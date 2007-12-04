@@ -1,0 +1,238 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>Mootools Mocha UI</title>
+	<meta name="description" content="A web applications user interface library built on the Mootools javascript framework" />
+
+	<link rel="stylesheet" href="css/style.css" type="text/css" />
+	<link rel="stylesheet" href="css/mocha.css" type="text/css" />
+	<script type="text/javascript" src="scripts/mootools-beta-1.2b1-compatible.js"></script>
+	<!--[if IE]>
+		<script type="text/javascript" src="scripts/excanvas-compressed.js"></script>
+		<style type="text/css"> html, body 	{ height: 100%; overflow: auto; } </style>
+	<![endif]-->
+	<script type="text/javascript" src="scripts/mocha.js"></script>
+
+</head>
+<body>
+
+<div id="mochaDesktop">
+
+<div id="mochaDesktopHeader">
+<div id="mochaDesktopTitlebar">
+	<h1>Mocha UI <span class="version">beta version 0.7</span></h1>
+</div>
+	
+<div id="mochaDesktopNavbar">
+<ul>
+	<li><a href="" onclick="javascript:return false;">Examples</a>	
+		<ul>
+			<li><a href="pages/lipsum.html" onclick="javascript:new MochaWindow({
+					id: 'ajaxpage',
+					title: 'Window Content Loaded with Ajax',
+					contentType: 'ajax',
+					contentURL: 'pages/lipsum.html',
+					width: 340,
+					height: 340
+				});return false">Ajax Demo</a>
+			</li>					
+			<li><a href="pages/spirograph.html" onclick="javascript:new MochaWindow({
+					id: 'spirograph',
+					title: 'Canvas Spirograph in an Iframe',
+					contentType: 'iframe',
+					contentURL: 'pages/spirograph.html',
+					width: 340,
+					height: 340,
+					scrollbars: false,					
+					paddingVertical: 0,					
+					paddingHorizontal: 0,
+					bgColor: '#000'
+				});return false">Spirograph</a>
+			</li>
+		</ul>							
+	</li>
+	<li><a href="" onclick="javascript:return false;">View</a>
+		<ul>
+			<li><a href="" onclick="javascript:myDesktop.arrangeCascade();return false">Cascade Windows</a>
+			</li>
+		</ul>
+	</li>
+	<li><a href="" onclick="javascript:return false;">Tools</a>
+		<ul>
+			<li><a href="pages/builder.html" onclick="javascript:new MochaWindow({
+					id: 'windowbuilder',
+					title: 'Window Builder',
+					contentType: 'ajax',
+					contentURL: 'pages/builder.html',
+					width: 370,
+					height: 400,				
+					x: 20,
+					y: 60
+				});return false">Window Builder</a>
+			</li>
+		</ul>
+	</li>										
+	<li><a href="" onclick="javascript:return false;">Help</a>
+		<ul>
+			<li><a href="pages/faq.html" onclick="javascript:new MochaWindow({
+					id: 'faq',
+					title: 'FAQ',
+					contentType: 'ajax',
+					contentURL: 'pages/faq.html',
+					width: 320,
+					height: 320,
+					x: 20,
+					y: 60					
+				});return false">FAQ</a>
+			</li>		
+			<li><a href="pages/docs.html" onclick="javascript:new MochaWindow({
+					id: 'docs',
+					title: 'Documentation',
+					contentType: 'ajax',
+					contentURL: 'pages/docs.html',
+					width: 320,
+					height: 320,
+					x: 20,
+					y: 60					
+				});return false">Documentation</a>
+			</li>		
+			<li><a href="pages/support.html" onclick="javascript:new MochaWindow({
+					id: 'help',
+					title: 'Support',
+					contentType: 'ajax',
+					contentURL: 'pages/support.html',
+					width: 320,
+					height: 320,
+					x: 20,
+					y: 60					
+				});return false">Support</a>
+			</li>		
+			<li><a href="pages/about.html" onclick="javascript:new MochaWindow({
+					id: 'about',
+					title: 'Mocha UI Version 0.7',
+					contentType: 'ajax',
+					contentURL: 'pages/about.html',
+					modal: true,
+					width: 300,
+					height: 150
+				});return false">About</a>
+			</li>
+		</ul>	
+	</li>
+</ul>
+</div><!-- mochaDesktopNavbar end -->
+
+<div id="mochaDock1" class="mochaDock" >
+	<div id="mochaDockPlacement1"  class="moachDockPlacement"></div>
+</div>
+
+</div><!-- mochaDesktopHeader end -->
+
+<div id="mochaPageWrapper">
+	<div id="mochaPage">
+		<div id="mochaPageAside">
+			<h3>Introduction</h3>
+			<p>Mocha is a web applications user interface library built on the Mootools javascript framework. The Mocha GUI components are made with canvas tag graphics.</p>
+
+			<p>Explore the navigation bar and see the windows to the right for more information.</p>
+
+			<h3>Download</h3>
+			<p><a href="mocha_v0.7.zip">Download Mocha UI v0.7</a></p>
+		</div><!-- mochaPageAside end -->
+	</div><!-- mochaPage end -->
+</div><!-- mochaPageWrapper end -->
+
+<div class="mocha" id="overview" style="width:300px; height:255px;">
+<h3 class="mochaTitle">Overview</h3>
+<h3>Features</h3>
+<ul>
+	<li>No images. The windows, including their controls, gradients and shadows, are drawn with the canvas tag.</li>
+	<li>Windows can be focused, dragged, resized, maximized, minimized, restored and closed.</li>
+	<li>Adjustable rounded corner radius.</li>
+	<li>Dynamically create new windows on demand.</li>
+	<li>Create modal dialog windows</li>
+	<li>Optional "desktop" toolbars</li>
+	<li>Minimal HTML markup required.</li>
+	<li>Tested in Firefox 2, Internet Explorer 6 &amp; 7, Safari 2, and Opera 9.</li>
+</ul>
+
+<h3>Bugs</h3>
+<ul>
+	<li>Scrollbars show through GUI in Firefox on the Mac. This is a known <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=400346">bug</a>.</li>
+	<li>In Opera 9, though the scrollbars in windows do not show through windows with a higher z-index, you can grab and scroll a scrollbar in a window that is behind another window with a higher z-index.</li>
+</ul>
+
+<h3>Notes for Contributors</h3>
+<ul>
+	<li>Add and initial comments to your additions to make it easier for me to merge your code.</li>
+	<li>Use descriptive names for your variables.</li>
+	<li>Test your modifications in Firefox 2, Internet Exploere 6 & 7, and Opera 9 on the PC, and then in Safari 2 on the Mac. Firefox 2 on the Mac is not fully supported, though Firefox 3 on the Mac probably will be after its full release.</li>
+</ul>	
+
+<h3>Change Log</h3>
+<p>v0.5 - 11/17/2007</p>
+<ul>
+	<li>Initial release</li>
+</ul>
+
+<p>v0.6 - 11/26/2007</p>
+<ul>
+	<li>Fixed the IE6 select issue</li>
+	<li>Added a couple more class options</li>	
+	<li>Minor code optimizations</li>
+</ul>
+
+<p>v0.7 - 12/03/2007</p>
+<ul>
+	<li>Added minimize functionality (Scott F. Frederick)</li>
+	<li>Added mouseover "title" to close, maximize, and minimize buttons (Scott F. Frederick)</li>
+	<li>Added onmouseover "title" to minimized window buttons displaying full header title (Scott F. Frederick)</li>
+	<li>The close, maximize, and minimize buttons are now individually optional</li>
+	<li>Added the MochaWindow and MochaWindowForm classes</li>
+	<li>Added several options for setting the properties and style of new windows</li>
+	<li>Added additional ajax and iframe support</li>
+	<li>Reconfigured how the core class is loaded so it is easier to access the class methods</li>
+	<li>Added optional toolbars to the "desktop"</li>
+	<li>Added modal dialog windows</li>	
+	<li>Code optimizations</li>
+</ul>
+</div>
+
+<div class="mocha" id="resources" style="width:300px; height:275px;">
+<h3 class="mochaTitle">Resources</h3>
+<h3>Mootools</h3>
+<p><a target="_blank" href="http://mootools.net/">Mootools</a> is an Object-Oriented JavaScript framework designed for the intermediate to advanced JavaScript developer.</p>
+<ul>
+	<li><a target="_blank" href="http://demos.mootools.net/">Demos</a></li>
+	<li><a target="_blank" href="http://docs.mootools.net/">Documentation</a></li>
+	<li><a target="_blank" href="http://forum.mootools.net/">Forums</a></li>		
+</ul>
+
+<h3>ExplorerCanvas</h3>
+<p>Firefox, Safari and Opera 9 support the canvas tag to allow 2D command-based drawing. <a target="_blank" href="http://excanvas.sourceforge.net/">ExplorerCanvas</a> is a javascript file that brings the same functionality to Internet Explorer.</p>
+</div>
+
+<div class="mocha" id="sliderRadius" style="width:300px; height:105px;">
+<h3 class="mochaTitle">Corner Radius Slider</h3>
+<p>Move the slider to change the radius of the rounded corners on these windows.</p>
+
+<div id="slider">
+	<div id="update">Corner Radius: <span id="updatevalue">XX</span></div>
+	<div id="sliderarea">
+		<div id="sliderknob"></div>
+	</div><!-- sliderarea end -->
+</div><!-- slider end -->
+</div>
+
+</div><!-- mochaDesktop end -->
+
+	<script type="text/javascript">
+		var myDesktop = new MochaDesktop({
+			//options go here
+		});						
+	</script>
+
+</body>
+</html>
