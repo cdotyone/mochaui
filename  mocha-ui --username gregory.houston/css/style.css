@@ -63,3 +63,18 @@ ul {
 dt {
 	font-weight: bold;
 	}
+
+/* Code */
+	
+pre {
+	background-color: #f6f6f6;
+	color: #006600;
+	display: block;
+	font-family: 'Courier New', Courier, monospace;
+	font-size: 11px;
+	max-height: 250px;
+	overflow: auto;
+	margin: 0 0 10px 0;
+	padding: 10px;
+	border: 1px solid #d1d7dc;	
+	}

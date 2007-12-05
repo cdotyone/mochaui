@@ -27,18 +27,30 @@
 	
 <div id="mochaDesktopNavbar">
 <ul>
-	<li><a href="" onclick="javascript:return false;">Examples</a>	
+	<li><a href="" onclick="return false;">Examples</a>	
 		<ul>
-			<li><a href="pages/lipsum.html" onclick="javascript:new MochaWindow({
+			<li><a href="pages/lipsum.html" onclick="new MochaWindow({
 					id: 'ajaxpage',
 					title: 'Window Content Loaded with Ajax',
 					contentType: 'ajax',
 					contentURL: 'pages/lipsum.html',
 					width: 340,
-					height: 340
+					height: 250
 				});return false">Ajax Demo</a>
 			</li>					
-			<li><a href="pages/spirograph.html" onclick="javascript:new MochaWindow({
+			<li><a href="http://forum.mootools.net/" onclick="new MochaWindow({
+					id: 'mootools',
+					title: 'Mootools Forums in an Iframe',
+					contentType: 'iframe',
+					contentURL: 'http://forum.mootools.net/',
+					width: 650,
+					height: 400,
+					scrollbars: false,					
+					paddingVertical: 0,					
+					paddingHorizontal: 0
+				});return false">Iframe: Mootools</a>
+			</li>
+			<li><a href="pages/spirograph.html" onclick="new MochaWindow({
 					id: 'spirograph',
 					title: 'Canvas Spirograph in an Iframe',
 					contentType: 'iframe',
@@ -49,19 +61,19 @@
 					paddingVertical: 0,					
 					paddingHorizontal: 0,
 					bgColor: '#000'
-				});return false">Spirograph</a>
+				});return false">Iframe: Spirograph</a>
 			</li>
 		</ul>							
 	</li>
-	<li><a href="" onclick="javascript:return false;">View</a>
+	<li><a href="" onclick="return false;">View</a>
 		<ul>
-			<li><a href="" onclick="javascript:myDesktop.arrangeCascade();return false">Cascade Windows</a>
+			<li><a href="" onclick="myDesktop.arrangeCascade();return false">Cascade Windows</a>
 			</li>
 		</ul>
 	</li>
-	<li><a href="" onclick="javascript:return false;">Tools</a>
+	<li><a href="" onclick="return false;">Tools</a>
 		<ul>
-			<li><a href="pages/builder.html" onclick="javascript:new MochaWindow({
+			<li><a href="pages/builder.html" onclick="new MochaWindow({
 					id: 'windowbuilder',
 					title: 'Window Builder',
 					contentType: 'ajax',
@@ -74,9 +86,9 @@
 			</li>
 		</ul>
 	</li>										
-	<li><a href="" onclick="javascript:return false;">Help</a>
+	<li><a href="" onclick="return false;">Help</a>
 		<ul>
-			<li><a href="pages/faq.html" onclick="javascript:new MochaWindow({
+			<li><a href="pages/faq.html" onclick="new MochaWindow({
 					id: 'faq',
 					title: 'FAQ',
 					contentType: 'ajax',
@@ -87,7 +99,7 @@
 					y: 60					
 				});return false">FAQ</a>
 			</li>		
-			<li><a href="pages/docs.html" onclick="javascript:new MochaWindow({
+			<li><a href="pages/docs.html" onclick="new MochaWindow({
 					id: 'docs',
 					title: 'Documentation',
 					contentType: 'ajax',
@@ -98,7 +110,7 @@
 					y: 60					
 				});return false">Documentation</a>
 			</li>		
-			<li><a href="pages/support.html" onclick="javascript:new MochaWindow({
+			<li><a href="pages/support.html" onclick="new MochaWindow({
 					id: 'help',
 					title: 'Support',
 					contentType: 'ajax',
@@ -109,7 +121,7 @@
 					y: 60					
 				});return false">Support</a>
 			</li>		
-			<li><a href="pages/about.html" onclick="javascript:new MochaWindow({
+			<li><a href="pages/about.html" onclick="new MochaWindow({
 					id: 'about',
 					title: 'Mocha UI Version 0.7',
 					contentType: 'ajax',
@@ -139,7 +151,7 @@
 			<p>Explore the navigation bar and see the windows to the right for more information.</p>
 
 			<h3>Download</h3>
-			<p><a href="mocha_v0.7.zip">Download Mocha UI v0.7</a></p>
+			<p><a target="_blank" href="http://code.google.com/p/mocha-ui/downloads/list">Download Mocha UI v0.7</a></p>
 		</div><!-- mochaPageAside end -->
 	</div><!-- mochaPage end -->
 </div><!-- mochaPageWrapper end -->
@@ -162,6 +174,7 @@
 <ul>
 	<li>Scrollbars show through GUI in Firefox on the Mac. This is a known <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=400346">bug</a>.</li>
 	<li>In Opera 9, though the scrollbars in windows do not show through windows with a higher z-index, you can grab and scroll a scrollbar in a window that is behind another window with a higher z-index.</li>
+	<li>Also see the tickets on <a target="_blank" href="http://code.google.com/p/mocha-ui/issues/list">Google Code</a>.</li>	
 </ul>
 
 <h3>Notes for Contributors</h3>
@@ -223,7 +236,8 @@
 	<div id="sliderarea">
 		<div id="sliderknob"></div>
 	</div><!-- sliderarea end -->
-</div><!-- slider end -->
+</div>
+<!-- slider end -->
 </div>
 
 </div><!-- mochaDesktop end -->

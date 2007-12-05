@@ -143,7 +143,7 @@
 	overflow: auto;	
 }
 	
-#mochaDesktop .mochaScrollerpad {	
+#mochaDesktop .mochaScrollerpad {
 	padding: 10px 12px;
 	}		
 
@@ -181,6 +181,11 @@
 	background: #000;	
 	cursor: pointer;	
 }
+
+.mochaIframe {
+	width: 100%;
+	height: inherit;
+}  
 	
 /* Slider */
 
@@ -254,12 +259,12 @@
 	float: left;	
 	text-align: right;
 	width: 80px;
-	margin: 0 0 8px 0;	
+	margin: 0 0 3px 0;	
 }
 	
 #mochaDesktop .formField {
 	float: right;
-	margin: 0 0 8px 0;
+	margin: 0 0 3px 0;
 	padding: 0 0 0 0;
 	width: 230px;
 }

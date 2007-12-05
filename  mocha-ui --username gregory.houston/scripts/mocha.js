@@ -120,7 +120,7 @@ var MochaDesktop = new Class({
 		canvas.setStyle('zIndex', 100);
 			
 		// Dynamically initialize canvas using excanvas. This is only required by IE
-		if (/msie/i.test(navigator.userAgent)) {
+		if (window.ie) {
 			G_vmlCanvasManager.initElement(canvas);
 		}
 		
@@ -165,7 +165,7 @@ var MochaDesktop = new Class({
 		this.triangleDock(ctx, dockTWidth , dockTHeight, 241, 102, 116, 1.0); 
 		
 	},	
-	newWindow: function(id, title, contentType, content, contentURL, modal, width, height, scrollbars, x, y, paddingVertical, paddingHorizontal, bgColor){
+	newWindow: function(id, title, contentType, content, contentURL, onContentLoaded, modal, width, height, scrollbars, x, y, paddingVertical, paddingHorizontal, bgColor){
 		
 		var mochaNewWindow = new Element('div', {
 			'class': 'mocha',
@@ -201,17 +201,10 @@ var MochaDesktop = new Class({
 			'class': 'mochaTitle'
 		}).setHTML(title).injectTop(mochaNewWindow);
 		
-		this.insertAll([mochaNewWindow]);
+		this.insertAll([mochaNewWindow], onContentLoaded);
 		
 		this.drawWindow(mochaNewWindow);
 
-		if (mochaNewWindow.iframe) {
-			$E('.mochaIframe', mochaNewWindow).setStyles({
-				'width': width,
-				'height': height
-			});
-		}
-		
 		if (scrollbars) {
 			scrollbars = 'auto';
 		} else {
@@ -302,13 +295,13 @@ var MochaDesktop = new Class({
 				$('mochaPage').setStyle('height', window.getHeight() + 'px');
 			}
 	},
-	insertAll: function(elementArray){
+	insertAll: function(elementArray, onContentLoaded){
 		elementArray.each(function(el){
 			var mochaTempContents = el.innerHTML;
 			el.empty();
 
 			if (window.ie6){
-				el.innerHTML = '<iframe class="zIndexFix" scrolling=no marginwidth=0 src="" marginheight=0></iframe>';
+				el.innerHTML = '<iframe class="zIndexFix" scrolling="no" marginwidth="0" src="" marginheight="0"></iframe>';
 			}
 			
 			var mochaOverlay = new Element('div', {
@@ -353,22 +346,28 @@ var MochaDesktop = new Class({
 					'marginwidth': 0,
 					'marginheight': 0,
 					'frameBorder': 0,
-					'scrolling': 'no'
+					'scrolling': 'auto'
 				}).injectInside(mochaScrollerpad);
 			}			
 			
 			var mochaTitlebarH3 = $E('h3.mochaTitle', mochaScrollerpad).clone().injectInside(mochaTitlebar);
 			$E('.mochaTitle', mochaScrollerpad).remove();
 
-			if(el.contentURL && !el.iframe){		
+			if(el.contentURL && !el.iframe){
 				var url = el.contentURL;
 				var myAjax = new Ajax(url, {
 					method: 'get',
-					update: mochaScrollerpad
+					update: mochaScrollerpad,
+					onRequest: function(){
+						//
+					},
+					onFailure: function(){
+						mochaScrollerpad.setHTML('<p>ERROR LOADING AJAX CONTENT</p><p>Make sure all of your content is uploaded to your server, and that you are attempting to load a document from the same domain as this page. Ajax loading will not work on your local machine.</p>');
+					},
+					onSuccess: function(){
+						if ( onContentLoaded ) onContentLoaded();
+					}
 				}).request();
-				if (!myAjax.getHeader('Content-Length')){
-					mochaScrollerpad.setHTML('<p>ERROR LOADING AJAX CONTENT</p><p>Make sure all of your content is uploaded to your server, and that you are attempting to load a document on the same domain as this page. Ajax loading will not work on your local machine.</p>')
-				}
 			}
 			
 			//Insert canvas
@@ -379,7 +378,7 @@ var MochaDesktop = new Class({
 			canvas.height = 1;
 
 			// Dynamically initialize canvas using excanvas. This is only required by IE
-			if (/msie/i.test(navigator.userAgent)) {
+			if (window.ie) {
 				G_vmlCanvasManager.initElement(canvas);
 			}
 
@@ -460,6 +459,14 @@ var MochaDesktop = new Class({
 		
 		mochaScroller.setStyle('height', mochaContent.getStyle('height'));
 		mochaScroller.setStyle('width', mochaContent.getStyle('width'));
+		
+		//resize iframe when window is resized
+		if (el.iframe) {
+			$E('.mochaIframe', el).setStyles({
+			//	'width': mochaContent.getStyle('width'),
+				'height': mochaContent.getStyle('height')
+			});
+		}
 	
 		mochaHeight = mochaContent.scrollHeight;
 		mochaWidth = mochaContent.scrollWidth + this.scrollWidthOffset;
@@ -472,7 +479,6 @@ var MochaDesktop = new Class({
 		if(sTitleBarTitle == null) {
 			sTitleBarTitle = "";
 		}
-
 		
 	 	mochaOverlay.setStyle('height', mochaHeight);
 		el.setStyle('height', mochaHeight);
@@ -654,8 +660,20 @@ var MochaDesktop = new Class({
 				new Drag.Move(el, {
 					handle: mochaHandle,
 					onStart: function(){  
-						this.focusThis(el); 
-					}.bind(this)
+						this.focusThis(el);
+						if (el.iframe && !window.webkit) {
+							$E('.mochaIframe', el).setStyles({
+								'display': 'none'
+							});
+						}						
+					}.bind(this),
+					onComplete: function(){
+						if (el.iframe && !window.webkit) {
+							$E('.mochaIframe', el).setStyles({
+								'display': 'block'
+							});
+						}					
+					}.bind(this)					
 				});
 			}
 		}.bind(this));
@@ -667,11 +685,31 @@ var MochaDesktop = new Class({
 				var resizeHandle = $E('.resizeHandle', el);
 				mochaContent.makeResizable({
 					handle: resizeHandle,
-					modifiers: {x: 'width', y: 'height'},
-					limit: { x:[this.options.minWidth,this.options.maxWidth], y:[this.options.minHeight,this.options.maxHeight] }, 							
+					modifiers: {
+						x: 'width',
+						y: 'height'
+					},
+					limit: {
+						x:[this.options.minWidth,this.options.maxWidth],
+						y:[this.options.minHeight,this.options.maxHeight]
+					},
+					onStart: function(){
+						if (el.iframe && !window.webkit) {
+							$E('.mochaIframe', el).setStyles({
+								'display': 'none'
+							});
+						}
+					}.bind(this),
 					onDrag: function(){
 						this.drawWindow(el);
-					}.bind(this)
+					}.bind(this),
+					onComplete: function(){
+						if (el.iframe && !window.webkit) {
+							$E('.mochaIframe', el).setStyles({
+								'display': 'block'
+							});
+						}					
+					}.bind(this)					
 				});
 			}
 		}.bind(this));
@@ -879,6 +917,7 @@ var MochaWindow = new Class({
 		contentType: 'html', // html, ajax, or iframe
 		content: '', // used if contentType is set to 'html'
 		contentURL: 'pages/lipsum.html', // used if contentType is set to 'ajax' or 'iframe'	
+		onContentLoaded: null,
 		modal: false,
 		width: 300,
 		height: 125,
@@ -893,7 +932,7 @@ var MochaWindow = new Class({
 		this.setOptions(options);
 		
 		if (!$(this.options.id)){
-		myDesktop.newWindow(this.options.id, this.options.title, this.options.contentType, this.options.content, this.options.contentURL, this.options.modal, this.options.width, this.options.height, this.options.scrollbars, this.options.x, this.options.y, this.options.paddingVertical, this.options.paddingHorizontal, this.options.bgColor)
+			myDesktop.newWindow(this.options.id, this.options.title, this.options.contentType, this.options.content, this.options.contentURL, this.options.onContentLoaded, this.options.modal, this.options.width, this.options.height, this.options.scrollbars, this.options.x, this.options.y, this.options.paddingVertical, this.options.paddingHorizontal, this.options.bgColor)
 		} else if ($(this.options.id).getStyle('display') == 'none'){ // instead of creating a duplicate window, restore minimized window
 			$(this.options.id).setStyle('display','block');
 			$$('#mochaDesktop button.mochaDockButton').each(function(el){
@@ -934,6 +973,7 @@ var MochaWindowForm = new Class({
 		} else {
 			modal = null;
 		}
+		var onContentLoaded = null;
 		var width = $('mochaNewWindowWidth').value.toInt();
 		var height = $('mochaNewWindowHeight').value.toInt();
 		var scrollbars = null;		
@@ -942,7 +982,7 @@ var MochaWindowForm = new Class({
 		var paddingVertical = $('mochaNewWindowPaddingVertical').value.toInt();
 		var paddingHorizontal = $('mochaNewWindowPaddingHorizontal').value.toInt();
 		var bgColor = '#fff';
-		myDesktop.newWindow(id, title, contentType, content, contentURL, modal, width, height, scrollbars, x, y, paddingVertical, paddingHorizontal, bgColor);		
+		myDesktop.newWindow(id, title, contentType, content, contentURL, onContentLoaded, modal, width, height, scrollbars, x, y, paddingVertical, paddingHorizontal, bgColor);		
 	}
 });
 MochaWindowForm.implement(new Options);
