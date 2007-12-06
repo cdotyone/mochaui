@@ -115,10 +115,9 @@ var MochaDesktop = new Class({
 				this.drawAll();
 			}.bind(this), 100);
 		}.bind(this)
-		
-		//added SFF 12/04/2007
+	},
+	initDock: function (el){
 		document.addEvent('mousemove',function (objDoc){
-			
 			if(objDoc.event.clientY>(document.body.clientHeight -10))  //-10 because firefox doesn't record outside movement, but IE7 does
 			{
 				if($('mochaDock').getProperty('AutoHide'))
@@ -126,9 +125,7 @@ var MochaDesktop = new Class({
 					$('mochaDock').setStyle('display','block');
 				}
 			}
-		});
-	},
-	initDock: function (el){
+		});		
 					
 		//Insert canvas
 		var canvas = new Element('canvas', {
@@ -1236,7 +1233,21 @@ function attachMochaLinkEvents(){
 				height: 150
 			});
 		});
-	}	
+	}
+	
+	if ($('cascadeLink')){
+		$('cascadeLink').addEvent('click', function(e){	
+			new Event(e).stop();
+			document.myDesktop.arrangeCascade();
+		});
+	}
+	
+	// Deactivate menu header links
+	$$('#mochaDesktop a.returnFalse').each(function(el){
+		el.addEvent('click', function(e){													
+			new Event(e).stop();
+		});			
+	});	
 	
 }
 
