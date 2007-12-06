@@ -8,6 +8,36 @@
 <h3>Iframes</h3>
 <p>There are at least three ways you can put Iframes in your windows. You can place an iframe in one of your mocha divs in the original index.html. You can use the iframe contentType option, which will place your content in an iframe for you though this gives you the least amount of control over the iframe's properties. You can load a page with an iframe in it into a window using ajax. The later option gives you the most control.</p>
 
+<p>If you use the iframe contentType your iframe will automatically be resized when the window it is in is resized. If you want this same functionality when using one of the other load options simply add class="mochaIframe" to those iframes and they will be resized for you as well.</p>
+
 <h3>Window Parameters</h3>
 <h3>X and Y</h3>
 <p>If x an y are not set the new window is centered in the page.</p>
+
+<h3>Creating a Window Link</h3>
+
+HTML:
+<pre>
+&lt;a id="docsLink" href="pages/docs.html"&gt;Documentation&lt;/a&gt;
+</pre>
+
+Javascript:
+<pre>
+	if ($('docsLink')){
+		$('docsLink').addEvent('click', function(e){	
+			new Event(e).stop();
+			new MochaWindow({
+				id: 'docs',
+				title: 'Documentation',
+				contentType: 'ajax',
+				contentURL: 'pages/docs.html',
+				width: 320,
+				height: 320,
+				x: 20,
+				y: 60
+			});
+		});
+	}
+</pre>
+
+<p>Note: If you wish to add links in windows that open other windows remember to add events to those links when the windows are created.</p>

@@ -69,13 +69,13 @@
 	border: 1px solid #999;
 	background: #fff;
 	position: absolute;
-	width: 138px;
+	width: 148px;
 	left: -999em;
 	z-index: 8000;
 }
 
 #mochaDesktopNavbar li ul li, #mochaDesktopNavbar li ul li a {
-	width: 120px;
+	width: 130px;
 }
 
 #mochaDesktopNavbar li:hover ul, #mochaDesktopNavbar li.sfhover ul { /* lists nested under hovered list items */
@@ -259,12 +259,12 @@
 	float: left;	
 	text-align: right;
 	width: 80px;
-	margin: 0 0 3px 0;	
+	margin: 0 0 5px 0;	
 }
 	
 #mochaDesktop .formField {
 	float: right;
-	margin: 0 0 3px 0;
+	margin: 0 0 5px 0;
 	padding: 0 0 0 0;
 	width: 230px;
 }
@@ -306,7 +306,7 @@ iframe.zIndexFix {
 	
 /* Window Minimize Dock */
 
-.mochaDock {
+#mochaDock {
 	position: relative;
 	background: #fff;
 	padding: 2px 4px;
@@ -316,7 +316,7 @@ iframe.zIndexFix {
 	background-color: #f0f0f0;
 	border-top: 1px solid #bbb;
 	border-bottom: 1px solid #fff;
-	height: 20px; /* will probably remove this so the dock can expand */
+	height: auto;
 }
 	
 .mochaDockButton {
@@ -333,9 +333,23 @@ iframe.zIndexFix {
 	margin: 0 1px 0 0;			 
 }
 
-.moachDockPlacement {
+#mochaDockPlacement {
 	position: absolute;
 	top: 2px;
+	left: 2px;
+	width: 20px;
+	height: 12px;
+	opacity: 0;
+	filter: alpha(opacity=.5);
+	-moz-opacity: 0;
+	background: #f00; /* for troubleshooting */
+	cursor: pointer;
+	z-index: 2; /* for IE */	
+}
+
+#MochaDockAutoHide {
+	position: absolute;
+	top: 12px;
 	left: 2px;
 	width: 20px;
 	height: 12px;
@@ -344,5 +358,5 @@ iframe.zIndexFix {
 	-moz-opacity: 0;
 	background: #f00; /* for troubleshooting */
 	cursor: pointer;
-	z-index: 2; /* for IE */	
+	z-index: 2; /* for IE */		
 }

@@ -29,115 +29,37 @@
 <ul>
 	<li><a href="" onclick="return false;">Examples</a>	
 		<ul>
-			<li><a href="pages/lipsum.html" onclick="new MochaWindow({
-					id: 'ajaxpage',
-					title: 'Window Content Loaded with Ajax',
-					contentType: 'ajax',
-					contentURL: 'pages/lipsum.html',
-					width: 340,
-					height: 250
-				});return false">Ajax Demo</a>
-			</li>					
-			<li><a href="http://forum.mootools.net/" onclick="new MochaWindow({
-					id: 'mootools',
-					title: 'Mootools Forums in an Iframe',
-					contentType: 'iframe',
-					contentURL: 'http://forum.mootools.net/',
-					width: 650,
-					height: 400,
-					scrollbars: false,					
-					paddingVertical: 0,					
-					paddingHorizontal: 0
-				});return false">Iframe: Mootools</a>
-			</li>
-			<li><a href="pages/spirograph.html" onclick="new MochaWindow({
-					id: 'spirograph',
-					title: 'Canvas Spirograph in an Iframe',
-					contentType: 'iframe',
-					contentURL: 'pages/spirograph.html',
-					width: 340,
-					height: 340,
-					scrollbars: false,					
-					paddingVertical: 0,					
-					paddingHorizontal: 0,
-					bgColor: '#000'
-				});return false">Iframe: Spirograph</a>
-			</li>
+			<li><a id="ajaxpageLink" href="pages/lipsum.html">Ajax Demo</a></li>					
+			<li><a id="mootoolsLink" href="http://forum.mootools.net/">Iframe: Mootools</a></li>
+			<li><a id="spirographLink" href="pages/spirograph.html">Iframe: Spirograph</a></li>
+			<li><a target="_blank" href="basic.html">Starter: No Toolbars</a></li>			
 		</ul>							
 	</li>
 	<li><a href="" onclick="return false;">View</a>
 		<ul>
-			<li><a href="" onclick="myDesktop.arrangeCascade();return false">Cascade Windows</a>
-			</li>
+			<li><a href="" onclick="myDesktop.arrangeCascade();return false">Cascade Windows</a></li>
 		</ul>
 	</li>
 	<li><a href="" onclick="return false;">Tools</a>
 		<ul>
-			<li><a href="pages/builder.html" onclick="new MochaWindow({
-					id: 'windowbuilder',
-					title: 'Window Builder',
-					contentType: 'ajax',
-					contentURL: 'pages/builder.html',
-					width: 370,
-					height: 400,				
-					x: 20,
-					y: 60
-				});return false">Window Builder</a>
+			<li><a id="builderLink" href="pages/builder.html">Window Builder</a>
 			</li>
 		</ul>
 	</li>										
 	<li><a href="" onclick="return false;">Help</a>
 		<ul>
-			<li><a href="pages/faq.html" onclick="new MochaWindow({
-					id: 'faq',
-					title: 'FAQ',
-					contentType: 'ajax',
-					contentURL: 'pages/faq.html',
-					width: 320,
-					height: 320,
-					x: 20,
-					y: 60					
-				});return false">FAQ</a>
-			</li>		
-			<li><a href="pages/docs.html" onclick="new MochaWindow({
-					id: 'docs',
-					title: 'Documentation',
-					contentType: 'ajax',
-					contentURL: 'pages/docs.html',
-					width: 320,
-					height: 320,
-					x: 20,
-					y: 60					
-				});return false">Documentation</a>
-			</li>		
-			<li><a href="pages/support.html" onclick="new MochaWindow({
-					id: 'help',
-					title: 'Support',
-					contentType: 'ajax',
-					contentURL: 'pages/support.html',
-					width: 320,
-					height: 320,
-					x: 20,
-					y: 60					
-				});return false">Support</a>
-			</li>		
-			<li><a href="pages/about.html" onclick="new MochaWindow({
-					id: 'about',
-					title: 'Mocha UI Version 0.7',
-					contentType: 'ajax',
-					contentURL: 'pages/about.html',
-					modal: true,
-					width: 300,
-					height: 150
-				});return false">About</a>
-			</li>
+			<li><a id="faqLink" href="pages/faq.html">FAQ</a></li>		
+			<li><a id="docsLink" href="pages/docs.html">Documentation</a></li>		
+			<li><a id="helpLink" href="pages/support.html">Support</a></li>		
+			<li><a id="aboutLink" href="pages/about.html">About</a></li>
 		</ul>	
 	</li>
 </ul>
 </div><!-- mochaDesktopNavbar end -->
 
-<div id="mochaDock1" class="mochaDock" >
-	<div id="mochaDockPlacement1"  class="moachDockPlacement"></div>
+<div id="mochaDock">
+	<div id="mochaDockPlacement"></div>
+	<div id="MochaDockAutoHide"></div>
 </div>
 
 </div><!-- mochaDesktopHeader end -->
@@ -236,17 +158,10 @@
 	<div id="sliderarea">
 		<div id="sliderknob"></div>
 	</div><!-- sliderarea end -->
-</div>
-<!-- slider end -->
+</div><!-- slider end -->
 </div>
 
 </div><!-- mochaDesktop end -->
-
-	<script type="text/javascript">
-		var myDesktop = new MochaDesktop({
-			//options go here
-		});						
-	</script>
 
 </body>
 </html>
