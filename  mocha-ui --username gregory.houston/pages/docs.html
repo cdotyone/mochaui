@@ -1,6 +1,54 @@
+<h3>A Word of Warning</h3>
 <p>Initially this project was meant to be no more than an experiment in making a simple GUI with canvas tag graphics. I had no particular use for it. I took it on as a sort of puzzle to fill some time. Others however have found uses for the project and so I've continued to work on it when time allows.</p>
 
-<p>As you can see there is not much documentation. Depending on time and interest however this section may continue to grow.</p>
+<p>Since the feature set is growing rather rapidly I will probably be rethinking a lot of the code structure, naming, and syntax. I would like to develop a core that is modular, light, robust, and easy to modify and extend. At these early stages I encourage early adopters to voice their thoughts on code structure, naming and syntax. What functionality would you like to see in its own classes rather than in the main class? Do you see something in the code that can be optimized? Let me know.</p>
+
+<p>As you can see there is not much documentation. As the code and feature set becomes more crystallized the documentation will get more attention.</p>
+
+<h3>Aspects of Mocha UI (Subject to Change)</h3>
+<ul>
+	<li>Desktop. The Desktop is the Mocha UI container. The MochaDesktop class sets global variables for all windows.</li>
+	<li>Toolbars - Requires the Desktop</li>
+	<li>Workspaces - Requires the Desktop and Toolbars; not yet implemented</li>
+	<li>Windows - Requires the Desktop, though considering making it possible to break this dependency</li>
+</ul>
+
+<h3>MochaWindow</h3>
+
+<p><strong>Syntax:</strong></p>
+<pre>
+new MochaWindow();
+</pre>
+
+<p><strong>Arguments: </strong>Options</p>
+
+<p><strong>Options:</strong></p>
+<ul>
+	<li>id: (string)</li>
+	<li>title: (string)</li>
+	<li>contentType: (string: 'html', 'ajax', or 'iframe')</li>
+	<li>content: (string) used if contentType is set to 'html'</li>
+	<li>contentURL: (string) used if contentType is set to 'ajax' or 'iframe'</li>
+	<li>modal: (boolean)</li>
+	<li>width: (number)</li>
+	<li>height: (number)</li>
+	<li>scrollbars: (boolean)</li>
+	<li>x: (number)</li> If x or y are not set the new window is centered in the page.
+	<li>y: (number)</li> If x or y are not set the new window is centered in the page.
+	<li>paddingVertical: (number)</li>
+	<li>paddingHorizontal: (number)</li>
+	<li>bgColor: (string, defaults to '#fff')</li>
+</ul>
+
+<p><strong>Events:</strong></p>
+<ul>
+	<li>onContentLoaded: (function)	Event, fired when content is successfully loaded via ajax</li>
+	<li>onClose: (function)	Event, fired when window is closed</li>
+	<li>onMinimize: (function) Event, fired when window is minimized</li>
+	<li>onMaximize: (function) Event, fired when window is maximized</li>
+	<li>onFocus: (function) Event, fired when window is focused</li>
+	<li>onResize: (function) Event, fired when window is resized</li>
+</ul>	
 
 <h3>Loading Content with Ajax</h3>
 <p>For content to load via ajax all the files must be online and in the same domain. If you need to load content from another domain or wish to have it work offline, load the content in a iframe instead of using the ajax option.</p>
@@ -9,10 +57,6 @@
 <p>There are at least three ways you can put Iframes in your windows. You can place an iframe in one of your mocha divs in the original index.html. You can use the iframe contentType option, which will place your content in an iframe for you though this gives you the least amount of control over the iframe's properties. You can load a page with an iframe in it into a window using ajax. The later option gives you the most control.</p>
 
 <p>If you use the iframe contentType your iframe will automatically be resized when the window it is in is resized. If you want this same functionality when using one of the other load options simply add class="mochaIframe" to those iframes and they will be resized for you as well.</p>
-
-<h3>Window Parameters</h3>
-<h3>X and Y</h3>
-<p>If x an y are not set the new window is centered in the page.</p>
 
 <h3>Creating a Window Link</h3>
 
@@ -40,4 +84,8 @@ Javascript:
 	}
 </pre>
 
-<p>Note: If you wish to add links in windows that open other windows remember to add events to those links when the windows are created.</p>
+<p><strong>Notes:</strong></p>
+<p>If you wish to add links in windows that open other windows remember to add events to those links when the windows are created.</p>
+
+<h3>MooCanvas</h3>
+<p>Though I have not tried it, some of you may be interested in <a target="_blank" href="http://olmo-maldonado.com/projects/moocanvas/">MooCanvas</a> as an alternative to <a target="_blank" href="http://excanvas.sourceforge.net/">ExplorerCanvas</a>. Mocha UI would require a little bit of extra code to work with MooCanvas. See the MooCanvas page for more information on how it's usage differs from ExplorerCanvas.</p>

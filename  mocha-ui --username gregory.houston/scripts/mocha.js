@@ -23,7 +23,7 @@ var MochaDesktop = new Class({
 		closable: true,
 		headerHeight: 25,
 		footerHeight: 30,
-		cornerRadius: 9,
+		cornerRadius: 8,
 		desktopTopOffset: 20, // use a negative number if neccessary to place first window where you want it
 		desktopLeftOffset: 290,
 		mochaTopOffset: 70, // initial vertical spacing of each window
@@ -33,8 +33,7 @@ var MochaDesktop = new Class({
 		minWidth: 250, // minimum width of windows when resized
 		maxWidth: 2500, // maximum width of windows when resized
 		minHeight: 100,	// minimum height of windows when resized	
-		maxHeight: 2000, // maximum height of windows when resized
-		windowIDCount: 0 // this should be in initialize since it is a ticker and not an option
+		maxHeight: 2000 // maximum height of windows when resized
 	},
 	initialize: function(options){		
 		this.setOptions(options);
@@ -44,6 +43,7 @@ var MochaDesktop = new Class({
 		this.maximizebuttonX = 0;
 		this.closebuttonX = 0;
 		this.scrollWidthOffset = 6;
+		this.windowIDCount = 0;
 		new Element('canvas');
 		// Add properties to elements in the DOM
 		Element.implement({oldTop: ''});
@@ -65,33 +65,29 @@ var MochaDesktop = new Class({
 		else {
 			this.options.minimizable = false; // Minimize is set to false if there is no dock
 		}
-		$$('#mochaDesktop div.mocha').setStyle('display', 'block');
+		$$('div.mocha').setStyle('display', 'block');
 		this.setDesktopSize();
-		this.insertAll($$('#mochaDesktop div.mocha'));
+		this.insertAll($$('div.mocha'));
 		this.drawAll();
-		this.attachDraggable($$('#mochaDesktop div.mocha'));
-		this.attachResizable($$('#mochaDesktop div.mocha'));
-		this.attachFocus($$('#mochaDesktop div.mocha'));
-		this.attachMinimize($$('#mochaDesktop div.mocha'));
-		this.attachMaximize($$('#mochaDesktop div.mocha'));
-		this.attachClose($$('#mochaDesktop div.mocha'));
-		this.addSlider();
+		this.attachDraggable($$('div.mocha'));
+		this.attachResizable($$('div.mocha'));
+		this.attachFocus($$('div.mocha'));
+		this.attachMinimize($$('div.mocha'));
+		this.attachMaximize($$('div.mocha'));
+		this.attachClose($$('div.mocha'));
 		if ($('mochaDock')) {		
 			this.initDock($('mochaDock'));	
 			this.drawDock($('mochaDock'));
 		}
 		this.arrangeCascade();
-
+		// Modal initialization
 		var mochaModal = new Element('div', {
 			'id': 'mochaModalBackground'
 		}).injectInside($('mochaDesktop'));
-
 		mochaModal.setStyle('opacity', .4);
-
 		this.modalOpenMorph = new Fx.Morph($('mochaModalBackground'), {
 				'duration': 200
 				});
-
 		this.modalCloseMorph = new Fx.Morph($('mochaModalBackground'), {
 			'duration': 200,
 			onComplete: function(){
@@ -245,7 +241,7 @@ var MochaDesktop = new Class({
 			onMinimize: $empty,					// Event, fired when window is minimized
 			onMaximize: $empty,					// Event, fired when window is maximized
 			onFocus: $empty,					// Event, fired when window is focused
-			onResize: $empty,					// Event, fired when window is resized (TO BE IMPLEMENTED / Nevyn)
+			onResize: $empty,					// Event, fired when window is resized
 			modal: false,
 			width: 300,
 			height: 125, 
@@ -267,8 +263,8 @@ var MochaDesktop = new Class({
 					}
 				});
 			} else {
-				// Nevyn: make sure that the window we are refocusing gets focus and not parent window
-				// since the onclick event for the parent window (if window is created from within another window) willb be fired after this thus the setTimeout()
+				// Make sure that the window we are refocusing gets focus and not the parent window
+				// since the onclick event for the parent window (if window is created from within another window) will be fired after this thus the setTimeout()
 				setTimeout(function () { this.focusThis($(windowProperties.id)); }.bind(this),10);
 			}
 			return;
@@ -276,7 +272,7 @@ var MochaDesktop = new Class({
 		
 		var mochaNewWindow = new Element('div', {
 			'class': 'mocha',
-			'id': 'win' + (++this.options.windowIDCount)
+			'id': 'win' + (++this.windowIDCount)
 		}).injectInside($('mochaDesktop'));
 		
 		if (windowProperties.contentType == 'html') {
@@ -372,7 +368,7 @@ var MochaDesktop = new Class({
 				'left': this.options.newWindowPosLeft
 			});
 		}
-		// Nevyn: make sure newly created window has focus, if the window is created from within another window its onclick event will be
+		// Make sure newly created window has focus, if the window is created from within another window its onclick event will be
 		// fired after this function has completed execution, thus setTimeout()
 		setTimeout(function () { this.focusThis(mochaNewWindow); }.bind(this),10);
 	},
@@ -534,7 +530,7 @@ var MochaDesktop = new Class({
 		}.bind(this));
 	},
 	drawAll: function(){
-		$$('#mochaDesktop div.mocha').each(function(el){
+		$$('div.mocha').each(function(el){
 			if (el.getStyle('display') != 'none'){ 										
 				this.drawWindow(el);
 			}
@@ -553,7 +549,7 @@ var MochaDesktop = new Class({
 		
 		//assign a unique id to each window, 
 		//that doesn't yet have an id
-		if(el.id==""){el.id='win'+(++this.options.windowIDCount);}
+		if(el.id==""){el.id='win'+(++this.windowIDCount);}
 		
 		this.setMochaControlsWidth(el);
 		
@@ -998,7 +994,7 @@ var MochaDesktop = new Class({
 	arrangeCascade: function(){
 		var x = this.options.desktopLeftOffset
 		var y = this.options.desktopTopOffset;		
-		$$('#mochaDesktop div.mocha').each(function(el){
+		$$('div.mocha').each(function(el){
 			if (el.getStyle('display') != 'none'){										
 				this.focusThis(el);										
 				x += this.options.mochaLeftOffset;
@@ -1012,20 +1008,6 @@ var MochaDesktop = new Class({
 				});
 			}
 		}.bind(this));
-	},
-	addSlider: function(){
-		if ($('sliderarea')) {
-			this.mochaSlide = new Slider($('sliderarea'), $('sliderknob'), {
-				steps: 20,
-				offset: 5,
-				onChange: function(pos){
-					$('updatevalue').setHTML(pos);
-					this.options.cornerRadius = pos;
-					this.drawAll();
-					this.indexLevel++; 
-				}.bind(this) 	
-			}).set(this.options.cornerRadius);
-		}
 	}
 });
 MochaDesktop.implement(new Options);
@@ -1087,7 +1069,7 @@ var MochaWindow = new Class({
 			document.myDesktop.newWindow(this.options)
 		} else if ($(this.options.id).getStyle('display') == 'none'){ // instead of creating a duplicate window, restore minimized window
 			$(this.options.id).setStyle('display','block');
-			$$('#mochaDesktop button.mochaDockButton').each(function(el){
+			$$('button.mochaDockButton').each(function(el){
 				if (el.getProperty('WinAssociated') == this.options.id){ 										
 					el.dispose();
 				}
@@ -1151,6 +1133,9 @@ MochaWindowForm.implement(new Options);
 	ATTACH MOCHA LINK EVENTS
 	Here is where you define your windows and the events that open them.
 	If you are not using links to run Mocha methods you can remove this function.
+	
+	If you need to add link events to links within windows you are creating, do
+	it in the onContentLoaded function of the new window.
 
    ----------------------------------------------------------------- */
 
@@ -1165,8 +1150,7 @@ function attachMochaLinkEvents(){
 				contentType: 'ajax',
 				contentURL: 'pages/lipsum.html',
 				width: 340,
-				height: 250,
-				onClose: function(){alert('red');}
+				height: 150
 			});
 		});
 	}
@@ -1302,6 +1286,22 @@ function attachMochaLinkEvents(){
 		});
 	}
 	
+	if ($('contributeLink')){
+		$('contributeLink').addEvent('click', function(e){	
+			new Event(e).stop();
+			new MochaWindow({
+				id: 'contribute',
+				title: 'Contribute',
+				contentType: 'ajax',
+				contentURL: 'pages/contribute.html',
+				width: 320,
+				height: 320,
+				x: 20,
+				y: 60					
+			});
+		});
+	}	
+	
 	if ($('aboutLink')){
 		$('aboutLink').addEvent('click', function(e){	
 			new Event(e).stop();
@@ -1325,12 +1325,36 @@ function attachMochaLinkEvents(){
 	}
 	
 	// Deactivate menu header links
-	$$('#mochaDesktop a.returnFalse').each(function(el){
+	$$('a.returnFalse').each(function(el){
 		el.addEvent('click', function(e){													
 			new Event(e).stop();
 		});			
 	});	
 	
+}
+
+/* -----------------------------------------------------------------
+
+	Corner Radius Slider
+	Remove this function and it's reference in onload if you are not
+	using the example corner radius slider
+
+   ----------------------------------------------------------------- */
+
+
+function addSlider(){
+	if ($('sliderarea')) {
+		mochaSlide = new Slider($('sliderarea'), $('sliderknob'), {
+			steps: 20,
+			offset: 5,
+			onChange: function(pos){
+				$('updatevalue').setHTML(pos);
+				document.myDesktop.options.cornerRadius = pos;
+				document.myDesktop.drawAll();
+				document.myDesktop.indexLevel++; 
+			}
+		}).set(document.myDesktop.options.cornerRadius);
+	}
 }
 
 /* -----------------------------------------------------------------
@@ -1343,4 +1367,5 @@ window.addEvent('load', function(){
 		document.myToolbars = new MochaToolbars();	
 		document.myDesktop = new MochaDesktop();
 		attachMochaLinkEvents();
+		addSlider(); // remove this if you remove the example corner radius slider
 });
