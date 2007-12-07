@@ -1190,6 +1190,25 @@ function attachMochaLinkEvents(){
 		});
 	}
 	
+	if ($('cornerRadiusLink')){
+		$('cornerRadiusLink').addEvent('click', function(e){	
+			new Event(e).stop();
+			new MochaWindow({
+				id: 'cornerRadius',
+				title: 'Corner Radius Slider',
+				contentType: 'ajax',
+				contentURL: 'pages/corner_radius.html',
+				onContentLoaded: function(){
+					addSlider();
+				},
+				width: 300,
+				height: 105,
+				x: 20,
+				y: 60					
+			});
+		});
+	}	
+	
 	if ($('triggersLink')){
 		$('triggersLink').addEvent('click', function(e){	
 			new Event(e).stop();
@@ -1269,6 +1288,38 @@ function attachMochaLinkEvents(){
 			});
 		});
 	}
+	
+	if ($('overviewLink')){
+		$('overviewLink').addEvent('click', function(e){	
+			new Event(e).stop();
+			new MochaWindow({
+				id: 'overview',
+				title: 'Overview',
+				contentType: 'ajax',
+				contentURL: 'pages/overview.html',
+				width: 300,
+				height: 255,
+				x: 20,
+				y: 60					
+			});
+		});
+	}
+
+	if ($('resourcesLink')){
+		$('resourcesLink').addEvent('click', function(e){	
+			new Event(e).stop();
+			new MochaWindow({
+				id: 'resources',
+				title: 'Resources',
+				contentType: 'ajax',
+				contentURL: 'pages/resources.html',
+				width: 300,
+				height: 275,
+				x: 20,
+				y: 60					
+			});
+		});
+	}	
 	
 	if ($('helpLink')){
 		$('helpLink').addEvent('click', function(e){	
