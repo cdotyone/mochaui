@@ -47,7 +47,15 @@
 			<li><a id="builderLink" href="pages/builder.html">Window Builder</a>
 			</li>
 		</ul>
-	</li>										
+	</li>
+	<li>
+		<a href="" onclick="javascript:return false;">Workspaces</a>
+		<ul>
+			<li><a href="#" onclick="javascript:myDesktop.setScreen(0)">Workspace 01</a></li>
+			<li><a href="#" onclick="javascript:myDesktop.setScreen(1)">Workspace 02</a></li>
+			<li><a href="#" onclick="javascript:myDesktop.setScreen(2)">Workspace 03</a></li>
+		</ul>
+	</li>												
 	<li><a class="returnFalse" href="">Help</a>
 		<ul>
 			<li><a id="faqLink" href="pages/faq.html">FAQ</a></li>		
@@ -69,17 +77,27 @@
 
 <div id="mochaPageWrapper">
 	<div id="mochaPage">
-		<div id="mochaPageAside">
-			<h3>Introduction</h3>
-			<p>Mocha is a web applications user interface library built on the Mootools javascript framework. The Mocha GUI components are made with canvas tag graphics.</p>
+		<div id="mochaScreens">
+			<div class="screen">
+				<div id="mochaPageAside">
+					<h3>Introduction</h3>
+					<p>Mocha is a web applications user interface library built on the Mootools javascript framework. The Mocha GUI components are made with canvas tag graphics.</p>
 
-			<p>Explore the navigation bar and see the windows to the right for more information.</p>
+					<p>Explore the navigation bar and see the windows to the right for more information.</p>
 			
-			<p> - <a href="http://greghoustondesign.com/">Greg Houston</a></p>
+					<p> - <a href="http://greghoustondesign.com/">Greg Houston</a></p>
 
-			<h3>Download</h3>
-			<p><a target="_blank" href="http://code.google.com/p/mocha-ui/downloads/list">Download Mocha UI v0.7</a></p>
-		</div><!-- mochaPageAside end -->
+					<h3>Download</h3>
+					<p><a target="_blank" href="http://code.google.com/p/mocha-ui/downloads/list">Download Mocha UI v0.7</a></p>
+				</div><!-- mochaPageAside end -->
+			</div>
+			<div class="screen">
+				Screen 2, some other content here.
+			</div>
+			<div class="screen">
+				Screen 3, different content again.
+			</div>
+		</div><!-- mochaScreens end -->			
 	</div><!-- mochaPage end -->
 </div><!-- mochaPageWrapper end -->
 
@@ -140,7 +158,7 @@
 	<li>Fixed it so that if the desktop toolbars are removed the rest of the code still works</li>
 	<li>Removed the inline javascript from the example html</li>
 	<li>Added optional autohide to the dock (Scott F. Frederick)</li>
-	<li>Added the following options to new windows: onContentLoaded, onClose, onMinimize, onMaximize, onFocus, and onResize</li>
+	<li>Added the following options to new windows: onContentLoaded, onClose, onMinimize, onMaximize, onFocus, and onResize (Joel Lindau)</li>
 	<li>Pulled the slider function out of the core class</li>
 </ul>	
 	

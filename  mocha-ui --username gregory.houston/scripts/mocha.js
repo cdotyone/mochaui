@@ -3,14 +3,15 @@
 	Script: 
 		mocha.js v.0.7
 	
-	Author:
-		Greg Houston, <http://greghoustondesign.com/>
+	Copyright:
+		Copyright (c) 2007 Greg Houston, <http://greghoustondesign.com/>
 	
-	Contributors:
-		Scott F. Frederick 
- 
 	License:
-		MIT License
+		MIT-style license
+
+	Contributors:
+		Scott F. Frederick
+		Joel Lindau
 	
    ----------------------------------------------------------------- */
 
@@ -23,7 +24,7 @@ var MochaDesktop = new Class({
 		closable: true,
 		headerHeight: 25,
 		footerHeight: 30,
-		cornerRadius: 8,
+		cornerRadius: 9,
 		desktopTopOffset: 20, // use a negative number if neccessary to place first window where you want it
 		desktopLeftOffset: 290,
 		mochaTopOffset: 70, // initial vertical spacing of each window
@@ -33,7 +34,8 @@ var MochaDesktop = new Class({
 		minWidth: 250, // minimum width of windows when resized
 		maxWidth: 2500, // maximum width of windows when resized
 		minHeight: 100,	// minimum height of windows when resized	
-		maxHeight: 2000 // maximum height of windows when resized
+		maxHeight: 2000, // maximum height of windows when resized
+		defaultScreen: 0 // Default screen, if used		
 	},
 	initialize: function(options){		
 		this.setOptions(options);
@@ -79,6 +81,7 @@ var MochaDesktop = new Class({
 			this.initDock($('mochaDock'));	
 			this.drawDock($('mochaDock'));
 		}
+		this.setScreen(this.options.defaultScreen);		
 		this.arrangeCascade();
 		// Modal initialization
 		var mochaModal = new Element('div', {
@@ -128,10 +131,16 @@ var MochaDesktop = new Class({
 			'class': 'mochaCanvas',
 			'id': 'canv1'
 		}).injectInside(el);		
-		canvas.width = 15;
-		canvas.height = 15;
 		
-		canvas.setStyle('zIndex', 100);
+		canvas.setStyles({
+		   position: 'absolute',
+		   top: '4px',
+		   left: '2px',
+		   zIndex: 2
+		   });
+		   
+		   canvas.width=15;
+		   canvas.height=18;
 			
 		// Dynamically initialize canvas using excanvas. This is only required by IE
 		if (window.ie) {
@@ -141,20 +150,13 @@ var MochaDesktop = new Class({
 		//Position top or bottom selector
 		$('mochaDockPlacement').setProperty('title','Position Dock Top');
 			
-		//Auto Hide on/off added SFF 12/03/2007
+		//Auto Hide on/off 
 		$('MochaDockAutoHide').setProperty('title','Turn Auto Hide On');
 		
 			//attach event
 		$('mochaDockPlacement').addEvent('click', function(event){
 			var objDock=event.target.parentNode;
 										   
-			//added SFF 12/04/2007
-			if($('mochaDock').getProperty('AutoHide') == 'true')
-			{
-				alert("Currently the Dock-Bar cannot be positioned on 'top' when 'Autohide' is on.")				
-				return false;
-			}
-			
 			var ctx = $E('.mochaCanvas',el).getContext('2d');
 			
 				//switch top pos
@@ -167,7 +169,11 @@ var MochaDesktop = new Class({
 					})
 					$('mochaDesktopHeader').setStyle('height', 54);
 				objDock.setProperty('DockPosition','Bottom');
-				this.drawCircle(ctx, 5 , 3, 3, 241, 102, 116, 1.0); 
+				this.drawCircle(ctx, 5, 4, 3, 241, 102, 116, 1.0); 
+				//added SFF 12/07/2007
+				if ($('mochaDock').getProperty('AutoHide') != 'true' || $('mochaDock').getProperty('AutoHideDisabled') != 'true') {
+					this.drawCircle(ctx, 5 , 14, 3, 241, 102, 116, 1.0); 
+				}
 				} else {
 					objDock.setStyles({
 					'position': 'relative',
@@ -177,41 +183,57 @@ var MochaDesktop = new Class({
 					})
 					$('mochaDesktopHeader').setStyle('height', 74);					
 				objDock.setProperty('DockPosition','Top');	
-				this.drawCircle(ctx, 5, 3, 3, 0, 255, 0, 1.0);
+				this.drawCircle(ctx, 5, 4, 3, 0, 255, 0, 1.0);
+				this.drawCircle(ctx, 5, 14, 3, 212, 208, 200, 1.0); //added SFF 12/07/2007
 				}
 			
+			//Added SFF 12/07/2007
+			//diasble/enable autohide and grey/orange/green out button
+			if($('mochaDock').getProperty('AutoHide') == 'true' || $('mochaDock').getProperty('AutoHideDisabled')=='true')
+			{
+				if (objDock.getProperty('DockPosition') == 'Bottom') {
+					$('mochaDock').setProperty('AutoHideDisabled', 'false');
+					$('mochaDock').setProperty('AutoHide', 'true')
+					this.drawCircle(ctx, 5, 14, 3, 0, 255, 0, 1.0);
+				}
+				else{
+					$('mochaDock').setProperty('AutoHideDisabled', 'true');
+					$('mochaDock').setProperty('AutoHide', 'false')
+				}
+				
+			}	
+			
+							
 			//update title tag
 			$('mochaDockPlacement').setProperty('title',(objDock.getStyle('position') == 'relative')?'Position Dock Bottom':'Position Dock Top');
 		}.bind(this));
 		
-		//attach event Auto Hide Added SFF 12/03/2007
+		//attach event Auto Hide 
 		$('MochaDockAutoHide').addEvent('click', function(event){
 			var objDock=event.target.parentNode;
 			var ctx = $E('.mochaCanvas',el).getContext('2d');
 			
-			if(objDock.getProperty('DockPosition')=='Top')
-			{
-				alert("Currently 'Autohide' is not available when the Dock-Bar is positioned on 'top'.")				
-				return false;
-		}
+			//changed SFF 12/07/2007
+			//disable auto hide when Dock bar on top
+			if(objDock.getProperty('DockPosition')=='Top'){return false;}
 		
 			//update title tag
 			if(objDock.getProperty('AutoHide')=='true'){
 				$('MochaDockAutoHide').setProperty('title','Turn Auto Hide On');
-				this.drawCircle(ctx, 5 , 12, 3, 241, 102, 116, 1.0);
+				this.drawCircle(ctx, 5 , 14, 3, 241, 102, 116, 1.0);
 				objDock.setProperty('AutoHide','false');
 				objDock.setStyle('display','block');
 			}
 			else{
 				$('MochaDockAutoHide').setProperty('title','Turn Auto Hide Off');
-				this.drawCircle(ctx, 5 , 12, 3, 0, 255, 0, 1.0); 
+				this.drawCircle(ctx, 5 , 14, 3, 0, 255, 0, 1.0); 
 				objDock.setProperty('AutoHide','true');
 				objDock.setStyle('display','none');
 			}
 		}.bind(this));
 		
-		//added SFF 12/04/2007
-		$('mochaDock').addEvent('mouseout', function(objDock)
+		//changed SFF 12/07/2007
+		$('mochaDock').addEvent('mouseleave', function(objDock)
 		{	if(this.getProperty('AutoHide') == 'true'){ //mozilla doesn't understand true evaluations, so made the property a string???
 				if((objDock.event.clientY<(document.body.clientHeight - this.getStyle('height').toInt()))){
 					this.setStyle('display', 'none');
@@ -225,10 +247,17 @@ var MochaDesktop = new Class({
 		var ctx = $E('.mochaCanvas',el).getContext('2d');		
 		
 		//changed SFF 12/03/2007
-		this.drawCircle(ctx, 5 , 3, 3, 241, 102, 116, 1.0); 
-		this.drawCircle(ctx, 5 , 12, 3, 241, 102, 116, 1.0);
+		this.drawCircle(ctx, 5 , 4, 3, 241, 102, 116, 1.0); 
+		this.drawCircle(ctx, 5 , 14, 3, 241, 102, 116, 1.0);
 		
 	},	
+	setScreen: function(index) {
+		if ( !$('mochaScreens') )
+			return;
+		$$('#mochaScreens div.screen').each(function(el,i) {
+			el.setStyle('display', i == index ? 'block' : 'none');
+		});
+	},
 	newWindow: function(properties){
 		windowProperties = $extend({
 			id: null,
@@ -331,14 +360,7 @@ var MochaDesktop = new Class({
 		}		
 		
 		this.attachClose([mochaNewWindow], windowProperties.onClose);
-		if (mochaNewWindow.modal) {	
-			mochaNewWindow.setStyles({
-				'zIndex': 11000
-			});
-		} else {
-			this.focusThis(mochaNewWindow);
-		}
-		
+
 		if (windowProperties.x && windowProperties.y) {
 			this.options.newWindowPosTop = windowProperties.y;
 			this.options.newWindowPosLeft = windowProperties.x;
@@ -368,9 +390,14 @@ var MochaDesktop = new Class({
 				'left': this.options.newWindowPosLeft
 			});
 		}
-		// Make sure newly created window has focus, if the window is created from within another window its onclick event will be
-		// fired after this function has completed execution, thus setTimeout()
-		setTimeout(function () { this.focusThis(mochaNewWindow); }.bind(this),10);
+		
+		if (windowProperties.modal) {
+			mochaNewWindow.setStyles({
+				'zIndex': 11000
+			});
+		} else {
+			setTimeout(function () { this.focusThis(mochaNewWindow); }.bind(this), 10);
+		}		
 	},
 	focusThis: function(el){
 			this.indexLevel++;
@@ -696,14 +723,6 @@ var MochaDesktop = new Class({
 		ctx.lineTo(x+width,y+height);
 		ctx.closePath();
 		ctx.fillStyle = 'rgba(' + r +',' + g + ',' + b + ',' + a + ')';
-		ctx.fill();
-	},
-	triangleDock: function(ctx,x,y,r,g,b,a){ // give more generic name or remove. no longer used for dock
-		ctx.beginPath();
-		ctx.moveTo(1,1);
-		ctx.lineTo(14,1);
-		ctx.lineTo(1,14);
-		ctx.fillStyle = 'rgba(' + r +',' + g + ',' + b + ',' + a + ')';	
 		ctx.fill();
 	},
 	//added SFF 12/03/2007
@@ -1066,7 +1085,7 @@ var MochaWindow = new Class({
 		this.setOptions(options);
 		
 		if (!$(this.options.id)){
-			document.myDesktop.newWindow(this.options)
+			document.myDesktop.newWindow(this.options);
 		} else if ($(this.options.id).getStyle('display') == 'none'){ // instead of creating a duplicate window, restore minimized window
 			$(this.options.id).setStyle('display','block');
 			$$('button.mochaDockButton').each(function(el){
@@ -1090,38 +1109,55 @@ MochaWindow.implement(new Options);
 
 var MochaWindowForm = new Class({
 	options: {
+		id: null,
+		title: 'New Window',
+		contentType: 'html', // html, ajax, or iframe
+		content: '', // used if contentType is set to 'html'
+		contentURL: 'pages/lipsum.html', // used if contentType is set to 'ajax' or 'iframe'	
+		onContentLoaded: $empty,
+		onMinimize: $empty,					// Event, fired when window is minimized
+		onMaximize: $empty,					// Event, fired when window is maximized
+		onFocus: $empty,					// Event, fired when window is focused
+		onResize: $empty,					// Event, fired when window is resized
+		onClose: $empty,
+		modal: false,
+		width: 300,
+		height: 125,
+		scrollbars: true, // true sets the overflow to auto and false sets it to hidden
+		x: null, // if x or y is null or modal is false the new window is centered on the screen
+		y: null,
+		paddingVertical: 10,
+		paddingHorizontal: 12,
+		bgColor: '#fff'
 	},
 	initialize: function(options){
 		this.setOptions(options);
-		var id = null;
-		var title = $('mochaNewWindowHeaderTitle').value;
+		this.options.title = $('mochaNewWindowHeaderTitle').value;
 		if ($('htmlContentType').checked){
-			contentType = 'html';
+			this.options.contentType = 'html';
 		}
 		if ($('ajaxContentType').checked){
-			contentType = 'ajax';
+			this.options.contentType = 'ajax';
 		}
 		if ($('iframeContentType').checked){
-			contentType = 'iframe';
+			this.options.contentType = 'iframe';
 		}
-		var content = $('mochaNewWindowContent').value;
+		this.options.content = $('mochaNewWindowContent').value;
 		if ($('mochaNewWindowContentURL').value){
-			var contentURL = $('mochaNewWindowContentURL').value;
+			this.options.contentURL = $('mochaNewWindowContentURL').value;
 		}		
 		if ($('mochaNewWindowModal').checked) {
-			modal = true;
-		} else {
-			modal = null;
+			this.options.modal = true;
 		}
-		var onContentLoaded = null;
-		var width = $('mochaNewWindowWidth').value.toInt();
-		var height = $('mochaNewWindowHeight').value.toInt();
-		var scrollbars = null;		
-		var x = $('mochaNewWindowX').value.toInt();
-		var y = $('mochaNewWindowY').value.toInt();
-		var paddingVertical = $('mochaNewWindowPaddingVertical').value.toInt();
-		var paddingHorizontal = $('mochaNewWindowPaddingHorizontal').value.toInt();
-		var bgColor = '#fff';
+		this.options.onContentLoaded = null;
+		this.options.width = $('mochaNewWindowWidth').value.toInt();
+		this.options.height = $('mochaNewWindowHeight').value.toInt();
+		this.options.scrollbars = null;		
+		this.options.x = $('mochaNewWindowX').value.toInt();
+		this.options.y = $('mochaNewWindowY').value.toInt();
+		this.options.paddingVertical = $('mochaNewWindowPaddingVertical').value.toInt();
+		this.options.paddingHorizontal = $('mochaNewWindowPaddingHorizontal').value.toInt();
+		this.options.bgColor = '#fff';
 		document.myDesktop.newWindow(this.options);		
 	}
 });

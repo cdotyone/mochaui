@@ -309,14 +309,16 @@ iframe.zIndexFix {
 #mochaDock {
 	position: relative;
 	background: #fff;
-	padding: 2px 4px;
+	padding: 2px 15px;
 	bottom: 0;
 	left: 0;
 	width: 100%;
 	background-color: #f0f0f0;
 	border-top: 1px solid #bbb;
 	border-bottom: 1px solid #fff;
+	min-height: 20px;
 	height: auto;
+   _height: 20px; /* IE 6.0 hack, for not supporting min-height SFF 12/07/2007*/
 }
 	
 .mochaDockButton {
@@ -335,28 +337,28 @@ iframe.zIndexFix {
 
 #mochaDockPlacement {
 	position: absolute;
-	top: 2px;
+	top: 3px;
 	left: 2px;
-	width: 20px;
-	height: 12px;
-	opacity: 0;
-	filter: alpha(opacity=.5);
-	-moz-opacity: 0;
-	background: #f00; /* for troubleshooting */
-	cursor: pointer;
-	z-index: 2; /* for IE */	
-}
-
-#MochaDockAutoHide {
-	position: absolute;
-	top: 12px;
-	left: 2px;
-	width: 20px;
-	height: 12px;
+	width: 10px;
+	height: 9px;
 	opacity: 0;
 	filter: alpha(opacity=0);
 	-moz-opacity: 0;
 	background: #f00; /* for troubleshooting */
 	cursor: pointer;
-	z-index: 2; /* for IE */		
+	z-index: 3; /* for IE */	
+}
+
+#MochaDockAutoHide {
+	position: absolute;
+	top: 13px;
+	left: 2px;
+	width: 10px;
+	height: 9px;
+	opacity: 0;
+	filter: alpha(opacity=0);
+	-moz-opacity: 0;
+	background: #f00; /* for troubleshooting */
+	cursor: pointer;
+	z-index: 3; /* for IE */		
 }
