@@ -1,5 +1,9 @@
 /* MOCHA */	
 
+body {
+	margin: 0; /* Required */
+}
+
 #mochaDesktop {
 	position: relative;
 	top: 0;
@@ -101,7 +105,7 @@
 	
 /* Windows */
 	
-#mochaDesktop div.mocha {
+div.mocha {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -109,17 +113,17 @@
 	overflow: hidden;	
 }
 	
-#mochaDesktop div.mochaOverlay {
+div.mochaOverlay {
 	position: absolute;
 	top: 2px;
 	left: 3px;
 }
 	
-#mochaDesktop div .mochaTitlebar {
+div.mocha .mochaTitlebar {
 	width: 100%;
 }		
 	
-#mochaDesktop div .mochaTitlebar h3 {
+div.mocha .mochaTitlebar h3 {
 	font-size: 12px;
 	line-height: 15px;	
 	font-weight: bold;
@@ -128,22 +132,22 @@
 	padding: 0;
 }
 	
-#mochaDesktop div .mochaTitlebar a {
+div.mocha .mochaTitlebar a {
 	color: #444;
 }	
 	
-#mochaDesktop .mochaContent {
+div.mocha .mochaContent {
 	font-size: 11px;
 	border-top: 1px solid #bdbdbd;	
 	border-bottom: 1px solid #d7d7d7;
 }
 	
-#mochaDesktop .mochaScroller {	
+div.mocha .mochaScroller {	
 	background: #fff;
 	overflow: auto;	
 }
 	
-#mochaDesktop .mochaScrollerpad {
+div.mocha .mochaScrollerpad {
 	padding: 10px 12px;
 	}		
 
@@ -280,8 +284,7 @@
 	position: absolute;
 	top: 0;
 	left: 0;
-	width: 4000px;
-	height: 2000px;
+	width: 100%;
 	background: #000;
 	opacity: 0;
 	filter: alpha(opacity=0);

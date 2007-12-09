@@ -20,7 +20,7 @@ var MochaDesktop = new Class({
 		draggable: true,
 		resizable: true,
 		minimizable: true, // this is automatically reset to false if there is no dock
-		maximizable: true,
+		maximizable: true, // this is automatically reset to false if #mochaDesktop is not present
 		closable: true,
 		headerHeight: 25,
 		footerHeight: 30,
@@ -38,7 +38,7 @@ var MochaDesktop = new Class({
 		defaultScreen: 0 // Default screen, if used		
 	},
 	initialize: function(options){		
-		this.setOptions(options);
+		this.setOptions(options);		
 		this.indexLevel = 1;
 		this.mochaControlsWidth = 0;
 		this.minimizebuttonX = 0;
@@ -46,7 +46,7 @@ var MochaDesktop = new Class({
 		this.closebuttonX = 0;
 		this.scrollWidthOffset = 6;
 		this.windowIDCount = 0;
-		new Element('canvas');
+		new Element('canvas');		
 		// Add properties to elements in the DOM
 		Element.implement({oldTop: ''});
 		Element.implement({oldLeft: ''});
@@ -56,6 +56,13 @@ var MochaDesktop = new Class({
 		Element.implement({modal: ''});
 		Element.implement({iframe: ''});		
 		Element.implement({contentURL: ''});		
+		$$('div.mocha').setStyle('display', 'block');
+		if ($('mochaDesktop')) {
+			this.setDesktopSize();			
+		}
+		else {
+			this.options.maximizable = false;		
+		}
 		if ($('mochaDock')) { 
 			$('mochaDock').setStyles({
 				'position': 'absolute',
@@ -63,12 +70,12 @@ var MochaDesktop = new Class({
 				'bottom': 0,
 				'left': 0			
 			});
+			this.initDock($('mochaDock'));	
+			this.drawDock($('mochaDock'));			
 		}
 		else {
-			this.options.minimizable = false; // Minimize is set to false if there is no dock
-		}
-		$$('div.mocha').setStyle('display', 'block');
-		this.setDesktopSize();
+			this.options.minimizable = false;
+		}		
 		this.insertAll($$('div.mocha'));
 		this.drawAll();
 		this.attachDraggable($$('div.mocha'));
@@ -77,16 +84,23 @@ var MochaDesktop = new Class({
 		this.attachMinimize($$('div.mocha'));
 		this.attachMaximize($$('div.mocha'));
 		this.attachClose($$('div.mocha'));
-		if ($('mochaDock')) {		
-			this.initDock($('mochaDock'));	
-			this.drawDock($('mochaDock'));
-		}
+
 		this.setScreen(this.options.defaultScreen);		
 		this.arrangeCascade();
+		
 		// Modal initialization
 		var mochaModal = new Element('div', {
 			'id': 'mochaModalBackground'
-		}).injectInside($('mochaDesktop'));
+		});		
+
+		if ($('mochaDesktop')){
+			mochaModal.injectInside($('mochaDesktop'));
+		}
+		else {
+			mochaModal.injectInside(document.body);
+		}
+		this.setModalSize();
+
 		mochaModal.setStyle('opacity', .4);
 		this.modalOpenMorph = new Fx.Morph($('mochaModalBackground'), {
 				'duration': 200
@@ -97,7 +111,7 @@ var MochaDesktop = new Class({
 				$('mochaModalBackground').setStyle('display', 'none');
 			}.bind(this)
 		});		
-		if (window.ie){ // fix for dropdown menus in IE
+		if (window.ie && $("mochaDesktopNavbar")){ // fix for dropdown menus in IE
 			var sfEls = $("mochaDesktopNavbar").getElementsByTagName("LI");
 			for (var i=0; i<sfEls.length; i++) {
 				sfEls[i].onmouseover=function() {
@@ -108,8 +122,10 @@ var MochaDesktop = new Class({
 				}
 			}			
 		};
-		window.onresize = function(){
+		
+		window.onresize = function(){			
 			this.setDesktopSize();
+			this.setModalSize();
 			setTimeout( function(){
 				this.drawAll();
 			}.bind(this), 100);
@@ -117,10 +133,8 @@ var MochaDesktop = new Class({
 	},
 	initDock: function (el){
 		document.addEvent('mousemove',function (objDoc){
-			if(objDoc.event.clientY>(document.body.clientHeight -10))  //-10 because firefox doesn't record outside movement, but IE7 does
-			{
-				if($('mochaDock').getProperty('AutoHide'))
-				{
+			if(objDoc.event.clientY>(document.body.clientHeight -10)) { 
+				if($('mochaDock').getProperty('AutoHide')) {
 					$('mochaDock').setStyle('display','block');
 				}
 			}
@@ -153,7 +167,7 @@ var MochaDesktop = new Class({
 		//Auto Hide on/off 
 		$('MochaDockAutoHide').setProperty('title','Turn Auto Hide On');
 		
-			//attach event
+		//attach event
 		$('mochaDockPlacement').addEvent('click', function(event){
 			var objDock=event.target.parentNode;
 										   
@@ -170,7 +184,7 @@ var MochaDesktop = new Class({
 					$('mochaDesktopHeader').setStyle('height', 54);
 				objDock.setProperty('DockPosition','Bottom');
 				this.drawCircle(ctx, 5, 4, 3, 241, 102, 116, 1.0); 
-				//added SFF 12/07/2007
+
 				if ($('mochaDock').getProperty('AutoHide') != 'true' || $('mochaDock').getProperty('AutoHideDisabled') != 'true') {
 					this.drawCircle(ctx, 5 , 14, 3, 241, 102, 116, 1.0); 
 				}
@@ -184,10 +198,9 @@ var MochaDesktop = new Class({
 					$('mochaDesktopHeader').setStyle('height', 74);					
 				objDock.setProperty('DockPosition','Top');	
 				this.drawCircle(ctx, 5, 4, 3, 0, 255, 0, 1.0);
-				this.drawCircle(ctx, 5, 14, 3, 212, 208, 200, 1.0); //added SFF 12/07/2007
-				}
-			
-			//Added SFF 12/07/2007
+				this.drawCircle(ctx, 5, 14, 3, 212, 208, 200, 1.0);
+				}			
+
 			//diasble/enable autohide and grey/orange/green out button
 			if($('mochaDock').getProperty('AutoHide') == 'true' || $('mochaDock').getProperty('AutoHideDisabled')=='true')
 			{
@@ -201,8 +214,7 @@ var MochaDesktop = new Class({
 					$('mochaDock').setProperty('AutoHide', 'false')
 				}
 				
-			}	
-			
+			}			
 							
 			//update title tag
 			$('mochaDockPlacement').setProperty('title',(objDock.getStyle('position') == 'relative')?'Position Dock Bottom':'Position Dock Top');
@@ -211,9 +223,8 @@ var MochaDesktop = new Class({
 		//attach event Auto Hide 
 		$('MochaDockAutoHide').addEvent('click', function(event){
 			var objDock=event.target.parentNode;
-			var ctx = $E('.mochaCanvas',el).getContext('2d');
-			
-			//changed SFF 12/07/2007
+			var ctx = $E('.mochaCanvas',el).getContext('2d');			
+
 			//disable auto hide when Dock bar on top
 			if(objDock.getProperty('DockPosition')=='Top'){return false;}
 		
@@ -230,12 +241,11 @@ var MochaDesktop = new Class({
 				objDock.setProperty('AutoHide','true');
 				objDock.setStyle('display','none');
 			}
-		}.bind(this));
-		
-		//changed SFF 12/07/2007
+		}.bind(this));		
+
 		$('mochaDock').addEvent('mouseleave', function(objDock)
 		{	if(this.getProperty('AutoHide') == 'true'){ //mozilla doesn't understand true evaluations, so made the property a string???
-				if((objDock.event.clientY<(document.body.clientHeight - this.getStyle('height').toInt()))){
+				if((objDock.event.clientY < (document.body.clientHeight - this.getStyle('height').toInt()))){
 					this.setStyle('display', 'none');
 				}
 			}	
@@ -245,8 +255,7 @@ var MochaDesktop = new Class({
 	drawDock: function (el){		
 		
 		var ctx = $E('.mochaCanvas',el).getContext('2d');		
-		
-		//changed SFF 12/03/2007
+
 		this.drawCircle(ctx, 5 , 4, 3, 241, 102, 116, 1.0); 
 		this.drawCircle(ctx, 5 , 14, 3, 241, 102, 116, 1.0);
 		
@@ -286,14 +295,13 @@ var MochaDesktop = new Class({
 			if ( $(windowProperties.id).getStyle('display') == 'none' ) {
 				// instead of creating a duplicate window, restore minimized window
 				$(windowProperties.id).setStyle('display','block');
-				$$('#mochaDesktop button.mochaDockButton').each(function(el){
+				$$('button.mochaDockButton').each(function(el){
 					if (el.getProperty('WinAssociated') == windowProperties.id){ 										
 						el.dispose();
 					}
 				});
 			} else {
-				// Make sure that the window we are refocusing gets focus and not the parent window
-				// since the onclick event for the parent window (if window is created from within another window) will be fired after this thus the setTimeout()
+				// Make sure new window gets focus
 				setTimeout(function () { this.focusThis($(windowProperties.id)); }.bind(this),10);
 			}
 			return;
@@ -302,7 +310,14 @@ var MochaDesktop = new Class({
 		var mochaNewWindow = new Element('div', {
 			'class': 'mocha',
 			'id': 'win' + (++this.windowIDCount)
-		}).injectInside($('mochaDesktop'));
+		});
+		
+		if ($('mochaDesktop')){
+			mochaNewWindow.injectInside($('mochaDesktop'));
+		}
+		else {
+			mochaNewWindow.injectInside(document.body);
+		}		
 		
 		if (windowProperties.contentType == 'html') {
 			mochaNewWindow.setHTML(windowProperties.content);	
@@ -337,7 +352,7 @@ var MochaDesktop = new Class({
 		
 		this.drawWindow(mochaNewWindow);
 
-		scrollbars = windowProperties.scrollbars ? 'auto' : 'hidden';
+		var scrollbars = windowProperties.scrollbars ? 'auto' : 'hidden';
 		$E('.mochaScroller', mochaNewWindow).setStyles({
 			'overflow': scrollbars,
 			'background': windowProperties.bgColor
@@ -364,13 +379,11 @@ var MochaDesktop = new Class({
 		if (windowProperties.x && windowProperties.y) {
 			this.options.newWindowPosTop = windowProperties.y;
 			this.options.newWindowPosLeft = windowProperties.x;
-		} else if (window.webkit ) {
-			this.options.newWindowPosTop = (window.innerHeight.toInt() * .5) - (mochaNewWindow.offsetHeight * .5);
-			this.options.newWindowPosLeft = (window.innerWidth.toInt() * .5) - (mochaNewWindow.offsetWidth * .5);
-		} else {
-			this.options.newWindowPosTop = (window.getHeight().toInt() * .5) - (mochaNewWindow.offsetHeight * .5);
-			this.options.newWindowPosLeft = (window.getWidth().toInt() * .5) - (mochaNewWindow.offsetWidth * .5);
-		}		
+		}
+		else {
+			this.options.newWindowPosTop = (this.getWindowHeight() * .5) - (mochaNewWindow.offsetHeight * .5);
+			this.options.newWindowPosLeft = (this.getWindowWidth() * .5) - (mochaNewWindow.offsetWidth * .5);
+		}
 		
 		if (mochaNewWindow.modal) {
 			$('mochaModalBackground').setStyle('display', 'block');
@@ -381,7 +394,8 @@ var MochaDesktop = new Class({
 				'top': this.options.newWindowPosTop,
 				'left': this.options.newWindowPosLeft
 			});
-		} else {
+		} 
+		else {
 			var mochaMorph = new Fx.Morph(mochaNewWindow, {
 				'duration': 300
 			});
@@ -395,34 +409,42 @@ var MochaDesktop = new Class({
 			mochaNewWindow.setStyles({
 				'zIndex': 11000
 			});
-		} else {
-			setTimeout(function () { this.focusThis(mochaNewWindow); }.bind(this), 10);
-		}		
+		}
+		else {
+			setTimeout(function() { this.focusThis(mochaNewWindow); }.bind(this), 10);
+		}
+		//alert(mochaNewWindow.getStyle('zIndex'));
 	},
 	focusThis: function(el){
-			this.indexLevel++;
-			el.setStyle('zIndex', this.indexLevel);
+		this.indexLevel++;
+		el.setStyle('zIndex', this.indexLevel);
 	},
+	getWindowWidth: function(){
+		window.webkit ? windowWidth = window.innerWidth : windowWidth = window.getWidth();
+		return windowWidth.toInt();
+	},
+	getWindowHeight: function(){
+		window.webkit ? windowHeight = window.innerHeight : windowHeight = window.getHeight();
+		return windowHeight.toInt();
+	},	
 	setDesktopSize: function(){
-			if (window.webkit ) {
-				$('mochaDesktop').setStyle('width', (window.innerWidth - 20) + 'px'); // To adjust for scrollbar
-				setTimeout( function(){
-					$('mochaDesktop').setStyle('width', window.innerWidth + 'px');
-				}.bind(this),100);
-				$('mochaDesktop').setStyle('height', window.innerHeight + 'px');
-				$('mochaPageWrapper').setStyle('height', window.innerHeight + 'px');
-				$('mochaPage').setStyle('height', window.innerHeight + 'px');
+		if ($('mochaDesktop')) {
+			$('mochaDesktop').setStyle('width', this.getWindowWidth() - 20); // To adjust for broswer scrollbar
+			setTimeout( function(){
+				$('mochaDesktop').setStyle('width', this.getWindowWidth());
+			}.bind(this),100);					
+			$('mochaDesktop').setStyle('height', this.getWindowHeight());
+			if ($('mochaPageWrapper')){
+				$('mochaPageWrapper').setStyle('height', this.getWindowHeight());
 			}
-			else {
-				$('mochaDesktop').setStyle('width', (window.getWidth() - 20) + 'px'); // To adjust for scrollbar
-				setTimeout( function(){
-					$('mochaDesktop').setStyle('width', window.getWidth() + 'px');
-				}.bind(this),100);					
-				$('mochaDesktop').setStyle('height', window.getHeight() + 'px');
-				$('mochaPageWrapper').setStyle('height', window.getHeight() + 'px');
-				$('mochaPage').setStyle('height', window.getHeight() + 'px');
+			if ($('mochaPage')){
+				$('mochaPage').setStyle('height', this.getWindowHeight());
 			}
+		}
 	},
+	setModalSize: function(){
+		$('mochaModalBackground').setStyle('height', this.getWindowHeight());		
+	},	
 	insertAll: function(elementArray, onContentLoaded){
 		elementArray.each(function(el){
 			var mochaTempContents = el.innerHTML;
@@ -576,13 +598,13 @@ var MochaDesktop = new Class({
 		
 		//assign a unique id to each window, 
 		//that doesn't yet have an id
-		if(el.id==""){el.id='win'+(++this.windowIDCount);}
+		if(el.id == ""){el.id = 'win' + (++this.windowIDCount);}
 		
 		this.setMochaControlsWidth(el);
 		
 		if (el.maximizeToggle == 'restore') {
-			mochaContent.setStyle('height', ($('mochaDesktop').offsetHeight - this.options.headerHeight - this.options.footerHeight + 6));
-			mochaContent.setStyle('width', $('mochaDesktop').offsetWidth);
+			mochaContent.setStyle('height', (this.getWindowHeight() - this.options.headerHeight - this.options.footerHeight + 6));
+			mochaContent.setStyle('width', this.getWindowWidth());
 		}
 		
 		mochaScroller.setStyle('height', mochaContent.getStyle('height'));
@@ -591,7 +613,6 @@ var MochaDesktop = new Class({
 		//resize iframe when window is resized
 		if (el.iframe) {
 			$E('.mochaIframe', el).setStyles({
-			//	'width': mochaContent.getStyle('width'),
 				'height': mochaContent.getStyle('height')
 			});
 		}
@@ -634,7 +655,7 @@ var MochaDesktop = new Class({
 		mochaTitlebar.setStyle('width', mochaWidth - 6);
 	
 		// Draw shapes
-		ctx.clearRect(0,0,$('mochaDesktop').offsetWidth,$('mochaDesktop').offsetHeight);
+		ctx.clearRect(0, 0, this.getWindowWidth(), this.getWindowHeight());
 		if (shadows == null || shadows == false && !window.ie){
 			this.roundedRect(ctx, 0, 0, mochaWidth, mochaHeight, this.options.cornerRadius, 0, 0, 0, 0.06); //shadow
 			this.roundedRect(ctx, 1, 1, mochaWidth - 2, mochaHeight - 2, this.options.cornerRadius, 0, 0, 0, 0.08); //shadow
@@ -725,7 +746,6 @@ var MochaDesktop = new Class({
 		ctx.fillStyle = 'rgba(' + r +',' + g + ',' + b + ',' + a + ')';
 		ctx.fill();
 	},
-	//added SFF 12/03/2007
 	drawCircle: function(ctx,x,y,diameter,r,g,b,a){
 		//circle
 		ctx.beginPath();
@@ -734,7 +754,7 @@ var MochaDesktop = new Class({
 		ctx.fillStyle = 'rgba(' + r +',' + g + ',' + b + ',' + a + ')';
 		ctx.fill();
 	},
-	maximizebutton: function(ctx,x,y,r,g,b,a){
+	maximizebutton: function(ctx,x,y,r,g,b,a){ // this could reuse the drawCircle method above
 		//circle
 		ctx.beginPath();
 		ctx.moveTo(x,y);
@@ -751,7 +771,7 @@ var MochaDesktop = new Class({
 		ctx.lineTo(x+4,y);
 		ctx.stroke();
 	},
-	closebutton: function(ctx,x,y,r,g,b,a){
+	closebutton: function(ctx,x,y,r,g,b,a){ // this could reuse the drawCircle method above
 		//circle
 		ctx.beginPath();
 		ctx.moveTo(x,y);
@@ -768,7 +788,7 @@ var MochaDesktop = new Class({
 		ctx.lineTo(x-3,y+3);
 		ctx.stroke();
 	},
-	minimizebutton: function(ctx,x,y,r,g,b,a){
+	minimizebutton: function(ctx,x,y,r,g,b,a){ // this could reuse the drawCircle method above
 		//circle
 		ctx.beginPath();
 		ctx.moveTo(x,y);
@@ -791,14 +811,14 @@ var MochaDesktop = new Class({
 						this.focusThis(el);
 						if (el.iframe && !window.webkit) {
 							$E('.mochaIframe', el).setStyles({
-								'display': 'none'
+								'visibility': 'hidden'
 							});
 						}						
 					}.bind(this),
 					onComplete: function(){
 						if (el.iframe && !window.webkit) {
 							$E('.mochaIframe', el).setStyles({
-								'display': 'block'
+								'visibility': 'visible'
 							});
 						}					
 					}.bind(this)					
@@ -824,7 +844,7 @@ var MochaDesktop = new Class({
 					onStart: function(){
 						if (el.iframe && !window.webkit) {
 							$E('.mochaIframe', el).setStyles({
-								'display': 'none'
+								'visibility': 'hidden'
 							});
 						}
 					}.bind(this),
@@ -834,7 +854,7 @@ var MochaDesktop = new Class({
 					onComplete: function(){
 						if (el.iframe && !window.webkit) {
 							$E('.mochaIframe', el).setStyles({
-								'display': 'block'
+								'visibility': 'visible'
 							});
 						}
 					if (onResize){onResize();} // checks for onResize since windows generated at startup do not have this option						
@@ -944,8 +964,8 @@ var MochaDesktop = new Class({
 		var mochaMorph = new Fx.Morph(el, { 
 			'duration': 200,
 			'onComplete': function(el){
-				mochaContent.setStyle('height', ($('mochaDesktop').offsetHeight - this.options.headerHeight - this.options.footerHeight + 6));
-				mochaContent.setStyle('width', $('mochaDesktop').offsetWidth);
+				mochaContent.setStyle('height', (this.getWindowWidth() - this.options.headerHeight - this.options.footerHeight + 6));
+				mochaContent.setStyle('width', this.getWindowHeight());
 				this.drawWindow(el);
 			}.bind(this)
 		});
@@ -973,7 +993,7 @@ var MochaDesktop = new Class({
 		if(sTitleBarText.length <= 13){sLongTitle = ""};
 		
 		//hide window
-		objWin.setStyle('display','none');
+		objWin.setStyle('visibility','hidden');
 		
 		var btnEl = new Element('button', {
 			'WinAssociated': objWin.id,
@@ -983,17 +1003,15 @@ var MochaDesktop = new Class({
 		}).setHTML((sTitleBarText.substring(0,13) + sLongTitle)).injectInside($('mochaDock'));
 				
 		btnEl.addEvent('click', function(event){		
-			//click event will restore the window
-			
+			//click event will restore the window			
 			var objWin = $(event.target.getProperty('WinAssociated'));
-			objWin.setStyle('display','block');
-			
-			//make "top window" on redisplay
-			objWin.fireEvent('click'); //calling click forces the zindex to increment.
+			objWin.setStyle('visibility','visible');
+
+			this.focusThis(objWin);
 			
 			//remove this btn element 
 			event.target.dispose();
-		});
+		}.bind(this));
 		
 	},
 	restoreWindow: function(el) {
@@ -1062,14 +1080,14 @@ var MochaWindow = new Class({
 	options: {
 		id: null,
 		title: 'New Window',
-		contentType: 'html', // html, ajax, or iframe
-		content: '', // used if contentType is set to 'html'
+		contentType: 'html', 			 // html, ajax, or iframe
+		content: '', 					 // used if contentType is set to 'html'
 		contentURL: 'pages/lipsum.html', // used if contentType is set to 'ajax' or 'iframe'	
 		onContentLoaded: $empty,
-		onMinimize: $empty,					// Event, fired when window is minimized
-		onMaximize: $empty,					// Event, fired when window is maximized
-		onFocus: $empty,					// Event, fired when window is focused
-		onResize: $empty,					// Event, fired when window is resized
+		onMinimize: $empty,				 // Event, fired when window is minimized
+		onMaximize: $empty,				 // Event, fired when window is maximized
+		onFocus: $empty,				 // Event, fired when window is focused
+		onResize: $empty,				 // Event, fired when window is resized
 		onClose: $empty,
 		modal: false,
 		width: 300,
@@ -1086,15 +1104,6 @@ var MochaWindow = new Class({
 		
 		if (!$(this.options.id)){
 			document.myDesktop.newWindow(this.options);
-		} else if ($(this.options.id).getStyle('display') == 'none'){ // instead of creating a duplicate window, restore minimized window
-			$(this.options.id).setStyle('display','block');
-			$$('button.mochaDockButton').each(function(el){
-				if (el.getProperty('WinAssociated') == this.options.id){ 										
-					el.dispose();
-				}
-			}.bind(this));	
-		} else { // instead of creating a duplicate window, refocus window in question
-			document.myDesktop.focusThis($(this.options.id));		
 		}		
 	}
 });		
@@ -1151,8 +1160,7 @@ var MochaWindowForm = new Class({
 		}
 		this.options.onContentLoaded = null;
 		this.options.width = $('mochaNewWindowWidth').value.toInt();
-		this.options.height = $('mochaNewWindowHeight').value.toInt();
-		this.options.scrollbars = null;		
+		this.options.height = $('mochaNewWindowHeight').value.toInt();	
 		this.options.x = $('mochaNewWindowX').value.toInt();
 		this.options.y = $('mochaNewWindowY').value.toInt();
 		this.options.paddingVertical = $('mochaNewWindowPaddingVertical').value.toInt();
@@ -1207,7 +1215,7 @@ function attachMochaLinkEvents(){
 			});
 		});
 	}
-	
+
 	if ($('spirographLink')){
 		$('spirographLink').addEvent('click', function(e){	
 			new Event(e).stop();
@@ -1221,7 +1229,7 @@ function attachMochaLinkEvents(){
 				scrollbars: false,					
 				paddingVertical: 0,					
 				paddingHorizontal: 0,
-				bgColor: '#000'
+				bgColor: '#c30'
 			});
 		});
 	}
@@ -1285,6 +1293,12 @@ function attachMochaLinkEvents(){
 				title: 'Window Builder',
 				contentType: 'ajax',
 				contentURL: 'pages/builder.html',
+				onContentLoaded: function(){
+					$('mochaNewWindowSubmit').addEvent('click', function(e){
+						new Event(e).stop();
+						new MochaWindowForm();
+					});													 
+				},
 				width: 370,
 				height: 400,				
 				x: 20,

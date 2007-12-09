@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>Mootools Mocha UI</title>
+
+	<link rel="stylesheet" href="css/style.css" type="text/css" />
+	<link rel="stylesheet" href="css/mocha.css" type="text/css" />
+	<script type="text/javascript" src="scripts/mootools-beta-1.2b1-compatible.js"></script>
+	<!--[if IE]>
+		<script type="text/javascript" src="scripts/excanvas-compressed.js"></script>
+		<style type="text/css"> html, body 	{ height: 100%; overflow: auto; } </style>
+	<![endif]-->
+	<script type="text/javascript" src="scripts/mocha.js"></script>
+	
+	<script type="text/javascript">
+	window.addEvent('load', function(){
+		if ($('modalDemoLink')){
+			$('modalDemoLink').addEvent('click', function(e){	
+				new Event(e).stop();
+				new MochaWindow({
+					id: 'modalDemo',
+					title: 'A Modal Window',
+					content: 'Your modal window content',
+					modal: true,
+					width: 300,
+					height: 150
+				});
+			});
+		}
+	});
+	
+	</script>	
+
+</head>
+<body>
+<p>This is a modal demo without the MochaDesktop.</p>
+
+<p><a id="modalDemoLink" href="">Demo Modal</a></p>
+
+</body>
+</html>
