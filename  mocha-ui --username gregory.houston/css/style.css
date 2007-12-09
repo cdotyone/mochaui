@@ -14,6 +14,10 @@ body {
 	color: #555;	
 }
 
+.aside {
+	width: 300px;
+}
+
 /* Typography */
 	
 h2, h3 {

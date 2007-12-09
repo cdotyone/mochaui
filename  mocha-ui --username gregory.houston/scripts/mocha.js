@@ -34,8 +34,7 @@ var MochaDesktop = new Class({
 		minWidth: 250, // minimum width of windows when resized
 		maxWidth: 2500, // maximum width of windows when resized
 		minHeight: 100,	// minimum height of windows when resized	
-		maxHeight: 2000, // maximum height of windows when resized
-		defaultScreen: 0 // Default screen, if used		
+		maxHeight: 2000 // maximum height of windows when resized	
 	},
 	initialize: function(options){		
 		this.setOptions(options);		
@@ -64,14 +63,19 @@ var MochaDesktop = new Class({
 			this.options.maximizable = false;		
 		}
 		if ($('mochaDock')) { 
-			$('mochaDock').setStyles({
-				'position': 'absolute',
-				'top': null,
-				'bottom': 0,
-				'left': 0			
-			});
-			this.initDock($('mochaDock'));	
-			this.drawDock($('mochaDock'));			
+			if (this.options.minimizable == true){
+				$('mochaDock').setStyles({
+					'position': 'absolute',
+					'top': null,
+					'bottom': 0,
+					'left': 0			
+				});
+				this.initDock($('mochaDock'));	
+				this.drawDock($('mochaDock'));
+			}
+			else {
+				$('mochaDock').setStyle('display', 'none');	
+			}
 		}
 		else {
 			this.options.minimizable = false;
@@ -83,9 +87,7 @@ var MochaDesktop = new Class({
 		this.attachFocus($$('div.mocha'));
 		this.attachMinimize($$('div.mocha'));
 		this.attachMaximize($$('div.mocha'));
-		this.attachClose($$('div.mocha'));
-
-		this.setScreen(this.options.defaultScreen);		
+		this.attachClose($$('div.mocha'));	
 		this.arrangeCascade();
 		
 		// Modal initialization
@@ -260,13 +262,6 @@ var MochaDesktop = new Class({
 		this.drawCircle(ctx, 5 , 14, 3, 241, 102, 116, 1.0);
 		
 	},	
-	setScreen: function(index) {
-		if ( !$('mochaScreens') )
-			return;
-		$$('#mochaScreens div.screen').each(function(el,i) {
-			el.setStyle('display', i == index ? 'block' : 'none');
-		});
-	},
 	newWindow: function(properties){
 		windowProperties = $extend({
 			id: null,
@@ -436,9 +431,6 @@ var MochaDesktop = new Class({
 			$('mochaDesktop').setStyle('height', this.getWindowHeight());
 			if ($('mochaPageWrapper')){
 				$('mochaPageWrapper').setStyle('height', this.getWindowHeight());
-			}
-			if ($('mochaPage')){
-				$('mochaPage').setStyle('height', this.getWindowHeight());
 			}
 		}
 	},
@@ -1067,7 +1059,32 @@ var MochaToolbars = new Class({
 		this.setOptions(options);
 	}
 });	
-MochaToolbars.implement(new Options);	
+MochaToolbars.implement(new Options);
+
+/* -----------------------------------------------------------------
+
+	MOCHA SCREENS
+	This class can be removed if you are not creating multiple screens/workspaces.
+
+   ----------------------------------------------------------------- */
+
+var MochaScreens = new Class({
+	options: {
+		defaultScreen: 0 // Default screen	
+	},
+	initialize: function(options){
+		this.setOptions(options);
+		this.setScreen(this.options.defaultScreen);			
+	},
+	setScreen: function(index) {
+		if ( !$('mochaScreens') )
+			return;
+		$$('#mochaScreens div.screen').each(function(el,i) {
+			el.setStyle('display', i == index ? 'block' : 'none');
+		});
+	}	
+});		
+MochaScreens.implement(new Options);
 
 /* -----------------------------------------------------------------
 
@@ -1133,7 +1150,7 @@ var MochaWindowForm = new Class({
 		width: 300,
 		height: 125,
 		scrollbars: true, // true sets the overflow to auto and false sets it to hidden
-		x: null, // if x or y is null or modal is false the new window is centered on the screen
+		x: null, // if x or y is null or modal is false the new window is centered in the browser window
 		y: null,
 		paddingVertical: 10,
 		paddingHorizontal: 12,
@@ -1369,6 +1386,27 @@ function attachMochaLinkEvents(){
 				y: 60					
 			});
 		});
+	}
+	
+	if ($('workspace01Link')){
+		$('workspace01Link').addEvent('click', function(e){	
+			new Event(e).stop();
+			document.mochaScreens.setScreen(0)
+		});
+	}
+	
+	if ($('workspace02Link')){
+		$('workspace02Link').addEvent('click', function(e){	
+			new Event(e).stop();
+			document.mochaScreens.setScreen(1)
+		});
+	}
+	
+	if ($('workspace03Link')){
+		$('workspace03Link').addEvent('click', function(e){	
+			new Event(e).stop();
+			document.mochaScreens.setScreen(2)
+		});
 	}	
 	
 	if ($('helpLink')){
@@ -1465,7 +1503,8 @@ function addSlider(){
    ----------------------------------------------------------------- */
 
 window.addEvent('load', function(){
-		document.myToolbars = new MochaToolbars();	
+		document.myToolbars = new MochaToolbars();
+		document.mochaScreens = new MochaScreens();
 		document.myDesktop = new MochaDesktop();
 		attachMochaLinkEvents();
 		addSlider(); // remove this if you remove the example corner radius slider

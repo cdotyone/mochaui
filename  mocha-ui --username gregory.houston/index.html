@@ -51,9 +51,9 @@
 	<li>
 		<a href="" onclick="javascript:return false;">Workspaces</a>
 		<ul>
-			<li><a href="#" onclick="javascript:myDesktop.setScreen(0)">Workspace 01</a></li>
-			<li><a href="#" onclick="javascript:myDesktop.setScreen(1)">Workspace 02</a></li>
-			<li><a href="#" onclick="javascript:myDesktop.setScreen(2)">Workspace 03</a></li>
+			<li><a id="workspace01Link" href="">Workspace 01</a></li>
+			<li><a id="workspace02Link" href="">Workspace 02</a></li>
+			<li><a id="workspace03Link" href="">Workspace 03</a></li>
 		</ul>
 	</li>												
 	<li><a class="returnFalse" href="">Help</a>
@@ -79,7 +79,7 @@
 	<div id="mochaPage">
 		<div id="mochaScreens">
 			<div class="screen">
-				<div id="mochaPageAside">
+				<div class="aside">
 					<h3>Introduction</h3>
 					<p>Mocha is a web applications user interface library built on the Mootools javascript framework. The Mocha GUI components are made with canvas tag graphics.</p>
 
@@ -89,7 +89,7 @@
 
 					<h3>Download</h3>
 					<p><a target="_blank" href="http://code.google.com/p/mocha-ui/downloads/list">Download Mocha UI v0.7</a></p>
-				</div><!-- mochaPageAside end -->
+				</div><!-- aside end -->
 			</div>
 			<div class="screen">
 				Screen 2, some other content here.
