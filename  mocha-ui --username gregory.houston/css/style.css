@@ -82,3 +82,12 @@ pre {
 	padding: 10px;
 	border: 1px solid #d1d7dc;	
 	}
+	
+/* Dividers */
+
+hr {
+	background-color: #ddd;
+	color: #ccc;
+	height: 1px;
+	border: 0px;
+}	

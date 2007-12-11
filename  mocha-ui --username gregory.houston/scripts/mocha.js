@@ -173,7 +173,7 @@ var MochaDesktop = new Class({
 		$('mochaDockPlacement').addEvent('click', function(event){
 			var objDock=event.target.parentNode;
 										   
-			var ctx = $E('.mochaCanvas',el).getContext('2d');
+			var ctx = el.getElement('.mochaCanvas').getContext('2d');
 			
 				//switch top pos
 			if (objDock.getStyle('position') != 'absolute'){
@@ -225,7 +225,7 @@ var MochaDesktop = new Class({
 		//attach event Auto Hide 
 		$('mochaDockAutoHide').addEvent('click', function(event){
 			var objDock=event.target.parentNode;
-			var ctx = $E('.mochaCanvas',el).getContext('2d');			
+			var ctx = el.getElement('.mochaCanvas').getContext('2d');			
 
 			//disable auto hide when Dock bar on top
 			if(objDock.getProperty('DockPosition')=='Top'){return false;}
@@ -255,8 +255,7 @@ var MochaDesktop = new Class({
 		
 	},
 	drawDock: function (el){		
-		
-		var ctx = $E('.mochaCanvas',el).getContext('2d');		
+		var ctx = el.getElement('.mochaCanvas').getContext('2d');		
 
 		this.drawCircle(ctx, 5 , 4, 3, 241, 102, 116, 1.0); 
 		this.drawCircle(ctx, 5 , 14, 3, 241, 102, 116, 1.0);
@@ -348,12 +347,12 @@ var MochaDesktop = new Class({
 		this.drawWindow(mochaNewWindow);
 
 		var scrollbars = windowProperties.scrollbars ? 'auto' : 'hidden';
-		$E('.mochaScroller', mochaNewWindow).setStyles({
+		mochaNewWindow.getElement('.mochaScroller').setStyles({
 			'overflow': scrollbars,
 			'background': windowProperties.bgColor
 		});				
 		
-		$E('.mochaScrollerpad', mochaNewWindow).setStyles({
+		mochaNewWindow.getElement('.mochaScrollerpad').setStyles({
 			'padding-top': windowProperties.paddingVertical,
 			'padding-bottom': windowProperties.paddingVertical,
 			'padding-left': windowProperties.paddingHorizontal,
@@ -492,8 +491,8 @@ var MochaDesktop = new Class({
 				}).injectInside(mochaScrollerpad);
 			}			
 			
-			var mochaTitlebarH3 = $E('h3.mochaTitle', mochaScrollerpad).clone().injectInside(mochaTitlebar);
-			$E('.mochaTitle', mochaScrollerpad).dispose();
+			var mochaTitlebarH3 = mochaScrollerpad.getElement('h3.mochaTitle').clone().injectInside(mochaTitlebar);
+			mochaScrollerpad.getElement('.mochaTitle').dispose();
 
 			if(el.contentURL && !el.iframe){
 				var url = el.contentURL;
@@ -578,13 +577,13 @@ var MochaDesktop = new Class({
 		}.bind(this));	
 	},
 	drawWindow: function(el, shadows) {
-		var mochaIframe = $E('.zIndexFix', el);
-		var mochaOverlay = $E('.mochaOverlay', el);
-		var mochaContent = $E('.mochaContent', el); 
-		var mochaScroller = $E('.mochaScroller', el);
-		var mochaTitlebar = $E('.mochaTitlebar', el);
-		var mochaCanvas = $E('.mochaCanvas', el);
-		var mochaControls = $E('.mochaControls', el);
+		var mochaIframe = el.getElement('.zIndexFix');
+		var mochaOverlay = el.getElement('.mochaOverlay');
+		var mochaContent = el.getElement('.mochaContent'); 
+		var mochaScroller = el.getElement('.mochaScroller');
+		var mochaTitlebar = el.getElement('.mochaTitlebar');
+		var mochaCanvas = el.getElement('.mochaCanvas');
+		var mochaControls = el.getElement('.mochaControls');
 		
 		var ctx = mochaCanvas.getContext('2d');
 		
@@ -604,7 +603,7 @@ var MochaDesktop = new Class({
 		
 		//resize iframe when window is resized
 		if (el.iframe) {
-			$E('.mochaIframe', el).setStyles({
+			el.getElement('.mochaIframe').setStyles({
 				'height': mochaContent.getStyle('height')
 			});
 		}
@@ -796,20 +795,20 @@ var MochaDesktop = new Class({
 	attachDraggable: function(elementArray){
 		elementArray.each(function(el){
 			if (this.options.draggable && !el.modal){
-				var mochaHandle = $E('.mochaTitlebar', el)	
+				var mochaHandle = el.getElement('.mochaTitlebar');
 				new Drag.Move(el, {
 					handle: mochaHandle,
 					onStart: function(){  
 						this.focusThis(el);
 						if (el.iframe && !window.webkit) {
-							$E('.mochaIframe', el).setStyles({
+							el.getElement('.mochaIframe').setStyles({
 								'visibility': 'hidden'
 							});
 						}						
 					}.bind(this),
 					onComplete: function(){
 						if (el.iframe && !window.webkit) {
-							$E('.mochaIframe', el).setStyles({
+							el.getElement('.mochaIframe').setStyles({
 								'visibility': 'visible'
 							});
 						}					
@@ -821,8 +820,8 @@ var MochaDesktop = new Class({
 	attachResizable: function(elementArray, onResize){
 		elementArray.each(function(el){		
 			if (this.options.resizable && !el.modal){
-				var mochaContent = $E('.mochaContent', el);
-				var resizeHandle = $E('.resizeHandle', el);
+				var mochaContent = el.getElement('.mochaContent');
+				var resizeHandle = el.getElement('.resizeHandle');
 				mochaContent.makeResizable({
 					handle: resizeHandle,
 					modifiers: {
@@ -835,7 +834,7 @@ var MochaDesktop = new Class({
 					},
 					onStart: function(){
 						if (el.iframe && !window.webkit) {
-							$E('.mochaIframe', el).setStyles({
+							el.getElement('.mochaIframe').setStyles({
 								'visibility': 'hidden'
 							});
 						}
@@ -845,7 +844,7 @@ var MochaDesktop = new Class({
 					}.bind(this),
 					onComplete: function(){
 						if (el.iframe && !window.webkit) {
-							$E('.mochaIframe', el).setStyles({
+							el.getElement('.mochaIframe').setStyles({
 								'visibility': 'visible'
 							});
 						}
@@ -869,7 +868,7 @@ var MochaDesktop = new Class({
 	attachMinimize: function(elementArray, onMinimize){	
 		elementArray.each(function(element) {
 			if (this.options.minimizable && !element.modal){
-				$E('.minimizeToggle', element).addEvent('click', function(event){
+				element.getElement('.minimizeToggle').addEvent('click', function(event){
 					var mochaControls = event.target.parentNode;
 					var el = mochaControls.parentNode;
 					this.minimizeWindow(el);
@@ -881,15 +880,15 @@ var MochaDesktop = new Class({
 	attachMaximize: function(elementArray, onMaximize) {	
 		elementArray.each(function(element) {
 			if (this.options.maximizable && !element.modal){
-				$E('.maximizeToggle', element).addEvent('click', function(event){
+				element.getElement('.maximizeToggle').addEvent('click', function(event){
 					var mochaControls = event.target.parentNode;
 					var el = mochaControls.parentNode;
 					if (el.maximizeToggle == 'maximize') {
-						$E('.maximizeToggle', element).setProperty('title', 'Restore'); //Set title
+						element.getElement('.maximizeToggle').setProperty('title', 'Restore'); //Set title
 						this.maximizeWindow(el);
 						if(onMaximize){onMaximize();} // checks for onMaximize since windows generated at startup do not have this option
 					} else {
-						$E('.maximizeToggle', element).setProperty('title', 'Maximize'); //Set title
+						element.getElement('.maximizeToggle').setProperty('title', 'Maximize'); //Set title
 						this.restoreWindow(el);
 					}
 				}.bind(this));
@@ -899,7 +898,8 @@ var MochaDesktop = new Class({
 	attachClose: function(elementArray, onClose){
 		elementArray.each(function(element) {
 			if (this.options.closable || element.modal){
-				$E('.mochaClose', element).addEvent('click', function(event){
+				element.getElement('.mochaClose').addEvent('click', function(event){
+					// Joel: not sure if these lines are needed, leaving them
 					var mochaControls = event.target.parentNode;
 					var el = mochaControls.parentNode;
 					this.drawWindow(el, false);
@@ -930,7 +930,7 @@ var MochaDesktop = new Class({
 		if (this.options.minimizable && !el.modal){
 			this.mochaControlsWidth += 19;
 			if (this.options.maximizable){
-				$E('.maximizeToggle', el).setStyle('margin-left', 5);
+				el.getElement('.maximizeToggle').setStyle('margin-left', 5);
 			}
 		}
 		if (this.options.maximizable && !el.modal){
@@ -940,13 +940,13 @@ var MochaDesktop = new Class({
 		if (this.options.closable || el.modal){
 			this.mochaControlsWidth += 19;
 			if (this.options.maximizable || this.options.minimizable){
-				$E('.mochaClose', el).setStyle('margin-left', 5);
+				el.getElement('.mochaClose').setStyle('margin-left', 5);
 			}
 		}
-		$E('.mochaControls', el).setStyle('width', this.mochaControlsWidth - 5);
+		el.getElement('.mochaControls').setStyle('width', this.mochaControlsWidth - 5);
 	},
 	maximizeWindow: function(el) {
-		var mochaContent = $E('.mochaContent', el);	
+		var mochaContent = el.getElement('.mochaContent');	
 
 		$(el).oldTop = $(el).getStyle('top');
 		$(el).oldLeft = $(el).getStyle('left');
@@ -968,17 +968,17 @@ var MochaDesktop = new Class({
 		$(el).maximizeToggle = 'restore';
 	},
 	minimizeWindow: function(el) {
-		var mochaContent = $E('.mochaContent', el);
+		var mochaContent = el.getElement('.mochaContent');
 		this.addToMinimizeDock(el)
 	},
 	addToMinimizeDock: function (el) {
 		//get handle to window
-		var mochaControls = $E('.mochaControls',el);
+		var mochaControls = el.getElement('.mochaControls');
 		var objWin  = mochaControls.parentNode
 	
 		//capture title bar text
-		var sTitleBarHTML = $E('.mochaTitlebar',el).innerHTML;
-		var sTitleBarText = $E('.mochaTitle',el).innerHTML; //must use mochaTitle and innerhtml because firefox doesn't support innerText on mochaTitlebar element
+		var sTitleBarHTML = el.getElement('.mochaTitlebar').innerHTML;
+		var sTitleBarText = el.getElement('.mochaTitle').innerHTML; //must use mochaTitle and innerhtml because firefox doesn't support innerText on mochaTitlebar element
 			
 		//check for long title
 		var sLongTitle = "...";
@@ -1007,7 +1007,7 @@ var MochaDesktop = new Class({
 		
 	},
 	restoreWindow: function(el) {
-		var mochaContent = $E('.mochaContent', el);
+		var mochaContent = el.getElement('.mochaContent');
 		mochaContent.setStyle('width', mochaContent.oldWidth);
 		mochaContent.setStyle('height', mochaContent.oldHeight);
 		$(el).maximizeToggle = 'maximize';
