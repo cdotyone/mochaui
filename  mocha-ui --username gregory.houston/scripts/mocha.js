@@ -307,6 +307,7 @@ var MochaDesktop = new Class({
 		});
 		
         // Attach the events to element
+		mochaNewWindow.onContentLoaded = windowProperties.onContentLoaded;
 		mochaNewWindow.onClose = windowProperties.onClose;
 		mochaNewWindow.onMinimize = windowProperties.onMinimize,
 		mochaNewWindow.onMaximize = windowProperties.onMaximize;
