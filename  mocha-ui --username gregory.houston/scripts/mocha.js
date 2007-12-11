@@ -1064,7 +1064,7 @@ var MochaDesktop = new Class({
 		var x = this.options.desktopLeftOffset
 		var y = this.options.desktopTopOffset;		
 		$$('div.mocha').each(function(el){
-			if (el.getStyle('display') != 'none'){										
+			if (el.getStyle('visibility') != 'hidden'){										
 				this.focusThis(el);										
 				x += this.options.mochaLeftOffset;
 				y += this.options.mochaTopOffset;			
