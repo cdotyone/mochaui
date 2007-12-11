@@ -136,7 +136,7 @@ var MochaDesktop = new Class({
 	initDock: function (el){
 		document.addEvent('mousemove',function (objDoc){
 			if(objDoc.event.clientY>(document.body.clientHeight -10)) { 
-				if($('mochaDock').getProperty('AutoHide')) {
+				if($('mochaDock').getProperty('autoHide')) {
 					$('mochaDock').setStyle('display','block');
 				}
 			}
@@ -167,7 +167,7 @@ var MochaDesktop = new Class({
 		$('mochaDockPlacement').setProperty('title','Position Dock Top');
 			
 		//Auto Hide on/off 
-		$('MochaDockAutoHide').setProperty('title','Turn Auto Hide On');
+		$('mochaDockAutoHide').setProperty('title','Turn Auto Hide On');
 		
 		//attach event
 		$('mochaDockPlacement').addEvent('click', function(event){
@@ -187,7 +187,7 @@ var MochaDesktop = new Class({
 				objDock.setProperty('DockPosition','Bottom');
 				this.drawCircle(ctx, 5, 4, 3, 241, 102, 116, 1.0); 
 
-				if ($('mochaDock').getProperty('AutoHide') != 'true' || $('mochaDock').getProperty('AutoHideDisabled') != 'true') {
+				if ($('mochaDock').getProperty('autoHide') != 'true' || $('mochaDock').getProperty('autoHideDisabled') != 'true') {
 					this.drawCircle(ctx, 5 , 14, 3, 241, 102, 116, 1.0); 
 				}
 				} else {
@@ -204,16 +204,16 @@ var MochaDesktop = new Class({
 				}			
 
 			//diasble/enable autohide and grey/orange/green out button
-			if($('mochaDock').getProperty('AutoHide') == 'true' || $('mochaDock').getProperty('AutoHideDisabled')=='true')
+			if($('mochaDock').getProperty('autoHide') == 'true' || $('mochaDock').getProperty('autoHideDisabled')=='true')
 			{
 				if (objDock.getProperty('DockPosition') == 'Bottom') {
-					$('mochaDock').setProperty('AutoHideDisabled', 'false');
-					$('mochaDock').setProperty('AutoHide', 'true')
+					$('mochaDock').setProperty('autoHideDisabled', 'false');
+					$('mochaDock').setProperty('autoHide', 'true')
 					this.drawCircle(ctx, 5, 14, 3, 0, 255, 0, 1.0);
 				}
 				else{
-					$('mochaDock').setProperty('AutoHideDisabled', 'true');
-					$('mochaDock').setProperty('AutoHide', 'false')
+					$('mochaDock').setProperty('autoHideDisabled', 'true');
+					$('mochaDock').setProperty('autoHide', 'false')
 				}
 				
 			}			
@@ -223,7 +223,7 @@ var MochaDesktop = new Class({
 		}.bind(this));
 		
 		//attach event Auto Hide 
-		$('MochaDockAutoHide').addEvent('click', function(event){
+		$('mochaDockAutoHide').addEvent('click', function(event){
 			var objDock=event.target.parentNode;
 			var ctx = $E('.mochaCanvas',el).getContext('2d');			
 
@@ -231,22 +231,22 @@ var MochaDesktop = new Class({
 			if(objDock.getProperty('DockPosition')=='Top'){return false;}
 		
 			//update title tag
-			if(objDock.getProperty('AutoHide')=='true'){
-				$('MochaDockAutoHide').setProperty('title','Turn Auto Hide On');
+			if(objDock.getProperty('autoHide') == 'true'){
+				$('mochaDockAutoHide').setProperty('title', 'Turn Auto Hide On');
 				this.drawCircle(ctx, 5 , 14, 3, 241, 102, 116, 1.0);
-				objDock.setProperty('AutoHide','false');
+				objDock.setProperty('autoHide','false');
 				objDock.setStyle('display','block');
 			}
 			else{
-				$('MochaDockAutoHide').setProperty('title','Turn Auto Hide Off');
+				$('mochaDockAutoHide').setProperty('title','Turn Auto Hide Off');
 				this.drawCircle(ctx, 5 , 14, 3, 0, 255, 0, 1.0); 
-				objDock.setProperty('AutoHide','true');
+				objDock.setProperty('autoHide','true');
 				objDock.setStyle('display','none');
 			}
 		}.bind(this));		
 
 		$('mochaDock').addEvent('mouseleave', function(objDock)
-		{	if(this.getProperty('AutoHide') == 'true'){ //mozilla doesn't understand true evaluations, so made the property a string???
+		{	if(this.getProperty('autoHide') == 'true'){ //mozilla doesn't understand true evaluations, so made the property a string???
 				if((objDock.event.clientY < (document.body.clientHeight - this.getStyle('height').toInt()))){
 					this.setStyle('display', 'none');
 				}

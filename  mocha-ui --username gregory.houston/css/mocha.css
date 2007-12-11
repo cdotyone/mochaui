@@ -348,7 +348,7 @@ iframe.zIndexFix {
 	z-index: 3; /* for IE */	
 }
 
-#MochaDockAutoHide {
+#mochaDockAutoHide {
 	position: absolute;
 	top: 13px;
 	left: 2px;
