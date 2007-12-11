@@ -204,7 +204,7 @@ var MochaDesktop = new Class({
 				}			
 
 			//diasble/enable autohide and grey/orange/green out button
-			if($('mochaDock').getProperty('autoHide') == 'true' || $('mochaDock').getProperty('autoHideDisabled')=='true')
+			if($('mochaDock').getProperty('autoHide') == 'true' || $('mochaDock').getProperty('autoHideDisabled') == 'true')
 			{
 				if (objDock.getProperty('DockPosition') == 'Bottom') {
 					$('mochaDock').setProperty('autoHideDisabled', 'false');
@@ -284,19 +284,19 @@ var MochaDesktop = new Class({
 			paddingHorizontal: 12,
 			bgColor: '#fff'
 		}, properties || {});
-		
-		if ( $(windowProperties.id) ) { // Window already exist
-			if ( $(windowProperties.id).getStyle('display') == 'none' ) {
+
+		if ( $(windowProperties.id) ) { // If window already exists
+			if ( $(windowProperties.id).getStyle('visibility') == 'hidden' ) {
 				// instead of creating a duplicate window, restore minimized window
-				$(windowProperties.id).setStyle('display','block');
+				$(windowProperties.id).setStyle('visibility','visible');
 				$$('button.mochaDockButton').each(function(el){
 					if (el.getProperty('WinAssociated') == windowProperties.id){ 										
 						el.dispose();
 					}
 				});
 			} else {
-				// Make sure new window gets focus
-				setTimeout(function () { this.focusThis($(windowProperties.id)); }.bind(this),10);
+				// If window exists, make sure it gets focus
+				setTimeout(function() { this.focusThis($(windowProperties.id)); }.bind(this),10);
 			}
 			return;
 		}
@@ -305,6 +305,13 @@ var MochaDesktop = new Class({
 			'class': 'mocha',
 			'id': 'win' + (++this.windowIDCount)
 		});
+		
+        // Attach the events to element
+		mochaNewWindow.onClose = windowProperties.onClose;
+		mochaNewWindow.onMinimize = windowProperties.onMinimize,
+		mochaNewWindow.onMaximize = windowProperties.onMaximize;
+		mochaNewWindow.onFocus = windowProperties.onFocus;
+		mochaNewWindow.onResize	= windowProperties.onResize;		
 		
 		if ($('mochaDesktop')){
 			mochaNewWindow.injectInside($('mochaDesktop'));
@@ -342,7 +349,7 @@ var MochaDesktop = new Class({
 			'class': 'mochaTitle'
 		}).setHTML(windowProperties.title).injectTop(mochaNewWindow);
 		
-		this.insertAll([mochaNewWindow], windowProperties.onContentLoaded);
+		this.insertAll([mochaNewWindow]);
 		
 		this.drawWindow(mochaNewWindow);
 
@@ -408,6 +415,49 @@ var MochaDesktop = new Class({
 			setTimeout(function() { this.focusThis(mochaNewWindow); }.bind(this), 10);
 		}
 		//alert(mochaNewWindow.getStyle('zIndex'));
+		return mochaNewWindow;
+	},
+    
+/*
+	Method: closeWindow
+	Params: 
+		el: window element or window identifier to be closed
+
+	Returns:
+		true: window was closed
+		false: window was not closed
+*/
+	closeWindow: function(el) {
+		var element = $(el);
+		
+		if (el.onClose){	
+			el.onClose();
+		}		
+		
+		this.drawWindow(el, false); // redraws IE windows without shadows since IE messes up canvas alpha when you change element opacity			
+		
+		if (element.modal) {
+			this.modalCloseMorph.start({
+				opacity: 0
+			});
+		}
+		
+		var closeMorph = new Fx.Morph(element, {
+			duration: 250,
+			onComplete: function(){
+				element.dispose();
+				if (el.onCloseComplete){	
+					el.onCloseComplete();
+				}	
+			}.bind(this)
+		});
+
+		closeMorph.start({
+			opacity: .4
+		});
+		
+
+		return true;		
 	},
 	focusThis: function(el){
 		this.indexLevel++;
@@ -436,7 +486,7 @@ var MochaDesktop = new Class({
 	setModalSize: function(){
 		$('mochaModalBackground').setStyle('height', this.getWindowHeight());		
 	},	
-	insertAll: function(elementArray, onContentLoaded){
+	insertAll: function(elementArray){
 		elementArray.each(function(el){
 			var mochaTempContents = el.innerHTML;
 			el.empty();
@@ -506,7 +556,7 @@ var MochaDesktop = new Class({
 						mochaScrollerpad.setHTML('<p>ERROR LOADING AJAX CONTENT</p><p>Make sure all of your content is uploaded to your server, and that you are attempting to load a document from the same domain as this page. Ajax loading will not work on your local machine.</p>');
 					},
 					onSuccess: function(){
-						if ( onContentLoaded ) onContentLoaded();
+						if ( el.onContentLoaded ) el.onContentLoaded();
 					}
 				}).request();
 			}
@@ -817,7 +867,7 @@ var MochaDesktop = new Class({
 			}
 		}.bind(this));
 	},
-	attachResizable: function(elementArray, onResize){
+	attachResizable: function(elementArray){
 		elementArray.each(function(el){		
 			if (this.options.resizable && !el.modal){
 				var mochaContent = el.getElement('.mochaContent');
@@ -848,36 +898,42 @@ var MochaDesktop = new Class({
 								'visibility': 'visible'
 							});
 						}
-					if (onResize){onResize();} // checks for onResize since windows generated at startup do not have this option						
+					if (el.onResize){ // checks for onResize since windows generated at startup do not have this option			
+						el.onResize();  // later I may just assign $empty functions for onclose and so forth to the original windows
+					}	
 					}.bind(this)					
 				});
 			}
 		}.bind(this));
 	},
-	attachFocus: function(elementArray, onFocus){
+	attachFocus: function(elementArray){
 		elementArray.each(function(element) {
 			element.addEvent('click', function(event){
 				// Only focus when needed, otherwize onFocus() will run on every click
 				if ( element.getStyle('zIndex').toInt() < this.indexLevel ) {
 				this.focusThis(element);
-					if (onFocus){onFocus();} // checks for onFocus since windows generated at startup do not have this option
+					if (element.onFocus){
+						element.onFocus();
+					}
 				}
 			}.bind(this));
 		}.bind(this));
 	},
-	attachMinimize: function(elementArray, onMinimize){	
+	attachMinimize: function(elementArray){	
 		elementArray.each(function(element) {
 			if (this.options.minimizable && !element.modal){
 				element.getElement('.minimizeToggle').addEvent('click', function(event){
 					var mochaControls = event.target.parentNode;
 					var el = mochaControls.parentNode;
 					this.minimizeWindow(el);
-					if (onMinimize){onMinimize();}	// checks for onMinimize since windows generated at startup do not have this option
+					if (el.onMinimize){
+						el.onMinimize();
+					}
 				}.bind(this));
 			}
 		}.bind(this));
 	},
-	attachMaximize: function(elementArray, onMaximize) {	
+	attachMaximize: function(elementArray) {	
 		elementArray.each(function(element) {
 			if (this.options.maximizable && !element.modal){
 				element.getElement('.maximizeToggle').addEvent('click', function(event){
@@ -886,7 +942,9 @@ var MochaDesktop = new Class({
 					if (el.maximizeToggle == 'maximize') {
 						element.getElement('.maximizeToggle').setProperty('title', 'Restore'); //Set title
 						this.maximizeWindow(el);
-						if(onMaximize){onMaximize();} // checks for onMaximize since windows generated at startup do not have this option
+						if(el.onMaximize){
+							el.onMaximize();
+						}
 					} else {
 						element.getElement('.maximizeToggle').setProperty('title', 'Maximize'); //Set title
 						this.restoreWindow(el);
@@ -895,32 +953,13 @@ var MochaDesktop = new Class({
 			}
 		}.bind(this));
 	},
-	attachClose: function(elementArray, onClose){
+	attachClose: function(elementArray){
 		elementArray.each(function(element) {
 			if (this.options.closable || element.modal){
 				element.getElement('.mochaClose').addEvent('click', function(event){
-					// Joel: not sure if these lines are needed, leaving them
 					var mochaControls = event.target.parentNode;
 					var el = mochaControls.parentNode;
-					this.drawWindow(el, false);
-
-					if (element.modal) {
-						this.modalCloseMorph.start({
-							'opacity': 0
-						});
-					}
-
-					var closeMorph = new Fx.Morph(el, {
-						'duration': 250,
-						onComplete: function(){
-								el.dispose();
-						}.bind(this)
-					});
-
-					closeMorph.start({
-						'opacity': .4
-					});
-					if (onClose){onClose();} // checks for onClose since windows generated at startup do not have this option
+					this.closeWindow(element, false);
 				}.bind(this));
 			}
 		}.bind(this));
@@ -1118,10 +1157,7 @@ var MochaWindow = new Class({
 	},
 	initialize: function(options){		
 		this.setOptions(options);
-		
-		if (!$(this.options.id)){
-			document.myDesktop.newWindow(this.options);
-		}		
+		document.myDesktop.newWindow(this.options);		
 	}
 });		
 MochaWindow.implement(new Options);
@@ -1282,7 +1318,7 @@ function attachMochaLinkEvents(){
 					alert('The window\'s content was loaded.');
 				},			
 				onClose: function(){
-					alert('The window was closed.');
+					alert('The window is closing.');
 				},
 				onMinimize: function(){
 					alert('The window was minimized.');
