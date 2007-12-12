@@ -134,11 +134,9 @@ var MochaDesktop = new Class({
 		}.bind(this)
 	},
 	initDock: function (el){
-		document.addEvent('mousemove',function (objDoc){
-			if(objDoc.event.clientY>(document.body.clientHeight -10)) { 
-				if($('mochaDock').getProperty('autoHide')) {
-					$('mochaDock').setStyle('display','block');
-				}
+		document.addEvent('mousemove', function (objDoc){
+			if(objDoc.event.clientY > (document.body.clientHeight -10) && $('mochaDock').getProperty('autoHide')) { 
+				$('mochaDock').setStyle('display','block');
 			}
 		});		
 					
@@ -149,14 +147,14 @@ var MochaDesktop = new Class({
 		}).injectInside(el);		
 		
 		canvas.setStyles({
-		   position: 'absolute',
-		   top: '4px',
-		   left: '2px',
-		   zIndex: 2
-		   });
+			position: 'absolute',
+			top: '4px',
+			left: '2px',
+			zIndex: 2
+		});
 		   
-		   canvas.width=15;
-		   canvas.height=18;
+		canvas.width=15;
+		canvas.height=18;
 			
 		// Dynamically initialize canvas using excanvas. This is only required by IE
 		if (window.ie) {
@@ -171,20 +169,19 @@ var MochaDesktop = new Class({
 		
 		//attach event
 		$('mochaDockPlacement').addEvent('click', function(event){
-			var objDock=event.target.parentNode;
-										   
+			var objDock=event.target.parentNode;										   
 			var ctx = el.getElement('.mochaCanvas').getContext('2d');
 			
-				//switch top pos
+			//switch top pos
 			if (objDock.getStyle('position') != 'absolute'){
 				objDock.setStyles({
-						'position': 'absolute',
-						'bottom': 0,
-						'border-top': '1px solid #bbb',					
-						'border-bottom': '1px solid #fff'
-					})
-					$('mochaDesktopHeader').setStyle('height', 54);
-				objDock.setProperty('DockPosition','Bottom');
+					'position': 'absolute',
+					'bottom': 0,
+					'border-top': '1px solid #bbb',					
+					'border-bottom': '1px solid #fff'
+				})
+				$('mochaDesktopHeader').setStyle('height', 54);
+				objDock.setProperty('dockPosition','Bottom');
 				this.drawCircle(ctx, 5, 4, 3, 241, 102, 116, 1.0); 
 
 				if ($('mochaDock').getProperty('autoHide') != 'true' || $('mochaDock').getProperty('autoHideDisabled') != 'true') {
@@ -192,21 +189,21 @@ var MochaDesktop = new Class({
 				}
 				} else {
 					objDock.setStyles({
-					'position': 'relative',
-					'bottom': null,
-					'border-top': '1px solid #fff',					
-					'border-bottom': '1px solid #bbb'
+						'position': 'relative',
+						'bottom': null,
+						'border-top': '1px solid #fff',					
+						'border-bottom': '1px solid #bbb'
 					})
 					$('mochaDesktopHeader').setStyle('height', 74);					
-				objDock.setProperty('DockPosition','Top');	
-				this.drawCircle(ctx, 5, 4, 3, 0, 255, 0, 1.0);
-				this.drawCircle(ctx, 5, 14, 3, 212, 208, 200, 1.0);
+					objDock.setProperty('dockPosition','Top');	
+					this.drawCircle(ctx, 5, 4, 3, 0, 255, 0, 1.0);
+					this.drawCircle(ctx, 5, 14, 3, 212, 208, 200, 1.0);
 				}			
 
 			//diasble/enable autohide and grey/orange/green out button
 			if($('mochaDock').getProperty('autoHide') == 'true' || $('mochaDock').getProperty('autoHideDisabled') == 'true')
 			{
-				if (objDock.getProperty('DockPosition') == 'Bottom') {
+				if (objDock.getProperty('dockPosition') == 'Bottom') {
 					$('mochaDock').setProperty('autoHideDisabled', 'false');
 					$('mochaDock').setProperty('autoHide', 'true')
 					this.drawCircle(ctx, 5, 14, 3, 0, 255, 0, 1.0);
@@ -228,7 +225,7 @@ var MochaDesktop = new Class({
 			var ctx = el.getElement('.mochaCanvas').getContext('2d');			
 
 			//disable auto hide when Dock bar on top
-			if(objDock.getProperty('DockPosition')=='Top'){return false;}
+			if(objDock.getProperty('dockPosition')=='Top'){return false;}
 		
 			//update title tag
 			if(objDock.getProperty('autoHide') == 'true'){
@@ -255,11 +252,9 @@ var MochaDesktop = new Class({
 		
 	},
 	drawDock: function (el){		
-		var ctx = el.getElement('.mochaCanvas').getContext('2d');		
-
+		var ctx = el.getElement('.mochaCanvas').getContext('2d');
 		this.drawCircle(ctx, 5 , 4, 3, 241, 102, 116, 1.0); 
-		this.drawCircle(ctx, 5 , 14, 3, 241, 102, 116, 1.0);
-		
+		this.drawCircle(ctx, 5 , 14, 3, 241, 102, 116, 1.0);		
 	},	
 	newWindow: function(properties){
 		windowProperties = $extend({
@@ -268,12 +263,13 @@ var MochaDesktop = new Class({
 			contentType: 'html', 				// html, ajax, or iframe
 			content: '', 						// used if contentType is set to 'html'
 			contentURL: 'pages/lipsum.html',	// used if contentType is set to 'ajax' or 'iframe'	
-			onContentLoaded: $empty,			// Event, fired when content is successfully loaded via ajax
-			onClose: $empty,					// Event, fired when window is closed
-			onMinimize: $empty,					// Event, fired when window is minimized
-			onMaximize: $empty,					// Event, fired when window is maximized
-			onFocus: $empty,					// Event, fired when window is focused
-			onResize: $empty,					// Event, fired when window is resized
+			onContentLoaded: $empty,			// Event, fired when content is successfully loaded via XHR
+			onFocus: $empty,					// Event, fired when the window is focused
+			onResize: $empty,					// Event, fired when the window is resized
+			onMinimize: $empty,					// Event, fired when the window is minimized
+			onMaximize: $empty,					// Event, fired when the window is maximized
+			onClose: $empty,					// Event, fired just before the window is closed
+			onCloseComplete: $empty,			// Event, fired after the window is closed			
 			modal: false,
 			width: 300,
 			height: 125, 
@@ -287,15 +283,15 @@ var MochaDesktop = new Class({
 
 		if ( $(windowProperties.id) ) { // If window already exists
 			if ( $(windowProperties.id).getStyle('visibility') == 'hidden' ) {
-				// instead of creating a duplicate window, restore minimized window
+				// If window is minimized, instead of creating a duplicate window, restore minimized window
 				$(windowProperties.id).setStyle('visibility','visible');
 				$$('button.mochaDockButton').each(function(el){
-					if (el.getProperty('WinAssociated') == windowProperties.id){ 										
+					if (el.getProperty('winAssociated') == windowProperties.id){ 										
 						el.dispose();
 					}
 				});
 			} else {
-				// If window exists, make sure it gets focus
+				// If window exists and is not minimized, give the findow focus
 				setTimeout(function() { this.focusThis($(windowProperties.id)); }.bind(this),10);
 			}
 			return;
@@ -308,12 +304,13 @@ var MochaDesktop = new Class({
 		
         // Attach the events to element
 		mochaNewWindow.onContentLoaded = windowProperties.onContentLoaded;
-		mochaNewWindow.onClose = windowProperties.onClose;
-		mochaNewWindow.onMinimize = windowProperties.onMinimize,
-		mochaNewWindow.onMaximize = windowProperties.onMaximize;
 		mochaNewWindow.onFocus = windowProperties.onFocus;
 		mochaNewWindow.onResize	= windowProperties.onResize;		
-		
+		mochaNewWindow.onMinimize = windowProperties.onMinimize,
+		mochaNewWindow.onMaximize = windowProperties.onMaximize;	
+		mochaNewWindow.onClose = windowProperties.onClose;
+		mochaNewWindow.onCloseComplete = windowProperties.onCloseComplete;		
+
 		if ($('mochaDesktop')){
 			mochaNewWindow.injectInside($('mochaDesktop'));
 		}
@@ -418,16 +415,18 @@ var MochaDesktop = new Class({
 		//alert(mochaNewWindow.getStyle('zIndex'));
 		return mochaNewWindow;
 	},
-    
-/*
+	/*
+	
 	Method: closeWindow
-	Params: 
-		el: window element or window identifier to be closed
+	
+	Arguments: 
+		el: the $(window) to be closed
 
 	Returns:
-		true: window was closed
-		false: window was not closed
-*/
+		true: the window was closed
+		false: the window was not closed
+
+	*/
 	closeWindow: function(el) {
 		var element = $(el);
 		
@@ -455,8 +454,7 @@ var MochaDesktop = new Class({
 
 		closeMorph.start({
 			opacity: .4
-		});
-		
+		});		
 
 		return true;		
 	},
@@ -465,12 +463,12 @@ var MochaDesktop = new Class({
 		el.setStyle('zIndex', this.indexLevel);
 	},
 	getWindowWidth: function(){
-		window.webkit ? windowWidth = window.innerWidth : windowWidth = window.getWidth();
-		return windowWidth.toInt();
+		var windowDimensions = document.getCoordinates();
+		return windowDimensions.width;
 	},
 	getWindowHeight: function(){
-		window.webkit ? windowHeight = window.innerHeight : windowHeight = window.getHeight();
-		return windowHeight.toInt();
+		var windowDimensions = document.getCoordinates();
+		return windowDimensions.height;
 	},	
 	setDesktopSize: function(){
 		if ($('mochaDesktop')) {
@@ -1028,7 +1026,7 @@ var MochaDesktop = new Class({
 		objWin.setStyle('visibility','hidden');
 		
 		var btnEl = new Element('button', {
-			'WinAssociated': objWin.id,
+			'winAssociated': objWin.id,
 			'class': 'mochaDockButton',
 			'title': sTitleBarText,
 			'id': 'DockButton'+objWin.id
@@ -1036,7 +1034,7 @@ var MochaDesktop = new Class({
 				
 		btnEl.addEvent('click', function(event){		
 			//click event will restore the window			
-			var objWin = $(event.target.getProperty('WinAssociated'));
+			var objWin = $(event.target.getProperty('winAssociated'));
 			objWin.setStyle('visibility','visible');
 
 			this.focusThis(objWin);
@@ -1129,7 +1127,7 @@ MochaScreens.implement(new Options);
 /* -----------------------------------------------------------------
 
 	MOCHA WINDOW
-	This class can be removed if you are not creating new windows dynamically.
+	Notes: This class can be removed if you are not creating new windows dynamically.
 
    ----------------------------------------------------------------- */
 
@@ -1146,6 +1144,7 @@ var MochaWindow = new Class({
 		onFocus: $empty,				 // Event, fired when window is focused
 		onResize: $empty,				 // Event, fired when window is resized
 		onClose: $empty,
+		onCloseComplete: $empty,		
 		modal: false,
 		width: 300,
 		height: 125,
@@ -1166,7 +1165,7 @@ MochaWindow.implement(new Options);
 /* -----------------------------------------------------------------
 
 	MOCHA WINDOW FROM FORM
-	This class can be removed if you are not creating new windows dynamically from a form.
+	Notes: This class can be removed if you are not creating new windows dynamically from a form.
 
    ----------------------------------------------------------------- */
 
@@ -1176,13 +1175,7 @@ var MochaWindowForm = new Class({
 		title: 'New Window',
 		contentType: 'html', // html, ajax, or iframe
 		content: '', // used if contentType is set to 'html'
-		contentURL: 'pages/lipsum.html', // used if contentType is set to 'ajax' or 'iframe'	
-		onContentLoaded: $empty,
-		onMinimize: $empty,					// Event, fired when window is minimized
-		onMaximize: $empty,					// Event, fired when window is maximized
-		onFocus: $empty,					// Event, fired when window is focused
-		onResize: $empty,					// Event, fired when window is resized
-		onClose: $empty,
+		contentURL: 'pages/lipsum.html', // used if contentType is set to 'ajax' or 'iframe'
 		modal: false,
 		width: 300,
 		height: 125,
@@ -1190,8 +1183,7 @@ var MochaWindowForm = new Class({
 		x: null, // if x or y is null or modal is false the new window is centered in the browser window
 		y: null,
 		paddingVertical: 10,
-		paddingHorizontal: 12,
-		bgColor: '#fff'
+		paddingHorizontal: 12
 	},
 	initialize: function(options){
 		this.setOptions(options);
@@ -1212,14 +1204,12 @@ var MochaWindowForm = new Class({
 		if ($('mochaNewWindowModal').checked) {
 			this.options.modal = true;
 		}
-		this.options.onContentLoaded = null;
 		this.options.width = $('mochaNewWindowWidth').value.toInt();
 		this.options.height = $('mochaNewWindowHeight').value.toInt();	
 		this.options.x = $('mochaNewWindowX').value.toInt();
 		this.options.y = $('mochaNewWindowY').value.toInt();
 		this.options.paddingVertical = $('mochaNewWindowPaddingVertical').value.toInt();
 		this.options.paddingHorizontal = $('mochaNewWindowPaddingHorizontal').value.toInt();
-		this.options.bgColor = '#fff';
 		document.myDesktop.newWindow(this.options);		
 	}
 });
@@ -1229,7 +1219,7 @@ MochaWindowForm.implement(new Options);
 /* -----------------------------------------------------------------
 
 	ATTACH MOCHA LINK EVENTS
-	Here is where you define your windows and the events that open them.
+	Notes: Here is where you define your windows and the events that open them.
 	If you are not using links to run Mocha methods you can remove this function.
 	
 	If you need to add link events to links within windows you are creating, do
