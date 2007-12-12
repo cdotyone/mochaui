@@ -4,9 +4,9 @@
 <div class="clear"></div>
 <div class="formLabel">Load Method:</div>
 <div class="formField">
-<input type="radio" name="contentType" id="htmlContentType" value="html" checked /> Enter HTML<br>
-<input type="radio" name="contentType" id="ajaxContentType" value="ajax" /> Load URL via Ajax<br>
-<input type="radio" name="contentType" id="iframeContentType" value="iframe" /> Load URL into iframe</div>
+<input type="radio" name="loadMethod" id="htmlLoadMethod" value="html" checked /> Enter HTML<br>
+<input type="radio" name="loadMethod" id="xhrLoadMethod" value="xhr" /> Load URL via XMLHttpRequest<br>
+<input type="radio" name="loadMethod" id="iframeLoadMethod" value="iframe" /> Load URL into iframe</div>
 <div class="clear"></div>
 <div class="formLabel">Content:</div>
 <div class="formField"><textarea id="mochaNewWindowContent">This is my window content.</textarea></div>
@@ -57,6 +57,7 @@
 	<li>onMaximize</li>
 	<li>onClose</li>
 	<li>onCloseComplete</li>
+	<li>scrollbars</li>
 	<li>bgColor</li>
 </ul>
 

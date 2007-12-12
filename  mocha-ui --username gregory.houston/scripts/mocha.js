@@ -36,8 +36,8 @@ var MochaDesktop = new Class({
 		minHeight: 100,	// minimum height of windows when resized	
 		maxHeight: 2000 // maximum height of windows when resized	
 	},
-	initialize: function(options){		
-		this.setOptions(options);		
+	initialize: function(options){
+		this.setOptions(options);
 		this.indexLevel = 1;
 		this.mochaControlsWidth = 0;
 		this.minimizebuttonX = 0;
@@ -45,7 +45,7 @@ var MochaDesktop = new Class({
 		this.closebuttonX = 0;
 		this.scrollWidthOffset = 6;
 		this.windowIDCount = 0;
-		new Element('canvas');		
+		new Element('canvas');
 		// Add properties to elements in the DOM
 		Element.implement({oldTop: ''});
 		Element.implement({oldLeft: ''});
@@ -53,14 +53,14 @@ var MochaDesktop = new Class({
 		Element.implement({oldHeight: ''});
 		Element.implement({maximizeToggle: 'maximize'});
 		Element.implement({modal: ''});
-		Element.implement({iframe: ''});		
-		Element.implement({contentURL: ''});		
+		Element.implement({iframe: ''});
+		Element.implement({contentURL: ''});
 		$$('div.mocha').setStyle('display', 'block');
 		if ($('mochaDesktop')) {
-			this.setDesktopSize();			
+			this.setDesktopSize();
 		}
 		else {
-			this.options.maximizable = false;		
+			this.options.maximizable = false;
 		}
 		if ($('mochaDock')) { 
 			if (this.options.minimizable == true){
@@ -68,9 +68,9 @@ var MochaDesktop = new Class({
 					'position': 'absolute',
 					'top': null,
 					'bottom': 0,
-					'left': 0			
+					'left': 0
 				});
-				this.initDock($('mochaDock'));	
+				this.initDock($('mochaDock'));
 				this.drawDock($('mochaDock'));
 			}
 			else {
@@ -79,7 +79,7 @@ var MochaDesktop = new Class({
 		}
 		else {
 			this.options.minimizable = false;
-		}		
+		}
 		this.insertAll($$('div.mocha'));
 		this.drawAll();
 		this.attachDraggable($$('div.mocha'));
@@ -87,9 +87,9 @@ var MochaDesktop = new Class({
 		this.attachFocus($$('div.mocha'));
 		this.attachMinimize($$('div.mocha'));
 		this.attachMaximize($$('div.mocha'));
-		this.attachClose($$('div.mocha'));	
+		this.attachClose($$('div.mocha'));
 		this.arrangeCascade();
-		
+
 		// Modal initialization
 		var mochaModal = new Element('div', {
 			'id': 'mochaModalBackground'
@@ -116,16 +116,16 @@ var MochaDesktop = new Class({
 		if (window.ie && $("mochaDesktopNavbar")){ // fix for dropdown menus in IE
 			var sfEls = $("mochaDesktopNavbar").getElementsByTagName("LI");
 			for (var i=0; i<sfEls.length; i++) {
-				sfEls[i].onmouseover=function() {
+				sfEls[i].onmouseover=function(){
 					this.className += " sfhover";
 				}
-				sfEls[i].onmouseout = function() {
+				sfEls[i].onmouseout = function(){
 					this.className = this.className.replace(new RegExp(" sfhover\\b"), "");
 				}
-			}			
+			}
 		};
 		
-		window.onresize = function(){			
+		window.onresize = function(){
 			this.setDesktopSize();
 			this.setModalSize();
 			setTimeout( function(){
@@ -139,12 +139,12 @@ var MochaDesktop = new Class({
 				$('mochaDock').setStyle('display','block');
 			}
 		});		
-					
+
 		//Insert canvas
 		var canvas = new Element('canvas', {
 			'class': 'mochaCanvas',
 			'id': 'canv1'
-		}).injectInside(el);		
+		}).injectInside(el);
 		
 		canvas.setStyles({
 			position: 'absolute',
@@ -152,10 +152,10 @@ var MochaDesktop = new Class({
 			left: '2px',
 			zIndex: 2
 		});
-		   
+
 		canvas.width=15;
 		canvas.height=18;
-			
+
 		// Dynamically initialize canvas using excanvas. This is only required by IE
 		if (window.ie) {
 			G_vmlCanvasManager.initElement(canvas);
@@ -169,15 +169,15 @@ var MochaDesktop = new Class({
 		
 		//attach event
 		$('mochaDockPlacement').addEvent('click', function(event){
-			var objDock=event.target.parentNode;										   
+			var objDock=event.target.parentNode;
 			var ctx = el.getElement('.mochaCanvas').getContext('2d');
 			
-			//switch top pos
+			//switch to top position
 			if (objDock.getStyle('position') != 'absolute'){
 				objDock.setStyles({
 					'position': 'absolute',
 					'bottom': 0,
-					'border-top': '1px solid #bbb',					
+					'border-top': '1px solid #bbb',
 					'border-bottom': '1px solid #fff'
 				})
 				$('mochaDesktopHeader').setStyle('height', 54);
@@ -191,14 +191,14 @@ var MochaDesktop = new Class({
 					objDock.setStyles({
 						'position': 'relative',
 						'bottom': null,
-						'border-top': '1px solid #fff',					
+						'border-top': '1px solid #fff',
 						'border-bottom': '1px solid #bbb'
 					})
-					$('mochaDesktopHeader').setStyle('height', 74);					
+					$('mochaDesktopHeader').setStyle('height', 74);
 					objDock.setProperty('dockPosition','Top');	
 					this.drawCircle(ctx, 5, 4, 3, 0, 255, 0, 1.0);
 					this.drawCircle(ctx, 5, 14, 3, 212, 208, 200, 1.0);
-				}			
+				}
 
 			//diasble/enable autohide and grey/orange/green out button
 			if($('mochaDock').getProperty('autoHide') == 'true' || $('mochaDock').getProperty('autoHideDisabled') == 'true')
@@ -212,17 +212,17 @@ var MochaDesktop = new Class({
 					$('mochaDock').setProperty('autoHideDisabled', 'true');
 					$('mochaDock').setProperty('autoHide', 'false')
 				}
-				
-			}			
-							
+
+			}
+
 			//update title tag
 			$('mochaDockPlacement').setProperty('title',(objDock.getStyle('position') == 'relative')?'Position Dock Bottom':'Position Dock Top');
 		}.bind(this));
-		
+
 		//attach event Auto Hide 
 		$('mochaDockAutoHide').addEvent('click', function(event){
 			var objDock=event.target.parentNode;
-			var ctx = el.getElement('.mochaCanvas').getContext('2d');			
+			var ctx = el.getElement('.mochaCanvas').getContext('2d');
 
 			//disable auto hide when Dock bar on top
 			if(objDock.getProperty('dockPosition')=='Top'){return false;}
@@ -247,22 +247,22 @@ var MochaDesktop = new Class({
 				if((objDock.event.clientY < (document.body.clientHeight - this.getStyle('height').toInt()))){
 					this.setStyle('display', 'none');
 				}
-			}	
+			}
 		});
 		
 	},
-	drawDock: function (el){		
+	drawDock: function (el){
 		var ctx = el.getElement('.mochaCanvas').getContext('2d');
 		this.drawCircle(ctx, 5 , 4, 3, 241, 102, 116, 1.0); 
-		this.drawCircle(ctx, 5 , 14, 3, 241, 102, 116, 1.0);		
+		this.drawCircle(ctx, 5 , 14, 3, 241, 102, 116, 1.0);
 	},	
 	newWindow: function(properties){
 		windowProperties = $extend({
 			id: null,
 			title: 'New Window',
-			contentType: 'html', 				// html, ajax, or iframe
-			content: '', 						// used if contentType is set to 'html'
-			contentURL: 'pages/lipsum.html',	// used if contentType is set to 'ajax' or 'iframe'	
+			loadMethod: 'html', 				// html, xhr, or iframe
+			content: '', 						// used if loadMethod is set to 'html'
+			contentURL: 'pages/lipsum.html',	// used if loadMethod is set to 'xhr' or 'iframe'	
 			onContentLoaded: $empty,			// Event, fired when content is successfully loaded via XHR
 			onFocus: $empty,					// Event, fired when the window is focused
 			onResize: $empty,					// Event, fired when the window is resized
@@ -286,13 +286,13 @@ var MochaDesktop = new Class({
 				// If window is minimized, instead of creating a duplicate window, restore minimized window
 				$(windowProperties.id).setStyle('visibility','visible');
 				$$('button.mochaDockButton').each(function(el){
-					if (el.getProperty('winAssociated') == windowProperties.id){ 										
+					if (el.getProperty('winAssociated') == windowProperties.id){
 						el.dispose();
 					}
 				});
 			} else {
 				// If window exists and is not minimized, give the findow focus
-				setTimeout(function() { this.focusThis($(windowProperties.id)); }.bind(this),10);
+				setTimeout(function(){ this.focusThis($(windowProperties.id)); }.bind(this),10);
 			}
 			return;
 		}
@@ -302,23 +302,23 @@ var MochaDesktop = new Class({
 			'id': 'win' + (++this.windowIDCount)
 		});
 		
-        // Attach the events to element
+		// Attach the events to element
 		mochaNewWindow.onContentLoaded = windowProperties.onContentLoaded;
 		mochaNewWindow.onFocus = windowProperties.onFocus;
-		mochaNewWindow.onResize	= windowProperties.onResize;		
+		mochaNewWindow.onResize	= windowProperties.onResize;
 		mochaNewWindow.onMinimize = windowProperties.onMinimize,
-		mochaNewWindow.onMaximize = windowProperties.onMaximize;	
+		mochaNewWindow.onMaximize = windowProperties.onMaximize;
 		mochaNewWindow.onClose = windowProperties.onClose;
-		mochaNewWindow.onCloseComplete = windowProperties.onCloseComplete;		
+		mochaNewWindow.onCloseComplete = windowProperties.onCloseComplete;
 
 		if ($('mochaDesktop')){
 			mochaNewWindow.injectInside($('mochaDesktop'));
 		}
 		else {
 			mochaNewWindow.injectInside(document.body);
-		}		
+		}
 		
-		if (windowProperties.contentType == 'html') {
+		if (windowProperties.loadMethod == 'html') {
 			mochaNewWindow.setHTML(windowProperties.content);	
 		}
 		
@@ -329,14 +329,14 @@ var MochaDesktop = new Class({
 		if (windowProperties.modal) {
 			mochaNewWindow.modal = true;
 		}
-		
-		if (windowProperties.contentURL && windowProperties.contentType != 'html') {
+
+		if (windowProperties.contentURL && windowProperties.loadMethod != 'html') {
 			mochaNewWindow.contentURL = windowProperties.contentURL;
-			if (windowProperties.contentType == 'iframe'){
+			if (windowProperties.loadMethod == 'iframe'){
 				mochaNewWindow.iframe = true;
 			}
-		}		
-		
+		}
+
 		mochaNewWindow.setStyles({
 			'width': windowProperties.width,
 			'height': windowProperties.height,
@@ -346,7 +346,7 @@ var MochaDesktop = new Class({
 		new Element('h3', {
 			'class': 'mochaTitle'
 		}).setHTML(windowProperties.title).injectTop(mochaNewWindow);
-		
+
 		this.insertAll([mochaNewWindow]);
 		
 		this.drawWindow(mochaNewWindow);
@@ -355,24 +355,23 @@ var MochaDesktop = new Class({
 		mochaNewWindow.getElement('.mochaScroller').setStyles({
 			'overflow': scrollbars,
 			'background': windowProperties.bgColor
-		});				
-		
+		});
+
 		mochaNewWindow.getElement('.mochaScrollerpad').setStyles({
 			'padding-top': windowProperties.paddingVertical,
 			'padding-bottom': windowProperties.paddingVertical,
 			'padding-left': windowProperties.paddingHorizontal,
-			'padding-right': windowProperties.paddingHorizontal			
-		});		
+			'padding-right': windowProperties.paddingHorizontal
+		});
 		
-		
-		if (!mochaNewWindow.modal) {		
+		if (!mochaNewWindow.modal) {
 			this.attachDraggable([mochaNewWindow]);
 			this.attachResizable([mochaNewWindow], windowProperties.onResize);
 			this.attachFocus([mochaNewWindow], windowProperties.onFocus);
 			this.attachMinimize([mochaNewWindow], windowProperties.onMinimize);
 			this.attachMaximize([mochaNewWindow], windowProperties.onMaximize);
-		}		
-		
+		}
+
 		this.attachClose([mochaNewWindow], windowProperties.onClose);
 
 		if (windowProperties.x && windowProperties.y) {
@@ -410,9 +409,8 @@ var MochaDesktop = new Class({
 			});
 		}
 		else {
-			setTimeout(function() { this.focusThis(mochaNewWindow); }.bind(this), 10);
+			setTimeout(function(){ this.focusThis(mochaNewWindow); }.bind(this), 10);
 		}
-		//alert(mochaNewWindow.getStyle('zIndex'));
 		return mochaNewWindow;
 	},
 	/*
@@ -432,9 +430,9 @@ var MochaDesktop = new Class({
 		
 		if (el.onClose){	
 			el.onClose();
-		}		
+		}
 		
-		this.drawWindow(el, false); // redraws IE windows without shadows since IE messes up canvas alpha when you change element opacity			
+		this.drawWindow(el, false); // redraws IE windows without shadows since IE messes up canvas alpha when you change element opacity
 		
 		if (element.modal) {
 			this.modalCloseMorph.start({
@@ -446,7 +444,7 @@ var MochaDesktop = new Class({
 			duration: 250,
 			onComplete: function(){
 				element.dispose();
-				if (el.onCloseComplete){	
+				if (el.onCloseComplete){
 					el.onCloseComplete();
 				}	
 			}.bind(this)
@@ -454,9 +452,9 @@ var MochaDesktop = new Class({
 
 		closeMorph.start({
 			opacity: .4
-		});		
+		});
 
-		return true;		
+		return true;
 	},
 	focusThis: function(el){
 		this.indexLevel++;
@@ -475,7 +473,7 @@ var MochaDesktop = new Class({
 			$('mochaDesktop').setStyle('width', this.getWindowWidth() - 20); // To adjust for broswer scrollbar
 			setTimeout( function(){
 				$('mochaDesktop').setStyle('width', this.getWindowWidth());
-			}.bind(this),100);					
+			}.bind(this), 100);
 			$('mochaDesktop').setStyle('height', this.getWindowHeight());
 			if ($('mochaPageWrapper')){
 				$('mochaPageWrapper').setStyle('height', this.getWindowHeight());
@@ -483,7 +481,7 @@ var MochaDesktop = new Class({
 		}
 	},
 	setModalSize: function(){
-		$('mochaModalBackground').setStyle('height', this.getWindowHeight());		
+		$('mochaModalBackground').setStyle('height', this.getWindowHeight());
 	},	
 	insertAll: function(elementArray){
 		elementArray.each(function(el){
@@ -544,20 +542,18 @@ var MochaDesktop = new Class({
 			mochaScrollerpad.getElement('.mochaTitle').dispose();
 
 			if(el.contentURL && !el.iframe){
-				var url = el.contentURL;
-				var myAjax = new Ajax(url, {
-					method: 'get',
-					update: mochaScrollerpad,
+				new Request({
+					url: el.contentURL,
 					onRequest: function(){
-						//
 					},
 					onFailure: function(){
-						mochaScrollerpad.setHTML('<p>ERROR LOADING AJAX CONTENT</p><p>Make sure all of your content is uploaded to your server, and that you are attempting to load a document from the same domain as this page. Ajax loading will not work on your local machine.</p>');
+						mochaScrollerpad.setHTML('<p><strong>Error Loading XMLHttpRequest</strong></p><p>Make sure all of your content is uploaded to your server, and that you are attempting to load a document from the same domain as this page. XMLHttpRequests will not work on your local machine.</p>');
 					},
-					onSuccess: function(){
+					onSuccess: function(response) {
+						mochaScrollerpad.setHTML(response);
 						if ( el.onContentLoaded ) el.onContentLoaded();
 					}
-				}).request();
+				}).get();
 			}
 			
 			//Insert canvas
@@ -589,7 +585,7 @@ var MochaDesktop = new Class({
 			}).injectAfter(mochaOverlay);
 
 			if (window.ie){
-				mochaControls.setStyle('zIndex', 2)	
+				mochaControls.setStyle('zIndex', 2)
 			}
 
 			//Insert close button
@@ -620,10 +616,10 @@ var MochaDesktop = new Class({
 	},
 	drawAll: function(){
 		$$('div.mocha').each(function(el){
-			if (el.getStyle('display') != 'none'){ 										
+			if (el.getStyle('display') != 'none'){
 				this.drawWindow(el);
 			}
-		}.bind(this));	
+		}.bind(this));
 	},
 	drawWindow: function(el, shadows) {
 		var mochaIframe = el.getElement('.zIndexFix');
@@ -633,15 +629,15 @@ var MochaDesktop = new Class({
 		var mochaTitlebar = el.getElement('.mochaTitlebar');
 		var mochaCanvas = el.getElement('.mochaCanvas');
 		var mochaControls = el.getElement('.mochaControls');
-		
+
 		var ctx = mochaCanvas.getContext('2d');
-		
+
 		//assign a unique id to each window, 
 		//that doesn't yet have an id
 		if(el.id == ""){el.id = 'win' + (++this.windowIDCount);}
-		
+
 		this.setMochaControlsWidth(el);
-		
+
 		if (el.maximizeToggle == 'restore') {
 			mochaContent.setStyle('height', (this.getWindowHeight() - this.options.headerHeight - this.options.footerHeight + 6));
 			mochaContent.setStyle('width', this.getWindowWidth());
@@ -668,8 +664,8 @@ var MochaDesktop = new Class({
 		if(sTitleBarTitle == null) {
 			sTitleBarTitle = "";
 		}
-		
-	 	mochaOverlay.setStyle('height', mochaHeight);
+
+		mochaOverlay.setStyle('height', mochaHeight);
 		el.setStyle('height', mochaHeight);
 
 		//test for Safari
@@ -682,13 +678,13 @@ var MochaDesktop = new Class({
 			mochaCanvas.width = mochaWidth;
 			mochaCanvas.height = mochaHeight;
 		}
-		
+
 		// part of the fix for IE6 select z-index bug and FF on Mac scrollbar z-index bug
 		if (window.ie6){
 			mochaIframe.setStyle('width', mochaWidth);
 			mochaIframe.setStyle('height', mochaHeight);
 		}
-		
+
 		// set width		
 		mochaOverlay.setStyle('width', mochaWidth); 
 		el.setStyle('width', mochaWidth);
@@ -703,7 +699,7 @@ var MochaDesktop = new Class({
 		}		
 		this.roundedRect(ctx,3,2,mochaWidth-6,mochaHeight-6,this.options.cornerRadius,246,246,246,1.0);	//mocha body
 		this.topRoundedRect(ctx,3,2,mochaWidth-this.scrollWidthOffset,this.options.headerHeight,this.options.cornerRadius); //mocha header
-		
+
 		if (this.options.closable && this.options.maximizable){
 			this.minimizebuttonX = mochaWidth - 53;
 		} else if (this.options.closable || this.options.maximizable){
@@ -711,14 +707,14 @@ var MochaDesktop = new Class({
 		} else {
 			this.minimizebuttonX = mochaWidth - 15;
 		}
-		
+
 		if (this.options.closable){
 			this.maximizebuttonX = mochaWidth - 34;
 		}
 		else {
 			this.maximizebuttonX = mochaWidth - 15;
 		}
-		
+
 		this.closebuttonX = mochaWidth - 15;
 
 			if (this.options.closable || el.modal){
@@ -734,7 +730,7 @@ var MochaDesktop = new Class({
 			this.triangle(ctx, mochaWidth - 20, mochaHeight - 20, 12, 12, 209, 209, 209, 1.0); //resize handle
 			}
 			this.triangle(ctx, mochaWidth - 20, mochaHeight - 20, 10, 10, 0, 0, 0, 0); //invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7.
-		
+
 	},
 	//mocha body
 	roundedRect: function(ctx,x,y,width,height,radius,r,g,b,a){
@@ -853,15 +849,15 @@ var MochaDesktop = new Class({
 							el.getElement('.mochaIframe').setStyles({
 								'visibility': 'hidden'
 							});
-						}						
+						}
 					}.bind(this),
 					onComplete: function(){
 						if (el.iframe && !window.webkit) {
 							el.getElement('.mochaIframe').setStyles({
 								'visibility': 'visible'
 							});
-						}					
-					}.bind(this)					
+						}
+					}.bind(this)
 				});
 			}
 		}.bind(this));
@@ -900,7 +896,7 @@ var MochaDesktop = new Class({
 					if (el.onResize){ // checks for onResize since windows generated at startup do not have this option			
 						el.onResize();  // later I may just assign $empty functions for onclose and so forth to the original windows
 					}	
-					}.bind(this)					
+					}.bind(this)
 				});
 			}
 		}.bind(this));
@@ -973,7 +969,7 @@ var MochaDesktop = new Class({
 		}
 		if (this.options.maximizable && !el.modal){
 			this.mochaControlsWidth += 19;
-			
+
 		}		
 		if (this.options.closable || el.modal){
 			this.mochaControlsWidth += 19;
@@ -1032,13 +1028,13 @@ var MochaDesktop = new Class({
 			'id': 'DockButton'+objWin.id
 		}).setHTML((sTitleBarText.substring(0,13) + sLongTitle)).injectInside($('mochaDock'));
 				
-		btnEl.addEvent('click', function(event){		
-			//click event will restore the window			
+		btnEl.addEvent('click', function(event){
+			//click event will restore the window
 			var objWin = $(event.target.getProperty('winAssociated'));
 			objWin.setStyle('visibility','visible');
 
 			this.focusThis(objWin);
-			
+
 			//remove this btn element 
 			event.target.dispose();
 		}.bind(this));
@@ -1060,12 +1056,12 @@ var MochaDesktop = new Class({
 	},
 	arrangeCascade: function(){
 		var x = this.options.desktopLeftOffset
-		var y = this.options.desktopTopOffset;		
+		var y = this.options.desktopTopOffset;
 		$$('div.mocha').each(function(el){
-			if (el.getStyle('visibility') != 'hidden'){										
-				this.focusThis(el);										
+			if (el.getStyle('visibility') != 'hidden'){
+				this.focusThis(el);
 				x += this.options.mochaLeftOffset;
-				y += this.options.mochaTopOffset;			
+				y += this.options.mochaTopOffset;
 				var mochaMorph = new Fx.Morph(el, {
 					'duration': 550
 				});
@@ -1091,9 +1087,9 @@ var MochaToolbars = new Class({
 	options: {
 		titlebar: true,
 		menubar: true,
-		dock: true		
+		dock: true
 	},
-	initialize: function(options){		
+	initialize: function(options){
 		this.setOptions(options);
 	}
 });	
@@ -1112,7 +1108,7 @@ var MochaScreens = new Class({
 	},
 	initialize: function(options){
 		this.setOptions(options);
-		this.setScreen(this.options.defaultScreen);			
+		this.setScreen(this.options.defaultScreen);
 	},
 	setScreen: function(index) {
 		if ( !$('mochaScreens') )
@@ -1120,8 +1116,8 @@ var MochaScreens = new Class({
 		$$('#mochaScreens div.screen').each(function(el,i) {
 			el.setStyle('display', i == index ? 'block' : 'none');
 		});
-	}	
-});		
+	}
+});
 MochaScreens.implement(new Options);
 
 /* -----------------------------------------------------------------
@@ -1135,9 +1131,9 @@ var MochaWindow = new Class({
 	options: {
 		id: null,
 		title: 'New Window',
-		contentType: 'html', 			 // html, ajax, or iframe
-		content: '', 					 // used if contentType is set to 'html'
-		contentURL: 'pages/lipsum.html', // used if contentType is set to 'ajax' or 'iframe'	
+		loadMethod: 'html', 			 // html, xhr, or iframe
+		content: '', 					 // used if loadMethod is set to 'html'
+		contentURL: 'pages/lipsum.html', // used if loadMethod is set to 'xhr' or 'iframe'	
 		onContentLoaded: $empty,
 		onMinimize: $empty,				 // Event, fired when window is minimized
 		onMaximize: $empty,				 // Event, fired when window is maximized
@@ -1159,7 +1155,7 @@ var MochaWindow = new Class({
 		this.setOptions(options);
 		document.myDesktop.newWindow(this.options);		
 	}
-});		
+});
 MochaWindow.implement(new Options);
 
 /* -----------------------------------------------------------------
@@ -1173,9 +1169,9 @@ var MochaWindowForm = new Class({
 	options: {
 		id: null,
 		title: 'New Window',
-		contentType: 'html', // html, ajax, or iframe
-		content: '', // used if contentType is set to 'html'
-		contentURL: 'pages/lipsum.html', // used if contentType is set to 'ajax' or 'iframe'
+		loadMethod: 'html', // html, xhr, or iframe
+		content: '', // used if loadMethod is set to 'html'
+		contentURL: 'pages/lipsum.html', // used if loadMethod is set to 'xhr' or 'iframe'
 		modal: false,
 		width: 300,
 		height: 125,
@@ -1188,14 +1184,14 @@ var MochaWindowForm = new Class({
 	initialize: function(options){
 		this.setOptions(options);
 		this.options.title = $('mochaNewWindowHeaderTitle').value;
-		if ($('htmlContentType').checked){
-			this.options.contentType = 'html';
+		if ($('htmlLoadMethod').checked){
+			this.options.loadMethod = 'html';
 		}
-		if ($('ajaxContentType').checked){
-			this.options.contentType = 'ajax';
+		if ($('xhrLoadMethod').checked){
+			this.options.loadMethod = 'xhr';
 		}
-		if ($('iframeContentType').checked){
-			this.options.contentType = 'iframe';
+		if ($('iframeLoadMethod').checked){
+			this.options.loadMethod = 'iframe';
 		}
 		this.options.content = $('mochaNewWindowContent').value;
 		if ($('mochaNewWindowContentURL').value){
@@ -1229,13 +1225,13 @@ MochaWindowForm.implement(new Options);
 
 function attachMochaLinkEvents(){
 	
-	if ($('ajaxpageLink')){ // Associated HTML: <a id="ajaxpageLink" href="pages/lipsum.html">Ajax Page</a>
+	if ($('ajaxpageLink')){ // Associated HTML: <a id="xhrpageLink" href="pages/lipsum.html">xhr Page</a>
 		$('ajaxpageLink').addEvent('click', function(e){	
 			new Event(e).stop();
 			new MochaWindow({
 				id: 'ajaxpage',
-				title: 'Window Content Loaded with Ajax',
-				contentType: 'ajax',
+				title: 'Content Loaded with an XMLHttpRequest',
+				loadMethod: 'xhr',
 				contentURL: 'pages/lipsum.html',
 				width: 340,
 				height: 150
@@ -1249,12 +1245,12 @@ function attachMochaLinkEvents(){
 			new MochaWindow({
 				id: 'mootools',
 				title: 'Mootools Forums in an Iframe',
-				contentType: 'iframe',
+				loadMethod: 'iframe',
 				contentURL: 'http://forum.mootools.net/',
 				width: 650,
 				height: 400,
-				scrollbars: false,					
-				paddingVertical: 0,					
+				scrollbars: false,
+				paddingVertical: 0,
 				paddingHorizontal: 0
 			});
 		});
@@ -1266,12 +1262,12 @@ function attachMochaLinkEvents(){
 			new MochaWindow({
 				id: 'spirograph',
 				title: 'Canvas Spirograph in an Iframe',
-				contentType: 'iframe',
+				loadMethod: 'iframe',
 				contentURL: 'pages/spirograph.html',
 				width: 340,
 				height: 340,
-				scrollbars: false,					
-				paddingVertical: 0,					
+				scrollbars: false,
+				paddingVertical: 0,
 				paddingHorizontal: 0,
 				bgColor: '#c30'
 			});
@@ -1284,7 +1280,7 @@ function attachMochaLinkEvents(){
 			new MochaWindow({
 				id: 'cornerRadius',
 				title: 'Corner Radius Slider',
-				contentType: 'ajax',
+				loadMethod: 'xhr',
 				contentURL: 'pages/corner_radius.html',
 				onContentLoaded: function(){
 					addSlider();
@@ -1292,18 +1288,18 @@ function attachMochaLinkEvents(){
 				width: 300,
 				height: 105,
 				x: 20,
-				y: 60					
+				y: 60
 			});
 		});
 	}	
-	
+
 	if ($('triggersLink')){
-		$('triggersLink').addEvent('click', function(e){	
+		$('triggersLink').addEvent('click', function(e){
 			new Event(e).stop();
 			new MochaWindow({
 				id: 'triggers',
 				title: 'Window Trigger Options',
-				contentType: 'ajax',
+				loadMethod: 'xhr',
 				contentURL: 'pages/triggers.html',
 				onContentLoaded: function(){
 					alert('The window\'s content was loaded.');
@@ -1322,7 +1318,7 @@ function attachMochaLinkEvents(){
 				},
 				onResize: function(){
 					alert('The window was resized.');
-				},				
+				},
 				width: 340,
 				height: 250
 			});
@@ -1335,16 +1331,16 @@ function attachMochaLinkEvents(){
 			new MochaWindow({
 				id: 'windowbuilder',
 				title: 'Window Builder',
-				contentType: 'ajax',
+				loadMethod: 'xhr',
 				contentURL: 'pages/builder.html',
 				onContentLoaded: function(){
 					$('mochaNewWindowSubmit').addEvent('click', function(e){
 						new Event(e).stop();
 						new MochaWindowForm();
-					});													 
+					});
 				},
 				width: 370,
-				height: 400,				
+				height: 400,
 				x: 20,
 				y: 60
 			});
@@ -1357,12 +1353,12 @@ function attachMochaLinkEvents(){
 			new MochaWindow({
 				id: 'faq',
 				title: 'FAQ',
-				contentType: 'ajax',
+				loadMethod: 'xhr',
 				contentURL: 'pages/faq.html',
 				width: 320,
 				height: 320,
 				x: 20,
-				y: 60					
+				y: 60
 			});
 		});
 	}
@@ -1373,12 +1369,12 @@ function attachMochaLinkEvents(){
 			new MochaWindow({
 				id: 'docs',
 				title: 'Documentation',
-				contentType: 'ajax',
+				loadMethod: 'xhr',
 				contentURL: 'pages/docs.html',
 				width: 600,
 				height: 350,
 				x: 20,
-				y: 60					
+				y: 60
 			});
 		});
 	}
@@ -1389,12 +1385,12 @@ function attachMochaLinkEvents(){
 			new MochaWindow({
 				id: 'overview',
 				title: 'Overview',
-				contentType: 'ajax',
+				loadMethod: 'xhr',
 				contentURL: 'pages/overview.html',
 				width: 300,
 				height: 255,
 				x: 20,
-				y: 60					
+				y: 60
 			});
 		});
 	}
@@ -1405,12 +1401,12 @@ function attachMochaLinkEvents(){
 			new MochaWindow({
 				id: 'resources',
 				title: 'Resources',
-				contentType: 'ajax',
+				loadMethod: 'xhr',
 				contentURL: 'pages/resources.html',
 				width: 300,
 				height: 275,
 				x: 20,
-				y: 60					
+				y: 60
 			});
 		});
 	}
@@ -1442,12 +1438,12 @@ function attachMochaLinkEvents(){
 			new MochaWindow({
 				id: 'help',
 				title: 'Support',
-				contentType: 'ajax',
+				loadMethod: 'xhr',
 				contentURL: 'pages/support.html',
 				width: 320,
 				height: 320,
 				x: 20,
-				y: 60					
+				y: 60
 			});
 		});
 	}
@@ -1458,12 +1454,12 @@ function attachMochaLinkEvents(){
 			new MochaWindow({
 				id: 'contribute',
 				title: 'Contribute',
-				contentType: 'ajax',
+				loadMethod: 'xhr',
 				contentURL: 'pages/contribute.html',
 				width: 320,
 				height: 320,
 				x: 20,
-				y: 60					
+				y: 60
 			});
 		});
 	}	
@@ -1474,7 +1470,7 @@ function attachMochaLinkEvents(){
 			new MochaWindow({
 				id: 'about',
 				title: 'Mocha UI Version 0.7',
-				contentType: 'ajax',
+				loadMethod: 'xhr',
 				contentURL: 'pages/about.html',
 				modal: true,
 				width: 300,
@@ -1492,10 +1488,10 @@ function attachMochaLinkEvents(){
 	
 	// Deactivate menu header links
 	$$('a.returnFalse').each(function(el){
-		el.addEvent('click', function(e){													
+		el.addEvent('click', function(e){
 			new Event(e).stop();
-		});			
-	});	
+		});
+	});
 	
 }
 
