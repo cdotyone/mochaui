@@ -32,7 +32,7 @@
 			<li><a id="ajaxpageLink" href="pages/lipsum.html">Ajax(XHR) Demo</a></li>
 			<li><a id="mootoolsLink" href="http://forum.mootools.net/">Iframe: Mootools</a></li>
 			<li><a id="spirographLink" href="pages/spirograph.html">Iframe: Spirograph</a></li>
-			<li><a id="triggersLink" href="pages/triggers.html">Window Triggers</a></li>
+			<li><a id="eventsLink" href="pages/events.html">Window Events</a></li>
 			<li><a id="cornerRadiusLink" href="pages/corner_radius.html">Corner Radius Slider</a></li>
 			<li><a target="_blank" href="basic.html">Starter: No Toolbars</a></li>
 			<li><a target="_blank" href="modal.html">Starter: Modal Only</a></li>
@@ -89,7 +89,7 @@
 					<p> - <a href="http://greghoustondesign.com/">Greg Houston</a></p>
 
 					<h3>Download</h3>
-					<p><a target="_blank" href="http://code.google.com/p/mocha-ui/downloads/list">Download Mocha UI v0.7</a></p>
+					<p><a target="_blank" href="http://code.google.com/p/mocha-ui/downloads/list">Download Mocha UI v0.7 r22</a></p>
 				</div><!-- aside end -->
 			</div>
 			<div class="screen">
@@ -115,7 +115,6 @@
 	<li>Minimal HTML markup required.</li>
 	<li>Tested in Firefox 2, Internet Explorer 6 &amp; 7, Safari 2, and Opera 9.</li>
 	<li>Validates as XHTML 1.0 Strict if you use no target attributes in your anchors and validates as XHTML 1.0 Transitional if you do.</li>
-	<li>Gracefully degrades without javascript.</li>
 </ul>
 
 <h3>Bugs</h3>
@@ -126,19 +125,19 @@
 </ul>
 
 <h3>Change Log</h3>
-<p>v0.5 - 11/17/2007</p>
+<h4>v0.5 - 11/17/2007</h4>
 <ul>
 	<li>Initial release</li>
 </ul>
 
-<p>v0.6 - 11/26/2007</p>
+<h4>v0.6 - 11/26/2007</h4>
 <ul>
 	<li>Fixed the IE6 select issue</li>
 	<li>Added a couple more class options</li>	
 	<li>Minor code optimizations</li>
 </ul>
 
-<p>v0.7 - 12/03/2007</p>
+<h4>v0.7 - 12/03/2007</h4>
 <ul>
 	<li>Added minimize functionality (Scott F. Frederick)</li>
 	<li>Added mouseover "title" to close, maximize, and minimize buttons (Scott F. Frederick)</li>
@@ -153,15 +152,21 @@
 	<li>Code optimizations</li>
 </ul>
 
-<p>Coming in the Next Update to v0.7</p>
+<h4>v0.7 r22 - 12/11/2007</h4>
 <ul>
 	<li>Iframes now resize when you resize a window</li>
 	<li>Fixed it so that if the desktop toolbars are removed the rest of the code still works</li>
+	<li>Modal windows can now be used standalone without any Mocha UI html markup</li>
 	<li>Removed the inline javascript from the example html</li>
 	<li>Added optional autohide to the dock (Scott F. Frederick)</li>
-	<li>Added the following options to new windows: onContentLoaded, onClose, onMinimize, onMaximize, onFocus, and onResize (Joel Lindau)</li>
+	<li>Added the following options to new windows: onContentLoaded, onFocus, onResize, onMinimize, onMaximize, onClose and onCloseComplete (Joel Lindau)</li>
+	<li>Added screens/workspaces (Joel Lindau)</li>
 	<li>Pulled the slider function out of the core class</li>
+	<li>Code optimizations</li>
 </ul>	
+
+<h4>Coming in the Next Update</h4>
+<p>Hopefully in the next update we can focus a bit more on code patterns, optimization, and how to implement plugins and modules.</p>
 	
 </div>
 

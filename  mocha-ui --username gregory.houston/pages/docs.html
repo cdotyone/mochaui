@@ -2,7 +2,7 @@
 
 <p>Since the feature set is growing rather rapidly I will probably be rethinking a lot of the code structure, naming, and syntax. Please keep this in mind if you are trying to upgrade from a previous release of Mocha UI.
 
-<p>I would like to develop a core that is modular, light, robust, and easy to modify and extend. At these early stages I encourage early adopters to voice their thoughts on code structure, naming and syntax. What functionality would you like to see in it's own classes rather than in the main class? Do you see something in the code that can be optimized? Do you have ideas on implementing plugins or modules? Let me know.</p>
+<p>I would like to develop a core that is modular, light, robust, and easy to modify and extend. At these early stages I encourage early adopters to voice their thoughts on code structure, naming and syntax. What functionality would you like to see in it's own class or implemented as a plugin or module? Do you see something in the code that can be optimized? Do you have ideas on implementing plugins or modules? Let me know.</p>
 
 <p>As the code and feature set becomes more crystallized the documentation will be further developed.</p>
 
@@ -14,11 +14,11 @@
 	<li>Windows - Requires the Desktop, though considering making it possible to break this dependency</li>
 </ul>
 
-<h3>MochaWindow</h3>
+<h3>Creating a New Window</h3>
 
 <p><strong>Syntax:</strong></p>
 <pre>
-new MochaWindow();
+document.mochaDesktop.newWindow();
 </pre>
 
 <p><strong>Arguments: </strong>Options</p>
@@ -34,8 +34,8 @@ new MochaWindow();
 	<li>width: (number)</li>
 	<li>height: (number)</li>
 	<li>scrollbars: (boolean)</li>
-	<li>x: (number)</li> If x or y are not set the new window is centered in the page.
-	<li>y: (number)</li> If x or y are not set the new window is centered in the page.
+	<li>x: (number) If x or y are not set the new window is centered in the browser window.</li>
+	<li>y: (number)</li>
 	<li>paddingVertical: (number)</li>
 	<li>paddingHorizontal: (number)</li>
 	<li>bgColor: (string, defaults to '#fff')</li>
@@ -44,11 +44,12 @@ new MochaWindow();
 <p><strong>Events:</strong></p>
 <ul>
 	<li>onContentLoaded: (function)	Event, fired when content is successfully loaded via xhr</li>
-	<li>onClose: (function)	Event, fired when window is closed</li>
+	<li>onFocus: (function) Event, fired when window is focused</li>
+	<li>onResize: (function) Event, fired when window is resized</li>	
 	<li>onMinimize: (function) Event, fired when window is minimized</li>
 	<li>onMaximize: (function) Event, fired when window is maximized</li>
-	<li>onFocus: (function) Event, fired when window is focused</li>
-	<li>onResize: (function) Event, fired when window is resized</li>
+	<li>onClose: (function)	Event, fired just before window is closed</li>
+	<li>onCloseComplete: (function)	Event, fired after window is disposed</li>		
 </ul>	
 
 <h3>Loading Content with an XMLHttpRequest(XHR)</h3>
@@ -61,17 +62,17 @@ new MochaWindow();
 
 <h3>Creating a Window Link</h3>
 
-HTML:
+Example HTML:
 <pre>
 &lt;a id="docsLink" href="pages/docs.html"&gt;Documentation&lt;/a&gt;
 </pre>
 
-Javascript:
+Example Javascript:
 <pre>
 	if ($('docsLink')){
 		$('docsLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			new MochaWindow({
+			document.mochaDesktop.newWindow({
 				id: 'docs',
 				title: 'Documentation',
 				contentType: 'xhr',
@@ -87,6 +88,14 @@ Javascript:
 
 <p><strong>Notes:</strong></p>
 <p>If you wish to add links in windows that open other windows remember to add events to those links when the windows are created.</p>
+
+<h3>Closing a Window</h3>
+<p>Closing a window requires that you know the ID property of the window. Setting the ID is an option when creating a window.</p>
+
+Example Javascript:
+<pre>
+document.mochaDesktop.closeWindow($('windowID'));
+</pre>
 
 <h3>MooCanvas</h3>
 <p>Though I have not tried it, some of you may be interested in <a target="_blank" href="http://olmo-maldonado.com/projects/moocanvas/">MooCanvas</a> as an alternative to <a target="_blank" href="http://excanvas.sourceforge.net/">ExplorerCanvas</a>. Mocha UI would require a little bit of extra code to work with MooCanvas. See the MooCanvas page for more information on how it's usage differs from ExplorerCanvas.</p>

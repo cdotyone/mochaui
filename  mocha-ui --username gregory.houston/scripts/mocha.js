@@ -559,10 +559,10 @@ var MochaDesktop = new Class({
 			
 			//Insert canvas
 			var canvas = new Element('canvas', {
-				'class': 'mochaCanvas'
+				'class': 'mochaCanvas',
+				'width': 1,
+				'height': 1
 			}).injectInside(el);
-			canvas.width = 1;
-			canvas.height = 1;
 
 			// Dynamically initialize canvas using excanvas. This is only required by IE
 			if (window.ie) {
@@ -955,7 +955,7 @@ var MochaDesktop = new Class({
 				element.getElement('.mochaClose').addEvent('click', function(event){
 					var mochaControls = event.target.parentNode;
 					var el = mochaControls.parentNode;
-					this.closeWindow(element, false);
+					this.closeWindow(element);
 				}.bind(this));
 			}
 		}.bind(this));
@@ -1078,28 +1078,8 @@ MochaDesktop.implement(new Options);
 
 /* -----------------------------------------------------------------
 
-	MOCHA TOOLBARS
-	This class can be removed if you are not using the Mocha UI toolbars.
-	Not yet implemented
-
-   ----------------------------------------------------------------- */
-   
-var MochaToolbars = new Class({
-	options: {
-		titlebar: true,
-		menubar: true,
-		dock: true
-	},
-	initialize: function(options){
-		this.setOptions(options);
-	}
-});	
-MochaToolbars.implement(new Options);
-
-/* -----------------------------------------------------------------
-
 	MOCHA SCREENS
-	This class can be removed if you are not creating multiple screens/workspaces.
+	Notes: This class can be removed if you are not creating multiple screens/workspaces.
 
    ----------------------------------------------------------------- */
 
@@ -1120,44 +1100,6 @@ var MochaScreens = new Class({
 	}
 });
 MochaScreens.implement(new Options);
-
-/* -----------------------------------------------------------------
-
-	MOCHA WINDOW
-	Notes: This class can be removed if you are not creating new windows dynamically.
-
-   ----------------------------------------------------------------- */
-
-var MochaWindow = new Class({
-	options: {
-		id: null,
-		title: 'New Window',
-		loadMethod: 'html', 			 // html, xhr, or iframe
-		content: '', 					 // used if loadMethod is set to 'html'
-		contentURL: 'pages/lipsum.html', // used if loadMethod is set to 'xhr' or 'iframe'	
-		onContentLoaded: $empty,
-		onMinimize: $empty,				 // Event, fired when window is minimized
-		onMaximize: $empty,				 // Event, fired when window is maximized
-		onFocus: $empty,				 // Event, fired when window is focused
-		onResize: $empty,				 // Event, fired when window is resized
-		onClose: $empty,
-		onCloseComplete: $empty,		
-		modal: false,
-		width: 300,
-		height: 125,
-		scrollbars: true, // true sets the overflow to auto and false sets it to hidden
-		x: null, // if x or y is null or modal is false the new window is centered on the screen
-		y: null,
-		paddingVertical: 10,
-		paddingHorizontal: 12,
-		bgColor: '#fff'
-	},
-	initialize: function(options){		
-		this.setOptions(options);
-		document.mochaDesktop.newWindow(this.options);		
-	}
-});
-MochaWindow.implement(new Options);
 
 /* -----------------------------------------------------------------
 
@@ -1212,7 +1154,6 @@ var MochaWindowForm = new Class({
 });
 MochaWindowForm.implement(new Options);
 
-
 /* -----------------------------------------------------------------
 
 	ATTACH MOCHA LINK EVENTS
@@ -1229,7 +1170,7 @@ function attachMochaLinkEvents(){
 	if ($('ajaxpageLink')){ // Associated HTML: <a id="xhrpageLink" href="pages/lipsum.html">xhr Page</a>
 		$('ajaxpageLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			new MochaWindow({
+			document.mochaDesktop.newWindow({
 				id: 'ajaxpage',
 				title: 'Content Loaded with an XMLHttpRequest',
 				loadMethod: 'xhr',
@@ -1243,7 +1184,7 @@ function attachMochaLinkEvents(){
 	if ($('mootoolsLink')){
 		$('mootoolsLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			new MochaWindow({
+			document.mochaDesktop.newWindow({
 				id: 'mootools',
 				title: 'Mootools Forums in an Iframe',
 				loadMethod: 'iframe',
@@ -1260,7 +1201,7 @@ function attachMochaLinkEvents(){
 	if ($('spirographLink')){
 		$('spirographLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			new MochaWindow({
+			document.mochaDesktop.newWindow({
 				id: 'spirograph',
 				title: 'Canvas Spirograph in an Iframe',
 				loadMethod: 'iframe',
@@ -1278,7 +1219,7 @@ function attachMochaLinkEvents(){
 	if ($('cornerRadiusLink')){
 		$('cornerRadiusLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			new MochaWindow({
+			document.mochaDesktop.newWindow({
 				id: 'cornerRadius',
 				title: 'Corner Radius Slider',
 				loadMethod: 'xhr',
@@ -1294,14 +1235,14 @@ function attachMochaLinkEvents(){
 		});
 	}	
 
-	if ($('triggersLink')){
-		$('triggersLink').addEvent('click', function(e){
+	if ($('eventsLink')){
+		$('eventsLink').addEvent('click', function(e){
 			new Event(e).stop();
-			new MochaWindow({
-				id: 'triggers',
+			document.mochaDesktop.newWindow({
+				id: 'events',
 				title: 'Window Trigger Options',
 				loadMethod: 'xhr',
-				contentURL: 'pages/triggers.html',
+				contentURL: 'pages/events.html',
 				onContentLoaded: function(){
 					alert('The window\'s content was loaded.');
 				},			
@@ -1329,7 +1270,7 @@ function attachMochaLinkEvents(){
 	if ($('builderLink')){
 		$('builderLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			new MochaWindow({
+			document.mochaDesktop.newWindow({
 				id: 'windowbuilder',
 				title: 'Window Builder',
 				loadMethod: 'xhr',
@@ -1351,7 +1292,7 @@ function attachMochaLinkEvents(){
 	if ($('faqLink')){
 		$('faqLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			new MochaWindow({
+			document.mochaDesktop.newWindow({
 				id: 'faq',
 				title: 'FAQ',
 				loadMethod: 'xhr',
@@ -1367,7 +1308,7 @@ function attachMochaLinkEvents(){
 	if ($('docsLink')){
 		$('docsLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			new MochaWindow({
+			document.mochaDesktop.newWindow({
 				id: 'docs',
 				title: 'Documentation',
 				loadMethod: 'xhr',
@@ -1383,7 +1324,7 @@ function attachMochaLinkEvents(){
 	if ($('overviewLink')){
 		$('overviewLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			new MochaWindow({
+			document.mochaDesktop.newWindow({
 				id: 'overview',
 				title: 'Overview',
 				loadMethod: 'xhr',
@@ -1399,7 +1340,7 @@ function attachMochaLinkEvents(){
 	if ($('resourcesLink')){
 		$('resourcesLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			new MochaWindow({
+			document.mochaDesktop.newWindow({
 				id: 'resources',
 				title: 'Resources',
 				loadMethod: 'xhr',
@@ -1436,7 +1377,7 @@ function attachMochaLinkEvents(){
 	if ($('helpLink')){
 		$('helpLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			new MochaWindow({
+			document.mochaDesktop.newWindow({
 				id: 'help',
 				title: 'Support',
 				loadMethod: 'xhr',
@@ -1452,7 +1393,7 @@ function attachMochaLinkEvents(){
 	if ($('contributeLink')){
 		$('contributeLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			new MochaWindow({
+			document.mochaDesktop.newWindow({
 				id: 'contribute',
 				title: 'Contribute',
 				loadMethod: 'xhr',
@@ -1468,7 +1409,7 @@ function attachMochaLinkEvents(){
 	if ($('aboutLink')){
 		$('aboutLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			new MochaWindow({
+			document.mochaDesktop.newWindow({
 				id: 'about',
 				title: 'Mocha UI Version 0.7',
 				loadMethod: 'xhr',
@@ -1499,7 +1440,7 @@ function attachMochaLinkEvents(){
 /* -----------------------------------------------------------------
 
 	Corner Radius Slider
-	Remove this function and it's reference in onload if you are not
+	Notes: Remove this function and it's reference in onload if you are not
 	using the example corner radius slider
 
    ----------------------------------------------------------------- */
@@ -1527,7 +1468,6 @@ function addSlider(){
    ----------------------------------------------------------------- */
 
 window.addEvent('load', function(){
-		document.mochaToolbars = new MochaToolbars();
 		document.mochaScreens = new MochaScreens();
 		document.mochaDesktop = new MochaDesktop();
 		attachMochaLinkEvents();
