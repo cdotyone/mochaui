@@ -27,9 +27,9 @@ new MochaWindow();
 <ul>
 	<li>id: (string)</li>
 	<li>title: (string)</li>
-	<li>contentType: (string: 'html', 'ajax', or 'iframe')</li>
+	<li>contentType: (string: 'html', 'xhr', or 'iframe')</li>
 	<li>content: (string) used if contentType is set to 'html'</li>
-	<li>contentURL: (string) used if contentType is set to 'ajax' or 'iframe'</li>
+	<li>contentURL: (string) used if contentType is set to 'xhr' or 'iframe'</li>
 	<li>modal: (boolean)</li>
 	<li>width: (number)</li>
 	<li>height: (number)</li>
@@ -43,7 +43,7 @@ new MochaWindow();
 
 <p><strong>Events:</strong></p>
 <ul>
-	<li>onContentLoaded: (function)	Event, fired when content is successfully loaded via ajax</li>
+	<li>onContentLoaded: (function)	Event, fired when content is successfully loaded via xhr</li>
 	<li>onClose: (function)	Event, fired when window is closed</li>
 	<li>onMinimize: (function) Event, fired when window is minimized</li>
 	<li>onMaximize: (function) Event, fired when window is maximized</li>
@@ -51,11 +51,11 @@ new MochaWindow();
 	<li>onResize: (function) Event, fired when window is resized</li>
 </ul>	
 
-<h3>Loading Content with Ajax</h3>
-<p>For content to load via ajax all the files must be online and in the same domain. If you need to load content from another domain or wish to have it work offline, load the content in a iframe instead of using the ajax option.</p>
+<h3>Loading Content with an XMLHttpRequest(XHR)</h3>
+<p>For content to load via xhr all the files must be online and in the same domain. If you need to load content from another domain or wish to have it work offline, load the content in a iframe instead of using the xhr option.</p>
 
 <h3>Iframes</h3>
-<p>There are at least three ways you can put Iframes in your windows. You can place an iframe in one of your mocha divs in the original index.html. You can use the iframe contentType option, which will place your content in an iframe for you though this gives you the least amount of control over the iframe's properties. You can load a page with an iframe in it into a window using ajax. The later option gives you the most control.</p>
+<p>There are at least three ways you can put Iframes in your windows. You can place an iframe in one of your mocha divs in the original index.html. You can use the iframe contentType option, which will place your content in an iframe for you though this gives you the least amount of control over the iframe's properties. You can load a page with an iframe in it into a window using xhr. The later option gives you the most control.</p>
 
 <p>If you use the iframe contentType your iframe will automatically be resized when the window it is in is resized. If you want this same functionality when using one of the other load options simply add class="mochaIframe" to those iframes and they will be resized for you as well.</p>
 
@@ -74,7 +74,7 @@ Javascript:
 			new MochaWindow({
 				id: 'docs',
 				title: 'Documentation',
-				contentType: 'ajax',
+				contentType: 'xhr',
 				contentURL: 'pages/docs.html',
 				width: 320,
 				height: 320,

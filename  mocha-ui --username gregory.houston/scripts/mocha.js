@@ -411,7 +411,7 @@ var MochaDesktop = new Class({
 		else {
 			setTimeout(function(){ this.focusThis(mochaNewWindow); }.bind(this), 10);
 		}
-		return mochaNewWindow;
+		return;
 	},
 	/*
 	
@@ -529,6 +529,7 @@ var MochaDesktop = new Class({
 			
 			if (el.iframe){
 				var mochaIframe = new Element('iframe', {
+					'id': el.id + 'Iframe',						  
 					'class': 'mochaIframe',
 					'src': el.contentURL,
 					'marginwidth': 0,
@@ -1153,7 +1154,7 @@ var MochaWindow = new Class({
 	},
 	initialize: function(options){		
 		this.setOptions(options);
-		document.myDesktop.newWindow(this.options);		
+		document.mochaDesktop.newWindow(this.options);		
 	}
 });
 MochaWindow.implement(new Options);
@@ -1206,7 +1207,7 @@ var MochaWindowForm = new Class({
 		this.options.y = $('mochaNewWindowY').value.toInt();
 		this.options.paddingVertical = $('mochaNewWindowPaddingVertical').value.toInt();
 		this.options.paddingHorizontal = $('mochaNewWindowPaddingHorizontal').value.toInt();
-		document.myDesktop.newWindow(this.options);		
+		document.mochaDesktop.newWindow(this.options);		
 	}
 });
 MochaWindowForm.implement(new Options);
@@ -1482,7 +1483,7 @@ function attachMochaLinkEvents(){
 	if ($('cascadeLink')){
 		$('cascadeLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			document.myDesktop.arrangeCascade();
+			document.mochaDesktop.arrangeCascade();
 		});
 	}
 	
@@ -1511,11 +1512,11 @@ function addSlider(){
 			offset: 5,
 			onChange: function(pos){
 				$('updatevalue').setHTML(pos);
-				document.myDesktop.options.cornerRadius = pos;
-				document.myDesktop.drawAll();
-				document.myDesktop.indexLevel++; 
+				document.mochaDesktop.options.cornerRadius = pos;
+				document.mochaDesktop.drawAll();
+				document.mochaDesktop.indexLevel++; 
 			}
-		}).set(document.myDesktop.options.cornerRadius);
+		}).set(document.mochaDesktop.options.cornerRadius);
 	}
 }
 
@@ -1526,9 +1527,9 @@ function addSlider(){
    ----------------------------------------------------------------- */
 
 window.addEvent('load', function(){
-		document.myToolbars = new MochaToolbars();
+		document.mochaToolbars = new MochaToolbars();
 		document.mochaScreens = new MochaScreens();
-		document.myDesktop = new MochaDesktop();
+		document.mochaDesktop = new MochaDesktop();
 		attachMochaLinkEvents();
 		addSlider(); // remove this if you remove the example corner radius slider
 });
