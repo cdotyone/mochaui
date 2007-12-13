@@ -117,6 +117,7 @@ var MochaDesktop = new Class({
 				$('mochaModalBackground').setStyle('display', 'none');
 			}.bind(this)
 		});		
+		
 		if (window.ie && $("mochaDesktopNavbar")){ // fix for dropdown menus in IE
 			var sfEls = $("mochaDesktopNavbar").getElementsByTagName("LI");
 			for (var i=0; i<sfEls.length; i++) {
@@ -600,13 +601,13 @@ var MochaDesktop = new Class({
 			mochaCanvas.height = mochaHeight;
 		}
 
-		// part of the fix for IE6 select z-index bug and FF on Mac scrollbar z-index bug
+		// Part of the fix for IE6 select z-index bug and FF on Mac scrollbar z-index bug
 		if (window.ie6){
 			mochaIframe.setStyle('width', mochaWidth);
 			mochaIframe.setStyle('height', mochaHeight);
 		}
 
-		// set width		
+		// Set width		
 		mochaOverlay.setStyle('width', mochaWidth); 
 		el.setStyle('width', mochaWidth);
 		mochaTitlebar.setStyle('width', mochaWidth - 6);
@@ -766,14 +767,14 @@ var MochaDesktop = new Class({
 					handle: mochaHandle,
 					onStart: function(){  
 						this.focusWindow(el);
-						if (el.iframe && !window.webkit) {
+						if (el.iframe) {
 							el.getElement('.mochaIframe').setStyles({
 								'display': 'none'
 							});
 						}
 					}.bind(this),
 					onComplete: function(){
-						if (el.iframe && !window.webkit) {
+						if (el.iframe) {
 							el.getElement('.mochaIframe').setStyles({
 								'display': 'block'
 							});
@@ -799,7 +800,7 @@ var MochaDesktop = new Class({
 						y:[this.options.minHeight,this.options.maxHeight]
 					},
 					onStart: function(){
-						if (el.iframe && !window.webkit) {
+						if (el.iframe) {
 							el.getElement('.mochaIframe').setStyles({
 								'display': 'none'
 							});
@@ -809,7 +810,7 @@ var MochaDesktop = new Class({
 						this.drawWindow(el);
 					}.bind(this),
 					onComplete: function(){
-						if (el.iframe && !window.webkit) {
+						if (el.iframe) {
 							el.getElement('.mochaIframe').setStyles({
 								'display': 'block'
 							});
