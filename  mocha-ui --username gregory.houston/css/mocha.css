@@ -140,12 +140,12 @@ div.mocha .mochaContent {
 	
 div.mocha .mochaScroller {	
 	background: #fff;
-	overflow: auto;	
+	overflow: auto;
 }
 	
 div.mocha .mochaScrollerpad {
 	padding: 10px 12px;
-	}		
+}		
 
 .resizeHandle {
 	position: absolute;
