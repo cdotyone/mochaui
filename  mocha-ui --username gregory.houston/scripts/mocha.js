@@ -363,7 +363,7 @@ var MochaDesktop = new Class({
 		return true;
 	},
 	focusWindow: function(el){
-		this.indexLevel++;
+		this.indexLevel ++;
 		el.setStyle('zIndex', this.indexLevel);
 	},
 	getWindowWidth: function(){
@@ -399,8 +399,7 @@ var MochaDesktop = new Class({
 			}
 			
 			var mochaOverlay = new Element('div', {
-				'class': 'mochaOverlay',
-				'display': 'none'
+				'class': 'mochaOverlay'
 			}).injectInside(el);
 			
 			if (window.ie){
