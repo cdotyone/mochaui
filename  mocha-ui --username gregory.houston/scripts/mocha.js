@@ -282,18 +282,17 @@ var MochaDesktop = new Class({
 		}, properties || {});
 
 		if ( $(windowProperties.id) ) { // If window already exists
-			if ( $(windowProperties.id).getStyle('visibility') == 'hidden' ) {
+			if ( $(windowProperties.id).getStyle('display') == 'none' ) {
 				// If window is minimized, instead of creating a duplicate window, restore minimized window
-				$(windowProperties.id).setStyle('visibility','visible');
+				$(windowProperties.id).setStyle('display','block');
 				$$('button.mochaDockButton').each(function(el){
 					if (el.getProperty('winAssociated') == windowProperties.id){
 						el.dispose();
 					}
 				});
-			} else {
-				// If window exists and is not minimized, give the findow focus
-				setTimeout(function(){ this.focusThis($(windowProperties.id)); }.bind(this),10);
 			}
+			// If window exists and is not minimized, give the findow focus			
+			setTimeout(function(){ this.focusWindow($(windowProperties.id)); }.bind(this),10);			
 			return;
 		}
 		
@@ -409,7 +408,7 @@ var MochaDesktop = new Class({
 			});
 		}
 		else {
-			setTimeout(function(){ this.focusThis(mochaNewWindow); }.bind(this), 10);
+			setTimeout(function(){ this.focusWindow(mochaNewWindow); }.bind(this), 10);
 		}
 		return;
 	},
@@ -456,7 +455,7 @@ var MochaDesktop = new Class({
 
 		return true;
 	},
-	focusThis: function(el){
+	focusWindow: function(el){
 		this.indexLevel++;
 		el.setStyle('zIndex', this.indexLevel);
 	},
@@ -845,17 +844,17 @@ var MochaDesktop = new Class({
 				new Drag.Move(el, {
 					handle: mochaHandle,
 					onStart: function(){  
-						this.focusThis(el);
+						this.focusWindow(el);
 						if (el.iframe && !window.webkit) {
 							el.getElement('.mochaIframe').setStyles({
-								'visibility': 'hidden'
+								'display': 'none'
 							});
 						}
 					}.bind(this),
 					onComplete: function(){
 						if (el.iframe && !window.webkit) {
 							el.getElement('.mochaIframe').setStyles({
-								'visibility': 'visible'
+								'display': 'block'
 							});
 						}
 					}.bind(this)
@@ -881,7 +880,7 @@ var MochaDesktop = new Class({
 					onStart: function(){
 						if (el.iframe && !window.webkit) {
 							el.getElement('.mochaIframe').setStyles({
-								'visibility': 'hidden'
+								'display': 'none'
 							});
 						}
 					}.bind(this),
@@ -891,7 +890,7 @@ var MochaDesktop = new Class({
 					onComplete: function(){
 						if (el.iframe && !window.webkit) {
 							el.getElement('.mochaIframe').setStyles({
-								'visibility': 'visible'
+								'display': 'block'
 							});
 						}
 					if (el.onResize){ // checks for onResize since windows generated at startup do not have this option			
@@ -907,7 +906,7 @@ var MochaDesktop = new Class({
 			element.addEvent('click', function(event){
 				// Only focus when needed, otherwize onFocus() will run on every click
 				if ( element.getStyle('zIndex').toInt() < this.indexLevel ) {
-				this.focusThis(element);
+				this.focusWindow(element);
 					if (element.onFocus){
 						element.onFocus();
 					}
@@ -1020,7 +1019,7 @@ var MochaDesktop = new Class({
 		if(sTitleBarText.length <= 13){sLongTitle = ""};
 		
 		//hide window
-		objWin.setStyle('visibility','hidden');
+		objWin.setStyle('display','none');
 		
 		var btnEl = new Element('button', {
 			'winAssociated': objWin.id,
@@ -1032,9 +1031,9 @@ var MochaDesktop = new Class({
 		btnEl.addEvent('click', function(event){
 			//click event will restore the window
 			var objWin = $(event.target.getProperty('winAssociated'));
-			objWin.setStyle('visibility','visible');
+			objWin.setStyle('display','block');
 
-			this.focusThis(objWin);
+			this.focusWindow(objWin);
 
 			//remove this btn element 
 			event.target.dispose();
@@ -1059,8 +1058,8 @@ var MochaDesktop = new Class({
 		var x = this.options.desktopLeftOffset
 		var y = this.options.desktopTopOffset;
 		$$('div.mocha').each(function(el){
-			if (el.getStyle('visibility') != 'hidden'){
-				this.focusThis(el);
+			if (el.getStyle('display') != 'none'){
+				this.focusWindow(el);
 				x += this.options.mochaLeftOffset;
 				y += this.options.mochaTopOffset;
 				var mochaMorph = new Fx.Morph(el, {
