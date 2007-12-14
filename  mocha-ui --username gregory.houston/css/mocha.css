@@ -102,12 +102,16 @@ body {
 /* Windows */
 	
 div.mocha {
-	position: absolute;
+	position: fixed; /* This is fixed rather than absolute to fix Mac FF2 issues */
 	top: 0;
 	left: 0;
 	display: none;
 	overflow: hidden;	
 }
+
+* html div.mocha {
+	position: absolute;
+}	
 	
 div.mochaOverlay {
 	position: absolute;
@@ -277,7 +281,7 @@ div.mocha .mochaScrollerpad {
 
 #mochaModalBackground {
 	display: none;
-	position: absolute;
+	position: fixed; /* This is fixed rather than absolute to fix Mac FF2 issues */
 	top: 0;
 	left: 0;
 	width: 100%;
@@ -286,7 +290,10 @@ div.mocha .mochaScrollerpad {
 	filter: alpha(opacity=0);
 	-moz-opacity: 0;
 	z-index: 10000;
-	overflow: auto; /* For Mac Firefox 2 */	
+}
+
+* html 	#mochaModalBackground {
+	position: absolute;
 }	
 	
 /* fix for IE6 select z-index issue */

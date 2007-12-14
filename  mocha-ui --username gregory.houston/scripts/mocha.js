@@ -133,7 +133,7 @@ var MochaDesktop = new Class({
 			this.setModalSize();
 			setTimeout( function(){
 				this.drawAll();
-			}.bind(this), 100);
+			}.bind(this), 10);
 		}.bind(this)
 	},
 	/*
@@ -362,19 +362,7 @@ var MochaDesktop = new Class({
 	},
 	focusWindow: function(el){		
 		this.indexLevel ++;		
-		el.setStyle('zIndex', this.indexLevel);
-		// For Mac Firefox 2
-		// This basically cuts and pastes the window
-		// so its contents are reloaded and thus
-		// media in the window will stop playing
-		if (Browser.Platform.mac && Browser.Engine.gecko){
-			if ($('mochaDesktop')){
-				el.inject($('mochaDesktop', 'bottom'));
-			}
-			else {
-				el.inject(document.body, 'bottom');
-			}
-		}		
+		el.setStyle('zIndex', this.indexLevel);		
 	},
 	getWindowWidth: function(){
 		var windowDimensions = document.getCoordinates();
@@ -386,10 +374,10 @@ var MochaDesktop = new Class({
 	},	
 	setDesktopSize: function(){
 		if ($('mochaDesktop')) {
-			$('mochaDesktop').setStyle('width', this.getWindowWidth() - 20); // To adjust for broswer scrollbar
+			$('mochaDesktop').setStyle('width', this.getWindowWidth() - 20); // To adjust for browser scrollbar
 			setTimeout( function(){
 				$('mochaDesktop').setStyle('width', this.getWindowWidth());
-			}.bind(this), 100);
+			}.bind(this), 50);
 			$('mochaDesktop').setStyle('height', this.getWindowHeight());
 			if ($('mochaPageWrapper')){
 				$('mochaPageWrapper').setStyle('height', this.getWindowHeight());
@@ -617,8 +605,10 @@ var MochaDesktop = new Class({
 
 		// Part of the fix for IE6 select z-index bug and FF on Mac scrollbar z-index bug
 		if (Browser.Engine.trident4){
-			mochaIframe.setStyle('width', mochaWidth);
-			mochaIframe.setStyle('height', mochaHeight);
+			mochaIframe.setStyles({
+				'width': mochaWidth,
+				'height': mochaHeight
+			});
 		}
 
 		// Set width		
