@@ -118,7 +118,7 @@ var MochaDesktop = new Class({
 			}.bind(this)
 		});		
 		
-		if (window.ie && $("mochaDesktopNavbar")){ // fix for dropdown menus in IE
+		if (Browser.Engine.trident && $("mochaDesktopNavbar")){ // fix for dropdown menus in IE
 			var sfEls = $("mochaDesktopNavbar").getElementsByTagName("LI");
 			for (var i=0; i<sfEls.length; i++) {
 				sfEls[i].onmouseover=function(){
@@ -338,7 +338,7 @@ var MochaDesktop = new Class({
 		}
 		
 		// redraws IE windows without shadows since IE messes up canvas alpha when you change element opacity
-		if (window.ie) this.drawWindow(el, false); 
+		if (Browser.Engine.trident) this.drawWindow(el, false); 
 		
 		if (element.modal) {
 			this.modalCloseMorph.start({
@@ -362,9 +362,21 @@ var MochaDesktop = new Class({
 
 		return true;
 	},
-	focusWindow: function(el){
-		this.indexLevel ++;
+	focusWindow: function(el){		
+		this.indexLevel ++;		
 		el.setStyle('zIndex', this.indexLevel);
+		// For Mac Firefox 2
+		// This basically cuts and pastes the window
+		// so its contents are reloaded and thus
+		// media in the window will stop playing
+		if (Browser.Platform.mac && Browser.Engine.gecko){
+			if ($('mochaDesktop')){
+				el.inject($('mochaDesktop', 'bottom'));
+			}
+			else {
+				el.inject(document.body, 'bottom');
+			}
+		}		
 	},
 	getWindowWidth: function(){
 		var windowDimensions = document.getCoordinates();
@@ -394,7 +406,7 @@ var MochaDesktop = new Class({
 			var mochaTempContents = el.innerHTML;
 			el.empty();
 
-			if (window.ie6){
+			if (Browser.Engine.trident4){
 				el.innerHTML = '<iframe class="zIndexFix" scrolling="no" marginwidth="0" src="" marginheight="0"></iframe>';
 			}
 			
@@ -402,8 +414,13 @@ var MochaDesktop = new Class({
 				'class': 'mochaOverlay'
 			}).injectInside(el);
 			
-			if (window.ie){
-				mochaOverlay.setStyle('zIndex', 2)
+			if (Browser.Engine.trident){
+				mochaOverlay.setStyle('zIndex', 2);
+			}
+			
+			// For Mac Firefox 2 to help reduce scrollbar bugs in that browser
+			if (Browser.Platform.mac && Browser.Engine.gecko){
+				mochaOverlay.setStyle('overflow', 'auto');				
 			}
 
 			//Insert mochaTitlebar
@@ -470,7 +487,7 @@ var MochaDesktop = new Class({
 			}).injectInside(el);
 
 			// Dynamically initialize canvas using excanvas. This is only required by IE
-			if (window.ie) {
+			if (Browser.Engine.trident) {
 				G_vmlCanvasManager.initElement(canvas);
 			}
 
@@ -481,7 +498,7 @@ var MochaDesktop = new Class({
 				}).injectAfter(mochaOverlay);
 			}
 
-			if (window.ie && !el.modal){
+			if (Browser.Engine.trident && !el.modal){
 				resizeHandle.setStyle('zIndex', 2)	
 			}
 
@@ -490,7 +507,7 @@ var MochaDesktop = new Class({
 				'class': 'mochaControls'
 			}).injectAfter(mochaOverlay);
 
-			if (window.ie){
+			if (Browser.Engine.trident){
 				mochaControls.setStyle('zIndex', 2)
 			}
 
@@ -590,7 +607,7 @@ var MochaDesktop = new Class({
 		mochaOverlay.setStyle('height', mochaHeight);
 		el.setStyle('height', mochaHeight);
 
-		if (window.webkit) {
+		if (Browser.Engine.webkit) {
 			mochaCanvas.setProperties({
 				'width': 4000,
 				'height': 2000
@@ -601,7 +618,7 @@ var MochaDesktop = new Class({
 		}
 
 		// Part of the fix for IE6 select z-index bug and FF on Mac scrollbar z-index bug
-		if (window.ie6){
+		if (Browser.Engine.trident4){
 			mochaIframe.setStyle('width', mochaWidth);
 			mochaIframe.setStyle('height', mochaHeight);
 		}
@@ -613,7 +630,7 @@ var MochaDesktop = new Class({
 	
 		// Draw shapes
 		ctx.clearRect(0, 0, this.getWindowWidth(), this.getWindowHeight());
-		if (shadows == null || shadows == false && !window.ie){
+		if (shadows == null || shadows == false && !Browser.Engine.trident){
 			this.roundedRect(ctx, 0, 0, mochaWidth, mochaHeight, this.options.cornerRadius, 0, 0, 0, 0.06); //shadow
 			this.roundedRect(ctx, 1, 1, mochaWidth - 2, mochaHeight - 2, this.options.cornerRadius, 0, 0, 0, 0.08); //shadow
 			this.roundedRect(ctx, 2, 2, mochaWidth - 4, mochaHeight - 4, this.options.cornerRadius, 0, 0, 0, 0.3); //shadow
@@ -672,7 +689,9 @@ var MochaDesktop = new Class({
 	topRoundedRect: function(ctx,x,y,width,height,radius){
 
 		// Create gradient
-		if (window.opera != null ){
+		
+		// Fix a quirk in Opera with the Gradient
+		if (Browser.Engine.presto){
 			var lingrad = ctx.createLinearGradient(0,0,0,this.options.headerHeight+2);
 		}
 		else {
@@ -999,7 +1018,7 @@ var MochaDesktop = new Class({
 		canvas.height=18;
 
 		// Dynamically initialize canvas using excanvas. This is only required by IE
-		if (window.ie) {
+		if (Browser.Engine.trident) {
 			G_vmlCanvasManager.initElement(canvas);
 		}
 		
