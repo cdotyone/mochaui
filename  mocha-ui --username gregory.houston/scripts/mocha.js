@@ -117,19 +117,17 @@ var MochaDesktop = new Class({
 				$('mochaModalBackground').setStyle('display', 'none');
 			}.bind(this)
 		});		
-		
-		if (Browser.Engine.trident && $("mochaDesktopNavbar")){ // fix for dropdown menus in IE
-			var sfEls = $("mochaDesktopNavbar").getElementsByTagName("LI");
-			for (var i=0; i<sfEls.length; i++) {
-				sfEls[i].onmouseover=function(){
-					this.className += " sfhover";
-				}
-				sfEls[i].onmouseout = function(){
-					this.className = this.className.replace(new RegExp(" sfhover\\b"), "");
-				}
-			}
-		};
-		
+		 // Fix for dropdown menus in IE
+		if (Browser.Engine.trident && $("mochaDesktopNavbar")){
+			$('mochaDesktopNavbar').getElements('li').each(function(element) {
+				element.addEvent('mouseenter', function(){		
+					this.addClass('ieHover');
+				})
+				element.addEvent('mouseleave', function(){	
+					this.removeClass('ieHover');
+				})
+			})
+		};		
 		window.onresize = function(){
 			this.setDesktopSize();
 			this.setModalSize();

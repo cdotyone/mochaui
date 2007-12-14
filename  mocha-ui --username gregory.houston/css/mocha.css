@@ -82,7 +82,7 @@ body {
 	width: 130px;
 }
 
-#mochaDesktopNavbar li:hover ul, #mochaDesktopNavbar li.sfhover ul { /* lists nested under hovered list items */
+#mochaDesktopNavbar li:hover ul, #mochaDesktopNavbar li.ieHover ul { /* lists nested under hovered list items */
 	left: auto;
 }
 
