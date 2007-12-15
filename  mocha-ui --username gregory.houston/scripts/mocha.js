@@ -84,6 +84,7 @@ var MochaDesktop = new Class({
 		else {
 			this.options.minimizable = false;
 		}
+		
 		this.insertWindowElements($$('div.mocha'));
 		this.drawAll();
 		this.attachDraggable($$('div.mocha'));
@@ -133,7 +134,7 @@ var MochaDesktop = new Class({
 			this.setModalSize();
 			setTimeout( function(){
 				this.drawAll();
-			}.bind(this), 10);
+			}.bind(this), 100);
 		}.bind(this)
 	},
 	/*
@@ -221,6 +222,14 @@ var MochaDesktop = new Class({
 				mochaNewWindow.iframe = true;
 			}
 		}
+		
+		// This is set to fixed in the css to fix a Mac FF2 scrollbar issue,
+		// but needs to be reset to absolute for Opera so Maximize doesn't
+		// create desktop scrollbars
+		// *** Make sure this works for both on initialize windows and new windows after Joel integrates the two and then remove this line.		
+		if (Browser.Engine.presto){
+			$$('div.mocha').setStyle('position', 'absolute');	
+		}		
 
 		// Set height and width of window
 		mochaNewWindow.setStyles({
@@ -377,7 +386,7 @@ var MochaDesktop = new Class({
 			$('mochaDesktop').setStyle('width', this.getWindowWidth() - 20); // To adjust for browser scrollbar
 			setTimeout( function(){
 				$('mochaDesktop').setStyle('width', this.getWindowWidth());
-			}.bind(this), 50);
+			}.bind(this), 100);
 			$('mochaDesktop').setStyle('height', this.getWindowHeight());
 			if ($('mochaPageWrapper')){
 				$('mochaPageWrapper').setStyle('height', this.getWindowHeight());
@@ -775,14 +784,14 @@ var MochaDesktop = new Class({
 						this.focusWindow(el);
 						if (el.iframe) {
 							el.getElement('.mochaIframe').setStyles({
-								'display': 'none'
+								'visibility': 'hidden'
 							});
 						}
 					}.bind(this),
 					onComplete: function(){
 						if (el.iframe) {
 							el.getElement('.mochaIframe').setStyles({
-								'display': 'block'
+								'visibility': 'visible'
 							});
 						}
 					}.bind(this)
@@ -808,7 +817,7 @@ var MochaDesktop = new Class({
 					onStart: function(){
 						if (el.iframe) {
 							el.getElement('.mochaIframe').setStyles({
-								'display': 'none'
+								'visibility': 'hidden'
 							});
 						}
 					}.bind(this),
@@ -818,7 +827,7 @@ var MochaDesktop = new Class({
 					onComplete: function(){
 						if (el.iframe) {
 							el.getElement('.mochaIframe').setStyles({
-								'display': 'block'
+								'visibility': 'visible'
 							});
 						}
 					if (el.onResize){ // checks for onResize since windows generated at startup do not have this option			
@@ -908,6 +917,11 @@ var MochaDesktop = new Class({
 		el.getElement('.mochaControls').setStyle('width', this.mochaControlsWidth - 5);
 	},
 	maximizeWindow: function(el) {
+		if (el.iframe) {
+			el.getElement('.mochaIframe').setStyles({
+				'visibility': 'hidden'
+			});
+		}
 		var mochaContent = el.getElement('.mochaContent');	
 
 		$(el).oldTop = $(el).getStyle('top');
@@ -921,6 +935,11 @@ var MochaDesktop = new Class({
 				mochaContent.setStyle('height', (this.getWindowWidth() - this.options.headerHeight - this.options.footerHeight + 6));
 				mochaContent.setStyle('width', this.getWindowHeight());
 				this.drawWindow(el);
+				if (el.iframe) {
+					el.getElement('.mochaIframe').setStyles({
+						'visibility': 'visible'
+					});
+				}				
 			}.bind(this)
 		});
 		mochaMorph.start({
@@ -930,20 +949,32 @@ var MochaDesktop = new Class({
 		$(el).maximizeToggle = 'restore';
 	},
 	restoreWindow: function(el) {
+		if (el.iframe) {
+			el.getElement('.mochaIframe').setStyles({
+				'visibility': 'hidden'
+			});
+		}		
 		var mochaContent = el.getElement('.mochaContent');
 		mochaContent.setStyle('width', mochaContent.oldWidth);
 		mochaContent.setStyle('height', mochaContent.oldHeight);
 		$(el).maximizeToggle = 'maximize';
 		this.drawWindow(el);
 		var mochaMorph = new Fx.Morph(el, { 
-			'duration': 150
+			'duration': 150,
+			'onComplete': function(el){
+				if (el.iframe) {
+					el.getElement('.mochaIframe').setStyles({
+						'visibility': 'visible'
+					});
+				}				
+			}.bind(this)	
 		});
 		mochaMorph.start({
 			'top': $(el).oldTop,
 			'left': $(el).oldLeft
 		});
 	},
-	minimizeWindow: function(el) {
+	minimizeWindow: function(el) {		
 		var mochaContent = el.getElement('.mochaContent');
 		this.addToMinimizeDock(el)
 	},
@@ -961,7 +992,12 @@ var MochaDesktop = new Class({
 		if(sTitleBarText.length <= 13){sLongTitle = ""};
 		
 		//hide window
-		objWin.setStyle('display','none');
+		if (objWin.iframe) {
+			objWin.getElement('.mochaIframe').setStyles({
+				'visibility': 'hidden'
+			});
+		}		
+		objWin.setStyle('visibility','hidden');	
 		
 		var btnEl = new Element('button', {
 			'winAssociated': objWin.id,
@@ -973,8 +1009,12 @@ var MochaDesktop = new Class({
 		btnEl.addEvent('click', function(event){
 			//click event will restore the window
 			var objWin = $(event.target.getProperty('winAssociated'));
-			objWin.setStyle('display','block');
-
+			objWin.setStyle('visibility','visible');
+			if (objWin.iframe) {
+				objWin.getElement('.mochaIframe').setStyles({
+					'visibility': 'visible'
+				});
+			}
 			this.focusWindow(objWin);
 
 			//remove this btn element 
@@ -1270,6 +1310,24 @@ function attachMochaLinkEvents(){
 			});
 		});
 	}
+	
+	if ($('youTubeLink')){
+		$('youTubeLink').addEvent('click', function(e){	
+			new Event(e).stop();
+			document.mochaDesktop.newWindow({
+				id: 'youTube',
+				title: 'YouTube in Iframe',
+				loadMethod: 'iframe',
+				contentURL: 'pages/youtube.html',
+				width: 425,
+				height: 355,
+				scrollbars: false,
+				paddingVertical: 0,
+				paddingHorizontal: 0,
+				bgColor: '#000'
+			});
+		});
+	}	
 	
 	if ($('cornerRadiusLink')){
 		$('cornerRadiusLink').addEvent('click', function(e){	

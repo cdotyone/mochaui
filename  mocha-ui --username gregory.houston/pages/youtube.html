@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+
+<script type="text/javascript" src="../scripts/swfobject.js"></script>
+
+<style type="text/css">
+
+	/* hide from ie on mac \*/
+	html {
+		height: 100%;
+		overflow: hidden;
+	}
+	
+	#flashcontent {
+		height: 100%;
+	}
+	/* end hide */
+
+	body {
+		height: 100%;
+		margin: 0;
+		padding: 0;
+		background: #000;
+	}
+
+</style>
+
+</head>
+<body>
+
+	<div id="flashcontent">
+		<strong>You need to upgrade your Flash Player</strong>
+	</div>
+	
+	<script type="text/javascript">
+		// <![CDATA[
+		
+		var so = new SWFObject("http://www.youtube.com/v/INn1C6ImJKg&rel=1&border=0", "myFlash", "100%", "100%", "8", "#000000");
+		so.addParam("scale", "noscale");
+		so.addParam("wmode", "transparent");
+		so.write("flashcontent");
+		
+		// ]]>
+	</script>
+
+<!--
+Other tracks:
+http://www.youtube.com/v/7f6q2M6VKkY&rel=1
+
+-->
+
+</body>
+</html>

@@ -102,7 +102,7 @@ body {
 /* Windows */
 	
 div.mocha {
-	position: fixed; /* This is fixed rather than absolute to fix Mac FF2 issues */
+	position: fixed; /* this is a fix for FF2 on the Mac. It has to be reset to absolute for both Opera and IE6 */
 	top: 0;
 	left: 0;
 	display: none;
