@@ -283,12 +283,9 @@ var MochaDesktop = new Class({
 		this.drawWindow(mochaNewWindow);
 		
 		// Attach events to the window
-		if (!mochaNewWindow.modal) {
-			this.attachDraggable(mochaNewWindow);
-			this.attachResizable(mochaNewWindow);
-		}
+		this.attachDraggable(mochaNewWindow);
+		this.attachResizable(mochaNewWindow);
 		this.setupEvents(mochaNewWindow);
-		//this.attachClose([mochaNewWindow]);
 
 		// Move new window into position
 		if (windowProperties.x && windowProperties.y) {
@@ -302,6 +299,7 @@ var MochaDesktop = new Class({
 		
 		if (mochaNewWindow.modal) {
 			$('mochaModalBackground').setStyle('display', 'block');
+			this.modalCloseMorph.cancel();
 			this.modalOpenMorph.start({
 				'opacity': .55
 			});
