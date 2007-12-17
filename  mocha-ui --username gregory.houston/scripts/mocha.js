@@ -47,19 +47,8 @@ var MochaDesktop = new Class({
 		this.scrollWidthOffset = 6;
 		this.windowIDCount = 0;
 		new Element('canvas');
-		// Add properties to elements in the DOM
-		// Consider moving this to windowProperties
-		// so it is not added to all the elements in the DOM
-		// but just to the windows
-		Element.implement({oldTop: ''});
-		Element.implement({oldLeft: ''});
-		Element.implement({oldWidth: ''});
-		Element.implement({oldHeight: ''});
-		Element.implement({maximizeToggle: 'maximize'});
-		Element.implement({modal: ''});
-		Element.implement({iframe: ''});
-		Element.implement({contentURL: ''});
-		$$('div.mocha').setStyle('display', 'block');
+
+		//$$('div.mocha').setStyle('display', 'block');
 		if ($('mochaDesktop')) {
 			this.setDesktopSize();
 		}
@@ -84,15 +73,24 @@ var MochaDesktop = new Class({
 		else {
 			this.options.minimizable = false;
 		}
+		$$('div.mocha').each(function(el, i) {
+			// Get the window title and dispose that element, so it does not end up in window content
+			var titleEl = el.getElement('h3.mochaTitle');
+			var properties = {
+				title: '[Title not found]',
+				id: el.getProperty('id'),
+				height: el.getStyle('height'),
+				width: el.getStyle('width')
+			}
+			if ( titleEl ) {
+				properties.title = titleEl.innerHTML;
+				titleEl.dispose();
+			}
+			properties.content = el.innerHTML;
+			el.dispose();
+			this.newWindow(properties);
+		}.bind(this));
 		
-		this.insertWindowElements($$('div.mocha'));
-		this.drawAll();
-		this.attachDraggable($$('div.mocha'));
-		this.attachResizable($$('div.mocha'));
-		this.attachFocus($$('div.mocha'));
-		this.attachMinimize($$('div.mocha'));
-		this.attachMaximize($$('div.mocha'));
-		this.attachClose($$('div.mocha'));
 		this.arrangeCascade();
 
 		// Modal initialization
@@ -118,23 +116,22 @@ var MochaDesktop = new Class({
 				$('mochaModalBackground').setStyle('display', 'none');
 			}.bind(this)
 		});		
+		
 		 // Fix for dropdown menus in IE
-		if (Browser.Engine.trident && $("mochaDesktopNavbar")){
-			$('mochaDesktopNavbar').getElements('li').each(function(element) {
-				element.addEvent('mouseenter', function(){		
-					this.addClass('ieHover');
-				})
-				element.addEvent('mouseleave', function(){	
-					this.removeClass('ieHover');
-				})
-			})
-		};		
+ 		if (Browser.Engine.trident && $("mochaDesktopNavbar")){
+ 			$('mochaDesktopNavbar').getElements('li').each(function(element) {
+ 				element.addEvent('mouseenter', function(){		
+ 					this.addClass('ieHover');
+ 				})
+ 				element.addEvent('mouseleave', function(){	
+ 					this.removeClass('ieHover');
+ 				})
+ 			})
+ 		};
+		
 		window.onresize = function(){
 			this.setDesktopSize();
 			this.setModalSize();
-			setTimeout( function(){
-				this.drawAll();
-			}.bind(this), 100);
 		}.bind(this)
 	},
 	/*
@@ -172,31 +169,50 @@ var MochaDesktop = new Class({
 
 		// Check if window already exists
 		if ( $(windowProperties.id) ) {
-			if ( $(windowProperties.id).getStyle('display') == 'none' ) {
-				// If window is minimized, instead of creating a duplicate window, restore minimized window
-				$(windowProperties.id).setStyle('display','block');
-				$$('button.mochaDockButton').each(function(el){
-					if (el.getProperty('winAssociated') == windowProperties.id){
-						el.dispose();
-					}
-				});
-			}
-			// If window exists and is not minimized, give the findow focus			
-			setTimeout(function(){ this.focusWindow($(windowProperties.id)); }.bind(this),10);			
+			if ( $(windowProperties.id).isMinimized )	// If minimized -> restore
+				this.restoreWindow($(windowProperties.id));
+			else // else focus
+				setTimeout(function(){ this.focusWindow($(windowProperties.id)); }.bind(this),10);			
 			return;
 		}
 		
 		// Create window div
 		var mochaNewWindow = new Element('div', {
 			'class': 'mocha',
-			'id': 'win' + (++this.windowIDCount)
+			'id': windowProperties.id ? windowProperties.id : 'win' + (++this.windowIDCount)
+		});
+				
+		// Set height and width of window
+		mochaNewWindow.setStyles({
+			'width': windowProperties.width,
+			'height': windowProperties.height,
+			'display': 'block'
+		});
+
+		// Extend our window
+		mochaNewWindow = $extend(mochaNewWindow, {
+			// Custom properties
+			oldTop: 0,
+			oldLeft: 0,
+			oldWidth: 0,
+			oldHeight: 0,
+			modal: windowProperties.modal,
+			//iframe: windowProperties.loadMethod == 'iframe' ? true : false,
+			isMaximized: false,
+			isMinimized: false,
+			// Custom events
+			onFocus: windowProperties.onFocus,
+			onResize: windowProperties.onResize,
+			onMinimize: windowProperties.onMinimize,
+			onMaximize: windowProperties.onMaximize,
+			onClose: windowProperties.onClose,
+			onCloseComplete: windowProperties.onCloseComplete
 		});
 		
-		// Set window ID. This is being set twice. Might think about how to consolidate the two instances
-		if (windowProperties.id){
-			mochaNewWindow.setProperty('id', windowProperties.id);
-		}		
-		
+		//
+		// NOTE: Saw a note in revision 31 regarding a Mac FF2 scrollbar issue, position set to absolute here (which it already is now). Check / Joel
+		// 
+
 		// Inject window in the page
 		if ($('mochaDesktop')){
 			mochaNewWindow.injectInside($('mochaDesktop'));
@@ -204,85 +220,75 @@ var MochaDesktop = new Class({
 		else {
 			mochaNewWindow.injectInside(document.body);
 		}
-		
-		// Add content to window
-		if (windowProperties.loadMethod == 'html') {
-			mochaNewWindow.setHTML(windowProperties.content);	
+
+		mochaNewWindow.subElements = this.insertWindowElements(mochaNewWindow);
+
+		// Set title
+		mochaNewWindow.subElements.title.setHTML(windowProperties.title);
+
+		// Add content to window		
+		switch(windowProperties.loadMethod) {
+			case 'xhr':
+				new Request({
+					url: windowProperties.contentURL,
+					onRequest: function(){
+					},
+					onFailure: function(){
+						mochaNewWindow.subElements.content.setHTML('<p><strong>Error Loading XMLHttpRequest</strong></p><p>Make sure all of your content is uploaded to your server, and that you are attempting to load a document from the same domain as this page. XMLHttpRequests will not work on your local machine.</p>');
+					},
+					onSuccess: function(response) {
+						mochaNewWindow.subElements.content.setHTML(response);
+						windowProperties.onContentLoaded();
+					}
+				}).get();
+				break;
+			case 'iframe':
+				if ( windowProperties.contentURL == '')
+					break;
+				mochaNewWindow.subElements.iframe = new Element('iframe', {
+					'id': mochaNewWindow.id + 'Iframe',						  
+					'class': 'mochaIframe',
+					'src': windowProperties.contentURL,
+					'marginwidth': 0,
+					'marginheight': 0,
+					'frameBorder': 0,
+					'scrolling': 'auto'
+				}).injectInside(mochaNewWindow.subElements.content);
+				//mochaIframe.setStyle('height', windowElements.content.getStyle('height'));
+				// Should be possible have onContentLoaded for iframe also
+				break;
+			case 'html':
+			default:
+				mochaNewWindow.subElements.content.setHTML(windowProperties.content);
+				windowProperties.onContentLoaded();
+				break;
 		}
-		
-		// Is the window modal or not
-		if (windowProperties.modal) {
-			mochaNewWindow.modal = true;
-		}
+	
 
-		// Does the window use an Iframe for it's content?
-		if (windowProperties.contentURL && windowProperties.loadMethod != 'html') {
-			mochaNewWindow.contentURL = windowProperties.contentURL;
-			if (windowProperties.loadMethod == 'iframe'){
-				mochaNewWindow.iframe = true;
-			}
-		}
-		
-		// This is set to fixed in the css to fix a Mac FF2 scrollbar issue,
-		// but needs to be reset to absolute for Opera so Maximize doesn't
-		// create desktop scrollbars
-		// *** Make sure this works for both on initialize windows and new windows after Joel integrates the two and then remove this line.		
-		if (Browser.Engine.presto){
-			$$('div.mocha').setStyle('position', 'absolute');	
-		}		
-
-		// Set height and width of window
-		mochaNewWindow.setStyles({
-			'width': windowProperties.width,
-			'height': windowProperties.height,
-			'display': 'block'
-		});
-		
-		// Create window header
-		new Element('h3', {
-			'class': 'mochaTitle'
-		}).setHTML(windowProperties.title).injectTop(mochaNewWindow);
-
-		// Here is where the new windows and the onstart windows use the same code.
-		// We want to merge new window and onstart window creation 
-		this.insertWindowElements([mochaNewWindow]);
-		
-		// Add canvas gui to new window
-		this.drawWindow(mochaNewWindow);
-
-		// Set scrollbars to auto or hidden
-		var scrollbars = windowProperties.scrollbars ? 'auto' : 'hidden';
-		mochaNewWindow.getElement('.mochaScroller').setStyles({
-			'overflow': scrollbars,
+		// Set scrollbars, always use 'hidden' for iframe windows
+		mochaNewWindow.subElements.scroller.setStyles({
+			'overflow': windowProperties.scrollbars && !mochaNewWindow.subElements.iframe ? 'auto' : 'hidden',
 			'background': windowProperties.bgColor
 		});
 
 		// Set content padding
-		mochaNewWindow.getElement('.mochaScrollerpad').setStyles({
+		mochaNewWindow.subElements.content.setStyles({
 			'padding-top': windowProperties.paddingVertical,
 			'padding-bottom': windowProperties.paddingVertical,
 			'padding-left': windowProperties.paddingHorizontal,
 			'padding-right': windowProperties.paddingHorizontal
 		});
 
-		// Set events for the window
-		mochaNewWindow.onContentLoaded = windowProperties.onContentLoaded;
-		mochaNewWindow.onFocus = windowProperties.onFocus;
-		mochaNewWindow.onResize	= windowProperties.onResize;
-		mochaNewWindow.onMinimize = windowProperties.onMinimize,
-		mochaNewWindow.onMaximize = windowProperties.onMaximize;
-		mochaNewWindow.onClose = windowProperties.onClose;
-		mochaNewWindow.onCloseComplete = windowProperties.onCloseComplete;
-
+		// Add canvas gui to new window
+		this.drawWindow(mochaNewWindow);
+		
 		// Attach events to the window
 		if (!mochaNewWindow.modal) {
-			this.attachDraggable([mochaNewWindow]);
-			this.attachResizable([mochaNewWindow], windowProperties.onResize);
-			this.attachFocus([mochaNewWindow], windowProperties.onFocus);
-			this.attachMinimize([mochaNewWindow], windowProperties.onMinimize);
-			this.attachMaximize([mochaNewWindow], windowProperties.onMaximize);
+			this.attachDraggable(mochaNewWindow);
+			this.attachResizable(mochaNewWindow);
 		}
-		this.attachClose([mochaNewWindow]);
+		this.setupEvents(mochaNewWindow);
+		//this.attachClose([mochaNewWindow]);
 
 		// Move new window into position
 		if (windowProperties.x && windowProperties.y) {
@@ -313,7 +319,7 @@ var MochaDesktop = new Class({
 				'left': this.options.newWindowPosLeft
 			});
 		}
-		
+
 		// Set the zIndex for the new window
 		if (windowProperties.modal) {
 			mochaNewWindow.setStyles({
@@ -323,7 +329,8 @@ var MochaDesktop = new Class({
 		else {
 			setTimeout(function(){ this.focusWindow(mochaNewWindow); }.bind(this), 10);
 		}
-		return;
+		// Return window element ?
+		// return mochaWindow;
 	},
 	/*
 	
@@ -337,29 +344,28 @@ var MochaDesktop = new Class({
 		false: the window was not closed
 
 	*/
-	closeWindow: function(el) {
-		var element = $(el);
+	closeWindow: function(windowEl) {
+		// Does window exist and is not already in process of closing ?
+		if ( !(windowEl = $(windowEl)) || windowEl.isClosing )
+			return;
 		
-		if (el.onClose){	
-			el.onClose();
-		}
+		windowEl.isClosing = true;
+		windowEl.onClose();
 		
 		// redraws IE windows without shadows since IE messes up canvas alpha when you change element opacity
-		if (Browser.Engine.trident) this.drawWindow(el, false); 
+		if (Browser.Engine.trident) this.drawWindow(windowEl, false); 
 		
-		if (element.modal) {
+		if (windowEl.modal) {
 			this.modalCloseMorph.start({
 				opacity: 0
 			});
 		}
 		
-		var closeMorph = new Fx.Morph(element, {
+		var closeMorph = new Fx.Morph(windowEl, {
 			duration: 250,
 			onComplete: function(){
-				element.dispose();
-				if (el.onCloseComplete){
-					el.onCloseComplete();
-				}	
+				windowEl.dispose();
+				windowEl.onCloseComplete();
 			}.bind(this)
 		});
 
@@ -369,9 +375,174 @@ var MochaDesktop = new Class({
 
 		return true;
 	},
-	focusWindow: function(el){		
-		this.indexLevel ++;		
-		el.setStyle('zIndex', this.indexLevel);		
+	focusWindow: function(windowEl){
+		if ( !(windowEl = $(windowEl)) )
+			return;
+		this.indexLevel++;
+		windowEl.setStyle('zIndex', this.indexLevel);
+		windowEl.onFocus();
+	},
+	maximizeWindow: function(windowEl) {
+		// Window exists and is not already maximized ?
+		if ( !(windowEl = $(windowEl)) || windowEl.isMaximized )
+			return;
+		windowEl.onMaximize();
+		windowEl.oldTop = windowEl.getStyle('top');
+		windowEl.oldLeft = windowEl.getStyle('left');
+		windowEl.subElements.contentWrapper.oldWidth = windowEl.subElements.contentWrapper.getStyle('width');
+		windowEl.subElements.contentWrapper.oldHeight = windowEl.subElements.contentWrapper.getStyle('height');
+
+		var mochaMorph = new Fx.Morph(windowEl, { 
+			'duration': 200,
+			'onComplete': function(windowEl){
+				windowEl.subElements.contentWrapper.setStyles({
+					'height': (this.getWindowHeight() - this.options.headerHeight - this.options.footerHeight + 6),
+					'width': this.getWindowWidth()
+				});
+				this.drawWindow(windowEl);
+			}.bind(this)
+		});
+		mochaMorph.start({
+			'top': -3, // takes shadow width into account
+			'left': -3 // takes shadow width into account
+		});
+		windowEl.isMaximized = true;
+	},
+	restoreWindow: function(windowEl) {
+		// Window exists and is maximized ?
+		if ( !(windowEl = $(windowEl)) || !windowEl.isMaximized )
+			return;
+		windowEl.subElements.contentWrapper.setStyles({
+			'width': windowEl.subElements.contentWrapper.oldWidth,
+			'height': windowEl.subElements.contentWrapper.oldHeight
+		});
+
+		windowEl.isMaximized = false;
+		this.drawWindow(windowEl);
+		var mochaMorph = new Fx.Morph(windowEl, { 
+			'duration': 150
+		});
+		mochaMorph.start({
+			'top': windowEl.oldTop,
+			'left': windowEl.oldLeft
+		});
+	},
+	minimizeWindow: function(windowEl) {
+		if ( !(windowEl = $(windowEl)) )
+			return;
+		var mochaContent = windowEl.getElement('.mochaContent');
+		var titleText = windowEl.subElements.title.innerHTML;
+		windowEl.onMinimize();
+
+		// Hide window and add to dock
+		windowEl.setStyle('display', 'none');
+		windowEl.isMinimized = true;
+		var dockButton = new Element('button', {
+			'class': 'mochaDockButton',
+			'title': windowEl.subElements.title.innerHTML
+		}).setHTML(titleText.substring(0,13) + (titleText.length > 13 ? '...' : '')).injectInside($('mochaDock'));
+		dockButton.addEvent('click', function(event) {
+			windowEl.setStyle('display', 'block');
+			windowEl.isMinimized = false;
+			this.focusWindow(windowEl);
+			event.target.dispose();
+		}.bind(this));		
+	},
+	/* -- START Private Methods -- */
+	
+	/*
+		Method: setupControlEvents()
+		Usage: internal
+
+		Arguments:
+			windowEl
+	*/
+	setupEvents: function(windowEl) {
+		if ( !(windowEl = $(windowEl)) )
+			return;
+            
+		// Set events
+		// Note: if a button does not exist, its due to properties passed to newWindow() stating otherwice
+		if ( windowEl.subElements.closeButton )
+			windowEl.subElements.closeButton.addEvent('click', function() { this.closeWindow(windowEl); }.bind(this));
+		
+		if ( !windowEl.modal )		
+			windowEl.addEvent('click', function() { this.focusWindow(windowEl); }.bind(this));
+		
+		if ( windowEl.subElements.minimizeButton )
+			windowEl.subElements.minimizeButton.addEvent('click', function() { this.minimizeWindow(windowEl); }.bind(this));
+		
+		if ( windowEl.subElements.maximizeButton ) {
+			windowEl.subElements.maximizeButton.addEvent('click', function() { 
+				if ( windowEl.isMaximized ) {
+					this.restoreWindow(windowEl);
+					windowEl.subElements.maximizeButton.setProperty('title', 'Maximize');
+				} else {
+					this.maximizeWindow(windowEl); 
+					windowEl.subElements.maximizeButton.setProperty('title', 'Restore');
+				}
+			}.bind(this));
+		}
+	},
+	/*
+		Method: attachDraggable()
+		Description: make window draggable
+		Usage: internal
+		
+		Arguments:
+			windowEl
+	*/
+	attachDraggable: function(windowEl){
+		if ( !this.options.draggable || windowEl.modal )
+			return;
+		
+		new Drag.Move(windowEl, {
+			handle: windowEl.subElements.titleBar,
+			onStart: function() {
+				this.focusWindow(windowEl);
+				if ( windowEl.subElements.iframe )
+					windowEl.subElements.iframe.setStyle('visibility', 'hidden');
+			}.bind(this),
+			onComplete: function() {
+				if ( windowEl.subElements.iframe )
+					windowEl.subElements.iframe.setStyle('visibility', 'visible');
+			}
+		});
+	},
+	/*
+		Method: attachResizable()
+		Description: make window resizable
+		Usage: internal
+		
+		Arguments:
+			windowEl
+	*/
+	attachResizable: function(windowEl){
+		if ( !this.options.resizable || windowEl.modal )
+			return;
+		windowEl.subElements.contentWrapper.makeResizable({
+			handle: windowEl.subElements.resizeHandle,
+			modifiers: {
+				x: 'width',
+				y: 'height'
+			},
+			limit: {
+				x: [this.options.minWidth, this.options.maxWidth],
+				y: [this.options.minHeight, this.options.maxHeight]
+			},
+			onStart: function() {
+				if ( windowEl.subElements.iframe )
+					windowEl.subElements.iframe.setStyle('visibility', 'hidden');
+			},
+			onDrag: function() {
+				this.drawWindow(windowEl);
+			}.bind(this),
+			onComplete: function() {
+				if ( windowEl.subElements.iframe )
+					windowEl.subElements.iframe.setStyle('visibility', 'visible');
+				windowEl.onResize();
+			}
+		});
 	},
 	getWindowWidth: function(){
 		var windowDimensions = document.getCoordinates();
@@ -383,7 +554,7 @@ var MochaDesktop = new Class({
 	},	
 	setDesktopSize: function(){
 		if ($('mochaDesktop')) {
-			$('mochaDesktop').setStyle('width', this.getWindowWidth() - 20); // To adjust for browser scrollbar
+			$('mochaDesktop').setStyle('width', this.getWindowWidth() - 20); // To adjust for broswer scrollbar
 			setTimeout( function(){
 				$('mochaDesktop').setStyle('width', this.getWindowWidth());
 			}.bind(this), 100);
@@ -395,149 +566,140 @@ var MochaDesktop = new Class({
 	},
 	setModalSize: function(){
 		$('mochaModalBackground').setStyle('height', this.getWindowHeight());
-	},	
-	insertWindowElements: function(elementArray){
-		elementArray.each(function(el){
-			var mochaTempContents = el.innerHTML;
-			el.empty();
-
-			if (Browser.Engine.trident4){
-				el.innerHTML = '<iframe class="zIndexFix" scrolling="no" marginwidth="0" src="" marginheight="0"></iframe>';
-			}
-			
-			var mochaOverlay = new Element('div', {
-				'class': 'mochaOverlay'
-			}).injectInside(el);
-			
-			if (Browser.Engine.trident){
-				mochaOverlay.setStyle('zIndex', 2);
-			}
-			
-			// For Mac Firefox 2 to help reduce scrollbar bugs in that browser
-			if (Browser.Platform.mac && Browser.Engine.gecko){
-				mochaOverlay.setStyle('overflow', 'auto');				
-			}
-
-			//Insert mochaTitlebar
-			var mochaTitlebar = new Element('div', {
-				'class': 'mochaTitlebar'
-			}).injectTop(mochaOverlay);
-			
-			if (this.options.draggable && !el.modal){
-				mochaTitlebar.setStyle('cursor', 'move');
-			}
-
-			var mochaContent = new Element('div', {
-				'class': 'mochaContent'
-			}).injectInside(mochaOverlay);
-
-			mochaContent.setStyles({
-				width: el.getStyle('width'),
-				height: el.getStyle('height')
-			});
-
-			var mochaScroller = new Element('div', {
-				'class': 'mochaScroller'
-			}).injectTop(mochaContent);
-
-			var mochaScrollerpad = new Element('div', {
-				'class': 'mochaScrollerpad'
-			}).setHTML(mochaTempContents).injectInside(mochaScroller);
-			
-			if (el.iframe){
-				var mochaIframe = new Element('iframe', {
-					'id': el.id + 'Iframe',						  
-					'class': 'mochaIframe',
-					'src': el.contentURL,
-					'marginwidth': 0,
-					'marginheight': 0,
-					'frameBorder': 0,
-					'scrolling': 'auto'
-				}).injectInside(mochaScrollerpad);
-			}			
-			
-			var mochaTitlebarH3 = mochaScrollerpad.getElement('h3.mochaTitle').clone().injectInside(mochaTitlebar);
-			mochaScrollerpad.getElement('.mochaTitle').dispose();
-
-			if(el.contentURL && !el.iframe){
-				new Request({
-					url: el.contentURL,
-					onRequest: function(){
-					},
-					onFailure: function(){
-						mochaScrollerpad.setHTML('<p><strong>Error Loading XMLHttpRequest</strong></p><p>Make sure all of your content is uploaded to your server, and that you are attempting to load a document from the same domain as this page. XMLHttpRequests will not work on your local machine.</p>');
-					},
-					onSuccess: function(response) {
-						mochaScrollerpad.setHTML(response);
-						if ( el.onContentLoaded ) el.onContentLoaded();
-					}
-				}).get();
-			}
-			
-			//Insert canvas
-			var canvas = new Element('canvas', {
-				'class': 'mochaCanvas',
-				'width': 1,
-				'height': 1
-			}).injectInside(el);
-
-			// Dynamically initialize canvas using excanvas. This is only required by IE
-			if (Browser.Engine.trident) {
-				G_vmlCanvasManager.initElement(canvas);
-			}
-
-			//Insert resize handles
-			if (this.options.resizable && !el.modal){
-				var resizeHandle = new Element('div', {
-					'class': 'resizeHandle'
-				}).injectAfter(mochaOverlay);
-			}
-
-			if (Browser.Engine.trident && !el.modal){
-				resizeHandle.setStyle('zIndex', 2)	
-			}
-
-			//Insert mochaTitlebar controls
-			var mochaControls = new Element('div', {
-				'class': 'mochaControls'
-			}).injectAfter(mochaOverlay);
-
-			if (Browser.Engine.trident){
-				mochaControls.setStyle('zIndex', 2)
-			}
-
-			//Insert close button
-			if (this.options.closable || el.modal){
-				new Element('div', {
-					'class': 'mochaClose',
-					'title': 'Close Window'
-				}).injectInside(mochaControls);
-			}				
-
-			//Insert maximize button
-			if (this.options.maximizable && !el.modal){
-				new Element('div', {
-					'class': 'maximizeToggle',
-					'title': 'Maximize'
-				}).injectInside(mochaControls);
-			}
-
-			//Insert minimize button
-			if (this.options.minimizable){
-				new Element('div', {
-					'class': 'minimizeToggle',
-					'title': 'Minimize'
-				}).injectInside(mochaControls);
-			}
-
-		}.bind(this));
 	},
-	drawAll: function(){
-		$$('div.mocha').each(function(el){
-			if (el.getStyle('display') != 'none'){
-				this.drawWindow(el);
-			}
-		}.bind(this));
+	/*
+		Method: insertWindowElements
+		Arguments:
+			windowEl
+		Returns:
+			object containing all elements created within [windowEl]
+	*/
+	insertWindowElements: function(windowEl){
+		var windowElements = {
+			overlay: null,
+			titleBar: null,
+			canvas: null,
+		    title: null,        
+            content: null,
+            scroller: null,
+            closeButton: null,
+            minimizeButton: null,
+            maximizeButton: null,
+			resizeHandle: null
+		};
+
+		if (Browser.Engine.trident4){
+			//windowEl.innerHTML = '<iframe class="zIndexFix" scrolling="no" marginwidth="0" src="" marginheight="0"></iframe>';
+			windowElements.zIndexFix = new Element('iframe', {
+				'class': 'zIndexFix',
+				'scrolling': 'no',
+				'marginWidth': 0,
+				'marginHeight': 0,
+				'src': ''
+			});
+		}
+			
+		windowElements.overlay = new Element('div', {
+			'class': 'mochaOverlay'
+		}).injectInside(windowEl);
+		
+		if (Browser.Engine.trident4){
+			windowElements.overlay.setStyle('zIndex', 2)
+		}
+		// For Mac Firefox 2 to help reduce scrollbar bugs in that browser
+		if (Browser.Platform.mac && Browser.Engine.gecko){
+			windowElements.overlay.setStyle('overflow', 'auto');				
+		}
+		//Insert mochaTitlebar
+		windowElements.titleBar = new Element('div', {
+			'class': 'mochaTitlebar'
+		}).injectTop(windowElements.overlay);
+
+		// Create window header
+		windowElements.title = new Element('h3', {
+			'class': 'mochaTitle'
+		}).injectInside(windowElements.titleBar);
+		
+		if (this.options.draggable && !windowEl.modal){
+			windowElements.titleBar.setStyle('cursor', 'move');
+		}
+
+		windowElements.contentWrapper = new Element('div', {
+			'class': 'mochaContent'
+		}).injectInside(windowElements.overlay);
+
+		windowElements.contentWrapper.setStyles({
+			width: windowEl.getStyle('width'),
+			height: windowEl.getStyle('height')
+		});
+
+		windowElements.scroller = new Element('div', {
+			'class': 'mochaScroller'
+		}).injectTop(windowElements.contentWrapper);
+
+		windowElements.content = new Element('div', {
+			'class': 'mochaScrollerpad'
+		}).injectInside(windowElements.scroller);
+		
+			
+		//Insert canvas
+		windowElements.canvas = new Element('canvas', {
+			'class': 'mochaCanvas',
+			'width': 1,
+			'height': 1
+		}).injectInside(windowEl);
+	
+		//Insert resize handles
+		if (this.options.resizable && !windowEl.modal){
+			windowElements.resizeHandle = new Element('div', {
+				'class': 'resizeHandle'
+			}).injectAfter(windowElements.overlay);
+			
+			if ( Browser.Engine.trident )
+				windowElements.resizeHandle.setStyle('zIndex', 2);
+		}
+
+		//Insert mochaTitlebar controls
+		windowElements.controls = new Element('div', {
+			'class': 'mochaControls'
+		}).injectAfter(windowElements.overlay);
+		
+		if (Browser.Engine.trident){
+			windowElements.controls.setStyle('zIndex', 2)
+		}
+
+		//Insert close button
+		if (this.options.closable || windowEl.modal){
+			windowElements.closeButton = new Element('div', {
+				'class': 'mochaClose',
+				'title': 'Close Window'
+			}).injectInside(windowElements.controls);
+		}				
+
+		//Insert maximize button
+		if (this.options.maximizable && !windowEl.modal){
+			windowElements.maximizeButton = new Element('div', {
+				'class': 'maximizeToggle',
+				'title': 'Maximize'
+			}).injectInside(windowElements.controls);
+		}
+
+		//Insert minimize button
+		if (this.options.minimizable){
+			windowElements.minimizeButton = new Element('div', {
+				'class': 'minimizeToggle',
+				'title': 'Minimize'
+			}).injectInside(windowElements.controls);
+		}
+		// Dynamically initialize canvas using excanvas. This is only required by IE
+		if ( Browser.Engine.trident ) {
+			G_vmlCanvasManager.initElement(windowElements.canvas);
+			// This is really odd, .getContext() method does not exist before retrieving the
+			// element via getElement
+			windowElements.canvas = windowEl.getElement('.mochaCanvas');
+		}
+
+		return windowElements;
 	},
 	/*
 	
@@ -550,80 +712,58 @@ var MochaDesktop = new Class({
 	Notes: This is where we create the canvas GUI	
 
 	*/	
-	drawWindow: function(el, shadows) {
-		var mochaIframe = el.getElement('.zIndexFix');
-		var mochaOverlay = el.getElement('.mochaOverlay');
-		var mochaContent = el.getElement('.mochaContent'); 
-		var mochaScroller = el.getElement('.mochaScroller');
-		var mochaTitlebar = el.getElement('.mochaTitlebar');
-		var mochaCanvas = el.getElement('.mochaCanvas');
-		var mochaControls = el.getElement('.mochaControls');
-
-		var ctx = mochaCanvas.getContext('2d');
-
-		//Assign a unique id to each window, 
-		//that doesn't yet have an id.
-		//This is happening at least three times for windows not created onstart.
-		//Should rethink the flow on this.
-		if(el.id == ""){el.id = 'win' + (++this.windowIDCount);}
+	drawWindow: function(windowEl, shadows) {
+		var ctx = windowEl.subElements.canvas.getContext('2d');
 
 		//This should probably be in the insertWindowElements method rather than here
-		this.setMochaControlsWidth(el);
+		this.setMochaControlsWidth(windowEl);
 
-		if (el.maximizeToggle == 'restore') {
-			mochaContent.setStyle('height', (this.getWindowHeight() - this.options.headerHeight - this.options.footerHeight + 6));
-			mochaContent.setStyle('width', this.getWindowWidth());
-		}
-		
-		mochaScroller.setStyle('height', mochaContent.getStyle('height'));
-		mochaScroller.setStyle('width', mochaContent.getStyle('width'));
+		// Doesn't appear to be needed ?
+		/*if ( windowEl.isMaximized ) {
+			windowEl.subElements.content.setStyles({
+				'height': (this.getWindowHeight() - this.options.headerHeight - this.options.footerHeight + 6),
+				'width': this.getWindowWidth()
+			});
+		}*/
+		windowEl.subElements.scroller.setStyles({
+			'height': windowEl.subElements.contentWrapper.getStyle('height'),
+			'width': windowEl.subElements.contentWrapper.getStyle('width')
+		});
 		
 		//Resize iframe when window is resized
-		if (el.iframe) {
-			el.getElement('.mochaIframe').setStyles({
-				'height': mochaContent.getStyle('height')
+		if ( windowEl.subElements.iframe ) {
+			windowEl.subElements.iframe.setStyles({
+				'height': windowEl.subElements.contentWrapper.getStyle('height'),
+				'width': windowEl.subElements.contentWrapper.getStyle('width')
 			});
 		}
 	
-		mochaHeight = mochaContent.scrollHeight;
-		mochaWidth = mochaContent.scrollWidth + this.scrollWidthOffset;
+		mochaHeight = windowEl.subElements.contentWrapper.scrollHeight;
+		mochaWidth = windowEl.subElements.contentWrapper.scrollWidth + this.scrollWidthOffset;
 		mochaHeight += this.options.headerHeight + this.options.footerHeight;
 		
-		//Firefox returns null and IE returns empty string difference
-		// Definitely in the wrong place
-		var sTitleBarTitle = mochaTitlebar.getProperty('title');
 		
-		//Firefox
-		//Also in the wrong place
-		if(sTitleBarTitle == null) {
-			sTitleBarTitle = "";
-		}
-
-		mochaOverlay.setStyle('height', mochaHeight);
-		el.setStyle('height', mochaHeight);
-
-		if (Browser.Engine.webkit) {
-			mochaCanvas.setProperties({
-				'width': 4000,
-				'height': 2000
-			});
-		} else {
-			mochaCanvas.width = mochaWidth;
-			mochaCanvas.height = mochaHeight;
-		}
+		windowEl.subElements.overlay.setStyle('height', mochaHeight);
+		windowEl.setStyle('height', mochaHeight);
+		
+		// Set canvas width, webkit fix: 4000x2000 (not sure why / Joel)
+		windowEl.subElements.canvas.setProperties({
+			'width': (Browser.Engine.webkit ? 4000 : mochaWidth),
+			'height': (Browser.Engine.webkit ? 2000 : mochaHeight)
+		});
 
 		// Part of the fix for IE6 select z-index bug and FF on Mac scrollbar z-index bug
-		if (Browser.Engine.trident4){
-			mochaIframe.setStyles({
+		if ( Browser.Engine.trident4 ){
+			windowEl.subElements.zIndexFix.setStyles({
 				'width': mochaWidth,
 				'height': mochaHeight
-			});
+			})
 		}
 
 		// Set width		
-		mochaOverlay.setStyle('width', mochaWidth); 
-		el.setStyle('width', mochaWidth);
-		mochaTitlebar.setStyle('width', mochaWidth - 6);
+		windowEl.setStyle('width', mochaWidth);
+		windowEl.subElements.overlay.setStyle('width', mochaWidth); 
+		windowEl.subElements.titleBar.setStyle('width', mochaWidth - 6);
 	
 		// Draw shapes
 		ctx.clearRect(0, 0, this.getWindowWidth(), this.getWindowHeight());
@@ -652,19 +792,16 @@ var MochaDesktop = new Class({
 
 		this.closebuttonX = mochaWidth - 15;
 
-			if (this.options.closable || el.modal){
-				this.closebutton(ctx, this.closebuttonX, 15, 229, 217, 217, 1.0);
-			}
-			if (this.options.maximizable && !el.modal){
-				this.maximizebutton(ctx, this.maximizebuttonX, 15, 217, 229, 217, 1.0);
-			}
-			if (this.options.minimizable && !el.modal){
-				this.minimizebutton(ctx, this.minimizebuttonX, 15, 231, 231, 209, 1.0); //Minimize
-			}
-			if (this.options.resizable && !el.modal){
+		if (this.options.closable || windowEl.modal)
+			this.closebutton(ctx, this.closebuttonX, 15, 229, 217, 217, 1.0);
+		if (this.options.maximizable && !windowEl.modal)
+			this.maximizebutton(ctx, this.maximizebuttonX, 15, 217, 229, 217, 1.0);
+		if ( this.options.minimizable && !windowEl.modal )
+			this.minimizebutton(ctx, this.minimizebuttonX, 15, 231, 231, 209, 1.0); //Minimize
+		if ( this.options.resizable && !windowEl.modal ) 
 			this.triangle(ctx, mochaWidth - 20, mochaHeight - 20, 12, 12, 209, 209, 209, 1.0); //resize handle
-			}
-			this.triangle(ctx, mochaWidth - 20, mochaHeight - 20, 10, 10, 0, 0, 0, 0); //invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7.
+	
+		this.triangle(ctx, mochaWidth - 20, mochaHeight - 20, 10, 10, 0, 0, 0, 0); //invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7.
 
 	},
 	//mocha body
@@ -686,9 +823,7 @@ var MochaDesktop = new Class({
 	topRoundedRect: function(ctx,x,y,width,height,radius){
 
 		// Create gradient
-		
-		// Fix a quirk in Opera with the Gradient
-		if (Browser.Engine.presto){
+		if (Browser.Engine.presto != null ){
 			var lingrad = ctx.createLinearGradient(0,0,0,this.options.headerHeight+2);
 		}
 		else {
@@ -774,128 +909,6 @@ var MochaDesktop = new Class({
 		ctx.lineTo(x+4,y);
 		ctx.stroke();
 	},
-	attachDraggable: function(elementArray){
-		elementArray.each(function(el){
-			if (this.options.draggable && !el.modal){
-				var mochaHandle = el.getElement('.mochaTitlebar');
-				new Drag.Move(el, {
-					handle: mochaHandle,
-					onStart: function(){  
-						this.focusWindow(el);
-						if (el.iframe) {
-							el.getElement('.mochaIframe').setStyles({
-								'visibility': 'hidden'
-							});
-						}
-					}.bind(this),
-					onComplete: function(){
-						if (el.iframe) {
-							el.getElement('.mochaIframe').setStyles({
-								'visibility': 'visible'
-							});
-						}
-					}.bind(this)
-				});
-			}
-		}.bind(this));
-	},
-	attachResizable: function(elementArray){
-		elementArray.each(function(el){		
-			if (this.options.resizable && !el.modal){
-				var mochaContent = el.getElement('.mochaContent');
-				var resizeHandle = el.getElement('.resizeHandle');
-				mochaContent.makeResizable({
-					handle: resizeHandle,
-					modifiers: {
-						x: 'width',
-						y: 'height'
-					},
-					limit: {
-						x:[this.options.minWidth,this.options.maxWidth],
-						y:[this.options.minHeight,this.options.maxHeight]
-					},
-					onStart: function(){
-						if (el.iframe) {
-							el.getElement('.mochaIframe').setStyles({
-								'visibility': 'hidden'
-							});
-						}
-					}.bind(this),
-					onDrag: function(){
-						this.drawWindow(el);
-					}.bind(this),
-					onComplete: function(){
-						if (el.iframe) {
-							el.getElement('.mochaIframe').setStyles({
-								'visibility': 'visible'
-							});
-						}
-					if (el.onResize){ // checks for onResize since windows generated at startup do not have this option			
-						el.onResize();  // later I may just assign $empty functions for onclose and so forth to the original windows
-					}	
-					}.bind(this)
-				});
-			}
-		}.bind(this));
-	},
-	attachFocus: function(elementArray){
-		elementArray.each(function(element) {
-			element.addEvent('click', function(event){
-				// Only focus when needed, otherwize onFocus() will run on every click
-				if ( element.getStyle('zIndex').toInt() < this.indexLevel ) {
-				this.focusWindow(element);
-					if (element.onFocus){
-						element.onFocus();
-					}
-				}
-			}.bind(this));
-		}.bind(this));
-	},
-	attachMinimize: function(elementArray){	
-		elementArray.each(function(element) {
-			if (this.options.minimizable && !element.modal){
-				element.getElement('.minimizeToggle').addEvent('click', function(event){
-					var mochaControls = event.target.parentNode;
-					var el = mochaControls.parentNode;
-					this.minimizeWindow(el);
-					if (el.onMinimize){
-						el.onMinimize();
-					}
-				}.bind(this));
-			}
-		}.bind(this));
-	},
-	attachMaximize: function(elementArray) {	
-		elementArray.each(function(element) {
-			if (this.options.maximizable && !element.modal){
-				element.getElement('.maximizeToggle').addEvent('click', function(event){
-					var mochaControls = event.target.parentNode;
-					var el = mochaControls.parentNode;
-					if (el.maximizeToggle == 'maximize') {
-						element.getElement('.maximizeToggle').setProperty('title', 'Restore'); //Set title
-						this.maximizeWindow(el);
-						if(el.onMaximize){
-							el.onMaximize();
-						}
-					} else {
-						element.getElement('.maximizeToggle').setProperty('title', 'Maximize'); //Set title
-						this.restoreWindow(el);
-					}
-				}.bind(this));
-			}
-		}.bind(this));
-	},
-	attachClose: function(elementArray){
-		elementArray.each(function(element) {
-			if (this.options.closable || element.modal){
-				element.getElement('.mochaClose').addEvent('click', function(event){
-					var mochaControls = event.target.parentNode;
-					var el = mochaControls.parentNode;
-					this.closeWindow(element);
-				}.bind(this));
-			}
-		}.bind(this));
-	},
 	setMochaControlsWidth: function(el){
 		this.mochaControlsWidth = 0;
 		if (this.options.minimizable && !el.modal){
@@ -916,112 +929,6 @@ var MochaDesktop = new Class({
 		}
 		el.getElement('.mochaControls').setStyle('width', this.mochaControlsWidth - 5);
 	},
-	maximizeWindow: function(el) {
-		if (el.iframe) {
-			el.getElement('.mochaIframe').setStyles({
-				'visibility': 'hidden'
-			});
-		}
-		var mochaContent = el.getElement('.mochaContent');	
-
-		$(el).oldTop = $(el).getStyle('top');
-		$(el).oldLeft = $(el).getStyle('left');
-		mochaContent.oldWidth = mochaContent.getStyle('width');
-		mochaContent.oldHeight = mochaContent.getStyle('height');
-
-		var mochaMorph = new Fx.Morph(el, { 
-			'duration': 200,
-			'onComplete': function(el){
-				mochaContent.setStyle('height', (this.getWindowWidth() - this.options.headerHeight - this.options.footerHeight + 6));
-				mochaContent.setStyle('width', this.getWindowHeight());
-				this.drawWindow(el);
-				if (el.iframe) {
-					el.getElement('.mochaIframe').setStyles({
-						'visibility': 'visible'
-					});
-				}				
-			}.bind(this)
-		});
-		mochaMorph.start({
-			'top': -3, // takes shadow width into account
-			'left': -3 // takes shadow width into account
-		});
-		$(el).maximizeToggle = 'restore';
-	},
-	restoreWindow: function(el) {
-		if (el.iframe) {
-			el.getElement('.mochaIframe').setStyles({
-				'visibility': 'hidden'
-			});
-		}		
-		var mochaContent = el.getElement('.mochaContent');
-		mochaContent.setStyle('width', mochaContent.oldWidth);
-		mochaContent.setStyle('height', mochaContent.oldHeight);
-		$(el).maximizeToggle = 'maximize';
-		this.drawWindow(el);
-		var mochaMorph = new Fx.Morph(el, { 
-			'duration': 150,
-			'onComplete': function(el){
-				if (el.iframe) {
-					el.getElement('.mochaIframe').setStyles({
-						'visibility': 'visible'
-					});
-				}				
-			}.bind(this)	
-		});
-		mochaMorph.start({
-			'top': $(el).oldTop,
-			'left': $(el).oldLeft
-		});
-	},
-	minimizeWindow: function(el) {		
-		var mochaContent = el.getElement('.mochaContent');
-		this.addToMinimizeDock(el)
-	},
-	addToMinimizeDock: function (el) {
-		//get handle to window
-		var mochaControls = el.getElement('.mochaControls');
-		var objWin  = mochaControls.parentNode
-	
-		//capture title bar text
-		var sTitleBarHTML = el.getElement('.mochaTitlebar').innerHTML;
-		var sTitleBarText = el.getElement('.mochaTitle').innerHTML; //must use mochaTitle and innerhtml because firefox doesn't support innerText on mochaTitlebar element
-			
-		//check for long title
-		var sLongTitle = "...";
-		if(sTitleBarText.length <= 13){sLongTitle = ""};
-		
-		//hide window
-		if (objWin.iframe) {
-			objWin.getElement('.mochaIframe').setStyles({
-				'visibility': 'hidden'
-			});
-		}		
-		objWin.setStyle('visibility','hidden');	
-		
-		var btnEl = new Element('button', {
-			'winAssociated': objWin.id,
-			'class': 'mochaDockButton',
-			'title': sTitleBarText,
-			'id': 'DockButton'+objWin.id
-		}).setHTML((sTitleBarText.substring(0,13) + sLongTitle)).injectInside($('mochaDock'));
-				
-		btnEl.addEvent('click', function(event){
-			//click event will restore the window
-			var objWin = $(event.target.getProperty('winAssociated'));
-			objWin.setStyle('visibility','visible');
-			if (objWin.iframe) {
-				objWin.getElement('.mochaIframe').setStyles({
-					'visibility': 'visible'
-				});
-			}
-			this.focusWindow(objWin);
-
-			//remove this btn element 
-			event.target.dispose();
-		}.bind(this));
-		
-	},	
 	initDock: function (el){
 		document.addEvent('mousemove', function (objDoc){
 			if(objDoc.event.clientY > (document.body.clientHeight -10) && $('mochaDock').getProperty('autoHide')) { 
@@ -1311,24 +1218,6 @@ function attachMochaLinkEvents(){
 		});
 	}
 	
-	if ($('youTubeLink')){
-		$('youTubeLink').addEvent('click', function(e){	
-			new Event(e).stop();
-			document.mochaDesktop.newWindow({
-				id: 'youTube',
-				title: 'YouTube in Iframe',
-				loadMethod: 'iframe',
-				contentURL: 'pages/youtube.html',
-				width: 425,
-				height: 355,
-				scrollbars: false,
-				paddingVertical: 0,
-				paddingHorizontal: 0,
-				bgColor: '#000'
-			});
-		});
-	}	
-	
 	if ($('cornerRadiusLink')){
 		$('cornerRadiusLink').addEvent('click', function(e){	
 			new Event(e).stop();
@@ -1567,7 +1456,9 @@ function addSlider(){
 			onChange: function(pos){
 				$('updatevalue').setHTML(pos);
 				document.mochaDesktop.options.cornerRadius = pos;
-				document.mochaDesktop.drawAll();
+				$$('div.mocha').each(function(windowEl, i) {
+					document.mochaDesktop.drawWindow(windowEl);
+				});
 				document.mochaDesktop.indexLevel++; 
 			}
 		}).set(document.mochaDesktop.options.cornerRadius);
