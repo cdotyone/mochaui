@@ -17,59 +17,59 @@
 
 var MochaDesktop = new Class({
 	options: {
-		// Global options for windows. Some of these options can be overriden for individual windows in newWindow()
-		minimizable: true,		// Requires dock
-		maximizable: true,		// Requires desktop
-		closable: true,
-		effects: true,          // Toggle window fade and move effects - NOT IMPLEMENTED YET
-		desktopTopOffset: 20,   // Use a negative number if neccessary to place first window where you want it
+		// Global options for windows.
+		// Some of these options can be overriden for individual windows in newWindow()
+		resizable:         true,
+		draggable:         true,
+		minimizable:       true,  // Requires dock
+		maximizable:       true,  // Requires desktop
+		closable:          true,
+		effects:           true,  // Toggle window fade and move effects - NOT IMPLEMENTED YET
+		desktopTopOffset:  20,    // Use a negative number if neccessary to place first window where you want it
 		desktopLeftOffset: 290,
-		mochaTopOffset: 70,     // Initial vertical spacing of each window
-		mochaLeftOffset: 70,    // Initial horizontal spacing of each window
-		minWidth: 250,          // Minimum width of windows when resized
-		maxWidth: 2500,         // Maximum width of windows when resized
-		minHeight: 100,	        // Minimum height of windows when resized	
-		maxHeight: 2000,        // Maximum height of windows when resized
-		// Global style options
-		headerHeight: 25,       // Height of window titlebar	
-		footerHeight: 26, 		
-		cornerRadius: 9,		
+		mochaTopOffset:    70,    // Initial vertical spacing of each window
+		mochaLeftOffset:   70,    // Initial horizontal spacing of each window
+		minWidth:          250,   // Minimum width of windows when resized
+		maxWidth:          2500,  // Maximum width of windows when resized
+		minHeight:         100,	  // Minimum height of windows when resized	
+		maxHeight:         2000,  // Maximum height of windows when resized
+		// Style options
+		headerHeight:      25,    // Height of window titlebar	
+		footerHeight:      26, 		
+		cornerRadius:      9,		
 		headerGradientTop:    '250, 250, 250',  // RGB
 		headerGradientBottom: '228, 228, 228',  // RGB
 		footerBgColor:        '246, 246, 246'	// Background color of the main canvas shape
 	},
 	initialize: function(options){
 		this.setOptions(options);
-		// Private properties		
-		this.indexLevel = 1;         // Used for z-Index
-		this.windowIDCount = 0;		
+		// Private properties
+		this.indexLevel         = 1;  // Used for z-Index
+		this.windowIDCount      = 0;		
+		this.myTimer 			= ''; // Used with accordian 
 		this.mochaControlsWidth = 0;
-		this.minimizebuttonX = 0;    // Minimize button horizontal position
-		this.maximizebuttonX = 0;    // Maximize button horizontal position
-		this.closebuttonX = 0;       // Close button horizontal position
-		this.shadowWidth = 3;
-		this.shadowOffset = this.shadowWidth * 2;
+		this.minimizebuttonX    = 0;  // Minimize button horizontal position
+		this.maximizebuttonX    = 0;  // Maximize button horizontal position
+		this.closebuttonX       = 0;  // Close button horizontal position
+		this.shadowWidth        = 3;
+		this.shadowOffset       = this.shadowWidth * 2;		
+		this.HeaderFooterShadow = this.options.headerHeight + this.options.footerHeight + this.shadowOffset;
 		
-		this.dockHeight	= 0;		// Calculated height of dock
-		this.headerHeight = 0;		// Calculated height of desktop header
-		this.dockVisible = true;	// True when dock is visible, false when not
-		this.dockAutoHide = false;	// True when dock autohide is set to on, false if set to off
-		this.hasDock = true;		 
-		this.hasDesktop	= true;
+		this.dockHeight	  = 0;      // Calculated height of dock
+		this.headerHeight = 0;      // Calculated height of desktop header
+		this.dockVisible  = true;   // True when dock is visible, false when not
+		this.dockAutoHide = false;  // True when dock autohide is set to on, false if set to off
+		this.hasDock      = true;		 
+		this.hasDesktop	  = true;		
+		var dock          = $('mochaDock');
+		var desktop       = $('mochaDesktop');
+		var desktopHeader = $('mochaDesktopHeader');
 		
-		var dock			= $('mochaDock');
-		var desktop			= $('mochaDesktop');
-		var desktopHeader	= $('mochaDesktopHeader');
+		if ( desktopHeader ) { this.headerHeight = this.calcElementHeight(desktopHeader); }
 		
-		if ( desktopHeader ) {
-			this.headerHeight = this.calcElementHeight(desktopHeader);
-
-		}
 		// Make sure that hasDesktop and hasDock is set to false if the elements doesn't exist
-		if ( !desktop )
-			this.hasDesktop = false;
-		if ( !dock ) 
-			this.hasDock = false;
+		if ( !desktop ) this.hasDesktop = false;
+		if ( !dock ) this.hasDock = false;
 
 		if ( this.hasDock ) {
 			this.dockHeight = this.calcElementHeight(dock);
@@ -81,10 +81,54 @@ var MochaDesktop = new Class({
 			});
 			this.initDock(dock);
 			this.drawDock(dock);
-		} else if ( dock ) // If dock exists but option.hasDock is set to false, hide dock
-			dock.setStyle('display', 'none');	
-			
-		// Dynamically create windows defined in XHTML and remove the definitions from the DOM
+		} else if ( dock ) { // If dock exists but option.hasDock is set to false, hide dock
+			dock.setStyle('display', 'none');
+		}
+		
+		// Dynamically create windows defined in XHTML and remove the definitions from the DOM	
+		this.newWindowsFromXHTML();
+		
+		// Set desktop size
+		this.setDesktopSize(desktop);
+		
+		// Modal initialization
+		var mochaModal = new Element('div', {
+			'id': 'mochaModalBackground',
+			'styles': {
+				'height': document.getCoordinates().height
+			}
+		});		
+		mochaModal.injectInside(this.hasDesktop ? $('mochaDesktop') : document.body);
+		
+		mochaModal.setStyle('opacity', .4);
+		this.modalOpenMorph = new Fx.Morph($('mochaModalBackground'), {
+				'duration': 200
+				});
+		this.modalCloseMorph = new Fx.Morph($('mochaModalBackground'), {
+			'duration': 200,
+			onComplete: function(){
+				$('mochaModalBackground').setStyle('display', 'none');
+			}.bind(this)
+		});		
+		
+		 // Fix for dropdown menus in IE6
+		if (Browser.Engine.trident4 && $("mochaDesktopNavbar")){
+			$('mochaDesktopNavbar').getElements('li').each(function(element) {
+				element.addEvent('mouseenter', function(){
+					this.addClass('ieHover');
+				})
+				element.addEvent('mouseleave', function(){
+					this.removeClass('ieHover');
+				})
+			})
+		};
+		
+		window.onresize = function(){
+			this.setDesktopSize();
+			this.setModalSize();
+		}.bind(this);
+	},
+	newWindowsFromXHTML: function(properties, cascade){		
 		$$('div.mocha').each(function(el, i) {
 			// Get the window title and destroy that element, so it does not end up in window content
 			if ( Browser.Engine.presto || Browser.Engine.trident5 )
@@ -111,90 +155,50 @@ var MochaDesktop = new Class({
 			// Get content and destroy the element
 			properties.content = el.innerHTML;
 			el.destroy();
+			
 			// Create window
-			this.newWindow(properties);
+			this.newWindow(properties, true);
 		}.bind(this));
 		
 		this.arrangeCascade();
-		
-		// Set desktop size
-		this.setDesktopSize(desktop);
-		
-		// Modal initialization
-		var mochaModal = new Element('div', {
-			'id': 'mochaModalBackground',
-			'styles': {
-				'height': document.getCoordinates().height
-			}
-		});		
-		mochaModal.injectInside(this.hasDesktop ? $('mochaDesktop') : document.body);
-		
-		mochaModal.setStyle('opacity', .4);
-		this.modalOpenMorph = new Fx.Morph($('mochaModalBackground'), {
-				'duration': 200
-				});
-		this.modalCloseMorph = new Fx.Morph($('mochaModalBackground'), {
-			'duration': 200,
-			onComplete: function(){
-				$('mochaModalBackground').setStyle('display', 'none');
-			}.bind(this)
-		});	
-		
-		
-		 // Fix for dropdown menus in IE6
-		if (Browser.Engine.trident4 && $("mochaDesktopNavbar")){
-			$('mochaDesktopNavbar').getElements('li').each(function(element) {
-				element.addEvent('mouseenter', function(){
-					this.addClass('ieHover');
-				})
-				element.addEvent('mouseleave', function(){
-					this.removeClass('ieHover');
-				})
-			})
-		};
-
-		window.onresize = function(){
-			this.setDesktopSize();
-			this.setModalSize();
-		}.bind(this);
-	},
+	},	
 	/*
 	
 	Method: newWindow
 	
 	Arguments: 
 		properties
+		cascade - boolean - this is set to true for windows parsed from the original XHTML
 
 	*/	
-	newWindow: function(properties){
+	newWindow: function(properties, cascade){
 		var windowProperties = $extend({
 			id: null,
-			title: 'New Window',
-			loadMethod: 'html', 				// html, xhr, or iframe
-			content: '', 						// used if loadMethod is set to 'html'
-			contentURL: 'pages/lipsum.html',	// used if loadMethod is set to 'xhr' or 'iframe'			
-			modal: false,
-			draggable: true,
-			resizable: true,
-			// Minimizable, maximizable and closable properties, defaults to global options
-			minimizable: this.options.minimizable,
-			maximizable: this.options.maximizable,
-			closable: this.options.closable,
-			width: 300,
-			height: 125, 
-			scrollbars: true,
-			x: null,
-			y: null,
-			paddingVertical: 10,
+			title:            'New Window',
+			loadMethod:       'html', 	             // html, xhr, or iframe
+			content:           '',                   // used if loadMethod is set to 'html'
+			contentURL:        'pages/lipsum.html',	 // used if loadMethod is set to 'xhr' or 'iframe'			
+			modal:             false,
+			draggable:         this.options.draggable,
+			resizable:         this.options.resizable,			
+			minimizable:       this.options.minimizable,
+			maximizable:       this.options.maximizable,
+			closable:          this.options.closable,
+			width:             300,
+			height:            125, 
+			scrollbars:        true,
+			x:                 null,
+			y:                 null,
+			paddingVertical:   10,
 			paddingHorizontal: 12,
-			bgColor: '#fff',
-			onContentLoaded: $empty,			// Event, fired when content is successfully loaded via XHR
-			onFocus: $empty,					// Event, fired when the window is focused
-			onResize: $empty,					// Event, fired when the window is resized
-			onMinimize: $empty,					// Event, fired when the window is minimized
-			onMaximize: $empty,					// Event, fired when the window is maximized
-			onClose: $empty,					// Event, fired just before the window is closed
-			onCloseComplete: $empty			    // Event, fired after the window is closed
+			bgColor:           '#fff',
+			onContentLoaded:   $empty,  // Event, fired when content is successfully loaded via XHR
+			onFocus:           $empty,  // Event, fired when the window is focused
+			onResize:          $empty,  // Event, fired when the window is resized
+			onMinimize:        $empty,  // Event, fired when the window is minimized
+			onMaximize:        $empty,  // Event, fired when the window is maximized
+			onClose:           $empty,  // Event, fired just before the window is closed
+			onCloseComplete:   $empty   // Event, fired after the window is closed
 		}, properties || {});
 		var windowEl = $(windowProperties.id);
 		
@@ -316,10 +320,9 @@ var MochaDesktop = new Class({
 	
 		// Move new window into position. If position not specified by user then center the window on the page		
 		var dimensions = document.getCoordinates();
-		var windowPosTop = windowProperties.y ? windowProperties.y : (dimensions.height * .5) - ((windowProperties.height + this.options.headerHeight + this.options.footerHeight + this.shadowOffset) * .5);
+		var windowPosTop = windowProperties.y ? windowProperties.y : (dimensions.height * .5) - ((windowProperties.height + this.HeaderFooterShadow) * .5);
 		var windowPosLeft = windowProperties.x ? windowProperties.x : (dimensions.width * .5) - (windowProperties.width * .5);
 		
-		// Probably move this to function called windowShowEffect() or something
 		if (windowEl.modal) {
 			$('mochaModalBackground').setStyle('display', 'block');
 			this.modalCloseMorph.cancel();
@@ -328,9 +331,13 @@ var MochaDesktop = new Class({
 			});
 			windowEl.setStyles({
 				'top': windowPosTop,
-				'left': windowPosLeft
+				'left': windowPosLeft,
+				'zIndex': 11000
 			});
-		} 
+		}
+		else if (cascade == true) {
+			// do nothing		
+		}		
 		else {
 			windowEl.positionMorph = new Fx.Morph(windowEl, {
 				'duration': 300
@@ -339,25 +346,17 @@ var MochaDesktop = new Class({
 				'top': windowPosTop,
 				'left': windowPosLeft
 			});
-		}
-		// -- END
-		
-		// Set the zIndex for the new window
-		if (windowProperties.modal) {
-			windowEl.setStyles({
-				'zIndex': 11000
-			});
-		}
-		else {
-			setTimeout(function(){ this.focusWindow(windowEl); }.bind(this), 10);
+			setTimeout(function(){ this.focusWindow(windowEl); }.bind(this), 10);			
 		}		
+
+		// Inject window into DOM		
 		
-		// Inject window into DOM
+		windowEl.injectInside(this.hasDesktop ? $('mochaDesktop') : document.body);
 		this.drawWindow(windowEl, subElements);
-		windowEl.injectInside(this.hasDesktop ? $('mochaDesktop') : document.body);		
 		
 		// Drag.Move() does not work in IE until element has been injected, thus setting here
-		this.attachDraggable(windowEl, subElements.titleBar);
+		this.attachDraggable(windowEl, subElements.titleBar);			
+		
 	},
 	/*
 	
@@ -402,15 +401,23 @@ var MochaDesktop = new Class({
 
 		return true;
 	},
+	/*
+	
+	Method: closeAll
+	
+	Notes: This closes all the windows
+
+	Returns:
+		true: the windows were closed
+		false: the windows were not closed
+
+	*/	
 	closeAll: function() {
 		$$('div.mocha').each(function(el) {
 			this.closeWindow(el);
 		}.bind(this));
-	},
-	garbageCleanUp: function() {
-		$$('div.mocha').each(function(el) {
-			el.destroy();
-		}.bind(this));		
+		
+		return true;		
 	},
 	focusWindow: function(windowEl){
 		if ( !(windowEl = $(windowEl)) )
@@ -433,7 +440,7 @@ var MochaDesktop = new Class({
 		contentWrapper.oldWidth = contentWrapper.getStyle('width');
 		contentWrapper.oldHeight = contentWrapper.getStyle('height');
 		
-		var mochaMorph = new Fx.Morph(windowEl, { 
+		var maximizeMorph = new Fx.Morph(windowEl, { 
 			'duration': 200,
 			'onComplete': function(windowEl){
 				var windowDimensions = document.getCoordinates();
@@ -444,7 +451,7 @@ var MochaDesktop = new Class({
 				this.drawWindow(windowEl);
 			}.bind(this)
 		});
-		mochaMorph.start({
+		maximizeMorph.start({
 			'top': -this.shadowWidth, // takes shadow width into account
 			'left': -this.shadowWidth // takes shadow width into account
 		});
@@ -508,7 +515,9 @@ var MochaDesktop = new Class({
 	/*
 		Method: getSubElement()
 		Description: 
-			get a single subElement within windowEl
+			Get a single subElement within windowEl. Subelements have IDs that are made up of the windowEl ID plus
+			an element key. e.g., myWindow_content or myWindow_iframe.
+			Might rename these parentWindow and childElements in the future.
 		Arguments: 
 			windowEl, subElementKey
 		Returns:
@@ -521,7 +530,7 @@ var MochaDesktop = new Class({
 	/*
 		Method: getSubElements()
 		Description:
-			get subeleements within windowEl referenced in array subElementsKeys 
+			Get subElements within windowEl referenced in array subElementsKeys 
 		Arguments:
 			windowEl, subElementKeys
 		Returns:
@@ -670,7 +679,6 @@ var MochaDesktop = new Class({
 			object containing all elements created within [windowEl]
 	*/
 	insertWindowElements: function(windowEl, height, width){
-		var windowSubElementsLookup = this.windowSubElementsLookup;
 		var subElements = {};
 		
 		if (Browser.Engine.trident4){
@@ -793,27 +801,16 @@ var MochaDesktop = new Class({
 	Method: drawWindow
 	
 	Arguments: 
-		el: the $(window)
+		windowEl: the $(window)
+		subElements: children of $(window)
 		shadows: (boolean) false will draw a window without shadows
 		
 	Notes: This is where we create the canvas GUI	
 
 	*/	
 	drawWindow: function(windowEl, subElements, shadows) {
-		if ( !subElements )
+		if ( !subElements ) {
 			subElements = this.getSubElements(windowEl, ['title', 'content', 'canvas', 'contentWrapper', 'overlay', 'titleBar', 'iframe', 'zIndexFix']);
-		
-		if (Browser.Engine.presto){		
-			subElements.contentWrapper.setStyles({
-				'height': subElements.contentWrapper.getStyle('height') + 'px',
-				'width': subElements.contentWrapper.getStyle('width') + 'px'
-			});
-		}
-		else {
-			subElements.contentWrapper.setStyles({
-				'height': subElements.contentWrapper.getStyle('height'),
-				'width': subElements.contentWrapper.getStyle('width')
-			});			
 		}
 		
 		//Resize iframe when window is resized
@@ -824,9 +821,8 @@ var MochaDesktop = new Class({
 			});
 		}
 		
-		var mochaHeight = subElements.contentWrapper.getStyle('height').toInt();
+		var mochaHeight = subElements.contentWrapper.getStyle('height').toInt() + this.HeaderFooterShadow;		
 		var mochaWidth = subElements.contentWrapper.getStyle('width').toInt() + this.shadowOffset;
-		mochaHeight += this.options.headerHeight + this.options.footerHeight + this.shadowOffset;;
 			
 		subElements.overlay.setStyle('height', mochaHeight);
 		windowEl.setStyle('height', mochaHeight);
@@ -865,22 +861,22 @@ var MochaDesktop = new Class({
 		
 		// Mocha body
 		this.bodyRoundedRect(
-			ctx,							// context		
-			3,                              // x
-			2,                              // y			
-			mochaWidth-this.shadowOffset,   // width
-			mochaHeight-this.shadowOffset,  // height
-			this.options.cornerRadius       // corner radius
+			ctx,							 // context		
+			3,                               // x
+			2,                               // y			
+			mochaWidth - this.shadowOffset,  // width
+			mochaHeight - this.shadowOffset, // height
+			this.options.cornerRadius        // corner radius
 		);
 		
 		//mocha header
 		this.topRoundedRect(
-			ctx,							// context
-			3,                              // x
-			2,                              // y
-			mochaWidth-this.shadowOffset,   // width
-			this.options.headerHeight,      // height
-			this.options.cornerRadius       // corner radius
+			ctx,							 // context
+			3,                               // x
+			2,                               // y
+			mochaWidth - this.shadowOffset,  // width
+			this.options.headerHeight,       // height
+			this.options.cornerRadius        // corner radius
 		);		
 
 		// Calculate X position for controlbuttons
@@ -943,7 +939,6 @@ var MochaDesktop = new Class({
 
 		lingrad.addColorStop(0, 'rgba(' + this.options.headerGradientTop + ', 100)');
 		lingrad.addColorStop(1, 'rgba(' + this.options.headerGradientBottom + ', 100)');
-
 		ctx.fillStyle = lingrad;
 
 		// Draw header
@@ -1062,19 +1057,16 @@ var MochaDesktop = new Class({
 
 		// Insert canvas
 		var canvas = new Element('canvas', {
-			'class': 'mochaCanvas',
-			'id': 'canv1' //!!! Name this differently
-		}).injectInside(el);
-		
-		canvas.setStyles({
+			'class':  'mochaCanvas',
+			'id':     'dockCanvas',
+			'width':  '15',
+			'height': '18'
+		}).injectInside(el).setStyles({
 			position: 'absolute',
-			top: '4px',
-			left: '2px',
-			zIndex: 2
+			top:      '4px',
+			left:     '2px',
+			zIndex:   2
 		});
-
-		canvas.width = 15;
-		canvas.height = 18;
 
 		// Dynamically initialize canvas using excanvas. This is only required by IE
 		if (Browser.Engine.trident) {
@@ -1150,7 +1142,12 @@ var MochaDesktop = new Class({
 		var ctx = el.getElement('.mochaCanvas').getContext('2d');
 		this.drawCircle(ctx, 5 , 4, 3, 241, 102, 116, 1.0);  // orange
 		this.drawCircle(ctx, 5 , 14, 3, 241, 102, 116, 1.0); // orange
-	},	
+	},
+	dynamicResize: function (el){		
+			// console.log('dynamicResize');				
+			this.getSubElement(el, 'contentWrapper').setStyle('height', this.getSubElement(el, 'content').scrollHeight);
+			this.drawWindow(el);		
+	},
 	/*
 	
 	Method: arrangeCascade
@@ -1173,7 +1170,20 @@ var MochaDesktop = new Class({
 				});
 			}
 		}.bind(this));
-	}
+	},
+	/*
+	
+	Method: garbageCleanup
+	
+	Notes: Empties an all windows of their children, removes and garbages the windows.
+	This is useful to clear memory before the pageUnload. 
+	
+	*/	
+	garbageCleanUp: function() {
+		$$('div.mocha').each(function(el) {
+			el.destroy();
+		}.bind(this));		
+	}	
 });
 MochaDesktop.implement(new Options);
 
@@ -1255,312 +1265,6 @@ var MochaWindowForm = new Class({
 });
 MochaWindowForm.implement(new Options);
 
-/* -----------------------------------------------------------------
-
-	ATTACH MOCHA LINK EVENTS
-	Notes: Here is where you define your windows and the events that open them.
-	If you are not using links to run Mocha methods you can remove this function.
-	
-	If you need to add link events to links within windows you are creating, do
-	it in the onContentLoaded function of the new window.
-
-   ----------------------------------------------------------------- */
-
-function attachMochaLinkEvents(){
-	
-	if ($('ajaxpageLink')){ // Associated HTML: <a id="xhrpageLink" href="pages/lipsum.html">xhr Page</a>
-		$('ajaxpageLink').addEvent('click', function(e){	
-			new Event(e).stop();
-			document.mochaDesktop.newWindow({
-				id: 'ajaxpage',
-				title: 'Content Loaded with an XMLHttpRequest',
-				loadMethod: 'xhr',
-				contentURL: 'pages/lipsum.html',
-				width: 340,
-				height: 150
-			});
-		});
-	}
-	
-	if ($('mootoolsLink')){
-		$('mootoolsLink').addEvent('click', function(e){	
-			new Event(e).stop();
-			document.mochaDesktop.newWindow({
-				id: 'mootools',
-				title: 'Mootools Forums in an Iframe',
-				loadMethod: 'iframe',
-				contentURL: 'http://forum.mootools.net/',
-				width: 650,
-				height: 400,
-				scrollbars: false,
-				paddingVertical: 0,
-				paddingHorizontal: 0
-			});
-		});
-	}
-
-	if ($('spirographLink')){
-		$('spirographLink').addEvent('click', function(e){	
-			new Event(e).stop();
-			document.mochaDesktop.newWindow({
-				id: 'spirograph',
-				title: 'Canvas Spirograph in an Iframe',
-				loadMethod: 'iframe',
-				contentURL: 'pages/spirograph.html',
-				width: 340,
-				height: 340,
-				scrollbars: false,
-				paddingVertical: 0,
-				paddingHorizontal: 0,
-				bgColor: '#c30'
-			});
-		});
-	}
-	
-	if ($('cornerRadiusLink')){
-		$('cornerRadiusLink').addEvent('click', function(e){	
-			new Event(e).stop();
-			document.mochaDesktop.newWindow({
-				id: 'cornerRadius',
-				title: 'Corner Radius Slider',
-				loadMethod: 'xhr',
-				contentURL: 'pages/corner_radius.html',
-				onContentLoaded: function(){
-					addSlider();
-				},
-				width: 300,
-				height: 105,
-				x: 20,
-				y: 60
-			});
-		});
-	}	
-
-	if ($('eventsLink')){
-		$('eventsLink').addEvent('click', function(e){
-			new Event(e).stop();
-			document.mochaDesktop.newWindow({
-				id: 'events',
-				title: 'Window Trigger Options',
-				loadMethod: 'xhr',
-				contentURL: 'pages/events.html',
-				onContentLoaded: function(){
-					alert('The window\'s content was loaded.');
-				},			
-				onClose: function(){
-					alert('The window is closing.');
-				},
-				onMinimize: function(){
-					alert('The window was minimized.');
-				},
-				onMaximize: function(){
-					alert('The window was maximized.');
-				},
-				onFocus: function(){
-					alert('The window was focused.');
-				},
-				onResize: function(){
-					alert('The window was resized.');
-				},
-				width: 340,
-				height: 250
-			});
-		});
-	}	
-	
-	if ($('builderLink')){
-		$('builderLink').addEvent('click', function(e){	
-			new Event(e).stop();
-			document.mochaDesktop.newWindow({
-				id: 'windowbuilder',
-				title: 'Window Builder',
-				loadMethod: 'xhr',
-				contentURL: 'pages/builder.html',
-				onContentLoaded: function(){
-					$('mochaNewWindowSubmit').addEvent('click', function(e){
-						new Event(e).stop();
-						new MochaWindowForm();
-					});
-				},
-				width: 370,
-				height: 400,
-				x: 20,
-				y: 60
-			});
-		});
-	}
-	
-	if ($('faqLink')){
-		$('faqLink').addEvent('click', function(e){	
-			new Event(e).stop();
-			document.mochaDesktop.newWindow({
-				id: 'faq',
-				title: 'FAQ',
-				loadMethod: 'xhr',
-				contentURL: 'pages/faq.html',
-				width: 320,
-				height: 320,
-				x: 20,
-				y: 60
-			});
-		});
-	}
-	
-	if ($('docsLink')){
-		$('docsLink').addEvent('click', function(e){	
-			new Event(e).stop();
-			document.mochaDesktop.newWindow({
-				id: 'docs',
-				title: 'Documentation',
-				loadMethod: 'xhr',
-				contentURL: 'pages/docs.html',
-				width: 600,
-				height: 350,
-				x: 20,
-				y: 60
-			});
-		});
-	}
-	
-	if ($('overviewLink')){
-		$('overviewLink').addEvent('click', function(e){	
-			new Event(e).stop();
-			document.mochaDesktop.newWindow({
-				id: 'overview',
-				title: 'Overview',
-				loadMethod: 'xhr',
-				contentURL: 'pages/overview.html',
-				width: 300,
-				height: 255,
-				x: 20,
-				y: 60
-			});
-		});
-	}
-
-	if ($('resourcesLink')){
-		$('resourcesLink').addEvent('click', function(e){	
-			new Event(e).stop();
-			document.mochaDesktop.newWindow({
-				id: 'resources',
-				title: 'Resources',
-				loadMethod: 'xhr',
-				contentURL: 'pages/resources.html',
-				width: 300,
-				height: 275,
-				x: 20,
-				y: 60
-			});
-		});
-	}
-	
-	if ($('workspace01Link')){
-		$('workspace01Link').addEvent('click', function(e){	
-			new Event(e).stop();
-			document.mochaScreens.setScreen(0)
-		});
-	}
-	
-	if ($('workspace02Link')){
-		$('workspace02Link').addEvent('click', function(e){	
-			new Event(e).stop();
-			document.mochaScreens.setScreen(1)
-		});
-	}
-	
-	if ($('workspace03Link')){
-		$('workspace03Link').addEvent('click', function(e){	
-			new Event(e).stop();
-			document.mochaScreens.setScreen(2)
-		});
-	}	
-	
-	if ($('helpLink')){
-		$('helpLink').addEvent('click', function(e){	
-			new Event(e).stop();
-			document.mochaDesktop.newWindow({
-				id: 'help',
-				title: 'Support',
-				loadMethod: 'xhr',
-				contentURL: 'pages/support.html',
-				width: 320,
-				height: 320,
-				x: 20,
-				y: 60
-			});
-		});
-	}
-	
-	if ($('contributeLink')){
-		$('contributeLink').addEvent('click', function(e){	
-			new Event(e).stop();
-			document.mochaDesktop.newWindow({
-				id: 'contribute',
-				title: 'Contribute',
-				loadMethod: 'xhr',
-				contentURL: 'pages/contribute.html',
-				width: 320,
-				height: 320,
-				x: 20,
-				y: 60
-			});
-		});
-	}	
-	
-	if ($('aboutLink')){
-		$('aboutLink').addEvent('click', function(e){	
-			new Event(e).stop();
-			document.mochaDesktop.newWindow({
-				id: 'about',
-				title: 'Mocha UI Version 0.7',
-				loadMethod: 'xhr',
-				contentURL: 'pages/about.html',
-				modal: true,
-				width: 300,
-				height: 150
-			});
-		});
-	}
-	
-	if ($('cascadeLink')){
-		$('cascadeLink').addEvent('click', function(e){	
-			new Event(e).stop();
-			document.mochaDesktop.arrangeCascade();
-		});
-	}
-	
-	if ($('closeLink')){
-		$('closeLink').addEvent('click', function(e){	
-			new Event(e).stop();
-			document.mochaDesktop.closeAll();
-		});
-	}	
-	if ($('youTubeLink')) {
-		$('youTubeLink').addEvent('click', function(e){
-		new Event(e).stop();
-			document.mochaDesktop.newWindow({
-				id: 'youTube',
-				title: 'YouTube in Iframe',
-				loadMethod: 'iframe',
-				contentURL: 'pages/youtube.html',
-				width: 425,
-				height: 355,
-				scrollbars: false,
-				paddingVertical: 0,
-				paddingHorizontal: 0,
-				bgColor: '#000'
-			});
-		});
-	}
-
-	// Deactivate menu header links
-	$$('a.returnFalse').each(function(el){
-		el.addEvent('click', function(e){
-			new Event(e).stop();
-		});
-	});
-	
-}
 
 /* -----------------------------------------------------------------
 
@@ -1594,12 +1298,11 @@ function addSlider(){
 
    ----------------------------------------------------------------- */
 
-
-window.addEvent('load', function(){
+window.addEvent('domready', function(){							 
 		document.mochaScreens = new MochaScreens();
 		document.mochaDesktop = new MochaDesktop();
-		attachMochaLinkEvents();
-		addSlider(); // remove this if you remove the example corner radius slider
+		attachMochaLinkEvents(); // See mocha-events.js
+		addSlider();             // remove this if you remove the example corner radius slider		
 });
 
 // This runs when a person leaves your page.

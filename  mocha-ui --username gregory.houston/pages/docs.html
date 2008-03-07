@@ -14,6 +14,17 @@
 	<li>Windows - Requires the Desktop, though considering making it possible to break this dependency</li>
 </ul>
 
+<h3>Methods</h3>
+<p>
+newWindow() - Create a new window<br />
+focusWindow() - Focus a window<br />
+maximizeWindow() - Maximize a window<br />
+minimizeWindow() - Minimize a window<br />
+restoreMinimized() - Restore a minimized window<br />
+closeWindow() - Close a window<br />
+closeAll() - Close all the windows<br />
+</p>
+
 <h3>Creating a New Window</h3>
 
 <p><strong>Syntax:</strong></p>
@@ -31,6 +42,11 @@ document.mochaDesktop.newWindow();
 	<li>content: (string) used if contentType is set to 'html'</li>
 	<li>contentURL: (string) used if contentType is set to 'xhr' or 'iframe'</li>
 	<li>modal: (boolean)</li>
+	<li>draggable: (boolean)</li>
+	<li>resizable: (boolean)</li>
+	<li>minimizable: (boolean)</li>
+	<li>maximizable: (boolean)</li>
+	<li>closable: (boolean)</li>	
 	<li>width: (number)</li>
 	<li>height: (number)</li>
 	<li>scrollbars: (boolean)</li>
@@ -75,7 +91,7 @@ Example Javascript:
 			document.mochaDesktop.newWindow({
 				id: 'docs',
 				title: 'Documentation',
-				contentType: 'xhr',
+				loadMethod: 'xhr',
 				contentURL: 'pages/docs.html',
 				width: 320,
 				height: 320,
