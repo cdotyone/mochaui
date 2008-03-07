@@ -115,3 +115,27 @@ document.mochaDesktop.closeWindow($('windowID'));
 
 <h3>MooCanvas</h3>
 <p>Though I have not tried it, some of you may be interested in <a target="_blank" href="http://olmo-maldonado.com/projects/moocanvas/">MooCanvas</a> as an alternative to <a target="_blank" href="http://excanvas.sourceforge.net/">ExplorerCanvas</a>. Mocha UI would require a little bit of extra code to work with MooCanvas. See the MooCanvas page for more information on how it's usage differs from ExplorerCanvas.</p>
+
+<h3>Swiff and SWFobject</h3>
+<p>I am using Swiff to load the example YouTube Flash now since Swiff is built into Mootools, but it has some performance issues when resizing, maximizing, and minimizing windows with Flash in them in Opera that SWFobject did not.</p>
+
+<h3>General Issues</h3>
+<p>If you have a solution for any of these please let me know.</p>
+<ul>
+	<li>In the accordian example, the element divs do not have the proper top padding as is defined in the css.</li>
+	<li>In IE7, the wrong cursor, an I-bar, is displayed when the cursor is over #mochaPage, the main content area of the web page.</li>
+	<li>In the YouTube example, if the window is maximized and the video is playing, when the browser window is resized, the iframe the flash is in does not resize. This works fine however if the video is paused.</li>	
+</ul>
+
+<h3>Browser Performance Issues</h3>
+
+<p>Opera 9</p>
+<ul>
+	<li>Though they don't bleed threw thankfully, you can move the scrollbars on windows that are behind other windows.</li>
+	<li>Seems to have issues with Swiff, though you could use SWFobject instead.</li>
+</ul>
+
+<p>Mac Firefox 2  - Not fully supported</p>
+<ul>
+	<li>Has issues with Flash z-index.</li>
+</ul>	

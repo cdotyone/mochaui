@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
 <head>
 
-<script type="text/javascript" src="../scripts/swfobject.js"></script>
+<script type="text/javascript" src="../scripts/mootools-beta-1.2b1-compatible.js"></script>
 
 <style type="text/css">
 
@@ -36,10 +36,19 @@
 	<script type="text/javascript">
 		// <![CDATA[
 		
-		var so = new SWFObject("http://www.youtube.com/v/INn1C6ImJKg&rel=1&border=0", "myFlash", "100%", "100%", "8", "#000000");
-		so.addParam("scale", "noscale");
-		so.addParam("wmode", "transparent");
-		so.write("flashcontent");
+		
+				 
+		var obj = new Swiff('http://www.youtube.com/v/INn1C6ImJKg&rel=1&border=0', {
+			container: $('flashcontent'),
+    		id: 'myFlash',
+    		width: '100%',
+    		height: '100%',
+    		params: {
+        		'bgcolor' : '#000000',
+				'wmode'   : 'transparent',
+				'scale'   : 'noscale'
+    		}
+		});
 		
 		// ]]>
 	</script>

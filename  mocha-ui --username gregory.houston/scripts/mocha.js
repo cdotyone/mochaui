@@ -123,10 +123,43 @@ var MochaDesktop = new Class({
 			})
 		};
 		
+		// Resize desktop, modal background, and maximized windows when browser window is resized
 		window.onresize = function(){
-			this.setDesktopSize();
-			this.setModalSize();
-		}.bind(this);
+			this.onBrowserResize();
+		}.bind(this);		
+		
+	},		
+	onBrowserResize: function(){
+		this.setDesktopSize();
+		this.setModalSize();
+		// Resize maximized windows to fit new browser window size
+		setTimeout( function(){								 
+			$$('div.mocha').each(function(el){				
+				if (el.isMaximized) {
+
+					var iframe = this.getSubElement(el, 'iframe');						
+					if ( iframe ) {
+						iframe.setStyle('visibility', 'hidden');
+					}
+				
+					var windowDimensions = document.getCoordinates();
+					var contentWrapper = this.getSubElement(el, 'contentWrapper');
+					contentWrapper.setStyles({
+						'height': (windowDimensions.height - this.options.headerHeight - this.options.footerHeight),
+						'width': windowDimensions.width
+					});
+					
+					this.drawWindow(el);						
+					if ( iframe ) {
+						iframe.setStyles({
+							'height': contentWrapper.getStyle('height')
+						});
+						iframe.setStyle('visibility', 'visible');
+					}						
+					
+				}				
+			}.bind(this));
+		}.bind(this), 100);
 	},
 	newWindowsFromXHTML: function(properties, cascade){		
 		$$('div.mocha').each(function(el, i) {
@@ -440,15 +473,25 @@ var MochaDesktop = new Class({
 		contentWrapper.oldWidth = contentWrapper.getStyle('width');
 		contentWrapper.oldHeight = contentWrapper.getStyle('height');
 		
+		// Hide iframe
+		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
+		if ( windowEl.iframe ) {
+			this.getSubElement(windowEl, 'iframe').setStyle('visibility', 'hidden');
+		}		
+		
 		var maximizeMorph = new Fx.Morph(windowEl, { 
 			'duration': 200,
 			'onComplete': function(windowEl){
 				var windowDimensions = document.getCoordinates();
 				contentWrapper.setStyles({
-					'height': (windowDimensions.height - this.options.headerHeight - this.options.footerHeight + this.shadowOffset),
+					'height': (windowDimensions.height - this.options.headerHeight - this.options.footerHeight),
 					'width': windowDimensions.width
 				});
 				this.drawWindow(windowEl);
+				// Show iframe
+				if ( windowEl.iframe ) {
+					this.getSubElement(windowEl, 'iframe').setStyle('visibility', 'visible');
+				}				
 			}.bind(this)
 		});
 		maximizeMorph.start({
@@ -461,6 +504,12 @@ var MochaDesktop = new Class({
 		// Window exists and is maximized ?
 		if ( !(windowEl = $(windowEl)) || !windowEl.isMaximized )
 			return;
+			
+		// Hide iframe
+		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
+		if ( windowEl.iframe ) {
+			this.getSubElement(windowEl, 'iframe').setStyle('visibility', 'hidden');
+		}				
 		var contentWrapper = this.getSubElement(windowEl, 'contentWrapper');
 		contentWrapper.setStyles({
 			'width': contentWrapper.oldWidth,
@@ -470,7 +519,12 @@ var MochaDesktop = new Class({
 		windowEl.isMaximized = false;
 		this.drawWindow(windowEl);
 		var mochaMorph = new Fx.Morph(windowEl, { 
-			'duration': 150
+			'duration': 150,
+			'onComplete': function(el){
+				if ( windowEl.iframe ) {
+					this.getSubElement(windowEl, 'iframe').setStyle('visibility', 'visible');
+				}
+			}.bind(this)	
 		});
 		mochaMorph.start({
 			'top': windowEl.oldTop,
@@ -481,11 +535,18 @@ var MochaDesktop = new Class({
 		// What if there is no dock, react how ?? ignore request?
 		if ( !(windowEl = $(windowEl)) || !this.hasDock )
 			return;
+
+		// Hide iframe
+		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
+		if ( windowEl.iframe ) {
+			this.getSubElement(windowEl, 'iframe').setStyle('visibility', 'hidden');
+		}
+
 		var title = this.getSubElement(windowEl, 'title');
 		var mochaContentWrapper = windowEl.getElement('.mochaContentWrapper');
 		var titleText = title.innerHTML;
 		windowEl.onMinimize();
-
+		
 		// Hide window and add to dock
 		windowEl.setStyle('visibility', 'hidden');
 		this.getSubElement(windowEl, 'contentWrapper').setStyle('overflow', 'hidden'); // Fixes a scrollbar issue in Mac FF2
@@ -503,8 +564,15 @@ var MochaDesktop = new Class({
 		setTimeout(function(){ windowEl.setStyle('zIndex', 1); }.bind(this),100); 
 	},
 	restoreMinimized: function(windowEl) {
-		this.getSubElement(windowEl, 'contentWrapper').setStyle('overflow', 'auto'); // Fixes a scrollbar issue in Mac FF2
+		//this.getSubElement(windowEl, 'contentWrapper').setStyle('overflow', 'auto'); // Fixes a scrollbar issue in Mac FF2
+		
 		windowEl.setStyle('visibility', 'visible');
+		
+		// Show iframe
+		if ( windowEl.iframe ) {
+			this.getSubElement(windowEl, 'iframe').setStyle('visibility', 'visible');
+		}
+
 		windowEl.isMinimized = false;
 		this.focusWindow(windowEl);
 		$('mochaDock').getElementById(windowEl.id + '_dockButton').destroy();
@@ -662,7 +730,7 @@ var MochaDesktop = new Class({
 		if ( this.hasDesktop && (desktop || (desktop = $('mochaDesktop'))) ) // Why so many conditions?
 			desktop.setStyle('height', windowDimensions.height);
 		if ( (pageWrapper = $('mochaPageWrapper')) ) {
-			var pageWrapperHeight = (windowDimensions.height-(this.headerHeight+(this.dockVisible ? this.dockHeight : 0)));
+			var pageWrapperHeight = (windowDimensions.height- (this.headerHeight + (this.dockVisible ? this.dockHeight : 0)));
 			if ( pageWrapperHeight < 0 )
 				pageWrapperHeight = 0;
 			pageWrapper.setStyle('height', pageWrapperHeight + 'px');
@@ -795,7 +863,7 @@ var MochaDesktop = new Class({
 			subElements.overlay.setStyle('overflow', 'auto');
 		this.setMochaControlsWidth(windowEl, subElements);
 		return subElements;
-	},
+	},	
 	/*
 	
 	Method: drawWindow
@@ -817,7 +885,6 @@ var MochaDesktop = new Class({
 		if ( windowEl.iframe ) {
 			subElements.iframe.setStyles({
 				'height': subElements.contentWrapper.getStyle('height')
-				//'width': subElements.contentWrapper.getStyle('width')
 			});
 		}
 		
