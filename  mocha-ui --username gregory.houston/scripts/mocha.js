@@ -4,7 +4,7 @@
 		mocha.js v.0.7
 	
 	Copyright:
-		Copyright (c) 2007 Greg Houston, <http://greghoustondesign.com/>
+		Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>
 	
 	License:
 		MIT-style license
@@ -802,14 +802,6 @@ var MochaDesktop = new Class({
 			'id': windowEl.id + '_canvas'
 		}).injectInside(windowEl);
 		
-		// Dynamically initialize canvas using excanvas. This is only required by IE
-		if ( Browser.Engine.trident ) {			
-			G_vmlCanvasManager.initElement(subElements.canvas);
-			// This is really odd, .getContext() method does not exist before retrieving the
-			// element via getElement
-			subElements.canvas = windowEl.getElement('.mochaCanvas');			
-		}		
-	
 		//Insert resize handles
 		if (windowEl.resizable){
 			subElements.resizeHandle = new Element('div', {
@@ -1135,11 +1127,6 @@ var MochaDesktop = new Class({
 			zIndex:   2
 		});
 
-		// Dynamically initialize canvas using excanvas. This is only required by IE
-		if (Browser.Engine.trident) {
-			G_vmlCanvasManager.initElement(canvas);
-		}
-		
 		// Position top or bottom selector
 		$('mochaDockPlacement').setProperty('title','Position Dock Top');
 			
