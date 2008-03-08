@@ -107,16 +107,12 @@ body {
 /* Windows */
 	
 div.mocha {
-	position: fixed; /* this is a fix for FF2 on the Mac. It has to be reset to absolute for both Opera and IE6 */
+	position: absolute;
 	top: 0;
 	left: 0;
 	display: none;
 	overflow: hidden;	
 }
-
-* html div.mocha {
-	position: absolute;
-}	
 	
 div.mochaOverlay {
 	position: absolute;

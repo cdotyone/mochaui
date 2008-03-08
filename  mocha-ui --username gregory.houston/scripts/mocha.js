@@ -24,7 +24,7 @@ var MochaDesktop = new Class({
 		minimizable:       true,  // Requires dock
 		maximizable:       true,  // Requires desktop
 		closable:          true,
-		effects:           true, // Toggles the majority of window fade and move effects
+		effects:           true,  // Toggles the majority of window fade and move effects
 		desktopTopOffset:  20,    // Use a negative number if neccessary to place first window where you want it
 		desktopLeftOffset: 290,
 		mochaTopOffset:    70,    // Initial vertical spacing of each window
@@ -50,7 +50,8 @@ var MochaDesktop = new Class({
 		// Private properties
 		this.indexLevel         = 1;  // Used for z-Index
 		this.windowIDCount      = 0;		
-		this.myTimer 			= ''; // Used with accordian 
+		this.myTimer 			= ''; // Used with accordian
+		this.iconAnimation      = ''; // Used with loading icon
 		this.mochaControlsWidth = 0;
 		this.minimizebuttonX    = 0;  // Minimize button horizontal position
 		this.maximizebuttonX    = 0;  // Maximize button horizontal position
@@ -271,15 +272,21 @@ var MochaDesktop = new Class({
 				'display': 'block'
 			}
 		});
+		
+		// Part of fix for scrollbar issues in Mac FF2
+		if (Browser.Platform.mac && Browser.Engine.gecko){
+			windowEl.setStyle('position', 'fixed');	
+		}
 			
 		// Extend our window element
 		windowEl = $extend(windowEl, {
 			// Custom properties
 			oldTop:    0,
 			oldLeft:   0,
-			oldWidth:  0,	// Not needed
-			oldHeight: 0,	// Not needed
+			oldWidth:  0,
+			oldHeight: 0,
 			modal: windowProperties.modal,
+			scrollbars: windowProperties.scrollbars,
 			// Always use close buttons for modal windows
 			closable: windowProperties.closable || windowProperties.modal,
 			resizable: windowProperties.resizable && !windowProperties.modal,
@@ -300,12 +307,6 @@ var MochaDesktop = new Class({
 			onCloseComplete: windowProperties.onCloseComplete
 		});
 
-		// This is part of a Mac FF2 scrollbar fix. Position is set to fixed in the CSS.
-		// IE6 and Opera need it to be set to absolute. IE6 is reset in the CSS and Opera here.
-		if (Browser.Engine.presto != null ){
-			windowEl.setStyle('position', 'absolute');
-		}
-		
 		// Insert subelements inside windowEl and cache them locally while creating the new window 
 		var subElements = this.insertWindowElements(windowEl, windowProperties.height, windowProperties.width);
 		
@@ -613,7 +614,12 @@ var MochaDesktop = new Class({
 		
 		// Hide window and add to dock
 		windowEl.setStyle('visibility', 'hidden');
-		this.getSubElement(windowEl, 'contentWrapper').setStyle('overflow', 'hidden'); // Fixes a scrollbar issue in Mac FF2
+		
+		 // Fixes a scrollbar issue in Mac FF2
+		if (Browser.Platform.mac && Browser.Engine.gecko){
+			this.getSubElement(windowEl, 'contentWrapper').setStyle('overflow', 'hidden');
+		}		
+		
 		windowEl.isMinimized = true;
 		var dockButton = new Element('button', {
 			'id': windowEl.id + '_dockButton',
@@ -628,7 +634,11 @@ var MochaDesktop = new Class({
 		setTimeout(function(){ windowEl.setStyle('zIndex', 1); }.bind(this),100); 
 	},
 	restoreMinimized: function(windowEl) {
-		//this.getSubElement(windowEl, 'contentWrapper').setStyle('overflow', 'auto'); // Fixes a scrollbar issue in Mac FF2
+		
+		 // Part of Mac FF2 scrollbar fix
+		if (windowEl.scrollbars == true && windowEl.iframe == false){ 
+			this.getSubElement(windowEl, 'contentWrapper').setStyle('overflow', 'auto');		
+		}
 		
 		windowEl.setStyle('visibility', 'visible');
 		
@@ -1140,6 +1150,60 @@ var MochaDesktop = new Class({
 		ctx.lineTo(x + 4, y);
 		ctx.stroke();
 	},
+	loadingIcon: function(ctx,t) {
+		var ctx = $('loadingIcon').getContext('2d');	
+		ctx.clearRect(0, 0, 36, 36); // clear canvas
+		ctx.translate(13, 22);
+		ctx.rotate(t*(Math.PI / 8));
+		ctx.save();	
+		var color = 0;
+		for (i=0; i < 8; i++){ // draw individual dots
+			color = Math.floor(255 / 8 * i);
+			ctx.fillStyle = "rgb(" + color + "," + color + "," + color + ")";  	
+			ctx.rotate(-Math.PI / 4);
+			ctx.beginPath();
+			ctx.arc(0, 14, 4, 0, Math.PI*2, true);
+			ctx.fill();
+		}
+    	ctx.restore();
+	},
+	startLoadingIcon: function() {
+		$('loadingIcon').setStyles({
+			'display': 'block'
+		});
+		var drawFunction = loadingIcon();
+		this.canvasAnimatedRotate($('loadingIcon'), drawFunction, myIconAnimation, 12, 125);
+	},
+	stopLoadingIcon: function() {
+		$('loadingIcon').setStyle('display', 'none');		
+		clearInterval(this.iconAnimation);
+	},	
+	/*
+	
+	Method: canvasAnimatedRotate
+	
+	Arguments:
+		canvas: the canvas element to rotate
+		drawFunction: the variable name for the function that draws the shapes on your canvas
+		animation: is the setInterval variable name. Use it to stop the animation 
+		steps: the number of steps in one rotation
+		speed: how fast the animation rotates
+		
+	Notes: This is used for the loading icon - NOT IMPLEMENTED YET
+
+	*/	 
+	canvasAnimatedRotate: function(canvas, drawFunction, animation, steps, speed) {
+		var t = 1;	  	
+		animation = setInterval( function(){
+			var ctx = canvas.getContext('2d');
+			ctx.clearRect(0, 0, 500, 500); // clear canvas
+			ctx.save();
+			ctx.rotate(-Math.PI / steps);
+ 			drawFunction(ctx,t);
+ 			ctx.restore();
+			t++;			
+		}, speed);	  
+	},	
 	setMochaControlsWidth: function(windowEl, subElements){
 		var controlWidth = 14;
 		var marginWidth = 5;
