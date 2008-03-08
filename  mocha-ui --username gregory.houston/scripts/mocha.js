@@ -37,9 +37,12 @@ var MochaDesktop = new Class({
 		headerHeight:      25,    // Height of window titlebar	
 		footerHeight:      26, 		
 		cornerRadius:      9,		
-		headerGradientTop:    '250, 250, 250',  // RGB
-		headerGradientBottom: '228, 228, 228',  // RGB
-		footerBgColor:        '246, 246, 246'	// Background color of the main canvas shape
+		headerStartColor:  $RGB(250, 250, 250),  // Header gradient's top color
+		headerStopColor:   $RGB(228, 228, 228),  // Header gradient's bottom color
+		footerBgColor:     $RGB(246, 246, 246),	 // Background color of the main canvas shape
+		minimizeColor:     $RGB(231, 231, 209),  // Minimize button color
+		maximizeColor:     $RGB(217, 229, 217),  // Maximize button color
+		closeColor:        $RGB(229, 217, 217)   // Close button color
 	},
 	initialize: function(options){
 		this.setOptions(options);
@@ -74,10 +77,11 @@ var MochaDesktop = new Class({
 		if ( this.hasDock ) {
 			this.dockHeight = this.calcElementHeight(dock);
 			dock.setStyles({
+				'display':  'block',		   
 				'position': 'absolute',
-				'top': null,
-				'bottom': 0,
-				'left': 0
+				'top':      null,
+				'bottom':   0,
+				'left':     0
 			});
 			this.initDock(dock);
 			this.drawDock(dock);
@@ -85,11 +89,11 @@ var MochaDesktop = new Class({
 			dock.setStyle('display', 'none');
 		}
 		
-		// Dynamically create windows defined in XHTML and remove the definitions from the DOM	
-		this.newWindowsFromXHTML();
-		
 		// Set desktop size
 		this.setDesktopSize(desktop);
+
+		// Dynamically create windows defined in XHTML and remove the definitions from the DOM	
+		this.newWindowsFromXHTML();
 		
 		// Modal initialization
 		var mochaModal = new Element('div', {
@@ -194,7 +198,20 @@ var MochaDesktop = new Class({
 		}.bind(this));
 		
 		this.arrangeCascade();
-	},	
+	},
+	/*
+	
+	Method: newWindowsFromJSON
+	
+	Description: Create one or more windows from JSON data. You can define all the same properties
+	             as you can for newWindow. Undefined properties are set to their defaults.
+	
+	*/	
+	newWindowsFromJSON: function(properties){
+		properties.each(function(properties) {						 
+				this.newWindow(properties);		
+		}.bind(this));				
+	},		
 	/*
 	
 	Method: newWindow
@@ -944,11 +961,11 @@ var MochaDesktop = new Class({
 		this.minimizebuttonX = this.maximizebuttonX - (windowEl.minimizable ? 19 : 0);
 		
 		if ( windowEl.closable )
-			this.closebutton(ctx, this.closebuttonX, 15, 229, 217, 217, 1.0);
+			this.closebutton(ctx, this.closebuttonX, 15, this.options.closeColor, 1.0);
 		if ( windowEl.maximizable )
-			this.maximizebutton(ctx, this.maximizebuttonX, 15, 217, 229, 217, 1.0);
+			this.maximizebutton(ctx, this.maximizebuttonX, 15, this.options.maximizeColor, 1.0);
 		if ( windowEl.minimizable )
-			this.minimizebutton(ctx, this.minimizebuttonX, 15, 231, 231, 209, 1.0); //Minimize
+			this.minimizebutton(ctx, this.minimizebuttonX, 15, this.options.minimizeColor, 1.0); //Minimize
 		if ( windowEl.resizable ) 
 			this.triangle(ctx, mochaWidth - 20, mochaHeight - 20, 12, 12, 209, 209, 209, 1.0); //resize handle
 		
@@ -958,7 +975,7 @@ var MochaDesktop = new Class({
 	},
 	// Window body
 	bodyRoundedRect: function(ctx, x, y, width, height, radius){
-		ctx.fillStyle = 'rgba(' + this.options.footerBgColor + ', 100)';
+		ctx.fillStyle = 'rgba(' + this.options.footerBgColor.join(',') + ', 100)';
 		ctx.beginPath();
 		ctx.moveTo(x, y + radius);
 		ctx.lineTo(x, y + height - radius);
@@ -984,7 +1001,7 @@ var MochaDesktop = new Class({
 		ctx.lineTo(x + radius, y);
 		ctx.quadraticCurveTo(x, y, x, y + radius);
 		ctx.fill(); 
-	},
+	},	
 	// Window header with gradient background
 	topRoundedRect: function(ctx, x, y, width, height, radius){
 
@@ -996,8 +1013,8 @@ var MochaDesktop = new Class({
 			var lingrad = ctx.createLinearGradient(0, 0, 0, this.options.headerHeight);
 		}
 
-		lingrad.addColorStop(0, 'rgba(' + this.options.headerGradientTop + ', 100)');
-		lingrad.addColorStop(1, 'rgba(' + this.options.headerGradientBottom + ', 100)');
+		lingrad.addColorStop(0, 'rgba(' + this.options.headerStartColor.join(',') + ', 100)');
+		lingrad.addColorStop(1, 'rgba(' + this.options.headerStopColor.join(',') + ', 100)');
 		ctx.fillStyle = lingrad;
 
 		// Draw header
@@ -1029,12 +1046,12 @@ var MochaDesktop = new Class({
 		ctx.fillStyle = 'rgba(' + r +',' + g + ',' + b + ',' + a + ')';
 		ctx.fill();
 	},
-	maximizebutton: function(ctx, x, y, r, g, b, a){ // this could reuse the drawCircle method above
+	maximizebutton: function(ctx, x, y, rgb, a){ // this could reuse the drawCircle method above
 		// Circle
 		ctx.beginPath();
 		ctx.moveTo(x, y);
 		ctx.arc(x, y, 7, 0, Math.PI*2, true);
-		ctx.fillStyle = 'rgba(' + r +',' + g + ',' + b + ',' + a + ')';
+		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
 		ctx.fill();
 		// X sign
 		ctx.beginPath();
@@ -1046,12 +1063,12 @@ var MochaDesktop = new Class({
 		ctx.lineTo(x + 4, y);
 		ctx.stroke();
 	},
-	closebutton: function(ctx, x, y, r, g, b, a){ // this could reuse the drawCircle method above
+	closebutton: function(ctx, x, y, rgb, a){ // this could reuse the drawCircle method above
 		// Circle
 		ctx.beginPath();
 		ctx.moveTo(x, y);
 		ctx.arc(x, y, 7, 0, Math.PI*2, true);
-		ctx.fillStyle = 'rgba(' + r +',' + g + ',' + b + ',' + a + ')';
+		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
 		ctx.fill();
 		// Plus sign
 		ctx.beginPath();
@@ -1063,12 +1080,12 @@ var MochaDesktop = new Class({
 		ctx.lineTo(x - 3, y + 3);
 		ctx.stroke();
 	},
-	minimizebutton: function(ctx, x, y, r, g, b, a){ // this could reuse the drawCircle method above
+	minimizebutton: function(ctx, x, y, rgb, a){ // this could reuse the drawCircle method above
 		// Circle
 		ctx.beginPath();
 		ctx.moveTo(x,y);
 		ctx.arc(x,y,7,0,Math.PI*2,true);
-		ctx.fillStyle = 'rgba(' + r +',' + g + ',' + b + ',' + a + ')';
+		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
 		ctx.fill();
 		// Minus sign
 		ctx.beginPath();
@@ -1361,5 +1378,5 @@ window.addEvent('domready', function(){
 
 // This runs when a person leaves your page.
 window.addEvent('unload', function(){
-		document.mochaDesktop.garbageCleanUp();
+		if (document.mochaDesktop) document.mochaDesktop.garbageCleanUp();
 });

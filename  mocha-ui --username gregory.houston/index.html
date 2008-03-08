@@ -29,7 +29,8 @@
 <ul>
 	<li><a class="returnFalse" href="">Examples</a>	
 		<ul>
-			<li><a id="ajaxpageLink" href="pages/lipsum.html">Ajax(XHR) Demo</a></li>
+			<li><a id="ajaxpageLink" href="pages/lipsum.html">Ajax/XHR Demo</a></li>
+			<li><a id="jsonLink" href="data/json-windows-data.js">Json Demo</a></li>			
 			<li><a id="mootoolsLink" href="http://forum.mootools.net/">Iframe: Mootools</a></li>
 			<li><a id="spirographLink" href="pages/spirograph.html">Iframe: Spirograph</a></li>
 			<li><a id="youTubeLink" href="pages/youtube.html">Iframe: YouTube</a></li>
@@ -94,6 +95,7 @@
 					<h3>Download</h3>
 					<p><a target="_blank" href="http://code.google.com/p/mocha-ui/downloads/list">Download Mocha UI v0.7 r26</a></p>
 				
+					<div id="testbox"></div>
 				</div><!-- aside end -->
 
 			</div>
@@ -115,7 +117,8 @@
 	<li>No images. The windows, including their controls, gradients and shadows, are drawn with the canvas tag.</li>
 	<li>Windows can be focused, dragged, resized, maximized, minimized, restored and closed.</li>
 	<li>Adjustable rounded corner radius.</li>
-	<li>Dynamically create new windows on demand.</li>
+	<li>Dynamically create new windows on demand and load their content with innerHTML, XHR, or an iFrame.</li>
+	<li>The ability to create multiple new windows from a single Json data request.</li>
 	<li>Create modal dialog windows</li>
 	<li>Optional "desktop" toolbars</li>
 	<li>Minimal HTML markup required.</li>
@@ -169,7 +172,16 @@
 </ul>	
 
 <h4>Coming in the Next Update</h4>
-<p>Hopefully in the next update we can focus a bit more on code patterns, optimization, and how to implement plugins and modules.</p>
+<ul>
+	<li>Create multiple new windows from a single Json data request</li>
+	<li>Added some styling options to the class</li>
+	<li>You can set individual windows to be draggable, resizable, closable, maximizable, or minimizable, overriding the global settings</li>
+	<li>Added closeAll() method which closes all windows at once</li>
+	<li>Added more examples</li>
+	<li>Now uses [http://ibolmo.com/projects/moocanvas/ Moocanvas] for Internet Explorer canvas support</li>
+	<li>Fixed scrollbar bug in Firefox 2 on the Mac. Scrollbars no longer bleed through windows that are above them</li>
+	<li>The code is much faster now</li>
+</ul>	
 	
 </div>
 

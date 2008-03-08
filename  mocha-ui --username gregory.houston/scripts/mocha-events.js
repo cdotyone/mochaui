@@ -11,6 +11,7 @@
 
 function attachMochaLinkEvents(){
 	
+	
 	// Examples
 	if ($('ajaxpageLink')){ // Associated HTML: <a id="xhrpageLink" href="pages/lipsum.html">XHR Page</a>
 		$('ajaxpageLink').addEvent('click', function(e){	
@@ -25,7 +26,19 @@ function attachMochaLinkEvents(){
 			});
 		});
 	}
-	
+
+	if ($('jsonLink')){
+		$('jsonLink').addEvent('click', function(e) {
+			new Event(e).stop();
+			var url = 'data/json-windows-data.js';
+			var request = new Json.Remote(url, {
+				onComplete: function(properties) {
+					document.mochaDesktop.newWindowsFromJSON(properties.windows);
+				}
+			}).send();
+		});
+	}
+
 	if ($('mootoolsLink')){
 		$('mootoolsLink').addEvent('click', function(e){	
 			new Event(e).stop();

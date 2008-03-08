@@ -17,6 +17,7 @@
 <h3>Methods</h3>
 <p>
 newWindow() - Create a new window<br />
+newWindowsFromJSON() - Create one or more new windows from Json data. Uses newWindow()
 focusWindow() - Focus a window<br />
 maximizeWindow() - Maximize a window<br />
 minimizeWindow() - Minimize a window<br />
@@ -138,4 +139,7 @@ document.mochaDesktop.closeWindow($('windowID'));
 <p>Mac Firefox 2  - Not fully supported</p>
 <ul>
 	<li>Has issues with Flash z-index.</li>
-</ul>	
+</ul>
+
+<h3>Compression</h3>
+Though I haven't tried it yet, it is probably a good idea to compress mocha.js once you are ready to go live. You might try the <a href="http://developer.yahoo.com/yui/compressor/">YUI Compressor</a>	

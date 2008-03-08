@@ -317,6 +317,7 @@ iframe.zIndexFix {
 /* Window Minimize Dock */
 
 #mochaDock {
+	display: none;
 	position: relative;
 	background: #fff;
 	padding: 2px 15px;
@@ -388,4 +389,10 @@ iframe.zIndexFix {
  
 .element {
 	padding: 10px; 
+}
+
+/* Screens/Workspaces */
+
+.screen {
+	display: none;
 }
