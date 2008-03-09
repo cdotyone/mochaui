@@ -17,7 +17,7 @@
 
 var MochaUI = new Class({
 	options: {
-		// Global options for windows.
+		// Global options for windows:
 		// Some of these options can be overriden for individual windows in newWindow()
 		resizable:         true,
 		draggable:         true,
@@ -25,25 +25,27 @@ var MochaUI = new Class({
 		maximizable:       true,  // Requires desktop
 		closable:          true,
 		effects:           true,  // Toggles the majority of window fade and move effects
-		desktopTopOffset:  20,    // Use a negative number if neccessary to place first window where you want it
-		desktopLeftOffset: 290,
-		mochaTopOffset:    70,    // Initial vertical spacing of each window
-		mochaLeftOffset:   70,    // Initial horizontal spacing of each window
 		minWidth:          250,   // Minimum width of windows when resized
 		maxWidth:          2500,  // Maximum width of windows when resized
 		minHeight:         100,	  // Minimum height of windows when resized	
 		maxHeight:         2000,  // Maximum height of windows when resized
-		// Style options
+		// Style options:
 		headerHeight:      25,    // Height of window titlebar	
 		footerHeight:      26, 		
-		cornerRadius:      9,		
-		headerStartColor:  $RGB(250, 250, 250),  // Header gradient's top color
-		headerStopColor:   $RGB(228, 228, 228),  // Header gradient's bottom color
-		footerBgColor:     $RGB(246, 246, 246),	 // Background color of the main canvas shape
-		minimizeColor:     $RGB(231, 231, 209),  // Minimize button color
-		maximizeColor:     $RGB(217, 229, 217),  // Maximize button color
-		closeColor:        $RGB(229, 217, 217),  // Close button color
-		resizableColor:    $RGB(209, 209, 209),  // Resizable icon color
+		cornerRadius:      9,
+		bodyBgColor:	   '#fff',           // Body background color - Hex			
+		headerStartColor:  [250, 250, 250],  // Header gradient's top color - RGB
+		headerStopColor:   [228, 228, 228],  // Header gradient's bottom color	
+		footerBgColor:     [246, 246, 246],	 // Background color of the main canvas shape
+		minimizeColor:     [231, 231, 209],  // Minimize button color
+		maximizeColor:     [217, 229, 217],  // Maximize button color
+		closeColor:        [229, 217, 217],  // Close button color
+		resizableColor:    [209, 209, 209],  // Resizable icon color
+		// Cascade options:
+		desktopTopOffset:  20,    // Use a negative number if neccessary to place first window where you want it
+		desktopLeftOffset: 290,
+		mochaTopOffset:    70,    // Initial vertical spacing of each window
+		mochaLeftOffset:   70,    // Initial horizontal spacing of each window
 		// Naming options:
 		// If you change the IDs of the Mocha Desktop containers in your HTML, you need to change them here as well.
 		desktop:           'mochaDesktop',
@@ -248,12 +250,21 @@ var MochaUI = new Class({
 			closable:          this.options.closable,
 			width:             300,
 			height:            125, 
-			scrollbars:        true,
 			x:                 null,
 			y:                 null,
+			scrollbars:        true,			
+			// Styling
 			paddingVertical:   10,
-			paddingHorizontal: 12,
-			bgColor:           '#fff',
+			paddingHorizontal: 12,			
+			bodyBgColor:       this.options.bodyBgColor,
+			headerStartColor:  this.options.headerStartColor,  // Header gradient's top color
+			headerStopColor:   this.options.headerStopColor,   // Header gradient's bottom color
+			footerBgColor:     this.options.footerBgColor,	   // Background color of the main canvas shape
+			minimizeColor:     this.options.minimizeColor,     // Minimize button color
+			maximizeColor:     this.options.maximizeColor,     // Maximize button color
+			closeColor:        this.options.closeColor,        // Close button color
+			resizableColor:    this.options.resizableColor,    // Resizable icon color
+			// Events
 			onContentLoaded:   $empty,  // Event, fired when content is successfully loaded via XHR
 			onFocus:           $empty,  // Event, fired when the window is focused
 			onResize:          $empty,  // Event, fired when the window is resized
@@ -294,7 +305,7 @@ var MochaUI = new Class({
 			// Custom properties
 			oldTop:     0,
 			oldLeft:    0,
-			oldWidth:   0,
+			oldWidth:   0, // Using this?
 			oldHeight:  0,
 			modal:      windowProperties.modal,
 			scrollbars: windowProperties.scrollbars,
@@ -309,13 +320,21 @@ var MochaUI = new Class({
 			iframe: windowProperties.loadMethod == 'iframe' ? true : false,
 			isMaximized: false,
 			isMinimized: false,
+			// Custom styling			
+			headerStartColor:  windowProperties.headerStartColor,  // Header gradient's top color
+			headerStopColor:   windowProperties.headerStopColor,   // Header gradient's bottom color
+			footerBgColor:     windowProperties.footerBgColor,	   // Background color of the main canvas shape
+			minimizeColor:     windowProperties.minimizeColor,     // Minimize button color
+			maximizeColor:     windowProperties.maximizeColor,     // Maximize button color
+			closeColor:        windowProperties.closeColor,        // Close button color
+			resizableColor:    windowProperties.resizableColor,    // Resizable icon color				
 			// Custom events
-			onFocus:         windowProperties.onFocus,
-			onResize:        windowProperties.onResize,
-			onMinimize:      windowProperties.onMinimize,
-			onMaximize:      windowProperties.onMaximize,
-			onClose:         windowProperties.onClose,
-			onCloseComplete: windowProperties.onCloseComplete
+			onFocus:           windowProperties.onFocus,
+			onResize:          windowProperties.onResize,
+			onMinimize:        windowProperties.onMinimize,
+			onMaximize:        windowProperties.onMaximize,
+			onClose:           windowProperties.onClose,
+			onCloseComplete:   windowProperties.onCloseComplete
 		});
 
 		// Insert subelements inside windowEl and cache them locally while creating the new window 
@@ -365,7 +384,7 @@ var MochaUI = new Class({
 		// Set scrollbars, always use 'hidden' for iframe windows
 		subElements.contentWrapper.setStyles({
 			'overflow': windowProperties.scrollbars && !windowProperties.iframe ? 'auto' : 'hidden',
-			'background': windowProperties.bgColor
+			'background': windowProperties.bodyBgColor
 		});
 
 		// Set content padding
@@ -997,9 +1016,9 @@ var MochaUI = new Class({
 		
 		// This is the drop shadow. It is created onion style with three layers
 		if ( shadows != false ) {
-			this.roundedRect(ctx, 0, 0, mochaWidth, mochaHeight, this.options.cornerRadius, 0, 0, 0, 0.06); 
-			this.roundedRect(ctx, 1, 1, mochaWidth - 2, mochaHeight - 2, this.options.cornerRadius, 0, 0, 0, 0.08);
-			this.roundedRect(ctx, 2, 2, mochaWidth - 4, mochaHeight - 4, this.options.cornerRadius, 0, 0, 0, 0.3); 
+			this.roundedRect(ctx, 0, 0, mochaWidth, mochaHeight, this.options.cornerRadius, [0, 0, 0], 0.06); 
+			this.roundedRect(ctx, 1, 1, mochaWidth - 2, mochaHeight - 2, this.options.cornerRadius, [0, 0, 0], 0.08);
+			this.roundedRect(ctx, 2, 2, mochaWidth - 4, mochaHeight - 4, this.options.cornerRadius, [0, 0, 0], 0.3); 
 		}
 		
 		// Mocha body
@@ -1009,17 +1028,20 @@ var MochaUI = new Class({
 			2,                               // y			
 			mochaWidth - this.shadowOffset,  // width
 			mochaHeight - this.shadowOffset, // height
-			this.options.cornerRadius        // corner radius
+			this.options.cornerRadius,       // corner radius
+			windowEl.footerBgColor             // Footer color			
 		);
 		
 		// Mocha header
-		this.topRoundedRect(
+		this.topRoundedRect(				
 			ctx,							 // context
 			3,                               // x
 			2,                               // y
 			mochaWidth - this.shadowOffset,  // width
 			this.options.headerHeight,       // height
-			this.options.cornerRadius        // corner radius
+			this.options.cornerRadius,       // corner radius
+			windowEl.headerStartColor,       // Header gradient's top color
+			windowEl.headerStopColor         // Header gradient's bottom color
 		);		
 
 		// Calculate X position for controlbuttons
@@ -1028,21 +1050,21 @@ var MochaUI = new Class({
 		this.minimizebuttonX = this.maximizebuttonX - (windowEl.minimizable ? 19 : 0);
 		
 		if ( windowEl.closable )
-			this.closebutton(ctx, this.closebuttonX, 15, this.options.closeColor, 1.0);
+			this.closebutton(ctx, this.closebuttonX, 15, windowEl.closeColor, 1.0);
 		if ( windowEl.maximizable )
-			this.maximizebutton(ctx, this.maximizebuttonX, 15, this.options.maximizeColor, 1.0);
+			this.maximizebutton(ctx, this.maximizebuttonX, 15, windowEl.maximizeColor, 1.0);
 		if ( windowEl.minimizable )
-			this.minimizebutton(ctx, this.minimizebuttonX, 15, this.options.minimizeColor, 1.0); //Minimize
+			this.minimizebutton(ctx, this.minimizebuttonX, 15, windowEl.minimizeColor, 1.0); //Minimize
 		if ( windowEl.resizable ) 
-			this.triangle(ctx, mochaWidth - 20, mochaHeight - 20, 12, 12, this.options.resizableColor, 1.0); //resize handle
+			this.triangle(ctx, mochaWidth - 20, mochaHeight - 20, 12, 12, windowEl.resizableColor, 1.0); //resize handle
 		
 		// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7.
-		this.triangle(ctx, 0, 0, 10, 10, this.options.resizableColor, 0); 
+		this.triangle(ctx, 0, 0, 10, 10, windowEl.resizableColor, 0); 
 
 	},
 	// Window body
-	bodyRoundedRect: function(ctx, x, y, width, height, radius){
-		ctx.fillStyle = 'rgba(' + this.options.footerBgColor.join(',') + ', 100)';
+	bodyRoundedRect: function(ctx, x, y, width, height, radius, rgb){
+		ctx.fillStyle = 'rgba(' + rgb.join(',') + ', 100)';
 		ctx.beginPath();
 		ctx.moveTo(x, y + radius);
 		ctx.lineTo(x, y + height - radius);
@@ -1055,8 +1077,8 @@ var MochaUI = new Class({
 		ctx.quadraticCurveTo(x, y, x, y + radius);
 		ctx.fill(); 
 	},	
-	roundedRect: function(ctx, x, y, width, height, radius, r, g, b, a){
-		ctx.fillStyle = 'rgba(' + r +',' + g + ',' + b + ',' + a + ')';
+	roundedRect: function(ctx, x, y, width, height, radius, rgb, a){
+		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
 		ctx.beginPath();
 		ctx.moveTo(x, y + radius);
 		ctx.lineTo(x, y + height - radius);
@@ -1070,7 +1092,7 @@ var MochaUI = new Class({
 		ctx.fill(); 
 	},	
 	// Window header with gradient background
-	topRoundedRect: function(ctx, x, y, width, height, radius){
+	topRoundedRect: function(ctx, x, y, width, height, radius, headerStartColor, headerStopColor){
 
 		// Create gradient
 		if (Browser.Engine.presto != null ){
@@ -1080,8 +1102,8 @@ var MochaUI = new Class({
 			var lingrad = ctx.createLinearGradient(0, 0, 0, this.options.headerHeight);
 		}
 
-		lingrad.addColorStop(0, 'rgba(' + this.options.headerStartColor.join(',') + ', 100)');
-		lingrad.addColorStop(1, 'rgba(' + this.options.headerStopColor.join(',') + ', 100)');
+		lingrad.addColorStop(0, 'rgba(' + headerStartColor.join(',') + ', 100)');
+		lingrad.addColorStop(1, 'rgba(' + headerStopColor.join(',') + ', 100)');
 		ctx.fillStyle = lingrad;
 
 		// Draw header
@@ -1102,15 +1124,15 @@ var MochaUI = new Class({
 		ctx.lineTo(x, y + height);
 		ctx.lineTo(x + width, y + height);
 		ctx.closePath();
-		ctx.fillStyle = 'rgba(' + this.options.resizableColor.join(',') + ',' + a + ')';
+		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
 		ctx.fill();
 	},
-	drawCircle: function(ctx, x, y, diameter, r, g, b, a){
+	drawCircle: function(ctx, x, y, diameter, rgb, a){
 		// Circle
 		ctx.beginPath();
 		ctx.moveTo(x, y);
 		ctx.arc(x, y, diameter, 0, Math.PI*2, true);
-		ctx.fillStyle = 'rgba(' + r +',' + g + ',' + b + ',' + a + ')';
+		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
 		ctx.fill();
 	},
 	maximizebutton: function(ctx, x, y, rgb, a){ // this could reuse the drawCircle method above
@@ -1285,8 +1307,8 @@ var MochaUI = new Class({
 				})
 				this.desktopHeader.setStyle('height', 54 + 20);
 				this.dock.setProperty('dockPosition','Top');	
-				this.drawCircle(ctx, 5, 4, 3, 0, 255, 0, 1.0); // green
-				this.drawCircle(ctx, 5, 14, 3, 212, 208, 200, 1.0); // gray
+				this.drawCircle(ctx, 5, 4, 3, [0, 255, 0], 1.0); // green
+				this.drawCircle(ctx, 5, 14, 3, [212, 208, 200], 1.0); // gray
 				$('mochaDockPlacement').setProperty('title', 'Position Dock Bottom');				
 				$('mochaDockAutoHide').setProperty('title', 'Auto Hide Disabled in Top Dock Position');
 				this.dockAutoHide = false;
@@ -1301,8 +1323,8 @@ var MochaUI = new Class({
 				})
 				this.desktopHeader.setStyle('height', 54);
 				this.dock.setProperty('dockPosition','Bottom');
-				this.drawCircle(ctx, 5, 4, 3, 241, 102, 116, 1.0); // orange		
-				this.drawCircle(ctx, 5 , 14, 3, 241, 102, 116, 1.0); // orange 
+				this.drawCircle(ctx, 5, 4, 3, [241, 102, 116], 1.0); // orange		
+				this.drawCircle(ctx, 5 , 14, 3, [241, 102, 116], 1.0); // orange 
 				$('mochaDockPlacement').setProperty('title', 'Position Dock Top');					
 				$('mochaDockAutoHide').setProperty('title', 'Turn Auto Hide On');	 		
 			}
@@ -1318,17 +1340,17 @@ var MochaUI = new Class({
 			this.dockAutoHide = !this.dockAutoHide;	// Toggle
 			if ( this.dockAutoHide ) {
 				$('mochaDockAutoHide').setProperty('title', 'Turn Auto Hide Off');
-				this.drawCircle(ctx, 5 , 14, 3, 0, 255, 0, 1.0); // green
+				this.drawCircle(ctx, 5 , 14, 3, [0, 255, 0], 1.0); // green
 			} else {
 				$('mochaDockAutoHide').setProperty('title', 'Turn Auto Hide On');
-				this.drawCircle(ctx, 5 , 14, 3, 241, 102, 116, 1.0); // orange
+				this.drawCircle(ctx, 5 , 14, 3, [241, 102, 116], 1.0); // orange
 			}
 		}.bind(this));	
 	},
 	drawDock: function (el){
 		var ctx = el.getElement('.mochaCanvas').getContext('2d');
-		this.drawCircle(ctx, 5 , 4, 3, 241, 102, 116, 1.0);  // orange
-		this.drawCircle(ctx, 5 , 14, 3, 241, 102, 116, 1.0); // orange
+		this.drawCircle(ctx, 5 , 4, 3, [241, 102, 116], 1.0);  // orange
+		this.drawCircle(ctx, 5 , 14, 3, [241, 102, 116], 1.0); // orange
 	},
 	dynamicResize: function (windowEl){				
 			this.getSubElement(windowEl, 'contentWrapper').setStyle('height', this.getSubElement(windowEl, 'content').scrollHeight);
