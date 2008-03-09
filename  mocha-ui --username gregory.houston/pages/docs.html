@@ -8,7 +8,7 @@
 
 <h3>Aspects of Mocha UI (Subject to Change)</h3>
 <ul>
-	<li>Desktop. The Desktop is the Mocha UI container. The MochaDesktop class sets global variables for all windows.</li>
+	<li>Desktop. The Desktop is the Mocha UI container.</li>
 	<li>Toolbars - Requires the Desktop</li>
 	<li>Workspaces - Requires the Desktop and Toolbars; not yet implemented</li>
 	<li>Windows - Requires the Desktop, though considering making it possible to break this dependency</li>
@@ -30,7 +30,7 @@ closeAll() - Close all the windows<br />
 
 <p><strong>Syntax:</strong></p>
 <pre>
-document.mochaDesktop.newWindow();
+document.mochaUI.newWindow();
 </pre>
 
 <p><strong>Arguments: </strong>Options</p>
@@ -89,7 +89,7 @@ Example Javascript:
 	if ($('docsLink')){
 		$('docsLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			document.mochaDesktop.newWindow({
+			document.mochaUI.newWindow({
 				id: 'docs',
 				title: 'Documentation',
 				loadMethod: 'xhr',
@@ -111,7 +111,7 @@ Example Javascript:
 
 Example Javascript:
 <pre>
-document.mochaDesktop.closeWindow($('windowID'));
+document.mochaUI.closeWindow($('windowID'));
 </pre>
 
 <h3>MooCanvas and ExCanvas</h3>
@@ -123,7 +123,6 @@ document.mochaDesktop.closeWindow($('windowID'));
 <h3>General Issues</h3>
 <p>If you have a solution for any of these please let me know.</p>
 <ul>
-	<li>In the accordian example, the element divs do not have the proper top padding as is defined in the css.</li>
 	<li>In IE7, the wrong cursor, an I-bar, is displayed when the cursor is over #mochaPage, the main content area of the web page.</li>
 	<li>In the YouTube example, if the window is maximized and the video is playing, when the browser window is resized, the iframe the flash is in does not resize. This works fine however if the video is paused.</li>	
 </ul>

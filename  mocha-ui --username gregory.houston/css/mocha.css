@@ -83,7 +83,10 @@ body {
 	z-index: 8000;
 }
 
-#mochaDesktopNavbar li ul li, #mochaDesktopNavbar li ul li a {
+#mochaDesktopNavbar li ul li {
+} 
+
+#mochaDesktopNavbar li ul li a {
 	width: 130px;
 }
 
@@ -95,9 +98,15 @@ body {
     position: static;
 }
 
+.divider {
+	margin-top: 2px;
+	padding-top: 3px;	
+	border-top: 1px solid #ddd;
+}	
+
 #mochaPageWrapper {
 	width: 100%;
-	overflow: auto;
+	overflow: auto; /* This can be set to hidden if you want to treat it more like a desktop than a web page */
 }
 
 #mochaPage {
@@ -372,8 +381,7 @@ iframe.zIndexFix {
 
 /* Accordian */
 
-
-.toggler {
+.accordianToggler {
 	margin: 0;
 	padding: 4px 10px;
 	background: #eee;
@@ -382,9 +390,9 @@ iframe.zIndexFix {
 	font-size: 11px;
 	cursor: pointer;
 }
- 
-.element {
-	padding: 10px; 
+
+.accordianContent {
+	padding: 10px 10px 5px 10px;
 }
 
 /* Screens/Workspaces */

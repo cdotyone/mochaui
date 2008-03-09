@@ -1,7 +1,7 @@
 /* -----------------------------------------------------------------
 
 	Script: 
-		mocha.js v.0.7
+		mocha.js version 0.8
 	
 	Copyright:
 		Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>
@@ -15,7 +15,7 @@
 	
    ----------------------------------------------------------------- */
 
-var MochaDesktop = new Class({
+var MochaUI = new Class({
 	options: {
 		// Global options for windows.
 		// Some of these options can be overriden for individual windows in newWindow()
@@ -281,16 +281,16 @@ var MochaDesktop = new Class({
 		// Extend our window element
 		windowEl = $extend(windowEl, {
 			// Custom properties
-			oldTop:    0,
-			oldLeft:   0,
-			oldWidth:  0,
-			oldHeight: 0,
-			modal: windowProperties.modal,
+			oldTop:     0,
+			oldLeft:    0,
+			oldWidth:   0,
+			oldHeight:  0,
+			modal:      windowProperties.modal,
 			scrollbars: windowProperties.scrollbars,
 			// Always use close buttons for modal windows
-			closable: windowProperties.closable || windowProperties.modal,
-			resizable: windowProperties.resizable && !windowProperties.modal,
-			draggable: windowProperties.draggable && !windowProperties.modal,
+			closable:   windowProperties.closable || windowProperties.modal,
+			resizable:  windowProperties.resizable && !windowProperties.modal,
+			draggable:  windowProperties.draggable && !windowProperties.modal,
 			// Minimizable, dock is required and window cannot be modal
 			minimizable: this.hasDock && windowProperties.minimizable && !windowProperties.modal,
 			// Maximizable, desktop is required
@@ -299,11 +299,11 @@ var MochaDesktop = new Class({
 			isMaximized: false,
 			isMinimized: false,
 			// Custom events
-			onFocus: windowProperties.onFocus,
-			onResize: windowProperties.onResize,
-			onMinimize: windowProperties.onMinimize,
-			onMaximize: windowProperties.onMaximize,
-			onClose: windowProperties.onClose,
+			onFocus:         windowProperties.onFocus,
+			onResize:        windowProperties.onResize,
+			onMinimize:      windowProperties.onMinimize,
+			onMaximize:      windowProperties.onMaximize,
+			onClose:         windowProperties.onClose,
 			onCloseComplete: windowProperties.onCloseComplete
 		});
 
@@ -1375,7 +1375,7 @@ var MochaDesktop = new Class({
 		}.bind(this));		
 	}	
 });
-MochaDesktop.implement(new Options);
+MochaUI.implement(new Options);
 
 /* -----------------------------------------------------------------
 
@@ -1450,7 +1450,7 @@ var MochaWindowForm = new Class({
 		this.options.y = $('mochaNewWindowY').value.toInt();
 		this.options.paddingVertical = $('mochaNewWindowPaddingVertical').value.toInt();
 		this.options.paddingHorizontal = $('mochaNewWindowPaddingHorizontal').value.toInt();
-		document.mochaDesktop.newWindow(this.options);		
+		document.mochaUI.newWindow(this.options);		
 	}
 });
 MochaWindowForm.implement(new Options);
@@ -1472,13 +1472,13 @@ function addSlider(){
 			offset: 5,
 			onChange: function(pos){
 				$('updatevalue').setHTML(pos);
-				document.mochaDesktop.options.cornerRadius = pos;
+				document.mochaUI.options.cornerRadius = pos;
 				$$('div.mocha').each(function(windowEl, i) {
-					document.mochaDesktop.drawWindow(windowEl);
+					document.mochaUI.drawWindow(windowEl);
 				});
-				document.mochaDesktop.indexLevel++; 
+				document.mochaUI.indexLevel++; 
 			}
-		}).set(document.mochaDesktop.options.cornerRadius);
+		}).set(document.mochaUI.options.cornerRadius);
 	}
 }
 
@@ -1490,12 +1490,12 @@ function addSlider(){
 
 window.addEvent('domready', function(){							 
 		document.mochaScreens = new MochaScreens();
-		document.mochaDesktop = new MochaDesktop();
+		document.mochaUI = new MochaUI();
 		attachMochaLinkEvents(); // See mocha-events.js
 		addSlider();             // remove this if you remove the example corner radius slider		
 });
 
 // This runs when a person leaves your page.
 window.addEvent('unload', function(){
-		if (document.mochaDesktop) document.mochaDesktop.garbageCleanUp();
+		if (document.mochaUI) document.mochaUI.garbageCleanUp();
 });

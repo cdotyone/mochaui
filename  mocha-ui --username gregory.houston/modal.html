@@ -19,7 +19,7 @@
 		if ($('modalDemoLink')){
 			$('modalDemoLink').addEvent('click', function(e){	
 				new Event(e).stop();
-				document.mochaDesktop.newWindow({
+				document.mochaUI.newWindow({
 					id: 'modalDemo',
 					title: 'A Modal Window',
 					content: 'Your modal window content',

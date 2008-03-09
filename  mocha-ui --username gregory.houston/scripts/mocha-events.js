@@ -16,7 +16,7 @@ function attachMochaLinkEvents(){
 	if ($('ajaxpageLink')){ // Associated HTML: <a id="xhrpageLink" href="pages/lipsum.html">XHR Page</a>
 		$('ajaxpageLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			document.mochaDesktop.newWindow({
+			document.mochaUI.newWindow({
 				id: 'ajaxpage',
 				title: 'Content Loaded with an XMLHttpRequest',
 				loadMethod: 'xhr',
@@ -33,7 +33,7 @@ function attachMochaLinkEvents(){
 			var url = 'data/json-windows-data.js';
 			var request = new Json.Remote(url, {
 				onComplete: function(properties) {
-					document.mochaDesktop.newWindowsFromJSON(properties.windows);
+					document.mochaUI.newWindowsFromJSON(properties.windows);
 				}
 			}).send();
 		});
@@ -42,7 +42,7 @@ function attachMochaLinkEvents(){
 	if ($('mootoolsLink')){
 		$('mootoolsLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			document.mochaDesktop.newWindow({
+			document.mochaUI.newWindow({
 				id: 'mootools',
 				title: 'Mootools Forums in an Iframe',
 				loadMethod: 'iframe',
@@ -59,7 +59,7 @@ function attachMochaLinkEvents(){
 	if ($('spirographLink')){
 		$('spirographLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			document.mochaDesktop.newWindow({
+			document.mochaUI.newWindow({
 				id: 'spirograph',
 				title: 'Canvas Spirograph in an Iframe',
 				loadMethod: 'iframe',
@@ -77,7 +77,7 @@ function attachMochaLinkEvents(){
 	if ($('youTubeLink')) {
 		$('youTubeLink').addEvent('click', function(e){
 		new Event(e).stop();
-			document.mochaDesktop.newWindow({
+			document.mochaUI.newWindow({
 				id: 'youTube',
 				title: 'YouTube in Iframe',
 				loadMethod: 'iframe',
@@ -95,7 +95,7 @@ function attachMochaLinkEvents(){
 	if ($('accordianLink')){ 
 		$('accordianLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			document.mochaDesktop.newWindow({
+			document.mochaUI.newWindow({
 				id: 'accordianpage',
 				title: 'Accordian Example',
 				loadMethod: 'xhr',
@@ -108,20 +108,21 @@ function attachMochaLinkEvents(){
 				paddingVertical: 0,
 				paddingHorizontal: 0,				
 				onContentLoaded: function(el){
-					var myFunction = function(){ var accordion = new Accordion('h3.toggler', 'div.element', {
+					var myFunction = function(){ var accordion = new Accordion('h3.accordianToggler', 'div.accordianElement', {
+					//	start: 'all-closed',															   
 						opacity: false,
 						alwaysHide: true,
 						onStart: function(toggler, element){
-							document.mochaDesktop.myTimer = setInterval (
-								 "document.mochaDesktop.dynamicResize($('accordianpage'))", 10
+							document.mochaUI.myTimer = setInterval (
+								 "document.mochaUI.dynamicResize($('accordianpage'))", 10
 							);
 						}.bind(this),												
 						onComplete: function(){							
-							clearInterval ( document.mochaDesktop.myTimer );
-							document.mochaDesktop.dynamicResize($('accordianpage')) // once more for good measure
+							clearInterval ( document.mochaUI.myTimer );
+							document.mochaUI.dynamicResize($('accordianpage')) // once more for good measure
 						}.bind(this)									   
 					}, $('accordion')); }.bind(this)
-					myFunction.delay(100);
+					myFunction.delay(100); // Delay is a fix for IE
 				}				
 			});
 		});
@@ -130,7 +131,7 @@ function attachMochaLinkEvents(){
 	if ($('eventsLink')){
 		$('eventsLink').addEvent('click', function(e){
 			new Event(e).stop();
-			document.mochaDesktop.newWindow({
+			document.mochaUI.newWindow({
 				id: 'events',
 				title: 'Window Trigger Options',
 				loadMethod: 'xhr',
@@ -159,7 +160,7 @@ function attachMochaLinkEvents(){
 	if ($('cornerRadiusLink')){
 		$('cornerRadiusLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			document.mochaDesktop.newWindow({
+			document.mochaUI.newWindow({
 				id: 'cornerRadius',
 				title: 'Corner Radius Slider',
 				loadMethod: 'xhr',
@@ -179,14 +180,14 @@ function attachMochaLinkEvents(){
 	if ($('cascadeLink')){
 		$('cascadeLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			document.mochaDesktop.arrangeCascade();
+			document.mochaUI.arrangeCascade();
 		});
 	}
 	
 	if ($('closeLink')){
 		$('closeLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			document.mochaDesktop.closeAll();
+			document.mochaUI.closeAll();
 		});
 	}	
 	
@@ -194,7 +195,7 @@ function attachMochaLinkEvents(){
 	if ($('builderLink')){
 		$('builderLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			document.mochaDesktop.newWindow({
+			document.mochaUI.newWindow({
 				id: 'windowbuilder',
 				title: 'Window Builder',
 				loadMethod: 'xhr',
@@ -239,7 +240,7 @@ function attachMochaLinkEvents(){
 	if ($('faqLink')){
 		$('faqLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			document.mochaDesktop.newWindow({
+			document.mochaUI.newWindow({
 				id: 'faq',
 				title: 'FAQ',
 				loadMethod: 'xhr',
@@ -255,7 +256,7 @@ function attachMochaLinkEvents(){
 	if ($('docsLink')){
 		$('docsLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			document.mochaDesktop.newWindow({
+			document.mochaUI.newWindow({
 				id: 'docs',
 				title: 'Documentation',
 				loadMethod: 'xhr',
@@ -271,7 +272,7 @@ function attachMochaLinkEvents(){
 	if ($('overviewLink')){
 		$('overviewLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			document.mochaDesktop.newWindow({
+			document.mochaUI.newWindow({
 				id: 'overview',
 				title: 'Overview',
 				loadMethod: 'xhr',
@@ -287,7 +288,7 @@ function attachMochaLinkEvents(){
 	if ($('resourcesLink')){
 		$('resourcesLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			document.mochaDesktop.newWindow({
+			document.mochaUI.newWindow({
 				id: 'resources',
 				title: 'Resources',
 				loadMethod: 'xhr',
@@ -303,7 +304,7 @@ function attachMochaLinkEvents(){
 	if ($('helpLink')){
 		$('helpLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			document.mochaDesktop.newWindow({
+			document.mochaUI.newWindow({
 				id: 'help',
 				title: 'Support',
 				loadMethod: 'xhr',
@@ -319,7 +320,7 @@ function attachMochaLinkEvents(){
 	if ($('contributeLink')){
 		$('contributeLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			document.mochaDesktop.newWindow({
+			document.mochaUI.newWindow({
 				id: 'contribute',
 				title: 'Contribute',
 				loadMethod: 'xhr',
@@ -335,9 +336,9 @@ function attachMochaLinkEvents(){
 	if ($('aboutLink')){
 		$('aboutLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			document.mochaDesktop.newWindow({
+			document.mochaUI.newWindow({
 				id: 'about',
-				title: 'Mocha UI Version 0.7',
+				title: 'Mocha UI Version 0.8',
 				loadMethod: 'xhr',
 				contentURL: 'pages/about.html',
 				modal: true,
