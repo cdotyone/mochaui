@@ -171,7 +171,7 @@ function attachMochaLinkEvents(){
 				width: 300,
 				height: 105,
 				x: 20,
-				y: 60
+				y: 70
 			});
 		});
 	}
@@ -209,7 +209,7 @@ function attachMochaLinkEvents(){
 				width: 370,
 				height: 400,
 				x: 20,
-				y: 60
+				y: 70
 			});
 		});
 	}
@@ -248,7 +248,7 @@ function attachMochaLinkEvents(){
 				width: 320,
 				height: 320,
 				x: 20,
-				y: 60
+				y: 70
 			});
 		});
 	}
@@ -264,7 +264,7 @@ function attachMochaLinkEvents(){
 				width: 600,
 				height: 350,
 				x: 20,
-				y: 60
+				y: 70
 			});
 		});
 	}
@@ -280,7 +280,7 @@ function attachMochaLinkEvents(){
 				width: 300,
 				height: 255,
 				x: 20,
-				y: 60
+				y: 70
 			});
 		});
 	}
@@ -296,7 +296,7 @@ function attachMochaLinkEvents(){
 				width: 300,
 				height: 275,
 				x: 20,
-				y: 60
+				y: 70
 			});
 		});
 	}
@@ -312,7 +312,7 @@ function attachMochaLinkEvents(){
 				width: 320,
 				height: 320,
 				x: 20,
-				y: 60
+				y: 70
 			});
 		});
 	}
@@ -328,7 +328,7 @@ function attachMochaLinkEvents(){
 				width: 320,
 				height: 320,
 				x: 20,
-				y: 60
+				y: 70
 			});
 		});
 	}	

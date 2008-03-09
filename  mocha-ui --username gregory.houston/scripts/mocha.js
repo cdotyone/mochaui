@@ -50,7 +50,9 @@ var MochaUI = new Class({
 		// If you change the IDs of the Mocha Desktop containers in your HTML, you need to change them here as well.
 		desktop:           'mochaDesktop',
 		desktopHeader:     'mochaDesktopHeader',
-		desktopNavBar:     'mochaDesktopNavbar' 
+		desktopNavBar:     'mochaDesktopNavbar',
+		pageWrapper:       'mochaPageWrapper', 
+		dock:              'mochaDock'		
 	},
 	initialize: function(options){
 		this.setOptions(options);
@@ -66,48 +68,28 @@ var MochaUI = new Class({
 		this.shadowWidth        = 3;
 		this.shadowOffset       = this.shadowWidth * 2;		
 		this.HeaderFooterShadow = this.options.headerHeight + this.options.footerHeight + this.shadowOffset;
-		
-		this.dockHeight	   = 0;      // Calculated height of dock !!!probably can just use scrollHeight
-		this.headerHeight  = 0;      // Calculated height of desktop header. !!!probably can just use scrollHeight
-		this.dockVisible   = true;   // True when dock is visible, false when not
-		this.dockAutoHide  = false;  // True when dock autohide is set to on, false if set to off
-		
-		this.hasDock       = true;		
-		this.hasDesktop	   = true;
-		
+	
 		this.desktop       = $(this.options.desktop);
 		this.desktopHeader = $(this.options.desktopHeader);
-		this.desktopNavBar = $(this.options.desktopNavBar);		
+		this.desktopNavBar = $(this.options.desktopNavBar);
+		this.pageWrapper   = $(this.options.pageWrapper);		
+		this.dock          = $(this.options.dock);
 		
-		this.dock          = $('mochaDock');
+		this.dockVisible   = this.dock ? true : false;   // True when dock is visible, false when not
+		this.dockAutoHide  = false;  // True when dock autohide is set to on, false if set to off
 
-		if ( this.desktopHeader ) { this.headerHeight = this.calcElementHeight(this.desktopHeader); }
+		if ( this.dock ) { this.initializeDock(this.dock); }
 		
-		// Make sure that hasDesktop and hasDock is set to false if the elements doen't exist
-		if ( !this.desktop ) this.hasDesktop = false;
-		if ( !this.dock ) this.hasDock = false;
-
-		if ( this.hasDock ) {
-			this.dock.setStyles({
-				'display':  'block',		   
-				'position': 'absolute',
-				'top':      null,
-				'bottom':   0,
-				'left':     0
-			});
-			this.dockHeight = this.calcElementHeight(this.dock);			
-			this.initDock(this.dock);
-			this.drawDock(this.dock);
-		}
+		this.setDesktopSize();	
+		this.newWindowsFromXHTML();		
+		this.modalInitialize();		
+		this.menuInitialize();
 		
-		// Set desktop size
-		this.setDesktopSize();
-
-		// Dynamically create windows defined in XHTML and remove the definitions from the DOM	
-		this.newWindowsFromXHTML();
+		// Resize desktop, page wrapper, modal overlay, and maximized windows when browser window is resized
+		window.onresize = function(){ this.onBrowserResize(); }.bind(this);		
 		
-		this.modalInitialize();
-		
+	},
+	menuInitialize: function(){
 		// Fix for dropdown menus in IE6
 		if (Browser.Engine.trident4 && this.desktopNavBar){
 			this.desktopNavBar.getElements('li').each(function(element) {
@@ -118,13 +100,7 @@ var MochaUI = new Class({
 					this.removeClass('ieHover');
 				})
 			})
-		};
-		
-		// Resize desktop, modal mask, and maximized windows when browser window is resized
-		window.onresize = function(){
-			this.onBrowserResize();
-		}.bind(this);		
-		
+		};		
 	},
 	modalInitialize: function(){	
 		var modalOverlay = new Element('div', {
@@ -133,7 +109,7 @@ var MochaUI = new Class({
 				'height': document.getCoordinates().height
 			}
 		});		
-		modalOverlay.injectInside(this.hasDesktop ? this.desktop : document.body);
+		modalOverlay.injectInside(this.desktop ? this.desktop : document.body);
 		
 		modalOverlay.setStyle('opacity', .4);
 		this.modalOpenMorph = new Fx.Morph($('mochaModalOverlay'), {
@@ -243,16 +219,16 @@ var MochaUI = new Class({
 			content:           '',                   // used if loadMethod is set to 'html'
 			contentURL:        'pages/lipsum.html',	 // used if loadMethod is set to 'xhr' or 'iframe'			
 			modal:             false,
-			draggable:         this.options.draggable,
-			resizable:         this.options.resizable,			
-			minimizable:       this.options.minimizable,
-			maximizable:       this.options.maximizable,
-			closable:          this.options.closable,
 			width:             300,
 			height:            125, 
 			x:                 null,
 			y:                 null,
-			scrollbars:        true,			
+			scrollbars:        true,
+			draggable:         this.options.draggable,
+			resizable:         this.options.resizable,			
+			minimizable:       this.options.minimizable,
+			maximizable:       this.options.maximizable,
+			closable:          this.options.closable,			
 			// Styling
 			paddingVertical:   10,
 			paddingHorizontal: 12,			
@@ -314,9 +290,9 @@ var MochaUI = new Class({
 			resizable:  windowProperties.resizable && !windowProperties.modal,
 			draggable:  windowProperties.draggable && !windowProperties.modal,
 			// Minimizable, dock is required and window cannot be modal
-			minimizable: this.hasDock && windowProperties.minimizable && !windowProperties.modal,
+			minimizable: this.dock && windowProperties.minimizable && !windowProperties.modal,
 			// Maximizable, desktop is required
-			maximizable: this.hasDesktop && windowProperties.maximizable && !windowProperties.modal,
+			maximizable: this.desktop && windowProperties.maximizable && !windowProperties.modal,
 			iframe: windowProperties.loadMethod == 'iframe' ? true : false,
 			isMaximized: false,
 			isMinimized: false,
@@ -443,7 +419,7 @@ var MochaUI = new Class({
 
 		// Inject window into DOM		
 		
-		windowEl.injectInside(this.hasDesktop ? this.desktop : document.body);
+		windowEl.injectInside(this.desktop ? this.desktop : document.body);
 		this.drawWindow(windowEl, subElements);
 		
 		// Drag.Move() does not work in IE until element has been injected, thus setting here
@@ -628,7 +604,7 @@ var MochaUI = new Class({
 	},
 	minimizeWindow: function(windowEl) {
 		// What if there is no dock, react how ?? ignore request?
-		if ( !(windowEl = $(windowEl)) || !this.hasDock )
+		if ( !(windowEl = $(windowEl)) || !this.dock)
 			return;
 
 		// Hide iframe
@@ -715,20 +691,6 @@ var MochaUI = new Class({
 		}.bind(this));
 		return subElements;
 	},
-	/*
-		Method: calcElementHeight() // !! Probably unnecessary.
-		Description:
-			Calculate an elements real height, including padding and borders
-		Arguments:
-			element
-		Returns:
-			Integer, height in pixels
-	*/
-	calcElementHeight: function(element) { // !!! This probably isn't necessary. Scrollheight should do all this
-		
-		return element.scrollHeight;
-	},
-	
 	/*
 		Method: setupControlEvents()
 		Usage: internal
@@ -827,16 +789,19 @@ var MochaUI = new Class({
 	},
 	setDesktopSize: function(){
 		var windowDimensions = document.getCoordinates();
-		var pageWrapper = null;
-		if ( this.hasDesktop )
-			this.desktop.setStyle('height', windowDimensions.height);
 		
-		// Set pageWrapper height - Is this really necessary?
-		if ( (pageWrapper = $('mochaPageWrapper')) ) {
-			var pageWrapperHeight = (windowDimensions.height- (this.headerHeight + (this.dockVisible ? this.dockHeight : 0)));
-			if ( pageWrapperHeight < 0 )
+		if ( this.desktop ){
+			this.desktop.setStyle('height', windowDimensions.height);
+		}
+		
+		// Set pageWrapper height so the dock doesn't cover the pageWrapper scrollbars.
+
+		if ( this.pageWrapper && this.desktopHeader) {
+			var pageWrapperHeight = (windowDimensions.height - this.desktopHeader.offsetHeight - (this.dockVisible ? this.dock.offsetHeight : 0));	
+			if ( pageWrapperHeight < 0 ) {
 				pageWrapperHeight = 0;
-			pageWrapper.setStyle('height', pageWrapperHeight + 'px');
+			}
+			this.pageWrapper.setStyle('height', pageWrapperHeight + 'px');
 		}
 	},	
 	setModalSize: function(){
@@ -1252,14 +1217,21 @@ var MochaUI = new Class({
 		}
 		subElements.controls.setStyle('width', this.mochaControlsWidth);
 	},
-	initDock: function (el){
+	initializeDock: function (el){
+			this.dock.setStyles({
+				'display':  'block',		   
+				'position': 'absolute',
+				'top':      null,
+				'bottom':   0,
+				'left':     0
+			});		
 		// Probably: this event should be added/removed when toggling AutoHide, since we dont need it when AutoHide is turned off
 		// this.dockVisible tracks the status of the dock, so that showing/hiding is not done when not needed
 		document.addEvent('mousemove', function(event) {
 			if ( !this.dockAutoHide )
 				return;
 			var ev = new Event(event);
-			if ( ev.client.y > (document.getCoordinates().height - this.dockHeight) ) {
+			if ( ev.client.y > (document.getCoordinates().height - 25) ) {
 				if ( !this.dockVisible ) {
 					this.dock.setStyle('display', 'block'); 
 					this.dockVisible = true;
@@ -1305,7 +1277,7 @@ var MochaUI = new Class({
 					'border-top':    '1px solid #fff',
 					'border-bottom': '1px solid #bbb'
 				})
-				this.desktopHeader.setStyle('height', 54 + 20);
+				this.setDesktopSize();
 				this.dock.setProperty('dockPosition','Top');	
 				this.drawCircle(ctx, 5, 4, 3, [0, 255, 0], 1.0); // green
 				this.drawCircle(ctx, 5, 14, 3, [212, 208, 200], 1.0); // gray
@@ -1321,7 +1293,7 @@ var MochaUI = new Class({
 					'border-top':    '1px solid #bbb',
 					'border-bottom': '1px solid #fff'
 				})
-				this.desktopHeader.setStyle('height', 54);
+				this.setDesktopSize();				
 				this.dock.setProperty('dockPosition','Bottom');
 				this.drawCircle(ctx, 5, 4, 3, [241, 102, 116], 1.0); // orange		
 				this.drawCircle(ctx, 5 , 14, 3, [241, 102, 116], 1.0); // orange 
@@ -1345,7 +1317,9 @@ var MochaUI = new Class({
 				$('mochaDockAutoHide').setProperty('title', 'Turn Auto Hide On');
 				this.drawCircle(ctx, 5 , 14, 3, [241, 102, 116], 1.0); // orange
 			}
-		}.bind(this));	
+		}.bind(this));
+		
+		this.drawDock(this.dock);		
 	},
 	drawDock: function (el){
 		var ctx = el.getElement('.mochaCanvas').getContext('2d');
@@ -1353,7 +1327,7 @@ var MochaUI = new Class({
 		this.drawCircle(ctx, 5 , 14, 3, [241, 102, 116], 1.0); // orange
 	},
 	dynamicResize: function (windowEl){				
-			this.getSubElement(windowEl, 'contentWrapper').setStyle('height', this.getSubElement(windowEl, 'content').scrollHeight);
+			this.getSubElement(windowEl, 'contentWrapper').setStyle('height', this.getSubElement(windowEl, 'content').offsetHeight);
 			this.drawWindow(windowEl);		
 	},
 	/*
