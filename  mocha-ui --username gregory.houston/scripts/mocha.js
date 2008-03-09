@@ -43,7 +43,12 @@ var MochaUI = new Class({
 		minimizeColor:     $RGB(231, 231, 209),  // Minimize button color
 		maximizeColor:     $RGB(217, 229, 217),  // Maximize button color
 		closeColor:        $RGB(229, 217, 217),  // Close button color
-		resizableColor:    $RGB(209, 209, 209)   // Resizable drag icon color		
+		resizableColor:    $RGB(209, 209, 209),  // Resizable icon color
+		// Naming options:
+		// If you change the IDs of the Mocha Desktop containers in your HTML, you need to change them here as well.
+		desktop:           'mochaDesktop',
+		desktopHeader:     'mochaDesktopHeader',
+		desktopNavBar:     'mochaDesktopNavbar' 
 	},
 	initialize: function(options){
 		this.setOptions(options);
@@ -60,64 +65,50 @@ var MochaUI = new Class({
 		this.shadowOffset       = this.shadowWidth * 2;		
 		this.HeaderFooterShadow = this.options.headerHeight + this.options.footerHeight + this.shadowOffset;
 		
-		this.dockHeight	  = 0;      // Calculated height of dock
-		this.headerHeight = 0;      // Calculated height of desktop header
-		this.dockVisible  = true;   // True when dock is visible, false when not
-		this.dockAutoHide = false;  // True when dock autohide is set to on, false if set to off
-		this.hasDock      = true;		 
-		this.hasDesktop	  = true;		
-		var dock          = $('mochaDock');
-		var desktop       = $('mochaDesktop');
-		var desktopHeader = $('mochaDesktopHeader');
+		this.dockHeight	   = 0;      // Calculated height of dock !!!probably can just use scrollHeight
+		this.headerHeight  = 0;      // Calculated height of desktop header. !!!probably can just use scrollHeight
+		this.dockVisible   = true;   // True when dock is visible, false when not
+		this.dockAutoHide  = false;  // True when dock autohide is set to on, false if set to off
 		
-		if ( desktopHeader ) { this.headerHeight = this.calcElementHeight(desktopHeader); }
+		this.hasDock       = true;		
+		this.hasDesktop	   = true;
 		
-		// Make sure that hasDesktop and hasDock is set to false if the elements doesn't exist
-		if ( !desktop ) this.hasDesktop = false;
-		if ( !dock ) this.hasDock = false;
+		this.desktop       = $(this.options.desktop);
+		this.desktopHeader = $(this.options.desktopHeader);
+		this.desktopNavBar = $(this.options.desktopNavBar);		
+		
+		this.dock          = $('mochaDock');
+
+		if ( this.desktopHeader ) { this.headerHeight = this.calcElementHeight(this.desktopHeader); }
+		
+		// Make sure that hasDesktop and hasDock is set to false if the elements doen't exist
+		if ( !this.desktop ) this.hasDesktop = false;
+		if ( !this.dock ) this.hasDock = false;
 
 		if ( this.hasDock ) {
-			dock.setStyles({
+			this.dock.setStyles({
 				'display':  'block',		   
 				'position': 'absolute',
 				'top':      null,
 				'bottom':   0,
 				'left':     0
 			});
-			this.dockHeight = this.calcElementHeight(dock);			
-			this.initDock(dock);
-			this.drawDock(dock);
+			this.dockHeight = this.calcElementHeight(this.dock);			
+			this.initDock(this.dock);
+			this.drawDock(this.dock);
 		}
 		
 		// Set desktop size
-		this.setDesktopSize(desktop);
+		this.setDesktopSize();
 
 		// Dynamically create windows defined in XHTML and remove the definitions from the DOM	
 		this.newWindowsFromXHTML();
 		
-		// Modal initialization
-		var mochaModal = new Element('div', {
-			'id': 'mochaModalBackground',
-			'styles': {
-				'height': document.getCoordinates().height
-			}
-		});		
-		mochaModal.injectInside(this.hasDesktop ? $('mochaDesktop') : document.body);
+		this.modalInitialize();
 		
-		mochaModal.setStyle('opacity', .4);
-		this.modalOpenMorph = new Fx.Morph($('mochaModalBackground'), {
-				'duration': 200
-				});
-		this.modalCloseMorph = new Fx.Morph($('mochaModalBackground'), {
-			'duration': 200,
-			onComplete: function(){
-				$('mochaModalBackground').setStyle('display', 'none');
-			}.bind(this)
-		});		
-		
-		 // Fix for dropdown menus in IE6
-		if (Browser.Engine.trident4 && $("mochaDesktopNavbar")){
-			$('mochaDesktopNavbar').getElements('li').each(function(element) {
+		// Fix for dropdown menus in IE6
+		if (Browser.Engine.trident4 && this.desktopNavBar){
+			this.desktopNavBar.getElements('li').each(function(element) {
 				element.addEvent('mouseenter', function(){
 					this.addClass('ieHover');
 				})
@@ -127,12 +118,32 @@ var MochaUI = new Class({
 			})
 		};
 		
-		// Resize desktop, modal background, and maximized windows when browser window is resized
+		// Resize desktop, modal mask, and maximized windows when browser window is resized
 		window.onresize = function(){
 			this.onBrowserResize();
 		}.bind(this);		
 		
-	},		
+	},
+	modalInitialize: function(){	
+		var modalOverlay = new Element('div', {
+			'id': 'mochaModalOverlay',
+			'styles': {
+				'height': document.getCoordinates().height
+			}
+		});		
+		modalOverlay.injectInside(this.hasDesktop ? this.desktop : document.body);
+		
+		modalOverlay.setStyle('opacity', .4);
+		this.modalOpenMorph = new Fx.Morph($('mochaModalOverlay'), {
+				'duration': 200
+				});
+		this.modalCloseMorph = new Fx.Morph($('mochaModalOverlay'), {
+			'duration': 200,
+			onComplete: function(){
+				$('mochaModalOverlay').setStyle('display', 'none');
+			}.bind(this)
+		});
+	},
 	onBrowserResize: function(){
 		this.setDesktopSize();
 		this.setModalSize();
@@ -375,9 +386,9 @@ var MochaUI = new Class({
 		var windowPosLeft = windowProperties.x ? windowProperties.x : (dimensions.width * .5) - (windowProperties.width * .5);
 		
 		if (windowEl.modal) {
-			$('mochaModalBackground').setStyle('display', 'block');
+			$('mochaModalOverlay').setStyle('display', 'block');
 			if (this.options.effects == false){			
-				$('mochaModalBackground').setStyle('opacity', .55);
+				$('mochaModalOverlay').setStyle('opacity', .55);
 			}
 			else {
 				this.modalCloseMorph.cancel();
@@ -413,7 +424,7 @@ var MochaUI = new Class({
 
 		// Inject window into DOM		
 		
-		windowEl.injectInside(this.hasDesktop ? $('mochaDesktop') : document.body);
+		windowEl.injectInside(this.hasDesktop ? this.desktop : document.body);
 		this.drawWindow(windowEl, subElements);
 		
 		// Drag.Move() does not work in IE until element has been injected, thus setting here
@@ -442,7 +453,7 @@ var MochaUI = new Class({
 		
 		if (this.options.effects == false){
 			if (windowEl.modal) {
-				$('mochaModalBackground').setStyle('opacity', 0);
+				$('mochaModalOverlay').setStyle('opacity', 0);
 			}
 			windowEl.destroy();
 			windowEl.onCloseComplete();			
@@ -625,7 +636,7 @@ var MochaUI = new Class({
 			'id': windowEl.id + '_dockButton',
 			'class': 'mochaDockButton',
 			'title': titleText
-		}).setHTML(titleText.substring(0,13) + (titleText.length > 13 ? '...' : '')).injectInside($('mochaDock'));
+		}).setHTML(titleText.substring(0,13) + (titleText.length > 13 ? '...' : '')).injectInside($(this.dock));
 		dockButton.addEvent('click', function(event) {
 			this.restoreMinimized(windowEl);
 		}.bind(this));
@@ -649,7 +660,7 @@ var MochaUI = new Class({
 
 		windowEl.isMinimized = false;
 		this.focusWindow(windowEl);
-		$('mochaDock').getElementById(windowEl.id + '_dockButton').destroy();
+		this.dock.getElementById(windowEl.id + '_dockButton').destroy();
 	},
 		
 	/* -- START Private Methods -- */
@@ -686,7 +697,7 @@ var MochaUI = new Class({
 		return subElements;
 	},
 	/*
-		Method: calcElementHeight()
+		Method: calcElementHeight() // !! Probably unnecessary.
 		Description:
 			Calculate an elements real height, including padding and borders
 		Arguments:
@@ -695,11 +706,8 @@ var MochaUI = new Class({
 			Integer, height in pixels
 	*/
 	calcElementHeight: function(element) { // !!! This probably isn't necessary. Scrollheight should do all this
-		var styleDimensions = element.getStyles('height', 'padding-top', 'padding-bottom', 'border-top', 'border-bottom');
-		var heightPx = 0;
-		for(var style in styleDimensions)
-			heightPx += styleDimensions[style].toInt();
-		return heightPx;
+		
+		return element.scrollHeight;
 	},
 	
 	/*
@@ -798,11 +806,13 @@ var MochaUI = new Class({
 			}.bind(this)
 		});
 	},
-	setDesktopSize: function(desktop){
+	setDesktopSize: function(){
 		var windowDimensions = document.getCoordinates();
 		var pageWrapper = null;
-		if ( this.hasDesktop && (desktop || (desktop = $('mochaDesktop'))) ) // Why so many conditions?
-			desktop.setStyle('height', windowDimensions.height);
+		if ( this.hasDesktop )
+			this.desktop.setStyle('height', windowDimensions.height);
+		
+		// Set pageWrapper height - Is this really necessary?
 		if ( (pageWrapper = $('mochaPageWrapper')) ) {
 			var pageWrapperHeight = (windowDimensions.height- (this.headerHeight + (this.dockVisible ? this.dockHeight : 0)));
 			if ( pageWrapperHeight < 0 )
@@ -811,7 +821,7 @@ var MochaUI = new Class({
 		}
 	},	
 	setModalSize: function(){
-		$('mochaModalBackground').setStyle('height', document.getCoordinates().height);
+		$('mochaModalOverlay').setStyle('height', document.getCoordinates().height);
 	},
 	/*
 		Method: insertWindowElements
@@ -1229,13 +1239,13 @@ var MochaUI = new Class({
 			var ev = new Event(event);
 			if ( ev.client.y > (document.getCoordinates().height - this.dockHeight) ) {
 				if ( !this.dockVisible ) {
-					$('mochaDock').setStyle('display', 'block'); 
+					this.dock.setStyle('display', 'block'); 
 					this.dockVisible = true;
 					this.setDesktopSize();
 				}
 			} else {
 				if ( this.dockVisible ) {
-					$('mochaDock').setStyle('display', 'none'); 
+					this.dock.setStyle('display', 'none'); 
 					this.dockVisible = false;
 					this.setDesktopSize();
 				}
@@ -1263,50 +1273,45 @@ var MochaUI = new Class({
 		
 		// Attach event
 		$('mochaDockPlacement').addEvent('click', function(event){
-			var objDock=event.target.parentNode;
 			var ctx = el.getElement('.mochaCanvas').getContext('2d');
 			
 			// Move dock to top position
-			if (objDock.getStyle('position') != 'relative'){
-				objDock.setStyles({
-					'position': 'relative',
-					'bottom': null,
-					'border-top': '1px solid #fff',
+			if (this.dock.getStyle('position') != 'relative'){
+				this.dock.setStyles({
+					'position':      'relative',
+					'bottom':         null,
+					'border-top':    '1px solid #fff',
 					'border-bottom': '1px solid #bbb'
 				})
-				$('mochaDesktopHeader').setStyle('height', 74);
-				objDock.setProperty('dockPosition','Top');	
+				this.desktopHeader.setStyle('height', 54 + 20);
+				this.dock.setProperty('dockPosition','Top');	
 				this.drawCircle(ctx, 5, 4, 3, 0, 255, 0, 1.0); // green
 				this.drawCircle(ctx, 5, 14, 3, 212, 208, 200, 1.0); // gray
 				$('mochaDockPlacement').setProperty('title', 'Position Dock Bottom');				
 				$('mochaDockAutoHide').setProperty('title', 'Auto Hide Disabled in Top Dock Position');
+				this.dockAutoHide = false;
 			}
 			// Move dock to bottom position
 			else {
-				objDock.setStyles({
-					'position': 'absolute',
-					'bottom': 0,
-					'border-top': '1px solid #bbb',
+				this.dock.setStyles({
+					'position':      'absolute',
+					'bottom':        0,
+					'border-top':    '1px solid #bbb',
 					'border-bottom': '1px solid #fff'
 				})
-				$('mochaDesktopHeader').setStyle('height', 54);
-				objDock.setProperty('dockPosition','Bottom');
+				this.desktopHeader.setStyle('height', 54);
+				this.dock.setProperty('dockPosition','Bottom');
 				this.drawCircle(ctx, 5, 4, 3, 241, 102, 116, 1.0); // orange		
 				this.drawCircle(ctx, 5 , 14, 3, 241, 102, 116, 1.0); // orange 
 				$('mochaDockPlacement').setProperty('title', 'Position Dock Top');					
 				$('mochaDockAutoHide').setProperty('title', 'Turn Auto Hide On');	 		
 			}
 
-			if ( this.dockAutoHide ) {
-				this.dockAutoHide = false;
-			}
-
 		}.bind(this));
 
 		// Attach event Auto Hide 
 		$('mochaDockAutoHide').addEvent('click', function(event){
-			var objDock = event.target.parentNode;
-			if ( objDock.getProperty('dockPosition') == 'Top' )
+			if ( this.dock.getProperty('dockPosition') == 'Top' )
 				return false;
 			
 			var ctx = el.getElement('.mochaCanvas').getContext('2d');
