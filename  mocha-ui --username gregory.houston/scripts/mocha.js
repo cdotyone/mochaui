@@ -78,7 +78,7 @@ var MochaUI = new Class({
 		this.dockVisible   = this.dock ? true : false;   // True when dock is visible, false when not
 		this.dockAutoHide  = false;  // True when dock autohide is set to on, false if set to off
 
-		if ( this.dock ) { this.initializeDock(this.dock); }
+		if ( this.dock ) { this.initializeDock(); }
 		
 		this.setDesktopSize();	
 		this.newWindowsFromXHTML();		
@@ -189,6 +189,9 @@ var MochaUI = new Class({
 		
 		this.arrangeCascade();
 	},
+	mochaTest: function(){
+		alert('test');
+	},
 	/*
 	
 	Method: newWindowsFromJSON
@@ -213,7 +216,7 @@ var MochaUI = new Class({
 	*/	
 	newWindow: function(properties, cascade){
 		var windowProperties = $extend({
-			id: null,
+			id:                null,
 			title:            'New Window',
 			loadMethod:       'html', 	             // html, xhr, or iframe
 			content:           '',                   // used if loadMethod is set to 'html'
@@ -279,10 +282,12 @@ var MochaUI = new Class({
 		// Extend our window element
 		windowEl = $extend(windowEl, {
 			// Custom properties
+			id:         windowProperties.id,
 			oldTop:     0,
 			oldLeft:    0,
 			oldWidth:   0, // Using this?
 			oldHeight:  0,
+			iconAnimation: $empty,
 			modal:      windowProperties.modal,
 			scrollbars: windowProperties.scrollbars,
 			// Always use close buttons for modal windows
@@ -325,19 +330,23 @@ var MochaUI = new Class({
 				new Request({
 					url: windowProperties.contentURL,
 					onRequest: function(){
-					},
-					onFailure: function(){
+						this.showLoadingIcon(subElements.canvasIcon);
+					}.bind(this),
+					onFailure: function(){						
 						subElements.content.setHTML('<p><strong>Error Loading XMLHttpRequest</strong></p><p>Make sure all of your content is uploaded to your server, and that you are attempting to load a document from the same domain as this page. XMLHttpRequests will not work on your local machine.</p>');
-					},
-					onSuccess: function(response) {
+						this.hideLoadingIcon.delay(500, this, subElements.canvasIcon);
+					}.bind(this),
+					onSuccess: function(response) {						
 						subElements.content.setHTML(response);
+						this.hideLoadingIcon.delay(500, this, subElements.canvasIcon);
 						windowProperties.onContentLoaded();
-					}
+					}.bind(this)
 				}).get();
 				break;
 			case 'iframe':
-				if ( windowProperties.contentURL == '')
+				if ( windowProperties.contentURL == '') {					
 					break;
+				}				
 				subElements.iframe = new Element('iframe', {
 					'id': windowEl.id + '_iframe', 
 					'class': 'mochaIframe',
@@ -347,8 +356,10 @@ var MochaUI = new Class({
 					'frameBorder':  0,
 					'scrolling':    'auto'
 				}).injectInside(subElements.content);
-				//mochaIframe.setStyle('height', windowElements.content.getStyle('height'));
-				// Should be possible have onContentLoaded for iframe also
+				subElements.iframe.addEvent('load', function(e) {
+					this.hideLoadingIcon.delay(500, this, subElements.canvasIcon);
+				}.bind(this));					
+				this.showLoadingIcon(subElements.canvasIcon);
 				break;
 			case 'html':
 			default:
@@ -423,7 +434,7 @@ var MochaUI = new Class({
 		this.drawWindow(windowEl, subElements);
 		
 		// Drag.Move() does not work in IE until element has been injected, thus setting here
-		this.attachDraggable(windowEl, subElements.titleBar);			
+		this.attachDraggable(windowEl, subElements.titleBar);
 		
 	},
 	/*
@@ -913,6 +924,14 @@ var MochaUI = new Class({
 			}).injectInside(subElements.controls);
 		}
 		
+		//Insert canvas
+		subElements.canvasIcon = new Element('canvas', {
+			'class': 'mochaLoadingIcon',
+			'width': 18,
+			'height': 18,
+			'id': windowEl.id + '_canvasIcon'
+		}).injectBottom(windowEl);		
+		
 		if ( Browser.Engine.trident ) {
 			subElements.controls.setStyle('zIndex', 2)
 			subElements.overlay.setStyle('zIndex', 2)
@@ -1147,59 +1166,43 @@ var MochaUI = new Class({
 		ctx.lineTo(x + 4, y);
 		ctx.stroke();
 	},
-	loadingIcon: function(ctx,t) {
-		var ctx = $('loadingIcon').getContext('2d');	
-		ctx.clearRect(0, 0, 36, 36); // clear canvas
-		ctx.translate(13, 22);
-		ctx.rotate(t*(Math.PI / 8));
-		ctx.save();	
-		var color = 0;
-		for (i=0; i < 8; i++){ // draw individual dots
-			color = Math.floor(255 / 8 * i);
-			ctx.fillStyle = "rgb(" + color + "," + color + "," + color + ")";  	
-			ctx.rotate(-Math.PI / 4);
-			ctx.beginPath();
-			ctx.arc(0, 14, 4, 0, Math.PI*2, true);
-			ctx.fill();
-		}
-    	ctx.restore();
-	},
-	startLoadingIcon: function() {
-		$('loadingIcon').setStyles({
-			'display': 'block'
-		});
-		var drawFunction = loadingIcon();
-		this.canvasAnimatedRotate($('loadingIcon'), drawFunction, myIconAnimation, 12, 125);
-	},
-	stopLoadingIcon: function() {
-		$('loadingIcon').setStyle('display', 'none');		
-		clearInterval(this.iconAnimation);
+	hideLoadingIcon: function(canvas) {
+		$(canvas).setStyle('display', 'none');		
+		$clear(canvas.iconAnimation);
 	},	
 	/*
 	
-	Method: canvasAnimatedRotate
-	
-	Arguments:
-		canvas: the canvas element to rotate
-		drawFunction: the variable name for the function that draws the shapes on your canvas
-		animation: is the setInterval variable name. Use it to stop the animation 
-		steps: the number of steps in one rotation
-		speed: how fast the animation rotates
-		
-	Notes: This is used for the loading icon - NOT IMPLEMENTED YET
+	Method: showLoadingIcon	
 
 	*/	 
-	canvasAnimatedRotate: function(canvas, drawFunction, animation, steps, speed) {
+	showLoadingIcon: function(canvas) {
+		$(canvas).setStyles({
+			'display': 'block'
+		});		
 		var t = 1;	  	
-		animation = setInterval( function(){
-			var ctx = canvas.getContext('2d');
-			ctx.clearRect(0, 0, 500, 500); // clear canvas
+		var iconAnimation = function(canvas){
+			var ctx = $(canvas).getContext('2d');
+			ctx.clearRect(0, 0, 36, 36); // clear canvas
 			ctx.save();
-			ctx.rotate(-Math.PI / steps);
- 			drawFunction(ctx,t);
- 			ctx.restore();
+			ctx.rotate(-Math.PI / 12);			
+			ctx.clearRect(0, 0, 36, 36); // clear canvas
+			ctx.translate(7, 11);
+			ctx.rotate(t*(Math.PI / 8));
+			ctx.save();	
+			var color = 0;
+			for (i=0; i < 8; i++){ // draw individual dots
+				color = Math.floor(255 / 8 * i);
+				ctx.fillStyle = "rgb(" + color + "," + color + "," + color + ")";  	
+				ctx.rotate(-Math.PI / 4);
+				ctx.beginPath();
+				ctx.arc(0, 7, 2, 0, Math.PI*2, true);
+				ctx.fill();
+			}
+    		ctx.restore();
+    		ctx.restore();			
 			t++;			
-		}, speed);	  
+		}.bind(this);
+		canvas.iconAnimation = iconAnimation.periodical(125, this, canvas);
 	},	
 	setMochaControlsWidth: function(windowEl, subElements){
 		var controlWidth = 14;
@@ -1217,7 +1220,7 @@ var MochaUI = new Class({
 		}
 		subElements.controls.setStyle('width', this.mochaControlsWidth);
 	},
-	initializeDock: function (el){
+	initializeDock: function (){
 			this.dock.setStyles({
 				'display':  'block',		   
 				'position': 'absolute',
@@ -1252,7 +1255,7 @@ var MochaUI = new Class({
 			'id':     'dockCanvas',
 			'width':  '15',
 			'height': '18'
-		}).injectInside(el).setStyles({
+		}).injectInside(this.dock).setStyles({
 			position: 'absolute',
 			top:      '4px',
 			left:     '2px',
@@ -1267,7 +1270,7 @@ var MochaUI = new Class({
 		
 		// Attach event
 		$('mochaDockPlacement').addEvent('click', function(event){
-			var ctx = el.getElement('.mochaCanvas').getContext('2d');
+			var ctx = this.dock.getElement('.mochaCanvas').getContext('2d');
 			
 			// Move dock to top position
 			if (this.dock.getStyle('position') != 'relative'){
@@ -1308,7 +1311,7 @@ var MochaUI = new Class({
 			if ( this.dock.getProperty('dockPosition') == 'Top' )
 				return false;
 			
-			var ctx = el.getElement('.mochaCanvas').getContext('2d');
+			var ctx = this.dock.getElement('.mochaCanvas').getContext('2d');
 			this.dockAutoHide = !this.dockAutoHide;	// Toggle
 			if ( this.dockAutoHide ) {
 				$('mochaDockAutoHide').setProperty('title', 'Turn Auto Hide Off');
@@ -1493,7 +1496,7 @@ window.addEvent('domready', function(){
 		document.mochaScreens = new MochaScreens();
 		document.mochaUI = new MochaUI();
 		attachMochaLinkEvents(); // See mocha-events.js
-		addSlider();             // remove this if you remove the example corner radius slider		
+		addSlider();             // remove this if you remove the example corner radius slider
 });
 
 // This runs when a person leaves your page.

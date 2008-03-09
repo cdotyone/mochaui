@@ -197,6 +197,12 @@ div.mocha .mochaContent {
 	cursor: pointer;	
 }
 
+.mochaLoadingIcon {
+	position: absolute;
+	bottom: 7px;
+	left: 6px;	
+}
+
 .mochaIframe {
 	width: 100%;
 	height: inherit;

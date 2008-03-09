@@ -32,8 +32,12 @@ function attachMochaLinkEvents(){
 			new Event(e).stop();
 			var url = 'data/json-windows-data.js';
 			var request = new Json.Remote(url, {
+				onRequest: function(){
+					// document.mochaUI.showLoadingIcon(subElements.canvasIcon);
+				}.bind(this),										  
 				onComplete: function(properties) {
 					document.mochaUI.newWindowsFromJSON(properties.windows);
+					// document.mochaUI.hideLoadingIcon(subElements.canvasIcon);
 				}
 			}).send();
 		});
