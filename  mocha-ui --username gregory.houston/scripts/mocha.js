@@ -57,6 +57,7 @@ var MochaUI = new Class({
 	initialize: function(options){
 		this.setOptions(options);
 		// Private properties
+		this.ieSupport          = 'excanvas' // Makes it easier to switch between Excanvas and Moocanvas for testing
 		this.indexLevel         = 1;  // Used for z-Index
 		this.windowIDCount      = 0;		
 		this.myTimer 			= ''; // Used with accordian
@@ -189,9 +190,6 @@ var MochaUI = new Class({
 		
 		this.arrangeCascade();
 	},
-	mochaTest: function(){
-		alert('test');
-	},
 	/*
 	
 	Method: newWindowsFromJSON
@@ -215,6 +213,9 @@ var MochaUI = new Class({
 
 	*/	
 	newWindow: function(properties, cascade){
+		
+
+		
 		var windowProperties = $extend({
 			id:                null,
 			title:            'New Window',
@@ -266,7 +267,7 @@ var MochaUI = new Class({
 		// Create window div
 		var windowEl = new Element('div', {
 			'class': 'mocha',			
-			'id':    windowProperties.id ? windowProperties.id : 'win' + (++this.windowIDCount),
+			'id':    windowProperties.id && windowProperties.id != null ? windowProperties.id : 'win' + (++this.windowIDCount),
 			'styles': {
 				'width':   windowProperties.width,
 				'height':  windowProperties.height,
@@ -278,7 +279,14 @@ var MochaUI = new Class({
 		if (Browser.Platform.mac && Browser.Engine.gecko){
 			windowEl.setStyle('position', 'fixed');	
 		}
-			
+		
+		if (windowProperties.loadMethod == 'iframe') {
+			// Iframes have their own scrollbars and padding.
+			windowProperties.scrollbars = false;
+			windowProperties.paddingVertical = 0;
+			windowProperties.paddingHorizontal = 0;
+		}
+		
 		// Extend our window element
 		windowEl = $extend(windowEl, {
 			// Custom properties
@@ -334,11 +342,11 @@ var MochaUI = new Class({
 					}.bind(this),
 					onFailure: function(){						
 						subElements.content.setHTML('<p><strong>Error Loading XMLHttpRequest</strong></p><p>Make sure all of your content is uploaded to your server, and that you are attempting to load a document from the same domain as this page. XMLHttpRequests will not work on your local machine.</p>');
-						this.hideLoadingIcon.delay(500, this, subElements.canvasIcon);
+						this.hideLoadingIcon.delay(150, this, subElements.canvasIcon);
 					}.bind(this),
 					onSuccess: function(response) {						
 						subElements.content.setHTML(response);
-						this.hideLoadingIcon.delay(500, this, subElements.canvasIcon);
+						this.hideLoadingIcon.delay(150, this, subElements.canvasIcon);
 						windowProperties.onContentLoaded();
 					}.bind(this)
 				}).get();
@@ -356,10 +364,12 @@ var MochaUI = new Class({
 					'frameBorder':  0,
 					'scrolling':    'auto'
 				}).injectInside(subElements.content);
+				// Add onload event to iframe so we can stop the loading icon and run onContentLoaded()
 				subElements.iframe.addEvent('load', function(e) {
-					this.hideLoadingIcon.delay(500, this, subElements.canvasIcon);
+					this.hideLoadingIcon.delay(150, this, subElements.canvasIcon);
+					windowProperties.onContentLoaded();
 				}.bind(this));					
-				this.showLoadingIcon(subElements.canvasIcon);
+				this.showLoadingIcon(subElements.canvasIcon);				
 				break;
 			case 'html':
 			default:
@@ -388,9 +398,21 @@ var MochaUI = new Class({
 	
 		// Move new window into position. If position not specified by user then center the window on the page		
 		var dimensions = document.getCoordinates();
-		var windowPosTop = windowProperties.y ? windowProperties.y : (dimensions.height * .5) - ((windowProperties.height + this.HeaderFooterShadow) * .5);
-		var windowPosLeft = windowProperties.x ? windowProperties.x : (dimensions.width * .5) - (windowProperties.width * .5);
 		
+		if (!windowProperties.y) {
+			var windowPosTop = (dimensions.height * .5) - ((windowProperties.height + this.HeaderFooterShadow) * .5);	
+		}
+		else {
+			var windowPosTop = windowProperties.y		
+		}
+		
+		if (!windowProperties.x) {
+			var windowPosLeft =	(dimensions.width * .5) - (windowProperties.width * .5);
+		}
+		else {
+			var windowPosLeft = windowProperties.x	
+		}
+				
 		if (windowEl.modal) {
 			$('mochaModalOverlay').setStyle('display', 'block');
 			if (this.options.effects == false){			
@@ -881,6 +903,14 @@ var MochaUI = new Class({
 			'id': windowEl.id + '_canvas'
 		}).injectInside(windowEl);
 		
+		// Dynamically initialize canvas using excanvas. This is only required by IE
+		if ( Browser.Engine.trident && this.ieSupport == 'excanvas'  ) {			
+			G_vmlCanvasManager.initElement(subElements.canvas);
+			// This is really odd, .getContext() method does not exist before retrieving the
+			// element via getElement
+			subElements.canvas = windowEl.getElement('.mochaCanvas');			
+		}		
+		
 		//Insert resize handles
 		if (windowEl.resizable){
 			subElements.resizeHandle = new Element('div', {
@@ -930,7 +960,15 @@ var MochaUI = new Class({
 			'width': 18,
 			'height': 18,
 			'id': windowEl.id + '_canvasIcon'
-		}).injectBottom(windowEl);		
+		}).injectBottom(windowEl);	
+		
+		// Dynamically initialize canvas using excanvas. This is only required by IE
+		if (Browser.Engine.trident && this.ieSupport == 'excanvas') {
+			G_vmlCanvasManager.initElement(subElements.canvasIcon);
+			// This is really odd, .getContext() method does not exist before retrieving the
+			// element via getElement
+			subElements.canvasIcon = windowEl.getElement('.mochaLoadingIcon');			
+		}		
 		
 		if ( Browser.Engine.trident ) {
 			subElements.controls.setStyle('zIndex', 2)
@@ -958,12 +996,12 @@ var MochaUI = new Class({
 	drawWindow: function(windowEl, subElements, shadows) {
 		if ( !subElements ) {
 			subElements = this.getSubElements(windowEl, ['title', 'content', 'canvas', 'contentWrapper', 'overlay', 'titleBar', 'iframe', 'zIndexFix']);
-		}
-		
+		}		
+
 		//Resize iframe when window is resized
 		if ( windowEl.iframe ) {
 			subElements.iframe.setStyles({
-				'height': subElements.contentWrapper.getStyle('height')
+				'height': subElements.contentWrapper.offsetHeight
 			});
 		}
 		
@@ -1180,7 +1218,7 @@ var MochaUI = new Class({
 			'display': 'block'
 		});		
 		var t = 1;	  	
-		var iconAnimation = function(canvas){
+		var iconAnimation = function(canvas){ 
 			var ctx = $(canvas).getContext('2d');
 			ctx.clearRect(0, 0, 36, 36); // clear canvas
 			ctx.save();
@@ -1261,6 +1299,11 @@ var MochaUI = new Class({
 			left:     '2px',
 			zIndex:   2
 		});
+		
+		// Dynamically initialize canvas using excanvas. This is only required by IE
+		if (Browser.Engine.trident && this.ieSupport == 'excanvas') {
+			G_vmlCanvasManager.initElement(canvas);
+		}		
 
 		// Position top or bottom selector
 		$('mochaDockPlacement').setProperty('title','Position Dock Top');
@@ -1342,7 +1385,7 @@ var MochaUI = new Class({
 		var x = this.options.desktopLeftOffset
 		var y = this.options.desktopTopOffset;
 		$$('div.mocha').each(function(windowEl){
-			if (windowEl.getStyle('display') != 'none'){
+			if (!windowEl.isMinimized && !windowEl.isMaximized){
 				this.focusWindow(windowEl);
 				x += this.options.mochaLeftOffset;
 				y += this.options.mochaTopOffset;
@@ -1370,6 +1413,7 @@ var MochaUI = new Class({
 	Method: garbageCleanup
 	
 	Notes: Empties an all windows of their children, removes and garbages the windows.
+	It is does not trigger onClose() or onCloseComplete().
 	This is useful to clear memory before the pageUnload. 
 	
 	*/	
@@ -1431,6 +1475,7 @@ var MochaWindowForm = new Class({
 	},
 	initialize: function(options){
 		this.setOptions(options);
+		this.options.id = 'win' + (++document.mochaUI.windowIDCount);		
 		this.options.title = $('mochaNewWindowHeaderTitle').value;
 		if ($('htmlLoadMethod').checked){
 			this.options.loadMethod = 'html';
@@ -1468,7 +1513,6 @@ MochaWindowForm.implement(new Options);
 
    ----------------------------------------------------------------- */
 
-
 function addSlider(){
 	if ($('sliderarea')) {
 		mochaSlide = new Slider($('sliderarea'), $('sliderknob'), {
@@ -1496,7 +1540,7 @@ window.addEvent('domready', function(){
 		document.mochaScreens = new MochaScreens();
 		document.mochaUI = new MochaUI();
 		attachMochaLinkEvents(); // See mocha-events.js
-		addSlider();             // remove this if you remove the example corner radius slider
+		addSlider();             // remove this if you remove the example corner radius slider		
 });
 
 // This runs when a person leaves your page.

@@ -8,6 +8,7 @@
 		"minimizable": false,
 		"resizable": false,
 		"headerStartColor": [230, 160, 160],
+		"headerStoptColor": [237, 237, 237],		
 		"closeColor": [250, 250, 250],
 		"x": 50,
 		"y": 70
@@ -20,6 +21,7 @@
 		"minimizable": false,
 		"resizable": false,		
 		"headerStartColor": [230, 190, 160],
+		"headerStoptColor": [237, 237, 237],		
 		"closeColor": [250, 250, 250],		
 		"x": 110,
 		"y": 145
@@ -32,6 +34,7 @@
 		"minimizable": false,
 		"resizable": false,		
 		"headerStartColor": [160, 160, 230],
+		"headerStoptColor": [237, 237, 237],		
 		"closeColor": [250, 250, 250],		
 		"x": 170,
 		"y": 220

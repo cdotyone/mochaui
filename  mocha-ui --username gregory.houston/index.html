@@ -10,7 +10,7 @@
 	<link rel="stylesheet" href="css/mocha.css" type="text/css" />
 	<script type="text/javascript" src="scripts/mootools-trunk-1475.js" charset="utf-8"></script>
 	<!--[if IE]>
-		<script type="text/javascript" src="scripts/moocanvas.js"></script>		
+		<script type="text/javascript" src="scripts/excanvas-compressed.js"></script>		
 	<![endif]-->
 	<script type="text/javascript" src="scripts/mocha-events.js" charset="utf-8"></script>	
 	<script type="text/javascript" src="scripts/mocha.js" charset="utf-8"></script>	
@@ -115,7 +115,7 @@
 
 <h3>Features</h3>
 <ul>
-	<li>No images. The windows, including their controls, gradients and shadows, are drawn with the canvas tag.</li>
+	<li>No images. The windows (including their controls, animated loading icons, gradients and shadows) are drawn with the canvas tag.</li>
 	<li>Windows can be focused, dragged, resized, maximized, minimized, restored and closed.</li>
 	<li>Adjustable rounded corner radius.</li>
 	<li>Dynamically create new windows on demand and load their content with innerHTML, XHR, or an iFrame.</li>
@@ -135,15 +135,17 @@
 
 <h4>Coming in the Next Release</h4>
 <ul>
-	<li>Create multiple new windows from a single Json data request</li>
+	<li>Added functionality for creating multiple new windows from a single Json data request</li>
+	<li>Added animated canvas loading icon to xhr and iframe load methods</li>
+	<li>onContentLoaded now works with iframes</li>
 	<li>Added styling options which can be set globally and for individual windows</li>
-	<li>Added global effects option which toggles most of the window transition effects.</li>
-	<li>You can set individual windows to be draggable, resizable, closable, maximizable, or minimizable, overriding the global settings</li>
+	<li>Added global effects option which toggles most of the window transition effects</li>
+	<li>Now you can set individual windows to be draggable, resizable, closable, maximizable, or minimizable, overriding the global settings</li>
 	<li>Added closeAll() method which closes all windows at once</li>
 	<li>Added more examples</li>
-	<li>Now uses [http://ibolmo.com/projects/moocanvas/ Moocanvas] for Internet Explorer canvas support</li>
+	<li>Now uses <a href="http://ibolmo.com/projects/moocanvas/">Moocanvas</a> for Internet Explorer canvas support</li>
 	<li>Fixed scrollbar bug in Firefox 2 on the Mac. Scrollbars no longer bleed through windows that are above them</li>
-	<li>Speed optimizations</li>
+	<li>Made speed optimizations</li>
 </ul>
 
 <h4>v0.7 r22 - 12/11/2007</h4>

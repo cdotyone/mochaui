@@ -106,6 +106,19 @@ Example Javascript:
 <p><strong>Notes:</strong></p>
 <p>If you wish to add links in windows that open other windows remember to add events to those links when the windows are created.</p>
 
+<h3>Updating the Content of a Window</h3>
+<p>Updating the content of a window requires that you know the ID property of the window. Setting the ID is an option when creating a window.</p>
+
+You can change the content of a window by referring to:
+<pre>
+this.getSubElement($('windowID'), 'content');
+</pre>
+
+If you used the iframe load method, you can change the src of that window's iframe as follows:
+<pre>
+this.getSubElement($('windowID'), 'iframe').src = 'http://www.mydomain.com/';
+</pre>
+
 <h3>Closing a Window</h3>
 <p>Closing a window requires that you know the ID property of the window. Setting the ID is an option when creating a window.</p>
 

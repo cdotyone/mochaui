@@ -33,11 +33,11 @@ function attachMochaLinkEvents(){
 			var url = 'data/json-windows-data.js';
 			var request = new Json.Remote(url, {
 				onRequest: function(){
-					// document.mochaUI.showLoadingIcon(subElements.canvasIcon);
+					// add code to show loading icon
 				}.bind(this),										  
 				onComplete: function(properties) {
 					document.mochaUI.newWindowsFromJSON(properties.windows);
-					// document.mochaUI.hideLoadingIcon(subElements.canvasIcon);
+					// add code to hide loading icon
 				}
 			}).send();
 		});
@@ -213,7 +213,7 @@ function attachMochaLinkEvents(){
 				width: 370,
 				height: 400,
 				x: 20,
-				y: 70
+				y: 60
 			});
 		});
 	}
