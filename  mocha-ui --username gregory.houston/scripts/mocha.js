@@ -326,7 +326,7 @@ var MochaUI = new Class({
 			onCloseComplete:   windowProperties.onCloseComplete
 		});
 
-		// Insert subelements inside windowEl and cache them locally while creating the new window 
+		// Insert sub elements inside windowEl and cache them locally while creating the new window 
 		var subElements = this.insertWindowElements(windowEl, windowProperties.height, windowProperties.width);
 		
 		// Set title
@@ -487,7 +487,7 @@ var MochaUI = new Class({
 			windowEl.onCloseComplete();			
 		}
 		else {
-			// redraws IE windows without shadows since IE messes up canvas alpha when you change element opacity
+			// Redraws IE windows without shadows since IE messes up canvas alpha when you change element opacity
 			if (Browser.Engine.trident) this.drawWindow(windowEl, null, false);
 			if (windowEl.modal) {
 				this.modalCloseMorph.start({
@@ -588,8 +588,8 @@ var MochaUI = new Class({
 				}.bind(this)
 			});
 			maximizeMorph.start({
-				'top':  -this.shadowWidth, // takes shadow width into account
-				'left': -this.shadowWidth // takes shadow width into account
+				'top':  -this.shadowWidth, // Takes shadow width into account
+				'left': -this.shadowWidth // Takes shadow width into account
 			});
 		}		
 		
@@ -906,7 +906,7 @@ var MochaUI = new Class({
 		// Dynamically initialize canvas using excanvas. This is only required by IE
 		if ( Browser.Engine.trident && this.ieSupport == 'excanvas'  ) {			
 			G_vmlCanvasManager.initElement(subElements.canvas);
-			// This is really odd, .getContext() method does not exist before retrieving the
+			// This is odd, .getContext() method does not exist before retrieving the
 			// element via getElement
 			subElements.canvas = windowEl.getElement('.mochaCanvas');			
 		}		
@@ -965,7 +965,7 @@ var MochaUI = new Class({
 		// Dynamically initialize canvas using excanvas. This is only required by IE
 		if (Browser.Engine.trident && this.ieSupport == 'excanvas') {
 			G_vmlCanvasManager.initElement(subElements.canvasIcon);
-			// This is really odd, .getContext() method does not exist before retrieving the
+			// This is odd, .getContext() method does not exist before retrieving the
 			// element via getElement
 			subElements.canvasIcon = windowEl.getElement('.mochaLoadingIcon');			
 		}		
@@ -1051,7 +1051,7 @@ var MochaUI = new Class({
 			mochaWidth - this.shadowOffset,  // width
 			mochaHeight - this.shadowOffset, // height
 			this.options.cornerRadius,       // corner radius
-			windowEl.footerBgColor             // Footer color			
+			windowEl.footerBgColor           // Footer color			
 		);
 		
 		// Mocha header
@@ -1076,9 +1076,9 @@ var MochaUI = new Class({
 		if ( windowEl.maximizable )
 			this.maximizebutton(ctx, this.maximizebuttonX, 15, windowEl.maximizeColor, 1.0);
 		if ( windowEl.minimizable )
-			this.minimizebutton(ctx, this.minimizebuttonX, 15, windowEl.minimizeColor, 1.0); //Minimize
+			this.minimizebutton(ctx, this.minimizebuttonX, 15, windowEl.minimizeColor, 1.0); // Minimize
 		if ( windowEl.resizable ) 
-			this.triangle(ctx, mochaWidth - 20, mochaHeight - 20, 12, 12, windowEl.resizableColor, 1.0); //resize handle
+			this.triangle(ctx, mochaWidth - 20, mochaHeight - 20, 12, 12, windowEl.resizableColor, 1.0); // Resize handle
 		
 		// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7.
 		this.triangle(ctx, 0, 0, 10, 10, windowEl.resizableColor, 0); 
@@ -1157,7 +1157,7 @@ var MochaUI = new Class({
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
 		ctx.fill();
 	},
-	maximizebutton: function(ctx, x, y, rgb, a){ // this could reuse the drawCircle method above
+	maximizebutton: function(ctx, x, y, rgb, a){ // This could reuse the drawCircle method above
 		// Circle
 		ctx.beginPath();
 		ctx.moveTo(x, y);
@@ -1174,7 +1174,7 @@ var MochaUI = new Class({
 		ctx.lineTo(x + 4, y);
 		ctx.stroke();
 	},
-	closebutton: function(ctx, x, y, rgb, a){ // this could reuse the drawCircle method above
+	closebutton: function(ctx, x, y, rgb, a){ // This could reuse the drawCircle method above
 		// Circle
 		ctx.beginPath();
 		ctx.moveTo(x, y);
@@ -1191,7 +1191,7 @@ var MochaUI = new Class({
 		ctx.lineTo(x - 3, y + 3);
 		ctx.stroke();
 	},
-	minimizebutton: function(ctx, x, y, rgb, a){ // this could reuse the drawCircle method above
+	minimizebutton: function(ctx, x, y, rgb, a){ // This could reuse the drawCircle method above
 		// Circle
 		ctx.beginPath();
 		ctx.moveTo(x,y);
@@ -1220,15 +1220,12 @@ var MochaUI = new Class({
 		var t = 1;	  	
 		var iconAnimation = function(canvas){ 
 			var ctx = $(canvas).getContext('2d');
-			ctx.clearRect(0, 0, 36, 36); // clear canvas
+			ctx.clearRect(0, 0, 18, 18); // Clear canvas
 			ctx.save();
-			ctx.rotate(-Math.PI / 12);			
-			ctx.clearRect(0, 0, 36, 36); // clear canvas
-			ctx.translate(7, 11);
-			ctx.rotate(t*(Math.PI / 8));
-			ctx.save();	
+			ctx.translate(9, 9);
+			ctx.rotate(t*(Math.PI / 8));	
 			var color = 0;
-			for (i=0; i < 8; i++){ // draw individual dots
+			for (i=0; i < 8; i++){ // Draw individual dots
 				color = Math.floor(255 / 8 * i);
 				ctx.fillStyle = "rgb(" + color + "," + color + "," + color + ")";  	
 				ctx.rotate(-Math.PI / 4);
@@ -1236,7 +1233,6 @@ var MochaUI = new Class({
 				ctx.arc(0, 7, 2, 0, Math.PI*2, true);
 				ctx.fill();
 			}
-    		ctx.restore();
     		ctx.restore();			
 			t++;			
 		}.bind(this);

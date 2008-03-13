@@ -213,7 +213,7 @@ function attachMochaLinkEvents(){
 				width: 370,
 				height: 400,
 				x: 20,
-				y: 60
+				y: 70
 			});
 		});
 	}
