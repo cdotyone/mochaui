@@ -150,10 +150,13 @@ div.mocha .mochaTitlebar a {
 	color: #444;
 }	
 	
-div.mocha .mochaContentWrapper { /* Has a fixed height and scrollbars if required */
-	font-size: 11px;
+div.mocha .mochaContentBorder {
 	border-top: 1px solid #bdbdbd;	
-	border-bottom: 1px solid #d7d7d7;	
+	border-bottom: 1px solid #d7d7d7;
+}
+	
+div.mocha .mochaContentWrapper { /* Has a fixed height and scrollbars if required */
+	font-size: 11px;	
 	background: #fff;
 	overflow: auto;	
 }

@@ -73,6 +73,10 @@ ul {
 dt {
 	font-weight: bold;
 	}
+	
+dd {
+	padding: 0 0 9px 0;
+}	
 
 /* Code */
 	

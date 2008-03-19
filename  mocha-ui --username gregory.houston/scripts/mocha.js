@@ -298,6 +298,7 @@ var MochaUI = new Class({
 			iconAnimation: $empty,
 			modal:      windowProperties.modal,
 			scrollbars: windowProperties.scrollbars,
+			contentBorder: null,
 			// Always use close buttons for modal windows
 			closable:   windowProperties.closable || windowProperties.modal,
 			resizable:  windowProperties.resizable && !windowProperties.modal,
@@ -881,6 +882,11 @@ var MochaUI = new Class({
 			'id': windowEl.id + '_title'
 		}).injectInside(subElements.titleBar);
 		
+		windowEl.contentBorder = new Element('div', {
+			'class': 'mochaContentBorder',
+			'id': this.options.id + '_contentBorder'
+		}).injectInside(subElements.overlay);			
+		
 		subElements.contentWrapper = new Element('div', {
 			'class': 'mochaContentWrapper',
 			'id': windowEl.id + '_contentWrapper',
@@ -888,7 +894,7 @@ var MochaUI = new Class({
 				'width': width + 'px',
 				'height': height + 'px'
 			}
-		}).injectInside(subElements.overlay);
+		}).injectInside(windowEl.contentBorder);
 		
 		subElements.content = new Element('div', {
 			'class': 'mochaContent',
@@ -996,9 +1002,13 @@ var MochaUI = new Class({
 	drawWindow: function(windowEl, subElements, shadows) {
 		if ( !subElements ) {
 			subElements = this.getSubElements(windowEl, ['title', 'content', 'canvas', 'contentWrapper', 'overlay', 'titleBar', 'iframe', 'zIndexFix']);
-		}		
+		}
+		
+		windowEl.contentBorder.setStyles({
+			'width': subElements.contentWrapper.offsetWidth
+		});			
 
-		//Resize iframe when window is resized
+		// Resize iframe when window is resized
 		if ( windowEl.iframe ) {
 			subElements.iframe.setStyles({
 				'height': subElements.contentWrapper.offsetHeight
