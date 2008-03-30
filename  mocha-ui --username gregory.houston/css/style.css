@@ -13,7 +13,7 @@ body {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
 	line-height: 18px;
-	color: #555;	
+	color: #333;	
 }
 
 .aside {
@@ -73,7 +73,7 @@ ul {
 dt {
 	font-weight: bold;
 	}
-	
+
 dd {
 	padding: 0 0 9px 0;
 }	
@@ -88,7 +88,7 @@ pre {
 	font-size: 11px;
 	max-height: 250px;
 	overflow: auto;
-	margin: 0 0 10px 0;
+	margin: 5px 0 10px 0;
 	padding: 10px;
 	border: 1px solid #d1d7dc;	
 	}

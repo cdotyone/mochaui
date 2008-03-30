@@ -1,0 +1,72 @@
+<ul>
+	<li>No images. The windows (including their controls, animated loading icons, gradients and shadows) are drawn with the canvas tag.</li>
+	<li>Windows can be focused, dragged, resized, maximized, minimized, restored and closed.</li>
+	<li>Adjustable rounded corner radius.</li>
+	<li>Dynamically create new windows on demand and load their content with innerHTML, XHR, or an iFrame.</li>
+	<li>The ability to create multiple new windows from a single Json data request.</li>
+	<li>Create modal dialog windows</li>
+	<li>Optional "desktop" toolbars</li>
+	<li>Minimal HTML markup required.</li>
+	<li>Tested in Firefox 2, Internet Explorer 6 &amp; 7, Safari 2, and Opera 9.</li>
+	<li>Validates as XHTML 1.0 Strict if you use no target attributes in your anchors and validates as XHTML 1.0 Transitional if you do.</li>
+</ul>
+
+<h3>Bugs</h3>
+<p>See the documentaion and also view the current tickets at <a target="_blank" href="http://code.google.com/p/mocha-ui/issues/list">Google Code</a>.</p>	
+
+
+<h3>Change Log</h3>
+
+<h4>v0.8 - 3/13/2008</h4>
+<ul>
+	<li>Added functionality for creating multiple new windows from a single Json data request</li>
+	<li>Added animated canvas loading icon to xhr and iframe load methods</li>
+	<li>onContentLoaded now works with iframes</li>
+	<li>Added styling options which can be set globally and for individual windows</li>
+	<li>Added global effects option which toggles most of the window transition effects</li>
+	<li>Now you can set individual windows to be draggable, resizable, closable, maximizable, or minimizable, overriding the global settings (Joel Lindau)</li>
+	<li>Added closeAll() method which closes all windows at once</li>
+	<li>Added more examples</li>
+	<li>Fixed scrollbar bug in Firefox 2 on the Mac. Scrollbars no longer bleed through windows that are above them</li>
+	<li>Made speed optimizations (Joel Lindau)</li>
+</ul>
+
+<h4>v0.7 r22 - 12/11/2007</h4>
+<ul>
+	<li>Iframes now resize when you resize a window</li>
+	<li>Fixed it so that if the desktop toolbars are removed the rest of the code still works</li>
+	<li>Modal windows can now be used standalone without any Mocha UI html markup</li>
+	<li>Removed the inline javascript from the example html</li>
+	<li>Added optional autohide to the dock (Scott F. Frederick)</li>
+	<li>Added the following options to new windows: onContentLoaded, onFocus, onResize, onMinimize, onMaximize, onClose and onCloseComplete (Joel Lindau)</li>
+	<li>Added screens/workspaces (Joel Lindau)</li>
+	<li>Pulled the slider function out of the core class</li>
+	<li>Code optimizations</li>
+</ul>
+
+<h4>v0.7 - 12/03/2007</h4>
+<ul>
+	<li>Added minimize functionality (Scott F. Frederick)</li>
+	<li>Added mouseover "title" to close, maximize, and minimize buttons (Scott F. Frederick)</li>
+	<li>Added onmouseover "title" to minimized window buttons displaying full header title (Scott F. Frederick)</li>
+	<li>The close, maximize, and minimize buttons are now individually optional</li>
+	<li>Added the MochaWindow and MochaWindowForm classes</li>
+	<li>Added several options for setting the properties and style of new windows</li>
+	<li>Added additional ajax and iframe support</li>
+	<li>Reconfigured how the core class is loaded so it is easier to access the class methods</li>
+	<li>Added optional toolbars to the "desktop"</li>
+	<li>Added modal dialog windows</li>	
+	<li>Code optimizations</li>
+</ul>
+
+<h4>v0.6 - 11/26/2007</h4>
+<ul>
+	<li>Fixed the IE6 select issue</li>
+	<li>Added a couple more class options</li>	
+	<li>Minor code optimizations</li>
+</ul>
+
+<h4>v0.5 - 11/17/2007</h4>
+<ul>
+	<li>Initial release</li>
+</ul>	

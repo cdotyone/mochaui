@@ -14,23 +14,25 @@
 	<li>Windows - Requires the Desktop, though considering making it possible to break this dependency</li>
 </ul>
 
-<h3>Methods</h3>
+<h3>Classes</h3>
+<p>new MochaUI.Window({properties}) - Create a new window<br /></p>
+
+<h3>Functions</h3>
 <p>
-newWindow() - Create a new window<br />
 newWindowsFromJSON() - Create one or more new windows from Json data. Uses newWindow()
-focusWindow() - Focus a window<br />
-maximizeWindow() - Maximize a window<br />
-minimizeWindow() - Minimize a window<br />
-restoreMinimized() - Restore a minimized window<br />
-closeWindow() - Close a window<br />
-closeAll() - Close all the windows<br />
+MochaUI.focusWindow(windowEl) - Focus a window<br />
+MochaUI.Desktop.maximizeWindow(windowEl) - Maximize a window<br />
+MochaUI.Dock.minimizeWindow(windowEl) - Minimize a window<br />
+MochaUI.Dock.restoreMinimized(windowEl) - Restore a minimized window<br />
+MochaUI.closeWindow(windowEl) - Close a window<br />
+MochaUI.closeAll(windowEl) - Close all the windows<br />
 </p>
 
 <h3>Creating a New Window</h3>
 
 <p><strong>Syntax:</strong></p>
 <pre>
-document.mochaUI.newWindow();
+new MochaUI.Window();
 </pre>
 
 <p><strong>Arguments: </strong>Options</p>
@@ -89,7 +91,7 @@ Example Javascript:
 	if ($('docsLink')){
 		$('docsLink').addEvent('click', function(e){	
 			new Event(e).stop();
-			document.mochaUI.newWindow({
+			MochaUI.newWindow({
 				id: 'docs',
 				title: 'Documentation',
 				loadMethod: 'xhr',
@@ -124,8 +126,11 @@ this.getSubElement($('windowID'), 'iframe').src = 'http://www.mydomain.com/';
 
 Example Javascript:
 <pre>
-document.mochaUI.closeWindow($('windowID'));
+MochaUI.closeWindow($('windowID'));
 </pre>
+
+<h3>MooCanvas and ExCanvas</h3>
+<p>Mocha UI now uses <a target="_blank" href="http://ibolmo.com/projects/moocanvas/">Moocanvas</a> for it's Internet Explorer canvas functionality. As an alternative you could also use <a target="_blank" href="http://excanvas.sourceforge.net/">ExplorerCanvas</a>, though it requires some additional lines be added to the code in order to initialize the canvas element.</p>
 
 <h3>Swiff and SWFobject</h3>
 <p>I am using Swiff to load the example YouTube Flash now since Swiff is built into Mootools, but it has some performance issues when resizing, maximizing, and minimizing windows with Flash in them in Opera that SWFobject did not.</p>
@@ -152,6 +157,9 @@ document.mochaUI.closeWindow($('windowID'));
 
 <h3>Compression</h3>
 <p>Though I haven't tried it yet, it is probably a good idea to compress mocha.js once you are ready to go live. You might try the <a href="http://developer.yahoo.com/yui/compressor/">YUI Compressor</a></p>
+
+<h3>Credits</h3>
+<p>Mocha UI's default theme is inspired by Itunes, the Max OS/X in general, Adobe Express, Windows XP, and Cubase among others.
 
 <h3>Make a Donation</h3>
 <p>Help support the continued development of Mocha UI.</p>

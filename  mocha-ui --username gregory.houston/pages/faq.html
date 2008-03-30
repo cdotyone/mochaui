@@ -1,4 +1,9 @@
 <dl>
+	<dt>Why is such and such is not working?</dt>
+	<dd>Mootools requires an XHTML doctype. Make sure you are using one.
+	<pre>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"&gt;</pre>
+	</dd>
+
 	<dt>Can I use Mocha UI with Prototype?</dt>
 	<dd>Maybe. Mootools and Prototype are not compatible, though you might try <a target="_blank" href="http://www.protolific.net/">ProtoSafe</a> which claims to help Mootools and Protoype work together. If your project is using Prototype, <a target="_blank" href="http://www.prototype-ui.com/">Prototype UI</a> may be the way for you to go.</dd>
 
@@ -7,4 +12,19 @@
 
 	<dt>How do I access the parent document's javascript from within an iframe?</dt>
 	<dd>Use:<pre>parent.myFunction();</pre></dd>
+
+	<dt>I have a canvas graphic in a window loaded with xhr. In Internet Explorer 6 and 7 the canvas graphic is displayed the first time the page is loaded, but if the page is refreshed the graphic no longer is displayed.</dt>
+	<dd>This is a cache issue in IE6 and 7. Add the date and time to the file you are loading in order to fool IE into treating the file like it would if it were a completely new file.
+	<pre>contentURL: 'plugins/myPlugin/index.html?t=' + new Date().getTime()</pre>
+	</dd>	
+	
 </dl>
+
+<h3>Tips for Improved Performance</h3>
+
+<ul>
+	<li>Use the xhr load method rather than loading content into iframes.</li>
+	<li>When not transferring sensitive data, use "get" rather than "post" as your AJAX method.</li>
+	<li>Minify your javascript.</li>
+	<li>Gzip your javascript and css files. This can make them 60-70% smaller. With Apache2 you can use mod_deflate to gzip your files. Older versions of Apache use mod_gzip. Alternatively you can gzip your files with PHP using either zlib.output_compression or ob_gzhandler.</li>	
+</ul>	

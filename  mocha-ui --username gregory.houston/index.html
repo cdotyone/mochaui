@@ -8,12 +8,14 @@
 
 	<link rel="stylesheet" href="css/style.css" type="text/css" />
 	<link rel="stylesheet" href="css/mocha.css" type="text/css" />
-	<script type="text/javascript" src="scripts/mootools-trunk-1475.js" charset="utf-8"></script>
+	
 	<!--[if IE]>
 		<script type="text/javascript" src="scripts/excanvas-compressed.js"></script>		
 	<![endif]-->
-	<script type="text/javascript" src="scripts/mocha-events.js" charset="utf-8"></script>	
-	<script type="text/javascript" src="scripts/mocha.js" charset="utf-8"></script>	
+	
+	<script type="text/javascript" src="scripts/mootools-trunk-1514.js" charset="utf-8"></script>			
+	<script type="text/javascript" src="scripts/mocha.js" charset="utf-8"></script>
+	<script type="text/javascript" src="scripts/mocha-init.js" charset="utf-8"></script> 				
 
 </head>
 <body>
@@ -29,51 +31,52 @@
 <ul>
 	<li><a class="returnFalse" href="">Examples</a>	
 		<ul>
-			<li><a id="ajaxpageLink" href="pages/lipsum.html">Ajax/XHR Demo</a></li>
+			<li><a id="ajaxpageLinkCheck" href="pages/lipsum.html">Ajax/XHR Demo</a></li>
 			<li><a id="jsonLink" href="data/json-windows-data.js">Json Demo</a></li>			
-			<li><a id="mootoolsLink" href="http://forum.mootools.net/">Iframe: Mootools</a></li>
-			<li><a id="spirographLink" href="pages/spirograph.html">Iframe: Spirograph</a></li>
-			<li><a id="youTubeLink" href="pages/youtube.html">Iframe: YouTube</a></li>
-			<li class="divider"><a id="accordianLink" href="pages/accordian.html">Accordian</a></li>
-			<li><a id="cornerRadiusLink" href="pages/corner_radius.html">Corner Radius Slider</a></li>
-			<li class="divider"><a id="eventsLink" href="pages/events.html">Window Events</a></li>			
-			<li class="divider"><a target="_blank" href="basic.html">Starter: No Toolbars</a></li>
-			<li><a target="_blank" href="basic2.html">Starter: No Desktop</a></li>			
-			<li><a target="_blank" href="modal.html">Starter: Modal Only</a></li>
+			<li><a id="mootoolsLinkCheck" href="http://forum.mootools.net/">Iframe: Mootools</a></li>
+			<li><a id="youTubeLinkCheck" href="pages/youtube.html">Iframe: YouTube</a></li>
+			<li><a id="dataGridLinkCheck" href="plugins/tablesoort/index.html">Data Grid</a></li>
+			<li><a id="clockLinkCheck" href="plugins/coolclock/index.html">Widget: Clock</a></li>						
+			<li><a id="cornerRadiusLinkCheck" href="pages/corner_radius.html">Corner Radius Slider</a></li>
+			<li class="divider"><a id="windoweventsLinkCheck" href="pages/events.html">Window Events</a></li>			
+			<li class="divider"><a target="_blank" href="no-toolbars.html">Starter: No Toolbars</a></li>
+			<li><a target="_blank" href="no-desktop.html">Starter: No Desktop</a></li>			
+			<li><a target="_blank" href="modal-only.html">Starter: Modal Only</a></li>
 		</ul>
 	</li>
 	<li><a class="returnFalse" href="">View</a>
 		<ul>
-			<li><a id="cascadeLink" href="">Cascade Windows</a></li>
+			<li><a id="sidebarLinkCheck" href="">Sidebar</a></li>		
+			<li class="divider"><a id="cascadeLink" href="">Cascade Windows</a></li>
 			<li><a id="closeLink" href="">Close All Windows</a></li>
 		</ul>
 	</li>
 	<li><a class="returnFalse" href="">Tools</a>
 		<ul>
-			<li><a id="builderLink" href="pages/builder.html">Window Builder</a>
-			</li>
+			<li><a id="builderLinkCheck" href="pages/builder.html">Window Builder</a></li>
 		</ul>
 	</li>
 	<li>
-		<a href="" onclick="javascript:return false;">Workspaces</a>
+		<a class="returnFalse" href="">Workspaces</a>
 		<ul>
-			<li><a id="workspace01Link" href="">Workspace 01</a></li>
-			<li><a id="workspace02Link" href="">Workspace 02</a></li>
-			<li><a id="workspace03Link" href="">Workspace 03</a></li>
+			<li><a id="workspace01LinkCheck" href="">Workspace 01</a></li>
+			<li><a id="workspace02LinkCheck" href="">Workspace 02</a></li>
+			<li><a id="workspace03LinkCheck" href="">Workspace 03</a></li>
 		</ul>
 	</li>
 	<li><a class="returnFalse" href="">Help</a>
 		<ul>
-			<li><a id="faqLink" href="pages/faq.html">FAQ</a></li>
-			<li><a id="docsLink" href="pages/docs.html">Documentation</a></li>
-			<li><a id="helpLink" href="pages/support.html">Support</a></li>
-			<li><a id="contributeLink" href="pages/support.html">Contribute</a></li>
-			<li class="divider"><a id="aboutLink" href="pages/about.html">About</a></li>
+			<li><a id="overviewLinkCheck" href="pages/overview.html">Overview</a></li>
+			<li><a id="featuresLinkCheck" href="pages/features.html">Features</a></li>					
+			<li><a id="faqLinkCheck" href="pages/faq.html">FAQ</a></li>
+			<li><a id="docsLinkCheck" href="pages/docs.html">Documentation</a></li>
+			<li><a id="helpLinkCheck" href="pages/support.html">Support</a></li>
+			<li><a id="contributeLinkCheck" href="pages/contribute.html">Contribute</a></li>
+			<li class="divider"><a id="aboutLinkCheck" href="pages/about.html">About</a></li>
 		</ul>	
 	</li>
 </ul>
 </div><!-- mochaDesktopNavbar end -->
-
 </div><!-- mochaDesktopHeader end -->
 
 <div id="mochaDock">
@@ -81,141 +84,48 @@
 	<div id="mochaDockAutoHide"></div>
 </div>
 
+<div id="mochaSidebarWrapper">
+	<div id="mochaSidebarMinimize">
+		<div class="columnControlWrapper">
+			<div class="columnControl">			</div>
+		</div>
+	</div>
+	<div id="mochaSidebar">
+		<div id="mochaSidebarContentWrapper">	
+			<div id="mochaSidebarContent">
+			<p>This is some sidebar content.</p>
+			</div>
+		</div>	
+	</div>
+	<div id="mochaSidebarHandle">
+		<div class="columnControlWrapper">
+			<div class="columnControl">			</div>
+		</div>	
+	</div>
+</div>
+
 <div id="mochaPageWrapper">
 	<div id="mochaPage">
-		<div id="mochaScreens">
-			<div class="screen">
-				<div class="aside">			
-			
-					<h3>Introduction</h3>
-					<p>Mocha is a web applications user interface library built on the Mootools javascript framework. The Mocha GUI components are made with canvas tag graphics.</p>
+		<div id="mochaWorkspaces">
+			<div id="workspace01" class="workspace">
+				<div class="aside" style="float:left"><!-- Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam congue felis ac velit. Vivamus egestas, enim non dignissim porttitor, enim lorem aliquet augue, ut ullamcorper nunc dui vitae metus. Nullam eget magna. Donec tellus felis, ornare eu, sagittis eget, tincidunt sit amet, sapien. Aenean vitae felis sit amet massa consectetuer elementum. Pellentesque euismod commodo felis. Ut imperdiet velit et risus. Sed varius metus sit amet felis. Integer mollis dui in risus. Morbi erat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque in pede. Nulla suscipit ipsum eget ligula. Maecenas sem. Aliquam commodo ligula quis sem. Maecenas feugiat lorem et sem. Pellentesque magna tortor, aliquam a, sodales eget, hendrerit in, mauris. Aliquam erat volutpat. Maecenas et nibh ut justo nonummy eleifend. Suspendisse urna nisl, posuere vel, dictum vitae, tempor vitae, diam.
 
-					<p>Explore the navigation bar and see the windows to the right for more information.</p>
-			
-					<p> - <a href="http://greghoustondesign.com/">Greg Houston</a></p>
+Nulla vehicula. Nam massa sapien, euismod vitae, ultrices quis, bibendum id, justo. Morbi velit. Morbi turpis lectus, vulputate sit amet, congue eget, ultrices quis, ante. Maecenas ipsum sem, cursus ut, euismod sit amet, venenatis nec, neque. Donec elementum viverra sapien. Vivamus nunc diam, iaculis vel, rutrum et, adipiscing a, urna. Suspendisse potenti. Pellentesque auctor imperdiet dolor. Proin mattis leo ut dolor. Vestibulum metus nisl, dignissim a, viverra sit amet, nonummy a, est. Maecenas orci arcu, auctor id, dictum tristique, porta nec, libero. In magna.
 
-					<h3>Download</h3>
-					<p><a target="_blank" href="http://code.google.com/p/mocha-ui/downloads/list">Download Mocha UI v0.8</a></p>
-				
-				</div><!-- aside end -->
+Nulla sit amet erat. Sed in mi ut risus nonummy ultrices. Sed id urna. Praesent id magna. Praesent diam. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Nullam tincidunt. Sed euismod tristique sem. Sed tincidunt. Proin eget neque. Donec in dolor et nisi consequat varius. In hac habitasse platea dictumst. Fusce cursus, leo et congue gravida, arcu nunc venenatis mi, at volutpat risus justo in est. Mauris vitae lacus ut libero venenatis venenatis. Pellentesque dapibus turpis eget augue. Nunc at elit et felis pharetra dignissim. Proin scelerisque metus eget nunc.
 
+Maecenas viverra neque vitae sapien. Quisque pulvinar blandit lectus. Donec egestas sem in odio. Quisque eros nulla, hendrerit at, iaculis eu, molestie a, nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Suspendisse potenti. Aenean bibendum pulvinar purus. Maecenas et lacus. Vestibulum lorem urna, malesuada sed, convallis consequat, pharetra quis, turpis. In vel massa in felis tempor hendrerit. Proin leo elit, nonummy varius, aliquet facilisis, hendrerit at, tortor. Aenean arcu augue, fringilla vulputate, facilisis hendrerit, hendrerit vel, metus. Nam a felis vel massa rhoncus euismod. Maecenas in sem. Ut hendrerit lobortis turpis. Vestibulum eget erat vitae nisl aliquet pellentesque. Aliquam erat volutpat.
+
+Aliquam pede turpis, ullamcorper vel, commodo sit amet, rhoncus in, massa. In ut ligula eu ipsum pharetra iaculis. Morbi rhoncus porta nibh. Aenean condimentum. Suspendisse hendrerit quam sit amet eros. In imperdiet dui eget turpis. Aliquam erat volutpat. Aliquam convallis purus eget ipsum. Pellentesque tristique viverra libero. Phasellus augue tortor, aliquet in, sollicitudin mattis, viverra sed, nulla. Donec egestas, dui at euismod pellentesque, eros justo accumsan purus, in sagittis tortor nulla at justo. Aenean mollis volutpat purus. In erat. Aenean nec dui. Nulla vitae libero. Nam neque. -->
+</div><!-- aside end -->
 			</div>
-			<div class="screen">
-				Screen 2, some other content here.
-			</div>
-			<div class="screen">
-				Screen 3, different content again.
-			</div>
-		</div><!-- mochaScreens end -->			
+			<div id="workspace02" class="workspace"></div>
+			<div id="workspace03" class="workspace"></div>
+		</div><!-- mochaWorkspaces end -->			
 	</div><!-- mochaPage end -->
 </div><!-- mochaPageWrapper end -->
-
-<div class="mocha" id="overview" style="width:300px; height:255px;">
-<h3 class="mochaTitle">Overview</h3>
-
-<h3>Features</h3>
-<ul>
-	<li>No images. The windows (including their controls, animated loading icons, gradients and shadows) are drawn with the canvas tag.</li>
-	<li>Windows can be focused, dragged, resized, maximized, minimized, restored and closed.</li>
-	<li>Adjustable rounded corner radius.</li>
-	<li>Dynamically create new windows on demand and load their content with innerHTML, XHR, or an iFrame.</li>
-	<li>The ability to create multiple new windows from a single Json data request.</li>
-	<li>Create modal dialog windows</li>
-	<li>Optional "desktop" toolbars</li>
-	<li>Minimal HTML markup required.</li>
-	<li>Tested in Firefox 2, Internet Explorer 6 &amp; 7, Safari 2, and Opera 9.</li>
-	<li>Validates as XHTML 1.0 Strict if you use no target attributes in your anchors and validates as XHTML 1.0 Transitional if you do.</li>
-</ul>
-
-<h3>Bugs</h3>
-<p>See the documentaion and also view the current tickets at <a target="_blank" href="http://code.google.com/p/mocha-ui/issues/list">Google Code</a>.</p>	
-
-
-<h3>Change Log</h3>
-
-<h4>v0.8 - 3/13/2008</h4>
-<ul>
-	<li>Added functionality for creating multiple new windows from a single Json data request</li>
-	<li>Added animated canvas loading icon to xhr and iframe load methods</li>
-	<li>onContentLoaded now works with iframes</li>
-	<li>Added styling options which can be set globally and for individual windows</li>
-	<li>Added global effects option which toggles most of the window transition effects</li>
-	<li>Now you can set individual windows to be draggable, resizable, closable, maximizable, or minimizable, overriding the global settings (Joel Lindau)</li>
-	<li>Added closeAll() method which closes all windows at once</li>
-	<li>Added more examples</li>
-	<li>Fixed scrollbar bug in Firefox 2 on the Mac. Scrollbars no longer bleed through windows that are above them</li>
-	<li>Made speed optimizations (Joel Lindau)</li>
-</ul>
-
-<h4>v0.7 r22 - 12/11/2007</h4>
-<ul>
-	<li>Iframes now resize when you resize a window</li>
-	<li>Fixed it so that if the desktop toolbars are removed the rest of the code still works</li>
-	<li>Modal windows can now be used standalone without any Mocha UI html markup</li>
-	<li>Removed the inline javascript from the example html</li>
-	<li>Added optional autohide to the dock (Scott F. Frederick)</li>
-	<li>Added the following options to new windows: onContentLoaded, onFocus, onResize, onMinimize, onMaximize, onClose and onCloseComplete (Joel Lindau)</li>
-	<li>Added screens/workspaces (Joel Lindau)</li>
-	<li>Pulled the slider function out of the core class</li>
-	<li>Code optimizations</li>
-</ul>
-
-<h4>v0.7 - 12/03/2007</h4>
-<ul>
-	<li>Added minimize functionality (Scott F. Frederick)</li>
-	<li>Added mouseover "title" to close, maximize, and minimize buttons (Scott F. Frederick)</li>
-	<li>Added onmouseover "title" to minimized window buttons displaying full header title (Scott F. Frederick)</li>
-	<li>The close, maximize, and minimize buttons are now individually optional</li>
-	<li>Added the MochaWindow and MochaWindowForm classes</li>
-	<li>Added several options for setting the properties and style of new windows</li>
-	<li>Added additional ajax and iframe support</li>
-	<li>Reconfigured how the core class is loaded so it is easier to access the class methods</li>
-	<li>Added optional toolbars to the "desktop"</li>
-	<li>Added modal dialog windows</li>	
-	<li>Code optimizations</li>
-</ul>
-
-<h4>v0.6 - 11/26/2007</h4>
-<ul>
-	<li>Fixed the IE6 select issue</li>
-	<li>Added a couple more class options</li>	
-	<li>Minor code optimizations</li>
-</ul>
-
-<h4>v0.5 - 11/17/2007</h4>
-<ul>
-	<li>Initial release</li>
-</ul>	
-	
 </div>
-
-<div class="mocha" id="resources" style="width:300px; height:275px;">
-<h3 class="mochaTitle">Resources</h3>
-<h3>Mootools</h3>
-<p><a target="_blank" href="http://mootools.net/">Mootools</a> is an Object-Oriented JavaScript framework designed for the intermediate to advanced JavaScript developer.</p>
-<ul>
-	<li><a target="_blank" href="http://demos.mootools.net/">Demos</a></li>
-	<li><a target="_blank" href="http://docs.mootools.net/">Documentation</a></li>
-	<li><a target="_blank" href="http://forum.mootools.net/">Forums</a></li>		
-</ul>
-
-<h3>ExplorerCanvas</h3>
-<p>Firefox, Safari and Opera 9 support the canvas tag to allow 2D command-based drawing. <a target="_blank" href="http://excanvas.sourceforge.net/">ExplorerCanvas</a> is a javascript file that brings the same functionality to Internet Explorer.</p>
-</div>
-
-<div class="mocha" id="cornerRadius" style="width:300px; height:105px;">
-<h3 class="mochaTitle">Corner Radius Slider</h3>
-<p>Move the slider to change the radius of the rounded corners on these windows.</p>
-
-<div id="slider">
-	<div id="update">Corner Radius: <span id="updatevalue">XX</span></div>
-	<div id="sliderarea">
-		<div id="sliderknob"></div>
-	</div><!-- sliderarea end -->
-</div><!-- slider end -->
-</div>
-
-</div><!-- mochaDesktop end -->
+<!-- mochaDesktop end -->
 
 </body>
 </html>
