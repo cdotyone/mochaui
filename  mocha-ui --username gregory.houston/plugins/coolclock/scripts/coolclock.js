@@ -91,7 +91,26 @@ CoolClock.config = {
 			minuteHand: { lineWidth: 4, startAt: 0, endAt: 78, color: "#fff", alpha: 1 },
 			secondHand: { lineWidth: 4, startAt: 82, endAt: 94, color: "#98B8D9", alpha: 1 },
 			secondDecoration: { lineWidth: 3, startAt: 0, radius: 6, fillColor: "white", color: "white", alpha: 1 }
-	}		
+		},
+		mochaUI2: {
+			outerBorder: { lineWidth: 185, radius:1, color: "#000", alpha: 0 },
+			smallIndicator: { lineWidth: 3, startAt: 88, endAt: 94, color: "#ccc", alpha: 1 },
+			largeIndicator: { lineWidth: 3, startAt: 82, endAt: 94, color: "#47B8ED", alpha: 1 },
+			hourHand: { lineWidth: 4, startAt: 0, endAt: 58, color: "#479AED", alpha: 1 },
+			minuteHand: { lineWidth: 4, startAt: 0, endAt: 78, color: "#479AED", alpha: 1 },
+			secondHand: { lineWidth: 3, startAt: 82, endAt: 94, color: "#ED7C47", alpha: 1 },
+			secondDecoration: { lineWidth: 0, startAt: 0, radius: 6, fillColor: "#479AED", color: "#000", alpha: 1 }
+		},
+		mochaUI3: {
+			outerBorder: { lineWidth: 185, radius:1, color: "#000", alpha: 0 },
+			smallIndicator: { lineWidth: 3, startAt: 88, endAt: 94, color: "#2CC2D1", alpha: 1 },
+			largeIndicator: { lineWidth: 3, startAt: 82, endAt: 94, color: "#1BFFD9", alpha: 1 },
+			hourHand: { lineWidth: 4, startAt: 0, endAt: 58, color: "#fff", alpha: 1 },
+			minuteHand: { lineWidth: 4, startAt: 0, endAt: 78, color: "#fff", alpha: 1 },
+			secondHand: { lineWidth: 4, startAt: 82, endAt: 94, color: "#EFCD5F", alpha: 1 },
+			secondDecoration: { lineWidth: 0, startAt: 0, radius: 6, fillColor: "#fff", color: "#000", alpha: 1 }
+		}
+		
 
 	}
 };

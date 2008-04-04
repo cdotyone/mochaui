@@ -13,8 +13,10 @@
 		<script type="text/javascript" src="scripts/excanvas-compressed.js"></script>		
 	<![endif]-->
 	
-	<script type="text/javascript" src="scripts/mootools-trunk-1514.js" charset="utf-8"></script>			
-	<script type="text/javascript" src="scripts/mocha.js" charset="utf-8"></script>
+	<script type="text/javascript" src="scripts/mootools-trunk-1514.js" charset="utf-8"></script>
+	<!-- mocha-javascript.php is for development. It is not recommended for live use -->		 
+	<script type="text/javascript" src="scripts/source/mocha-javascript.php"></script>
+	<!-- <script type="text/javascript" src="scripts/mocha.js" charset="utf-8"></script> -->		
 	<script type="text/javascript" src="scripts/mocha-init.js" charset="utf-8"></script> 				
 
 </head>
@@ -23,8 +25,10 @@
 <div id="mochaDesktop">
 
 <div id="mochaDesktopHeader">
-<div id="mochaDesktopTitlebar">
-	<h1>Mocha UI <span class="version">beta version 0.8</span></h1>
+<div id="mochaDesktopTitlebarWrapper">
+	<div id="mochaDesktopTitlebar">
+		<h1>Mocha UI <span class="version">beta version 0.8</span></h1>
+	</div>
 </div>
 	
 <div id="mochaDesktopNavbar">
@@ -59,6 +63,8 @@
 	<li>
 		<a class="returnFalse" href="">Workspaces</a>
 		<ul>
+			<li><a id="saveWorkspaceLink" href="">Save Workspace</a></li>
+			<li><a id="loadWorkspaceLink" href="">Load Saved Workspace</a></li>					
 			<li><a id="workspace01LinkCheck" href="">Workspace 01</a></li>
 			<li><a id="workspace02LinkCheck" href="">Workspace 02</a></li>
 			<li><a id="workspace03LinkCheck" href="">Workspace 03</a></li>
@@ -79,9 +85,11 @@
 </div><!-- mochaDesktopNavbar end -->
 </div><!-- mochaDesktopHeader end -->
 
-<div id="mochaDock">
-	<div id="mochaDockPlacement"></div>
-	<div id="mochaDockAutoHide"></div>
+<div id="mochaDockWrapper">
+	<div id="mochaDock">
+		<div id="mochaDockPlacement"></div>
+		<div id="mochaDockAutoHide"></div>
+	</div>
 </div>
 
 <div id="mochaSidebarWrapper">
@@ -93,7 +101,7 @@
 	<div id="mochaSidebar">
 		<div id="mochaSidebarContentWrapper">	
 			<div id="mochaSidebarContent">
-			<p>This is some sidebar content.</p>
+			<p>This is a development copy of the Mocha UI code. I would strongly discourage you from trying to use this in a live project. Download a stable version.</p>
 			</div>
 		</div>	
 	</div>

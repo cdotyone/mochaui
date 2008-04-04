@@ -50,7 +50,7 @@
 initializeWindows = function(){
 
 	// Examples
-	var ajaxpageWindow = function(){ 
+	MochaUI.ajaxpageWindow = function(){ 
 		new MochaUI.Window({
 			id: 'ajaxpage',
 			title: 'Content Loaded with an XMLHttpRequest',
@@ -63,11 +63,11 @@ initializeWindows = function(){
 	if ($('ajaxpageLinkCheck')){ // Associated HTML: <a id="xhrpageLink" href="pages/lipsum.html">XHR Page</a>
 		$('ajaxpageLinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			ajaxpageWindow();
+			MochaUI.ajaxpageWindow();
 		});
 	}	
 	
-	var jsonWindows = function(){
+	MochaUI.jsonWindows = function(){
 		var url = 'data/json-windows-data.js';
 		var request = new Request.JSON({
 			url: url,
@@ -84,11 +84,11 @@ initializeWindows = function(){
 	if ($('jsonLink')){
 		$('jsonLink').addEvent('click', function(e) {
 			new Event(e).stop();
-			jsonWindows();			
+			MochaUI.jsonWindows();			
 		});
 	}	
 
-	var mootoolsWindow = function(){
+	MochaUI.mootoolsWindow = function(){
 		new MochaUI.Window({
 			id: 'mootools',
 			title: 'Mootools Forums in an Iframe',
@@ -103,11 +103,11 @@ initializeWindows = function(){
 	if ($('mootoolsLinkCheck')){
 		$('mootoolsLinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			mootoolsWindow();
+			MochaUI.mootoolsWindow();
 		});
 	}	
 
-	var youtubeWindow = function(){
+	MochaUI.youtubeWindow = function(){
 		new MochaUI.Window({
 			id: 'youTube',
 			title: 'YouTube in Iframe',
@@ -123,11 +123,11 @@ initializeWindows = function(){
 	if ($('youTubeLinkCheck')) {
 		$('youTubeLinkCheck').addEvent('click', function(e){
 		new Event(e).stop();
-			youtubeWindow();
+			MochaUI.youtubeWindow();
 		});
 	}	
 	
-	var dataGridWindow = function(){
+	MochaUI.dataGridWindow = function(){
 		// It's a good idea to load your css before the window
 		if ( !$('tablesoortcss') ) {
 			new Asset.css('plugins/tablesoort/css/tablesoort.css', {id: 'tablesoortcss'});
@@ -168,12 +168,12 @@ initializeWindows = function(){
 	if ($('dataGridLinkCheck')){ 
 		$('dataGridLinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			dataGridWindow();
+			MochaUI.dataGridWindow();
 		});
 	}	
 
 	
-	var eventsWindow = function(){	
+	MochaUI.eventsWindow = function(){	
 		new MochaUI.Window({
 			id: 'windowevents',
 			title: 'Window Events',
@@ -201,11 +201,11 @@ initializeWindows = function(){
 	if ($('windoweventsLinkCheck')){
 		$('windoweventsLinkCheck').addEvent('click', function(e){
 			new Event(e).stop();
-			eventsWindow();
+			MochaUI.eventsWindow();
 		});
 	}	
 	
-	var cornerRadiusWindow = function(){	
+	MochaUI.cornerRadiusWindow = function(){	
 		new MochaUI.Window({
 			id: 'cornerRadius',
 			title: 'Corner Radius Slider',
@@ -221,20 +221,17 @@ initializeWindows = function(){
 			y: 305,
 			resizable: false,
 			maximizable: false,
-			bodyBgColor: '#141414',           
-			headerStartColor: [92, 92, 92],  
-			headerStopColor: [71, 71, 71],  
-			footerBgColor: [71, 71, 71] 			
+			bodyBgColor: '#f6f6f6'			
 		});
 	}
 	if ($('cornerRadiusLinkCheck')){
 		$('cornerRadiusLinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			cornerRadiusWindow();
+			MochaUI.cornerRadiusWindow();
 		});
 	}	
 	
-	var clockWindow = function(){	
+	MochaUI.clockWindow = function(){	
 		new MochaUI.Window({
 			id: 'clock',
 			title: 'Canvas Clock',
@@ -283,10 +280,7 @@ initializeWindows = function(){
 			y: 75,
 			scrollbars: false,
 			padding: { top: 0, right: 0, bottom: 0, left: 0 },				
-			bodyBgColor: '#141414',           
-			headerStartColor: [92, 92, 92],  
-			headerStopColor: [71, 71, 71],  
-			footerBgColor: [71, 71, 71], 
+			bodyBgColor: '#f6f6f6',
 			resizable: false,
 			maximizable: false				
 		});	
@@ -294,7 +288,7 @@ initializeWindows = function(){
 	if ($('clockLinkCheck')){
 		$('clockLinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			clockWindow();
+			MochaUI.clockWindow();
 		});
 	}
 
@@ -321,7 +315,7 @@ initializeWindows = function(){
 	}
 	
 	// Tools
-	var builderWindow = function(){	
+	MochaUI.builderWindow = function(){	
 		new MochaUI.Window({
 			id: 'builder',
 			title: 'Window Builder',
@@ -342,36 +336,51 @@ initializeWindows = function(){
 	if ($('builderLinkCheck')){
 		$('builderLinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			builderWindow();
+			MochaUI.builderWindow();
 		});
 	}	
 	
 	// Todo: Add menu check mark functionality for workspaces.
 	
-	// Workspaces	
+	// Workspaces
+	
+	if ($('saveWorkspaceLink')){
+		$('saveWorkspaceLink').addEvent('click', function(e){	
+			new Event(e).stop();
+			MochaUI.saveWorkspace();
+		});
+	}
+	
+	if ($('loadWorkspaceLink')){
+		$('loadWorkspaceLink').addEvent('click', function(e){	
+			new Event(e).stop();
+			MochaUI.loadWorkspace();
+		});
+	}	
+	
 	if ($('workspace01LinkCheck')){
 		$('workspace01LinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			MochaUI.Workspaces.setWorkspace({index: 0, background: '#8caac7' })
+			MochaUI.Workspaces.setWorkspace({index: 0, background: '#BFCFDE' })
 		});
 	}
 	
 	if ($('workspace02LinkCheck')){
 		$('workspace02LinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			MochaUI.Workspaces.setWorkspace({index: 1, background: '#595959' })
+			MochaUI.Workspaces.setWorkspace({index: 1, background: '#8CAAC7' })
 		});
 	}
 	
 	if ($('workspace03LinkCheck')){
 		$('workspace03LinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			MochaUI.Workspaces.setWorkspace({index: 2, background: '#BFCFDE' })
+			MochaUI.Workspaces.setWorkspace({index: 2, background: '#fff' })
 		});
 	}	
 	
 	// Help
-	var overviewWindow = function(){	
+	MochaUI.overviewWindow = function(){	
 		var accordianPage = new MochaUI.Window({
 			id: 'overview',
 			title: 'Overview',
@@ -416,11 +425,11 @@ initializeWindows = function(){
 	if ($('overviewLinkCheck')){ 
 		$('overviewLinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			overviewWindow();
+			MochaUI.overviewWindow();
 		});
 	}	
 	
-	var featuresWindow = function(){		
+	MochaUI.featuresWindow = function(){		
 		new MochaUI.Window({
 			id: 'features',
 			title: 'Features',
@@ -435,11 +444,11 @@ initializeWindows = function(){
 	if ($('featuresLinkCheck')){
 		$('featuresLinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			featuresWindow();
+			MochaUI.featuresWindow();
 		});
 	}	
 	
-	var faqWindow = function(){
+	MochaUI.faqWindow = function(){
 			new MochaUI.Window({
 				id: 'faq',
 				title: 'FAQ',
@@ -452,11 +461,11 @@ initializeWindows = function(){
 	if ($('faqLinkCheck')){
 		$('faqLinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			faqWindow();
+			MochaUI.faqWindow();
 		});
 	}	
 	
-	var docsWindow = function(){
+	MochaUI.docsWindow = function(){
 			new MochaUI.Window({
 				id: 'docs',
 				title: 'Documentation',
@@ -469,11 +478,11 @@ initializeWindows = function(){
 	if ($('docsLinkCheck')){
 		$('docsLinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			docsWindow();
+			MochaUI.docsWindow();
 		});
 	}	
 	
-	var resourcesWindow = function(){
+	MochaUI.resourcesWindow = function(){
 			new MochaUI.Window({
 				id: 'resources',
 				title: 'Resources',
@@ -488,11 +497,11 @@ initializeWindows = function(){
 	if ($('resourcesLinkCheck')){
 		$('resourcesLinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			resourcesWindow();
+			MochaUI.resourcesWindow();
 		});
 	}	
 
-	var helpWindow = function(){
+	MochaUI.helpWindow = function(){
 			new MochaUI.Window({
 				id: 'help',
 				title: 'Support',
@@ -507,11 +516,11 @@ initializeWindows = function(){
 	if ($('helpLinkCheck')){
 		$('helpLinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			helpWindow();
+			MochaUI.helpWindow();
 		});
 	}	
 	
-	var contributeWindow = function(){
+	MochaUI.contributeWindow = function(){
 		new MochaUI.Window({
 			id: 'contribute',
 			title: 'Contribute',
@@ -526,11 +535,11 @@ initializeWindows = function(){
 	if ($('contributeLinkCheck')){
 		$('contributeLinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			contributeWindow();
+			MochaUI.contributeWindow();
 		});
 	}	
 
-	var aboutWindow = function(){
+	MochaUI.aboutWindow = function(){
 		new MochaUI.Window({
 			id: 'about',
 			title: 'Mocha UI Version 0.8',
@@ -546,7 +555,7 @@ initializeWindows = function(){
 	if ($('aboutLinkCheck')){
 		$('aboutLinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			aboutWindow();
+			MochaUI.aboutWindow();
 		});
 	}
 	
@@ -558,15 +567,35 @@ initializeWindows = function(){
 	});
 	
 	// Build windows onDomReady
-	overviewWindow(); 
-	dataGridWindow(); 
-	cornerRadiusWindow();
-	clockWindow();
-	featuresWindow();
+	//MochaUI.overviewWindow(); 
+	// MochaUI.dataGridWindow(); 
+	MochaUI.cornerRadiusWindow();
+	MochaUI.clockWindow();
+	//MochaUI.featuresWindow();
 	
 }
 
 // Initialize MochaUI when the DOM is ready
 window.addEvent('domready', function(){
-	initializeWindows();	
+									 
+	MochaUI.Desktop = new MochaUI.Desktop();									 
+	MochaUI.Dock = new MochaUI.Dock();									 
+	MochaUI.Workspaces = new MochaUI.Workspaces();	
+	MochaUI.Modal = new MochaUI.Modal();
+	// used by basic.html and basic2.html examples
+	MochaUI.NewWindowsFromHTML = new MochaUI.NewWindowsFromHTML();
+
+	initializeWindows();
+	
+	window.addEvent('keydown', function(event){												
+		var key = event.code;
+		if (key == 9 && event.control) MochaUI.toggleWindowVisibility();					
+	});		
+	
+});
+
+
+// This runs when a person leaves your page.
+window.addEvent('unload', function(){
+	if (MochaUI) MochaUI.garbageCleanUp();
 });

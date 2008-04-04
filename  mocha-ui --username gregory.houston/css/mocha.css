@@ -6,7 +6,7 @@ html {
 
 body {
 	margin: 0; /* Required */
-	background: #141414; /* Will be the margin color between toolbars */	
+	background: #fff;
 }
 
 #mochaDesktop {
@@ -21,14 +21,23 @@ body {
 }			  				
 
 #mochaDesktopHeader {
+	background: #bdbdbd; /* Will be the margin color between toolbars */
+	padding: 0 0 1px 0;
+}
+
+#mochaDesktopTitlebarWrapper {
+	position: relative;
+	height: 35px;
+	background: #eeeeef;		
 }
 	
 #mochaDesktopTitlebar {
-	margin: 0 0 1px 0;
-	padding: 5px 8px 7px 8px;
-	background: #474747;
-	border: 1px solid #5c5c5c;
-	height: 25px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding: 4px 8px 6px 8px;
+	height: 23px;
+	z-index: 2;
 }	
 	
 #mochaDesktopTitlebar h1 {
@@ -36,18 +45,18 @@ body {
 	padding: 4px 0 0 0;
 	font-size: 18px;
 	font-weight: bold;
-	color: #8caac7;
+	color: #141414;
 }
 	
 #mochaDesktopTitlebar h1 .version {
 	font-size: 12px;
-	color: #fff;	
+	color: #47B8ED;
 }		
 
 #mochaDesktopNavbar {
-	margin: 0 0 1px 0;
-	background: #474747;
-	border: 1px solid #5c5c5c;
+	margin: 1px 0 0 0;
+	background: #eeeeef;
+	border: 1px solid #fff;
 	height: 22px;
 }
 
@@ -68,11 +77,11 @@ body {
 	
 #mochaDesktopNavbar ul li a {
 	padding: 2px 9px 2px 9px;	
-	color: #fff;
+	color: #141414;
 }
 
 #mochaDesktopNavbar ul li a:hover {
-	background: #333;
+	background: #ddd;
 }
 	
 #mochaDesktopNavbar li ul {
@@ -108,7 +117,7 @@ body {
 }
 
 #mochaDesktopNavbar li ul li a:hover {
-	background: #e4e4e4;
+	background: #eee;
 }
 
 #mochaDesktopNavbar li:hover ul, #mochaDesktopNavbar li.ieHover ul { /* lists nested under hovered list items */
@@ -137,8 +146,7 @@ body {
 #mochaSidebarWrapper {
 	display: none;
 	float: left;
-	background: #141414;
-	color: #fff;
+	background: #bdbdbd;
 	font-size: 11px;			
 }
 
@@ -150,9 +158,9 @@ body {
 
 #mochaSidebarContentWrapper {
 	margin-right: 1px;
-	background: #474747;
-	border: 1px solid #595959;
-	color: #fff;		
+	background: #eeeeef;
+	border: 1px solid #fff;
+	color: #141414;		
 }
 
 #mochaSidebarContent {
@@ -162,8 +170,8 @@ body {
 #mochaSidebarMinimize{
 	float: left;
 	position: relative;	
-	background: #474747;
-	border: 1px solid #595959;
+	background: #eeeeef;
+	border: 1px solid #fff;
 	width: 4px;
 	margin: 0 1px 0 0;
 	cursor: pointer;	
@@ -172,8 +180,8 @@ body {
 #mochaSidebarHandle {
 	float: left;
 	position: relative;
-	background: #474747;
-	border: 1px solid #595959;
+	background: #eeeeef;
+	border: 1px solid #fff;
 	width: 4px;
 	margin: 0 1px 0 0;
 	cursor: e-resize; /* This is for Opera which does not support the col-resize cursor */
@@ -189,6 +197,7 @@ body {
 }
 
 .columnControlWrapper {
+	display: none;
 	position: absolute;
 	left: -1px;
 	top: 150px;
@@ -237,8 +246,8 @@ div.mocha .mochaTitlebar a {
 }	
 
 div.mocha .mochaContentBorder {
-	border-top: 1px solid #bbb;	
-	border-bottom: 1px solid #d7d7d7;
+	border-top: 1px solid #bdbdbd;	
+	border-bottom: 1px solid #bdbdbd;
 }
 	
 div.mocha .mochaContentWrapper { /* Has a fixed height and scrollbars if required */
@@ -310,26 +319,29 @@ div.mocha .mochaContent {
 #sliderarea {
 	clear: both;
 	position: relative;
-	height: 8px;
+	height: 2px;
 	width: 200px;
-	font-size: 1px;	
-	background: #333;
+	font-size: 1px;
+	line-height: 1px;
+	overflow: none;	
+	background: #ccc;
 	margin: 2px 0 10px 0;
 }
  
 #sliderknob {
 	position: absolute;
-	height: 8px;
-	width: 20px;
+	top: -3px;
+	height: 7px;
+	width: 13px;
 	font-size: 1px;
-	background: #8caac7;
+	background: #47B8ED;
+	border-right: 1px solid #eee;
+	border-left: 1px solid #eee;	
 	cursor: pointer;
 }
 	
 #update {
-	position: absolute;
-	top: 0;
-	left: 0;	
+	padding-bottom: 10px;	
 }	
 	
 .clear {
@@ -419,23 +431,28 @@ iframe.zIndexFix {
 	
 /* Window Minimize Dock */
 
-#mochaDock {
+#mochaDockWrapper{
 	display: none;
+	background: #bdbdbd;
+	padding: 1px 0 0 0;
+	width: 100%;	
+}
+
+#mochaDock {
 	position: relative;
-	margin: 1px 0 0 0;
 	padding: 3px 15px 1px 15px;
 	bottom: 0;
 	left: 0;
 	width: 100%;
-	background: #474747;
-	border: 1px solid #5c5c5c;
+	background: #eee;
+	border: 1px solid #fff;
 	min-height: 22px;
 	height: auto;
    _height: 20px; /* IE 6.0 hack, for not supporting min-height SFF 12/07/2007*/
 }
 
-#mochaDock.top {
-	margin: 0 0 1px 0;	
+#mochaDockWrapper.top {
+	padding: 0 0 1px 0;	
 }
 
 .mochaDockButton {
@@ -533,14 +550,14 @@ iframe.zIndexFix {
 /* Window Themes */
 
 div.mocha.darkWindow {
-	color: #fff;
+	color: #141414;
 }
 
 div.mocha.darkWindow .mochaContentBorder {
-	border-top: 1px solid #474747;	
-	border-bottom: 1px solid #474747;
+/*	border-top: 1px solid #e4e4e4;	*/
+	border-bottom: 1px solid #f6f6f6;
 }
 
 div.mocha.darkWindow .mochaTitlebar h3 {
-	color: #fff;
+	color: #333;
 }

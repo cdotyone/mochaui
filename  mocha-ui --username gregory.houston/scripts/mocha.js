@@ -1337,7 +1337,7 @@ MochaUI.Desktop = new Class({
 					$$('div.mocha').setStyle('position', 'fixed');	
 				}
 			},
-			onBeforeComplete: function(){
+			onComplete: function(){
 				if (!Browser.Platform.mac && Browser.Engine.gecko){
 					$$('div.mocha').setStyle('position', 'absolute');	
 				}
@@ -1387,23 +1387,23 @@ MochaUI.Desktop = new Class({
 		}
 	},
 	sidebarMinimizeToggle: function(){
-			if (!this.sidebarIsMinimized){											
+			if (!this.sidebarIsMinimized){					
 				this.sidebar.setStyle('display', 'none');
 				this.sidebarHandle.setStyle('display', 'none');
 				// Part of IE6 3px jox bug fix			
 				if (Browser.Engine.trident4){
 					this.sidebarMinimize.setStyle('margin-right', 0);
-				}				
-				this.sidebarIsMinimized = true;
+				}
+				this.sidebarIsMinimized = true;				
 			}
-			else {
+			else {					
 				this.sidebar.setStyle('display', 'block');
 				this.sidebarHandle.setStyle('display', 'block');
 				if (Browser.Engine.trident4){
 					this.sidebarMinimize.setStyle('margin-right', 1);
 				}				
 				this.sidebarIsMinimized = false;
-			}		
+			}				
 	}
 });
 MochaUI.Desktop.implement(new Options, new Events);
@@ -1930,25 +1930,4 @@ MochaUI.extend({
 			}).set(windowOptions.cornerRadius);
 		}
 	}
-});
-
-// Initialize MochaUI on DomReady
-window.addEvent('domready', function(){
-	MochaUI.Desktop = new MochaUI.Desktop();									 
-	MochaUI.Dock = new MochaUI.Dock();									 
-	MochaUI.Workspaces = new MochaUI.Workspaces();	
-	MochaUI.Modal = new MochaUI.Modal();
-	// used by basic.html and basic2.html examples
-	MochaUI.NewWindowsFromXHTML = new MochaUI.NewWindowsFromXHTML();
-	
-	window.addEvent('keydown', function(event){												
-		var key = event.code;
-		if (key == 9 && event.control) MochaUI.toggleWindowVisibility();					
-	});	
-	
-});
-
-// This runs when a person leaves your page.
-window.addEvent('unload', function(){
-	if (MochaUI) MochaUI.garbageCleanUp();
 });
