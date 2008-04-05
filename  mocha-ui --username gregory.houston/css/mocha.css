@@ -1,4 +1,14 @@
-/* MOCHA UI */
+/*
+
+CSS for Mocha UI
+
+Copyright:
+	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.
+	
+License:
+	MIT-style license.
+   
+*/   
 
 html {
 	overflow: auto; /* Removes empty vertical scrollbars in IE */
@@ -158,7 +168,7 @@ body {
 
 #mochaSidebarContentWrapper {
 	margin-right: 1px;
-	background: #eeeeef;
+	background: #fff;
 	border: 1px solid #fff;
 	color: #141414;		
 }
@@ -246,8 +256,8 @@ div.mocha .mochaTitlebar a {
 }	
 
 div.mocha .mochaContentBorder {
-	border-top: 1px solid #bdbdbd;	
-	border-bottom: 1px solid #bdbdbd;
+	border-top: 1px solid #d9d9d9;	
+	border-bottom: 1px solid #d9d9d9;
 }
 	
 div.mocha .mochaContentWrapper { /* Has a fixed height and scrollbars if required */
@@ -324,7 +334,7 @@ div.mocha .mochaContent {
 	font-size: 1px;
 	line-height: 1px;
 	overflow: none;	
-	background: #ccc;
+	background: #bbb;
 	margin: 2px 0 10px 0;
 }
  
@@ -444,7 +454,7 @@ iframe.zIndexFix {
 	bottom: 0;
 	left: 0;
 	width: 100%;
-	background: #eee;
+	background: #eeeeef;
 	border: 1px solid #fff;
 	min-height: 22px;
 	height: auto;
@@ -471,7 +481,6 @@ iframe.zIndexFix {
 	top: 0;
 	left: 0;
 	display: block;
-	color: #fff;
 	text-align: left;
 	padding: 1px 0 0 8px;
 	width: 115px;
@@ -517,14 +526,14 @@ iframe.zIndexFix {
 /* Accordian */
 
 .accordianWrapper {
-	
+	padding: 5px;
 }
 
 .accordianToggler {
 	margin: 0;
 	padding: 4px 10px;
-	background: #dcdcdc;
-	border-top: 1px solid #bbb;
+	background: #f3f3f3;
+	border-top: 1px solid #fff;
 	font-size: 11px;
 	cursor: pointer;
 }
@@ -534,7 +543,7 @@ iframe.zIndexFix {
 }
 
 .accordianToggler.open {
-	background: #ccd7e3;	
+	background: #f3f3f3;	
 }
 
 .accordianContent {
@@ -550,12 +559,10 @@ iframe.zIndexFix {
 /* Window Themes */
 
 div.mocha.darkWindow {
-	color: #141414;
+	color: #666;
 }
 
 div.mocha.darkWindow .mochaContentBorder {
-/*	border-top: 1px solid #e4e4e4;	*/
-	border-bottom: 1px solid #f6f6f6;
 }
 
 div.mocha.darkWindow .mochaTitlebar h3 {

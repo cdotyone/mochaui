@@ -94,12 +94,12 @@ CoolClock.config = {
 		},
 		mochaUI2: {
 			outerBorder: { lineWidth: 185, radius:1, color: "#000", alpha: 0 },
-			smallIndicator: { lineWidth: 3, startAt: 88, endAt: 94, color: "#ccc", alpha: 1 },
+			smallIndicator: { lineWidth: 3, startAt: 88, endAt: 94, color: "#999", alpha: 1 },
 			largeIndicator: { lineWidth: 3, startAt: 82, endAt: 94, color: "#47B8ED", alpha: 1 },
-			hourHand: { lineWidth: 4, startAt: 0, endAt: 58, color: "#479AED", alpha: 1 },
-			minuteHand: { lineWidth: 4, startAt: 0, endAt: 78, color: "#479AED", alpha: 1 },
-			secondHand: { lineWidth: 3, startAt: 82, endAt: 94, color: "#ED7C47", alpha: 1 },
-			secondDecoration: { lineWidth: 0, startAt: 0, radius: 6, fillColor: "#479AED", color: "#000", alpha: 1 }
+			hourHand: { lineWidth: 4, startAt: -1, endAt: 58, color: "#999", alpha: 1 },
+			minuteHand: { lineWidth: 4, startAt: -1, endAt: 78, color: "#999", alpha: 1 },
+			secondHand: { lineWidth: 4, startAt: 82, endAt: 94, color: "#ED7C47", alpha: 1 },
+			secondDecoration: { lineWidth: 0, startAt: 0, radius: 6, fillColor: "#999", color: "#000", alpha: 0 }
 		},
 		mochaUI3: {
 			outerBorder: { lineWidth: 185, radius:1, color: "#000", alpha: 0 },

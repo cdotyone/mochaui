@@ -221,7 +221,7 @@ initializeWindows = function(){
 			y: 305,
 			resizable: false,
 			maximizable: false,
-			bodyBgColor: '#f6f6f6'			
+			bodyBgColor: '#fff'			
 		});
 	}
 	if ($('cornerRadiusLinkCheck')){
@@ -241,7 +241,7 @@ initializeWindows = function(){
 			onContentLoaded: function(){				
 				if ( !MochaUI.clockScript == true ){
 					new Request({
-						url: 'plugins/coolclock/scripts/coolclock.js',
+						url: 'plugins/coolclock/scripts/coolclock.js?t=' + new Date().getTime(),
 						method: 'get',
 						onSuccess: function() {							
 							if (Browser.Engine.trident) {	
@@ -280,7 +280,7 @@ initializeWindows = function(){
 			y: 75,
 			scrollbars: false,
 			padding: { top: 0, right: 0, bottom: 0, left: 0 },				
-			bodyBgColor: '#f6f6f6',
+			bodyBgColor: '#fff',
 			resizable: false,
 			maximizable: false				
 		});	
@@ -388,7 +388,7 @@ initializeWindows = function(){
 			contentURL: 'pages/overview.html',
 			width: 300,
 			height: 200,
-			x: 20,
+			x: 330,
 			y: 75,
 			scrollbars: false,
 			resizable: false,
@@ -472,7 +472,8 @@ initializeWindows = function(){
 				loadMethod: 'xhr',
 				contentURL: 'pages/docs.html',
 				width: 750,
-				height: 350
+				height: 350,
+				padding: [10,10,10,10,10]
 			});
 	}
 	if ($('docsLinkCheck')){
@@ -567,7 +568,7 @@ initializeWindows = function(){
 	});
 	
 	// Build windows onDomReady
-	//MochaUI.overviewWindow(); 
+	MochaUI.overviewWindow(); 
 	// MochaUI.dataGridWindow(); 
 	MochaUI.cornerRadiusWindow();
 	MochaUI.clockWindow();

@@ -26,13 +26,11 @@ h2, h3, h4 {
 	margin: 0;
 	padding: 0 0 5px 0;
 	font-size: 12px;
-	font-weight: bold;
-	color: #333;	
+	font-weight: bold;	
 }
 	
 h2 {
 	font-size: 14px;
-	color: #555;
 	font-weight: bold;	
 }
 	
