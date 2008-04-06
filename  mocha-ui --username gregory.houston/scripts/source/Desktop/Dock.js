@@ -2,12 +2,13 @@
 
 Script: Dock.js
 	Create windows from a form
-	
-Dependencies: desktop.js, window.js, core.js	
 
 License:
 	MIT-style license.
-	
+
+Requires:
+	Core.js, Window.js, Desktop.js	
+
 Todo:
 	- Make it so the dock requires no initial html markup.
 	- Make dock buttons sortable.
@@ -32,7 +33,7 @@ MochaUI.Dock = new Class({
 	options: {
 		useControls: true, // Toggles autohide and dock placement controls - NOT FULLY IMPLEMENTED		
 		// Style options
-		dockButtonColor:   [218, 218, 222]
+		dockButtonColor:   [255, 255, 255]
 	},
 	initialize: function(options){
 		// Stops if MochaUI.Desktop is not implemented

@@ -8,6 +8,12 @@ License:
 
 Requires:
 	Core.js, Window.js
+	
+Options:
+	useHeaderCanvas - Toggle canvas header gradient.
+	headerStartColor - Header gradient's top color - RGB.
+	headerStopColor - Header gradient's bottom color.
+	sidebarLimitX - Sidebar minimum and maximum widths when resizing.
 
 */
 
@@ -30,10 +36,13 @@ MochaUI.Desktop = new Class({
 		sidebarWrapper:         'mochaSidebarWrapper',		
 		sidebar:                'mochaSidebar',
 		sidebarContentWrapper:  'mochaSidebarContentWrapper',		
-		sidebarMinimize:        'mochaSidebarMinimize',
+		sidebarMinimize:        'mochaSidebarControl',
 		sidebarHandle:          'mochaSidebarHandle',
-		headerStartColor:       [250, 250, 250],  // Header gradient's top color - RGB
-		headerStopColor:        [228, 228, 230]  // Header gradient's bottom color		
+		// Style options:
+		headerStartColor:       [250, 250, 250],  // Header gradient's top color - RGB.
+		headerStopColor:        [229, 229, 229],  // Header gradient's bottom color.
+		// Sidebar options:
+		sidebarLimitX:          [180, 280]        // Sidebar minimum and maximum widths when resizing.
 	},	
 	initialize: function(options){
 		this.setOptions(options);
@@ -54,7 +63,7 @@ MochaUI.Desktop = new Class({
 		this.desktopHeaderHeight = 35; //this.desktopTitlebarWrapper.offsetHeight;
 			this.titlebarCanvas = new Element('canvas', {
 				'id':     'titlebarCanvas',
-				'width': 1000,
+				'width':  1000,
 				'height': this.desktopHeaderHeight
 			}).injectBottom(this.desktopTitlebarWrapper);
 		}
@@ -171,7 +180,7 @@ MochaUI.Desktop = new Class({
 		if (this.sidebar){
 			var sidebarBorderOffset = Browser.Engine.trident4 ? 3 : 2;  
 			this.sidebarContentWrapper.setStyle('height', pageWrapperHeight - sidebarBorderOffset + 'px');
-			this.sidebarMinimize.setStyle('height', pageWrapperHeight - sidebarBorderOffset + 'px');
+			this.sidebarMinimize.setStyle('top', ((pageWrapperHeight * .5) - (this.sidebarMinimize.offsetHeight * .5))  + 'px');
 			this.sidebarHandle.setStyle('height', pageWrapperHeight - sidebarBorderOffset + 'px');			
 		}
 	},
@@ -331,7 +340,7 @@ MochaUI.Desktop = new Class({
 				y: false				
 			},
 			limit: {
-				x: [180, 280]
+				x: sidebarLimitX
 			},
 			onBeforeStart: function(){
  				// Using postion fixed fixes a minor display glitch while resizing the sidebar in Firefox PC
@@ -414,7 +423,6 @@ MochaUI.Desktop = new Class({
 	sidebarMinimizeToggle: function(){
 			if (!this.sidebarIsMinimized){					
 				this.sidebar.setStyle('display', 'none');
-				this.sidebarHandle.setStyle('display', 'none');
 				// Part of IE6 3px jox bug fix			
 				if (Browser.Engine.trident4){
 					this.sidebarMinimize.setStyle('margin-right', 0);
@@ -423,7 +431,6 @@ MochaUI.Desktop = new Class({
 			}
 			else {					
 				this.sidebar.setStyle('display', 'block');
-				this.sidebarHandle.setStyle('display', 'block');
 				if (Browser.Engine.trident4){
 					this.sidebarMinimize.setStyle('margin-right', 1);
 				}				

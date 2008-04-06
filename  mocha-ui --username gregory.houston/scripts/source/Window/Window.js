@@ -118,12 +118,12 @@ windowOptions = {
 	cornerRadius:      10,
 	bodyBgColor:	   '#fff',           // Body background color - Hex
 	headerStartColor:  [250, 250, 250],  // Header gradient's top color - RGB
-	headerStopColor:   [228, 228, 230],  // Header gradient's bottom color
-	footerBgColor:     [228, 228, 230],	 // Background color of the main canvas shape
+	headerStopColor:   [229, 229, 229],  // Header gradient's bottom color
+	footerBgColor:     [229, 229, 229],	 // Background color of the main canvas shape
 	minimizeColor:     [230, 230, 210],  // Minimize button color
 	maximizeColor:     [218, 230, 218],  // Maximize button color
 	closeColor:        [230, 218, 218],  // Close button color
-	resizableColor:    [209, 209, 209],  // Resizable icon color
+	resizableColor:    [254, 254, 254],  // Resizable icon color
 
 	// Events
 	onBeforeBuild:     $empty,  // Fired just before the window is built.
@@ -723,7 +723,7 @@ MochaUI.Window = new Class({
 		if ( this.minimizable )
 			this.minimizebutton(ctx, this.minimizebuttonX, 15, this.options.minimizeColor, 1.0); // Minimize
 		if ( this.options.resizable ) 
-			MochaUI.triangle(ctx, width - 20, height - 20, 12, 12, this.options.resizableColor, 1.0); // Resize handle
+			MochaUI.triangle(ctx, width - 20, height - 21, 12, 12, this.options.resizableColor, 1.0); // Resize handle
 
 		// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
 		MochaUI.triangle(ctx, 0, 0, 10, 10, this.options.resizableColor, 0);	
