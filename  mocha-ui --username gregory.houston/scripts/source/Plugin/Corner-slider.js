@@ -4,7 +4,10 @@ Script: Corner-slider.js
 	Initializes the corner radius slider.
 
 License:
-	MIT-style license.	
+	MIT-style license.
+	
+Requires:
+	Core.js, Window.js		
 
 */
 

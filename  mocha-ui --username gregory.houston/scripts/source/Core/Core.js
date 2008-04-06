@@ -17,7 +17,10 @@ Todo:
 	- Ctrl-Tab to toggle window visibility.
 
 To fix:
-	- With effects disabled maximizing caused an error	
+	- With effects disabled maximizing caused an error
+	
+Note:
+	This documentation is taken directly from the javascript source files. It is built using Natural Docs.
 	
 */
 
@@ -26,7 +29,7 @@ var MochaUI = new Hash({
 		instances: new Hash()
 	},	
 	options: new Hash({
-		useEffects: true,     // Toggles the majority of window fade and move effects.
+		useEffects: false,     // Toggles the majority of window fade and move effects.
 		useLoadingIcon: true  // Toggles whether or not the ajax spinners are displayed in window footers.
 
 	}),	
@@ -61,7 +64,7 @@ var MochaUI = new Hash({
 			return;
 			
 		currentWindowClass.isClosing = true;
-		currentWindowClass.fireEvent('onClose');
+		currentWindowClass.fireEvent('onClose', windowEl);
 
 		if (MochaUI.options.useEffects == false){
 			if (currentWindowClass.options.modal) {
@@ -118,9 +121,8 @@ var MochaUI = new Hash({
 	
 	Function: toggleWindowVisibility
 	
-	Todo: Don't toggle modal visibility. If new window is created make all windows visible except for
-	those that are minimized. If window is restored from dock make all windows visible except for any
-	others that are still minimized.
+	Todo:
+		Don't toggle modal visibility. If new window is created make all windows visible except for those that are minimized. If window is restored from dock make all windows visible except for any others that are still minimized.
 
 	*/	
 	toggleWindowVisibility: function() {		
@@ -145,7 +147,7 @@ var MochaUI = new Hash({
 			return;
 		MochaUI.indexLevel++;
 		windowEl.setStyle('zIndex', MochaUI.indexLevel);
-		currentWindowClass.fireEvent('onFocus');
+		currentWindowClass.fireEvent('onFocus', windowEl);
 	},	
 	roundedRect: function(ctx, x, y, width, height, radius, rgb, a){
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
@@ -212,7 +214,7 @@ var MochaUI = new Hash({
 				this.cookie.set(instance.options.id, {'options': instance.options, 'myevents': this.serialize(instance.$events)});
 			}
 			else {
-				this.cookie.set(instance.options.id, {'options': instance.options.trim()});				
+				this.cookie.set(instance.options.id, {'options': instance.options});				
 			}		
 		}.bind(this));		
 		this.cookie.save();
@@ -230,6 +232,18 @@ var MochaUI = new Hash({
 				var newWindow = new MochaUI.Window(options);
 			}			
 		}.bind(this));
+	},
+	/*
+	
+	Function: dynamicResize
+		Use with a timer to resize a window as the window's content size changes, such as with an accordian.
+		
+	*/		
+	dynamicResize: function (windowEl){
+		currentWindowClass = MochaUI.Windows.instances.get(windowEl.id);		
+		currentWindowClass.contentWrapperEl.setStyle('height', currentWindowClass.contentEl.offsetHeight);
+		currentWindowClass.contentWrapperEl.setStyle('width', currentWindowClass.contentEl.offsetWidth);			
+		currentWindowClass.drawWindow(windowEl);
 	},	
 	/*
 	

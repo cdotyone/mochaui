@@ -31,7 +31,7 @@ body {
 }			  				
 
 #mochaDesktopHeader {
-	background: #bdbdbd; /* Will be the margin color between toolbars */
+	background: #bebebe; /* Will be the margin color between toolbars */
 	padding: 0 0 1px 0;
 }
 
@@ -156,7 +156,7 @@ body {
 #mochaSidebarWrapper {
 	display: none;
 	float: left;
-	background: #bdbdbd;
+	background: #bebebe;
 	font-size: 11px;			
 }
 
@@ -443,7 +443,7 @@ iframe.zIndexFix {
 
 #mochaDockWrapper{
 	display: none;
-	background: #bdbdbd;
+	background: #bebebe;
 	padding: 1px 0 0 0;
 	width: 100%;	
 }

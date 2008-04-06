@@ -26,7 +26,7 @@
 				new Event(e).stop();
 				jsonWindows();			
 			});
-		}
+		}	
 		
 		Note: If your link is in the top menu, it opens only a single window, and you would
 		like a check mark next to it when it's window is open, format the link name as follows:
@@ -60,7 +60,7 @@ initializeWindows = function(){
 			height: 150
 		});
 	}	
-	if ($('ajaxpageLinkCheck')){ // Associated HTML: <a id="xhrpageLink" href="pages/lipsum.html">XHR Page</a>
+	if ($('ajaxpageLinkCheck')){ 
 		$('ajaxpageLinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
 			MochaUI.ajaxpageWindow();
@@ -109,7 +109,7 @@ initializeWindows = function(){
 
 	MochaUI.youtubeWindow = function(){
 		new MochaUI.Window({
-			id: 'youTube',
+			id: 'youtube',
 			title: 'YouTube in Iframe',
 			loadMethod: 'iframe',
 			contentURL: 'pages/youtube.html',
@@ -120,8 +120,8 @@ initializeWindows = function(){
 			bgColor: '#000'
 		});
 	}	
-	if ($('youTubeLinkCheck')) {
-		$('youTubeLinkCheck').addEvent('click', function(e){
+	if ($('youtubeLinkCheck')) {
+		$('youtubeLinkCheck').addEvent('click', function(e){
 		new Event(e).stop();
 			MochaUI.youtubeWindow();
 		});
@@ -156,12 +156,15 @@ initializeWindows = function(){
 							new tableSoort(sort.id);
 						});
 					}					
-				},				
+				},
+				resizable: false,
 				width: 615,
-				height: 200,
+				height: 205,
 				padding: { top: 0, right: 0, bottom: 0, left: 0 },				
 				x: 20,
-				y: 375					
+				y: 380,
+				bodyBgColor: '#fff',
+				scrollbars: false
 			});		
 		}		
 	}	
@@ -179,21 +182,27 @@ initializeWindows = function(){
 			title: 'Window Events',
 			loadMethod: 'xhr',
 			contentURL: 'pages/events.html',
-			onContentLoaded: function(){
-				alert('The window\'s content was loaded.');
+			onBeforeBuild: function(){
+				alert('This window is about to be built.');
+			},			
+			onContentLoaded: function(windowEl){
+				alert(windowEl.id + '\'s content was loaded.');
 			},			
 			onClose: function(){
 				alert('The window is closing.');
 			},
-			onMinimize: function(){
-				alert('The window was minimized.');
+			onMinimize: function(windowEl){
+				alert(windowEl.id + ' was minimized.');
 			},
-			onMaximize: function(){
-				alert('The window was maximized.');
+			onMaximize: function(windowEl){
+				alert(windowEl.id + ' was maximized.');
 			},
-			onResize: function(){
-				alert('The window was resized.');
+			onResize: function(windowEl){
+				alert(windowEl.id + ' was resized.');
 			},
+			onFocus: function(windowEl){
+				alert(windowEl.id + ' was focused.');
+			},			
 			width: 340,
 			height: 250
 		});
@@ -381,7 +390,7 @@ initializeWindows = function(){
 	
 	// Help
 	MochaUI.overviewWindow = function(){	
-		var accordianPage = new MochaUI.Window({
+		new MochaUI.Window({
 			id: 'overview',
 			title: 'Overview',
 			loadMethod: 'xhr',
@@ -394,9 +403,10 @@ initializeWindows = function(){
 			resizable: false,
 			maximizable: false,				
 			padding: { top: 0, right: 0, bottom: 0, left: 0 },			
-			onContentLoaded: function(el){
-				var myFunction = function(){
-					var accordion = new Accordion('h3.accordianToggler', 'div.accordianElement', {
+			onContentLoaded: function(windowEl){
+				this.windowEl = windowEl;
+				var accordianDelay = function(){					
+					new Accordion('h3.accordianToggler', 'div.accordianElement', {
 					//	start: 'all-closed',															   
 						opacity: false,
 						alwaysHide: true,
@@ -407,18 +417,18 @@ initializeWindows = function(){
 								toggler.removeClass('open');
 						},							
 						onStart: function(toggler, element){
-							accordianPage.accordianResize = function(){
-								accordianPage.dynamicResize($('accordianpage'));
+							this.windowEl.accordianResize = function(){
+								MochaUI.dynamicResize($('overview'));
 							}
-							accordianPage.accordianTimer = accordianPage.accordianResize.periodical(10);								
+							this.windowEl.accordianTimer = this.windowEl.accordianResize.periodical(10);								
 						}.bind(this),												
 						onComplete: function(){	
-							accordianPage.accordianTimer = $clear(accordianPage.accordianTimer);
-							accordianPage.dynamicResize($('accordianpage')) // once more for good measure
+							this.windowEl.accordianTimer = $clear(this.windowEl.accordianTimer);
+							MochaUI.dynamicResize($('overview')) // once more for good measure
 						}.bind(this)									   
 					}, $('overview'));
 				}.bind(this)
-				myFunction.delay(100); // Delay is a fix for IE
+				accordianDelay.delay(100, this); // Delay is a fix for IE
 			}				
 		});
 	}	
@@ -569,7 +579,7 @@ initializeWindows = function(){
 	
 	// Build windows onDomReady
 	MochaUI.overviewWindow(); 
-	// MochaUI.dataGridWindow(); 
+	//MochaUI.dataGridWindow(); 
 	MochaUI.cornerRadiusWindow();
 	MochaUI.clockWindow();
 	//MochaUI.featuresWindow();

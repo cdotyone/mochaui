@@ -1,10 +1,18 @@
 /*
 
 Script: Arrange-cascade.js
-	Cascade windows
+	Cascade windows.
 
 License:
 	MIT-style license.	
+
+Requires:
+	Core.js, Window.js
+	
+Syntax:
+	(start code)
+	MochaUI.arrangeCascade();
+	(end)
 
 */
 

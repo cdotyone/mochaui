@@ -6,7 +6,9 @@ Script: Combine-javascript.php
 	Dynamically concatenate source javascript files during development. 
 
 Example:
+	(start code)
 	<script type="text/javascript" src="scripts/source/combine-javascript.php"></script>
+	(end)
 
 */
 

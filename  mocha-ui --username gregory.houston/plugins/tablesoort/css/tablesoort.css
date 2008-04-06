@@ -1,5 +1,13 @@
 /* Table Soort */
 
+.tableWrapper {
+	overflow: auto;
+	height: 184px;
+	background: #fff;
+	margin: 9px;
+	border: 1px solid #d9d9d9;
+}
+
 table.sortTable {
 	background: #fff;
 	border-collapse: collapse;
@@ -18,12 +26,11 @@ table.sortTable tr.odd td {
 }
 
 table.sortTable th {
-	background: #dcdcdc;
+	background: #f3f3f3;
 	font-weight: bold;
 	padding: 2px 8px;
-	border-right: 1px solid #bbb;
-	border-bottom: 1px solid #bbb;	
-   	cursor: pointer;    
+   	cursor: pointer;
+	border-bottom: 1px solid #fff;    
 }
 
 table.sortTable th.asc {
@@ -35,7 +42,6 @@ table.sortTable th.desc {
 }
 
 table.sortTable td {
-	border-right: 1px solid #bbb;
 	padding: 2px 8px;	
 }
 

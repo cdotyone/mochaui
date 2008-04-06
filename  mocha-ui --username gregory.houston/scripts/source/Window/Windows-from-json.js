@@ -1,22 +1,32 @@
 /*
 
 Script: Windows-from-json.js
-	Create one or more windows from JSON data. You can define all the same properties as you can for new Mocha.Window(). Undefined properties are set to their defaults.
+	Create one or more windows from JSON data. You can define all the same properties as you can for new MochaUI.Window(). Undefined properties are set to their defaults.
 
 License:
 	MIT-style license.	
 
-Syntax: MochaUI.newWindowsFromJSON(properties);
+Syntax:
+	(start code)
+	MochaUI.newWindowsFromJSON(properties);
+	(end)
 
 Example:
-(start code)
-	var url = 'data/json-windows-data.js';
-	var request = new Json.Remote(url, {
-		onComplete: function(properties) {
-			MochaUI.newWindowsFromJSON(properties.windows);
-		}
-	}).send();
-(end)
+	(start code)
+	MochaUI.jsonWindows = function(){
+		var url = 'data/json-windows-data.js';
+		var request = new Request.JSON({
+			url: url,
+			method: 'get',										  
+			onComplete: function(properties) {
+				MochaUI.newWindowsFromJSON(properties.windows);
+			}
+		}).send();		
+	}
+	(end)
+	
+See Also:
+	<Window>	
 
 */
 

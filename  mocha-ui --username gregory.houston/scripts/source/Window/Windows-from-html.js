@@ -1,10 +1,25 @@
 /*
 
 Script: Windows-from-html.js
-	Create windows from html markup in page
+	Create windows from html markup in page.
 
 License:
 	MIT-style license.	
+
+Requires:
+	Core.js, Window.js
+	
+Example:
+	HTML markup.
+	(start code)
+<div class="mocha" id="mywindow" style="width:300px;height:255px;top:50px;left:350px">
+	<h3 class="mochaTitle">My Window</h3>
+	<p>My Window Content</p>
+</div>	
+	(end)
+
+See Also:
+	<Window>
 
 */
 

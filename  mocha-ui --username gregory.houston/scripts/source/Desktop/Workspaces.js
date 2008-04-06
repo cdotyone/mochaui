@@ -3,10 +3,11 @@
 Script: Workspaces.js
 	Create multiple workspaces.
 	
-Dependencies: desktop.js, window.js, core.js	
-
 License:
 	MIT-style license.
+
+Requires:
+	Core.js, Window.js, Desktop.js
 
 Notes:
 	The Workspaces emulate Adobe Illustrator functionality. This is experimental.

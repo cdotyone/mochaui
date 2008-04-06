@@ -3,10 +3,11 @@
 Script: Desktop.js
 	Creates a desktop. Enables window maximize. 
 	
-Dependencies: window.js, core.js	
-
 License:
 	MIT-style license.	
+
+Requires:
+	Core.js, Window.js
 
 */
 
@@ -142,7 +143,6 @@ MochaUI.Desktop = new Class({
 	},
 	setDesktopSize: function(){
 		var windowDimensions = window.getCoordinates();
-		//alert('desktop set');
 
 		if (this.options.useHeaderCanvas){
 			this.drawHeaderCanvas.delay(10, this);
@@ -156,7 +156,6 @@ MochaUI.Desktop = new Class({
 		}
 
 		// Set pageWrapper height so the dock doesn't cover the pageWrapper scrollbars.
-
 		if (this.pageWrapper && this.desktopHeader) {
 					
 			var dockOffset = MochaUI.dockVisible ? mochaDockWrapper.offsetHeight : 0;
@@ -178,9 +177,13 @@ MochaUI.Desktop = new Class({
 	},
 	/*
 	
-	Function: MochaUI.Desktop.maximizeWindow()
+	Function: maximizeWindow
+		Maximize a window.
 	
-	Requires: MochaUI.Desktop
+	Syntax:
+		(start code)
+		MochaUI.Desktop.maximizeWindow(windowEl);
+		(end)	
 
 	*/	
 	maximizeWindow: function(windowEl) {
@@ -193,7 +196,7 @@ MochaUI.Desktop = new Class({
 
 		currentWindowClass.isMaximized = true;
 
-		currentWindowClass.fireEvent('onMaximize');
+		currentWindowClass.fireEvent('onMaximize', windowEl);
 		
 		// Save original position
 		currentWindowClass.oldTop = windowEl.getStyle('top');
@@ -216,7 +219,7 @@ MochaUI.Desktop = new Class({
 				'top': -currentWindowClass.shadowWidth,
 				'left': -currentWindowClass.shadowWidth
 			});
-			contentWrapper.setStyles({
+			currentWindowClass.contentWrapperEl.setStyles({
 				'height': windowDimensions.height - currentWindowClass.options.headerHeight - currentWindowClass.options.footerHeight,
 				'width':  windowDimensions.width
 			});
@@ -258,6 +261,17 @@ MochaUI.Desktop = new Class({
 		}		
 
 	},
+	/*
+	
+	Function: restoreWindow
+		Restore a maximized window.
+	
+	Syntax:
+		(start code)
+		MochaUI.Desktop.restoreWindow(windowEl);
+		(end)	
+
+	*/	
 	restoreWindow: function(windowEl) {	
 	
 		currentWindowClass = MochaUI.Windows.instances.get(windowEl.id);
@@ -352,7 +366,18 @@ MochaUI.Desktop = new Class({
 				'id': 'sidebar_check'
 			}).injectInside($('sidebarLinkCheck'));
 		}		
-	},	
+	},
+	/*
+	
+	Function: sidebarToggle
+		Toggles the display of the sidebar.
+	
+	Syntax:
+		(start code)
+		MochaUI.Desktop.sidebarToggle();
+		(end)	
+
+	*/		
 	sidebarToggle: function(){
 		if (this.sidebarWrapper.getStyle('display') == 'block'){
 			this.sidebarWrapper.setStyle('display', 'none');
@@ -375,6 +400,17 @@ MochaUI.Desktop = new Class({
 			}			
 		}
 	},
+	/*
+	
+	Function: sidebarMinimizeToggle
+		Minimize and restore the sidebar.
+	
+	Syntax:
+		(start code)
+		MochaUI.Desktop.sidebarMinimizeToggle();
+		(end)	
+
+	*/		
 	sidebarMinimizeToggle: function(){
 			if (!this.sidebarIsMinimized){					
 				this.sidebar.setStyle('display', 'none');

@@ -4,16 +4,24 @@ Script: Window.js
 	Build windows.	
 
 License:
-	MIT-style license.
-	
+	MIT-style license.	
+
+Requires:
+	Core.js
+
 Todo:
 	- Try setting window opacity to .99 for IE. See if opacity effects will work with shadows then.
 
 */
    
 /*
-Class: MochaUI.Window
+Class: Window
 	Creates a single MochaUI window.
+	
+Syntax:
+	(start code)
+	new MochaUI.Window(options);
+	(end)	
 
 Arguments:
 	options
@@ -23,11 +31,44 @@ Options:
 
 Returns:
 	Window object.
-
-Syntax:
-(start code)
-		new MochaUI.Window();
-(end)
+	
+Example:
+	Define a window. It is suggested you name the function the same as your window ID + "Window".
+	(start code)
+	var mywindowWindow = function(){ 
+		new MochaUI.Window({
+			id: 'mywindow',
+			title: 'My Window',
+			loadMethod: 'xhr',
+			contentURL: 'pages/lipsum.html',
+			width: 340,
+			height: 150
+		});
+	}
+	(end)
+	
+Example:
+	Create window onDomReady.
+	(start code)	
+	window.addEvent('domready', function(){
+		mywindow();
+	});
+	(end)
+	
+Example:	
+	Add link events to build future windows. It is suggested you give your anchor the same ID as your window + "WindowLink" or + "WindowLinkCheck". Use the latter if it is a link in the menu toolbar.
+	(start code)	
+	// Javascript:
+	if ($('mywindowLink')){
+		$('mywindowLink').addEvent('click', function(e) {
+			new Event(e).stop();
+			mywindow();			
+		});
+	}
+	
+	// HTML:
+	<a id="mywindowLink" href="pages/lipsum.html">My Window</a>	
+	(end)
 
 */   
 
@@ -76,7 +117,7 @@ windowOptions = {
 	footerHeight:      26,
 	cornerRadius:      10,
 	bodyBgColor:	   '#fff',           // Body background color - Hex
-	headerStartColor:  [253, 253, 253],  // Header gradient's top color - RGB
+	headerStartColor:  [250, 250, 250],  // Header gradient's top color - RGB
 	headerStopColor:   [228, 228, 230],  // Header gradient's bottom color
 	footerBgColor:     [228, 228, 230],	 // Background color of the main canvas shape
 	minimizeColor:     [230, 230, 210],  // Minimize button color
@@ -85,14 +126,14 @@ windowOptions = {
 	resizableColor:    [209, 209, 209],  // Resizable icon color
 
 	// Events
-	onBeforeBuild:     $empty,  // NOT YET IMPLEMENTED
-	onContentLoaded:   $empty,  // Event, fired when content is successfully loaded via XHR.
-	onFocus:           $empty,  // Event, fired when the window is focused.
-	onResize:          $empty,  // Event, fired when the window is resized.
-	onMinimize:        $empty,  // Event, fired when the window is minimized.
-	onMaximize:        $empty,  // Event, fired when the window is maximized.
-	onClose:           $empty,  // Event, fired just before the window is closed.
-	onCloseComplete:   $empty   // Event, fired after the window is closed.
+	onBeforeBuild:     $empty,  // Fired just before the window is built.
+	onContentLoaded:   $empty,  // Fired when content is successfully loaded via XHR or Iframe.
+	onFocus:           $empty,  // Fired when the window is focused.
+	onResize:          $empty,  // Fired when the window is resized.
+	onMinimize:        $empty,  // Fired when the window is minimized.
+	onMaximize:        $empty,  // Fired when the window is maximized.
+	onClose:           $empty,  // Fired just before the window is closed.
+	onCloseComplete:   $empty   // Fired after the window is closed.
 };
 
 MochaUI.Window = new Class({
@@ -135,7 +176,7 @@ MochaUI.Window = new Class({
 	},
 	/*
 	
-	Method: newWindow
+	Internal Function: newWindow
 	
 	Arguments: 
 		properties
@@ -153,8 +194,9 @@ MochaUI.Window = new Class({
 			if (currentWindowClass.isMinimized) { // If minimized -> restore
 				MochaUI.Dock.restoreMinimized(this.windowEl);
 			}
-			else // else focus
-				setTimeout(function(){ MochaUI.focusWindow(this.windowEl); }.bind(this),10);
+			else { // else focus
+				setTimeout(MochaUI.focusWindow.pass(this.windowEl, this),10);	
+			}
 			return;
 		}
 		else {			
@@ -162,6 +204,8 @@ MochaUI.Window = new Class({
 		}
 		
 		this.isClosing = false;
+		
+		this.fireEvent('onBeforeBuild');		
 		
 		// Create window div
 		this.windowEl = new Element('div', {
@@ -211,7 +255,7 @@ MochaUI.Window = new Class({
 					}.bind(this),
 					onSuccess: function() {
 						this.hideLoadingIcon.delay(150, this, this.canvasIconEl);
-						this.fireEvent('onContentLoaded');
+						this.fireEvent('onContentLoaded', this.windowEl);
 					}.bind(this)
 				}).get();
 				break;
@@ -232,14 +276,14 @@ MochaUI.Window = new Class({
 				// Add onload event to iframe so we can stop the loading icon and run onContentLoaded()
 				this.iframeEl.addEvent('load', function(e) {
 					this.hideLoadingIcon.delay(150, this, this.canvasIconEl);
-					this.fireEvent('onContentLoaded');
+					this.fireEvent('onContentLoaded', this.windowEl);
 				}.bind(this));
 				this.showLoadingIcon(this.canvasIconEl);
 				break;
 			case 'html':
 			default:
 				this.contentEl.set('html', this.options.content);
-				this.fireEvent('onContentLoaded');
+				this.fireEvent('onContentLoaded', this.windowEl);
 				break;
 		}
 
@@ -327,7 +371,7 @@ MochaUI.Window = new Class({
 			this.windowEl.opacityMorph.start({
 				'opacity': 1
 			});
-			setTimeout(function(){ MochaUI.focusWindow(this.windowEl); }.bind(this), 10);
+			setTimeout(MochaUI.focusWindow.pass(this.windowEl, this),10);
 		}
 		
 		// Add check mark to menu if link exists in menu
@@ -340,9 +384,7 @@ MochaUI.Window = new Class({
 			}).injectInside(this.windowEl.id + 'LinkCheck');
 		}
 
-	},
-	/* -- START Private Methods -- */
-	
+	},	
 	setupEvents: function(windowEl) {
 
 		// Set events
@@ -369,12 +411,13 @@ MochaUI.Window = new Class({
 		}
 	},
 	/*
-		Method: attachDraggable()
-		Description: make window draggable
-		Usage: internal
+	
+	Internal Function: attachDraggable()
+		make window draggable
 		
-		Arguments:
-			windowEl
+	Arguments:
+		windowEl
+		
 	*/
 	attachDraggable: function(windowEl, handleEl){
 		if ( !this.options.draggable )
@@ -398,12 +441,13 @@ MochaUI.Window = new Class({
 		});
 	},
 	/*
-		Method: attachResizable()
-		Description: make window resizable
-		Usage: internal
+	
+	Internal Function: attachResizable
+		Make window resizable.
 		
-		Arguments:
-			windowEl
+	Arguments:
+		windowEl
+		
 	*/
 	attachResizable: function(windowEl){
 		if ( !this.options.resizable )
@@ -428,14 +472,17 @@ MochaUI.Window = new Class({
 			onComplete: function() {
 				if ( this.iframeEl )
 					this.iframeEl.setStyle('visibility', 'visible');
-				this.fireEvent('onResize');
+				this.fireEvent('onResize', windowEl);
 			}.bind(this)
 		});
 	},
 	/*
-		Method: insertWindowElements
-		Arguments:
-			windowEl
+	
+	Internal Function: insertWindowElements
+	
+	Arguments:
+		windowEl
+			
 	*/
 	insertWindowElements: function(){
 		
@@ -582,13 +629,12 @@ MochaUI.Window = new Class({
 	},
 	/*
 
-	Function: drawWindow()
+	Internal function: drawWindow
+		This is where we create the canvas GUI	
 
 	Arguments: 
 		windowEl: the $(window)
 		shadows: (boolean) false will draw a window without shadows
-
-	Notes: This is where we create the canvas GUI	
 
 	*/	
 	drawWindow: function(windowEl, shadows) {
@@ -818,10 +864,6 @@ MochaUI.Window = new Class({
 			this.closeButtonEl.setStyle('margin-left', marginWidth);
 		}
 		this.controlsEl.setStyle('width', this.mochaControlsWidth);
-	},
-	dynamicResize: function (windowEl){
-			this.contentWrapperEl.setStyle('height', this.contentEl.offsetHeight);
-			this.drawWindow(windowEl);
 	}
 });
 MochaUI.Window.implement(new Options, new Events);

@@ -6,9 +6,12 @@ Script: Modal.js
 License:
 	MIT-style license.	
 
-Requirements:
-	window.js, core.js
-
+Requires:
+	Core.js, Window.js
+	
+See Also:
+	<Window>	
+	
 */
 
 MochaUI.Modal = new Class({

@@ -1,10 +1,16 @@
 /*
 
 Script: Window-from-form.js
-	Create windows from a form
+	Create a window from a form.
 
 License:
-	MIT-style license.	
+	MIT-style license.
+	
+Requires:
+	Core.js, Window.js
+	
+See Also:
+	<Window>	
 
 */
 

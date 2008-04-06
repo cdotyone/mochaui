@@ -187,7 +187,7 @@ MochaUI.Dock = new Class({
 		var title = currentWindowClass.titleEl; //?
 		//var mochaContentWrapper = this.contentWrapperEl;
 		var titleText = title.innerHTML; //?
-		currentWindowClass.fireEvent('onMinimize');
+		currentWindowClass.fireEvent('onMinimize', windowEl);
 
 		// Hide window and add to dock
 		windowEl.setStyle('visibility', 'hidden');
