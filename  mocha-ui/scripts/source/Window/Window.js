@@ -120,9 +120,9 @@ windowOptions = {
 	headerStartColor:  [250, 250, 250],  // Header gradient's top color - RGB
 	headerStopColor:   [229, 229, 229],  // Header gradient's bottom color
 	footerBgColor:     [229, 229, 229],	 // Background color of the main canvas shape
-	minimizeColor:     [230, 230, 210],  // Minimize button color
-	maximizeColor:     [218, 230, 218],  // Maximize button color
-	closeColor:        [230, 218, 218],  // Close button color
+	minimizeColor:     [250, 250, 250],  // Minimize button color
+	maximizeColor:     [250, 250, 250],  // Maximize button color
+	closeColor:        [250, 250, 250],  // Close button color
 	resizableColor:    [254, 254, 254],  // Resizable icon color
 
 	// Events

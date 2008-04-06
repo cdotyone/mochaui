@@ -29,7 +29,7 @@ var MochaUI = new Hash({
 		instances: new Hash()
 	},	
 	options: new Hash({
-		useEffects: false,     // Toggles the majority of window fade and move effects.
+		useEffects: true,     // Toggles the majority of window fade and move effects.
 		useLoadingIcon: true  // Toggles whether or not the ajax spinners are displayed in window footers.
 
 	}),	

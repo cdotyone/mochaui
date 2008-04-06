@@ -370,21 +370,21 @@ initializeWindows = function(){
 	if ($('workspace01LinkCheck')){
 		$('workspace01LinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			MochaUI.Workspaces.setWorkspace({index: 0, background: '#BFCFDE' })
+			MochaUI.Workspaces.setWorkspace({index: 0, background: '#fff' })
 		});
 	}
 	
 	if ($('workspace02LinkCheck')){
 		$('workspace02LinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			MochaUI.Workspaces.setWorkspace({index: 1, background: '#8CAAC7' })
+			MochaUI.Workspaces.setWorkspace({index: 1, background: '#bfcfde' })
 		});
 	}
 	
 	if ($('workspace03LinkCheck')){
 		$('workspace03LinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			MochaUI.Workspaces.setWorkspace({index: 2, background: '#fff' })
+			MochaUI.Workspaces.setWorkspace({index: 2, background: '#8caac7' })
 		});
 	}	
 	
