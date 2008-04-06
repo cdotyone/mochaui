@@ -340,7 +340,7 @@ MochaUI.Desktop = new Class({
 				y: false				
 			},
 			limit: {
-				x: sidebarLimitX
+				x: this.options.sidebarLimitX
 			},
 			onBeforeStart: function(){
  				// Using postion fixed fixes a minor display glitch while resizing the sidebar in Firefox PC
