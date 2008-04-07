@@ -189,7 +189,7 @@ var MochaUI = new Hash({
 	unserialize: function(obj) {
 		var newobj = {};
 		$each(obj, function(prop,i) {
-			newobj[i] = eval(prop);
+			eval("newobj[i] = " + prop);
 		}, this);
 		return newobj;
 	},	

@@ -87,6 +87,10 @@ windowOptions = {
 	// html options
 	content:           'Window content',
 	
+	// Container options
+	container:         'desktop', // Window container element. NOT YET IMPLEMENTED
+	restrict:          false,     // Restrict window to container. NOT YET IMPLEMENTED
+	
 	// Window Events  
 	minimizable:       true,  // Requires MochaUI.Desktop and MochaUI.Dock.
 	maximizable:       true,  // Requires MochaUI.Desktop.
@@ -132,6 +136,7 @@ windowOptions = {
 	onResize:          $empty,  // Fired when the window is resized.
 	onMinimize:        $empty,  // Fired when the window is minimized.
 	onMaximize:        $empty,  // Fired when the window is maximized.
+	onRestore:         $empty,  // Fired when a window is restored from minimized or maximized. NOT YET IMPLEMENTED.
 	onClose:           $empty,  // Fired just before the window is closed.
 	onCloseComplete:   $empty   // Fired after the window is closed.
 };
