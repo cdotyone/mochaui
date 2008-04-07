@@ -217,12 +217,13 @@ initializeWindows = function(){
 	MochaUI.cornerRadiusWindow = function(){	
 		new MochaUI.Window({
 			id: 'cornerRadius',
-			title: 'Corner Radius Slider',
+			title: 'Parametrics',
 			addClass: 'darkWindow',		
 			loadMethod: 'xhr',
 			contentURL: 'pages/corner_radius.html',
 			onContentLoaded: function(){
-				MochaUI.addSlider.delay(100); // Delay is for IE6					
+				MochaUI.addRadiusSlider.delay(100); // Delay is for IE6
+				MochaUI.addShadowSlider.delay(100); // Delay is for IE6					
 			},
 			width: 300,
 			height: 105,

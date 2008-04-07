@@ -225,8 +225,8 @@ div.mocha {
 
 div.mochaOverlay {
 	position: absolute;
-	top: 2px;
-	left: 3px;	
+	top: 0;
+	left: 0;	
 }
 	
 div.mocha .mochaTitlebar {
@@ -307,28 +307,29 @@ div.mocha .mochaContent {
 /*	height: inherit; */
 }  
 	
-/* Slider */
+/* Sliders */
 
-#slider {
+.slider {
+	clear: both;
 	position: relative;
 	font-size: 12px;
 	font-weight: bold;
 	width: 200px;
-	padding-top: 19px;	
+	margin-bottom: 15px;	
 }
 
-#sliderarea {
+.sliderarea {
 	position: relative;
 	height: 6px;
 	width: 200px;
 	font-size: 1px;
 	line-height: 1px;
 	background: #dfdfdf;
-	margin: 2px 0 10px 0;
+	margin: 0;
 	padding: 0;
 }
  
-#sliderknob {
+.sliderknob {
 	position: absolute;
 	top: 0px;
 	height: 6px;
@@ -342,8 +343,8 @@ div.mocha .mochaContent {
 	overflow: hidden;
 }
 	
-#update {
-	padding-bottom: 10px;	
+.update {
+	padding-bottom: 5px;	
 }	
 	
 .clear {

@@ -225,8 +225,8 @@ MochaUI.Desktop = new Class({
 
 		if (MochaUI.options.useEffects == false){
 			windowEl.setStyles({
-				'top': -currentWindowClass.shadowWidth,
-				'left': -currentWindowClass.shadowWidth
+				'top': -currentWindowClass.options.shadowWidth,
+				'left': -currentWindowClass.options.shadowWidth
 			});
 			currentWindowClass.contentWrapperEl.setStyles({
 				'height': windowDimensions.height - currentWindowClass.options.headerHeight - currentWindowClass.options.footerHeight,
@@ -263,8 +263,8 @@ MochaUI.Desktop = new Class({
 				'0': {	'height': windowDimensions.height - currentWindowClass.options.headerHeight - currentWindowClass.options.footerHeight,
 						'width':  windowDimensions.width
 				},
-				'1': {	'top':  -currentWindowClass.shadowWidth, // Takes shadow width into account
-						'left': -currentWindowClass.shadowWidth  // Takes shadow width into account
+				'1': {	'top':  -currentWindowClass.options.shadowWidth, // Takes shadow width into account
+						'left': -currentWindowClass.options.shadowWidth  // Takes shadow width into account
 				}
 			});		
 		}		
