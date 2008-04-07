@@ -88,8 +88,8 @@ windowOptions = {
 	content:           'Window content',
 	
 	// Container options
-	container:         'desktop', // Window container element. NOT YET IMPLEMENTED
-	restrict:          false,     // Restrict window to container. NOT YET IMPLEMENTED
+	container:         'mochaDesktop',  // Element the window is injected in. NOT YET IMPLEMENTED
+	restrict:          true,            // Restrict window to container when dragging.
 	
 	// Window Events  
 	minimizable:       true,  // Requires MochaUI.Desktop and MochaUI.Dock.
@@ -312,12 +312,10 @@ MochaUI.Window = new Class({
 		this.drawWindow(this.windowEl);
 
 		// Attach events to the window
+		this.attachDraggable(this.windowEl, this.titleBarEl);		
 		this.attachResizable(this.windowEl);
 		this.setupEvents(this.windowEl);
 
-		// Drag.Move() does not work in IE until element has been injected, thus setting here
-		this.attachDraggable(this.windowEl, this.titleBarEl);
-		
 		// Move new window into position. If position not specified by user then center the window on the page.
 		// We do this last so that the effects are as smooth as possible, not interrupted by other functions.
 		var dimensions = document.getCoordinates();
@@ -429,6 +427,7 @@ MochaUI.Window = new Class({
 			return;
 		new Drag.Move(windowEl, {
 			handle: handleEl,
+			container: this.options.restrict ? $(this.options.container) : false,			
 			grid: this.options.draggableGrid,
 			limit: this.options.draggableLimit,
 			snap: this.options.draggableSnap,
@@ -458,7 +457,7 @@ MochaUI.Window = new Class({
 		if ( !this.options.resizable )
 			return;
 		this.contentWrapperEl.makeResizable({
-			handle: this.resizeHandleEl,
+			handle: this.resizeHandleEl,		
 			modifiers: {
 				x: 'width',
 				y: 'height'

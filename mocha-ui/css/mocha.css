@@ -145,6 +145,7 @@ body {
 }	
 
 #mochaPageWrapper {
+	position: relative;
 	width: auto;
 	overflow: auto; /* This can be set to hidden if you want to treat it more like a desktop than a web page */
 }
