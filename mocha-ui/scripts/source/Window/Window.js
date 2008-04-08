@@ -89,8 +89,8 @@ windowOptions = {
 	content:           'Window content',
 	
 	// Container options
-	container:         'mochaDesktop',  // Element the window is injected in. NOT YET IMPLEMENTED
-	restrict:          false,            // Restrict window to container when dragging.
+	container:         null,  // Element the window is injected in. Defaults to MochaUI.Desktop.deskop. If no desktop then to document.body.
+	restrict:          true,  // Restrict window to container when dragging.
 	
 	// Window Events  
 	minimizable:       true,  // Requires MochaUI.Desktop and MochaUI.Dock.
@@ -116,11 +116,11 @@ windowOptions = {
 	y:                 null,
 	scrollbars:        true,
 	padding:   		   { top: 10, right: 12, bottom: 10, left: 12 },
-	shadowBlur:       4,
+	shadowBlur:        4,       // Width of shadows.
 	
 	// Color options:		
 	headerHeight:      25,               // Height of window titlebar
-	footerHeight:      26,
+	footerHeight:      27,
 	cornerRadius:      10,
 	bodyBgColor:	   '#fff',           // Body background color - Hex
 	headerStartColor:  [250, 250, 250],  // Header gradient's top color - RGB
@@ -135,6 +135,7 @@ windowOptions = {
 	onBeforeBuild:     $empty,  // Fired just before the window is built.
 	onContentLoaded:   $empty,  // Fired when content is successfully loaded via XHR or Iframe.
 	onFocus:           $empty,  // Fired when the window is focused.
+	onBlur:            $empty,  // Fired when window loses focus. NOT YET IMPLEMENTED.
 	onResize:          $empty,  // Fired when the window is resized.
 	onMinimize:        $empty,  // Fired when the window is minimized.
 	onMaximize:        $empty,  // Fired when the window is maximized.
@@ -314,8 +315,11 @@ MochaUI.Window = new Class({
 		});
 
 		// Inject window into DOM		
+		if (!this.options.container){
+			this.options.container = MochaUI.Desktop.desktop ? MochaUI.Desktop.desktop : document.body;			 
+		}
 
-		this.windowEl.injectInside(MochaUI.Desktop.desktop ? MochaUI.Desktop.desktop : document.body);
+		this.windowEl.injectInside(this.options.container);
 		this.drawWindow(this.windowEl);
 
 		// Attach events to the window
@@ -645,7 +649,7 @@ MochaUI.Window = new Class({
 		if (Browser.Platform.mac && Browser.Engine.gecko) {
 			this.overlayEl.setStyle('overflow', 'auto');
 		}
-		this.setMochaControlsWidth(this.windowEl);
+		this.setMochaControlsWidth();
 		
 	},
 	/*
@@ -723,27 +727,39 @@ MochaUI.Window = new Class({
 			}
 		}
 		
+		// Make sure controls are placed correctly.
+		this.controlsEl.setStyles({
+			'right': this.options.shadowBlur + 5,
+			'top': this.options.shadowBlur + 5	
+		})
+		
+		// Make sure loading icon is placed correctly.
+		this.canvasIconEl.setStyles({
+			'left': this.options.shadowBlur + 3,
+			'bottom': this.options.shadowBlur + 4
+		})
+		
 		// Mocha body
 		this.bodyRoundedRect(
-			ctx,                         // context
-			this.options.shadowBlur,            // x
+			ctx,                                    // context
+			this.options.shadowBlur,                // x
 			this.options.shadowBlur - 1,            // y
-			width - (this.options.shadowBlur * 2),   // width
-			height - (this.options.shadowBlur * 2),  // height
-			this.options.cornerRadius,   // corner radius
-			this.options.footerBgColor   // Footer color
+			width - (this.options.shadowBlur * 2),  // width
+			height - (this.options.shadowBlur * 2), // height
+			this.options.cornerRadius,              // corner radius
+			this.options.footerBgColor              // Footer color
 		);
 
 		// Mocha header
 		this.topRoundedRect(
-			ctx,                            // context
+			ctx,                                   // context
 			this.options.shadowBlur,               // x
-			this.options.shadowBlur - 1,               // y
-			width - (this.options.shadowBlur * 2),      // width
-			this.options.headerHeight,      // height
-			this.options.cornerRadius,      // corner radius
-			this.options.headerStartColor,  // Header gradient's top color
-			this.options.headerStopColor    // Header gradient's bottom color
+			this.options.shadowBlur - 1,           // y
+			width - (this.options.shadowBlur * 2), // width
+			this.options.headerHeight,             // height
+			this.options.cornerRadius,             // corner radius
+			this.options.headerStartColor,         // Header gradient's top color
+			this.options.headerStopColor           // Header gradient's bottom color
 		);
 
 		// Calculate X position for controlbuttons
@@ -884,7 +900,7 @@ MochaUI.Window = new Class({
 		}.bind(this);
 		canvas.iconAnimation = iconAnimation.periodical(125, this, canvas);
 	},	
-	setMochaControlsWidth: function(windowEl){
+	setMochaControlsWidth: function(){
 		var controlWidth = 14;
 		var marginWidth = 5;
 		this.mochaControlsWidth = 0;
