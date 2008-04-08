@@ -333,7 +333,7 @@ MochaUI.Desktop = new Class({
 		}
 	},
 	sidebarInitialize: function(){
-		this.sidebar.makeResizable({
+		this.sidebarResizable = this.sidebar.makeResizable({
 			handle: this.sidebarHandle ? this.sidebarHandle : false,
 			modifiers: {
 				x: 'width',
@@ -421,7 +421,9 @@ MochaUI.Desktop = new Class({
 
 	*/		
 	sidebarMinimizeToggle: function(){
-			if (!this.sidebarIsMinimized){					
+			if (!this.sidebarIsMinimized){				
+				this.sidebarResizable.detach();
+				this.sidebarHandle.setStyle('cursor', 'default');						
 				this.sidebar.setStyle('display', 'none');
 				// Part of IE6 3px jox bug fix			
 				if (Browser.Engine.trident4){
@@ -429,8 +431,13 @@ MochaUI.Desktop = new Class({
 				}
 				this.sidebarIsMinimized = true;				
 			}
-			else {					
-				this.sidebar.setStyle('display', 'block');
+			else {
+				this.sidebarResizable.attach();	
+				this.sidebarHandle.setStyles({
+					'cursor': 'e-resize', /* This is for Opera which does not support the col-resize cursor */
+					'cursor': 'col-resize'
+				});				
+				this.sidebar.setStyle('display', 'block');				
 				if (Browser.Engine.trident4){
 					this.sidebarMinimize.setStyle('margin-right', 1);
 				}				

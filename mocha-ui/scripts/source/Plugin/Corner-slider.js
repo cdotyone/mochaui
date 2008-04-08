@@ -54,7 +54,7 @@ MochaUI.extend({
 					$('shadowUpdatevalue').set('html', pos);
 					
 					// Change default shadow width of the original class
-					windowOptions.shadowWidth = pos;
+					windowOptions.shadowBlur = pos;
 					
 					MochaUI.Window.implement({ options: windowOptions });
 					
@@ -67,18 +67,18 @@ MochaUI.extend({
 					// Change shadow width of all active classes and their windows
 					MochaUI.Windows.instances.each(function(instance) {
 															
-						instance.oldShadowWidth = instance.options.shadowWidth;									
-						instance.options.shadowWidth = pos;
+						instance.oldshadowBlur = instance.options.shadowBlur;									
+						instance.options.shadowBlur = pos;
 					
 						instance.windowEl.setStyles({
-							'top': instance.windowEl.getStyle('top').toInt() - (instance.options.shadowWidth - instance.oldShadowWidth) ,
-							'left': instance.windowEl.getStyle('left').toInt() - (instance.options.shadowWidth - instance.oldShadowWidth)
+							'top': instance.windowEl.getStyle('top').toInt() - (instance.options.shadowBlur - instance.oldshadowBlur) ,
+							'left': instance.windowEl.getStyle('left').toInt() - (instance.options.shadowBlur - instance.oldshadowBlur)
 						});
 						instance.drawWindow($(instance.options.id));
 					}.bind(this));					
 					MochaUI.indexLevel++; 
 				}.bind(this)				
-			}).set(windowOptions.shadowWidth);
+			}).set(windowOptions.shadowBlur);
 		}
 	}	
 });

@@ -186,7 +186,7 @@ body {
 	width: 4px;
 	margin: 0 1px 0 0;
 	cursor: e-resize; /* This is for Opera which does not support the col-resize cursor */
-	cursor: col-resize;	
+	cursor: col-resize;
 }
 
 * html #mochaSidebarWrapper {

@@ -116,7 +116,7 @@ windowOptions = {
 	y:                 null,
 	scrollbars:        true,
 	padding:   		   { top: 10, right: 12, bottom: 10, left: 12 },
-	shadowWidth:       4,
+	shadowBlur:       4,
 	
 	// Color options:		
 	headerHeight:      25,               // Height of window titlebar
@@ -154,7 +154,7 @@ MochaUI.Window = new Class({
 		this.minimizebuttonX    = 0;  // Minimize button horizontal position
 		this.maximizebuttonX    = 0;  // Maximize button horizontal position
 		this.closebuttonX       = 0;  // Close button horizontal position
-		this.HeaderFooterShadow = this.options.headerHeight + this.options.footerHeight + (this.options.shadowWidth * 2);
+		this.HeaderFooterShadow = this.options.headerHeight + this.options.footerHeight + (this.options.shadowBlur * 2);
 		this.oldTop             = 0;
 		this.oldLeft            = 0;
 
@@ -331,14 +331,14 @@ MochaUI.Window = new Class({
 			var windowPosTop = (dimensions.height * .5) - ((this.options.height + this.HeaderFooterShadow) * .5);
 		}
 		else {
-			var windowPosTop = this.options.y - this.options.shadowWidth;
+			var windowPosTop = this.options.y - this.options.shadowBlur;
 		}
 
 		if (!this.options.x) {
 			var windowPosLeft =	(dimensions.width * .5) - (this.options.width * .5);
 		}
 		else {
-			var windowPosLeft = this.options.x - this.options.shadowWidth;
+			var windowPosLeft = this.options.x - this.options.shadowBlur;
 		}
 
 		this.windowEl.setStyles({
@@ -671,22 +671,22 @@ MochaUI.Window = new Class({
 			});
 		}
 
-		this.HeaderFooterShadow = this.options.headerHeight + this.options.footerHeight + (this.options.shadowWidth * 2);
+		this.HeaderFooterShadow = this.options.headerHeight + this.options.footerHeight + (this.options.shadowBlur * 2);
 		var height = this.contentWrapperEl.getStyle('height').toInt() + this.HeaderFooterShadow;
-		var width = this.contentWrapperEl.getStyle('width').toInt() + (this.options.shadowWidth * 2);
+		var width = this.contentWrapperEl.getStyle('width').toInt() + (this.options.shadowBlur * 2);
 
 		this.windowEl.setStyle('height', height);
 		
 		/* this.windowEl.setStyles({
 			'height': height,
-			'top': this.options.y - this.options.shadowWidth,
-			'left': this.options.x - this.options.shadowWidth
+			'top': this.options.y - this.options.shadowBlur,
+			'left': this.options.x - this.options.shadowBlur
 		}); */		
 		
 		this.overlayEl.setStyles({
 			'height': height,
-			'top': this.options.shadowWidth,
-			'left': this.options.shadowWidth
+			'top': this.options.shadowBlur,
+			'left': this.options.shadowBlur
 		});		
 
 		// If opera height and width must be set like this, when resizing:
@@ -705,7 +705,7 @@ MochaUI.Window = new Class({
 		this.windowEl.setStyle('width', width);
 		this.overlayEl.setStyle('width', width);
 		this.titleBarEl.setStyles({
-			'width': width - (this.options.shadowWidth * 2),
+			'width': width - (this.options.shadowBlur * 2),
 			'height': this.options.headerHeight
 		});
 
@@ -717,19 +717,19 @@ MochaUI.Window = new Class({
 		// This is the drop shadow. It is created onion style with three layers
 		if ( shadows != false ) {	
 
-		this.options.shadowWidth	
-			for (var x = 0; x <= this.options.shadowWidth; x++){
-				MochaUI.roundedRect(ctx, x, x, width - (x * 2), height - (x * 2), this.options.cornerRadius + (this.options.shadowWidth - x), [0, 0, 0], x == this.options.shadowWidth ? .3 : .06 + (x * .01) );
+		this.options.shadowBlur	
+			for (var x = 0; x <= this.options.shadowBlur; x++){
+				MochaUI.roundedRect(ctx, x, x, width - (x * 2), height - (x * 2), this.options.cornerRadius + (this.options.shadowBlur - x), [0, 0, 0], x == this.options.shadowBlur ? .3 : .06 + (x * .01) );
 			}
 		}
 		
 		// Mocha body
 		this.bodyRoundedRect(
 			ctx,                         // context
-			this.options.shadowWidth,            // x
-			this.options.shadowWidth - 1,            // y
-			width - (this.options.shadowWidth * 2),   // width
-			height - (this.options.shadowWidth * 2),  // height
+			this.options.shadowBlur,            // x
+			this.options.shadowBlur - 1,            // y
+			width - (this.options.shadowBlur * 2),   // width
+			height - (this.options.shadowBlur * 2),  // height
 			this.options.cornerRadius,   // corner radius
 			this.options.footerBgColor   // Footer color
 		);
@@ -737,9 +737,9 @@ MochaUI.Window = new Class({
 		// Mocha header
 		this.topRoundedRect(
 			ctx,                            // context
-			this.options.shadowWidth,               // x
-			this.options.shadowWidth - 1,               // y
-			width - (this.options.shadowWidth * 2),      // width
+			this.options.shadowBlur,               // x
+			this.options.shadowBlur - 1,               // y
+			width - (this.options.shadowBlur * 2),      // width
 			this.options.headerHeight,      // height
 			this.options.cornerRadius,      // corner radius
 			this.options.headerStartColor,  // Header gradient's top color
@@ -747,18 +747,18 @@ MochaUI.Window = new Class({
 		);
 
 		// Calculate X position for controlbuttons
-		this.closebuttonX = width - (this.options.closable ? (this.options.shadowWidth + 12) : (this.options.shadowWidth - 7));
+		this.closebuttonX = width - (this.options.closable ? (this.options.shadowBlur + 12) : (this.options.shadowBlur - 7));
 		this.maximizebuttonX = this.closebuttonX - (this.maximizable ? 19 : 0);
 		this.minimizebuttonX = this.maximizebuttonX - (this.minimizable ? 19 : 0);
 
 		if ( this.options.closable )
-			this.closebutton(ctx, this.closebuttonX, (this.options.shadowWidth + 12), this.options.closeColor, 1.0);
+			this.closebutton(ctx, this.closebuttonX, (this.options.shadowBlur + 12), this.options.closeColor, 1.0);
 		if ( this.maximizable )
-			this.maximizebutton(ctx, this.maximizebuttonX, (this.options.shadowWidth + 12), this.options.maximizeColor, 1.0);
+			this.maximizebutton(ctx, this.maximizebuttonX, (this.options.shadowBlur + 12), this.options.maximizeColor, 1.0);
 		if ( this.minimizable )
-			this.minimizebutton(ctx, this.minimizebuttonX, (this.options.shadowWidth + 12), this.options.minimizeColor, 1.0); // Minimize
+			this.minimizebutton(ctx, this.minimizebuttonX, (this.options.shadowBlur + 12), this.options.minimizeColor, 1.0); // Minimize
 		if ( this.options.resizable ) 
-			MochaUI.triangle(ctx, width - (this.options.shadowWidth + 17), height - (this.options.shadowWidth + 18), 12, 12, this.options.resizableColor, 1.0); // Resize handle
+			MochaUI.triangle(ctx, width - (this.options.shadowBlur + 17), height - (this.options.shadowBlur + 18), 12, 12, this.options.resizableColor, 1.0); // Resize handle
 
 		// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
 		MochaUI.triangle(ctx, 0, 0, 10, 10, this.options.resizableColor, 0);	
