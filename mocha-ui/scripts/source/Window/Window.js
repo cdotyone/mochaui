@@ -180,8 +180,11 @@ MochaUI.Window = new Class({
 		return this;
 	},
 	saveValues: function(){
-		this.options.x = this.windowEl.getStyle('left');
-		this.options.y = this.windowEl.getStyle('top');
+		//var currentWindowClass = MochaUI.Windows.instances.get(this.options.id);		
+		this.options.x = this.windowEl.getStyle('left').toInt();
+		this.options.y = this.windowEl.getStyle('top').toInt();
+		//currentWindowClass.options.x = this.windowEl.getStyle('left');
+		//currentWindowClass.options.y = this.windowEl.getStyle('top');	
 	},	
 	/*
 	
@@ -446,7 +449,15 @@ MochaUI.Window = new Class({
 				if ( this.iframe ){
 					this.iframeEl.setStyle('visibility', 'visible');
 				}
+				// Store new position in options.
 				this.saveValues();
+				// Used by the shadow blur slider to adjust window position in relation to shadow width
+				//alert(windowEl.adjusted);
+				//currentWindowClass = MochaUI.Windows.instances.get(windowEl.id);
+				//currentWindowClass.adjusted = false;
+				//if (currentWindowClass.adjusted == true) {
+					currentWindowClass.moved = true;
+				//}
 			}.bind(this)
 		});
 	},
@@ -664,11 +675,13 @@ MochaUI.Window = new Class({
 		var height = this.contentWrapperEl.getStyle('height').toInt() + this.HeaderFooterShadow;
 		var width = this.contentWrapperEl.getStyle('width').toInt() + (this.options.shadowWidth * 2);
 
-		this.windowEl.setStyles({
+		this.windowEl.setStyle('height', height);
+		
+		/* this.windowEl.setStyles({
 			'height': height,
 			'top': this.options.y - this.options.shadowWidth,
 			'left': this.options.x - this.options.shadowWidth
-		});
+		}); */		
 		
 		this.overlayEl.setStyles({
 			'height': height,
