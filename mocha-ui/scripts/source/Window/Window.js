@@ -90,7 +90,7 @@ windowOptions = {
 	
 	// Container options
 	container:         'mochaDesktop',  // Element the window is injected in. NOT YET IMPLEMENTED
-	restrict:          true,            // Restrict window to container when dragging.
+	restrict:          false,            // Restrict window to container when dragging.
 	
 	// Window Events  
 	minimizable:       true,  // Requires MochaUI.Desktop and MochaUI.Dock.
