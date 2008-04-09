@@ -274,20 +274,27 @@ div.mocha .mochaContent {
 	-moz-opacity: 0;	
 }
 
-.handle {
+div.mocha .handle {
 	position: absolute;
-	background: #fff;
+	background: #0f0;
 	width: 3px;
 	height: 3px;
 	z-index: 2;
 	opacity: .0;
 	filter: alpha(opacity=0);
-	-moz-opacity: .0;	
+	-moz-opacity: .5;	
 }
 
-.corner {
+div.mocha .corner { /* Corner resize handles */
+	background: #f00;
 	width: 10px;
 	height: 10px;
+}
+
+div.mocha .cornerSE { /* Bottom right resize handle */
+	background: #f00;
+	width: 20px;
+	height: 20px;
 }
 
 .mochaControls {

@@ -724,12 +724,44 @@ MochaUI.Window = new Class({
 	});
 		
 	},
-	adjustHandles: function(){ 
+	adjustHandles: function(){
 		this.coords = this.windowEl.getCoordinates();
-		this.n.setStyle('width', this.coords.width - 20);
-		this.e.setStyle('height', this.coords.height - 20);
-		this.s.setStyle('width', this.coords.width - 20);
-		this.w.setStyle('height', this.coords.height - 20); 
+		this.n.setStyles({
+			'top': this.options.shadowBlur - 1,	
+			'left': this.options.shadowBlur - 1 + 10,				
+			'width': this.coords.width - (this.options.shadowBlur * 2) + 2 - 20
+		});
+		this.e.setStyles({
+			'top': this.options.shadowBlur - 1 + 10,						 
+			'right': this.options.shadowBlur - 1,			 
+			'height': this.coords.height - (this.options.shadowBlur * 2) + 2 - 30
+		});
+		this.s.setStyles({
+			'bottom': this.options.shadowBlur - 1,
+			'left': this.options.shadowBlur - 1 + 10,			
+			'width': this.coords.width - (this.options.shadowBlur * 2) + 2 - 30
+		});
+		this.w.setStyles({
+			'top': this.options.shadowBlur - 1 + 10,						 
+			'left': this.options.shadowBlur - 1,			 
+			'height': this.coords.height - (this.options.shadowBlur * 2) + 2 - 20
+		});
+		this.ne.setStyles({
+			'top': this.options.shadowBlur - 1,			 
+			'right': this.options.shadowBlur - 1	
+		});
+		this.se.setStyles({
+			'bottom': this.options.shadowBlur - 1,			 
+			'right': this.options.shadowBlur - 1	
+		});
+		this.sw.setStyles({
+			'bottom': this.options.shadowBlur - 1,			 
+			'left': this.options.shadowBlur - 1	
+		});
+		this.nw.setStyles({
+			'top': this.options.shadowBlur - 1,			 
+			'left': this.options.shadowBlur - 1	
+		});			
 	},	
 	/*
 	
@@ -916,7 +948,7 @@ MochaUI.Window = new Class({
 			
 			this.se = new Element('div', {
 				'id': this.options.id + '_resizeHandle_se',
-				'class': 'handle corner',		
+				'class': 'handle cornerSE',		
 				'styles': {
 					'bottom': 0,
 					'right': 0,
