@@ -110,10 +110,10 @@ windowOptions = {
 	
 	// Style options:
 	addClass:          null,    // Add a class to your window to give you more control over styling.	
-	width:             300,
-	height:            125,
-	x:                 null,
-	y:                 null,
+	width:             300,     // Width of content area.	
+	height:            125,     // Height of content area.
+	x:                 null,    // If x and y are left undefined the window is centered on the page. !!! NEED TO MAKE THIS WORK WITH THE CONTAINER OPTION. 
+	y:                 null,    
 	scrollbars:        true,
 	padding:   		   { top: 10, right: 12, bottom: 10, left: 12 },
 	shadowBlur:        4,       // Width of shadows.
@@ -216,8 +216,7 @@ MochaUI.Window = new Class({
 			MochaUI.Windows.instances.set(this.options.id, this);
 		}
 		
-		this.isClosing = false;
-		
+		this.isClosing = false;		
 		this.fireEvent('onBeforeBuild');		
 		
 		// Create window div
@@ -326,6 +325,10 @@ MochaUI.Window = new Class({
 		this.attachDraggable(this.windowEl, this.titleBarEl);		
 		this.attachResizable(this.windowEl);
 		this.setupEvents(this.windowEl);
+		
+		if (this.options.resizable){
+			this.adjustHandles();
+		}
 
 		// Move new window into position. If position not specified by user then center the window on the page.
 		// We do this last so that the effects are as smooth as possible, not interrupted by other functions.
@@ -436,7 +439,7 @@ MochaUI.Window = new Class({
 	attachDraggable: function(windowEl, handleEl){
 		if ( !this.options.draggable )
 			return;
-		new Drag.Move(windowEl, {
+		this.windowDrag = new Drag.Move(windowEl, {
 			handle: handleEl,
 			container: this.options.restrict ? $(this.options.container) : false,			
 			grid: this.options.draggableGrid,
@@ -455,13 +458,6 @@ MochaUI.Window = new Class({
 				}
 				// Store new position in options.
 				this.saveValues();
-				// Used by the shadow blur slider to adjust window position in relation to shadow width
-				//alert(windowEl.adjusted);
-				//currentWindowClass = MochaUI.Windows.instances.get(windowEl.id);
-				//currentWindowClass.adjusted = false;
-				//if (currentWindowClass.adjusted == true) {
-					currentWindowClass.moved = true;
-				//}
 			}.bind(this)
 		});
 	},
@@ -475,9 +471,11 @@ MochaUI.Window = new Class({
 		
 	*/
 	attachResizable: function(windowEl){
-		if ( !this.options.resizable )
+		if ( !this.options.resizable ){
 			return;
-		this.contentWrapperEl.makeResizable({
+		}
+		/*
+		this.windowDrag = this.contentWrapperEl.makeResizable({
 			handle: this.resizeHandleEl,		
 			modifiers: {
 				x: 'width',
@@ -487,9 +485,10 @@ MochaUI.Window = new Class({
 				x: this.options.resizableLimitX,
 				y: this.options.resizableLimitY
 			},
-			onStart: function() {
-				if ( this.iframeEl )
+			onBeforeStart: function() {
+				if ( this.iframeEl ){
 					this.iframeEl.setStyle('visibility', 'hidden');
+				}
 			}.bind(this),
 			onDrag: function() {
 				this.drawWindow(windowEl);
@@ -500,7 +499,238 @@ MochaUI.Window = new Class({
 				this.fireEvent('onResize', windowEl);
 			}.bind(this)
 		});
+		
+		*/
+
+		
+	this.windowEl.makeResizable({
+		handle: this.n,
+		limit: {
+			y: [ 0, function(){return this.windowEl.getStyle('top').toInt() + this.windowEl.getStyle('height').toInt() - 150;}.bind(this)]
+		},	
+		'modifiers': {'x': false, y: 'top'},
+			onBeforeStart: function() {
+				if ( this.iframeEl ){
+					this.iframeEl.setStyle('visibility', 'hidden');
+				}
+			}.bind(this),		
+		'onStart': function(){
+			this.coords = this.contentWrapperEl.getCoordinates();			
+			this.y2 = this.coords.top.toInt() + this.contentWrapperEl.offsetHeight;
+		}.bind(this),
+		'onDrag': function(){
+			this.coords = this.contentWrapperEl.getCoordinates();
+			this.contentWrapperEl.setStyle('height', this.y2 - this.coords.top.toInt());
+			this.drawWindow(windowEl);
+			this.adjustHandles();
+		}.bind(this),
+			onComplete: function() {
+				if ( this.iframeEl )
+					this.iframeEl.setStyle('visibility', 'visible');
+				this.fireEvent('onResize', windowEl);
+			}.bind(this)		
+	});
+			
+	this.contentWrapperEl.makeResizable({
+		handle: this.ne,
+		limit: {
+			x: [0, function(){return this.contentWrapperEl.getCoordinates().right.toInt() + this.contentWrapperEl.getStyle('width').toInt()}.bind(this) + 150],
+			y: [150, function(){return this.windowEl.getStyle('top').toInt() + this.windowEl.getStyle('height').toInt() - 150;}.bind(this)]
+		},
+		invert: true,
+		'modifiers': {x: 'width', y: 'height'},
+			onBeforeStart: function() {
+				if ( this.iframeEl ){
+					this.iframeEl.setStyle('visibility', 'hidden');
+				}
+			}.bind(this),		
+		'onStart': function(){
+			this.coords = this.contentWrapperEl.getCoordinates();
+			this.coords2 = this.windowEl.getCoordinates();
+			this.y2 = this.coords2.top.toInt() + this.contentWrapperEl.offsetHeight;			
+			this.x2 = this.coords.width.toInt();
+		}.bind(this),
+		'onDrag': function(){
+			this.coords = this.contentWrapperEl.getCoordinates();
+			this.windowEl.setStyle('top', this.y2 - this.contentWrapperEl.offsetHeight);			
+			this.contentWrapperEl.setStyle('width', this.x2 + (this.x2 - this.coords.width.toInt()) );
+			this.drawWindow(windowEl);
+			this.adjustHandles();
+		}.bind(this),
+			onComplete: function() {
+				if ( this.iframeEl )
+					this.iframeEl.setStyle('visibility', 'visible');
+				this.fireEvent('onResize', windowEl);
+			}.bind(this)		
+	});
+	
+	this.contentWrapperEl.makeResizable({
+		handle: this.e,
+		limit: {
+			x: [150, 2000]			
+		},	
+		'modifiers': {x: 'width', y: false},
+			onBeforeStart: function() {
+				if ( this.iframeEl ){
+					this.iframeEl.setStyle('visibility', 'hidden');
+				}
+			}.bind(this),		
+		'onDrag': function(){
+			this.drawWindow(windowEl);
+			this.adjustHandles();
+		}.bind(this),
+			onComplete: function() {
+				if ( this.iframeEl )
+					this.iframeEl.setStyle('visibility', 'visible');
+				this.fireEvent('onResize', windowEl);
+			}.bind(this)		
+	});	
+	
+	this.contentWrapperEl.makeResizable({
+		handle: this.se,
+		limit: {
+			x: [150, function(){return this.contentWrapperEl.getCoordinates().right.toInt() + this.contentWrapperEl.getStyle('width').toInt()}.bind(this)],
+			y: [150, 500]				
+		},	
+		'modifiers': {x: 'width', y: 'height'},
+			onBeforeStart: function() {
+				if ( this.iframeEl ){
+					this.iframeEl.setStyle('visibility', 'hidden');
+				}
+			}.bind(this),		
+		'onDrag': function(){
+			this.drawWindow(windowEl);			
+			this.adjustHandles();
+		}.bind(this),
+			onComplete: function() {
+				if ( this.iframeEl )
+					this.iframeEl.setStyle('visibility', 'visible');
+				this.fireEvent('onResize', windowEl);
+			}.bind(this)		
+	});		
+	
+	this.contentWrapperEl.makeResizable({
+		handle: this.s,
+		limit: {
+			y: [150, 500]				
+		},	
+		'modifiers': {x: false, y: 'height'},
+			onBeforeStart: function() {
+				if ( this.iframeEl ){
+					this.iframeEl.setStyle('visibility', 'hidden');
+				}
+			}.bind(this),		
+		'onDrag': function(){
+			this.drawWindow(windowEl);			
+			this.adjustHandles();
+		}.bind(this),
+			onComplete: function() {
+				if ( this.iframeEl )
+					this.iframeEl.setStyle('visibility', 'visible');
+				this.fireEvent('onResize', windowEl);
+			}.bind(this)		
+	});
+	
+	this.contentWrapperEl.makeResizable({
+		handle: this.sw,
+		limit: {
+			x: [0, 500],
+			y: [150, 500]
+		},	
+		'modifiers': {x: 'width', y: 'height'},
+			onBeforeStart: function() {
+				if ( this.iframeEl ){
+					this.iframeEl.setStyle('visibility', 'hidden');
+				}
+			}.bind(this),		
+		'onStart': function(){
+			this.coords = this.windowEl.getCoordinates();
+			this.x2 = this.coords.left.toInt();	
+			this.coords2 = this.contentWrapperEl.getCoordinates();			
+			this.w2 = this.coords2.width.toInt();			
+		}.bind(this),
+		'onDrag': function(){
+			this.coords = this.contentWrapperEl.getCoordinates();
+			this.coords2 = this.windowEl.getCoordinates();
+			this.contentWrapperEl.setStyle('width', this.w2 + (this.w2 - this.coords.width.toInt()) );			
+			this.windowEl.setStyle('left', this.x2 - (this.w2 - this.coords.width.toInt()) );
+			this.drawWindow(windowEl);			
+			this.adjustHandles();
+		}.bind(this),
+			onComplete: function() {
+				if ( this.iframeEl )
+					this.iframeEl.setStyle('visibility', 'visible');
+				this.fireEvent('onResize', windowEl);
+			}.bind(this)		
+	});
+	
+	this.windowEl.makeResizable({
+		handle: this.w,
+		limit: {
+			x: [0, function(){return this.windowEl.getStyle('left').toInt() + this.windowEl.getStyle('width').toInt() - 150;}.bind(this)]
+		},	
+		'modifiers': {x: 'left', y: false},
+			onBeforeStart: function() {
+				if ( this.iframeEl ){
+					this.iframeEl.setStyle('visibility', 'hidden');
+				}
+			}.bind(this),		
+		'onStart': function(){
+			this.coords = this.windowEl.getCoordinates();			
+			this.x2 = this.coords.left.toInt() + this.windowEl.getStyle('width').toInt();
+		}.bind(this),
+		'onDrag': function(){
+			this.coords = this.windowEl.getCoordinates();
+			this.contentWrapperEl.setStyle('width', this.x2 - this.coords.left.toInt());
+			this.drawWindow(windowEl);			
+			this.adjustHandles();
+		}.bind(this),
+			onComplete: function() {
+				if ( this.iframeEl )
+					this.iframeEl.setStyle('visibility', 'visible');
+				this.fireEvent('onResize', windowEl);
+			}.bind(this)		
+	});
+	
+	this.windowEl.makeResizable({
+		handle: this.nw,
+		limit: {
+			x: [0, function(){return this.windowEl.getStyle('left').toInt() + this.windowEl.getStyle('width').toInt() - 150;}.bind(this)],
+			y: [ 0, function(){return this.windowEl.getStyle('top').toInt() + this.windowEl.getStyle('height').toInt() - 150;}.bind(this)]
+		},	
+		'modifiers': {x: 'left', y: 'top'},
+			onBeforeStart: function() {
+				if ( this.iframeEl ){
+					this.iframeEl.setStyle('visibility', 'hidden');
+				}
+			}.bind(this),		
+		'onStart': function(){
+			this.coords = this.contentWrapperEl.getCoordinates();			
+			this.x2 = this.coords.left.toInt() + this.contentWrapperEl.getStyle('width').toInt();
+			this.y2 = this.coords.top.toInt() + this.contentWrapperEl.offsetHeight;			
+		}.bind(this),
+		'onDrag': function(){
+			this.coords = this.contentWrapperEl.getCoordinates();
+			this.contentWrapperEl.setStyle('width', this.x2 - this.coords.left.toInt());
+			this.contentWrapperEl.setStyle('height', this.y2 - this.coords.top.toInt());
+			this.drawWindow(windowEl);			
+			this.adjustHandles();
+		}.bind(this),
+			onComplete: function() {
+				if ( this.iframeEl )
+					this.iframeEl.setStyle('visibility', 'visible');
+				this.fireEvent('onResize', windowEl);
+			}.bind(this)		
+	});
+		
 	},
+	adjustHandles: function(){ 
+		this.coords = this.windowEl.getCoordinates();
+		this.n.setStyle('width', this.coords.width - 20);
+		this.e.setStyle('height', this.coords.height - 20);
+		this.s.setStyle('width', this.coords.width - 20);
+		this.w.setStyle('height', this.coords.height - 20); 
+	},	
 	/*
 	
 	Internal Function: insertWindowElements
@@ -580,17 +810,7 @@ MochaUI.Window = new Class({
 			this.canvasEl = this.windowEl.getElement('.mochaCanvas');
 		}
 
-		//Insert resize handles
-		if (this.options.resizable){
-			this.resizeHandleEl = new Element('div', {
-				'class': 'resizeHandle',
-				'id': this.options.id + '_resizeHandle'
-			}).injectAfter(this.overlayEl);
-			
-			if ( Browser.Engine.trident ){
-				this.resizeHandleEl.setStyle('zIndex', 2);
-			}
-		}
+	
 		
 		//Insert mochaTitlebar controls
 		this.controlsEl = new Element('div', {
@@ -650,6 +870,101 @@ MochaUI.Window = new Class({
 			this.overlayEl.setStyle('overflow', 'auto');
 		}
 		this.setMochaControlsWidth();
+		
+		//Insert resize handles
+		
+		if (this.options.resizable){
+		/*	this.resizeHandleEl = new Element('div', {
+				'class': 'resizeHandle',
+				'id': this.options.id + '_resizeHandle'
+			}).injectAfter(this.overlayEl);
+			
+			// do this to all handles by class !!!
+			if ( Browser.Engine.trident ){
+				this.resizeHandleEl.setStyle('zIndex', 2);
+			} */
+			
+			this.n = new Element('div', {
+				'id': this.options.id + '_resizeHandle_n',
+				'class': 'handle',		
+				'styles': {
+					'top': 0,
+					'left': 10,
+					'cursor': 'n-resize'
+				}
+			}).inject(this.overlayEl, 'after');
+			
+			this.ne = new Element('div', {
+				'id': this.options.id + '_resizeHandle_ne',
+				'class': 'handle corner',		
+				'styles': {
+					'top': 0,
+					'right': 0,
+					'cursor': 'ne-resize'
+				}
+			}).inject(this.overlayEl, 'after');
+			
+			this.e = new Element('div', {
+				'id': this.options.id + '_resizeHandle_e',
+				'class': 'handle',		
+				'styles': {
+					'top': 10,
+					'right': 0,
+					'cursor': 'e-resize'
+				}
+			}).inject(this.overlayEl, 'after');
+			
+			this.se = new Element('div', {
+				'id': this.options.id + '_resizeHandle_se',
+				'class': 'handle corner',		
+				'styles': {
+					'bottom': 0,
+					'right': 0,
+					'cursor': 'se-resize'
+				}
+			}).inject(this.overlayEl, 'after');
+			
+			this.s = new Element('div', {
+				'id': this.options.id + '_resizeHandle_s',
+				'class': 'handle',		
+				'styles': {
+					'bottom': 0,
+					'left': 10,
+					'cursor': 's-resize'
+				}
+			}).inject(this.overlayEl, 'after');
+			
+			this.sw = new Element('div', {
+				'id': this.options.id + '_resizeHandle_sw',
+				'class': 'handle corner',		
+				'styles': {
+					'bottom': 0,
+					'left': 0,
+					'cursor': 'sw-resize'
+				}
+			}).inject(this.overlayEl, 'after');
+			
+			this.w = new Element('div', {
+				'id': this.options.id + '_resizeHandle_w',
+				'class': 'handle',		
+				'styles': {
+					'top': 10,
+					'left': 0,
+					'cursor': 'w-resize'
+				}
+			}).inject(this.overlayEl, 'after');
+			
+			this.nw = new Element('div', {
+				'id': this.options.id + '_resizeHandle_nw',
+				'class': 'handle corner',		
+				'styles': {
+					'top': 0,
+					'left': 0,
+					'cursor': 'nw-resize'
+				}
+			}).inject(this.overlayEl, 'after');
+		}			
+		
 		
 	},
 	/*
@@ -774,7 +1089,7 @@ MochaUI.Window = new Class({
 		if ( this.minimizable )
 			this.minimizebutton(ctx, this.minimizebuttonX, (this.options.shadowBlur + 12), this.options.minimizeColor, 1.0); // Minimize
 		if ( this.options.resizable ) 
-			MochaUI.triangle(ctx, width - (this.options.shadowBlur + 17), height - (this.options.shadowBlur + 18), 12, 12, this.options.resizableColor, 1.0); // Resize handle
+			MochaUI.triangle(ctx, width - (this.options.shadowBlur + 17), height - (this.options.shadowBlur + 18), 11, 11, this.options.resizableColor, 1.0); // Resize handle
 
 		// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
 		MochaUI.triangle(ctx, 0, 0, 10, 10, this.options.resizableColor, 0);	

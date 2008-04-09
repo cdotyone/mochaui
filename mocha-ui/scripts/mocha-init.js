@@ -251,7 +251,7 @@ initializeWindows = function(){
 			onContentLoaded: function(){				
 				if ( !MochaUI.clockScript == true ){
 					new Request({
-						url: 'plugins/coolclock/scripts/coolclock.js?t=' + new Date().getTime(),
+						url: 'plugins/coolclock/scripts/coolclock.js',
 						method: 'get',
 						onSuccess: function() {							
 							if (Browser.Engine.trident) {	
@@ -583,7 +583,7 @@ initializeWindows = function(){
 	//MochaUI.dataGridWindow(); 
 	MochaUI.cornerRadiusWindow();
 	MochaUI.clockWindow();
-	//MochaUI.featuresWindow();
+	MochaUI.featuresWindow();
 	
 }
 

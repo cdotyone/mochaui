@@ -251,7 +251,7 @@ div.mocha .mochaContentBorder {
 	border-bottom: 1px solid #d9d9d9;
 }
 	
-div.mocha .mochaContentWrapper { /* Has a fixed height and scrollbars if required */
+div.mocha .mochaContentWrapper { /* Has a fixed height and scrollbars if required. */
 	font-size: 11px;	
 	background: #fff;
 	overflow: auto;	
@@ -261,7 +261,7 @@ div.mocha .mochaContent {
 	padding: 10px 12px;
 }		
 
-.resizeHandle {
+.resizeHandle { /* no longer used */
 	position: absolute;
 	bottom: 5px;
 	right: 5px;
@@ -273,7 +273,23 @@ div.mocha .mochaContent {
 	filter: alpha(opacity=0);
 	-moz-opacity: 0;	
 }
-	
+
+.handle {
+	position: absolute;
+	background: #fff;
+	width: 3px;
+	height: 3px;
+	z-index: 2;
+	opacity: .0;
+	filter: alpha(opacity=0);
+	-moz-opacity: .0;	
+}
+
+.corner {
+	width: 10px;
+	height: 10px;
+}
+
 .mochaControls {
 	position: absolute;
 	top: 8px;

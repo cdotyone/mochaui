@@ -51,25 +51,20 @@ MochaUI.extend({
 					}.bind(this));			
 				}.bind(this),
 				onChange: function(pos){
-					$('shadowUpdatevalue').set('html', pos);
-					
+					$('shadowUpdatevalue').set('html', pos);					
 					// Change default shadow width of the original class
-					windowOptions.shadowBlur = pos;
-					
-					MochaUI.Window.implement({ options: windowOptions });
-					
+					windowOptions.shadowBlur = pos;					
+					MochaUI.Window.implement({ options: windowOptions });					
 					// Don't redraw windows the first time the slider is initialized
-					if (sliderFirst == true) {
+					// !!! Probably need to make this separate from the corner radius slider
+					if (sliderFirst == true) { 
 						sliderFirst = false;
 						return;
-					}
-					
+					}					
 					// Change shadow width of all active classes and their windows
-					MochaUI.Windows.instances.each(function(instance) {
-															
+					MochaUI.Windows.instances.each(function(instance) {															
 						instance.oldshadowBlur = instance.options.shadowBlur;									
-						instance.options.shadowBlur = pos;
-					
+						instance.options.shadowBlur = pos;					
 						instance.windowEl.setStyles({
 							'top': instance.windowEl.getStyle('top').toInt() - (instance.options.shadowBlur - instance.oldshadowBlur) ,
 							'left': instance.windowEl.getStyle('left').toInt() - (instance.options.shadowBlur - instance.oldshadowBlur)
@@ -77,6 +72,13 @@ MochaUI.extend({
 						instance.drawWindow($(instance.options.id));
 					}.bind(this));					
 					MochaUI.indexLevel++; 
+				}.bind(this),
+				onComplete: function(){
+					MochaUI.Windows.instances.each(function(instance) {
+						if (instance.options.resizable){										
+							instance.adjustHandles();
+						}
+					}.bind(this));			
 				}.bind(this)				
 			}).set(windowOptions.shadowBlur);
 		}
