@@ -93,12 +93,12 @@ MochaUI.Desktop = new Class({
 		var ctx = $('titlebarCanvas').getContext('2d');		
 		// Create gradient
 		// Opera doesn't make gradients tall enough
-		if (Browser.Engine.presto != null ){
-			var lingrad = ctx.createLinearGradient(0, 0, 0, 35 + 10);
-		}
-		else {
+		//if (Browser.Engine.presto != null ){
+		//	var lingrad = ctx.createLinearGradient(0, 0, 0, 35 + 10);
+		//}
+		//else {
 			var lingrad = ctx.createLinearGradient(0, 0, 0, 35);
-		}
+		//}
 
 		lingrad.addColorStop(0, 'rgba(' + this.options.headerStartColor.join(',') + ', 1)');
 		lingrad.addColorStop(1, 'rgba(' + this.options.headerStopColor.join(',') + ', 1)');		

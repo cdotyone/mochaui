@@ -229,6 +229,7 @@ initializeWindows = function(){
 			height: 105,
 			x: 650,
 			y: 305,
+			padding: { top: 12, right: 12, bottom: 10, left: 12 },			
 			resizable: false,
 			maximizable: false,
 			bodyBgColor: '#fff'			
@@ -245,13 +246,13 @@ initializeWindows = function(){
 		new MochaUI.Window({
 			id: 'clock',
 			title: 'Canvas Clock',
-			addClass: 'darkWindow',
+			addClass: 'transparent',			
 			loadMethod: 'xhr',
 			contentURL: 'plugins/coolclock/index.html?t=' + new Date().getTime(),
 			onContentLoaded: function(){				
 				if ( !MochaUI.clockScript == true ){
 					new Request({
-						url: 'plugins/coolclock/scripts/coolclock.js',
+						url: 'plugins/coolclock/scripts/coolclock.js?t=' + new Date().getTime(),
 						method: 'get',
 						onSuccess: function() {							
 							if (Browser.Engine.trident) {	
@@ -283,14 +284,16 @@ initializeWindows = function(){
 						CoolClock.findAndCreateClocks();
 					}
 				}				
-			},			
+			},
+			shape: 'gauge',
+			footerHeight:      25,			
 			width: 160,
 			height: 160,
 			x: 650,
 			y: 75,
 			scrollbars: false,
 			padding: { top: 0, right: 0, bottom: 0, left: 0 },				
-			bodyBgColor: '#fff',
+			bodyBgColor: 'transparent',
 			resizable: false,
 			maximizable: false				
 		});	
@@ -371,7 +374,7 @@ initializeWindows = function(){
 	if ($('tab01LinkCheck')){
 		$('tab01LinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			MochaUI.Workspaces.setTab({index: 0, background: '#fff' })
+			MochaUI.Workspaces.setTab({index: 0, background: '#8caac7' })
 		});
 	}
 	
@@ -385,7 +388,7 @@ initializeWindows = function(){
 	if ($('tab03LinkCheck')){
 		$('tab03LinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			MochaUI.Workspaces.setTab({index: 2, background: '#8caac7' })
+			MochaUI.Workspaces.setTab({index: 2, background: '#fff' })
 		});
 	}	
 	
@@ -448,8 +451,8 @@ initializeWindows = function(){
 			contentURL: 'pages/features.html',
 			width: 300,
 			height: 230,
-			x: 335,
-			y: 75				
+			x: 330,
+			y: 385
 		});	
 	}
 	if ($('featuresLinkCheck')){

@@ -356,6 +356,7 @@ windowOptions = {
 	// Container options
 	container:         null,  // Element the window is injected in. Defaults to MochaUI.Desktop.deskop. If no desktop then to document.body.
 	restrict:          true,  // Restrict window to container when dragging.
+	shape:             'box',   // Shape of window; box or gauge.
 	
 	// Window Events  
 	minimizable:       true,  // Requires MochaUI.Desktop and MochaUI.Dock.
@@ -1154,12 +1155,6 @@ MochaUI.Window = new Class({
 
 		this.windowEl.setStyle('height', height);
 		
-		/* this.windowEl.setStyles({
-			'height': height,
-			'top': this.options.y - this.options.shadowBlur,
-			'left': this.options.x - this.options.shadowBlur
-		}); */		
-		
 		this.overlayEl.setStyles({
 			'height': height,
 			'top': this.options.shadowBlur,
@@ -1186,20 +1181,6 @@ MochaUI.Window = new Class({
 			'height': this.options.headerHeight
 		});
 
-		// Draw shapes
-		var ctx = this.canvasEl.getContext('2d');
-		var dimensions = document.getCoordinates();
-		ctx.clearRect(0, 0, dimensions.width, dimensions.height);
-		
-		// This is the drop shadow. It is created onion style with three layers
-		if ( shadows != false ) {	
-
-		this.options.shadowBlur	
-			for (var x = 0; x <= this.options.shadowBlur; x++){
-				MochaUI.roundedRect(ctx, x, x, width - (x * 2), height - (x * 2), this.options.cornerRadius + (this.options.shadowBlur - x), [0, 0, 0], x == this.options.shadowBlur ? .3 : .06 + (x * .01) );
-			}
-		}
-		
 		// Make sure controls are placed correctly.
 		this.controlsEl.setStyles({
 			'right': this.options.shadowBlur + 5,
@@ -1212,6 +1193,35 @@ MochaUI.Window = new Class({
 			'bottom': this.options.shadowBlur + 4
 		})
 		
+		// Calculate X position for controlbuttons
+		this.closebuttonX = width - (this.options.closable ? (this.options.shadowBlur + 12) : (this.options.shadowBlur - 7));
+		this.maximizebuttonX = this.closebuttonX - (this.maximizable ? 19 : 0);
+		this.minimizebuttonX = this.maximizebuttonX - (this.minimizable ? 19 : 0);		
+
+		// Draw shapes
+		var ctx = this.canvasEl.getContext('2d');
+		var dimensions = document.getCoordinates();
+		ctx.clearRect(0, 0, dimensions.width, dimensions.height);	
+
+		switch(this.options.shape) {
+			case 'box':
+				this.drawBox(ctx, width, height, shadows);
+				break;
+			case 'gauge':
+				this.drawGauge(ctx, width, height, shadows);
+				break;				
+		}		
+
+	},
+	drawBox: function(ctx, width, height, shadows){
+	
+		// This is the drop shadow. It is created onion style with three layers
+		if ( shadows != false ) {	
+			for (var x = 0; x <= this.options.shadowBlur; x++){
+				MochaUI.roundedRect(ctx, x, x, width - (x * 2), height - (x * 2), this.options.cornerRadius + (this.options.shadowBlur - x), [0, 0, 0], x == this.options.shadowBlur ? .3 : .06 + (x * .01) );
+			}
+		}	
+
 		// Mocha body
 		this.bodyRoundedRect(
 			ctx,                                    // context
@@ -1235,11 +1245,6 @@ MochaUI.Window = new Class({
 			this.options.headerStopColor           // Header gradient's bottom color
 		);
 
-		// Calculate X position for controlbuttons
-		this.closebuttonX = width - (this.options.closable ? (this.options.shadowBlur + 12) : (this.options.shadowBlur - 7));
-		this.maximizebuttonX = this.closebuttonX - (this.maximizable ? 19 : 0);
-		this.minimizebuttonX = this.maximizebuttonX - (this.minimizable ? 19 : 0);
-
 		if ( this.options.closable )
 			this.closebutton(ctx, this.closebuttonX, (this.options.shadowBlur + 12), this.options.closeBgColor, 1.0, this.options.closeColor, 1.0);
 		if ( this.maximizable )
@@ -1250,85 +1255,113 @@ MochaUI.Window = new Class({
 			MochaUI.triangle(ctx, width - (this.options.shadowBlur + 17), height - (this.options.shadowBlur + 18), 11, 11, this.options.resizableColor, 1.0); // Resize handle
 
 		// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
-		MochaUI.triangle(ctx, 0, 0, 10, 10, this.options.resizableColor, 0);	
+		if ( Browser.Engine.trident4 ){
+			MochaUI.triangle(ctx, 0, 0, 10, 10, this.options.resizableColor, 0);
+		}
 
 	},
+	drawGauge: function(ctx, width, height, shadows){
+		
+		// This is the drop shadow. It is created onion style with three layers
+		if ( shadows != false ) {	
+			for (var x = 0; x <= this.options.shadowBlur; x++){
+				
+				MochaUI.circle(ctx, width * .5, height * .5, (width *.5) - (x * 2), [0, 0, 0], x == this.options.shadowBlur ? .6 : .06 + (x * .04));
+			}
+		}
+		MochaUI.circle(ctx, width * .5, height * .5, (width *.5) - (this.options.shadowBlur), [250, 250, 250], 1);
+		
+		if ( this.options.closable )
+			this.closebutton(ctx, this.closebuttonX, (this.options.shadowBlur + 12), this.options.closeBgColor, 1.0, this.options.closeColor, 1.0);
+		if ( this.minimizable )
+			this.minimizebutton(ctx, this.minimizebuttonX, (this.options.shadowBlur + 12), this.options.minimizeBgColor, 1.0, this.options.minimizeColor, 1.0); // Minimize		
+		
+		
+	},		
 	// Window body
 	bodyRoundedRect: function(ctx, x, y, width, height, radius, rgb){
-		ctx.fillStyle = 'rgba(' + rgb.join(',') + ', 100)';
-		ctx.beginPath();
-		ctx.moveTo(x, y + radius);
-		ctx.lineTo(x, y + height - radius);
-		ctx.quadraticCurveTo(x, y + height, x + radius, y + height);
-		ctx.lineTo(x + width - radius, y + height);
-		ctx.quadraticCurveTo(x + width, y + height, x + width, y + height - radius);
-		ctx.lineTo(x + width, y + radius);
-		ctx.quadraticCurveTo(x + width, y, x + width - radius, y);
-		ctx.lineTo(x + radius, y);
-		ctx.quadraticCurveTo(x, y, x, y + radius);
-		ctx.fill(); 
+		with (ctx) {
+			fillStyle = 'rgba(' + rgb.join(',') + ', 100)';
+			beginPath();
+			moveTo(x, y + radius);
+			lineTo(x, y + height - radius);
+			quadraticCurveTo(x, y + height, x + radius, y + height);
+			lineTo(x + width - radius, y + height);
+			quadraticCurveTo(x + width, y + height, x + width, y + height - radius);
+			lineTo(x + width, y + radius);
+			quadraticCurveTo(x + width, y, x + width - radius, y);
+			lineTo(x + radius, y);
+			quadraticCurveTo(x, y, x, y + radius);
+			fill();
+		}
 	},
 	// Window header with gradient background
 	topRoundedRect: function(ctx, x, y, width, height, radius, headerStartColor, headerStopColor){
 
 		// Create gradient
-		if (Browser.Engine.presto != null ){
-			var lingrad = ctx.createLinearGradient(0, 0, 0, this.options.headerHeight + 2);
-		}
-		else {
+	//	if (Browser.Engine.presto != null ){
+	//		var lingrad = ctx.createLinearGradient(0, 0, 0, this.options.headerHeight + 2);
+	//	}
+	//	else {
 			var lingrad = ctx.createLinearGradient(0, 0, 0, this.options.headerHeight);
+	//	}
+
+		lingrad.addColorStop(0, 'rgba(' + headerStartColor.join(',') + ', 1)');
+		lingrad.addColorStop(1, 'rgba(' + headerStopColor.join(',') + ', 1)');
+		
+		with (ctx) {
+			fillStyle = lingrad;
+			// Draw header
+			beginPath();
+			moveTo(x, y);
+			lineTo(x, y + height);
+			lineTo(x + width, y + height);
+			lineTo(x + width, y + radius);
+			quadraticCurveTo(x + width, y, x + width - radius, y);
+			lineTo(x + radius, y);
+			quadraticCurveTo(x, y, x, y + radius);
+			fill();
 		}
-
-		lingrad.addColorStop(0, 'rgba(' + headerStartColor.join(',') + ', 100)');
-		lingrad.addColorStop(1, 'rgba(' + headerStopColor.join(',') + ', 100)');
-		ctx.fillStyle = lingrad;
-
-		// Draw header
-		ctx.beginPath();
-		ctx.moveTo(x, y);
-		ctx.lineTo(x, y + height);
-		ctx.lineTo(x + width, y + height);
-		ctx.lineTo(x + width, y + radius);
-		ctx.quadraticCurveTo(x + width, y, x + width - radius, y);
-		ctx.lineTo(x + radius, y);
-		ctx.quadraticCurveTo(x, y, x, y + radius);
-		ctx.fill(); 
 	},
 	maximizebutton: function(ctx, x, y, rgbBg, aBg, rgb, a){ // This could reuse the circle method above
-		// Circle
-		ctx.beginPath();
-		ctx.moveTo(x, y);
-		ctx.arc(x, y, 7, 0, Math.PI*2, true);
-		ctx.fillStyle = 'rgba(' + rgbBg.join(',') + ',' + aBg + ')';
-		ctx.fill();
-		// X sign
-		ctx.strokeStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';		
-		ctx.beginPath();
-		ctx.moveTo(x, y - 4);
-		ctx.lineTo(x, y + 4);
-		ctx.stroke();
-		ctx.beginPath();
-		ctx.moveTo(x - 4, y);
-		ctx.lineTo(x + 4, y);
-		ctx.stroke();
+		with (ctx) {	
+			// Circle
+			beginPath();
+			moveTo(x, y);
+			arc(x, y, 7, 0, Math.PI*2, true);
+			fillStyle = 'rgba(' + rgbBg.join(',') + ',' + aBg + ')';
+			fill();
+			// X sign
+			strokeStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';		
+			beginPath();
+			moveTo(x, y - 4);
+			lineTo(x, y + 4);
+			stroke();
+			beginPath();
+			moveTo(x - 4, y);
+			lineTo(x + 4, y);
+			stroke();
+		}
 	},
 	closebutton: function(ctx, x, y, rgbBg, aBg, rgb, a){ // This could reuse the circle method above
-		// Circle
-		ctx.beginPath();
-		ctx.moveTo(x, y);
-		ctx.arc(x, y, 7, 0, Math.PI*2, true);
-		ctx.fillStyle = 'rgba(' + rgbBg.join(',') + ',' + aBg + ')';
-		ctx.fill();
-		// Plus sign
-		ctx.strokeStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';		
-		ctx.beginPath();
-		ctx.moveTo(x - 3, y - 3);
-		ctx.lineTo(x + 3, y + 3);
-		ctx.stroke();
-		ctx.beginPath();
-		ctx.moveTo(x + 3, y - 3);
-		ctx.lineTo(x - 3, y + 3);
-		ctx.stroke();
+		with (ctx) {
+			// Circle
+			beginPath();
+			moveTo(x, y);
+			arc(x, y, 7, 0, Math.PI*2, true);
+			fillStyle = 'rgba(' + rgbBg.join(',') + ',' + aBg + ')';
+			fill();
+			// Plus sign
+			strokeStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';		
+			beginPath();
+			moveTo(x - 3, y - 3);
+			lineTo(x + 3, y + 3);
+			stroke();
+			beginPath();
+			moveTo(x + 3, y - 3);
+			lineTo(x - 3, y + 3);
+			stroke();
+		}
 	},
 	minimizebutton: function(ctx, x, y, rgbBg, aBg, rgb, a){ // This could reuse the circle method above
 		// Circle
@@ -1758,12 +1791,12 @@ MochaUI.Desktop = new Class({
 		var ctx = $('titlebarCanvas').getContext('2d');		
 		// Create gradient
 		// Opera doesn't make gradients tall enough
-		if (Browser.Engine.presto != null ){
-			var lingrad = ctx.createLinearGradient(0, 0, 0, 35 + 10);
-		}
-		else {
+		//if (Browser.Engine.presto != null ){
+		//	var lingrad = ctx.createLinearGradient(0, 0, 0, 35 + 10);
+		//}
+		//else {
 			var lingrad = ctx.createLinearGradient(0, 0, 0, 35);
-		}
+		//}
 
 		lingrad.addColorStop(0, 'rgba(' + this.options.headerStartColor.join(',') + ', 1)');
 		lingrad.addColorStop(1, 'rgba(' + this.options.headerStopColor.join(',') + ', 1)');		
@@ -2399,7 +2432,7 @@ Todo:
 MochaUI.Workspaces = new Class({
 	options: {
 		index:       0,     // Default screen
-		background:  '#fff'
+		background:  '#8caac7'
 	},
 	initialize: function(options){
 		this.setOptions(options);

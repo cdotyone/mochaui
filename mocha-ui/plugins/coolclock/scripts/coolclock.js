@@ -93,13 +93,13 @@ CoolClock.config = {
 			secondDecoration: { lineWidth: 3, startAt: 0, radius: 6, fillColor: "white", color: "white", alpha: 1 }
 		},
 		mochaUI2: {
-			outerBorder: { lineWidth: 185, radius:1, color: "#000", alpha: 0 },
-			smallIndicator: { lineWidth: 3, startAt: 88, endAt: 94, color: "#C7C3B7", alpha: 1 },
-			largeIndicator: { lineWidth: 3, startAt: 82, endAt: 94, color: "#C7C3B7", alpha: 1 },
-			hourHand: { lineWidth: 4, startAt: -1, endAt: 58, color: "#C7C3B7", alpha: 1 },
-			minuteHand: { lineWidth: 4, startAt: -1, endAt: 78, color: "#C7C3B7", alpha: 1 },
-			secondHand: { lineWidth: 3, startAt: 82, endAt: 94, color: "#ce1717", alpha: 1 },
-			secondDecoration: { lineWidth: 0, startAt: 0, radius: 6, fillColor: "#999", color: "#000", alpha: 0 }
+			outerBorder: { lineWidth: 6, radius:98, color: "#fff", alpha: 0 },
+			smallIndicator: { lineWidth: 2, startAt: 86, endAt: 91, color: "#555", alpha: 1 },
+			largeIndicator: { lineWidth: 3, startAt: 80, endAt: 91, color: "#555", alpha: 1 },
+			hourHand: { lineWidth: 4, startAt: -1, endAt: 54, color: "#141414", alpha: 1 },
+			minuteHand: { lineWidth: 4, startAt: -1, endAt: 78, color: "#141414", alpha: 1 },
+			secondHand: { lineWidth: 1, startAt: -16, endAt: 80, color: "#ce1717", alpha: 1 },
+			secondDecoration: { lineWidth: 2, startAt: 0, radius: 7, fillColor: "#fff", color: "#ce1717", alpha: 0 }
 		},
 		mochaUI3: {
 			outerBorder: { lineWidth: 185, radius:1, color: "#000", alpha: 0 },
@@ -109,9 +109,16 @@ CoolClock.config = {
 			minuteHand: { lineWidth: 4, startAt: 0, endAt: 78, color: "#fff", alpha: 1 },
 			secondHand: { lineWidth: 4, startAt: 82, endAt: 94, color: "#EFCD5F", alpha: 1 },
 			secondDecoration: { lineWidth: 0, startAt: 0, radius: 6, fillColor: "#fff", color: "#000", alpha: 1 }
+		},
+		mochaUI4: {
+			outerBorder: { lineWidth: 185, radius:1, color: "#000", alpha: 0 },
+			smallIndicator: { lineWidth: 3, startAt: 88, endAt: 94, color: "#C7C3B7", alpha: 1 },
+			largeIndicator: { lineWidth: 3, startAt: 82, endAt: 94, color: "#C7C3B7", alpha: 1 },
+			hourHand: { lineWidth: 4, startAt: -1, endAt: 58, color: "#C7C3B7", alpha: 1 },
+			minuteHand: { lineWidth: 4, startAt: -1, endAt: 78, color: "#C7C3B7", alpha: 1 },
+			secondHand: { lineWidth: 3, startAt: 82, endAt: 94, color: "#ce1717", alpha: 1 },
+			secondDecoration: { lineWidth: 0, startAt: 0, radius: 6, fillColor: "#999", color: "#000", alpha: 0 }
 		}
-		
-
 	}
 };
 
@@ -162,7 +169,10 @@ CoolClock.prototype = {
 			if (document.all)
 				// excanvas doesn't scale line width so we will do it here
 				lineWidth = lineWidth * this.scale;
+			beginPath();	
 			arc(x, y, skin.radius, 0, 2*Math.PI, false);
+			closePath();
+		
 			if (document.all)
 				// excanvas doesn't close the circle so let's color in the gap
 				arc(x, y, skin.radius, -0.1, 0.1, false);
@@ -170,7 +180,7 @@ CoolClock.prototype = {
 				fillStyle = skin.fillColor
 				fill();
 			}
-			else {
+			if (skin.color) {
 				// XXX why not stroke and fill
 				strokeStyle = skin.color;
 				stroke();
@@ -178,6 +188,43 @@ CoolClock.prototype = {
 			restore();
 		}
 	},
+
+	reflection: function(){
+		with (this.ctx) {
+  			beginPath();
+   			fillStyle = 'rgba(250, 250, 250, .4)';  
+  			arc(100, 100, 100, 0, Math.PI, true);
+  			bezierCurveTo(60, 80, 160, 80, 200, 100);    
+  			fill();
+		}
+	},
+	
+	bgGradient: function(){
+		var lingrad = this.ctx.createLinearGradient(0, 0, 0, 200);
+		lingrad.addColorStop(0, 'rgba(190, 190, 190, 1)');
+		lingrad.addColorStop(1, 'rgba(230, 230, 230, 1)');		
+		with (this.ctx) {
+			fillStyle = lingrad;			
+			beginPath();			
+			arc(100, 100, 99, 0, 2*Math.PI, false);
+			closePath();
+			fill();
+		}
+	},
+	
+	center: function(){		
+		with (this.ctx) {
+			beginPath();
+			fillStyle = "#fff";				
+			arc(100, 100, 7, 0, 2 * Math.PI, false);			
+			fill();
+			strokeStyle = "#ce1717";
+			lineWidth = 2;
+			arc(100, 100, 7, 0, 2 * Math.PI, false);			
+			stroke();
+			
+		}
+	},	
 
 	radialLineAtAngle: function(angleFraction,skin) {
 		with (this.ctx) {
@@ -207,6 +254,7 @@ CoolClock.prototype = {
 		var skin = CoolClock.config.skins[this.skinId];
 		this.ctx.clearRect(0,0,this.renderRadius*2,this.renderRadius*2);
 
+		this.bgGradient();		
 		this.fullCircle(skin.outerBorder);
 
 		for (var i=0;i<60;i++)
@@ -220,6 +268,8 @@ CoolClock.prototype = {
 				// decoration doesn't render right in IE so lets turn it off
 				this.radialLineAtAngle(sec/60,skin.secondDecoration);
 		}
+		this.center();		
+		this.reflection();
 	},
 
 

@@ -584,3 +584,13 @@ div.mocha.darkWindow .mochaContentBorder {
 div.mocha.darkWindow .mochaTitlebar h3 {
 	color: #333;
 }
+
+div.mocha.transparent .mochaTitlebar {
+	opacity: .0;
+	filter: alpha(opacity=0);
+	-moz-opacity: 0;
+} 
+
+div.mocha.transparent .mochaContentBorder {
+	border: none;
+}

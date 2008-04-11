@@ -28,7 +28,7 @@ Todo:
 MochaUI.Workspaces = new Class({
 	options: {
 		index:       0,     // Default screen
-		background:  '#fff'
+		background:  '#8caac7'
 	},
 	initialize: function(options){
 		this.setOptions(options);
