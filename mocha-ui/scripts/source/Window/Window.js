@@ -105,7 +105,7 @@ windowOptions = {
 
 	// Resizable
 	resizable:         true, 
-	resizeLimit:       {'x': [225, 500], 'y': [225, 500]},	// Minimum and maximum width and height of window when resized. {'x': [250, 2500], 'y': [100, 2000]}
+	resizeLimit:       {'x': [250, 2500], 'y': [125, 2000]},	// Minimum and maximum width and height of window when resized.
 	
 	// Style options:
 	addClass:          null,    // Add a class to your window to give you more control over styling.	
@@ -506,7 +506,7 @@ MochaUI.Window = new Class({
 		this.contentWrapperEl.makeResizable({
 			handle: [this.e, this.ne],
 			limit: {
-				x: this.options.resizeLimit.x		
+				x: [this.options.resizeLimit.x[0] - (this.options.shadowBlur * 2), this.options.resizeLimit.x[1] - (this.options.shadowBlur * 2) ]		
 			},	
 			modifiers: {x: 'width', y: false},
 			onBeforeStart: function(){this.resizeOnBeforeStart();}.bind(this),		
@@ -520,8 +520,8 @@ MochaUI.Window = new Class({
 		this.contentWrapperEl.makeResizable({
 			handle: this.se,
 			limit: {
-				x: this.options.resizeLimit.x, // x needs work !!!
-				y: this.options.resizeLimit.y				
+				x: [this.options.resizeLimit.x[0] - (this.options.shadowBlur * 2), this.options.resizeLimit.x[1] - (this.options.shadowBlur * 2) ],
+				y: [this.options.resizeLimit.y[0] - this.HeaderFooterShadow, this.options.resizeLimit.y[1] - this.HeaderFooterShadow]					
 			},	
 			modifiers: {x: 'width', y: 'height'},
 			onBeforeStart: function(){this.resizeOnBeforeStart();}.bind(this),		
@@ -535,7 +535,7 @@ MochaUI.Window = new Class({
 		this.contentWrapperEl.makeResizable({
 			handle: [this.s, this.sw],
 			limit: {
-				y: this.options.resizeLimit.y
+				y: [this.options.resizeLimit.y[0] - this.HeaderFooterShadow, this.options.resizeLimit.y[1] - this.HeaderFooterShadow]	
 			},	
 			modifiers: {x: false, y: 'height'},
 			onBeforeStart: function(){this.resizeOnBeforeStart();}.bind(this),		
@@ -551,10 +551,10 @@ MochaUI.Window = new Class({
 			limit: {
 				x: [
 					function(){
-						return this.windowEl.getStyle('left').toInt() + this.windowEl.getStyle('width').toInt() - this.options.resizeLimit.y[1];
+						return this.windowEl.getStyle('left').toInt() + this.windowEl.getStyle('width').toInt() - this.options.resizeLimit.x[1];
 					}.bind(this),
 				   function(){
-					   return this.windowEl.getStyle('left').toInt() + this.windowEl.getStyle('width').toInt() - this.options.resizeLimit.y[0];
+					   return this.windowEl.getStyle('left').toInt() + this.windowEl.getStyle('width').toInt() - this.options.resizeLimit.x[0];
 					}.bind(this)
 				]
 			},	
