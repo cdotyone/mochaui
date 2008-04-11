@@ -105,7 +105,7 @@ windowOptions = {
 
 	// Resizable
 	resizable:         true, 
-	resizeLimit:       {'x': [250, 2500], 'y': [100, 2000]},	// Minimum and maximum width and height of window when resized.
+	resizeLimit:       {'x': [225, 500], 'y': [225, 500]},	// Minimum and maximum width and height of window when resized. {'x': [250, 2500], 'y': [100, 2000]}
 	
 	// Style options:
 	addClass:          null,    // Add a class to your window to give you more control over styling.	
@@ -125,9 +125,12 @@ windowOptions = {
 	headerStartColor:  [250, 250, 250],  // Header gradient's top color - RGB
 	headerStopColor:   [229, 229, 229],  // Header gradient's bottom color
 	footerBgColor:     [229, 229, 229],	 // Background color of the main canvas shape
-	minimizeColor:     [250, 250, 250],  // Minimize button color
-	maximizeColor:     [250, 250, 250],  // Maximize button color
-	closeColor:        [250, 250, 250],  // Close button color
+	minimizeBgColor:   [250, 250, 250],  // Minimize button background color
+	minimizeColor:     [0, 0, 0],        // Minimize button color	
+	maximizeBgColor:   [250, 250, 250],  // Maximize button background color
+	maximizeColor:     [0, 0, 0],        // Maximize button color	
+	closeBgColor:      [250, 250, 250],  // Close button background color
+	closeColor:        [0, 0, 0],        // Close button color	
 	resizableColor:    [254, 254, 254],  // Resizable icon color
 
 	// Events
@@ -486,11 +489,7 @@ MochaUI.Window = new Class({
 				]
 			},	
 			modifiers: {'x': false, y: 'top'},
-			onBeforeStart: function() {
-				if (this.iframeEl){
-					this.iframeEl.setStyle('visibility', 'hidden');
-				}
-			}.bind(this),		
+			onBeforeStart: function(){this.resizeOnBeforeStart();}.bind(this),		
 			onStart: function(){
 				this.coords = this.contentWrapperEl.getCoordinates();			
 				this.y2 = this.coords.top.toInt() + this.contentWrapperEl.offsetHeight;
@@ -501,12 +500,7 @@ MochaUI.Window = new Class({
 				this.drawWindow(windowEl);
 				this.adjustHandles();
 			}.bind(this),
-			onComplete: function() {
-				if (this.iframeEl){
-					this.iframeEl.setStyle('visibility', 'visible');
-				}
-				this.fireEvent('onResize', windowEl);
-			}.bind(this)		
+			onComplete: function(){this.resizeOnComplete();}.bind(this)		
 		});
 	
 		this.contentWrapperEl.makeResizable({
@@ -515,21 +509,12 @@ MochaUI.Window = new Class({
 				x: this.options.resizeLimit.x		
 			},	
 			modifiers: {x: 'width', y: false},
-			onBeforeStart: function() {
-				if (this.iframeEl){
-					this.iframeEl.setStyle('visibility', 'hidden');
-				}
-			}.bind(this),		
+			onBeforeStart: function(){this.resizeOnBeforeStart();}.bind(this),		
 			onDrag: function(){
 				this.drawWindow(windowEl);
 				this.adjustHandles();
 			}.bind(this),
-			onComplete: function() {
-				if (this.iframeEl){
-					this.iframeEl.setStyle('visibility', 'visible');
-				}
-				this.fireEvent('onResize', windowEl);
-			}.bind(this)		
+			onComplete: function(){this.resizeOnComplete();}.bind(this)	
 		});	
 	
 		this.contentWrapperEl.makeResizable({
@@ -539,21 +524,12 @@ MochaUI.Window = new Class({
 				y: this.options.resizeLimit.y				
 			},	
 			modifiers: {x: 'width', y: 'height'},
-			onBeforeStart: function() {
-				if (this.iframeEl){
-					this.iframeEl.setStyle('visibility', 'hidden');
-				}
-			}.bind(this),		
+			onBeforeStart: function(){this.resizeOnBeforeStart();}.bind(this),		
 			onDrag: function(){
 				this.drawWindow(windowEl);	
 				this.adjustHandles();
 			}.bind(this),
-			onComplete: function() {
-				if (this.iframeEl){
-					this.iframeEl.setStyle('visibility', 'visible');
-				}
-				this.fireEvent('onResize', windowEl);
-			}.bind(this)		
+			onComplete: function(){this.resizeOnComplete();}.bind(this)	
 		});		
 		
 		this.contentWrapperEl.makeResizable({
@@ -562,52 +538,52 @@ MochaUI.Window = new Class({
 				y: this.options.resizeLimit.y
 			},	
 			modifiers: {x: false, y: 'height'},
-			onBeforeStart: function() {
-				if (this.iframeEl){
-					this.iframeEl.setStyle('visibility', 'hidden');
-				}
-			}.bind(this),		
+			onBeforeStart: function(){this.resizeOnBeforeStart();}.bind(this),		
 			onDrag: function(){
 				this.drawWindow(windowEl);			
 				this.adjustHandles();
 			}.bind(this),
-			onComplete: function() {
-				if (this.iframeEl){
-					this.iframeEl.setStyle('visibility', 'visible');
-				}
-				this.fireEvent('onResize', windowEl);
-			}.bind(this)		
+			onComplete: function(){this.resizeOnComplete();}.bind(this)	
 		});
 		
 		this.windowEl.makeResizable({
 			handle: [this.w, this.sw, this.nw],
 			limit: {
-				x: [0, function(){return this.windowEl.getStyle('left').toInt() + this.windowEl.getStyle('width').toInt() - this.options.resizeLimit.x[0];}.bind(this)] // !!! first x needs work
+				x: [
+					function(){
+						return this.windowEl.getStyle('left').toInt() + this.windowEl.getStyle('width').toInt() - this.options.resizeLimit.y[1];
+					}.bind(this),
+				   function(){
+					   return this.windowEl.getStyle('left').toInt() + this.windowEl.getStyle('width').toInt() - this.options.resizeLimit.y[0];
+					}.bind(this)
+				]
 			},	
-			modifiers: {x: 'left', y: false},
-			onBeforeStart: function() {
-				if (this.iframeEl){
-					this.iframeEl.setStyle('visibility', 'hidden');
-				}
-			}.bind(this),		
+			modifiers: {'x': 'left', y: false},
+			onBeforeStart: function(){this.resizeOnBeforeStart();}.bind(this),		
 			onStart: function(){
-				this.coords = this.windowEl.getCoordinates();			
-				this.x2 = this.coords.left.toInt() + this.windowEl.getStyle('width').toInt();
+				this.coords = this.contentWrapperEl.getCoordinates();			
+				this.x2 = this.coords.left.toInt() + this.contentWrapperEl.offsetWidth;
 			}.bind(this),
 			onDrag: function(){
-				this.coords = this.windowEl.getCoordinates();
+				this.coords = this.contentWrapperEl.getCoordinates();
 				this.contentWrapperEl.setStyle('width', this.x2 - this.coords.left.toInt());
-				this.drawWindow(windowEl);			
+				this.drawWindow(windowEl);
 				this.adjustHandles();
 			}.bind(this),
-			onComplete: function() {
-				if (this.iframeEl){
-					this.iframeEl.setStyle('visibility', 'visible');
-				}
-				this.fireEvent('onResize', windowEl);
-			}.bind(this)		
-		});	
+			onComplete: function(){this.resizeOnComplete();}.bind(this)
+		});
 	
+	},
+	resizeOnBeforeStart: function(){
+		if (this.iframeEl){
+			this.iframeEl.setStyle('visibility', 'hidden');
+		}	
+	},	
+	resizeOnComplete: function(){
+		if (this.iframeEl){
+			this.iframeEl.setStyle('visibility', 'visible');
+		}
+		this.fireEvent('onResize', this.windowEl);	
 	},
 	adjustHandles: function(){
 		this.coords = this.windowEl.getCoordinates();
@@ -1000,11 +976,11 @@ MochaUI.Window = new Class({
 		this.minimizebuttonX = this.maximizebuttonX - (this.minimizable ? 19 : 0);
 
 		if ( this.options.closable )
-			this.closebutton(ctx, this.closebuttonX, (this.options.shadowBlur + 12), this.options.closeColor, 1.0);
+			this.closebutton(ctx, this.closebuttonX, (this.options.shadowBlur + 12), this.options.closeBgColor, 1.0, this.options.closeColor, 1.0);
 		if ( this.maximizable )
-			this.maximizebutton(ctx, this.maximizebuttonX, (this.options.shadowBlur + 12), this.options.maximizeColor, 1.0);
+			this.maximizebutton(ctx, this.maximizebuttonX, (this.options.shadowBlur + 12), this.options.maximizeBgColor, 1.0, this.options.maximizeColor, 1.0);
 		if ( this.minimizable )
-			this.minimizebutton(ctx, this.minimizebuttonX, (this.options.shadowBlur + 12), this.options.minimizeColor, 1.0); // Minimize
+			this.minimizebutton(ctx, this.minimizebuttonX, (this.options.shadowBlur + 12), this.options.minimizeBgColor, 1.0, this.options.minimizeColor, 1.0); // Minimize
 		if ( this.options.resizable ) 
 			MochaUI.triangle(ctx, width - (this.options.shadowBlur + 17), height - (this.options.shadowBlur + 18), 11, 11, this.options.resizableColor, 1.0); // Resize handle
 
@@ -1053,14 +1029,15 @@ MochaUI.Window = new Class({
 		ctx.quadraticCurveTo(x, y, x, y + radius);
 		ctx.fill(); 
 	},
-	maximizebutton: function(ctx, x, y, rgb, a){ // This could reuse the circle method above
+	maximizebutton: function(ctx, x, y, rgbBg, aBg, rgb, a){ // This could reuse the circle method above
 		// Circle
 		ctx.beginPath();
 		ctx.moveTo(x, y);
 		ctx.arc(x, y, 7, 0, Math.PI*2, true);
-		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
+		ctx.fillStyle = 'rgba(' + rgbBg.join(',') + ',' + aBg + ')';
 		ctx.fill();
 		// X sign
+		ctx.strokeStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';		
 		ctx.beginPath();
 		ctx.moveTo(x, y - 4);
 		ctx.lineTo(x, y + 4);
@@ -1070,14 +1047,15 @@ MochaUI.Window = new Class({
 		ctx.lineTo(x + 4, y);
 		ctx.stroke();
 	},
-	closebutton: function(ctx, x, y, rgb, a){ // This could reuse the circle method above
+	closebutton: function(ctx, x, y, rgbBg, aBg, rgb, a){ // This could reuse the circle method above
 		// Circle
 		ctx.beginPath();
 		ctx.moveTo(x, y);
 		ctx.arc(x, y, 7, 0, Math.PI*2, true);
-		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
+		ctx.fillStyle = 'rgba(' + rgbBg.join(',') + ',' + aBg + ')';
 		ctx.fill();
 		// Plus sign
+		ctx.strokeStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';		
 		ctx.beginPath();
 		ctx.moveTo(x - 3, y - 3);
 		ctx.lineTo(x + 3, y + 3);
@@ -1087,14 +1065,15 @@ MochaUI.Window = new Class({
 		ctx.lineTo(x - 3, y + 3);
 		ctx.stroke();
 	},
-	minimizebutton: function(ctx, x, y, rgb, a){ // This could reuse the circle method above
+	minimizebutton: function(ctx, x, y, rgbBg, aBg, rgb, a){ // This could reuse the circle method above
 		// Circle
 		ctx.beginPath();
 		ctx.moveTo(x,y);
 		ctx.arc(x,y,7,0,Math.PI*2,true);
-		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
+		ctx.fillStyle = 'rgba(' + rgbBg.join(',') + ',' + aBg + ')';
 		ctx.fill();
 		// Minus sign
+		ctx.strokeStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';		
 		ctx.beginPath();
 		ctx.moveTo(x - 4, y);
 		ctx.lineTo(x + 4, y);

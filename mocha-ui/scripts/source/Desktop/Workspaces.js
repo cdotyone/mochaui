@@ -10,7 +10,7 @@ Requires:
 	Core.js, Window.js, Desktop.js
 
 Notes:
-	The Workspaces emulate Adobe Illustrator functionality. This is experimental.
+	This will become Tabs, which will use workspaces. The Workspaces emulate Adobe Illustrator functionality. This is experimental.
 
 Todo: 
 	- Make an easy way for Workspaces to have different css.
@@ -32,10 +32,10 @@ MochaUI.Workspaces = new Class({
 	},
 	initialize: function(options){
 		this.setOptions(options);
-		this.setWorkspace(this.options);
+		this.setTab(this.options);
 		this.currentWorkspace = this.options.index;
 	},
-	setWorkspace: function(properties) {
+	setTab: function(properties) {
 		
 		// MAKE IF index = current index return
 		
@@ -50,13 +50,10 @@ MochaUI.Workspaces = new Class({
 			this.currentWorkspace = options.index;	
 		}
 		
-		if (!$('mochaWorkspaces')){
-			return;
-		}
 		MochaUI.Desktop.pageWrapper.setStyles({
 			'background': options.background ? options.background : options.background					
 		});			
-		$$('#mochaWorkspaces div.workspace').each(function(el,i) {
+	/*	$$('#mochaWorkspaces div.workspace').each(function(el,i) {
 			el.setStyle('display', i == options.index ? 'block' : 'none');
 
 			// Add check mark to menu if link exists in menu
@@ -72,7 +69,7 @@ MochaUI.Workspaces = new Class({
 					if (el.check) el.check.destroy();
 				}
 			}			
-		});		
+		});	*/	
 	}
 });
 MochaUI.Workspaces.implement(new Options);

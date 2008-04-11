@@ -284,7 +284,7 @@ initializeWindows = function(){
 					}
 				}				
 			},			
-			width: 300,
+			width: 160,
 			height: 160,
 			x: 650,
 			y: 75,
@@ -368,24 +368,24 @@ initializeWindows = function(){
 		});
 	}	
 	
-	if ($('workspace01LinkCheck')){
-		$('workspace01LinkCheck').addEvent('click', function(e){	
+	if ($('tab01LinkCheck')){
+		$('tab01LinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			MochaUI.Workspaces.setWorkspace({index: 0, background: '#fff' })
+			MochaUI.Workspaces.setTab({index: 0, background: '#fff' })
 		});
 	}
 	
-	if ($('workspace02LinkCheck')){
-		$('workspace02LinkCheck').addEvent('click', function(e){	
+	if ($('tab02LinkCheck')){
+		$('tab02LinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			MochaUI.Workspaces.setWorkspace({index: 1, background: '#bfcfde' })
+			MochaUI.Workspaces.setTab({index: 1, background: '#bfcfde' })
 		});
 	}
 	
-	if ($('workspace03LinkCheck')){
-		$('workspace03LinkCheck').addEvent('click', function(e){	
+	if ($('tab03LinkCheck')){
+		$('tab03LinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			MochaUI.Workspaces.setWorkspace({index: 2, background: '#8caac7' })
+			MochaUI.Workspaces.setTab({index: 2, background: '#8caac7' })
 		});
 	}	
 	
