@@ -104,9 +104,8 @@ windowOptions = {
 	draggableSnap:     false, // The distance to drag before the Window starts to respond to the drag.
 
 	// Resizable
-	resizable:         true, 	
-	resizableLimitX:   [250, 2500],  // Minimum and maximum width of window when resized.
-	resizableLimitY:   [100, 2000],  // Minimum and maximum height of window when resized.
+	resizable:         true, 
+	resizeLimit:       {'x': [250, 2500], 'y': [100, 2000]},	// Minimum and maximum width and height of window when resized.
 	
 	// Style options:
 	addClass:          null,    // Add a class to your window to give you more control over styling.	
@@ -474,255 +473,141 @@ MochaUI.Window = new Class({
 		if ( !this.options.resizable ){
 			return;
 		}
-		/*
-		this.windowDrag = this.contentWrapperEl.makeResizable({
-			handle: this.resizeHandleEl,		
-			modifiers: {
-				x: 'width',
-				y: 'height'
-			},
+		this.windowEl.makeResizable({
+			handle: [this.n, this.ne, this.nw],
 			limit: {
-				x: this.options.resizableLimitX,
-				y: this.options.resizableLimitY
-			},
+				y: [
+					function(){
+						return this.windowEl.getStyle('top').toInt() + this.windowEl.getStyle('height').toInt() - this.options.resizeLimit.y[1];
+					}.bind(this),
+				   function(){
+					   return this.windowEl.getStyle('top').toInt() + this.windowEl.getStyle('height').toInt() - this.options.resizeLimit.y[0];
+					}.bind(this)
+				]
+			},	
+			modifiers: {'x': false, y: 'top'},
 			onBeforeStart: function() {
-				if ( this.iframeEl ){
+				if (this.iframeEl){
 					this.iframeEl.setStyle('visibility', 'hidden');
 				}
+			}.bind(this),		
+			onStart: function(){
+				this.coords = this.contentWrapperEl.getCoordinates();			
+				this.y2 = this.coords.top.toInt() + this.contentWrapperEl.offsetHeight;
 			}.bind(this),
-			onDrag: function() {
+			onDrag: function(){
+				this.coords = this.contentWrapperEl.getCoordinates();
+				this.contentWrapperEl.setStyle('height', this.y2 - this.coords.top.toInt());
 				this.drawWindow(windowEl);
+				this.adjustHandles();
 			}.bind(this),
 			onComplete: function() {
-				if ( this.iframeEl )
+				if (this.iframeEl){
 					this.iframeEl.setStyle('visibility', 'visible');
+				}
 				this.fireEvent('onResize', windowEl);
-			}.bind(this)
+			}.bind(this)		
+		});
+	
+		this.contentWrapperEl.makeResizable({
+			handle: [this.e, this.ne],
+			limit: {
+				x: this.options.resizeLimit.x		
+			},	
+			modifiers: {x: 'width', y: false},
+			onBeforeStart: function() {
+				if (this.iframeEl){
+					this.iframeEl.setStyle('visibility', 'hidden');
+				}
+			}.bind(this),		
+			onDrag: function(){
+				this.drawWindow(windowEl);
+				this.adjustHandles();
+			}.bind(this),
+			onComplete: function() {
+				if (this.iframeEl){
+					this.iframeEl.setStyle('visibility', 'visible');
+				}
+				this.fireEvent('onResize', windowEl);
+			}.bind(this)		
+		});	
+	
+		this.contentWrapperEl.makeResizable({
+			handle: this.se,
+			limit: {
+				x: this.options.resizeLimit.x, // x needs work !!!
+				y: this.options.resizeLimit.y				
+			},	
+			modifiers: {x: 'width', y: 'height'},
+			onBeforeStart: function() {
+				if (this.iframeEl){
+					this.iframeEl.setStyle('visibility', 'hidden');
+				}
+			}.bind(this),		
+			onDrag: function(){
+				this.drawWindow(windowEl);	
+				this.adjustHandles();
+			}.bind(this),
+			onComplete: function() {
+				if (this.iframeEl){
+					this.iframeEl.setStyle('visibility', 'visible');
+				}
+				this.fireEvent('onResize', windowEl);
+			}.bind(this)		
+		});		
+		
+		this.contentWrapperEl.makeResizable({
+			handle: [this.s, this.sw],
+			limit: {
+				y: this.options.resizeLimit.y
+			},	
+			modifiers: {x: false, y: 'height'},
+			onBeforeStart: function() {
+				if (this.iframeEl){
+					this.iframeEl.setStyle('visibility', 'hidden');
+				}
+			}.bind(this),		
+			onDrag: function(){
+				this.drawWindow(windowEl);			
+				this.adjustHandles();
+			}.bind(this),
+			onComplete: function() {
+				if (this.iframeEl){
+					this.iframeEl.setStyle('visibility', 'visible');
+				}
+				this.fireEvent('onResize', windowEl);
+			}.bind(this)		
 		});
 		
-		*/
-
-		
-	this.windowEl.makeResizable({
-		handle: this.n,
-		limit: {
-			y: [ 0, function(){return this.windowEl.getStyle('top').toInt() + this.windowEl.getStyle('height').toInt() - 150;}.bind(this)]
-		},	
-		'modifiers': {'x': false, y: 'top'},
+		this.windowEl.makeResizable({
+			handle: [this.w, this.sw, this.nw],
+			limit: {
+				x: [0, function(){return this.windowEl.getStyle('left').toInt() + this.windowEl.getStyle('width').toInt() - this.options.resizeLimit.x[0];}.bind(this)] // !!! first x needs work
+			},	
+			modifiers: {x: 'left', y: false},
 			onBeforeStart: function() {
-				if ( this.iframeEl ){
+				if (this.iframeEl){
 					this.iframeEl.setStyle('visibility', 'hidden');
 				}
 			}.bind(this),		
-		'onStart': function(){
-			this.coords = this.contentWrapperEl.getCoordinates();			
-			this.y2 = this.coords.top.toInt() + this.contentWrapperEl.offsetHeight;
-		}.bind(this),
-		'onDrag': function(){
-			this.coords = this.contentWrapperEl.getCoordinates();
-			this.contentWrapperEl.setStyle('height', this.y2 - this.coords.top.toInt());
-			this.drawWindow(windowEl);
-			this.adjustHandles();
-		}.bind(this),
+			onStart: function(){
+				this.coords = this.windowEl.getCoordinates();			
+				this.x2 = this.coords.left.toInt() + this.windowEl.getStyle('width').toInt();
+			}.bind(this),
+			onDrag: function(){
+				this.coords = this.windowEl.getCoordinates();
+				this.contentWrapperEl.setStyle('width', this.x2 - this.coords.left.toInt());
+				this.drawWindow(windowEl);			
+				this.adjustHandles();
+			}.bind(this),
 			onComplete: function() {
-				if ( this.iframeEl )
+				if (this.iframeEl){
 					this.iframeEl.setStyle('visibility', 'visible');
-				this.fireEvent('onResize', windowEl);
-			}.bind(this)		
-	});
-			
-	this.contentWrapperEl.makeResizable({
-		handle: this.ne,
-		limit: {
-			x: [0, function(){return this.contentWrapperEl.getCoordinates().right.toInt() + this.contentWrapperEl.getStyle('width').toInt()}.bind(this) + 150],
-			y: [150, function(){return this.windowEl.getStyle('top').toInt() + this.windowEl.getStyle('height').toInt() - 150;}.bind(this)]
-		},
-		invert: true,
-		'modifiers': {x: 'width', y: 'height'},
-			onBeforeStart: function() {
-				if ( this.iframeEl ){
-					this.iframeEl.setStyle('visibility', 'hidden');
 				}
-			}.bind(this),		
-		'onStart': function(){
-			this.coords = this.contentWrapperEl.getCoordinates();
-			this.coords2 = this.windowEl.getCoordinates();
-			this.y2 = this.coords2.top.toInt() + this.contentWrapperEl.offsetHeight;			
-			this.x2 = this.coords.width.toInt();
-		}.bind(this),
-		'onDrag': function(){
-			this.coords = this.contentWrapperEl.getCoordinates();
-			this.windowEl.setStyle('top', this.y2 - this.contentWrapperEl.offsetHeight);			
-			this.contentWrapperEl.setStyle('width', this.x2 + (this.x2 - this.coords.width.toInt()) );
-			this.drawWindow(windowEl);
-			this.adjustHandles();
-		}.bind(this),
-			onComplete: function() {
-				if ( this.iframeEl )
-					this.iframeEl.setStyle('visibility', 'visible');
 				this.fireEvent('onResize', windowEl);
 			}.bind(this)		
-	});
+		});	
 	
-	this.contentWrapperEl.makeResizable({
-		handle: this.e,
-		limit: {
-			x: [150, 2000]			
-		},	
-		'modifiers': {x: 'width', y: false},
-			onBeforeStart: function() {
-				if ( this.iframeEl ){
-					this.iframeEl.setStyle('visibility', 'hidden');
-				}
-			}.bind(this),		
-		'onDrag': function(){
-			this.drawWindow(windowEl);
-			this.adjustHandles();
-		}.bind(this),
-			onComplete: function() {
-				if ( this.iframeEl )
-					this.iframeEl.setStyle('visibility', 'visible');
-				this.fireEvent('onResize', windowEl);
-			}.bind(this)		
-	});	
-	
-	this.contentWrapperEl.makeResizable({
-		handle: this.se,
-		limit: {
-			x: [150, function(){return this.contentWrapperEl.getCoordinates().right.toInt() + this.contentWrapperEl.getStyle('width').toInt()}.bind(this)],
-			y: [150, 500]				
-		},	
-		'modifiers': {x: 'width', y: 'height'},
-			onBeforeStart: function() {
-				if ( this.iframeEl ){
-					this.iframeEl.setStyle('visibility', 'hidden');
-				}
-			}.bind(this),		
-		'onDrag': function(){
-			this.drawWindow(windowEl);			
-			this.adjustHandles();
-		}.bind(this),
-			onComplete: function() {
-				if ( this.iframeEl )
-					this.iframeEl.setStyle('visibility', 'visible');
-				this.fireEvent('onResize', windowEl);
-			}.bind(this)		
-	});		
-	
-	this.contentWrapperEl.makeResizable({
-		handle: this.s,
-		limit: {
-			y: [150, 500]				
-		},	
-		'modifiers': {x: false, y: 'height'},
-			onBeforeStart: function() {
-				if ( this.iframeEl ){
-					this.iframeEl.setStyle('visibility', 'hidden');
-				}
-			}.bind(this),		
-		'onDrag': function(){
-			this.drawWindow(windowEl);			
-			this.adjustHandles();
-		}.bind(this),
-			onComplete: function() {
-				if ( this.iframeEl )
-					this.iframeEl.setStyle('visibility', 'visible');
-				this.fireEvent('onResize', windowEl);
-			}.bind(this)		
-	});
-	
-	this.contentWrapperEl.makeResizable({
-		handle: this.sw,
-		limit: {
-			x: [0, 500],
-			y: [150, 500]
-		},	
-		'modifiers': {x: 'width', y: 'height'},
-			onBeforeStart: function() {
-				if ( this.iframeEl ){
-					this.iframeEl.setStyle('visibility', 'hidden');
-				}
-			}.bind(this),		
-		'onStart': function(){
-			this.coords = this.windowEl.getCoordinates();
-			this.x2 = this.coords.left.toInt();	
-			this.coords2 = this.contentWrapperEl.getCoordinates();			
-			this.w2 = this.coords2.width.toInt();			
-		}.bind(this),
-		'onDrag': function(){
-			this.coords = this.contentWrapperEl.getCoordinates();
-			this.coords2 = this.windowEl.getCoordinates();
-			this.contentWrapperEl.setStyle('width', this.w2 + (this.w2 - this.coords.width.toInt()) );			
-			this.windowEl.setStyle('left', this.x2 - (this.w2 - this.coords.width.toInt()) );
-			this.drawWindow(windowEl);			
-			this.adjustHandles();
-		}.bind(this),
-			onComplete: function() {
-				if ( this.iframeEl )
-					this.iframeEl.setStyle('visibility', 'visible');
-				this.fireEvent('onResize', windowEl);
-			}.bind(this)		
-	});
-	
-	this.windowEl.makeResizable({
-		handle: this.w,
-		limit: {
-			x: [0, function(){return this.windowEl.getStyle('left').toInt() + this.windowEl.getStyle('width').toInt() - 150;}.bind(this)]
-		},	
-		'modifiers': {x: 'left', y: false},
-			onBeforeStart: function() {
-				if ( this.iframeEl ){
-					this.iframeEl.setStyle('visibility', 'hidden');
-				}
-			}.bind(this),		
-		'onStart': function(){
-			this.coords = this.windowEl.getCoordinates();			
-			this.x2 = this.coords.left.toInt() + this.windowEl.getStyle('width').toInt();
-		}.bind(this),
-		'onDrag': function(){
-			this.coords = this.windowEl.getCoordinates();
-			this.contentWrapperEl.setStyle('width', this.x2 - this.coords.left.toInt());
-			this.drawWindow(windowEl);			
-			this.adjustHandles();
-		}.bind(this),
-			onComplete: function() {
-				if ( this.iframeEl )
-					this.iframeEl.setStyle('visibility', 'visible');
-				this.fireEvent('onResize', windowEl);
-			}.bind(this)		
-	});
-	
-	this.windowEl.makeResizable({
-		handle: this.nw,
-		limit: {
-			x: [0, function(){return this.windowEl.getStyle('left').toInt() + this.windowEl.getStyle('width').toInt() - 150;}.bind(this)],
-			y: [ 0, function(){return this.windowEl.getStyle('top').toInt() + this.windowEl.getStyle('height').toInt() - 150;}.bind(this)]
-		},	
-		'modifiers': {x: 'left', y: 'top'},
-			onBeforeStart: function() {
-				if ( this.iframeEl ){
-					this.iframeEl.setStyle('visibility', 'hidden');
-				}
-			}.bind(this),		
-		'onStart': function(){
-			this.coords = this.contentWrapperEl.getCoordinates();			
-			this.x2 = this.coords.left.toInt() + this.contentWrapperEl.getStyle('width').toInt();
-			this.y2 = this.coords.top.toInt() + this.contentWrapperEl.offsetHeight;			
-		}.bind(this),
-		'onDrag': function(){
-			this.coords = this.contentWrapperEl.getCoordinates();
-			this.contentWrapperEl.setStyle('width', this.x2 - this.coords.left.toInt());
-			this.contentWrapperEl.setStyle('height', this.y2 - this.coords.top.toInt());
-			this.drawWindow(windowEl);			
-			this.adjustHandles();
-		}.bind(this),
-			onComplete: function() {
-				if ( this.iframeEl )
-					this.iframeEl.setStyle('visibility', 'visible');
-				this.fireEvent('onResize', windowEl);
-			}.bind(this)		
-	});
-		
 	},
 	adjustHandles: function(){
 		this.coords = this.windowEl.getCoordinates();

@@ -282,7 +282,7 @@ div.mocha .handle {
 	z-index: 2;
 	opacity: .0;
 	filter: alpha(opacity=0);
-	-moz-opacity: .5;	
+	-moz-opacity: .0;	
 }
 
 div.mocha .corner { /* Corner resize handles */

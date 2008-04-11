@@ -120,6 +120,7 @@ var MochaUI = new Hash({
 	/*
 	
 	Function: toggleWindowVisibility
+		Toggle window visibility with Ctrl-Alt-Q.
 	
 	Todo:
 		Don't toggle modal visibility. If new window is created make all windows visible except for those that are minimized. If window is restored from dock make all windows visible except for any others that are still minimized.

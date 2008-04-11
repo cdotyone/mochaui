@@ -599,10 +599,13 @@ window.addEvent('domready', function(){
 
 	initializeWindows();
 	
-	window.addEvent('keydown', function(event){												
-		var key = event.code;
-		if (key == 9 && event.control) MochaUI.toggleWindowVisibility();					
-	});		
+	// Toggle window visibility with Ctrl-Alt-Q
+	document.addEvent('keydown', function(event){							 
+		if (event.key == 'q' && event.control && event.alt) {
+			MochaUI.toggleWindowVisibility();
+		}
+	});
+	
 	
 });
 
