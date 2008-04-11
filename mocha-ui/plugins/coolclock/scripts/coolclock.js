@@ -255,7 +255,7 @@ CoolClock.prototype = {
 		this.ctx.clearRect(0,0,this.renderRadius*2,this.renderRadius*2);
 
 		this.bgGradient();		
-		this.fullCircle(skin.outerBorder);
+		//this.fullCircle(skin.outerBorder);
 
 		for (var i=0;i<60;i++)
 			this.radialLineAtAngle(i/60,skin[ i%5 ? "smallIndicator" : "largeIndicator"]);

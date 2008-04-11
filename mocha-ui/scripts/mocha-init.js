@@ -227,8 +227,8 @@ initializeWindows = function(){
 			},
 			width: 300,
 			height: 105,
-			x: 650,
-			y: 305,
+			x: 330,
+			y: 385,
 			padding: { top: 12, right: 12, bottom: 10, left: 12 },			
 			resizable: false,
 			maximizable: false,
@@ -289,13 +289,11 @@ initializeWindows = function(){
 			footerHeight:      25,			
 			width: 160,
 			height: 160,
-			x: 650,
+			x: 720,
 			y: 75,
 			scrollbars: false,
 			padding: { top: 0, right: 0, bottom: 0, left: 0 },				
-			bodyBgColor: 'transparent',
-			resizable: false,
-			maximizable: false				
+			bodyBgColor: 'transparent'				
 		});	
 	}
 	if ($('clockLinkCheck')){
@@ -450,9 +448,9 @@ initializeWindows = function(){
 			loadMethod: 'xhr',
 			contentURL: 'pages/features.html',
 			width: 300,
-			height: 230,
-			x: 330,
-			y: 385
+			height: 210,
+			x: 650,
+			y: 280
 		});	
 	}
 	if ($('featuresLinkCheck')){

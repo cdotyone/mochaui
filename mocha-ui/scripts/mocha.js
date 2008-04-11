@@ -429,6 +429,12 @@ MochaUI.Window = new Class({
 
 		// Always use close buttons for modal windows
 		this.options.closable  =  this.options.closable || this.options.modal;
+		
+		// Gauges are not maximizable or resizable
+		if (this.options.shape == 'gauge'){
+			this.options.resizable = false;
+			this.options.maximizable = false;
+		}
 
 		// Minimizable, dock is required and window cannot be modal
 		this.minimizable = MochaUI.options.dock && this.options.minimizable && !this.options.modal;
@@ -739,7 +745,7 @@ MochaUI.Window = new Class({
 		
 	*/
 	attachResizable: function(windowEl){
-		if ( !this.options.resizable ){
+		if (!this.options.resizable){
 			return;
 		}
 		this.windowEl.makeResizable({
@@ -1033,15 +1039,6 @@ MochaUI.Window = new Class({
 		//Insert resize handles
 		
 		if (this.options.resizable){
-		/*	this.resizeHandleEl = new Element('div', {
-				'class': 'resizeHandle',
-				'id': this.options.id + '_resizeHandle'
-			}).injectAfter(this.overlayEl);
-			
-			// do this to all handles by class !!!
-			if ( Browser.Engine.trident ){
-				this.resizeHandleEl.setStyle('zIndex', 2);
-			} */
 			
 			this.n = new Element('div', {
 				'id': this.options.id + '_resizeHandle_n',
