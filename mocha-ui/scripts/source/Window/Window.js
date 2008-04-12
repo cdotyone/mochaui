@@ -126,11 +126,11 @@ windowOptions = {
 	headerStartColor:  [250, 250, 250],  // Header gradient's top color - RGB
 	headerStopColor:   [229, 229, 229],  // Header gradient's bottom color
 	footerBgColor:     [229, 229, 229],	 // Background color of the main canvas shape
-	minimizeBgColor:   [250, 250, 250],  // Minimize button background color
+	minimizeBgColor:   [255, 255, 255],  // Minimize button background color
 	minimizeColor:     [0, 0, 0],        // Minimize button color	
-	maximizeBgColor:   [250, 250, 250],  // Maximize button background color
+	maximizeBgColor:   [255, 255, 255],  // Maximize button background color
 	maximizeColor:     [0, 0, 0],        // Maximize button color	
-	closeBgColor:      [250, 250, 250],  // Close button background color
+	closeBgColor:      [255, 255, 255],  // Close button background color
 	closeColor:        [0, 0, 0],        // Close button color	
 	resizableColor:    [254, 254, 254],  // Resizable icon color
 
@@ -307,7 +307,7 @@ MochaUI.Window = new Class({
 				this.fireEvent('onContentLoaded', this.windowEl);
 				break;
 		}
-
+		
 		// Set scrollbars, always use 'hidden' for iframe windows
 		this.contentWrapperEl.setStyles({
 			'overflow': this.options.scrollbars && !this.options.iframe ? 'auto' : 'hidden',
@@ -722,7 +722,7 @@ MochaUI.Window = new Class({
 		if (this.options.closable){
 			this.closeButtonEl = new Element('div', {
 				'class': 'mochaClose',
-				'title': 'Close Window',
+				'title': 'Close',
 				'id': this.options.id + '_closeButton'
 			}).injectInside(this.controlsEl);
 		}

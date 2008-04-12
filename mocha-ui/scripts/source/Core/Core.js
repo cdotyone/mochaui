@@ -36,7 +36,7 @@ var MochaUI = new Hash({
 	ieSupport:      'excanvas',   // Makes it easier to switch between Excanvas and Moocanvas for testing	
 	indexLevel:     1,            // Used for z-Index
 	windowIDCount:  0,	          // Used for windows without an ID defined by the user
-	windowsVisible: true, // Ctrl-Tab to toggle window visibility
+	windowsVisible: true,         // Ctrl-Alt-Q to toggle window visibility
 	/*
 	
 	Function: closeWindow
@@ -72,6 +72,10 @@ var MochaUI = new Hash({
 			}
 			windowEl.destroy();
 			currentWindowClass.fireEvent('onCloseComplete');
+			MochaUI.Windows.instances.erase(currentWindowClass.options.id); // see how this effects on close complete
+			if(this.loadingWorkspace == true){
+				this.windowUnload();
+			}
 		}
 		else {
 			// Redraws IE windows without shadows since IE messes up canvas alpha when you change element opacity
@@ -86,14 +90,17 @@ var MochaUI = new Hash({
 				onComplete: function(){
 					windowEl.destroy();
 					currentWindowClass.fireEvent('onCloseComplete');
-					MochaUI.Windows.instances.erase(currentWindowClass.options.id); // see how this effects on close complete					
+					MochaUI.Windows.instances.erase(currentWindowClass.options.id); // see how this effects on close complete
+					if(this.loadingWorkspace == true){
+						this.windowUnload();
+					}
 				}.bind(this)
 			});
 			closeMorph.start({
 				'opacity': .4
 			});
 		}
-		if (currentWindowClass.check) currentWindowClass.check.destroy();		
+		if (currentWindowClass.check) currentWindowClass.check.destroy();
 		return true;
 	},	
 	/*
@@ -109,12 +116,10 @@ var MochaUI = new Hash({
 	*/
 	closeAll: function() {		
 		$$('div.mocha').each(function(el) {
-			this.closeWindow(el);
+			this.closeWindow(el);			
 		}.bind(this));
-		MochaUI.Windows.instances.each(function(instance) {		
-			MochaUI.Windows.instances.empty();
-		}.bind(this));		
-		$$('div.mochaDockButton').destroy();		
+		MochaUI.Windows.instances.empty();				
+		$$('div.mochaDockButton').destroy();
 		return true;
 	},	
 	/*
@@ -197,7 +202,7 @@ var MochaUI = new Hash({
 	/*
 	
 	Function: saveWorkspace
-		This is experimental. It currently uses cookies but really needs a database.
+		This is experimental. This version saves the ID of each open window to a cookie, and reloads those windows using the functions in mocha-init.js. A future version may be set up to save all the current options and events of each open window to a database.
 	
 	Note: EXPERIMENTAL - PARTIALLY IMPLEMENTED.
 	
@@ -210,29 +215,53 @@ var MochaUI = new Hash({
 	saveWorkspace: function(){
 		this.cookie = new Hash.Cookie('mochaUIworkspaceCookie', {duration: 3600});
 		this.cookie.empty();		
-		MochaUI.Windows.instances.each(function(instance) {												
-			if (instance.$events) {
-				this.cookie.set(instance.options.id, {'options': instance.options, 'myevents': this.serialize(instance.$events)});
-			}
-			else {
-				this.cookie.set(instance.options.id, {'options': instance.options});				
-			}		
+		MochaUI.Windows.instances.each(function(instance) {											
+
+		this.cookie.set(instance.options.id, {
+			'id': instance.options.id,
+			'top': instance.options.y,
+			'left': instance.options.x
+		});
+		
 		}.bind(this));		
 		this.cookie.save();
 	},
-	loadWorkspace: function(){
-		this.cookie = new Hash.Cookie('mochaUIworkspaceCookie', {duration: 3600});
-    	workspaceWindows = this.cookie.load();
-		workspaceWindows.each(function(instance) {
-			options = instance.options;
-			if (instance.myevents) {
-				events = this.unserialize(instance.myevents);
-				var newWindow = new MochaUI.Window(options).addEvents(events);
+	windowUnload: function(){
+		if ($$('div.mocha').length == 0){
+			if(this.myChain){
+				this.myChain.callChain();
 			}
-			else {
-				var newWindow = new MochaUI.Window(options);
-			}			
+		}		
+	},
+	loadWorkspace2: function(){
+		this.cookie = new Hash.Cookie('mochaUIworkspaceCookie', {duration: 3600});
+		workspaceWindows = this.cookie.load();
+		workspaceWindows.each(function(instance) {		
+			eval('MochaUI.' + instance.id + 'Window();');			
 		}.bind(this));
+		this.loadingWorkspace = false;
+	},
+	loadWorkspace: function(){
+		if ($$('div.mocha').length != 0){
+			this.loadingWorkspace = true;
+			this.myChain = new Chain();
+			this.myChain.chain(
+    			function(){					
+					$$('div.mocha').each(function(el) {
+						this.closeWindow(el);
+					}.bind(this));
+					$$('div.mochaDockButton').destroy();
+				}.bind(this),			
+    			function(){
+					this.loadWorkspace2();			
+				}.bind(this)
+			);
+			this.myChain.callChain();
+		}
+		else {
+			this.loadWorkspace2();
+		}
+	
 	},
 	/*
 	

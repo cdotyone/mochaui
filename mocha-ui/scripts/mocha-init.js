@@ -116,8 +116,7 @@ initializeWindows = function(){
 			width: 340,
 			height: 285,
 			scrollbars: false,
-			padding: { top: 0, right: 0, bottom: 0, left: 0 },
-			bgColor: '#000'
+			padding: { top: 0, right: 0, bottom: 0, left: 0 }
 		});
 	}	
 	if ($('youtubeLinkCheck')) {
@@ -289,7 +288,7 @@ initializeWindows = function(){
 			footerHeight:      25,			
 			width: 160,
 			height: 160,
-			x: 720,
+			x: 650,
 			y: 75,
 			scrollbars: false,
 			padding: { top: 0, right: 0, bottom: 0, left: 0 },				
