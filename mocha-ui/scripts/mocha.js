@@ -459,10 +459,19 @@ MochaUI.Window = new Class({
 		// Always use close buttons for modal windows
 		this.options.closable  =  this.options.closable || this.options.modal;
 		
+		// Modal windows are not resizable or draggable.
+		// Remove the following lines if you want them to be
+		if (this.options.modal == true){
+			this.options.resizable = false;
+			this.options.draggable = false;
+		}
+		
 		// Gauges are not maximizable or resizable
 		if (this.options.shape == 'gauge'){
 			this.options.resizable = false;
 			this.options.maximizable = false;
+			this.options.bodyBgColor = 'transparent';
+			this.options.scrollbars = false;			
 		}
 
 		// Minimizable, dock is required and window cannot be modal
@@ -972,7 +981,11 @@ MochaUI.Window = new Class({
 		this.contentBorderEl = new Element('div', {
 			'class': 'mochaContentBorder',
 			'id': this.options.id + '_contentBorder'
-		}).injectInside(this.overlayEl);		
+		}).injectInside(this.overlayEl);
+		
+		if (this.options.shape == 'gauge'){
+			this.contentBorderEl.setStyle('borderWidth', 0);
+		}
 		
 		this.contentWrapperEl = new Element('div', {
 			'class': 'mochaContentWrapper',
@@ -1557,7 +1570,6 @@ MochaUI.extend({
 			}
 		
 			// Get content and destroy the element
-
 			properties.content = el.innerHTML;
 			el.destroy();
 			

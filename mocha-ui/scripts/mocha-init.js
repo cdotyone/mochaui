@@ -285,14 +285,12 @@ initializeWindows = function(){
 				}				
 			},
 			shape: 'gauge',
-			footerHeight:      25,			
+			footerHeight: 25,			
 			width: 160,
 			height: 160,
 			x: 650,
 			y: 75,
-			scrollbars: false,
-			padding: { top: 0, right: 0, bottom: 0, left: 0 },				
-			bodyBgColor: 'transparent'				
+			padding: { top: 0, right: 0, bottom: 0, left: 0 }							
 		});	
 	}
 	if ($('clockLinkCheck')){
@@ -558,8 +556,6 @@ initializeWindows = function(){
 			loadMethod: 'xhr',
 			contentURL: 'pages/about.html',
 			modal: true,
-			resizable: false,
-			draggable: false,
 			width: 300,
 			height: 150
 		});

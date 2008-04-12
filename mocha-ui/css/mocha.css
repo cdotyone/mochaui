@@ -589,9 +589,4 @@ div.mocha.transparent .mochaTitlebar {
 	opacity: .0;
 	filter: alpha(opacity=0);
 	-moz-opacity: 0;
-} 
-
-div.mocha.transparent .mochaContentBorder {
-	border-top: 0px solid #000;	
-	border-bottom: 0px solid #000;
 }
