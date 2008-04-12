@@ -188,7 +188,6 @@ MochaUI.Dock = new Class({
 		var title = currentWindowClass.titleEl; //?
 		//var mochaContentWrapper = this.contentWrapperEl;
 		var titleText = title.innerHTML; //?
-		currentWindowClass.fireEvent('onMinimize', windowEl);
 
 		// Hide window and add to dock
 		windowEl.setStyle('visibility', 'hidden');
@@ -231,7 +230,8 @@ MochaUI.Dock = new Class({
 		
 		// Fixes a scrollbar issue in Mac FF2.
 		// Have to use timeout because window gets focused when you click on the minimize button 	
-		setTimeout(function(){ windowEl.setStyle('zIndex', 1); }.bind(this),100); 
+		setTimeout(function(){ windowEl.setStyle('zIndex', 1); }.bind(this),100);
+		currentWindowClass.fireEvent('onMinimize', windowEl);		
 	},
 	restoreMinimized: function(windowEl) {
 		
@@ -253,6 +253,7 @@ MochaUI.Dock = new Class({
 		currentWindowClass.isMinimized = false;
 		MochaUI.focusWindow(windowEl);
 		$(MochaUI.options.dock).getElementById(currentWindowClass.options.id + '_dockButton').destroy(); // getElementByID?
+		currentWindowClass.fireEvent('onRestore', windowEl);		
 	}	
 });
 MochaUI.Dock.implement(new Options, new Events);

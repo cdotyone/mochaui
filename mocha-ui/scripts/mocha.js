@@ -401,7 +401,7 @@ windowOptions = {
 
 	// Resizable
 	resizable:         true, 
-	resizeLimit:       {'x': [250, 2500], 'y': [125, 2000]},	// Minimum and maximum width and height of window when resized.
+	resizeLimit:       {'x': [250, 2500], 'y': [125, 2000]}, // Minimum and maximum width and height of window when resized.
 	
 	// Style options:
 	addClass:          null,    // Add a class to your window to give you more control over styling.	
@@ -437,7 +437,7 @@ windowOptions = {
 	onResize:          $empty,  // Fired when the window is resized.
 	onMinimize:        $empty,  // Fired when the window is minimized.
 	onMaximize:        $empty,  // Fired when the window is maximized.
-	onRestore:         $empty,  // Fired when a window is restored from minimized or maximized. NOT YET IMPLEMENTED.
+	onRestore:         $empty,  // Fired when a window is restored from minimized or maximized.
 	onClose:           $empty,  // Fired just before the window is closed.
 	onCloseComplete:   $empty   // Fired after the window is closed.
 };
@@ -1942,8 +1942,6 @@ MochaUI.Desktop = new Class({
 			return;			
 
 		currentWindowClass.isMaximized = true;
-
-		currentWindowClass.fireEvent('onMaximize', windowEl);
 		
 		// If the window has a container that is not the desktop
 		// temporarily move the window to the desktop while it is minimized.
@@ -1982,6 +1980,7 @@ MochaUI.Desktop = new Class({
 			if ( currentWindowClass.iframe ) {
 				currentWindowClass.iframeEl.setStyle('visibility', 'visible');
 			}
+			currentWindowClass.fireEvent('onMaximize', windowEl);
 		}
 		else {
 			
@@ -2002,6 +2001,7 @@ MochaUI.Desktop = new Class({
 					if ( currentWindowClass.iframe ) {
 						currentWindowClass.iframeEl.setStyle('visibility', 'visible');
 					}
+					currentWindowClass.fireEvent('onMaximize', windowEl);	
 				}.bind(this)
 			});
 			maximizeSizeMorph.start({
@@ -2055,7 +2055,8 @@ MochaUI.Desktop = new Class({
 			if (currentWindowClass.options.container != this.options.desktop){
 				$(currentWindowClass.options.container).grab(windowEl);
 				currentWindowClass.windowDrag.container = $(currentWindowClass.options.container);
-			}			
+			}
+			currentWindowClass.fireEvent('onRestore', windowEl);
 		}
 		else {
 			var restoreMorph = new Fx.Elements([currentWindowClass.contentWrapperEl, windowEl], { 
@@ -2072,7 +2073,8 @@ MochaUI.Desktop = new Class({
 					if (currentWindowClass.options.container != this.options.desktop){
 						$(currentWindowClass.options.container).grab(windowEl);
 						currentWindowClass.windowDrag.container = $(currentWindowClass.options.container);
-					}					
+					}
+					currentWindowClass.fireEvent('onRestore', windowEl);
 				}.bind(this)
 			});
 			restoreMorph.start({ 
@@ -2389,7 +2391,6 @@ MochaUI.Dock = new Class({
 		var title = currentWindowClass.titleEl; //?
 		//var mochaContentWrapper = this.contentWrapperEl;
 		var titleText = title.innerHTML; //?
-		currentWindowClass.fireEvent('onMinimize', windowEl);
 
 		// Hide window and add to dock
 		windowEl.setStyle('visibility', 'hidden');
@@ -2432,7 +2433,8 @@ MochaUI.Dock = new Class({
 		
 		// Fixes a scrollbar issue in Mac FF2.
 		// Have to use timeout because window gets focused when you click on the minimize button 	
-		setTimeout(function(){ windowEl.setStyle('zIndex', 1); }.bind(this),100); 
+		setTimeout(function(){ windowEl.setStyle('zIndex', 1); }.bind(this),100);
+		currentWindowClass.fireEvent('onMinimize', windowEl);		
 	},
 	restoreMinimized: function(windowEl) {
 		
@@ -2454,6 +2456,7 @@ MochaUI.Dock = new Class({
 		currentWindowClass.isMinimized = false;
 		MochaUI.focusWindow(windowEl);
 		$(MochaUI.options.dock).getElementById(currentWindowClass.options.id + '_dockButton').destroy(); // getElementByID?
+		currentWindowClass.fireEvent('onRestore', windowEl);		
 	}	
 });
 MochaUI.Dock.implement(new Options, new Events);

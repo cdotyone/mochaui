@@ -190,12 +190,18 @@ initializeWindows = function(){
 			onClose: function(){
 				alert('The window is closing.');
 			},
+			onCloseComplete: function(){
+				alert('The window is closed.');
+			},			
 			onMinimize: function(windowEl){
 				alert(windowEl.id + ' was minimized.');
 			},
 			onMaximize: function(windowEl){
 				alert(windowEl.id + ' was maximized.');
 			},
+			onRestore: function(windowEl){
+				alert(windowEl.id + ' was restored.');
+			},			
 			onResize: function(windowEl){
 				alert(windowEl.id + ' was resized.');
 			},

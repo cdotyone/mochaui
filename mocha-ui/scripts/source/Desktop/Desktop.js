@@ -204,8 +204,6 @@ MochaUI.Desktop = new Class({
 			return;			
 
 		currentWindowClass.isMaximized = true;
-
-		currentWindowClass.fireEvent('onMaximize', windowEl);
 		
 		// If the window has a container that is not the desktop
 		// temporarily move the window to the desktop while it is minimized.
@@ -244,6 +242,7 @@ MochaUI.Desktop = new Class({
 			if ( currentWindowClass.iframe ) {
 				currentWindowClass.iframeEl.setStyle('visibility', 'visible');
 			}
+			currentWindowClass.fireEvent('onMaximize', windowEl);
 		}
 		else {
 			
@@ -264,6 +263,7 @@ MochaUI.Desktop = new Class({
 					if ( currentWindowClass.iframe ) {
 						currentWindowClass.iframeEl.setStyle('visibility', 'visible');
 					}
+					currentWindowClass.fireEvent('onMaximize', windowEl);	
 				}.bind(this)
 			});
 			maximizeSizeMorph.start({
@@ -317,7 +317,8 @@ MochaUI.Desktop = new Class({
 			if (currentWindowClass.options.container != this.options.desktop){
 				$(currentWindowClass.options.container).grab(windowEl);
 				currentWindowClass.windowDrag.container = $(currentWindowClass.options.container);
-			}			
+			}
+			currentWindowClass.fireEvent('onRestore', windowEl);
 		}
 		else {
 			var restoreMorph = new Fx.Elements([currentWindowClass.contentWrapperEl, windowEl], { 
@@ -334,7 +335,8 @@ MochaUI.Desktop = new Class({
 					if (currentWindowClass.options.container != this.options.desktop){
 						$(currentWindowClass.options.container).grab(windowEl);
 						currentWindowClass.windowDrag.container = $(currentWindowClass.options.container);
-					}					
+					}
+					currentWindowClass.fireEvent('onRestore', windowEl);
 				}.bind(this)
 			});
 			restoreMorph.start({ 

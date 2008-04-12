@@ -107,7 +107,7 @@ windowOptions = {
 
 	// Resizable
 	resizable:         true, 
-	resizeLimit:       {'x': [250, 2500], 'y': [125, 2000]},	// Minimum and maximum width and height of window when resized.
+	resizeLimit:       {'x': [250, 2500], 'y': [125, 2000]}, // Minimum and maximum width and height of window when resized.
 	
 	// Style options:
 	addClass:          null,    // Add a class to your window to give you more control over styling.	
@@ -143,7 +143,7 @@ windowOptions = {
 	onResize:          $empty,  // Fired when the window is resized.
 	onMinimize:        $empty,  // Fired when the window is minimized.
 	onMaximize:        $empty,  // Fired when the window is maximized.
-	onRestore:         $empty,  // Fired when a window is restored from minimized or maximized. NOT YET IMPLEMENTED.
+	onRestore:         $empty,  // Fired when a window is restored from minimized or maximized.
 	onClose:           $empty,  // Fired just before the window is closed.
 	onCloseComplete:   $empty   // Fired after the window is closed.
 };
