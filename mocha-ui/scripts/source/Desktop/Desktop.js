@@ -207,6 +207,13 @@ MochaUI.Desktop = new Class({
 
 		currentWindowClass.fireEvent('onMaximize', windowEl);
 		
+		// If the window has a container that is not the desktop
+		// temporarily move the window to the desktop while it is minimized.
+		if (currentWindowClass.options.container != this.options.desktop){
+			this.desktop.grab(windowEl);
+			currentWindowClass.windowDrag.container = this.desktop;
+		}		
+		
 		// Save original position
 		currentWindowClass.oldTop = windowEl.getStyle('top');
 		currentWindowClass.oldLeft = windowEl.getStyle('left');
@@ -289,8 +296,8 @@ MochaUI.Desktop = new Class({
 		if ( !(windowEl = $(windowEl)) || !currentWindowClass.isMaximized )
 			return;		
 		
-		currentWindowClass.isMaximized = false;			
-
+		currentWindowClass.isMaximized = false;
+		
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
 		if ( currentWindowClass.iframe ) {
@@ -307,12 +314,16 @@ MochaUI.Desktop = new Class({
 				'top': currentWindowClass.oldTop,
 				'left': currentWindowClass.oldLeft
 			});
+			if (currentWindowClass.options.container != this.options.desktop){
+				$(currentWindowClass.options.container).grab(windowEl);
+				currentWindowClass.windowDrag.container = $(currentWindowClass.options.container);
+			}			
 		}
 		else {
 			var restoreMorph = new Fx.Elements([currentWindowClass.contentWrapperEl, windowEl], { 
 				'duration':   150,
 				'onStart': function(windowEl){
-						currentWindowClass.maximizeAnimation = currentWindowClass.drawWindow.periodical(20, currentWindowClass, currentWindowClass.windowEl);			
+					currentWindowClass.maximizeAnimation = currentWindowClass.drawWindow.periodical(20, currentWindowClass, currentWindowClass.windowEl);			
 				}.bind(this),
 				'onComplete': function(el){
 					$clear(currentWindowClass.maximizeAnimation);
@@ -320,6 +331,10 @@ MochaUI.Desktop = new Class({
 					if ( currentWindowClass.iframe ) {
 						currentWindowClass.iframeEl.setStyle('visibility', 'visible');
 					}
+					if (currentWindowClass.options.container != this.options.desktop){
+						$(currentWindowClass.options.container).grab(windowEl);
+						currentWindowClass.windowDrag.container = $(currentWindowClass.options.container);
+					}					
 				}.bind(this)
 			});
 			restoreMorph.start({ 
