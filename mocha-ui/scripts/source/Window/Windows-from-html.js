@@ -36,8 +36,8 @@ MochaUI.extend({
 				id: el.getProperty('id'),
 				height: elDimensions.height.toInt(),
 				width: elDimensions.width.toInt(),
-				x: el.getStyle('left'),
-				y: el.getStyle('top')
+				x: el.getStyle('left').toInt(),
+				y: el.getStyle('top').toInt()
 			};
 			// If there is a title element, set title and destroy the element so it does not end up in window content
 			if ( title ) {

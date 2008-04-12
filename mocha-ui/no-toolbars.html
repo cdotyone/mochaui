@@ -11,7 +11,13 @@
 	<!--[if IE]>
 		<script type="text/javascript" src="scripts/excanvas-compressed.js"></script>		
 	<![endif]-->	
-	<script type="text/javascript" src="scripts/mocha.js" charset="utf-8"></script>	
+	<script type="text/javascript" src="scripts/mocha.js" charset="utf-8"></script>
+	
+	<script type="text/javascript">
+	window.addEvent('domready', function(){
+		MochaUI.NewWindowsFromHTML = new MochaUI.NewWindowsFromHTML();		
+	});	
+	</script>			
 
 </head>
 <body>

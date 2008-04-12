@@ -11,10 +11,10 @@
 	<!--[if IE]>
 		<script type="text/javascript" src="scripts/excanvas-compressed.js"></script>		
 	<![endif]-->
-	<script type="text/javascript" src="scripts/mocha.js" charset="utf-8"></script>	
+	<script type="text/javascript" src="scripts/mocha.js" charset="utf-8"></script>
 	
 	<script type="text/javascript">
-	window.addEvent('load', function(){
+	window.addEvent('domready', function(){
 		if ($('modalDemoLink')){
 			$('modalDemoLink').addEvent('click', function(e){	
 				new Event(e).stop();
@@ -28,6 +28,7 @@
 				});
 			});
 		}
+		MochaUI.Modal = new MochaUI.Modal();		
 	});
 	
 	</script>	

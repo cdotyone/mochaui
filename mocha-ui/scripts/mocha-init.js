@@ -590,8 +590,6 @@ window.addEvent('domready', function(){
 	MochaUI.Dock = new MochaUI.Dock();									 
 	MochaUI.Workspaces = new MochaUI.Workspaces();	
 	MochaUI.Modal = new MochaUI.Modal();
-	// used by basic.html and basic2.html examples
-	MochaUI.NewWindowsFromHTML = new MochaUI.NewWindowsFromHTML();
 
 	initializeWindows();
 	
