@@ -1,7 +1,7 @@
 /*
 
 Script: Workspaces.js
-	Create multiple workspaces.
+	Save and load workspaces. The Workspaces emulate Adobe Illustrator functionality remembering what windows are open and where they are positioned. There will be two versions, a limited version that saves state to a cookie, and a fully functional version that saves state to a database. NOT FULLY IMPLEMENTED YET.
 	
 License:
 	MIT-style license.
@@ -9,21 +9,83 @@ License:
 Requires:
 	Core.js, Window.js, Desktop.js
 
-Notes:
-	This will become Tabs, which will use workspaces. The Workspaces emulate Adobe Illustrator functionality. This is experimental.
-
-Todo: 
-	- Make an easy way for Workspaces to have different css.
-	
-	- Each screen should be a separate workspace with it's own windows.
-	
-	- Workspaces change the styling of MochaDesktop and which windows are visible and in the dock.
-	
-	- Dynamically create new Workspaces.	
-
-	- Workspace content should be loaded like windows are.
-
 */
+
+MochaUI.extend({			   
+	/*
+	
+	Function: saveWorkspace
+		This is experimental. This version saves the ID of each open window to a cookie, and reloads those windows using the functions in mocha-init.js. This requires that each window have a function in mocha-init.js used to open them. Functions must be named the windowID + "Window". So if your window is called mywindow, it needs a function called mywindowWindow in mocha-init.js.
+	
+	Syntax:
+	(start code)
+		MochaUI.saveWorkspace();
+	(end)
+	
+	*/	
+	saveWorkspace: function(){
+		this.cookie = new Hash.Cookie('mochaUIworkspaceCookie', {duration: 3600});
+		this.cookie.empty();		
+		MochaUI.Windows.instances.each(function(instance) {											
+
+		this.cookie.set(instance.options.id, {
+			'id': instance.options.id,
+			'top': instance.options.y,
+			'left': instance.options.x
+		});
+		
+		}.bind(this));		
+		this.cookie.save();
+	},
+	windowUnload: function(){
+		if ($$('div.mocha').length == 0){
+			if(this.myChain){
+				this.myChain.callChain();
+			}
+		}		
+	},
+	loadWorkspace2: function(){
+		this.cookie = new Hash.Cookie('mochaUIworkspaceCookie', {duration: 3600});
+		workspaceWindows = this.cookie.load();
+		workspaceWindows.each(function(instance) {		
+			eval('MochaUI.' + instance.id + 'Window();');			
+		}.bind(this));
+		this.loadingWorkspace = false;
+	},
+	/*
+		
+	Function: loadWorkspace
+		Load the saved workspace.
+	
+	Syntax:
+	(start code)
+		MochaUI.loadWorkspace();
+	(end)
+	
+	*/
+	loadWorkspace: function(){
+		if ($$('div.mocha').length != 0){
+			this.loadingWorkspace = true;
+			this.myChain = new Chain();
+			this.myChain.chain(
+    			function(){					
+					$$('div.mocha').each(function(el) {
+						this.closeWindow(el);
+					}.bind(this));
+					$$('div.mochaDockButton').destroy();
+				}.bind(this),			
+    			function(){
+					this.loadWorkspace2();			
+				}.bind(this)
+			);
+			this.myChain.callChain();
+		}
+		else {
+			this.loadWorkspace2();
+		}
+	
+	}
+});
 
 MochaUI.Workspaces = new Class({
 	options: {

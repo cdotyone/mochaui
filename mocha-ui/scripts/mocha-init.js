@@ -88,25 +88,6 @@ initializeWindows = function(){
 		});
 	}	
 
-	MochaUI.mootoolsWindow = function(){
-		new MochaUI.Window({
-			id: 'mootools',
-			title: 'Mootools Forums in an Iframe',
-			loadMethod: 'iframe',
-			contentURL: 'http://forum.mootools.net/',
-			width: 650,
-			height: 400,
-			scrollbars: false,
-			padding: { top: 0, right: 0, bottom: 0, left: 0 }
-		});
-	}	
-	if ($('mootoolsLinkCheck')){
-		$('mootoolsLinkCheck').addEvent('click', function(e){	
-			new Event(e).stop();
-			MochaUI.mootoolsWindow();
-		});
-	}	
-
 	MochaUI.youtubeWindow = function(){
 		new MochaUI.Window({
 			id: 'youtube',
@@ -225,7 +206,7 @@ initializeWindows = function(){
 	MochaUI.cornerRadiusWindow = function(){	
 		new MochaUI.Window({
 			id: 'cornerRadius',
-			title: 'Parametrics',
+			title: 'Window Parametrics',
 			addClass: 'darkWindow',		
 			loadMethod: 'xhr',
 			contentURL: 'pages/corner_radius.html',
@@ -372,27 +353,6 @@ initializeWindows = function(){
 		$('loadWorkspaceLink').addEvent('click', function(e){	
 			new Event(e).stop();
 			MochaUI.loadWorkspace();
-		});
-	}	
-	
-	if ($('tab01LinkCheck')){
-		$('tab01LinkCheck').addEvent('click', function(e){	
-			new Event(e).stop();
-			MochaUI.Workspaces.setTab({index: 0, background: '#8caac7' })
-		});
-	}
-	
-	if ($('tab02LinkCheck')){
-		$('tab02LinkCheck').addEvent('click', function(e){	
-			new Event(e).stop();
-			MochaUI.Workspaces.setTab({index: 1, background: '#bfcfde' })
-		});
-	}
-	
-	if ($('tab03LinkCheck')){
-		$('tab03LinkCheck').addEvent('click', function(e){	
-			new Event(e).stop();
-			MochaUI.Workspaces.setTab({index: 2, background: '#fff' })
 		});
 	}	
 	

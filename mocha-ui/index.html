@@ -39,12 +39,11 @@
 	<li><a class="returnFalse" href="">Examples</a>	
 		<ul>
 			<li><a id="ajaxpageLinkCheck" href="pages/lipsum.html">Ajax/XHR Demo</a></li>
-			<li><a id="jsonLink" href="data/json-windows-data.js">Json Demo</a></li>			
-			<li><a id="mootoolsLinkCheck" href="http://forum.mootools.net/">Iframe: Mootools</a></li>
+			<li><a id="jsonLink" href="data/json-windows-data.js">Json Demo</a></li>
 			<li><a id="youtubeLinkCheck" href="pages/youtube.html">Iframe: YouTube</a></li>
 			<li><a id="dataGridLinkCheck" href="plugins/tablesoort/index.html">Data Grid</a></li>
 			<li><a id="clockLinkCheck" href="plugins/coolclock/index.html">Widget: Clock</a></li>						
-			<li><a id="cornerRadiusLinkCheck" href="pages/corner_radius.html">Corner Radius Slider</a></li>
+			<li><a id="cornerRadiusLinkCheck" href="pages/corner_radius.html">Window Parametrics</a></li>
 			<li class="divider"><a id="windoweventsLinkCheck" href="pages/events.html">Window Events</a></li>			
 			<li class="divider"><a target="_blank" href="no-toolbars.html">Starter: No Toolbars</a></li>
 			<li><a target="_blank" href="no-desktop.html">Starter: No Desktop</a></li>			
@@ -64,23 +63,17 @@
 		</ul>
 	</li>
 	<li>
-		<a class="returnFalse" href="">Workspaces</a>
+		<a class="returnFalse" href="">Workspace</a>
 		<ul>
 			<li><a id="saveWorkspaceLink" href="">Save Workspace</a></li>
-			<li><a id="loadWorkspaceLink" href="">Load Saved Workspace</a></li>					
-			<li><a id="tab01LinkCheck" href="">Tab 01</a></li>
-			<li><a id="tab02LinkCheck" href="">Tab 02</a></li>
-			<li><a id="tab03LinkCheck" href="">Tab 03</a></li>
+			<li><a id="loadWorkspaceLink" href="">Load Workspace</a></li>
 		</ul>
 	</li>
 	<li><a class="returnFalse" href="">Help</a>
 		<ul>
 			<li><a id="overviewLinkCheck" href="pages/overview.html">Overview</a></li>
-			<li><a id="featuresLinkCheck" href="pages/features.html">Features</a></li>					
-			<li><a id="faqLinkCheck" href="pages/faq.html">FAQ</a></li>
-			<li><a target="_blank" href="http://docs.mochaui.com/">Documentation</a></li>
-			<li><a id="helpLinkCheck" href="pages/support.html">Support</a></li>
-			<li><a id="contributeLinkCheck" href="pages/contribute.html">Contribute</a></li>
+			<li><a id="featuresLinkCheck" href="pages/features.html">Features</a></li>		
+			<li class="divider"><a target="_blank" href="http://docs.mochaui.com/">Documentation</a></li>			
 			<li class="divider"><a id="aboutLinkCheck" href="pages/about.html">About</a></li>
 		</ul>	
 	</li>
@@ -112,7 +105,8 @@
 
 <div id="mochaPageWrapper">
 	<div id="mochaPage">
-		<div class="aside" style="float:left"><!-- Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam congue felis ac velit. Vivamus egestas, enim non dignissim porttitor, enim lorem aliquet augue, ut ullamcorper nunc dui vitae metus. Nullam eget magna. Donec tellus felis, ornare eu, sagittis eget, tincidunt sit amet, sapien. Aenean vitae felis sit amet massa consectetuer elementum. Pellentesque euismod commodo felis. Ut imperdiet velit et risus. Sed varius metus sit amet felis. Integer mollis dui in risus. Morbi erat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque in pede. Nulla suscipit ipsum eget ligula. Maecenas sem. Aliquam commodo ligula quis sem. Maecenas feugiat lorem et sem. Pellentesque magna tortor, aliquam a, sodales eget, hendrerit in, mauris. Aliquam erat volutpat. Maecenas et nibh ut justo nonummy eleifend. Suspendisse urna nisl, posuere vel, dictum vitae, tempor vitae, diam.
+		<div class="aside" style="float:left">
+		<!-- Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam congue felis ac velit. Vivamus egestas, enim non dignissim porttitor, enim lorem aliquet augue, ut ullamcorper nunc dui vitae metus. Nullam eget magna. Donec tellus felis, ornare eu, sagittis eget, tincidunt sit amet, sapien. Aenean vitae felis sit amet massa consectetuer elementum. Pellentesque euismod commodo felis. Ut imperdiet velit et risus. Sed varius metus sit amet felis. Integer mollis dui in risus. Morbi erat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque in pede. Nulla suscipit ipsum eget ligula. Maecenas sem. Aliquam commodo ligula quis sem. Maecenas feugiat lorem et sem. Pellentesque magna tortor, aliquam a, sodales eget, hendrerit in, mauris. Aliquam erat volutpat. Maecenas et nibh ut justo nonummy eleifend. Suspendisse urna nisl, posuere vel, dictum vitae, tempor vitae, diam.
 
 Nulla vehicula. Nam massa sapien, euismod vitae, ultrices quis, bibendum id, justo. Morbi velit. Morbi turpis lectus, vulputate sit amet, congue eget, ultrices quis, ante. Maecenas ipsum sem, cursus ut, euismod sit amet, venenatis nec, neque. Donec elementum viverra sapien. Vivamus nunc diam, iaculis vel, rutrum et, adipiscing a, urna. Suspendisse potenti. Pellentesque auctor imperdiet dolor. Proin mattis leo ut dolor. Vestibulum metus nisl, dignissim a, viverra sit amet, nonummy a, est. Maecenas orci arcu, auctor id, dictum tristique, porta nec, libero. In magna.
 
@@ -121,11 +115,10 @@ Nulla sit amet erat. Sed in mi ut risus nonummy ultrices. Sed id urna. Praesent 
 Maecenas viverra neque vitae sapien. Quisque pulvinar blandit lectus. Donec egestas sem in odio. Quisque eros nulla, hendrerit at, iaculis eu, molestie a, nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Suspendisse potenti. Aenean bibendum pulvinar purus. Maecenas et lacus. Vestibulum lorem urna, malesuada sed, convallis consequat, pharetra quis, turpis. In vel massa in felis tempor hendrerit. Proin leo elit, nonummy varius, aliquet facilisis, hendrerit at, tortor. Aenean arcu augue, fringilla vulputate, facilisis hendrerit, hendrerit vel, metus. Nam a felis vel massa rhoncus euismod. Maecenas in sem. Ut hendrerit lobortis turpis. Vestibulum eget erat vitae nisl aliquet pellentesque. Aliquam erat volutpat.
 
 Aliquam pede turpis, ullamcorper vel, commodo sit amet, rhoncus in, massa. In ut ligula eu ipsum pharetra iaculis. Morbi rhoncus porta nibh. Aenean condimentum. Suspendisse hendrerit quam sit amet eros. In imperdiet dui eget turpis. Aliquam erat volutpat. Aliquam convallis purus eget ipsum. Pellentesque tristique viverra libero. Phasellus augue tortor, aliquet in, sollicitudin mattis, viverra sed, nulla. Donec egestas, dui at euismod pellentesque, eros justo accumsan purus, in sagittis tortor nulla at justo. Aenean mollis volutpat purus. In erat. Aenean nec dui. Nulla vitae libero. Nam neque. -->
-			</div><!-- aside end -->			
-		</div><!-- mochaWorkspaces end -->			
+		</div><!-- aside end -->					
 	</div><!-- mochaPage end -->
 </div><!-- mochaPageWrapper end -->
-</div>
+
 <!-- mochaDesktop end -->
 
 </body>
