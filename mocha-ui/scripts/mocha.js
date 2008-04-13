@@ -143,18 +143,30 @@ var MochaUI = new Hash({
 			}
 		}.bind(this));
 
-	},	
+	},
+	
 	focusWindow: function(windowEl){
-		if ( !(windowEl = $(windowEl)) ) 
+		if ( !(windowEl = $(windowEl)) ){ 
 			return;
+		}
 		currentWindowClass = MochaUI.Windows.instances.get(windowEl.id);			
 		// Only focus when needed
-		if ( windowEl.getStyle('zIndex').toInt() == MochaUI.indexLevel )
+		if ( windowEl.getStyle('zIndex').toInt() == MochaUI.indexLevel || currentWindowClass.isFocused == true)
 			return;
+
 		MochaUI.indexLevel++;
 		windowEl.setStyle('zIndex', MochaUI.indexLevel);
+		// Fire onBlur for the window that lost focus.
+		MochaUI.Windows.instances.each(function(instance){
+			if (instance.isFocused == true){
+				instance.fireEvent('onBlur', instance.windowEl);
+			}
+			instance.isFocused = false;			
+		});			
+		currentWindowClass.isFocused = true;		
 		currentWindowClass.fireEvent('onFocus', windowEl);
-	},	
+	},
+	
 	roundedRect: function(ctx, x, y, width, height, radius, rgb, a){
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
 		ctx.beginPath();
@@ -169,6 +181,7 @@ var MochaUI = new Hash({
 		ctx.quadraticCurveTo(x, y, x, y + radius);
 		ctx.fill(); 
 	},
+	
 	triangle: function(ctx, x, y, width, height, rgb, a){
 		ctx.beginPath();
 		ctx.moveTo(x + width, y);
@@ -178,6 +191,7 @@ var MochaUI = new Hash({
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
 		ctx.fill();
 	},
+	
 	circle: function(ctx, x, y, diameter, rgb, a){
 		ctx.beginPath();
 		ctx.moveTo(x, y);
@@ -185,6 +199,7 @@ var MochaUI = new Hash({
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
 		ctx.fill();
 	},
+	
 	serialize: function(obj) {
 		var newobj = {};
 		$each(obj, function(prop,i) {
@@ -192,6 +207,7 @@ var MochaUI = new Hash({
 		}, this);
 		return newobj;
 	},
+	
 	unserialize: function(obj) {
 		var newobj = {};
 		$each(obj, function(prop,i) {
@@ -404,7 +420,7 @@ windowOptions = {
 	resizeLimit:       {'x': [250, 2500], 'y': [125, 2000]}, // Minimum and maximum width and height of window when resized.
 	
 	// Style options:
-	addClass:          null,    // Add a class to your window to give you more control over styling.	
+	addClass:          '',    // Add a class to your window to give you more control over styling.	
 	width:             300,     // Width of content area.	
 	height:            125,     // Height of content area.
 	x:                 null,    // If x and y are left undefined the window is centered on the page. !!! NEED TO MAKE THIS WORK WITH THE CONTAINER OPTION. 
@@ -433,7 +449,7 @@ windowOptions = {
 	onBeforeBuild:     $empty,  // Fired just before the window is built.
 	onContentLoaded:   $empty,  // Fired when content is successfully loaded via XHR or Iframe.
 	onFocus:           $empty,  // Fired when the window is focused.
-	onBlur:            $empty,  // Fired when window loses focus. NOT YET IMPLEMENTED.
+	onBlur:            $empty,  // Fired when window loses focus.
 	onResize:          $empty,  // Fired when the window is resized.
 	onMinimize:        $empty,  // Fired when the window is minimized.
 	onMaximize:        $empty,  // Fired when the window is maximized.
@@ -739,6 +755,7 @@ MochaUI.Window = new Class({
 				}
 			}.bind(this));
 		}
+		
 	},
 	/*
 	
@@ -1016,9 +1033,7 @@ MochaUI.Window = new Class({
 			// This is odd, .getContext() method does not exist before retrieving the
 			// element via getElement
 			this.canvasEl = this.windowEl.getElement('.mochaCanvas');
-		}
-
-	
+		}	
 		
 		//Insert mochaTitlebar controls
 		this.controlsEl = new Element('div', {

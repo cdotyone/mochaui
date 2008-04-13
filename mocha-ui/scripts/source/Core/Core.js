@@ -143,18 +143,30 @@ var MochaUI = new Hash({
 			}
 		}.bind(this));
 
-	},	
+	},
+	
 	focusWindow: function(windowEl){
-		if ( !(windowEl = $(windowEl)) ) 
+		if ( !(windowEl = $(windowEl)) ){ 
 			return;
+		}
 		currentWindowClass = MochaUI.Windows.instances.get(windowEl.id);			
 		// Only focus when needed
-		if ( windowEl.getStyle('zIndex').toInt() == MochaUI.indexLevel )
+		if ( windowEl.getStyle('zIndex').toInt() == MochaUI.indexLevel || currentWindowClass.isFocused == true)
 			return;
+
 		MochaUI.indexLevel++;
 		windowEl.setStyle('zIndex', MochaUI.indexLevel);
+		// Fire onBlur for the window that lost focus.
+		MochaUI.Windows.instances.each(function(instance){
+			if (instance.isFocused == true){
+				instance.fireEvent('onBlur', instance.windowEl);
+			}
+			instance.isFocused = false;			
+		});			
+		currentWindowClass.isFocused = true;		
 		currentWindowClass.fireEvent('onFocus', windowEl);
-	},	
+	},
+	
 	roundedRect: function(ctx, x, y, width, height, radius, rgb, a){
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
 		ctx.beginPath();
@@ -169,6 +181,7 @@ var MochaUI = new Hash({
 		ctx.quadraticCurveTo(x, y, x, y + radius);
 		ctx.fill(); 
 	},
+	
 	triangle: function(ctx, x, y, width, height, rgb, a){
 		ctx.beginPath();
 		ctx.moveTo(x + width, y);
@@ -178,6 +191,7 @@ var MochaUI = new Hash({
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
 		ctx.fill();
 	},
+	
 	circle: function(ctx, x, y, diameter, rgb, a){
 		ctx.beginPath();
 		ctx.moveTo(x, y);
@@ -185,6 +199,7 @@ var MochaUI = new Hash({
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
 		ctx.fill();
 	},
+	
 	serialize: function(obj) {
 		var newobj = {};
 		$each(obj, function(prop,i) {
@@ -192,6 +207,7 @@ var MochaUI = new Hash({
 		}, this);
 		return newobj;
 	},
+	
 	unserialize: function(obj) {
 		var newobj = {};
 		$each(obj, function(prop,i) {

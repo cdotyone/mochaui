@@ -110,7 +110,7 @@ windowOptions = {
 	resizeLimit:       {'x': [250, 2500], 'y': [125, 2000]}, // Minimum and maximum width and height of window when resized.
 	
 	// Style options:
-	addClass:          null,    // Add a class to your window to give you more control over styling.	
+	addClass:          '',    // Add a class to your window to give you more control over styling.	
 	width:             300,     // Width of content area.	
 	height:            125,     // Height of content area.
 	x:                 null,    // If x and y are left undefined the window is centered on the page. !!! NEED TO MAKE THIS WORK WITH THE CONTAINER OPTION. 
@@ -139,7 +139,7 @@ windowOptions = {
 	onBeforeBuild:     $empty,  // Fired just before the window is built.
 	onContentLoaded:   $empty,  // Fired when content is successfully loaded via XHR or Iframe.
 	onFocus:           $empty,  // Fired when the window is focused.
-	onBlur:            $empty,  // Fired when window loses focus. NOT YET IMPLEMENTED.
+	onBlur:            $empty,  // Fired when window loses focus.
 	onResize:          $empty,  // Fired when the window is resized.
 	onMinimize:        $empty,  // Fired when the window is minimized.
 	onMaximize:        $empty,  // Fired when the window is maximized.
@@ -445,6 +445,7 @@ MochaUI.Window = new Class({
 				}
 			}.bind(this));
 		}
+		
 	},
 	/*
 	
@@ -722,9 +723,7 @@ MochaUI.Window = new Class({
 			// This is odd, .getContext() method does not exist before retrieving the
 			// element via getElement
 			this.canvasEl = this.windowEl.getElement('.mochaCanvas');
-		}
-
-	
+		}	
 		
 		//Insert mochaTitlebar controls
 		this.controlsEl = new Element('div', {

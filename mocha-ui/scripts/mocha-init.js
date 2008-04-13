@@ -207,6 +207,9 @@ initializeWindows = function(){
 			},
 			onFocus: function(windowEl){
 				alert(windowEl.id + ' was focused.');
+			},
+			onBlur: function(windowEl){
+				alert(windowEl.id + ' lost focus.');
 			},			
 			width: 340,
 			height: 250

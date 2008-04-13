@@ -96,7 +96,7 @@ CoolClock.config = {
 			outerBorder: { lineWidth: 6, radius:98, color: "#fff", alpha: 0 },
 			smallIndicator: { lineWidth: 2, startAt: 86, endAt: 91, color: "#555", alpha: 1 },
 			largeIndicator: { lineWidth: 3, startAt: 80, endAt: 91, color: "#555", alpha: 1 },
-			hourHand: { lineWidth: 4, startAt: -1, endAt: 54, color: "#141414", alpha: 1 },
+			hourHand: { lineWidth: 4, startAt: -1, endAt: 56, color: "#141414", alpha: 1 },
 			minuteHand: { lineWidth: 4, startAt: -1, endAt: 78, color: "#141414", alpha: 1 },
 			secondHand: { lineWidth: 1, startAt: -16, endAt: 80, color: "#ce1717", alpha: 1 },
 			secondDecoration: { lineWidth: 2, startAt: 0, radius: 7, fillColor: "#fff", color: "#ce1717", alpha: 0 }
@@ -193,8 +193,8 @@ CoolClock.prototype = {
 		with (this.ctx) {
   			beginPath();
    			fillStyle = 'rgba(250, 250, 250, .4)';  
-  			arc(100, 100, 100, 0, Math.PI, true);
-  			bezierCurveTo(60, 80, 160, 80, 200, 100);    
+  			arc(100, 100, 98, 0, Math.PI, true);
+  			bezierCurveTo(60, 80, 160, 80, 196, 100);    
   			fill();
 		}
 	},
