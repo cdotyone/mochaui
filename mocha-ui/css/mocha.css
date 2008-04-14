@@ -311,7 +311,8 @@ div.mocha .cornerSE { /* Bottom right resize handle */
 	top: 8px;
 	right: 8px;
 	height: 14px;	
-	z-index: 2;	
+	z-index: 2;
+	background: transparent;		
 }
 
 .minimizeToggle, .maximizeToggle, .mochaClose {
@@ -321,7 +322,10 @@ div.mocha .cornerSE { /* Bottom right resize handle */
 	font-size: 1px;	
 	cursor: pointer;
 	z-index: 4;
-	background: transparent;			
+	background: #f00;
+	opacity: .0;
+	filter: alpha(opacity=0);
+	-moz-opacity: 0;				
 }
 
 .mochaLoadingIcon {
@@ -332,7 +336,6 @@ div.mocha .cornerSE { /* Bottom right resize handle */
 
 .mochaIframe {
 	width: 100%;
-/*	height: inherit; */
 }  
 	
 /* Sliders */

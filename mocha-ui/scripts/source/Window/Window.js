@@ -330,18 +330,17 @@ MochaUI.Window = new Class({
 			'padding-bottom': this.options.padding.bottom,
 			'padding-left': this.options.padding.left,
 			'padding-right': this.options.padding.right
-		});
+		});		
 		
-		
-		/*if (this.options.shape == 'gauge'){
-			//this.controlsEl.setStyle('opacity', 0);
-			this.titleBarEl.addEvent('mouseover', function(){
-				//this.controlsEl.setStyle('opacity', 1);
+		if (this.options.shape == 'gauge'){
+			this.canvasControlsEl.setStyle('opacity', 0);
+			this.windowEl.addEvent('mouseover', function(){
+				this.canvasControlsEl.setStyle('opacity', 1);
 			}.bind(this));
-			this.titleBarEl.addEvent('mouseleave', function(){
-				//this.controlsEl.setStyle('opacity', 0);
+			this.windowEl.addEvent('mouseleave', function(){
+				this.canvasControlsEl.setStyle('opacity', 0);
 			}.bind(this));			
-		}*/
+		}
 
 		// Inject window into DOM		
 		if (!this.options.container || this.options.modal == true){
