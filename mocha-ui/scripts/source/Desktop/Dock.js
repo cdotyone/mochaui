@@ -184,6 +184,10 @@ MochaUI.Dock = new Class({
 		if ( currentWindowClass.iframe ) {
 			currentWindowClass.iframeEl.setStyle('visibility', 'hidden');
 		}
+		
+		if (currentWindowClass.options.shape == 'gauge'){
+			currentWindowClass.canvasControlsEl.setStyle('opacity', 0);
+		}
 
 		var title = currentWindowClass.titleEl; //?
 		//var mochaContentWrapper = this.contentWrapperEl;
