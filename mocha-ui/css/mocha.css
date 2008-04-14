@@ -302,23 +302,26 @@ div.mocha .cornerSE { /* Bottom right resize handle */
 	top: 8px;
 	right: 8px;
 	width: 0;
-	z-index: 2;	
+	z-index: 4;
+	background: transparent;	
 }
 
 .mochaCanvasControls {
 	position: absolute;
-	top: 0;
-	right: 0;
-	z-index: -1;		
+	top: 8px;
+	right: 8px;
+	height: 14px;	
+	z-index: 2;	
 }
 
 .minimizeToggle, .maximizeToggle, .mochaClose {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
 	float: right;
 	width: 14px;
 	height: 14px;
 	font-size: 1px;	
-	cursor: pointer;	
+	cursor: pointer;
+	z-index: 4;
+	background: transparent;			
 }
 
 .mochaLoadingIcon {

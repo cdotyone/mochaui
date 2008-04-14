@@ -331,6 +331,17 @@ MochaUI.Window = new Class({
 			'padding-left': this.options.padding.left,
 			'padding-right': this.options.padding.right
 		});
+		
+		
+		/*if (this.options.shape == 'gauge'){
+			//this.controlsEl.setStyle('opacity', 0);
+			this.titleBarEl.addEvent('mouseover', function(){
+				//this.controlsEl.setStyle('opacity', 1);
+			}.bind(this));
+			this.titleBarEl.addEvent('mouseleave', function(){
+				//this.controlsEl.setStyle('opacity', 0);
+			}.bind(this));			
+		}*/
 
 		// Inject window into DOM		
 		if (!this.options.container || this.options.modal == true){
@@ -736,7 +747,7 @@ MochaUI.Window = new Class({
 			'width': 14,
 			'height': 14,
 			'id': this.options.id + '_canvasControls'
-		}).injectInside(this.controlsEl);
+		}).injectInside(this.windowEl);
 		
 		// Dynamically initialize canvas using excanvas. This is only required by IE
 		if ( Browser.Engine.trident && MochaUI.ieSupport == 'excanvas'  ) {
@@ -954,7 +965,12 @@ MochaUI.Window = new Class({
 		this.controlsEl.setStyles({
 			'right': this.options.shadowBlur + 5,
 			'top': this.options.shadowBlur + 5	
-		})
+		});
+
+		this.canvasControlsEl.setStyles({
+			'right': this.options.shadowBlur + 5,
+			'top': this.options.shadowBlur + 5	
+		});
 
 		// Calculate X position for controlbuttons
 		this.closebuttonX = this.options.closable ? this.mochaControlsWidth - 12 : this.mochaControlsWidth + 7;
