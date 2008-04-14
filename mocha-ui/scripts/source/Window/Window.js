@@ -79,7 +79,7 @@ windowOptions = {
 	modal:             false,
 	
 	loadMethod:        'html', 	             // Can be set to 'html', 'xhr', or 'iframe'.
-	contentURL:        'pages/lipsum.html',	 // Used if loadMethod is set to 'xhr' or 'iframe'.
+	contentURL:        'pages/lipsum.html',	 // Used if loadMethod is set to 'xhr' or 'iframe'.  
 
 	// xhr options
 	evalScripts:       true,       
@@ -92,7 +92,7 @@ windowOptions = {
 	// The container defaults to 'mochaDesktop'. If no desktop then to document.body. Use 'mochaPageWrapper' if you don't want the windows to overlap the toolbars.
 	container:         null,  // Element the window is injected in. 
 	restrict:          true,  // Restrict window to container when dragging.
-	shape:             'box',   // Shape of window; box or gauge.
+	shape:             'box', // Shape of window; box or gauge.
 	
 	// Window Events  
 	minimizable:       true,  // Requires MochaUI.Desktop and MochaUI.Dock.
@@ -716,13 +716,13 @@ MochaUI.Window = new Class({
 			'height': 1,
 			'id': this.options.id + '_canvas'
 		}).injectInside(this.windowEl);
-
+		
 		// Dynamically initialize canvas using excanvas. This is only required by IE
 		if ( Browser.Engine.trident && MochaUI.ieSupport == 'excanvas'  ) {
-			G_vmlCanvasManager.initElement(this.canvasEl);
+			G_vmlCanvasManager.initElement(this.canvasEl);			
 			// This is odd, .getContext() method does not exist before retrieving the
 			// element via getElement
-			this.canvasEl = this.windowEl.getElement('.mochaCanvas');
+			this.canvasEl = this.windowEl.getElement('.mochaCanvas');			
 		}	
 		
 		//Insert mochaTitlebar controls
@@ -730,6 +730,21 @@ MochaUI.Window = new Class({
 			'class': 'mochaControls',
 			'id': this.options.id + '_controls'
 		}).injectAfter(this.overlayEl);
+		
+		this.canvasControlsEl = new Element('canvas', {
+			'class': 'mochaCanvasControls',
+			'width': 14,
+			'height': 14,
+			'id': this.options.id + '_canvasControls'
+		}).injectInside(this.controlsEl);
+		
+		// Dynamically initialize canvas using excanvas. This is only required by IE
+		if ( Browser.Engine.trident && MochaUI.ieSupport == 'excanvas'  ) {
+			G_vmlCanvasManager.initElement(this.canvasControlsEl);			
+			// This is odd, .getContext() method does not exist before retrieving the
+			// element via getElement
+			this.canvasControlsEl = this.windowEl.getElement('.mochaCanvasControls');			
+		}			
 		
 		//Insert close button
 		if (this.options.closable){
@@ -758,23 +773,24 @@ MochaUI.Window = new Class({
 		}
 		
 		//Insert canvas
-		this.canvasIconEl = new Element('canvas', {
-			'class': 'mochaLoadingIcon',
-			'width': 18,
-			'height': 18,
-			'id': this.options.id + '_canvasIcon'
-		}).injectBottom(this.windowEl);	
+		if ( this.options.shape != 'gauge'){
+			this.canvasIconEl = new Element('canvas', {
+				'class': 'mochaLoadingIcon',
+				'width': 18,
+				'height': 18,
+				'id': this.options.id + '_canvasIcon'
+			}).injectBottom(this.windowEl);	
 		
-		// Dynamically initialize canvas using excanvas. This is only required by IE
-		if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas') {
-			G_vmlCanvasManager.initElement(this.canvasIconEl);
-			// This is odd, .getContext() method does not exist before retrieving the
-			// element via getElement
-			this.canvasIconEl = this.windowEl.getElement('.mochaLoadingIcon');
+			// Dynamically initialize canvas using excanvas. This is only required by IE
+			if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas') {
+				G_vmlCanvasManager.initElement(this.canvasIconEl);
+				// This is odd, .getContext() method does not exist before retrieving the
+				// element via getElement
+				this.canvasIconEl = this.windowEl.getElement('.mochaLoadingIcon');
+			}
 		}
 
 		if ( Browser.Engine.trident ) {
-			this.controlsEl.setStyle('zIndex', 2);
 			this.overlayEl.setStyle('zIndex', 2);
 		}
 
@@ -907,8 +923,8 @@ MochaUI.Window = new Class({
 		});		
 
 		// If opera height and width must be set like this, when resizing:
-		this.canvasEl.height = Browser.Engine.webkit ? 4000 : height;
-		this.canvasEl.width = Browser.Engine.webkit ? 2000 : width;
+		this.canvasEl.height = height;
+		this.canvasEl.width = width;
 
 		// Part of the fix for IE6 select z-index bug and FF on Mac scrollbar z-index bug
 		if ( Browser.Engine.trident4 ){
@@ -925,28 +941,30 @@ MochaUI.Window = new Class({
 			'width': width - (this.options.shadowBlur * 2),
 			'height': this.options.headerHeight
 		});
+	
+		// Make sure loading icon is placed correctly.
+		if ( this.options.shape != 'gauge'){
+			this.canvasIconEl.setStyles({
+				'left': this.options.shadowBlur + 3,
+				'bottom': this.options.shadowBlur + 4
+			})
+		}
 
 		// Make sure controls are placed correctly.
 		this.controlsEl.setStyles({
 			'right': this.options.shadowBlur + 5,
 			'top': this.options.shadowBlur + 5	
 		})
-		
-		// Make sure loading icon is placed correctly.
-		this.canvasIconEl.setStyles({
-			'left': this.options.shadowBlur + 3,
-			'bottom': this.options.shadowBlur + 4
-		})
-		
+
 		// Calculate X position for controlbuttons
-		this.closebuttonX = width - (this.options.closable ? (this.options.shadowBlur + 12) : (this.options.shadowBlur - 7));
+		this.closebuttonX = this.options.closable ? this.mochaControlsWidth - 12 : this.mochaControlsWidth + 7;
 		this.maximizebuttonX = this.closebuttonX - (this.maximizable ? 19 : 0);
 		this.minimizebuttonX = this.maximizebuttonX - (this.minimizable ? 19 : 0);		
 
 		// Draw shapes
 		var ctx = this.canvasEl.getContext('2d');
 		var dimensions = document.getCoordinates();
-		ctx.clearRect(0, 0, dimensions.width, dimensions.height);	
+		ctx.clearRect(0, 0, width, height);	
 
 		switch(this.options.shape) {
 			case 'box':
@@ -955,12 +973,28 @@ MochaUI.Window = new Class({
 			case 'gauge':
 				this.drawGauge(ctx, width, height, shadows);
 				break;				
+		}
+		
+		var ctx2 = this.canvasControlsEl.getContext('2d');
+
+		if ( this.options.closable )
+			this.closebutton(ctx2, this.closebuttonX, 7, this.options.closeBgColor, 1.0, this.options.closeColor, 1.0);
+		if ( this.maximizable )
+			this.maximizebutton(ctx2, this.maximizebuttonX, 7, this.options.maximizeBgColor, 1.0, this.options.maximizeColor, 1.0);
+		if ( this.minimizable )
+			this.minimizebutton(ctx2, this.minimizebuttonX, 7, this.options.minimizeBgColor, 1.0, this.options.minimizeColor, 1.0); // Minimize
+		if ( this.options.resizable ) 
+			MochaUI.triangle(ctx2, width - (this.options.shadowBlur + 17), height - (this.options.shadowBlur + 18), 11, 11, this.options.resizableColor, 1.0); // Resize handle
+
+		// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
+		if ( Browser.Engine.trident4 ){
+			MochaUI.triangle(ctx, 0, 0, 10, 10, this.options.resizableColor, 0);
 		}		
 
 	},
 	drawBox: function(ctx, width, height, shadows){
 	
-		// This is the drop shadow. It is created onion style with three layers
+		// This is the drop shadow. It is created onion style.
 		if ( shadows != false ) {	
 			for (var x = 0; x <= this.options.shadowBlur; x++){
 				MochaUI.roundedRect(ctx, x, x, width - (x * 2), height - (x * 2), this.options.cornerRadius + (this.options.shadowBlur - x), [0, 0, 0], x == this.options.shadowBlur ? .3 : .06 + (x * .01) );
@@ -990,38 +1024,16 @@ MochaUI.Window = new Class({
 			this.options.headerStopColor           // Header gradient's bottom color
 		);
 
-		if ( this.options.closable )
-			this.closebutton(ctx, this.closebuttonX, (this.options.shadowBlur + 12), this.options.closeBgColor, 1.0, this.options.closeColor, 1.0);
-		if ( this.maximizable )
-			this.maximizebutton(ctx, this.maximizebuttonX, (this.options.shadowBlur + 12), this.options.maximizeBgColor, 1.0, this.options.maximizeColor, 1.0);
-		if ( this.minimizable )
-			this.minimizebutton(ctx, this.minimizebuttonX, (this.options.shadowBlur + 12), this.options.minimizeBgColor, 1.0, this.options.minimizeColor, 1.0); // Minimize
-		if ( this.options.resizable ) 
-			MochaUI.triangle(ctx, width - (this.options.shadowBlur + 17), height - (this.options.shadowBlur + 18), 11, 11, this.options.resizableColor, 1.0); // Resize handle
-
-		// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
-		if ( Browser.Engine.trident4 ){
-			MochaUI.triangle(ctx, 0, 0, 10, 10, this.options.resizableColor, 0);
-		}
-
 	},
-	drawGauge: function(ctx, width, height, shadows){
-		
-		// This is the drop shadow. It is created onion style with three layers
+	drawGauge: function(ctx, width, height, shadows){		
+		// This is the drop shadow. It is created onion style.
 		if ( shadows != false ) {	
 			for (var x = 0; x <= this.options.shadowBlur; x++){
 				
 				MochaUI.circle(ctx, width * .5, height * .5, (width *.5) - (x * 2), [0, 0, 0], x == this.options.shadowBlur ? .6 : .06 + (x * .04));
 			}
 		}
-		MochaUI.circle(ctx, width * .5, height * .5, (width *.5) - (this.options.shadowBlur), [250, 250, 250], 1);
-		
-		if ( this.options.closable )
-			this.closebutton(ctx, this.closebuttonX, (this.options.shadowBlur + 12), this.options.closeBgColor, 1.0, this.options.closeColor, 1.0);
-		if ( this.minimizable )
-			this.minimizebutton(ctx, this.minimizebuttonX, (this.options.shadowBlur + 12), this.options.minimizeBgColor, 1.0, this.options.minimizeColor, 1.0); // Minimize		
-		
-		
+		MochaUI.circle(ctx, width * .5, height * .5, (width *.5) - (this.options.shadowBlur), [250, 250, 250], 1);		
 	},		
 	// Window body
 	bodyRoundedRect: function(ctx, x, y, width, height, radius, rgb){
@@ -1123,13 +1135,12 @@ MochaUI.Window = new Class({
 		ctx.stroke();
 	},
 	hideLoadingIcon: function(canvas) {
-		if (!MochaUI.options.useLoadingIcon) return;		
+		if (!MochaUI.options.useLoadingIcon || this.options.shape == 'gauge') return;		
 		$(canvas).setStyle('display', 'none');		
 		$clear(canvas.iconAnimation);
 	},
 	showLoadingIcon: function(canvas) {
-		if (!MochaUI.options.useLoadingIcon) return;		
-		
+		if (!MochaUI.options.useLoadingIcon || this.options.shape == 'gauge') return;		
 		$(canvas).setStyles({
 			'display': 'block'
 		});		
@@ -1168,7 +1179,8 @@ MochaUI.Window = new Class({
 			this.mochaControlsWidth += (marginWidth + controlWidth);
 			this.closeButtonEl.setStyle('margin-left', marginWidth);
 		}
-		this.controlsEl.setStyle('width', this.mochaControlsWidth);
+		this.controlsEl.setStyle('width', this.mochaControlsWidth - marginWidth);
+		this.canvasControlsEl.setProperty('width', this.mochaControlsWidth - marginWidth);
 	}
 });
 MochaUI.Window.implement(new Options, new Events);

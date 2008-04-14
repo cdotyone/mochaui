@@ -302,11 +302,14 @@ div.mocha .cornerSE { /* Bottom right resize handle */
 	top: 8px;
 	right: 8px;
 	width: 0;
-	height: 14px;
-	background: #f00;
-	opacity: .0;
-	filter: alpha(opacity=0);
-	-moz-opacity: .0;
+	z-index: 2;	
+}
+
+.mochaCanvasControls {
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: -1;		
 }
 
 .minimizeToggle, .maximizeToggle, .mochaClose {
@@ -314,8 +317,7 @@ div.mocha .cornerSE { /* Bottom right resize handle */
 	float: right;
 	width: 14px;
 	height: 14px;
-	font-size: 1px;
-	background: #000;	
+	font-size: 1px;	
 	cursor: pointer;	
 }
 
