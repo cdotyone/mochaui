@@ -143,8 +143,7 @@ var MochaUI = new Hash({
 			}
 		}.bind(this));
 
-	},
-	
+	},	
 	focusWindow: function(windowEl){
 		if ( !(windowEl = $(windowEl)) ){ 
 			return;
@@ -165,8 +164,7 @@ var MochaUI = new Hash({
 		});			
 		currentWindowClass.isFocused = true;		
 		currentWindowClass.fireEvent('onFocus', windowEl);
-	},
-	
+	},	
 	roundedRect: function(ctx, x, y, width, height, radius, rgb, a){
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
 		ctx.beginPath();
@@ -180,8 +178,7 @@ var MochaUI = new Hash({
 		ctx.lineTo(x + radius, y);
 		ctx.quadraticCurveTo(x, y, x, y + radius);
 		ctx.fill(); 
-	},
-	
+	},	
 	triangle: function(ctx, x, y, width, height, rgb, a){
 		ctx.beginPath();
 		ctx.moveTo(x + width, y);
@@ -190,24 +187,21 @@ var MochaUI = new Hash({
 		ctx.closePath();
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
 		ctx.fill();
-	},
-	
+	},	
 	circle: function(ctx, x, y, diameter, rgb, a){
 		ctx.beginPath();
 		ctx.moveTo(x, y);
 		ctx.arc(x, y, diameter, 0, Math.PI*2, true);
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
 		ctx.fill();
-	},
-	
+	},	
 	serialize: function(obj) {
 		var newobj = {};
 		$each(obj, function(prop,i) {
 			newobj[i] = prop.toString().clean();
 		}, this);
 		return newobj;
-	},
-	
+	},	
 	unserialize: function(obj) {
 		var newobj = {};
 		$each(obj, function(prop,i) {
@@ -217,11 +211,45 @@ var MochaUI = new Hash({
 	},
 	/*
 	
+	Function: centerWindow
+		Center a window in it's container. If windowEl is undefined it will center the window that has focus.
+		
+	*/	
+	centerWindow: function(windowEl){
+		
+		if(!windowEl){
+			MochaUI.Windows.instances.each(function(instance){
+				if (instance.isFocused == true){
+					windowEl = instance.windowEl;
+				}				
+			});		
+		}
+		
+		currentWindowClass = MochaUI.Windows.instances.get(windowEl.id);
+		var dimensions = currentWindowClass.options.container.getCoordinates();
+		var windowPosTop = (dimensions.height * .5) - ((currentWindowClass.options.height + currentWindowClass.HeaderFooterShadow) * .5);
+		var windowPosLeft =	(dimensions.width * .5) - (currentWindowClass.options.width * .5);
+		
+		if (MochaUI.options.useEffects == true){
+			currentWindowClass.morph.start({
+				'top': windowPosTop,
+				'left': windowPosLeft
+			});
+		}
+		else {
+			windowEl.setStyles({
+				'top': windowPosTop,
+				'left': windowPosLeft
+			});
+		}
+	},
+	/*
+	
 	Function: dynamicResize
 		Use with a timer to resize a window as the window's content size changes, such as with an accordian.
 		
 	*/		
-	dynamicResize: function (windowEl){
+	dynamicResize: function(windowEl){
 		currentWindowClass = MochaUI.Windows.instances.get(windowEl.id);		
 		currentWindowClass.contentWrapperEl.setStyle('height', currentWindowClass.contentEl.offsetHeight);
 		currentWindowClass.contentWrapperEl.setStyle('width', currentWindowClass.contentEl.offsetWidth);			

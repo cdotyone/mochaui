@@ -312,6 +312,13 @@ initializeWindows = function(){
 		});
 	}
 	
+	if ($('centerLink')){
+		$('centerLink').addEvent('click', function(e){	
+			new Event(e).stop();
+			MochaUI.centerWindow();
+		});
+	}	
+	
 	// Tools
 	MochaUI.builderWindow = function(){	
 		new MochaUI.Window({

@@ -263,7 +263,7 @@ MochaUI.Window = new Class({
 			this.options.padding = { top: 0, right: 0, bottom: 0, left: 0 };
 		}
 		
-		// Insert sub elements inside windowEl and cache them locally while creating the new window
+		// Insert sub elements inside windowEl
 		this.insertWindowElements();
 		
 		// Set title		
@@ -324,7 +324,6 @@ MochaUI.Window = new Class({
 			'background': this.options.bodyBgColor
 		});
 
-		// Set content padding
 		this.contentEl.setStyles({
 			'padding-top': this.options.padding.top,
 			'padding-bottom': this.options.padding.bottom,
@@ -417,12 +416,17 @@ MochaUI.Window = new Class({
 			this.windowEl.opacityMorph.start({
 				'opacity': 1
 			});
-			setTimeout(MochaUI.focusWindow.pass(this.windowEl, this),10);
+			setTimeout(MochaUI.focusWindow.pass(this.windowEl, this), 10);
 		}
-		
+
+		// This is a generic morph that can be reused later by functions like centerWindow()
+		this.morph = new Fx.Morph(this.windowEl, {
+			'duration': 200
+		});
+
 		// Add check mark to menu if link exists in menu
-		// Need to make sure the check mark is not added to links not in menu
-						
+		// Need to make sure the check mark is not added to links not in menu		
+	
 		if ($(this.windowEl.id + 'LinkCheck')){
 			this.check = new Element('div', {
 				'class': 'check',
@@ -673,33 +677,31 @@ MochaUI.Window = new Class({
 				'marginHeight': 0,
 				'src': '',
 				'id': this.options.id + '_zIndexFix'
-			}).injectInside(this.windowEl);
+			}).inject(this.windowEl);
 		}
 
 		this.overlayEl = new Element('div', {
 			'class': 'mochaOverlay',
 			'id': this.options.id + '_overlay'
-		}).injectInside(this.windowEl);
+		}).inject(this.windowEl);
 
-		//Insert mochaTitlebar
 		this.titleBarEl = new Element('div', {
 			'class': 'mochaTitlebar',
 			'id': this.options.id + '_titleBar',
 			'styles': {
 				'cursor': this.options.draggable ? 'move' : 'default'
 			}
-		}).injectTop(this.overlayEl);
+		}).inject(this.overlayEl, 'top');
 
-		// Create window header
 		this.titleEl = new Element('h3', {
 			'class': 'mochaTitle',
 			'id': this.options.id + '_title'
-		}).injectInside(this.titleBarEl);
+		}).inject(this.titleBarEl);
 		
 		this.contentBorderEl = new Element('div', {
 			'class': 'mochaContentBorder',
 			'id': this.options.id + '_contentBorder'
-		}).injectInside(this.overlayEl);
+		}).inject(this.overlayEl);
 		
 		if (this.options.shape == 'gauge'){
 			this.contentBorderEl.setStyle('borderWidth', 0);
@@ -712,89 +714,79 @@ MochaUI.Window = new Class({
 				'width': width + 'px',
 				'height': height + 'px'
 			}
-		}).injectInside(this.contentBorderEl);
+		}).inject(this.contentBorderEl);
 
 		this.contentEl = new Element('div', {
 			'class': 'mochaContent',
 			'id': this.options.id + '_content'
-		}).injectInside(this.contentWrapperEl);
+		}).inject(this.contentWrapperEl);
 
-		//Insert canvas
 		this.canvasEl = new Element('canvas', {
 			'class': 'mochaCanvas',
 			'width': 1,
 			'height': 1,
 			'id': this.options.id + '_canvas'
-		}).injectInside(this.windowEl);
+		}).inject(this.windowEl);
 		
-		// Dynamically initialize canvas using excanvas. This is only required by IE
 		if ( Browser.Engine.trident && MochaUI.ieSupport == 'excanvas'  ) {
 			G_vmlCanvasManager.initElement(this.canvasEl);			
-			// This is odd, .getContext() method does not exist before retrieving the
-			// element via getElement
+			// getContext() method does not exist before retrieving the element via getElement
 			this.canvasEl = this.windowEl.getElement('.mochaCanvas');			
 		}	
 		
-		//Insert mochaTitlebar controls
 		this.controlsEl = new Element('div', {
 			'class': 'mochaControls',
 			'id': this.options.id + '_controls'
-		}).injectAfter(this.overlayEl);
+		}).inject(this.overlayEl, 'after');
 		
 		this.canvasControlsEl = new Element('canvas', {
 			'class': 'mochaCanvasControls',
 			'width': 14,
 			'height': 16,
 			'id': this.options.id + '_canvasControls'
-		}).injectInside(this.windowEl);
+		}).inject(this.windowEl);
 		
-		// Dynamically initialize canvas using excanvas. This is only required by IE
 		if ( Browser.Engine.trident && MochaUI.ieSupport == 'excanvas'  ) {
 			G_vmlCanvasManager.initElement(this.canvasControlsEl);			
-			// This is odd, .getContext() method does not exist before retrieving the
-			// element via getElement
+			// getContext() method does not exist before retrieving the element via getElement
 			this.canvasControlsEl = this.windowEl.getElement('.mochaCanvasControls');			
 		}			
 		
-		//Insert close button
 		if (this.options.closable){
 			this.closeButtonEl = new Element('div', {
 				'class': 'mochaClose',
 				'title': 'Close',
 				'id': this.options.id + '_closeButton'
-			}).injectInside(this.controlsEl);
+			}).inject(this.controlsEl);
 		}
 
-		//Insert maximize button
 		if (this.maximizable){
 			this.maximizeButtonEl = new Element('div', {
 				'class': 'maximizeToggle',
 				'title': 'Maximize',
 				'id': this.options.id + '_maximizeButton'
-			}).injectInside(this.controlsEl);
+			}).inject(this.controlsEl);
 		}
-		//Insert minimize button
+
 		if (this.minimizable){
 			this.minimizeButtonEl = new Element('div', {
 				'class': 'minimizeToggle',
 				'title': 'Minimize',
 				'id': this.options.id + '_minimizeButton'
-			}).injectInside(this.controlsEl);
+			}).inject(this.controlsEl);
 		}
 		
-		//Insert canvas
 		if ( this.options.shape != 'gauge'){
 			this.canvasIconEl = new Element('canvas', {
 				'class': 'mochaLoadingIcon',
 				'width': 18,
 				'height': 18,
 				'id': this.options.id + '_canvasIcon'
-			}).injectBottom(this.windowEl);	
+			}).inject(this.windowEl, 'bottom');	
 		
-			// Dynamically initialize canvas using excanvas. This is only required by IE
 			if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas') {
 				G_vmlCanvasManager.initElement(this.canvasIconEl);
-				// This is odd, .getContext() method does not exist before retrieving the
+			    // getContext() method does not exist before retrieving the element via getElement
 				// element via getElement
 				this.canvasIconEl = this.windowEl.getElement('.mochaLoadingIcon');
 			}
@@ -810,10 +802,7 @@ MochaUI.Window = new Class({
 		}
 		this.setMochaControlsWidth();
 		
-		//Insert resize handles
-		
-		if (this.options.resizable){
-			
+		if (this.options.resizable){			
 			this.n = new Element('div', {
 				'id': this.options.id + '_resizeHandle_n',
 				'class': 'handle',		
@@ -893,9 +882,7 @@ MochaUI.Window = new Class({
 					'cursor': 'nw-resize'
 				}
 			}).inject(this.overlayEl, 'after');
-		}			
-		
-		
+		}		
 	},
 	/*
 
@@ -907,8 +894,7 @@ MochaUI.Window = new Class({
 		shadows: (boolean) false will draw a window without shadows
 
 	*/	
-	drawWindow: function(windowEl, shadows) {
-		
+	drawWindow: function(windowEl, shadows) {		
 		this.contentBorderEl.setStyles({
 			'width': this.contentWrapperEl.offsetWidth
 		});
@@ -923,7 +909,6 @@ MochaUI.Window = new Class({
 		this.HeaderFooterShadow = this.options.headerHeight + this.options.footerHeight + (this.options.shadowBlur * 2);
 		var height = this.contentWrapperEl.getStyle('height').toInt() + this.HeaderFooterShadow;
 		var width = this.contentWrapperEl.getStyle('width').toInt() + (this.options.shadowBlur * 2);
-
 		this.windowEl.setStyle('height', height);
 		
 		this.overlayEl.setStyles({
@@ -932,7 +917,7 @@ MochaUI.Window = new Class({
 			'left': this.options.shadowBlur
 		});		
 
-		// If opera height and width must be set like this, when resizing:
+		// Opera height and width must be set like this, when resizing:
 		this.canvasEl.height = height;
 		this.canvasEl.width = width;
 
@@ -991,31 +976,65 @@ MochaUI.Window = new Class({
 		}
 		
 		var ctx2 = this.canvasControlsEl.getContext('2d');
+		ctx2.clearRect(0, 0, 100, 100);
 
-		if ( this.options.closable )
-			this.closebutton(ctx2, this.closebuttonX, 7, this.options.closeBgColor, 1.0, this.options.closeColor, 1.0);
-		if ( this.maximizable )
-			this.maximizebutton(ctx2, this.maximizebuttonX, 7, this.options.maximizeBgColor, 1.0, this.options.maximizeColor, 1.0);
-		if ( this.minimizable )
-			this.minimizebutton(ctx2, this.minimizebuttonX, 7, this.options.minimizeBgColor, 1.0, this.options.minimizeColor, 1.0); // Minimize
-		if ( this.options.resizable ) 
-			MochaUI.triangle(ctx2, width - (this.options.shadowBlur + 17), height - (this.options.shadowBlur + 18), 11, 11, this.options.resizableColor, 1.0); // Resize handle
-
+		if (this.options.closable){
+			this.closebutton(
+				ctx2,
+				this.closebuttonX,
+				7,
+				this.options.closeBgColor,
+				1.0,
+				this.options.closeColor,
+				1.0
+			);
+		}
+		if (this.maximizable){
+			this.maximizebutton(ctx2,
+				this.maximizebuttonX,
+				7,
+				this.options.maximizeBgColor,
+				1.0,
+				this.options.maximizeColor,
+				1.0
+			);
+		}
+		if (this.minimizable){
+			this.minimizebutton(
+				ctx2,
+				this.minimizebuttonX,
+				7,
+				this.options.minimizeBgColor,
+				1.0,
+				this.options.minimizeColor,
+				1.0
+			);
+		}
+		if (this.options.resizable){ 
+			MochaUI.triangle(
+				ctx2,
+				width - (this.options.shadowBlur + 17),
+				height - (this.options.shadowBlur + 18),
+				11,
+				11,
+				this.options.resizableColor,
+				1.0
+			);
+		}
 		// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
 		if ( Browser.Engine.trident4 ){
-			MochaUI.triangle(ctx, 0, 0, 10, 10, this.options.resizableColor, 0);
+			MochaUI.triangle(
+				ctx, 0, 0, 10, 10, this.options.resizableColor, 0);
 		}		
 
 	},
-	drawBox: function(ctx, width, height, shadows){
-	
+	drawBox: function(ctx, width, height, shadows){	
 		// This is the drop shadow. It is created onion style.
 		if ( shadows != false ) {	
 			for (var x = 0; x <= this.options.shadowBlur; x++){
 				MochaUI.roundedRect(ctx, x, x, width - (x * 2), height - (x * 2), this.options.cornerRadius + (this.options.shadowBlur - x), [0, 0, 0], x == this.options.shadowBlur ? .3 : .06 + (x * .01) );
 			}
-		}	
-
+		}
 		// Mocha body
 		this.bodyRoundedRect(
 			ctx,                                    // context
@@ -1043,14 +1062,12 @@ MochaUI.Window = new Class({
 	drawGauge: function(ctx, width, height, shadows){		
 		// This is the drop shadow. It is created onion style.
 		if ( shadows != false ) {	
-			for (var x = 0; x <= this.options.shadowBlur; x++){
-				
+			for (var x = 0; x <= this.options.shadowBlur; x++){				
 				MochaUI.circle(ctx, width * .5, height * .5, (width *.5) - (x * 2), [0, 0, 0], x == this.options.shadowBlur ? .6 : .06 + (x * .04));
 			}
 		}
 		MochaUI.circle(ctx, width * .5, height * .5, (width *.5) - (this.options.shadowBlur), [250, 250, 250], 1);		
 	},		
-	// Window body
 	bodyRoundedRect: function(ctx, x, y, width, height, radius, rgb){
 		with (ctx) {
 			fillStyle = 'rgba(' + rgb.join(',') + ', 100)';
@@ -1070,14 +1087,7 @@ MochaUI.Window = new Class({
 	// Window header with gradient background
 	topRoundedRect: function(ctx, x, y, width, height, radius, headerStartColor, headerStopColor){
 
-		// Create gradient
-	//	if (Browser.Engine.presto != null ){
-	//		var lingrad = ctx.createLinearGradient(0, 0, 0, this.options.headerHeight + 2);
-	//	}
-	//	else {
-			var lingrad = ctx.createLinearGradient(0, 0, 0, this.options.headerHeight);
-	//	}
-
+		var lingrad = ctx.createLinearGradient(0, 0, 0, this.options.headerHeight);
 		lingrad.addColorStop(0, 'rgba(' + headerStartColor.join(',') + ', 1)');
 		lingrad.addColorStop(1, 'rgba(' + headerStopColor.join(',') + ', 1)');
 		
@@ -1162,7 +1172,7 @@ MochaUI.Window = new Class({
 		var t = 1;	  	
 		var iconAnimation = function(canvas){ 
 			var ctx = $(canvas).getContext('2d');
-			ctx.clearRect(0, 0, 18, 18); // Clear canvas
+			ctx.clearRect(0, 0, 18, 18);
 			ctx.save();
 			ctx.translate(9, 9);
 			ctx.rotate(t*(Math.PI / 8));	
