@@ -200,10 +200,16 @@ MochaUI.Desktop = new Class({
 		currentWindowClass = MochaUI.Windows.instances.get(windowEl.id);
 
 		// If window no longer exists or is maximized, stop
-		if ( !(windowEl = $(windowEl)) || currentWindowClass.isMaximized )
+		if (windowEl != $(windowEl) || currentWindowClass.isMaximized )
 			return;			
 
 		currentWindowClass.isMaximized = true;
+		
+		// If window is restricted to a container, it should not be draggable when maximized.
+		if (currentWindowClass.options.restrict){
+			currentWindowClass.windowDrag.detach();
+			currentWindowClass.titleBarEl.setStyle('cursor', 'default');
+		}	
 		
 		// If the window has a container that is not the desktop
 		// temporarily move the window to the desktop while it is minimized.
@@ -297,6 +303,11 @@ MochaUI.Desktop = new Class({
 			return;		
 		
 		currentWindowClass.isMaximized = false;
+		
+		if (currentWindowClass.options.restrict){
+			currentWindowClass.windowDrag.attach();
+			currentWindowClass.titleBarEl.setStyle('cursor', 'move');
+		}		
 		
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues

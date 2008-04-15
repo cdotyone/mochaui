@@ -744,7 +744,7 @@ MochaUI.Window = new Class({
 		this.canvasControlsEl = new Element('canvas', {
 			'class': 'mochaCanvasControls',
 			'width': 14,
-			'height': 14,
+			'height': 16,
 			'id': this.options.id + '_canvasControls'
 		}).injectInside(this.windowEl);
 		

@@ -147,7 +147,7 @@ body {
 #mochaPageWrapper {
 	position: relative;
 	width: auto;
-	overflow: auto; /* This can be set to hidden if you want to treat it more like a desktop than a web page */
+	overflow: hidden; /* This can be set to auto */
 }
 
 #mochaPage {
@@ -308,9 +308,9 @@ div.mocha .cornerSE { /* Bottom right resize handle */
 
 .mochaCanvasControls {
 	position: absolute;
+	height: 16px;
 	top: 8px;
-	right: 8px;
-	height: 14px;	
+	right: 8px;	
 	z-index: 2;
 	background: transparent;		
 }
