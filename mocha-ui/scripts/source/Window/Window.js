@@ -117,7 +117,7 @@ windowOptions = {
 	y:                 null,    
 	scrollbars:        true,
 	padding:   		   { top: 10, right: 12, bottom: 10, left: 12 },
-	shadowBlur:        4,       // Width of shadows.
+	shadowBlur:        3,       // Width of shadows.
 	
 	// Color options:		
 	headerHeight:      25,               // Height of window titlebar

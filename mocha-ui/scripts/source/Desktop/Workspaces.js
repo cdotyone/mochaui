@@ -1,13 +1,16 @@
 /*
 
 Script: Workspaces.js
-	Save and load workspaces. The Workspaces emulate Adobe Illustrator functionality remembering what windows are open and where they are positioned. There will be two versions, a limited version that saves state to a cookie, and a fully functional version that saves state to a database. NOT FULLY IMPLEMENTED YET.
+	Save and load workspaces. The Workspaces emulate Adobe Illustrator functionality remembering what windows are open and where they are positioned. There will be two versions, a limited version that saves state to a cookie, and a fully functional version that saves state to a database. NOT FULLY IMPLEMENTED YET.	
 	
 License:
 	MIT-style license.
 
 Requires:
-	Core.js, Window.js, Desktop.js
+	Core.js, Window.js
+
+To do:
+	- Move to Window
 
 */
 
@@ -48,7 +51,11 @@ MochaUI.extend({
 		this.cookie = new Hash.Cookie('mochaUIworkspaceCookie', {duration: 3600});
 		workspaceWindows = this.cookie.load();
 		workspaceWindows.each(function(instance) {		
-			eval('MochaUI.' + instance.id + 'Window();');			
+			eval('MochaUI.' + instance.id + 'Window();');
+			$(instance.id).setStyles({
+				top: instance.top,
+				left: instance.left
+			});
 		}.bind(this));
 		this.loadingWorkspace = false;
 	},

@@ -145,9 +145,7 @@ var MochaUI = new Hash({
 
 	},	
 	focusWindow: function(windowEl){
-		if ( !(windowEl = $(windowEl)) ){ 
-			return;
-		}
+		if (windowEl != $(windowEl)) return;		
 		currentWindowClass = MochaUI.Windows.instances.get(windowEl.id);			
 		// Only focus when needed
 		if ( windowEl.getStyle('zIndex').toInt() == MochaUI.indexLevel || currentWindowClass.isFocused == true)
@@ -155,6 +153,7 @@ var MochaUI = new Hash({
 
 		MochaUI.indexLevel++;
 		windowEl.setStyle('zIndex', MochaUI.indexLevel);
+
 		// Fire onBlur for the window that lost focus.
 		MochaUI.Windows.instances.each(function(instance){
 			if (instance.isFocused == true){
