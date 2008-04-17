@@ -31,7 +31,7 @@ MochaUI.Modal = new Class({
 	},
 	modalInitialize: function(){
 		var modalOverlay = new Element('div', {
-			'id': 'mochaModalOverlay',
+			'id': 'modalOverlay',
 			'styles': {
 				'height': document.getCoordinates().height
 			}
@@ -39,18 +39,18 @@ MochaUI.Modal = new Class({
 		modalOverlay.injectInside(MochaUI.Desktop.desktop ? MochaUI.Desktop.desktop : document.body);
 		
 		modalOverlay.setStyle('opacity', .4);
-		this.modalOverlayOpenMorph = new Fx.Morph($('mochaModalOverlay'), {
+		this.modalOverlayOpenMorph = new Fx.Morph($('modalOverlay'), {
 				'duration': 200
 				});
-		this.modalOverlayCloseMorph = new Fx.Morph($('mochaModalOverlay'), {
+		this.modalOverlayCloseMorph = new Fx.Morph($('modalOverlay'), {
 			'duration': 200,
 			onComplete: function(){
-				$('mochaModalOverlay').setStyle('display', 'none');
+				$('modalOverlay').setStyle('display', 'none');
 			}.bind(this)
 		});
 	},
 	setModalSize: function(){
-		$('mochaModalOverlay').setStyle('height', document.getCoordinates().height);
+		$('modalOverlay').setStyle('height', document.getCoordinates().height);
 	}
 });
 MochaUI.Modal.implement(new Options, new Events);

@@ -79,7 +79,7 @@ MochaUI.extend({
 					$$('div.mocha').each(function(el) {
 						this.closeWindow(el);
 					}.bind(this));
-					$$('div.mochaDockButton').destroy();
+					$$('div.dockButton').destroy();
 				}.bind(this),			
     			function(){
 					this.loadWorkspace2();			

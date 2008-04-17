@@ -22,7 +22,7 @@ body {
 	background: #fff;
 }
 
-#mochaDesktop {
+#desktop {
 	position: relative;
 	top: 0;
 	left: 0;
@@ -34,18 +34,18 @@ body {
 	cursor: default; /* Fix for issue in IE7. IE7 wants to use the I-bar text cursor */	
 }			  				
 
-#mochaDesktopHeader {
+#desktopHeader {
 	background: #bebebe; /* Will be the margin color between toolbars */
 	padding: 0 0 1px 0;
 }
 
-#mochaDesktopTitlebarWrapper {
+#desktopTitlebarWrapper {
 	position: relative;
 	height: 35px;
 	background: #eeeeef;		
 }
 	
-#mochaDesktopTitlebar {
+#desktopTitlebar {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -54,7 +54,7 @@ body {
 	z-index: 2;
 }	
 	
-#mochaDesktopTitlebar h1 {
+#desktopTitlebar h1 {
 	margin: 0;
 	padding: 4px 0 0 0;
 	font-size: 18px;
@@ -62,43 +62,43 @@ body {
 	color: #ce1717;
 }
 	
-#mochaDesktopTitlebar h1 .version {
+#desktopTitlebar h1 .version {
 	font-size: 12px;
 	color: #555;
 }		
 
-#mochaDesktopNavbar {
+#desktopNavbar {
 	margin: 1px 0 0 0;
 	background: #eeeeee;
 	border: 1px solid #fff;
 	height: 22px;
 }
 
-#mochaDesktopNavbar ul {	
+#desktopNavbar ul {	
 	padding: 0;
 	margin: 0;
 	list-style: none;
 	font-size: 12px;
 }
 
-#mochaDesktopNavbar li {
+#desktopNavbar li {
 	float: left;			
 }
 
-#mochaDesktopNavbar a {
+#desktopNavbar a {
 	display: block;
 }	
 	
-#mochaDesktopNavbar ul li a {
+#desktopNavbar ul li a {
 	padding: 2px 9px 2px 9px;	
 	color: #141414;
 }
 
-#mochaDesktopNavbar ul li a:hover {
+#desktopNavbar ul li a:hover {
 	background: #ddd;
 }
 	
-#mochaDesktopNavbar li ul {
+#desktopNavbar li ul {
 	padding: 2px;
 	border: 1px solid #333;
 	background: #fff;
@@ -108,10 +108,10 @@ body {
 	z-index: 8000;
 }
 
-#mochaDesktopNavbar li ul li {
+#desktopNavbar li ul li {
 } 
 
-#mochaDesktopNavbar li ul li div.check {
+#desktopNavbar li ul li div.check {
 	position: absolute;
 	top: 7px;
 	left: 6px;
@@ -123,22 +123,22 @@ body {
 	font-size: 1px;
 }
 
-#mochaDesktopNavbar li ul li a {
+#desktopNavbar li ul li a {
 	position: relative;
 	padding: 1px 9px 1px 19px;
 	width: 130px;
 	color: #333;
 }
 
-#mochaDesktopNavbar li ul li a:hover {
+#desktopNavbar li ul li a:hover {
 	background: #eee;
 }
 
-#mochaDesktopNavbar li:hover ul, #mochaDesktopNavbar li.ieHover ul { /* lists nested under hovered list items */
+#desktopNavbar li:hover ul, #desktopNavbar li.ieHover ul { /* lists nested under hovered list items */
 	left: auto;
 }
 
-#mochaDesktopNavbar li:hover, #mochaDesktopNavbar li.hover {
+#desktopNavbar li:hover, #desktopNavbar li.hover {
     position: static;
 }
 
@@ -148,41 +148,41 @@ body {
 	border-top: 1px solid #ddd;
 }	
 
-#mochaPageWrapper {
+#pageWrapper {
 	position: relative;
 	width: auto;
 	overflow: hidden; /* This can be set to auto */
 }
 
-#mochaPage {
+#page {
 	padding: 20px 30px;
 }
 
-#mochaSidebarWrapper {
+#sidebarWrapper {
 	display: none;
 	float: left;
 	background: #bebebe;
 	font-size: 11px;			
 }
 
-#mochaSidebar {
+#sidebar {
 	width: 230px;
 	float: left;
 	overflow: hidden;	
 }
 
-#mochaSidebarContentWrapper {
+#sidebarContentWrapper {
 	margin-right: 1px;
 	background: #fff;
 	border: 1px solid #fff;
 	color: #141414;		
 }
 
-#mochaSidebarContent {
+#sidebarContent {
 	padding: 15px;
 }
 
-#mochaSidebarHandle {
+#sidebarHandle {
 	float: left;
 	position: relative;
 	background: #eeeeef;
@@ -193,11 +193,11 @@ body {
 	cursor: col-resize;
 }
 
-* html #mochaSidebarWrapper {
+* html #sidebarWrapper {
 	margin-right: -4px; /* Fix for IE6 3px jox bug */
 }
 
-* html #mochaSidebarHandle {
+* html #sidebarHandle {
 	margin-right: 1px; /* Fix for IE6 3px jox bug */
 }
 
@@ -388,26 +388,26 @@ div.mocha .cornerSE { /* Bottom right resize handle */
 	
 /* Window Builder Form Elements */
 	
-#mochaDesktop form {
+#desktop form {
 	margin: 0 0 0 0;
 	padding: 5px 0 0 0;
 	width: 320px;
 }
 
-#mochaDesktop textarea, #mochaDesktop input {
+#desktop textarea, #desktop input {
 	color: #555;
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;		
 }
 	
-#mochaDesktop .input {
+#desktop .input {
 	background: #fbfbfb;
 	width: 225px;
 	padding: 1px 0 1px 3px;
 	border: 1px solid #ccc;	
 }
 
-#mochaDesktop textarea {
+#desktop textarea {
 	background: #fbfbfb;
 	width: 225px;
 	height: 100px;
@@ -415,27 +415,27 @@ div.mocha .cornerSE { /* Bottom right resize handle */
 	border: 1px solid #ccc;	
 }		
 
-#mochaDesktop .formLabel {
+#desktop .formLabel {
 	float: left;	
 	text-align: right;
 	width: 80px;
 	margin: 0 0 5px 0;	
 }
 	
-#mochaDesktop .formField {
+#desktop .formField {
 	float: right;
 	margin: 0 0 5px 0;
 	padding: 0 0 0 0;
 	width: 230px;
 }
 	
-#mochaDesktop form .number {
+#desktop form .number {
 	width: 40px;
 }
 	
 /* Modal Windows */
 
-#mochaModalOverlay {
+#modalOverlay {
 	display: none;
 	position: fixed; /* This is fixed rather than absolute to fix Mac FF2 issues */
 	top: 0;
@@ -448,7 +448,7 @@ div.mocha .cornerSE { /* Bottom right resize handle */
 	z-index: 10000;
 }
 
-* html 	#mochaModalOverlay {
+* html 	#modalOverlay {
 	position: absolute;
 }	
 	
@@ -469,14 +469,14 @@ iframe.zIndexFix {
 	
 /* Window Minimize Dock */
 
-#mochaDockWrapper{
+#dockWrapper{
 	display: none;
 	background: #bebebe;
 	padding: 1px 0 0 0;
 	width: 100%;	
 }
 
-#mochaDock {
+#dock {
 	position: relative;
 	padding: 3px 15px 1px 15px;
 	bottom: 0;
@@ -489,11 +489,11 @@ iframe.zIndexFix {
    _height: 20px; /* IE 6.0 hack, for not supporting min-height SFF 12/07/2007*/
 }
 
-#mochaDockWrapper.top {
+#dockWrapper.top {
 	padding: 0 0 1px 0;	
 }
 
-.mochaDockButton {
+.dockButton {
 	float: left;
 	font-size: 11px;
 	position: relative;
@@ -504,7 +504,7 @@ iframe.zIndexFix {
 	cursor: pointer;		 
 }
 
-.mochaDockText {
+.dockText {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -523,7 +523,7 @@ iframe.zIndexFix {
 	z-index: 2;
 }
 
-#mochaDockPlacement {
+#dockPlacement {
 	position: absolute;
 	top: 3px;
 	left: 2px;
@@ -537,7 +537,7 @@ iframe.zIndexFix {
 	z-index: 3; /* for IE */	
 }
 
-#mochaDockAutoHide {
+#dockAutoHide {
 	position: absolute;
 	top: 13px;
 	left: 2px;
@@ -576,12 +576,6 @@ iframe.zIndexFix {
 
 .accordianContent {
 	padding: 10px 10px 5px 10px;
-}
-
-/* Screens/Workspaces */
-
-.workspace {
-	display: none;
 }
 
 /* Window Themes */

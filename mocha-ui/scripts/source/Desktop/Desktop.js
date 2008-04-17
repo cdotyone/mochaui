@@ -27,17 +27,17 @@ MochaUI.Desktop = new Class({
 		useHeaderCanvas: true,          		
 		// Naming options:
 		// If you change the IDs of the Mocha Desktop containers in your HTML, you need to change them here as well.
-		desktop:                'mochaDesktop',
-		desktopHeader:          'mochaDesktopHeader',
-		desktopTitlebarWrapper: 'mochaDesktopTitlebarWrapper',
-		desktopNavBar:          'mochaDesktopNavbar',
-		pageWrapper:            'mochaPageWrapper',
-		page:                   'mochaPage',
-		sidebarWrapper:         'mochaSidebarWrapper',		
-		sidebar:                'mochaSidebar',
-		sidebarContentWrapper:  'mochaSidebarContentWrapper',		
-		sidebarMinimize:        'mochaSidebarControl',
-		sidebarHandle:          'mochaSidebarHandle',
+		desktop:                'desktop',
+		desktopHeader:          'desktopHeader',
+		desktopTitlebarWrapper: 'desktopTitlebarWrapper',
+		desktopNavBar:          'desktopNavbar',
+		pageWrapper:            'pageWrapper',
+		page:                   'page',
+		sidebarWrapper:         'sidebarWrapper',		
+		sidebar:                'sidebar',
+		sidebarContentWrapper:  'sidebarContentWrapper',		
+		sidebarMinimize:        'sidebarControl',
+		sidebarHandle:          'sidebarHandle',
 		// Style options:
 		headerStartColor:       [250, 250, 250],  // Header gradient's top color - RGB.
 		headerStopColor:        [229, 229, 229],  // Header gradient's bottom color.
@@ -157,8 +157,8 @@ MochaUI.Desktop = new Class({
 			this.drawHeaderCanvas.delay(10, this);
 		}
 
-		var mochaDock = $(MochaUI.options.dock);
-		var mochaDockWrapper = $(MochaUI.options.dockWrapper);
+		// var dock = $(MochaUI.options.dock);
+		var dockWrapper = $(MochaUI.options.dockWrapper);
 		
 		// Setting the desktop height may only be needed by IE7
 		if ( this.desktop ){
@@ -168,7 +168,7 @@ MochaUI.Desktop = new Class({
 		// Set pageWrapper height so the dock doesn't cover the pageWrapper scrollbars.
 		if (this.pageWrapper && this.desktopHeader) {
 					
-			var dockOffset = MochaUI.dockVisible ? mochaDockWrapper.offsetHeight : 0;
+			var dockOffset = MochaUI.dockVisible ? dockWrapper.offsetHeight : 0;
 			
 			var pageWrapperHeight = windowDimensions.height - this.desktopHeader.offsetHeight - dockOffset;
 			

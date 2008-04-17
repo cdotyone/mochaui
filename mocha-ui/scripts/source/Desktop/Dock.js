@@ -18,8 +18,8 @@ Todo:
 MochaUI.options.extend({			   
 		// Naming options:
 		// If you change the IDs of the Mocha Desktop containers in your HTML, you need to change them here as well.
-		dockWrapper: 'mochaDockWrapper',
-		dock:        'mochaDock'
+		dockWrapper: 'dockWrapper',
+		dock:        'dock'
 });
 
 MochaUI.dockVisible = true;
@@ -84,13 +84,13 @@ MochaUI.Dock = new Class({
 		}
 
 		// Position top or bottom selector
-		$('mochaDockPlacement').setProperty('title','Position Dock Top');
+		$('dockPlacement').setProperty('title','Position Dock Top');
 
 		// Auto Hide toggle switch
-		$('mochaDockAutoHide').setProperty('title','Turn Auto Hide On');
+		$('dockAutoHide').setProperty('title','Turn Auto Hide On');
 
 		// Attach event
-		$('mochaDockPlacement').addEvent('click', function(event){
+		$('dockPlacement').addEvent('click', function(event){
 			var ctx = $('dockCanvas').getContext('2d');
 
 			// Move dock to top position
@@ -104,8 +104,8 @@ MochaUI.Dock = new Class({
 				this.dockWrapper.setProperty('dockPosition','Top');	
 				MochaUI.circle(ctx, 5, 4, 3, [0, 255, 0], 1.0); // green
 				MochaUI.circle(ctx, 5, 14, 3, [150, 150, 150], 1.0); // gray
-				$('mochaDockPlacement').setProperty('title', 'Position Dock Bottom');
-				$('mochaDockAutoHide').setProperty('title', 'Auto Hide Disabled in Top Dock Position');
+				$('dockPlacement').setProperty('title', 'Position Dock Bottom');
+				$('dockAutoHide').setProperty('title', 'Auto Hide Disabled in Top Dock Position');
 				this.dockAutoHide = false;
 			}
 			// Move dock to bottom position
@@ -119,21 +119,21 @@ MochaUI.Dock = new Class({
 				this.dockWrapper.setProperty('dockPosition','Bottom');
 				MochaUI.circle(ctx, 5, 4, 3, [255, 70, 70], 1.0); // orange
 				MochaUI.circle(ctx, 5 , 14, 3, [255, 70, 70], 1.0); // orange 
-				$('mochaDockPlacement').setProperty('title', 'Position Dock Top');
-				$('mochaDockAutoHide').setProperty('title', 'Turn Auto Hide On');
+				$('dockPlacement').setProperty('title', 'Position Dock Top');
+				$('dockAutoHide').setProperty('title', 'Turn Auto Hide On');
 			}
 
 		}.bind(this));
 
 		// Attach event Auto Hide 
-		$('mochaDockAutoHide').addEvent('click', function(event){
+		$('dockAutoHide').addEvent('click', function(event){
 			if ( this.dockWrapper.getProperty('dockPosition') == 'Top' )
 				return false;
 			
 			var ctx = $('dockCanvas').getContext('2d');
 			this.dockAutoHide = !this.dockAutoHide;	// Toggle
 			if ( this.dockAutoHide ) {
-				$('mochaDockAutoHide').setProperty('title', 'Turn Auto Hide Off');
+				$('dockAutoHide').setProperty('title', 'Turn Auto Hide Off');
 				MochaUI.circle(ctx, 5 , 14, 3, [0, 255, 0], 1.0); // green
 				
 				// Define event
@@ -159,7 +159,7 @@ MochaUI.Dock = new Class({
 				document.addEvent('mousemove', this.autoHideEvent);				
 				
 			} else {
-				$('mochaDockAutoHide').setProperty('title', 'Turn Auto Hide On');
+				$('dockAutoHide').setProperty('title', 'Turn Auto Hide On');
 				MochaUI.circle(ctx, 5 , 14, 3, [255, 70, 70], 1.0); // orange
 				// Remove event
 				document.removeEvent('mousemove', this.autoHideEvent);
@@ -190,7 +190,6 @@ MochaUI.Dock = new Class({
 		}
 
 		var title = currentWindowClass.titleEl; //?
-		//var mochaContentWrapper = this.contentWrapperEl;
 		var titleText = title.innerHTML; //?
 
 		// Hide window and add to dock
@@ -203,7 +202,7 @@ MochaUI.Dock = new Class({
 		
 		var dockButton = new Element('div', {
 			'id': currentWindowClass.options.id + '_dockButton',
-			'class': 'mochaDockButton',
+			'class': 'dockButton',
 			'title': titleText
 		}).injectInside($(MochaUI.options.dock));
 		
@@ -214,7 +213,7 @@ MochaUI.Dock = new Class({
 		//Insert canvas
 		var dockButtonCanvas = new Element('canvas', {
 			'id': currentWindowClass.options.id + '_dockButtonCanvas',
-			'class': 'mochaDockCanvas', 
+			'class': 'dockCanvas', 
 			'width': 120,
 			'height': 20			
 		}).injectInside(dockButton);	
@@ -229,7 +228,7 @@ MochaUI.Dock = new Class({
 		
 		var dockButtonText = new Element('div', {
 			'id': currentWindowClass.options.id + '_dockButtonText',
-			'class': 'mochaDockText'
+			'class': 'dockText'
 		}).set('html', titleText.substring(0,18) + (titleText.length > 18 ? '...' : '')).injectInside($(dockButton));		
 		
 		// Fixes a scrollbar issue in Mac FF2.

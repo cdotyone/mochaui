@@ -89,7 +89,7 @@ windowOptions = {
 	content:           'Window content',
 	
 	// Container options
-	// The container defaults to 'mochaDesktop'. If no desktop then to document.body. Use 'mochaPageWrapper' if you don't want the windows to overlap the toolbars.
+	// The container defaults to 'desktop'. If no desktop then to document.body. Use 'pageWrapper' if you don't want the windows to overlap the toolbars.
 	container:         null,  // Element the window is injected in. 
 	restrict:          true,  // Restrict window to container when dragging.
 	shape:             'box', // Shape of window; box or gauge.
@@ -403,9 +403,9 @@ MochaUI.Window = new Class({
 		}
 
 		if (this.options.modal) {
-			$('mochaModalOverlay').setStyle('display', 'block');
+			$('modalOverlay').setStyle('display', 'block');
 			if (MochaUI.options.useEffects == false){			
-				$('mochaModalOverlay').setStyle('opacity', .55);
+				$('modalOverlay').setStyle('opacity', .55);
 				this.windowEl.setStyles({
 					'zIndex': 11000,
 					'opacity': 1

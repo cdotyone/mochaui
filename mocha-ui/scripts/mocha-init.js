@@ -310,13 +310,6 @@ initializeWindows = function(){
 			new Event(e).stop();
 			MochaUI.closeAll();
 		});
-	}
-	
-	if ($('centerLink')){
-		$('centerLink').addEvent('click', function(e){	
-			new Event(e).stop();
-			MochaUI.centerWindow();
-		});
 	}	
 	
 	// Tools
@@ -327,7 +320,7 @@ initializeWindows = function(){
 			loadMethod: 'xhr',
 			contentURL: 'pages/builder.html',
 			onContentLoaded: function(){
-				$('mochaNewWindowSubmit').addEvent('click', function(e){
+				$('newWindowSubmit').addEvent('click', function(e){
 					new Event(e).stop();
 					new MochaUI.WindowForm();
 				});

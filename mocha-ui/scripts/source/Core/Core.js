@@ -68,7 +68,7 @@ var MochaUI = new Hash({
 
 		if (MochaUI.options.useEffects == false){
 			if (currentWindowClass.options.modal) {
-				$('mochaModalOverlay').setStyle('opacity', 0);
+				$('modalOverlay').setStyle('opacity', 0);
 			}
 			windowEl.destroy();
 			currentWindowClass.fireEvent('onCloseComplete');
@@ -119,7 +119,7 @@ var MochaUI = new Hash({
 			this.closeWindow(el);			
 		}.bind(this));
 		MochaUI.Windows.instances.empty();				
-		$$('div.mochaDockButton').destroy();
+		$$('div.dockButton').destroy();
 		return true;
 	},	
 	/*

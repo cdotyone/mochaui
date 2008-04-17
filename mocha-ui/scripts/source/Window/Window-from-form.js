@@ -31,7 +31,7 @@ MochaUI.WindowForm = new Class({
 	initialize: function(options){
 		this.setOptions(options);
 		this.options.id = 'win' + (++MochaUI.windowIDCount);
-		this.options.title = $('mochaNewWindowHeaderTitle').value;
+		this.options.title = $('newWindowHeaderTitle').value;
 		if ($('htmlLoadMethod').checked){
 			this.options.loadMethod = 'html';
 		}
@@ -41,17 +41,23 @@ MochaUI.WindowForm = new Class({
 		if ($('iframeLoadMethod').checked){
 			this.options.loadMethod = 'iframe';
 		}
-		this.options.content = $('mochaNewWindowContent').value;
-		if ($('mochaNewWindowContentURL').value){
-			this.options.contentURL = $('mochaNewWindowContentURL').value;
+		this.options.content = $('newWindowContent').value;
+		
+		// Remove eval(), javascript:, and script from User Provided Markup		
+		this.options.content = this.options.content.replace(/\<(.*)script(.*)\<\/(.*)script(.*)\>/g, ""); 
+    	this.options.content = this.options.content.replace(/[\"\'][\s]*javascript:(.*)[\"\']/g, "\"\"");    
+    	this.options.content = this.options.content.replace(/eval\((.*)\)/g, "");		
+		
+		if ($('newWindowContentURL').value){
+			this.options.contentURL = $('newWindowContentURL').value;
 		}		
-		if ($('mochaNewWindowModal').checked) {
+		if ($('newWindowModal').checked) {
 			this.options.modal = true;
 		}
-		this.options.width = $('mochaNewWindowWidth').value.toInt();
-		this.options.height = $('mochaNewWindowHeight').value.toInt();	
-		this.options.x = $('mochaNewWindowX').value.toInt();
-		this.options.y = $('mochaNewWindowY').value.toInt();
+		this.options.width = $('newWindowWidth').value.toInt();
+		this.options.height = $('newWindowHeight').value.toInt();	
+		this.options.x = $('newWindowX').value.toInt();
+		this.options.y = $('newWindowY').value.toInt();
 		new MochaUI.Window(this.options);
 	}
 });
