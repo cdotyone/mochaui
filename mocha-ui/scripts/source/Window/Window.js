@@ -322,7 +322,13 @@ MochaUI.Window = new Class({
 				break;
 			case 'html':
 			default:
-				this.contentEl.set('html', this.options.content);
+				// Need to test injecting elements as content.
+				var elementTypes = new Array('element', 'textnode', 'whitespace', 'collection');
+				if (elementTypes.contains($type(this.options.content))) {
+					this.options.content.inject(this.contentEl);
+				} else {
+					this.contentEl.set('html', this.options.content);
+				}				
 				this.fireEvent('onContentLoaded', this.windowEl);
 				break;
 		}
