@@ -97,16 +97,16 @@ windowOptions = {
 	// Window Events  
 	minimizable:       true,  // Requires MochaUI.Desktop and MochaUI.Dock.
 	maximizable:       true,  // Requires MochaUI.Desktop.
-	closable:          true,
+	closable:          true,  
 
 	// Draggable
-	draggable:         true,
+	draggable:         null,  // Defaults to false for modals; otherwise true.
 	draggableGrid:     false, // Distance in pixels for snap-to-grid dragging.
 	draggableLimit:    false, // An object with x and y properties used to limit the movement of the Window.	
 	draggableSnap:     false, // The distance to drag before the Window starts to respond to the drag.
 
 	// Resizable
-	resizable:         true, 
+	resizable:         null,  // Defaults to false for modals and gauges; otherwise true.
 	resizeLimit:       {'x': [250, 2500], 'y': [125, 2000]}, // Minimum and maximum width and height of window when resized.
 	
 	// Style options:
@@ -162,20 +162,29 @@ MochaUI.Window = new Class({
 		this.HeaderFooterShadow = this.options.headerHeight + this.options.footerHeight + (this.options.shadowBlur * 2);
 		this.oldTop             = 0;
 		this.oldLeft            = 0;
-
-		// Always use close buttons for modal windows
-		this.options.closable  =  this.options.closable || this.options.modal;
 		
-		// Modal windows are not resizable or draggable.
-		// Remove the following lines if you want them to be
-		if (this.options.modal == true){
-			this.options.resizable = false;
-			this.options.draggable = false;
+		// Set this.options.resizable if it was not defined
+		if (this.options.resizable == null){
+			if (this.options.modal == true || this.options.shape == 'gauge'){
+				this.options.resizable = false;
+			}
+			else {
+				this.options.resizable = true;	
+			}
 		}
+		
+		// Set this.options.draggable if it was not defined
+		if (this.options.draggable == null){
+			if (this.options.modal == true){
+				this.options.draggable = false;
+			}
+			else {
+				this.options.draggable = true;	
+			}
+		}		
 		
 		// Gauges are not maximizable or resizable
 		if (this.options.shape == 'gauge'){
-			this.options.resizable = false;
 			this.options.maximizable = false;
 			this.options.bodyBgColor = 'transparent';
 			this.options.scrollbars = false;			

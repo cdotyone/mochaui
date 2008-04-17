@@ -160,6 +160,7 @@ MochaUI.Desktop = new Class({
 		var mochaDock = $(MochaUI.options.dock);
 		var mochaDockWrapper = $(MochaUI.options.dockWrapper);
 		
+		// Setting the desktop height may only be needed by IE7
 		if ( this.desktop ){
 			this.desktop.setStyle('height', windowDimensions.height);
 		}
