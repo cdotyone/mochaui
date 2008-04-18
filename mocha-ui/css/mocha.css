@@ -108,8 +108,16 @@ body {
 	z-index: 8000;
 }
 
-#desktopNavbar li ul li {
-} 
+#desktopNavbar li:hover ul ul,
+#desktopNavbar li:hover ul ul ul,
+#desktopNavbar li.ieHover ul ul,
+#desktopNavbar li.ieHover ul ul ul {
+	left: -999em;
+}
+
+#desktopNavbar li ul ul { /* third-and-above-level lists */
+	margin: -22px 0 0 158px;
+}
 
 #desktopNavbar li ul li div.check {
 	position: absolute;
@@ -134,8 +142,13 @@ body {
 	background: #eee;
 }
 
-#desktopNavbar li:hover ul, #desktopNavbar li.ieHover ul { /* lists nested under hovered list items */
-	left: auto;
+#desktopNavbar li:hover ul,
+#desktopNavbar li li:hover ul,
+#desktopNavbar li li li:hover ul
+#desktopNavbar li.ieHover ul,
+#desktopNavbar li li.ieHover ul,
+#desktopNavbar li li li.ieHover ul { /* lists nested under hovered list items */
+      left: auto;
 }
 
 #desktopNavbar li:hover, #desktopNavbar li.hover {

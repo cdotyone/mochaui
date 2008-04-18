@@ -101,7 +101,8 @@ MochaUI.Dock = new Class({
 				});
 				this.dockWrapper.addClass('top');
 				MochaUI.Desktop.setDesktopSize();
-				this.dockWrapper.setProperty('dockPosition','Top');	
+				this.dockWrapper.setProperty('dockPosition','Top');
+				ctx.clearRect(0, 0, 100, 100);
 				MochaUI.circle(ctx, 5, 4, 3, [0, 255, 0], 1.0); // green
 				MochaUI.circle(ctx, 5, 14, 3, [150, 150, 150], 1.0); // gray
 				$('dockPlacement').setProperty('title', 'Position Dock Bottom');
@@ -117,6 +118,7 @@ MochaUI.Dock = new Class({
 				this.dockWrapper.removeClass('top');				
 				MochaUI.Desktop.setDesktopSize();
 				this.dockWrapper.setProperty('dockPosition','Bottom');
+				ctx.clearRect(0, 0, 100, 100);
 				MochaUI.circle(ctx, 5, 4, 3, [255, 70, 70], 1.0); // orange
 				MochaUI.circle(ctx, 5 , 14, 3, [255, 70, 70], 1.0); // orange 
 				$('dockPlacement').setProperty('title', 'Position Dock Top');
@@ -134,6 +136,7 @@ MochaUI.Dock = new Class({
 			this.dockAutoHide = !this.dockAutoHide;	// Toggle
 			if ( this.dockAutoHide ) {
 				$('dockAutoHide').setProperty('title', 'Turn Auto Hide Off');
+				ctx.clearRect(0, 11, 100, 100);				
 				MochaUI.circle(ctx, 5 , 14, 3, [0, 255, 0], 1.0); // green
 				
 				// Define event
@@ -160,6 +163,7 @@ MochaUI.Dock = new Class({
 				
 			} else {
 				$('dockAutoHide').setProperty('title', 'Turn Auto Hide On');
+				ctx.clearRect(0, 11, 100, 100);
 				MochaUI.circle(ctx, 5 , 14, 3, [255, 70, 70], 1.0); // orange
 				// Remove event
 				document.removeEvent('mousemove', this.autoHideEvent);
@@ -168,6 +172,7 @@ MochaUI.Dock = new Class({
 		
 		// Draw dock controls
 		var ctx = $('dockCanvas').getContext('2d');
+		ctx.clearRect(0, 0, 100, 100);
 		MochaUI.circle(ctx, 5 , 4, 3, [255, 70, 70], 1.0);  // orange
 		MochaUI.circle(ctx, 5 , 14, 3, [255, 70, 70], 1.0); // orange
 		
