@@ -208,7 +208,7 @@ MochaUI.Dock = new Class({
 			'id': currentWindowClass.options.id + '_dockButton',
 			'class': 'dockButton',
 			'title': titleText
-		}).injectInside($(MochaUI.options.dock));
+		}).inject($('dockAutoHide'), 'after');
 		
 		dockButton.addEvent('click', function(event) {
 			MochaUI.Dock.restoreMinimized(windowEl);
@@ -220,7 +220,7 @@ MochaUI.Dock = new Class({
 			'class': 'dockCanvas', 
 			'width': 120,
 			'height': 20			
-		}).injectInside(dockButton);	
+		}).inject(dockButton);	
 		
 		// Dynamically initialize canvas using excanvas. This is only required by IE
 		if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas') {
@@ -233,7 +233,9 @@ MochaUI.Dock = new Class({
 		var dockButtonText = new Element('div', {
 			'id': currentWindowClass.options.id + '_dockButtonText',
 			'class': 'dockText'
-		}).set('html', titleText.substring(0,18) + (titleText.length > 18 ? '...' : '')).injectInside($(dockButton));		
+		}).set('html', titleText.substring(0,18) + (titleText.length > 18 ? '...' : '')).injectInside($(dockButton));
+		
+		MochaUI.Desktop.setDesktopSize();
 		
 		// Fixes a scrollbar issue in Mac FF2.
 		// Have to use timeout because window gets focused when you click on the minimize button 	
@@ -246,7 +248,8 @@ MochaUI.Dock = new Class({
 		// Get the Class for this window
 		currentWindowClass = MochaUI.Windows.instances.get(windowEl.id);
 
-		$(currentWindowClass.options.id + '_dockButton').destroy();
+		$(currentWindowClass.options.id + '_dockButton').destroy();		
+		MochaUI.Desktop.setDesktopSize();
 
 		 // Part of Mac FF2 scrollbar fix
 		if (currentWindowClass.options.scrollbars == true && currentWindowClass.iframe == false){ 
