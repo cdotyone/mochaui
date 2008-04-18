@@ -194,8 +194,7 @@ MochaUI.Dock = new Class({
 			currentWindowClass.canvasControlsEl.setStyle('opacity', 0);
 		}
 
-		var title = currentWindowClass.titleEl; //?
-		var titleText = title.innerHTML; //?
+		var titleText = currentWindowClass.titleEl.innerHTML;
 
 		// Hide window and add to dock
 		windowEl.setStyle('visibility', 'hidden');
@@ -244,10 +243,10 @@ MochaUI.Dock = new Class({
 	},
 	restoreMinimized: function(windowEl) {
 
-		$(MochaUI.options.dock).getElementById(currentWindowClass.options.id + '_dockButton').destroy(); // getElementByID?
-
 		// Get the Class for this window
 		currentWindowClass = MochaUI.Windows.instances.get(windowEl.id);
+
+		$(currentWindowClass.options.id + '_dockButton').destroy();
 
 		 // Part of Mac FF2 scrollbar fix
 		if (currentWindowClass.options.scrollbars == true && currentWindowClass.iframe == false){ 
