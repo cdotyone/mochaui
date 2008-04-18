@@ -31,9 +31,13 @@ MochaUI.Dock = new Class({
 	Implements: [Events, Options],
 	
 	options: {
-		useControls: true, // Toggles autohide and dock placement controls - NOT FULLY IMPLEMENTED		
+		useControls:          true,       // Toggles autohide and dock placement controls - NOT FULLY IMPLEMENTED
+		dockPosition:         'bottom',   // Position the dock starts in, top or bottom.
 		// Style options
-		dockButtonColor:   [255, 255, 255]
+		dockTabColor:         [255, 255, 255],
+		trueButtonColor:      [70, 245, 70],     // Color for autohide on		
+		enabledButtonColor:   [255, 70, 70], 
+		disabledButtonColor:  [150, 150, 150]		
 	},
 	initialize: function(options){
 		// Stops if MochaUI.Desktop is not implemented
@@ -42,8 +46,7 @@ MochaUI.Dock = new Class({
 		
 		this.dockWrapper   = $(MochaUI.options.dockWrapper);		
 		this.dock          = $(MochaUI.options.dock);
-		this.autoHideEvent = null;
-
+		this.autoHideEvent = null;		
 		this.dockAutoHide  = false;  // True when dock autohide is set to on, false if set to off
 
 		this.dockWrapper.setStyles({
@@ -54,7 +57,9 @@ MochaUI.Dock = new Class({
 			'left':     0
 		});	
 
-		if ( this.options.useControls) { this.initializeDockControls(); }
+		if (this.options.useControls){
+			this.initializeDockControls();
+		}
 
 		// Add check mark to menu if link exists in menu
 		if ($('dockLinkCheck')){			
@@ -64,12 +69,10 @@ MochaUI.Dock = new Class({
 			}).injectInside($('dockLinkCheck'));
 		}
 
-		MochaUI.Desktop.setDesktopSize();
-		
-		// Resize desktop, page wrapper, modal overlay, and maximized windows when browser window is resized		
+		MochaUI.Desktop.setDesktopSize();		
 		this.installed     = true;		
 	},
-	initializeDockControls: function (){
+	initializeDockControls: function(){
 		
 		// Insert canvas
 		var canvas = new Element('canvas', {
@@ -79,7 +82,7 @@ MochaUI.Dock = new Class({
 		}).injectInside(this.dock);
 		
 		// Dynamically initialize canvas using excanvas. This is only required by IE
-		if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas') {
+		if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas'){
 			G_vmlCanvasManager.initElement(canvas);
 		}
 
@@ -88,69 +91,36 @@ MochaUI.Dock = new Class({
 
 		// Auto Hide toggle switch
 		$('dockAutoHide').setProperty('title','Turn Auto Hide On');
-
+		
 		// Attach event
-		$('dockPlacement').addEvent('click', function(event){
-			var ctx = $('dockCanvas').getContext('2d');
-
-			// Move dock to top position
-			if (this.dockWrapper.getStyle('position') != 'relative'){
-				this.dockWrapper.setStyles({
-					'position': 'relative',
-					'bottom':   null
-				});
-				this.dockWrapper.addClass('top');
-				MochaUI.Desktop.setDesktopSize();
-				this.dockWrapper.setProperty('dockPosition','Top');
-				ctx.clearRect(0, 0, 100, 100);
-				MochaUI.circle(ctx, 5, 4, 3, [0, 255, 0], 1.0); // green
-				MochaUI.circle(ctx, 5, 14, 3, [150, 150, 150], 1.0); // gray
-				$('dockPlacement').setProperty('title', 'Position Dock Bottom');
-				$('dockAutoHide').setProperty('title', 'Auto Hide Disabled in Top Dock Position');
-				this.dockAutoHide = false;
-			}
-			// Move dock to bottom position
-			else {
-				this.dockWrapper.setStyles({
-					'position':      'absolute',
-					'bottom':        0
-				});
-				this.dockWrapper.removeClass('top');				
-				MochaUI.Desktop.setDesktopSize();
-				this.dockWrapper.setProperty('dockPosition','Bottom');
-				ctx.clearRect(0, 0, 100, 100);
-				MochaUI.circle(ctx, 5, 4, 3, [255, 70, 70], 1.0); // orange
-				MochaUI.circle(ctx, 5 , 14, 3, [255, 70, 70], 1.0); // orange 
-				$('dockPlacement').setProperty('title', 'Position Dock Top');
-				$('dockAutoHide').setProperty('title', 'Turn Auto Hide On');
-			}
-
+		$('dockPlacement').addEvent('click', function(){
+			this.moveDock();
 		}.bind(this));
 
 		// Attach event Auto Hide 
 		$('dockAutoHide').addEvent('click', function(event){
-			if ( this.dockWrapper.getProperty('dockPosition') == 'Top' )
+			if ( this.dockWrapper.getProperty('dockPosition') == 'top' )
 				return false;
 			
 			var ctx = $('dockCanvas').getContext('2d');
 			this.dockAutoHide = !this.dockAutoHide;	// Toggle
-			if ( this.dockAutoHide ) {
+			if (this.dockAutoHide){
 				$('dockAutoHide').setProperty('title', 'Turn Auto Hide Off');
-				ctx.clearRect(0, 11, 100, 100);				
-				MochaUI.circle(ctx, 5 , 14, 3, [0, 255, 0], 1.0); // green
+				//ctx.clearRect(0, 11, 100, 100);				
+				MochaUI.circle(ctx, 5 , 14, 3, this.options.trueButtonColor, 1.0); // green
 				
 				// Define event
 				this.autoHideEvent = function(event) {
-					if ( !this.dockAutoHide )
+					if (!this.dockAutoHide)
 						return;
-					if ( event.client.y > (document.getCoordinates().height - 25) ) {
-						if ( !MochaUI.dockVisible ) {
+					if (event.client.y > (document.getCoordinates().height - 25)){
+						if (!MochaUI.dockVisible){
 							this.dockWrapper.setStyle('display', 'block');
 							MochaUI.dockVisible = true;
 							MochaUI.Desktop.setDesktopSize();
 						}
 					} else {
-						if ( MochaUI.dockVisible ) {
+						if (MochaUI.dockVisible){
 							this.dockWrapper.setStyle('display', 'none');
 							MochaUI.dockVisible = false;
 							MochaUI.Desktop.setDesktopSize();
@@ -163,21 +133,60 @@ MochaUI.Dock = new Class({
 				
 			} else {
 				$('dockAutoHide').setProperty('title', 'Turn Auto Hide On');
-				ctx.clearRect(0, 11, 100, 100);
-				MochaUI.circle(ctx, 5 , 14, 3, [255, 70, 70], 1.0); // orange
+				//ctx.clearRect(0, 11, 100, 100);
+				MochaUI.circle(ctx, 5 , 14, 3, this.options.enabledButtonColor, 1.0); // red
 				// Remove event
 				document.removeEvent('mousemove', this.autoHideEvent);
 			}
+			
 		}.bind(this));
 		
 		// Draw dock controls
 		var ctx = $('dockCanvas').getContext('2d');
 		ctx.clearRect(0, 0, 100, 100);
-		MochaUI.circle(ctx, 5 , 4, 3, [255, 70, 70], 1.0);  // orange
-		MochaUI.circle(ctx, 5 , 14, 3, [255, 70, 70], 1.0); // orange
+		MochaUI.circle(ctx, 5 , 4, 3, this.options.enabledButtonColor, 1.0);  // red
+		MochaUI.circle(ctx, 5 , 14, 3, this.options.enabledButtonColor, 1.0); // red
+		
+		if (this.options.dockPosition == 'top'){
+			this.moveDock();	
+		}		
 		
 	},
-	minimizeWindow: function(windowEl) {		
+	moveDock: function(){
+			var ctx = $('dockCanvas').getContext('2d');
+			// Move dock to top position
+			if (this.dockWrapper.getStyle('position') != 'relative'){
+				this.dockWrapper.setStyles({
+					'position': 'relative',
+					'bottom':   null
+				});
+				this.dockWrapper.addClass('top');
+				MochaUI.Desktop.setDesktopSize();
+				this.dockWrapper.setProperty('dockPosition','top');
+				ctx.clearRect(0, 0, 100, 100);
+				MochaUI.circle(ctx, 5, 4, 3, this.options.trueButtonColor, 1.0); // green
+				MochaUI.circle(ctx, 5, 14, 3, this.options.disabledButtonColor, 1.0); // gray
+				$('dockPlacement').setProperty('title', 'Position Dock Bottom');
+				$('dockAutoHide').setProperty('title', 'Auto Hide Disabled in Top Dock Position');
+				this.dockAutoHide = false;
+			}
+			// Move dock to bottom position
+			else {
+				this.dockWrapper.setStyles({
+					'position':      'absolute',
+					'bottom':        0
+				});
+				this.dockWrapper.removeClass('top');				
+				MochaUI.Desktop.setDesktopSize();
+				this.dockWrapper.setProperty('dockPosition', 'bottom');
+				ctx.clearRect(0, 0, 100, 100);
+				MochaUI.circle(ctx, 5, 4, 3, this.options.enabledButtonColor, 1.0); // red
+				MochaUI.circle(ctx, 5 , 14, 3, this.options.enabledButtonColor, 1.0); // red 
+				$('dockPlacement').setProperty('title', 'Position Dock Top');
+				$('dockAutoHide').setProperty('title', 'Turn Auto Hide On');
+			}		
+	},
+	minimizeWindow: function(windowEl){		
 		if (windowEl != $(windowEl))
 			return;
 			
@@ -193,7 +202,7 @@ MochaUI.Dock = new Class({
 		if (currentWindowClass.options.shape == 'gauge'){
 			currentWindowClass.canvasControlsEl.setStyle('opacity', 0);
 		}
-
+		
 		var titleText = currentWindowClass.titleEl.innerHTML;
 
 		// Hide window and add to dock
@@ -228,7 +237,7 @@ MochaUI.Dock = new Class({
 		}
 
 		var ctx = $(currentWindowClass.options.id + '_dockButtonCanvas').getContext('2d');
-		MochaUI.roundedRect(ctx, 0, 0, 120, 20, 5, this.options.dockButtonColor, 1);	
+		MochaUI.roundedRect(ctx, 0, 0, 120, 20, 5, this.options.dockTabColor, 1);	
 		
 		var dockButtonText = new Element('div', {
 			'id': currentWindowClass.options.id + '_dockButtonText',
