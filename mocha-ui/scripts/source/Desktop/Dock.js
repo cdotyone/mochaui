@@ -70,14 +70,10 @@ MochaUI.Dock = new Class({
 		}
 		
 		this.dockSortables = new Sortables('#dockSort', {
-			opacity: .5,
+			opacity: Browser.Engine.trident ? 1 : .5,
     		constrain: true,
     		clone: false,
-    		revert: false,
-			//snap: 30,
-			onComplete: function(button){
-				//alert('Hi');
-			}.bind(this)			
+    		revert: false			
 		});		
 		
 
