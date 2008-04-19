@@ -2042,12 +2042,12 @@ MochaUI.Desktop = new Class({
 			//var maximizePositionMorph = new Fx.Morph(windowEl, {
 			//	'duration': 300
 			//});
-			var maximizeSizeMorph = new Fx.Elements([currentWindowClass.contentWrapperEl, windowEl], { 
-				'duration': 70,
-				'onStart': function(windowEl){
+			var maximizeMorph = new Fx.Elements([currentWindowClass.contentWrapperEl, windowEl], { 
+				duration: 70,
+				onStart: function(windowEl){
 						currentWindowClass.maximizeAnimation = currentWindowClass.drawWindow.periodical(20, currentWindowClass, currentWindowClass.windowEl);
 				}.bind(this),
-				'onComplete': function(windowEl){
+				onComplete: function(windowEl){
 					$clear(currentWindowClass.maximizeAnimation);
 					currentWindowClass.drawWindow(windowEl);
 					// Show iframe
@@ -2057,7 +2057,7 @@ MochaUI.Desktop = new Class({
 					currentWindowClass.fireEvent('onMaximize', windowEl);	
 				}.bind(this)
 			});
-			maximizeSizeMorph.start({
+			maximizeMorph.start({
 				'0': {	'height': windowDimensions.height - currentWindowClass.options.headerHeight - currentWindowClass.options.footerHeight,
 						'width':  windowDimensions.width
 				},
@@ -2489,7 +2489,7 @@ MochaUI.Dock = new Class({
 			'id': currentWindowClass.options.id + '_dockTab',
 			'class': 'dockTab',
 			'title': titleText
-		}).inject($('dockSort'));
+		}).inject($('dockClear'), 'before');
 		
 		dockTab.addEvent('mousedown', function(e){
 			this.timeDown = $time();			

@@ -228,7 +228,7 @@ MochaUI.Dock = new Class({
 			'id': currentWindowClass.options.id + '_dockTab',
 			'class': 'dockTab',
 			'title': titleText
-		}).inject($('dockSort'));
+		}).inject($('dockClear'), 'before');
 		
 		dockTab.addEvent('mousedown', function(e){
 			this.timeDown = $time();			

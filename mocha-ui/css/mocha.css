@@ -397,6 +397,15 @@ div.mocha .cornerSE { /* Bottom right resize handle */
 	
 .clear {
 	clear: both;
+	height: 0;
+}
+
+*html .clear {
+	height: 1%;
+	font-size: 1px;
+	line-height: 1px;
+	overflow: hidden;
+	visibility: hidden;
 }
 	
 /* Window Builder Form Elements */
@@ -499,7 +508,7 @@ iframe.zIndexFix {
 	border: 1px solid #fff;
 	min-height: 22px;
 	height: auto;
-   _height: 20px; /* IE 6.0 hack, for not supporting min-height SFF 12/07/2007*/
+   _height: 22px; /* IE 6.0 hack, for not supporting min-height */
 }
 
 #dockWrapper.top {
