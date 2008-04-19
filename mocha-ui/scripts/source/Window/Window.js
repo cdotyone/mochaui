@@ -395,10 +395,19 @@ MochaUI.Window = new Class({
 			'top': windowPosTop,
 			'left': windowPosLeft
 		});
-
+		
 		if (MochaUI.options.useEffects == true){
+			// IE cannot handle both element opacity and VML alpha at the same time.
+			if (Browser.Engine.trident){
+				this.drawWindow(this.windowEl, false);
+			}
 			this.windowEl.opacityMorph = new Fx.Morph(this.windowEl, {
-				'duration': 500 // !!! Todo: need to draw windows without shadows in IE, and then with them.
+				'duration': 500,
+				onComplete: function(){
+					if (Browser.Engine.trident){
+						this.drawWindow(this.windowEl);
+					}
+				}.bind(this)
 			});
 		}
 

@@ -668,10 +668,19 @@ MochaUI.Window = new Class({
 			'top': windowPosTop,
 			'left': windowPosLeft
 		});
-
+		
 		if (MochaUI.options.useEffects == true){
+			// IE cannot handle both element opacity and VML alpha at the same time.
+			if (Browser.Engine.trident){
+				this.drawWindow(this.windowEl, false);
+			}
 			this.windowEl.opacityMorph = new Fx.Morph(this.windowEl, {
-				'duration': 500 // !!! Todo: need to draw windows without shadows in IE, and then with them.
+				'duration': 500,
+				onComplete: function(){
+					if (Browser.Engine.trident){
+						this.drawWindow(this.windowEl);
+					}
+				}.bind(this)
 			});
 		}
 
@@ -746,6 +755,7 @@ MochaUI.Window = new Class({
 					this.maximizeButtonEl.setProperty('title', 'Restore');
 				}
 			}.bind(this));
+
 		}
 		
 	},
@@ -1311,7 +1321,6 @@ MochaUI.Window = new Class({
 		}
 		// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
 		if ( Browser.Engine.trident4 ){
-
 			MochaUI.triangle(
 				ctx, 0, 0, 10, 10, this.options.resizableColor, 0);
 		}		
@@ -2612,7 +2621,6 @@ MochaUI.extend({
 	},
 	/*
 		
-
 	Function: loadWorkspace
 		Load the saved workspace.
 	
