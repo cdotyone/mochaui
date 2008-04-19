@@ -35,9 +35,6 @@ MochaUI.WindowForm = new Class({
 		if ($('htmlLoadMethod').checked){
 			this.options.loadMethod = 'html';
 		}
-		if ($('xhrLoadMethod').checked){
-			this.options.loadMethod = 'xhr';
-		}
 		if ($('iframeLoadMethod').checked){
 			this.options.loadMethod = 'iframe';
 		}

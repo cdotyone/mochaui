@@ -11,7 +11,6 @@ Requires:
 
 Todo:
 	- Make it so the dock requires no initial html markup.
-	- Make dock buttons sortable.
 
 */
 
