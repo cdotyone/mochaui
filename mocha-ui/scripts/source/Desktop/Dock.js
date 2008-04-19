@@ -66,8 +66,20 @@ MochaUI.Dock = new Class({
 			this.sidebarCheck = new Element('div', {
 				'class': 'check',
 				'id': 'dock_check'
-			}).injectInside($('dockLinkCheck'));
+			}).inject($('dockLinkCheck'));
 		}
+		
+		this.dockSortables = new Sortables('#dockSort', {
+			opacity: .5,
+    		constrain: true,
+    		clone: false,
+    		revert: false,
+			//snap: 30,
+			onComplete: function(button){
+				//alert('Hi');
+			}.bind(this)			
+		});		
+		
 
 		MochaUI.Desktop.setDesktopSize();		
 		this.installed     = true;		
@@ -79,7 +91,7 @@ MochaUI.Dock = new Class({
 			'id':     'dockCanvas',
 			'width':  '15',
 			'height': '18'
-		}).injectInside(this.dock);
+		}).inject(this.dock);
 		
 		// Dynamically initialize canvas using excanvas. This is only required by IE
 		if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas'){
@@ -187,8 +199,7 @@ MochaUI.Dock = new Class({
 			}		
 	},
 	minimizeWindow: function(windowEl){		
-		if (windowEl != $(windowEl))
-			return;
+		if (windowEl != $(windowEl)) return;
 			
 		currentWindowClass = MochaUI.Windows.instances.get(windowEl.id);
 		currentWindowClass.isMinimized = true;
@@ -213,36 +224,45 @@ MochaUI.Dock = new Class({
 			currentWindowClass.contentWrapperEl.setStyle('overflow', 'hidden');
 		}
 		
-		var dockButton = new Element('div', {
-			'id': currentWindowClass.options.id + '_dockButton',
-			'class': 'dockButton',
+		var dockTab = new Element('div', {
+			'id': currentWindowClass.options.id + '_dockTab',
+			'class': 'dockTab',
 			'title': titleText
-		}).inject($('dockAutoHide'), 'after');
+		}).inject($('dockSort'));
 		
-		dockButton.addEvent('click', function(event) {
-			MochaUI.Dock.restoreMinimized(windowEl);
-		}.bind(this));		
+		dockTab.addEvent('mousedown', function(e){
+			this.timeDown = $time();			
+		});
 		
+		dockTab.addEvent('mouseup', function(e){
+			this.timeUp = $time();
+			if ((this.timeUp - this.timeDown) < 275){
+				MochaUI.Dock.restoreMinimized.delay(25, MochaUI.Dock, windowEl);
+			}
+		});		
+
+		this.dockSortables.addItems(dockTab);
+
 		//Insert canvas
-		var dockButtonCanvas = new Element('canvas', {
-			'id': currentWindowClass.options.id + '_dockButtonCanvas',
+		var dockTabCanvas = new Element('canvas', {
+			'id': currentWindowClass.options.id + '_dockTabCanvas',
 			'class': 'dockCanvas', 
 			'width': 120,
 			'height': 20			
-		}).inject(dockButton);	
+		}).inject(dockTab);	
 		
 		// Dynamically initialize canvas using excanvas. This is only required by IE
 		if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas') {
-			G_vmlCanvasManager.initElement(dockButtonCanvas);
+			G_vmlCanvasManager.initElement(dockTabCanvas);
 		}
 
-		var ctx = $(currentWindowClass.options.id + '_dockButtonCanvas').getContext('2d');
+		var ctx = $(currentWindowClass.options.id + '_dockTabCanvas').getContext('2d');
 		MochaUI.roundedRect(ctx, 0, 0, 120, 20, 5, this.options.dockTabColor, 1);	
 		
-		var dockButtonText = new Element('div', {
-			'id': currentWindowClass.options.id + '_dockButtonText',
+		var dockTabText = new Element('div', {
+			'id': currentWindowClass.options.id + '_dockTabText',
 			'class': 'dockText'
-		}).set('html', titleText.substring(0,18) + (titleText.length > 18 ? '...' : '')).injectInside($(dockButton));
+		}).set('html', titleText.substring(0,18) + (titleText.length > 18 ? '...' : '')).inject($(dockTab));
 		
 		MochaUI.Desktop.setDesktopSize();
 		
@@ -254,10 +274,10 @@ MochaUI.Dock = new Class({
 	},
 	restoreMinimized: function(windowEl) {
 
-		// Get the Class for this window
 		currentWindowClass = MochaUI.Windows.instances.get(windowEl.id);
-
-		$(currentWindowClass.options.id + '_dockButton').destroy();		
+		currentButton = $(currentWindowClass.options.id + '_dockTab');		
+		
+		this.dockSortables.removeItems(currentButton ).destroy();
 		MochaUI.Desktop.setDesktopSize();
 
 		 // Part of Mac FF2 scrollbar fix
@@ -271,10 +291,8 @@ MochaUI.Dock = new Class({
 		if ( currentWindowClass.iframe ) {
 			currentWindowClass.iframeEl.setStyle('visibility', 'visible');
 		}
-
 		currentWindowClass.isMinimized = false;
 		MochaUI.focusWindow(windowEl);
-
 		currentWindowClass.fireEvent('onRestore', windowEl);		
 	}	
 });
