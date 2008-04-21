@@ -215,12 +215,9 @@ MochaUI.Window = new Class({
 		// Return window object
 		return this;
 	},
-	saveValues: function(){
-		//var currentWindowClass = MochaUI.Windows.instances.get(this.options.id);		
+	saveValues: function(){		
 		this.options.x = this.windowEl.getStyle('left').toInt();
-		this.options.y = this.windowEl.getStyle('top').toInt();
-		//currentWindowClass.options.x = this.windowEl.getStyle('left');
-		//currentWindowClass.options.y = this.windowEl.getStyle('top');	
+		this.options.y = this.windowEl.getStyle('top').toInt();	
 	},	
 	/*
 	
@@ -268,8 +265,7 @@ MochaUI.Window = new Class({
 
 		this.windowEl.addClass(this.options.addClass);		
 
-		// Part of fix for scrollbar issues in Mac FF2
-		if (Browser.Platform.mac && Browser.Engine.gecko){
+		if ((this.options.modal == true) || (Browser.Platform.mac && Browser.Engine.gecko)){
 			this.windowEl.setStyle('position', 'fixed');	
 		}
 

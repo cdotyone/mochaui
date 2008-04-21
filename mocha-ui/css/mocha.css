@@ -13,6 +13,7 @@ License:
 /* Mocha UI */
 
 html {
+	height: 100%;
 	overflow: auto; /* Removes empty vertical scrollbars in IE */
 }		
 
@@ -459,7 +460,7 @@ div.mocha .cornerSE { /* Bottom right resize handle */
 
 #modalOverlay {
 	display: none;
-	position: fixed; /* This is fixed rather than absolute to fix Mac FF2 issues */
+	position: fixed;
 	top: 0;
 	left: 0;
 	width: 100%;
