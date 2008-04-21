@@ -36,7 +36,7 @@ MochaUI.Modal = new Class({
 				'height': document.getCoordinates().height
 			}
 		});
-		modalOverlay.injectInside(MochaUI.Desktop.desktop ? MochaUI.Desktop.desktop : document.body);
+		modalOverlay.injectInside(document.body);
 		
 		modalOverlay.setStyle('opacity', .4);
 		this.modalOverlayOpenMorph = new Fx.Morph($('modalOverlay'), {

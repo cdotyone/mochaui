@@ -74,7 +74,6 @@ MochaUI.Dock = new Class({
     		clone: false,
     		revert: false			
 		});		
-		
 
 		MochaUI.Desktop.setDesktopSize();		
 		this.installed     = true;		

@@ -163,7 +163,14 @@ MochaUI.Window = new Class({
 		this.oldTop             = 0;
 		this.oldLeft            = 0;
 		
-		// Set this.options.resizable if it was not defined
+		if (this.options.modal == true){
+			this.options.container = document.body;			 
+		}		
+		if (!this.options.container){
+			this.options.container = MochaUI.Desktop.desktop ? MochaUI.Desktop.desktop : document.body;			 
+		}
+
+		// Set this.options.resizable to default if it was not defined
 		if (this.options.resizable == null){
 			if (this.options.modal == true || this.options.shape == 'gauge'){
 				this.options.resizable = false;
@@ -356,11 +363,7 @@ MochaUI.Window = new Class({
 			}.bind(this));			
 		}
 
-		// Inject window into DOM		
-		if (!this.options.container || this.options.modal == true){
-			this.options.container = MochaUI.Desktop.desktop ? MochaUI.Desktop.desktop : document.body;			 
-		}
-
+		// Inject window into DOM
 		this.windowEl.injectInside(this.options.container);
 		this.drawWindow(this.windowEl);
 
@@ -544,7 +547,7 @@ MochaUI.Window = new Class({
 					}.bind(this)
 				]
 			},	
-			modifiers: {'x': false, y: 'top'},
+			modifiers: {x: false, y: 'top'},
 			onBeforeStart: function(){this.resizeOnBeforeStart();}.bind(this),		
 			onStart: function(){
 				this.coords = this.contentWrapperEl.getCoordinates();			
@@ -614,7 +617,7 @@ MochaUI.Window = new Class({
 					}.bind(this)
 				]
 			},	
-			modifiers: {'x': 'left', y: false},
+			modifiers: {x: 'left', y: false},
 			onBeforeStart: function(){this.resizeOnBeforeStart();}.bind(this),		
 			onStart: function(){
 				this.coords = this.contentWrapperEl.getCoordinates();			

@@ -121,7 +121,7 @@ initializeWindows = function(){
 				onContentLoaded: function(){				
 					if ( !MochaUI.tablesoortScript == true ){
 						new Request({
-							url: 'plugins/tablesoort/scripts/tablesoort.js',
+							url: 'plugins/tablesoort/scripts/tablesoort.js?t=' + new Date().getTime(),
 							method: 'get',
 							onSuccess: function() {
 								$$('table.sortTable').each(function(sort){
