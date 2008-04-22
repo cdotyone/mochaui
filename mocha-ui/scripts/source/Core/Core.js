@@ -13,12 +13,6 @@ Contributors:
 	- Scott F. Frederick
 	- Joel Lindau
 	
-Todo:		
-	- Ctrl-Tab to toggle window visibility.
-
-To fix:
-	- With effects disabled maximizing caused an error
-	
 Note:
 	This documentation is taken directly from the javascript source files. It is built using Natural Docs.
 	
@@ -270,4 +264,11 @@ var MochaUI = new Hash({
 			el.destroy();
 		}.bind(this));		
 	}	
+});
+
+// Toggle window visibility with Ctrl-Alt-Q
+document.addEvent('keydown', function(event){							 
+	if (event.key == 'q' && event.control && event.alt) {
+		MochaUI.toggleWindowVisibility();
+	}
 });

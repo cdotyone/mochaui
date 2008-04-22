@@ -553,23 +553,12 @@ initializeWindows = function(){
 }
 
 // Initialize MochaUI when the DOM is ready
-window.addEvent('domready', function(){
-									 
+window.addEvent('domready', function(){									 
 	MochaUI.Desktop = new MochaUI.Desktop();									 
 	MochaUI.Dock = new MochaUI.Dock();									 
 	MochaUI.Workspaces = new MochaUI.Workspaces();	
 	MochaUI.Modal = new MochaUI.Modal();
-
-	initializeWindows();
-	
-	// Toggle window visibility with Ctrl-Alt-Q
-	document.addEvent('keydown', function(event){							 
-		if (event.key == 'q' && event.control && event.alt) {
-			MochaUI.toggleWindowVisibility();
-		}
-	});
-	
-	
+	initializeWindows();	
 });
 
 

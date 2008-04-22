@@ -13,12 +13,6 @@ Contributors:
 	- Scott F. Frederick
 	- Joel Lindau
 	
-Todo:		
-	- Ctrl-Tab to toggle window visibility.
-
-To fix:
-	- With effects disabled maximizing caused an error
-	
 Note:
 	This documentation is taken directly from the javascript source files. It is built using Natural Docs.
 	
@@ -271,6 +265,13 @@ var MochaUI = new Hash({
 		}.bind(this));		
 	}	
 });
+
+// Toggle window visibility with Ctrl-Alt-Q
+document.addEvent('keydown', function(event){							 
+	if (event.key == 'q' && event.control && event.alt) {
+		MochaUI.toggleWindowVisibility();
+	}
+});
 /*
 
 Script: Window.js
@@ -350,6 +351,7 @@ windowOptions = {
 	id:                null,
 	title:             'New Window',
 	modal:             false,
+	type:              'window',  // window, modal or notification. NOT YET IMPLEMENTED	
 	
 	loadMethod:        'html', 	             // Can be set to 'html', 'xhr', or 'iframe'.
 	contentURL:        'pages/lipsum.html',	 // Used if loadMethod is set to 'xhr' or 'iframe'.  
@@ -426,19 +428,20 @@ MochaUI.Window = new Class({
 	initialize: function(options){
 		this.setOptions(options);
 		
-		// Private properties
 		this.accordianTimer     = ''; // Used with accordian - should go somewhere else maybe?
-		this.mochaControlsWidth = 0;
-		this.minimizebuttonX    = 0;  // Minimize button horizontal position
-		this.maximizebuttonX    = 0;  // Maximize button horizontal position
-		this.closebuttonX       = 0;  // Close button horizontal position
 		this.HeaderFooterShadow = this.options.headerHeight + this.options.footerHeight + (this.options.shadowBlur * 2);
-		this.oldTop             = 0;
-		this.oldLeft            = 0;
 		
-		// Set this.options.resizable if it was not defined
+		// May be better to use if type != window
+		if (this.options.modal == true || this.options.type == 'notification'){
+			this.options.container = document.body;			 
+		}		
+		if (!this.options.container){
+			this.options.container = MochaUI.Desktop.desktop ? MochaUI.Desktop.desktop : document.body;			 
+		}
+
+		// Set this.options.resizable to default if it was not defined
 		if (this.options.resizable == null){
-			if (this.options.modal == true || this.options.shape == 'gauge'){
+			if (this.options.modal == true || this.options.shape == 'gauge' || this.options.type == 'notification'){
 				this.options.resizable = false;
 			}
 			else {
@@ -448,7 +451,7 @@ MochaUI.Window = new Class({
 		
 		// Set this.options.draggable if it was not defined
 		if (this.options.draggable == null){
-			if (this.options.modal == true){
+			if (this.options.modal == true || this.options.type == 'notification'){
 				this.options.draggable = false;
 			}
 			else {
@@ -457,10 +460,14 @@ MochaUI.Window = new Class({
 		}		
 		
 		// Gauges are not maximizable or resizable
-		if (this.options.shape == 'gauge'){
+		if (this.options.shape == 'gauge'|| this.options.type == 'notification'){
 			this.options.maximizable = false;
 			this.options.bodyBgColor = 'transparent';
 			this.options.scrollbars = false;			
+		}
+		if (this.options.type == 'notification'){
+			this.options.minimizable = false;
+			this.options.closable = false;			
 		}
 
 		// Minimizable, dock is required and window cannot be modal
@@ -472,21 +479,21 @@ MochaUI.Window = new Class({
 
 		this.isMaximized = false;
 		this.isMinimized = false;
-
+		
+		// If window has no ID, give it one.
+		if (this.options.id == null){
+			this.options.id = 'win' + (++MochaUI.windowIDCount);		
+		}
 		this.windowEl = $(this.options.id);
 		
-		// Run methods	
 		this.newWindow();
 		
 		// Return window object
 		return this;
 	},
-	saveValues: function(){
-		//var currentWindowClass = MochaUI.Windows.instances.get(this.options.id);		
+	saveValues: function(){		
 		this.options.x = this.windowEl.getStyle('left').toInt();
-		this.options.y = this.windowEl.getStyle('top').toInt();
-		//currentWindowClass.options.x = this.windowEl.getStyle('left');
-		//currentWindowClass.options.y = this.windowEl.getStyle('top');	
+		this.options.y = this.windowEl.getStyle('top').toInt();	
 	},	
 	/*
 	
@@ -497,7 +504,8 @@ MochaUI.Window = new Class({
 
 	*/	
 	newWindow: function(properties){ // options is not doing anything
-		
+	
+	
 		// Here we check to see if there is already a class instance for this window
 		if (MochaUI.Windows.instances.get(this.options.id)){			
 			var currentWindowClass = MochaUI.Windows.instances.get(this.options.id);		
@@ -523,7 +531,7 @@ MochaUI.Window = new Class({
 		// Create window div
 		this.windowEl = new Element('div', {
 			'class': 'mocha',
-			'id':    this.options.id && this.options.id != null ? this.options.id : 'win' + (++MochaUI.windowIDCount),
+			'id':    this.options.id,
 			'styles': {
 				'width':   this.options.width,
 				'height':  this.options.height,
@@ -534,8 +542,7 @@ MochaUI.Window = new Class({
 
 		this.windowEl.addClass(this.options.addClass);		
 
-		// Part of fix for scrollbar issues in Mac FF2
-		if (Browser.Platform.mac && Browser.Engine.gecko){
+		if ((this.options.modal == true) || (Browser.Platform.mac && Browser.Engine.gecko)){
 			this.windowEl.setStyle('position', 'fixed');	
 		}
 
@@ -547,7 +554,7 @@ MochaUI.Window = new Class({
 		
 		// Insert sub elements inside windowEl
 		this.insertWindowElements();
-		
+				
 		// Set title		
 		this.titleEl.set('html',this.options.title);
 
@@ -619,6 +626,7 @@ MochaUI.Window = new Class({
 			'padding-right': this.options.padding.right
 		});		
 		
+
 		if (this.options.shape == 'gauge'){
 			this.canvasControlsEl.setStyle('opacity', 0);
 			this.windowEl.addEvent('mouseover', function(){
@@ -629,11 +637,8 @@ MochaUI.Window = new Class({
 			}.bind(this));			
 		}
 
-		// Inject window into DOM		
-		if (!this.options.container || this.options.modal == true){
-			this.options.container = MochaUI.Desktop.desktop ? MochaUI.Desktop.desktop : document.body;			 
-		}
-
+		// Inject window into DOM
+		
 		this.windowEl.injectInside(this.options.container);
 		this.drawWindow(this.windowEl);
 
@@ -730,6 +735,10 @@ MochaUI.Window = new Class({
 				'id': this.options.id + '_check'
 			}).injectInside(this.windowEl.id + 'LinkCheck');
 		}
+		
+		if (this.options.type == 'notification'){
+			MochaUI.closeWindow.delay(1400, this, this.windowEl);	
+		}
 
 	},	
 	setupEvents: function(windowEl) {
@@ -755,7 +764,6 @@ MochaUI.Window = new Class({
 					this.maximizeButtonEl.setProperty('title', 'Restore');
 				}
 			}.bind(this));
-
 		}
 		
 	},
@@ -818,7 +826,7 @@ MochaUI.Window = new Class({
 					}.bind(this)
 				]
 			},	
-			modifiers: {'x': false, y: 'top'},
+			modifiers: {x: false, y: 'top'},
 			onBeforeStart: function(){this.resizeOnBeforeStart();}.bind(this),		
 			onStart: function(){
 				this.coords = this.contentWrapperEl.getCoordinates();			
@@ -888,7 +896,7 @@ MochaUI.Window = new Class({
 					}.bind(this)
 				]
 			},	
-			modifiers: {'x': 'left', y: false},
+			modifiers: {x: 'left', y: false},
 			onBeforeStart: function(){this.resizeOnBeforeStart();}.bind(this),		
 			onStart: function(){
 				this.coords = this.contentWrapperEl.getCoordinates();			
@@ -977,7 +985,7 @@ MochaUI.Window = new Class({
 				'id': this.options.id + '_zIndexFix'
 			}).inject(this.windowEl);
 		}
-
+		
 		this.overlayEl = new Element('div', {
 			'class': 'mochaOverlay',
 			'id': this.options.id + '_overlay'
@@ -1013,7 +1021,7 @@ MochaUI.Window = new Class({
 				'height': height + 'px'
 			}
 		}).inject(this.contentBorderEl);
-
+		
 		this.contentEl = new Element('div', {
 			'class': 'mochaContent',
 			'id': this.options.id + '_content'
@@ -1048,7 +1056,7 @@ MochaUI.Window = new Class({
 			G_vmlCanvasManager.initElement(this.canvasControlsEl);			
 			// getContext() method does not exist before retrieving the element via getElement
 			this.canvasControlsEl = this.windowEl.getElement('.mochaCanvasControls');			
-		}			
+		}
 		
 		if (this.options.closable){
 			this.closeButtonEl = new Element('div', {
@@ -1074,7 +1082,7 @@ MochaUI.Window = new Class({
 			}).inject(this.controlsEl);
 		}
 		
-		if ( this.options.shape != 'gauge'){
+		if ( this.options.shape != 'gauge' && this.options.type != 'notification'){
 			this.canvasIconEl = new Element('canvas', {
 				'class': 'mochaLoadingIcon',
 				'width': 18,
@@ -1089,7 +1097,7 @@ MochaUI.Window = new Class({
 				this.canvasIconEl = this.windowEl.getElement('.mochaLoadingIcon');
 			}
 		}
-
+		
 		if ( Browser.Engine.trident ) {
 			this.overlayEl.setStyle('zIndex', 2);
 		}
@@ -1098,8 +1106,11 @@ MochaUI.Window = new Class({
 		if (Browser.Platform.mac && Browser.Engine.gecko) {
 			this.overlayEl.setStyle('overflow', 'auto');
 		}
-		this.setMochaControlsWidth();
-		
+
+		if (this.options.type != 'notification'){
+			this.setMochaControlsWidth();
+		}
+
 		if (this.options.resizable){			
 			this.n = new Element('div', {
 				'id': this.options.id + '_resizeHandle_n',
@@ -1236,7 +1247,7 @@ MochaUI.Window = new Class({
 		});
 	
 		// Make sure loading icon is placed correctly.
-		if ( this.options.shape != 'gauge'){
+		if ( this.options.shape != 'gauge' && this.options.type != 'notification'){
 			this.canvasIconEl.setStyles({
 				'left': this.options.shadowBlur + 3,
 				'bottom': this.options.shadowBlur + 4
@@ -1319,6 +1330,7 @@ MochaUI.Window = new Class({
 				1.0
 			);
 		}
+
 		// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
 		if ( Browser.Engine.trident4 ){
 			MochaUI.triangle(
@@ -1458,12 +1470,12 @@ MochaUI.Window = new Class({
 		ctx.stroke();
 	},
 	hideLoadingIcon: function(canvas) {
-		if (!MochaUI.options.useLoadingIcon || this.options.shape == 'gauge') return;		
+		if (!MochaUI.options.useLoadingIcon || this.options.shape == 'gauge' || this.options.type == 'notification') return;		
 		$(canvas).setStyle('display', 'none');		
 		$clear(canvas.iconAnimation);
 	},
 	showLoadingIcon: function(canvas) {
-		if (!MochaUI.options.useLoadingIcon || this.options.shape == 'gauge') return;		
+		if (!MochaUI.options.useLoadingIcon || this.options.shape == 'gauge' || this.options.type == 'notification') return;		
 		$(canvas).setStyles({
 			'display': 'block'
 		});		
@@ -1545,7 +1557,7 @@ MochaUI.Modal = new Class({
 				'height': document.getCoordinates().height
 			}
 		});
-		modalOverlay.injectInside(MochaUI.Desktop.desktop ? MochaUI.Desktop.desktop : document.body);
+		modalOverlay.injectInside(document.body);
 		
 		modalOverlay.setStyle('opacity', .4);
 		this.modalOverlayOpenMorph = new Fx.Morph($('modalOverlay'), {
@@ -2592,6 +2604,22 @@ MochaUI.extend({
 		
 		}.bind(this));		
 		this.cookie.save();
+		
+		new MochaUI.Window({
+			loadMethod: 'html',
+			type: 'notification',
+			addClass: 'notification',
+			content: 'Workspace was saved.',
+			width: 200,
+			height: 25,
+			y: 25,
+			padding:  { top: 3, right: 12, bottom: 5, left: 12 },
+			shadowBlur: 5,
+			headerStartColor:  [255, 255, 255],
+			headerStopColor:   [245, 245, 245],
+			footerBgColor:     [245, 245, 245]	
+		});
+		
 	},
 	windowUnload: function(){
 		if ($$('div.mocha').length == 0){
