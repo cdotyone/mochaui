@@ -52,29 +52,29 @@ var MochaUI = new Hash({
 	closeWindow: function(windowEl) {
 		// Does window exist and is not already in process of closing ?		
 
-		currentWindowClass = MochaUI.Windows.instances.get(windowEl.id);
+		currentInstance = MochaUI.Windows.instances.get(windowEl.id);
 
-		if ( !(windowEl = $(windowEl)) || currentWindowClass.isClosing )
+		if ( !(windowEl = $(windowEl)) || currentInstance.isClosing )
 			return;
 			
-		currentWindowClass.isClosing = true;
-		currentWindowClass.fireEvent('onClose', windowEl);
+		currentInstance.isClosing = true;
+		currentInstance.fireEvent('onClose', windowEl);
 
 		if (MochaUI.options.useEffects == false){
-			if (currentWindowClass.options.type == 'modal') {
+			if (currentInstance.options.type == 'modal') {
 				$('modalOverlay').setStyle('opacity', 0);
 			}
 			windowEl.destroy();
-			currentWindowClass.fireEvent('onCloseComplete');
-			MochaUI.Windows.instances.erase(currentWindowClass.options.id); // see how this effects on close complete
+			currentInstance.fireEvent('onCloseComplete');
+			MochaUI.Windows.instances.erase(currentInstance.options.id); // see how this effects on close complete
 			if(this.loadingWorkspace == true){
 				this.windowUnload();
 			}
 		}
 		else {
 			// Redraws IE windows without shadows since IE messes up canvas alpha when you change element opacity
-			if (Browser.Engine.trident) currentWindowClass.drawWindow(windowEl, false);
-			if (currentWindowClass.options.type == 'modal') {
+			if (Browser.Engine.trident) currentInstance.drawWindow(windowEl, false);
+			if (currentInstance.options.type == 'modal') {
 				MochaUI.Modal.modalOverlayCloseMorph.start({
 					'opacity': 0
 				});
@@ -83,8 +83,8 @@ var MochaUI = new Hash({
 				duration: 180,
 				onComplete: function(){
 					windowEl.destroy();
-					currentWindowClass.fireEvent('onCloseComplete');
-					MochaUI.Windows.instances.erase(currentWindowClass.options.id); // see how this effects on close complete
+					currentInstance.fireEvent('onCloseComplete');
+					MochaUI.Windows.instances.erase(currentInstance.options.id); // see how this effects on close complete
 					if(this.loadingWorkspace == true){
 						this.windowUnload();
 					}
@@ -94,7 +94,7 @@ var MochaUI = new Hash({
 				'opacity': .4
 			});
 		}
-		if (currentWindowClass.check) currentWindowClass.check.destroy();
+		if (currentInstance.check) currentInstance.check.destroy();
 		return true;
 	},	
 	/*
@@ -139,24 +139,27 @@ var MochaUI = new Hash({
 
 	},	
 	focusWindow: function(windowEl){
-		if (windowEl != $(windowEl)) return;		
-		currentWindowClass = MochaUI.Windows.instances.get(windowEl.id);			
+		if (windowEl != $(windowEl)) return;
+		
+		var instances =  MochaUI.Windows.instances;
+		
+		var currentInstance = instances.get(windowEl.id);			
 		// Only focus when needed
-		if ( windowEl.getStyle('zIndex').toInt() == MochaUI.indexLevel || currentWindowClass.isFocused == true)
+		if ( windowEl.getStyle('zIndex').toInt() == MochaUI.indexLevel || currentInstance.isFocused == true)
 			return;
 
 		MochaUI.indexLevel++;
 		windowEl.setStyle('zIndex', MochaUI.indexLevel);
 
 		// Fire onBlur for the window that lost focus.
-		MochaUI.Windows.instances.each(function(instance){
+		instances.each(function(instance){
 			if (instance.isFocused == true){
 				instance.fireEvent('onBlur', instance.windowEl);
 			}
 			instance.isFocused = false;			
 		});			
-		currentWindowClass.isFocused = true;		
-		currentWindowClass.fireEvent('onFocus', windowEl);
+		currentInstance.isFocused = true;		
+		currentInstance.fireEvent('onFocus', windowEl);
 	},	
 	roundedRect: function(ctx, x, y, width, height, radius, rgb, a){
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
@@ -218,13 +221,14 @@ var MochaUI = new Hash({
 			});		
 		}
 		
-		currentWindowClass = MochaUI.Windows.instances.get(windowEl.id);
-		var dimensions = currentWindowClass.options.container.getCoordinates();
-		var windowPosTop = (dimensions.height * .5) - ((currentWindowClass.options.height + currentWindowClass.HeaderFooterShadow) * .5);
-		var windowPosLeft =	(dimensions.width * .5) - (currentWindowClass.options.width * .5);
+		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
+		var options = currentInstance.options;
+		var dimensions = options.container.getCoordinates();
+		var windowPosTop = (dimensions.height * .5) - ((options.height + currentInstance.HeaderFooterShadow) * .5);
+		var windowPosLeft =	(dimensions.width * .5) - (options.width * .5);
 		
 		if (MochaUI.options.useEffects == true){
-			currentWindowClass.morph.start({
+			currentInstance.morph.start({
 				'top': windowPosTop,
 				'left': windowPosLeft
 			});
@@ -243,10 +247,13 @@ var MochaUI = new Hash({
 		
 	*/		
 	dynamicResize: function(windowEl){
-		currentWindowClass = MochaUI.Windows.instances.get(windowEl.id);		
-		currentWindowClass.contentWrapperEl.setStyle('height', currentWindowClass.contentEl.offsetHeight);
-		currentWindowClass.contentWrapperEl.setStyle('width', currentWindowClass.contentEl.offsetWidth);			
-		currentWindowClass.drawWindow(windowEl);
+		currentInstance = MochaUI.Windows.instances.get(windowEl.id);
+		contentWrapperEl = currentInstance.contentWrapperEl;
+		contentEl = currentInstance.contentEl;
+		
+		contentWrapperEl.setStyle('height', contentEl.offsetHeight);
+		contentWrapperEl.setStyle('width', contentEl.offsetWidth);			
+		currentInstance.drawWindow(windowEl);
 	},	
 	/*
 	

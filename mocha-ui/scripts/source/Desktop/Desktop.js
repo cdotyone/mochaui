@@ -94,10 +94,8 @@ MochaUI.Desktop = new Class({
 		var lingrad = ctx.createLinearGradient(0, 0, 0, 35);
 
 		lingrad.addColorStop(0, 'rgba(' + this.options.headerStartColor.join(',') + ', 1)');
-		lingrad.addColorStop(1, 'rgba(' + this.options.headerStopColor.join(',') + ', 1)');		
-		
+		lingrad.addColorStop(1, 'rgba(' + this.options.headerStopColor.join(',') + ', 1)');			
 		ctx.fillStyle = lingrad;
-
 		ctx.fillRect(0, 0, windowDimensions.width, this.desktopHeaderHeight);			
 	},
 	menuInitialize: function(){
@@ -154,15 +152,14 @@ MochaUI.Desktop = new Class({
 		var dockWrapper = $(MochaUI.options.dockWrapper);
 		
 		// Setting the desktop height may only be needed by IE7
-		if ( this.desktop ){
+		if (this.desktop){
 			this.desktop.setStyle('height', windowDimensions.height);
 		}
 
 		// Set pageWrapper height so the dock doesn't cover the pageWrapper scrollbars.
 		if (this.pageWrapper && this.desktopHeader) {
 					
-			var dockOffset = MochaUI.dockVisible ? dockWrapper.offsetHeight : 0;
-			
+			var dockOffset = MochaUI.dockVisible ? dockWrapper.offsetHeight : 0;			
 			var pageWrapperHeight = windowDimensions.height - this.desktopHeader.offsetHeight - dockOffset;
 			
 			if ( pageWrapperHeight < 0 ) {
@@ -191,58 +188,63 @@ MochaUI.Desktop = new Class({
 	*/	
 	maximizeWindow: function(windowEl) {
 
-		currentWindowClass = MochaUI.Windows.instances.get(windowEl.id);
+		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
+		var windowDrag = currentInstance.windowDrag;
 
 		// If window no longer exists or is maximized, stop
-		if (windowEl != $(windowEl) || currentWindowClass.isMaximized )
+		if (windowEl != $(windowEl) || currentInstance.isMaximized )
 			return;			
 
-		currentWindowClass.isMaximized = true;
+		currentInstance.isMaximized = true;
 		
 		// If window is restricted to a container, it should not be draggable when maximized.
-		if (currentWindowClass.options.restrict){
-			currentWindowClass.windowDrag.detach();
-			currentWindowClass.titleBarEl.setStyle('cursor', 'default');
+		if (currentInstance.options.restrict){
+			windowDrag.detach();
+			currentInstance.titleBarEl.setStyle('cursor', 'default');
 		}	
 		
 		// If the window has a container that is not the desktop
 		// temporarily move the window to the desktop while it is minimized.
-		if (currentWindowClass.options.container != this.options.desktop){
+		if (currentInstance.options.container != this.options.desktop){
 			this.desktop.grab(windowEl);
-			currentWindowClass.windowDrag.container = this.desktop;
+			windowDrag.container = this.desktop;
 		}		
 		
 		// Save original position
-		currentWindowClass.oldTop = windowEl.getStyle('top');
-		currentWindowClass.oldLeft = windowEl.getStyle('left');
+		currentInstance.oldTop = windowEl.getStyle('top');
+		currentInstance.oldLeft = windowEl.getStyle('left');
+		
+		var contentWrapperEl = currentInstance.contentWrapperEl;
 		
 		// Save original dimensions
-		currentWindowClass.contentWrapperEl.oldWidth = currentWindowClass.contentWrapperEl.getStyle('width');
-		currentWindowClass.contentWrapperEl.oldHeight = currentWindowClass.contentWrapperEl.getStyle('height');
+		contentWrapperEl.oldWidth = contentWrapperEl.getStyle('width');
+		contentWrapperEl.oldHeight = contentWrapperEl.getStyle('height');
 		
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
-		if ( currentWindowClass.iframe ) {
-			currentWindowClass.iframeEl.setStyle('visibility', 'hidden');
+		if ( currentInstance.iframe ) {
+			currentInstance.iframeEl.setStyle('visibility', 'hidden');
 		}
 
 		var windowDimensions = document.getCoordinates();
+		var options = currentInstance.options;
+		var shadowBlur = options.shadowBlur;
 
 		if (MochaUI.options.useEffects == false){
 			windowEl.setStyles({
-				'top': -currentWindowClass.options.shadowBlur,
-				'left': -currentWindowClass.options.shadowBlur
+				'top': -shadowBlur,
+				'left': -shadowBlur
 			});
-			currentWindowClass.contentWrapperEl.setStyles({
-				'height': windowDimensions.height - currentWindowClass.options.headerHeight - currentWindowClass.options.footerHeight,
+			currentInstance.contentWrapperEl.setStyles({
+				'height': windowDimensions.height - options.headerHeight - options.footerHeight,
 				'width':  windowDimensions.width
 			});
-			currentWindowClass.drawWindow(windowEl);
+			currentInstance.drawWindow(windowEl);
 			// Show iframe
-			if ( currentWindowClass.iframe ) {
-				currentWindowClass.iframeEl.setStyle('visibility', 'visible');
+			if ( currentInstance.iframe ) {
+				currentInstance.iframeEl.setStyle('visibility', 'visible');
 			}
-			currentWindowClass.fireEvent('onMaximize', windowEl);
+			currentInstance.fireEvent('onMaximize', windowEl);
 		}
 		else {
 			
@@ -251,27 +253,27 @@ MochaUI.Desktop = new Class({
 			//var maximizePositionMorph = new Fx.Morph(windowEl, {
 			//	'duration': 300
 			//});
-			var maximizeMorph = new Fx.Elements([currentWindowClass.contentWrapperEl, windowEl], { 
+			var maximizeMorph = new Fx.Elements([contentWrapperEl, windowEl], { 
 				duration: 70,
 				onStart: function(windowEl){
-						currentWindowClass.maximizeAnimation = currentWindowClass.drawWindow.periodical(20, currentWindowClass, currentWindowClass.windowEl);
+						currentInstance.maximizeAnimation = currentInstance.drawWindow.periodical(20, currentInstance, windowEl);
 				}.bind(this),
 				onComplete: function(windowEl){
-					$clear(currentWindowClass.maximizeAnimation);
-					currentWindowClass.drawWindow(windowEl);
+					$clear(currentInstance.maximizeAnimation);
+					currentInstance.drawWindow(windowEl);
 					// Show iframe
-					if ( currentWindowClass.iframe ) {
-						currentWindowClass.iframeEl.setStyle('visibility', 'visible');
+					if ( currentInstance.iframe ) {
+						currentInstance.iframeEl.setStyle('visibility', 'visible');
 					}
-					currentWindowClass.fireEvent('onMaximize', windowEl);	
+					currentInstance.fireEvent('onMaximize', windowEl);	
 				}.bind(this)
 			});
 			maximizeMorph.start({
-				'0': {	'height': windowDimensions.height - currentWindowClass.options.headerHeight - currentWindowClass.options.footerHeight,
+				'0': {	'height': windowDimensions.height - options.headerHeight - options.footerHeight,
 						'width':  windowDimensions.width
 				},
-				'1': {	'top':  -currentWindowClass.options.shadowBlur, // Takes shadow width into account
-						'left': -currentWindowClass.options.shadowBlur  // Takes shadow width into account
+				'1': {	'top':  -shadowBlur,
+						'left': -shadowBlur
 				}
 			});		
 		}		
@@ -290,66 +292,70 @@ MochaUI.Desktop = new Class({
 	*/	
 	restoreWindow: function(windowEl) {	
 	
-		currentWindowClass = MochaUI.Windows.instances.get(windowEl.id);
+		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
 		
 		// Window exists and is maximized ?
-		if ( !(windowEl = $(windowEl)) || !currentWindowClass.isMaximized )
-			return;		
+		if ( !(windowEl = $(windowEl)) || !currentInstance.isMaximized )
+			return;
+			
+		var options = currentInstance.options;			
 		
-		currentWindowClass.isMaximized = false;
+		currentInstance.isMaximized = false;
 		
-		if (currentWindowClass.options.restrict){
-			currentWindowClass.windowDrag.attach();
-			currentWindowClass.titleBarEl.setStyle('cursor', 'move');
+		if (options.restrict){
+			currentInstance.windowDrag.attach();
+			currentInstance.titleBarEl.setStyle('cursor', 'move');
 		}		
 		
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
-		if ( currentWindowClass.iframe ) {
-			currentWindowClass.iframeEl.setStyle('visibility', 'hidden');
+		if ( currentInstance.iframe ) {
+			currentInstance.iframeEl.setStyle('visibility', 'hidden');
 		}
-
+		
+		var contentWrapperEl = currentInstance.contentWrapperEl;
+		
 		if (MochaUI.options.useEffects == false){
-			currentWindowClass.contentWrapperEl.setStyles({
-				'width':  currentWindowClass.contentWrapperEl.oldWidth,
-				'height': currentWindowClass.contentWrapperEl.oldHeight
+			contentWrapperEl.setStyles({
+				'width':  contentWrapperEl.oldWidth,
+				'height': contentWrapperEl.oldHeight
 			});
-			currentWindowClass.drawWindow(windowEl);
+			currentInstance.drawWindow(windowEl);
 			windowEl.setStyles({
-				'top': currentWindowClass.oldTop,
-				'left': currentWindowClass.oldLeft
+				'top': currentInstance.oldTop,
+				'left': currentInstance.oldLeft
 			});
-			if (currentWindowClass.options.container != this.options.desktop){
-				$(currentWindowClass.options.container).grab(windowEl);
-				currentWindowClass.windowDrag.container = $(currentWindowClass.options.container);
+			if (container != this.options.desktop){
+				$(options.container).grab(windowEl);
+				currentInstance.windowDrag.container = $(options.container);
 			}
-			currentWindowClass.fireEvent('onRestore', windowEl);
+			currentInstance.fireEvent('onRestore', windowEl);
 		}
 		else {
-			var restoreMorph = new Fx.Elements([currentWindowClass.contentWrapperEl, windowEl], { 
+			var restoreMorph = new Fx.Elements([contentWrapperEl, windowEl], { 
 				'duration':   150,
 				'onStart': function(windowEl){
-					currentWindowClass.maximizeAnimation = currentWindowClass.drawWindow.periodical(20, currentWindowClass, currentWindowClass.windowEl);			
+					currentInstance.maximizeAnimation = currentInstance.drawWindow.periodical(20, currentInstance, windowEl);			
 				}.bind(this),
 				'onComplete': function(el){
-					$clear(currentWindowClass.maximizeAnimation);
-					currentWindowClass.drawWindow(windowEl);
-					if ( currentWindowClass.iframe ) {
-						currentWindowClass.iframeEl.setStyle('visibility', 'visible');
+					$clear(currentInstance.maximizeAnimation);
+					currentInstance.drawWindow(windowEl);
+					if ( currentInstance.iframe ) {
+						currentInstance.iframeEl.setStyle('visibility', 'visible');
 					}
-					if (currentWindowClass.options.container != this.options.desktop){
-						$(currentWindowClass.options.container).grab(windowEl);
-						currentWindowClass.windowDrag.container = $(currentWindowClass.options.container);
+					if (options.container != this.options.desktop){
+						$(options.container).grab(windowEl);
+						currentInstance.windowDrag.container = $(options.container);
 					}
-					currentWindowClass.fireEvent('onRestore', windowEl);
+					currentInstance.fireEvent('onRestore', windowEl);
 				}.bind(this)
 			});
 			restoreMorph.start({ 
-				'0': {	'height': currentWindowClass.contentWrapperEl.oldHeight,
-						'width':  currentWindowClass.contentWrapperEl.oldWidth
+				'0': {	'height': contentWrapperEl.oldHeight,
+						'width':  contentWrapperEl.oldWidth
 				},
-				'1': {	'top':  currentWindowClass.oldTop,
-						'left': currentWindowClass.oldLeft
+				'1': {	'top':  currentInstance.oldTop,
+						'left': currentInstance.oldLeft
 				}
 			});
 		}
