@@ -33,6 +33,86 @@ var MochaUI = new Hash({
 	windowsVisible: true,         // Ctrl-Alt-Q to toggle window visibility
 	/*
 	
+	Function: updateContent
+		Replace the content of a window.
+		
+	Arguments:
+		windowEl, content, url
+		
+	*/	
+	updateContent: function(windowEl, content, url){
+		
+		if (!windowEl) return;		
+		
+		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
+		var options = currentInstance.options;
+		var contentEl = currentInstance.contentEl;
+		var canvasIconEl = currentInstance.canvasIconEl;
+		
+		// Remove old content.
+		currentInstance.contentEl.empty();
+
+		// Load new content.
+		switch(currentInstance.options.loadMethod) {
+			case 'xhr':
+				new Request.HTML({
+					url: url,
+					update: contentEl,
+					evalScripts: options.evalScripts,
+					evalResponse: options.evalResponse,
+					onRequest: function(){
+						currentInstance.showLoadingIcon(canvasIconEl);
+					}.bind(this),
+					onFailure: function(){
+						contentEl.set('html','<p><strong>Error Loading XMLHttpRequest</strong></p><p>Make sure all of your content is uploaded to your server, and that you are attempting to load a document from the same domain as this page. XMLHttpRequests will not work on your local machine.</p>');
+						currentInstance.hideLoadingIcon.delay(150, currentInstance, canvasIconEl);
+					}.bind(this),
+					onSuccess: function() {
+						currentInstance.hideLoadingIcon.delay(150, currentInstance, canvasIconEl);
+						currentInstance.fireEvent('onContentLoaded', windowEl);
+					}.bind(this)
+				}).get();
+				break;
+			case 'iframe': // May be able to streamline this if the iframe already exists.
+				if ( options.contentURL == '') {
+					break;
+				}
+				currentInstance.iframeEl = new Element('iframe', {
+					'id': currentInstance.options.id + '_iframe', 
+					'class': 'mochaIframe',
+					'src': url,
+					'marginwidth':  0,
+					'marginheight': 0,
+					'frameBorder':  0,
+					'scrolling':    'auto',
+					'styles': {
+						'height': currentInstance.contentWrapperEl.offsetHeight	
+					}
+				}).injectInside(contentEl);
+				
+				// Add onload event to iframe so we can stop the loading icon and run onContentLoaded()
+				currentInstance.iframeEl.addEvent('load', function(e) {
+					currentInstance.hideLoadingIcon.delay(150, currentInstance, canvasIconEl);
+					currentInstance.fireEvent('onContentLoaded', windowEl);
+				}.bind(this));
+				currentInstance.showLoadingIcon(canvasIconEl);
+				break;
+			case 'html':
+			default:
+				// Need to test injecting elements as content.
+				var elementTypes = new Array('element', 'textnode', 'whitespace', 'collection');
+				if (elementTypes.contains($type(content))) {
+					content.inject(contentEl);
+				} else {
+					contentEl.set('html', content);
+				}				
+				currentInstance.fireEvent('onContentLoaded', windowEl);
+				break;
+		}
+
+	},	
+	/*
+	
 	Function: closeWindow
 		Closes a window.
 
@@ -579,59 +659,7 @@ MochaUI.Window = new Class({
 		this.titleEl.set('html',this.options.title);
 
 		// Add content to window
-		switch(this.options.loadMethod) {
-			case 'xhr':
-				new Request.HTML({
-					url: this.options.contentURL,
-					update: this.contentEl,
-					evalScripts: this.options.evalScripts,
-					evalResponse: this.options.evalResponse,
-					onRequest: function(){
-						this.showLoadingIcon(this.canvasIconEl);
-					}.bind(this),
-					onFailure: function(){
-						this.contentEl.set('html','<p><strong>Error Loading XMLHttpRequest</strong></p><p>Make sure all of your content is uploaded to your server, and that you are attempting to load a document from the same domain as this page. XMLHttpRequests will not work on your local machine.</p>');
-						this.hideLoadingIcon.delay(150, this, this.canvasIconEl);
-					}.bind(this),
-					onSuccess: function() {
-						this.hideLoadingIcon.delay(150, this, this.canvasIconEl);
-						this.fireEvent('onContentLoaded', this.windowEl);
-					}.bind(this)
-				}).get();
-				break;
-			case 'iframe':
-				if ( this.options.contentURL == '') {
-					break;
-				}
-				this.iframeEl = new Element('iframe', {
-					'id': this.options.id + '_iframe', 
-					'class': 'mochaIframe',
-					'src': this.options.contentURL,
-					'marginwidth':  0,
-					'marginheight': 0,
-					'frameBorder':  0,
-					'scrolling':    'auto'
-				}).injectInside(this.contentEl);
-				
-				// Add onload event to iframe so we can stop the loading icon and run onContentLoaded()
-				this.iframeEl.addEvent('load', function(e) {
-					this.hideLoadingIcon.delay(150, this, this.canvasIconEl);
-					this.fireEvent('onContentLoaded', this.windowEl);
-				}.bind(this));
-				this.showLoadingIcon(this.canvasIconEl);
-				break;
-			case 'html':
-			default:
-				// Need to test injecting elements as content.
-				var elementTypes = new Array('element', 'textnode', 'whitespace', 'collection');
-				if (elementTypes.contains($type(this.options.content))) {
-					this.options.content.inject(this.contentEl);
-				} else {
-					this.contentEl.set('html', this.options.content);
-				}				
-				this.fireEvent('onContentLoaded', this.windowEl);
-				break;
-		}
+		MochaUI.updateContent(this.windowEl, this.options.content, this.options.contentURL);	
 		
 		// Set scrollbars, always use 'hidden' for iframe windows
 		this.contentWrapperEl.setStyles({
@@ -672,7 +700,7 @@ MochaUI.Window = new Class({
 
 		// Move new window into position. If position not specified by user then center the window on the page.
 		// We do this last so that the effects are as smooth as possible, not interrupted by other functions.
-		var dimensions = document.getCoordinates();
+		var dimensions = this.options.container.getCoordinates();
 
 		if (!this.options.y) {
 			var windowPosTop = (dimensions.height * .5) - ((this.options.height + this.HeaderFooterShadow) * .5);
@@ -759,7 +787,7 @@ MochaUI.Window = new Class({
 			MochaUI.closeWindow.delay(1400, this, this.windowEl);	
 		}
 
-	},	
+	},
 	setupEvents: function(windowEl) {
 
 		// Set events
@@ -789,7 +817,7 @@ MochaUI.Window = new Class({
 	/*
 	
 	Internal Function: attachDraggable()
-		make window draggable
+		Make window draggable.
 		
 	Arguments:
 		windowEl
@@ -829,9 +857,7 @@ MochaUI.Window = new Class({
 		
 	*/
 	attachResizable: function(windowEl){
-		if (!this.options.resizable){
-			return;
-		}
+		if (!this.options.resizable) return;	
 		this.windowEl.makeResizable({
 			handle: [this.n, this.ne, this.nw],
 			limit: {
@@ -1003,6 +1029,7 @@ MochaUI.Window = new Class({
 				'id': this.options.id + '_zIndexFix'
 			}).inject(this.windowEl);
 		}
+
 		
 		this.overlayEl = new Element('div', {
 			'class': 'mochaOverlay',
@@ -1031,7 +1058,6 @@ MochaUI.Window = new Class({
 			this.contentBorderEl.setStyle('borderWidth', 0);
 		}
 		
-
 		this.contentWrapperEl = new Element('div', {
 			'class': 'mochaContentWrapper',
 			'id': this.options.id + '_contentWrapper',
@@ -2018,8 +2044,7 @@ MochaUI.Desktop = new Class({
 		var windowDrag = currentInstance.windowDrag;
 
 		// If window no longer exists or is maximized, stop
-		if (windowEl != $(windowEl) || currentInstance.isMaximized )
-			return;			
+		if (windowEl != $(windowEl) || currentInstance.isMaximized ) return;			
 
 		currentInstance.isMaximized = true;
 		

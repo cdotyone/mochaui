@@ -37,7 +37,7 @@ var MochaUI = new Hash({
 		Replace the content of a window.
 		
 	Arguments:
-		windowEl
+		windowEl, content, url
 		
 	*/	
 	updateContent: function(windowEl, content, url){
@@ -45,31 +45,36 @@ var MochaUI = new Hash({
 		if (!windowEl) return;		
 		
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
+		var options = currentInstance.options;
+		var contentEl = currentInstance.contentEl;
+		var canvasIconEl = currentInstance.canvasIconEl;
+		
+		// Remove old content.
 		currentInstance.contentEl.empty();
 
-		// Add content to window
+		// Load new content.
 		switch(currentInstance.options.loadMethod) {
 			case 'xhr':
 				new Request.HTML({
 					url: url,
-					update: currentInstance.contentEl,
-					evalScripts: currentInstance.options.evalScripts,
-					evalResponse: currentInstance.options.evalResponse,
+					update: contentEl,
+					evalScripts: options.evalScripts,
+					evalResponse: options.evalResponse,
 					onRequest: function(){
-						currentInstance.showLoadingIcon(currentInstance.canvasIconEl);
+						currentInstance.showLoadingIcon(canvasIconEl);
 					}.bind(this),
 					onFailure: function(){
-						currentInstance.contentEl.set('html','<p><strong>Error Loading XMLHttpRequest</strong></p><p>Make sure all of your content is uploaded to your server, and that you are attempting to load a document from the same domain as this page. XMLHttpRequests will not work on your local machine.</p>');
-						currentInstance.hideLoadingIcon.delay(150, currentInstance, currentInstance.canvasIconEl);
+						contentEl.set('html','<p><strong>Error Loading XMLHttpRequest</strong></p><p>Make sure all of your content is uploaded to your server, and that you are attempting to load a document from the same domain as this page. XMLHttpRequests will not work on your local machine.</p>');
+						currentInstance.hideLoadingIcon.delay(150, currentInstance, canvasIconEl);
 					}.bind(this),
 					onSuccess: function() {
-						currentInstance.hideLoadingIcon.delay(150, currentInstance, currentInstance.canvasIconEl);
-						currentInstance.fireEvent('onContentLoaded', currentInstance.windowEl);
+						currentInstance.hideLoadingIcon.delay(150, currentInstance, canvasIconEl);
+						currentInstance.fireEvent('onContentLoaded', windowEl);
 					}.bind(this)
 				}).get();
 				break;
 			case 'iframe': // May be able to streamline this if the iframe already exists.
-				if ( currentInstance.options.contentURL == '') {
+				if ( options.contentURL == '') {
 					break;
 				}
 				currentInstance.iframeEl = new Element('iframe', {
@@ -83,25 +88,25 @@ var MochaUI = new Hash({
 					'styles': {
 						'height': currentInstance.contentWrapperEl.offsetHeight	
 					}
-				}).injectInside(currentInstance.contentEl);
+				}).injectInside(contentEl);
 				
 				// Add onload event to iframe so we can stop the loading icon and run onContentLoaded()
 				currentInstance.iframeEl.addEvent('load', function(e) {
-					currentInstance.hideLoadingIcon.delay(150, currentInstance, currentInstance.canvasIconEl);
-					currentInstance.fireEvent('onContentLoaded', currentInstance.windowEl);
+					currentInstance.hideLoadingIcon.delay(150, currentInstance, canvasIconEl);
+					currentInstance.fireEvent('onContentLoaded', windowEl);
 				}.bind(this));
-				currentInstance.showLoadingIcon(currentInstance.canvasIconEl);
+				currentInstance.showLoadingIcon(canvasIconEl);
 				break;
 			case 'html':
 			default:
 				// Need to test injecting elements as content.
 				var elementTypes = new Array('element', 'textnode', 'whitespace', 'collection');
 				if (elementTypes.contains($type(content))) {
-					content.inject(currentInstance.contentEl);
+					content.inject(contentEl);
 				} else {
-					currentInstance.contentEl.set('html', content);
+					contentEl.set('html', content);
 				}				
-				currentInstance.fireEvent('onContentLoaded', currentInstance.windowEl);
+				currentInstance.fireEvent('onContentLoaded', windowEl);
 				break;
 		}
 
