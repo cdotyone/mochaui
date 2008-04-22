@@ -298,59 +298,7 @@ MochaUI.Window = new Class({
 		this.titleEl.set('html',this.options.title);
 
 		// Add content to window
-		switch(this.options.loadMethod) {
-			case 'xhr':
-				new Request.HTML({
-					url: this.options.contentURL,
-					update: this.contentEl,
-					evalScripts: this.options.evalScripts,
-					evalResponse: this.options.evalResponse,
-					onRequest: function(){
-						this.showLoadingIcon(this.canvasIconEl);
-					}.bind(this),
-					onFailure: function(){
-						this.contentEl.set('html','<p><strong>Error Loading XMLHttpRequest</strong></p><p>Make sure all of your content is uploaded to your server, and that you are attempting to load a document from the same domain as this page. XMLHttpRequests will not work on your local machine.</p>');
-						this.hideLoadingIcon.delay(150, this, this.canvasIconEl);
-					}.bind(this),
-					onSuccess: function() {
-						this.hideLoadingIcon.delay(150, this, this.canvasIconEl);
-						this.fireEvent('onContentLoaded', this.windowEl);
-					}.bind(this)
-				}).get();
-				break;
-			case 'iframe':
-				if ( this.options.contentURL == '') {
-					break;
-				}
-				this.iframeEl = new Element('iframe', {
-					'id': this.options.id + '_iframe', 
-					'class': 'mochaIframe',
-					'src': this.options.contentURL,
-					'marginwidth':  0,
-					'marginheight': 0,
-					'frameBorder':  0,
-					'scrolling':    'auto'
-				}).injectInside(this.contentEl);
-				
-				// Add onload event to iframe so we can stop the loading icon and run onContentLoaded()
-				this.iframeEl.addEvent('load', function(e) {
-					this.hideLoadingIcon.delay(150, this, this.canvasIconEl);
-					this.fireEvent('onContentLoaded', this.windowEl);
-				}.bind(this));
-				this.showLoadingIcon(this.canvasIconEl);
-				break;
-			case 'html':
-			default:
-				// Need to test injecting elements as content.
-				var elementTypes = new Array('element', 'textnode', 'whitespace', 'collection');
-				if (elementTypes.contains($type(this.options.content))) {
-					this.options.content.inject(this.contentEl);
-				} else {
-					this.contentEl.set('html', this.options.content);
-				}				
-				this.fireEvent('onContentLoaded', this.windowEl);
-				break;
-		}
+		MochaUI.updateContent(this.windowEl, this.options.content, this.options.contentURL);	
 		
 		// Set scrollbars, always use 'hidden' for iframe windows
 		this.contentWrapperEl.setStyles({
@@ -391,7 +339,7 @@ MochaUI.Window = new Class({
 
 		// Move new window into position. If position not specified by user then center the window on the page.
 		// We do this last so that the effects are as smooth as possible, not interrupted by other functions.
-		var dimensions = document.getCoordinates();
+		var dimensions = this.options.container.getCoordinates();
 
 		if (!this.options.y) {
 			var windowPosTop = (dimensions.height * .5) - ((this.options.height + this.HeaderFooterShadow) * .5);
@@ -478,7 +426,7 @@ MochaUI.Window = new Class({
 			MochaUI.closeWindow.delay(1400, this, this.windowEl);	
 		}
 
-	},	
+	},
 	setupEvents: function(windowEl) {
 
 		// Set events
@@ -508,7 +456,7 @@ MochaUI.Window = new Class({
 	/*
 	
 	Internal Function: attachDraggable()
-		make window draggable
+		Make window draggable.
 		
 	Arguments:
 		windowEl
@@ -548,9 +496,7 @@ MochaUI.Window = new Class({
 		
 	*/
 	attachResizable: function(windowEl){
-		if (!this.options.resizable){
-			return;
-		}
+		if (!this.options.resizable) return;	
 		this.windowEl.makeResizable({
 			handle: [this.n, this.ne, this.nw],
 			limit: {

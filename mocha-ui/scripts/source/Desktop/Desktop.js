@@ -192,8 +192,7 @@ MochaUI.Desktop = new Class({
 		var windowDrag = currentInstance.windowDrag;
 
 		// If window no longer exists or is maximized, stop
-		if (windowEl != $(windowEl) || currentInstance.isMaximized )
-			return;			
+		if (windowEl != $(windowEl) || currentInstance.isMaximized ) return;			
 
 		currentInstance.isMaximized = true;
 		

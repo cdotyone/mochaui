@@ -33,6 +33,81 @@ var MochaUI = new Hash({
 	windowsVisible: true,         // Ctrl-Alt-Q to toggle window visibility
 	/*
 	
+	Function: updateContent
+		Replace the content of a window.
+		
+	Arguments:
+		windowEl
+		
+	*/	
+	updateContent: function(windowEl, content, url){
+		
+		if (!windowEl) return;		
+		
+		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
+		currentInstance.contentEl.empty();
+
+		// Add content to window
+		switch(currentInstance.options.loadMethod) {
+			case 'xhr':
+				new Request.HTML({
+					url: url,
+					update: currentInstance.contentEl,
+					evalScripts: currentInstance.options.evalScripts,
+					evalResponse: currentInstance.options.evalResponse,
+					onRequest: function(){
+						currentInstance.showLoadingIcon(currentInstance.canvasIconEl);
+					}.bind(this),
+					onFailure: function(){
+						currentInstance.contentEl.set('html','<p><strong>Error Loading XMLHttpRequest</strong></p><p>Make sure all of your content is uploaded to your server, and that you are attempting to load a document from the same domain as this page. XMLHttpRequests will not work on your local machine.</p>');
+						currentInstance.hideLoadingIcon.delay(150, currentInstance, currentInstance.canvasIconEl);
+					}.bind(this),
+					onSuccess: function() {
+						currentInstance.hideLoadingIcon.delay(150, currentInstance, currentInstance.canvasIconEl);
+						currentInstance.fireEvent('onContentLoaded', currentInstance.windowEl);
+					}.bind(this)
+				}).get();
+				break;
+			case 'iframe': // May be able to streamline this if the iframe already exists.
+				if ( currentInstance.options.contentURL == '') {
+					break;
+				}
+				currentInstance.iframeEl = new Element('iframe', {
+					'id': currentInstance.options.id + '_iframe', 
+					'class': 'mochaIframe',
+					'src': url,
+					'marginwidth':  0,
+					'marginheight': 0,
+					'frameBorder':  0,
+					'scrolling':    'auto',
+					'styles': {
+						'height': currentInstance.contentWrapperEl.offsetHeight	
+					}
+				}).injectInside(currentInstance.contentEl);
+				
+				// Add onload event to iframe so we can stop the loading icon and run onContentLoaded()
+				currentInstance.iframeEl.addEvent('load', function(e) {
+					currentInstance.hideLoadingIcon.delay(150, currentInstance, currentInstance.canvasIconEl);
+					currentInstance.fireEvent('onContentLoaded', currentInstance.windowEl);
+				}.bind(this));
+				currentInstance.showLoadingIcon(currentInstance.canvasIconEl);
+				break;
+			case 'html':
+			default:
+				// Need to test injecting elements as content.
+				var elementTypes = new Array('element', 'textnode', 'whitespace', 'collection');
+				if (elementTypes.contains($type(content))) {
+					content.inject(currentInstance.contentEl);
+				} else {
+					currentInstance.contentEl.set('html', content);
+				}				
+				currentInstance.fireEvent('onContentLoaded', currentInstance.windowEl);
+				break;
+		}
+
+	},	
+	/*
+	
 	Function: closeWindow
 		Closes a window.
 
