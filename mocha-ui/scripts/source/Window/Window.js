@@ -158,7 +158,7 @@ MochaUI.Window = new Class({
 		this.HeaderFooterShadow = this.options.headerHeight + this.options.footerHeight + (this.options.shadowBlur * 2);
 		
 		// May be better to use if type != window
-		if (this.options.modal == true || this.options.type == 'notification'){
+		if (this.options.type == 'modal' || this.options.type == 'notification'){
 			this.options.container = document.body;			 
 		}		
 		if (!this.options.container){
@@ -167,7 +167,7 @@ MochaUI.Window = new Class({
 
 		// Set this.options.resizable to default if it was not defined
 		if (this.options.resizable == null){
-			if (this.options.modal == true || this.options.shape == 'gauge' || this.options.type == 'notification'){
+			if (this.options.type == 'modal' || this.options.shape == 'gauge' || this.options.type == 'notification'){
 				this.options.resizable = false;
 			}
 			else {
@@ -177,7 +177,7 @@ MochaUI.Window = new Class({
 		
 		// Set this.options.draggable if it was not defined
 		if (this.options.draggable == null){
-			if (this.options.modal == true || this.options.type == 'notification'){
+			if (this.options.type == 'modal' || this.options.type == 'notification'){
 				this.options.draggable = false;
 			}
 			else {
@@ -197,10 +197,10 @@ MochaUI.Window = new Class({
 		}
 
 		// Minimizable, dock is required and window cannot be modal
-		this.minimizable = MochaUI.options.dock && this.options.minimizable && !this.options.modal;
+		this.minimizable = MochaUI.options.dock && this.options.minimizable && this.options.type != 'modal';
 
 		// Maximizable, desktop is required
-		this.maximizable = MochaUI.Desktop.desktop && this.options.maximizable && !this.options.modal;
+		this.maximizable = MochaUI.Desktop.desktop && this.options.maximizable && this.options.type != 'modal';
 		this.iframe      = this.options.loadMethod == 'iframe' ? true : false;
 
 		this.isMaximized = false;
@@ -268,7 +268,7 @@ MochaUI.Window = new Class({
 
 		this.windowEl.addClass(this.options.addClass);		
 
-		if ((this.options.modal == true) || (Browser.Platform.mac && Browser.Engine.gecko)){
+		if ((this.options.type == 'modal') || (Browser.Platform.mac && Browser.Engine.gecko)){
 			this.windowEl.setStyle('position', 'fixed');	
 		}
 
@@ -414,7 +414,7 @@ MochaUI.Window = new Class({
 			});
 		}
 
-		if (this.options.modal) {
+		if (this.options.type == 'modal') {
 			$('modalOverlay').setStyle('display', 'block');
 			if (MochaUI.options.useEffects == false){			
 				$('modalOverlay').setStyle('opacity', .55);
@@ -470,18 +470,18 @@ MochaUI.Window = new Class({
 
 		// Set events
 		// Note: if a button does not exist, its due to properties passed to newWindow() stating otherwice
-		if ( this.closeButtonEl )
+		if (this.closeButtonEl)
 			this.closeButtonEl.addEvent('click', function() { MochaUI.closeWindow(windowEl); }.bind(this));
 
-		if ( !this.options.modal )		
+		if (this.options.type != 'modal')		
 			windowEl.addEvent('click', function() { MochaUI.focusWindow(windowEl); }.bind(this));
 
-		if ( this.minimizeButtonEl )
+		if (this.minimizeButtonEl)
 			this.minimizeButtonEl.addEvent('click', function() { MochaUI.Dock.minimizeWindow(windowEl); }.bind(this));
 
-		if ( this.maximizeButtonEl ) {
+		if (this.maximizeButtonEl) {
 			this.maximizeButtonEl.addEvent('click', function() { 
-				if ( this.isMaximized ) {
+				if (this.isMaximized) {
 					MochaUI.Desktop.restoreWindow(windowEl);
 					this.maximizeButtonEl.setProperty('title', 'Maximize');
 				} else {
@@ -511,7 +511,7 @@ MochaUI.Window = new Class({
 			limit: this.options.draggableLimit,
 			snap: this.options.draggableSnap,
 			onStart: function() {
-				if (!this.options.modal){ 
+				if (this.options.type != 'modal'){ 
 					MochaUI.focusWindow(windowEl);
 				}
 				if ( this.iframe )

@@ -44,7 +44,7 @@ MochaUI.extend({
 			loadMethod: 'html',
 			type: 'notification',
 			addClass: 'notification',
-			content: 'Workspace was saved.',
+			content: 'Workspace saved.',
 			width: 200,
 			height: 25,
 			y: 25,

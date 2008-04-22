@@ -61,7 +61,7 @@ var MochaUI = new Hash({
 		currentWindowClass.fireEvent('onClose', windowEl);
 
 		if (MochaUI.options.useEffects == false){
-			if (currentWindowClass.options.modal) {
+			if (currentWindowClass.options.type == 'modal') {
 				$('modalOverlay').setStyle('opacity', 0);
 			}
 			windowEl.destroy();
@@ -74,7 +74,7 @@ var MochaUI = new Hash({
 		else {
 			// Redraws IE windows without shadows since IE messes up canvas alpha when you change element opacity
 			if (Browser.Engine.trident) currentWindowClass.drawWindow(windowEl, false);
-			if (currentWindowClass.options.modal) {
+			if (currentWindowClass.options.type == 'modal') {
 				MochaUI.Modal.modalOverlayCloseMorph.start({
 					'opacity': 0
 				});

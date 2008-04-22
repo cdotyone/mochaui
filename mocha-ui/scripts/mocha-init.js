@@ -524,7 +524,7 @@ initializeWindows = function(){
 			title: 'Mocha UI Version 0.8',
 			loadMethod: 'xhr',
 			contentURL: 'pages/about.html',
-			modal: true,
+			type: 'modal',
 			width: 300,
 			height: 150
 		});
