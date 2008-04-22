@@ -77,6 +77,7 @@ windowOptions = {
 	id:                null,
 	title:             'New Window',
 	modal:             false,
+	type:              'window',  // window, modal or notification. NOT YET IMPLEMENTED	
 	
 	loadMethod:        'html', 	             // Can be set to 'html', 'xhr', or 'iframe'.
 	contentURL:        'pages/lipsum.html',	 // Used if loadMethod is set to 'xhr' or 'iframe'.  
@@ -153,17 +154,11 @@ MochaUI.Window = new Class({
 	initialize: function(options){
 		this.setOptions(options);
 		
-		// Private properties
 		this.accordianTimer     = ''; // Used with accordian - should go somewhere else maybe?
-		this.mochaControlsWidth = 0;
-		this.minimizebuttonX    = 0;  // Minimize button horizontal position
-		this.maximizebuttonX    = 0;  // Maximize button horizontal position
-		this.closebuttonX       = 0;  // Close button horizontal position
 		this.HeaderFooterShadow = this.options.headerHeight + this.options.footerHeight + (this.options.shadowBlur * 2);
-		this.oldTop             = 0;
-		this.oldLeft            = 0;
 		
-		if (this.options.modal == true){
+		// May be better to use if type != window
+		if (this.options.modal == true || this.options.type == 'notification'){
 			this.options.container = document.body;			 
 		}		
 		if (!this.options.container){
@@ -172,7 +167,7 @@ MochaUI.Window = new Class({
 
 		// Set this.options.resizable to default if it was not defined
 		if (this.options.resizable == null){
-			if (this.options.modal == true || this.options.shape == 'gauge'){
+			if (this.options.modal == true || this.options.shape == 'gauge' || this.options.type == 'notification'){
 				this.options.resizable = false;
 			}
 			else {
@@ -182,7 +177,7 @@ MochaUI.Window = new Class({
 		
 		// Set this.options.draggable if it was not defined
 		if (this.options.draggable == null){
-			if (this.options.modal == true){
+			if (this.options.modal == true || this.options.type == 'notification'){
 				this.options.draggable = false;
 			}
 			else {
@@ -191,10 +186,14 @@ MochaUI.Window = new Class({
 		}		
 		
 		// Gauges are not maximizable or resizable
-		if (this.options.shape == 'gauge'){
+		if (this.options.shape == 'gauge'|| this.options.type == 'notification'){
 			this.options.maximizable = false;
 			this.options.bodyBgColor = 'transparent';
 			this.options.scrollbars = false;			
+		}
+		if (this.options.type == 'notification'){
+			this.options.minimizable = false;
+			this.options.closable = false;			
 		}
 
 		// Minimizable, dock is required and window cannot be modal
@@ -206,10 +205,13 @@ MochaUI.Window = new Class({
 
 		this.isMaximized = false;
 		this.isMinimized = false;
-
+		
+		// If window has no ID, give it one.
+		if (this.options.id == null){
+			this.options.id = 'win' + (++MochaUI.windowIDCount);		
+		}
 		this.windowEl = $(this.options.id);
 		
-		// Run methods	
 		this.newWindow();
 		
 		// Return window object
@@ -228,7 +230,8 @@ MochaUI.Window = new Class({
 
 	*/	
 	newWindow: function(properties){ // options is not doing anything
-		
+	
+	
 		// Here we check to see if there is already a class instance for this window
 		if (MochaUI.Windows.instances.get(this.options.id)){			
 			var currentWindowClass = MochaUI.Windows.instances.get(this.options.id);		
@@ -254,7 +257,7 @@ MochaUI.Window = new Class({
 		// Create window div
 		this.windowEl = new Element('div', {
 			'class': 'mocha',
-			'id':    this.options.id && this.options.id != null ? this.options.id : 'win' + (++MochaUI.windowIDCount),
+			'id':    this.options.id,
 			'styles': {
 				'width':   this.options.width,
 				'height':  this.options.height,
@@ -277,7 +280,7 @@ MochaUI.Window = new Class({
 		
 		// Insert sub elements inside windowEl
 		this.insertWindowElements();
-		
+				
 		// Set title		
 		this.titleEl.set('html',this.options.title);
 
@@ -360,6 +363,7 @@ MochaUI.Window = new Class({
 		}
 
 		// Inject window into DOM
+		
 		this.windowEl.injectInside(this.options.container);
 		this.drawWindow(this.windowEl);
 
@@ -455,6 +459,10 @@ MochaUI.Window = new Class({
 				'class': 'check',
 				'id': this.options.id + '_check'
 			}).injectInside(this.windowEl.id + 'LinkCheck');
+		}
+		
+		if (this.options.type == 'notification'){
+			MochaUI.closeWindow.delay(1400, this, this.windowEl);	
 		}
 
 	},	
@@ -702,7 +710,7 @@ MochaUI.Window = new Class({
 				'id': this.options.id + '_zIndexFix'
 			}).inject(this.windowEl);
 		}
-
+		
 		this.overlayEl = new Element('div', {
 			'class': 'mochaOverlay',
 			'id': this.options.id + '_overlay'
@@ -738,7 +746,7 @@ MochaUI.Window = new Class({
 				'height': height + 'px'
 			}
 		}).inject(this.contentBorderEl);
-
+		
 		this.contentEl = new Element('div', {
 			'class': 'mochaContent',
 			'id': this.options.id + '_content'
@@ -773,7 +781,7 @@ MochaUI.Window = new Class({
 			G_vmlCanvasManager.initElement(this.canvasControlsEl);			
 			// getContext() method does not exist before retrieving the element via getElement
 			this.canvasControlsEl = this.windowEl.getElement('.mochaCanvasControls');			
-		}			
+		}
 		
 		if (this.options.closable){
 			this.closeButtonEl = new Element('div', {
@@ -799,7 +807,7 @@ MochaUI.Window = new Class({
 			}).inject(this.controlsEl);
 		}
 		
-		if ( this.options.shape != 'gauge'){
+		if ( this.options.shape != 'gauge' && this.options.type != 'notification'){
 			this.canvasIconEl = new Element('canvas', {
 				'class': 'mochaLoadingIcon',
 				'width': 18,
@@ -814,7 +822,7 @@ MochaUI.Window = new Class({
 				this.canvasIconEl = this.windowEl.getElement('.mochaLoadingIcon');
 			}
 		}
-
+		
 		if ( Browser.Engine.trident ) {
 			this.overlayEl.setStyle('zIndex', 2);
 		}
@@ -823,8 +831,11 @@ MochaUI.Window = new Class({
 		if (Browser.Platform.mac && Browser.Engine.gecko) {
 			this.overlayEl.setStyle('overflow', 'auto');
 		}
-		this.setMochaControlsWidth();
-		
+
+		if (this.options.type != 'notification'){
+			this.setMochaControlsWidth();
+		}
+
 		if (this.options.resizable){			
 			this.n = new Element('div', {
 				'id': this.options.id + '_resizeHandle_n',
@@ -961,7 +972,7 @@ MochaUI.Window = new Class({
 		});
 	
 		// Make sure loading icon is placed correctly.
-		if ( this.options.shape != 'gauge'){
+		if ( this.options.shape != 'gauge' && this.options.type != 'notification'){
 			this.canvasIconEl.setStyles({
 				'left': this.options.shadowBlur + 3,
 				'bottom': this.options.shadowBlur + 4
@@ -1044,6 +1055,7 @@ MochaUI.Window = new Class({
 				1.0
 			);
 		}
+
 		// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
 		if ( Browser.Engine.trident4 ){
 			MochaUI.triangle(
@@ -1183,12 +1195,12 @@ MochaUI.Window = new Class({
 		ctx.stroke();
 	},
 	hideLoadingIcon: function(canvas) {
-		if (!MochaUI.options.useLoadingIcon || this.options.shape == 'gauge') return;		
+		if (!MochaUI.options.useLoadingIcon || this.options.shape == 'gauge' || this.options.type == 'notification') return;		
 		$(canvas).setStyle('display', 'none');		
 		$clear(canvas.iconAnimation);
 	},
 	showLoadingIcon: function(canvas) {
-		if (!MochaUI.options.useLoadingIcon || this.options.shape == 'gauge') return;		
+		if (!MochaUI.options.useLoadingIcon || this.options.shape == 'gauge' || this.options.type == 'notification') return;		
 		$(canvas).setStyles({
 			'display': 'block'
 		});		

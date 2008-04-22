@@ -39,6 +39,22 @@ MochaUI.extend({
 		
 		}.bind(this));		
 		this.cookie.save();
+		
+		new MochaUI.Window({
+			loadMethod: 'html',
+			type: 'notification',
+			addClass: 'notification',
+			content: 'Workspace was saved.',
+			width: 200,
+			height: 25,
+			y: 25,
+			padding:  { top: 3, right: 12, bottom: 5, left: 12 },
+			shadowBlur: 5,
+			headerStartColor:  [255, 255, 255],
+			headerStopColor:   [245, 245, 245],
+			footerBgColor:     [245, 245, 245]	
+		});
+		
 	},
 	windowUnload: function(){
 		if ($$('div.mocha').length == 0){

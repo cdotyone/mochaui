@@ -165,7 +165,7 @@ body {
 #pageWrapper {
 	position: relative;
 	width: auto;
-	overflow: hidden; /* This can be set to auto */
+	overflow: auto; /* This can be set to hidden or auto */
 }
 
 #page {
@@ -270,27 +270,13 @@ div.mocha .mochaContentBorder {
 }
 	
 div.mocha .mochaContentWrapper { /* Has a fixed height and scrollbars if required. */
-	font-size: 11px;	
-	background: #fff;
+	font-size: 11px;
 	overflow: auto;	
 }
 	
 div.mocha .mochaContent {
 	padding: 10px 12px;
 }		
-
-.resizeHandle { /* no longer used */
-	position: absolute;
-	bottom: 5px;
-	right: 5px;
-	width: 12px;
-	height: 12px;
-	background: #000;
-	cursor: se-resize;
-	opacity: .0;
-	filter: alpha(opacity=0);
-	-moz-opacity: 0;	
-}
 
 div.mocha .handle {
 	position: absolute;
@@ -618,4 +604,20 @@ div.mocha.transparent .mochaTitlebar {
 	opacity: .0;
 	filter: alpha(opacity=0);
 	-moz-opacity: 0;
+}
+
+div.mocha.notification .mochaTitlebar {
+	opacity: .0;
+	filter: alpha(opacity=0);
+	-moz-opacity: 0;
+}
+
+div.mocha.notification .mochaContentBorder {
+	border-width: 0px;
+}
+
+div.mocha.notification .mochaContentWrapper {
+	text-align: center;
+	font-size: 12px;
+	font-weight: bold;
 }
