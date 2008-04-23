@@ -73,7 +73,7 @@ Example:
 */   
 
 // Having these options outside of the Class allows us to add, change, and remove individual options without rewriting all of them.
-windowOptions = {
+MochaUI.windowOptions = {
 	id:                null,
 	title:             'New Window',
 	modal:             false,
@@ -150,21 +150,26 @@ windowOptions = {
 };
 
 MochaUI.Window = new Class({
-	options: windowOptions,
+	options: MochaUI.windowOptions,
 	initialize: function(options){
 		this.setOptions(options);
-		
-		this.accordianTimer     = ''; // Used with accordian - should go somewhere else maybe?
-		this.mochaControlsWidth = 0;
-		this.minimizebuttonX    = 0;  // Minimize button horizontal position
-		this.maximizebuttonX    = 0;  // Maximize button horizontal position
-		this.closebuttonX       = 0;  // Close button horizontal position
-		this.HeaderFooterShadow = this.options.headerHeight + this.options.footerHeight + (this.options.shadowBlur * 2);
-		this.oldTop             = 0;
-		this.oldLeft            = 0;
-		
+
 		// Shorten object chain
 		var options = this.options;
+
+		$extend(this, {		
+			accordianTimer: '', // Used with accordian - should go somewhere else maybe?
+			mochaControlsWidth: 0,
+			minimizebuttonX:  0,  // Minimize button horizontal position
+			maximizebuttonX: 0,  // Maximize button horizontal position
+			closebuttonX: 0,  // Close button horizontal position
+			HeaderFooterShadow: options.headerHeight + options.footerHeight + (options.shadowBlur * 2),
+			oldTop: 0,
+			oldLeft: 0,
+			iframe: options.loadMethod == 'iframe' ? true : false,
+			isMaximized: false,
+			isMinimized: false			
+		});
 		
 		// May be better to use if type != window
 		if (options.type == 'modal' || options.type == 'notification'){
@@ -204,16 +209,12 @@ MochaUI.Window = new Class({
 			options.minimizable = false;
 			options.closable = false;			
 		}
-
+		
 		// Minimizable, dock is required and window cannot be modal
-		this.minimizable = MochaUI.options.dock && options.minimizable && options.type != 'modal';
+		options.minimizable = MochaUI.options.dock && options.minimizable && options.type != 'modal';		
 
 		// Maximizable, desktop is required
-		this.maximizable = MochaUI.Desktop.desktop && options.maximizable && options.type != 'modal';
-		this.iframe      = options.loadMethod == 'iframe' ? true : false;
-
-		this.isMaximized = false;
-		this.isMinimized = false;
+		options.maximizable = MochaUI.Desktop.desktop && options.maximizable && options.type != 'modal';
 		
 		// If window has no ID, give it one.
 		if (options.id == null){
@@ -247,12 +248,12 @@ MochaUI.Window = new Class({
 	
 		// Here we check to see if there is already a class instance for this window
 		if (instanceID){			
-			var currentWindowClass = instanceID;		
+			var currentInstance = instanceID;		
 		}
 		
 		// Check if window already exists and is not in progress of closing
 		if ( this.windowEl && !this.isClosing ) {
-			if (currentWindowClass.isMinimized) { // If minimized -> restore
+			if (currentInstance.isMinimized) { // If minimized -> restore
 				MochaUI.Dock.restoreMinimized(this.windowEl);
 			}
 			else { // else focus
@@ -323,8 +324,7 @@ MochaUI.Window = new Class({
 			}.bind(this));			
 		}
 
-		// Inject window into DOM
-		
+		// Inject window into DOM		
 		this.windowEl.injectInside(this.options.container);
 		this.drawWindow(this.windowEl);
 
@@ -655,226 +655,234 @@ MochaUI.Window = new Class({
 	*/
 	insertWindowElements: function(){
 		
-		var height = this.options.height;
-		var width = this.options.width;
+		var options = this.options;
+		var height = options.height;
+		var width = options.width;
+		var id = options.id;
+		
+		var cache = {};
 		
 		if (Browser.Engine.trident4){
-			this.zIndexFixEl = new Element('iframe', {
+			cache.zIndexFixEl = new Element('iframe', {
 				'class': 'zIndexFix',
 				'scrolling': 'no',
 				'marginWidth': 0,
 				'marginHeight': 0,
 				'src': '',
-				'id': this.options.id + '_zIndexFix'
+				'id': id + '_zIndexFix'
 			}).inject(this.windowEl);
 		}
 		
-		this.overlayEl = new Element('div', {
+		cache.overlayEl = new Element('div', {
 			'class': 'mochaOverlay',
-			'id': this.options.id + '_overlay'
+			'id': id + '_overlay'
 		}).inject(this.windowEl);
 
-		this.titleBarEl = new Element('div', {
+		cache.titleBarEl = new Element('div', {
 			'class': 'mochaTitlebar',
-			'id': this.options.id + '_titleBar',
+			'id': id + '_titleBar',
 			'styles': {
-				'cursor': this.options.draggable ? 'move' : 'default'
+				'cursor': options.draggable ? 'move' : 'default'
 			}
-		}).inject(this.overlayEl, 'top');
+		}).inject(cache.overlayEl, 'top');
 
-		this.titleEl = new Element('h3', {
+		cache.titleEl = new Element('h3', {
 			'class': 'mochaTitle',
-			'id': this.options.id + '_title'
-		}).inject(this.titleBarEl);
+			'id': id + '_title'
+		}).inject(cache.titleBarEl);
 		
-		this.contentBorderEl = new Element('div', {
+		cache.contentBorderEl = new Element('div', {
 			'class': 'mochaContentBorder',
-			'id': this.options.id + '_contentBorder'
-		}).inject(this.overlayEl);
-		
-		if (this.options.shape == 'gauge'){
-			this.contentBorderEl.setStyle('borderWidth', 0);
-		}
-		
-		this.contentWrapperEl = new Element('div', {
+			'id': id + '_contentBorder'
+		}).inject(cache.overlayEl);
+
+		cache.contentWrapperEl = new Element('div', {
 			'class': 'mochaContentWrapper',
-			'id': this.options.id + '_contentWrapper',
+			'id': id + '_contentWrapper',
 			'styles': {
 				'width': width + 'px',
 				'height': height + 'px'
 			}
-		}).inject(this.contentBorderEl);
+		}).inject(cache.contentBorderEl);
 		
-		this.contentEl = new Element('div', {
+		if (this.options.shape == 'gauge'){
+			cache.contentBorderEl.setStyle('borderWidth', 0);
+		}		
+		
+		cache.contentEl = new Element('div', {
 			'class': 'mochaContent',
-			'id': this.options.id + '_content'
-		}).inject(this.contentWrapperEl);
+			'id': id + '_content'
+		}).inject(cache.contentWrapperEl);
 
-		this.canvasEl = new Element('canvas', {
+		cache.canvasEl = new Element('canvas', {
 			'class': 'mochaCanvas',
 			'width': 1,
 			'height': 1,
-			'id': this.options.id + '_canvas'
+			'id': id + '_canvas'
 		}).inject(this.windowEl);
 		
 		if ( Browser.Engine.trident && MochaUI.ieSupport == 'excanvas'  ) {
-			G_vmlCanvasManager.initElement(this.canvasEl);			
+			G_vmlCanvasManager.initElement(cache.canvasEl);			
 			// getContext() method does not exist before retrieving the element via getElement
-			this.canvasEl = this.windowEl.getElement('.mochaCanvas');			
+			cache.canvasEl = this.windowEl.getElement('.mochaCanvas');			
 		}	
 		
-		this.controlsEl = new Element('div', {
+		cache.controlsEl = new Element('div', {
 			'class': 'mochaControls',
-			'id': this.options.id + '_controls'
-		}).inject(this.overlayEl, 'after');
+			'id': id + '_controls'
+		}).inject(cache.overlayEl, 'after');
 		
-		this.canvasControlsEl = new Element('canvas', {
+		cache.canvasControlsEl = new Element('canvas', {
 			'class': 'mochaCanvasControls',
 			'width': 14,
 			'height': 16,
-			'id': this.options.id + '_canvasControls'
+			'id': id + '_canvasControls'
 		}).inject(this.windowEl);
 		
 		if ( Browser.Engine.trident && MochaUI.ieSupport == 'excanvas'  ) {
-			G_vmlCanvasManager.initElement(this.canvasControlsEl);			
+			G_vmlCanvasManager.initElement(cache.canvasControlsEl);			
 			// getContext() method does not exist before retrieving the element via getElement
-			this.canvasControlsEl = this.windowEl.getElement('.mochaCanvasControls');			
+			cache.canvasControlsEl = this.windowEl.getElement('.mochaCanvasControls');			
 		}
 		
-		if (this.options.closable){
-			this.closeButtonEl = new Element('div', {
+		if (options.closable){
+			cache.closeButtonEl = new Element('div', {
 				'class': 'mochaClose',
 				'title': 'Close',
-				'id': this.options.id + '_closeButton'
-			}).inject(this.controlsEl);
+				'id': id + '_closeButton'
+			}).inject(cache.controlsEl);
 		}
 
-		if (this.maximizable){
-			this.maximizeButtonEl = new Element('div', {
+		if (options.maximizable){
+			cache.maximizeButtonEl = new Element('div', {
 				'class': 'maximizeToggle',
 				'title': 'Maximize',
-				'id': this.options.id + '_maximizeButton'
-			}).inject(this.controlsEl);
+				'id': id + '_maximizeButton'
+			}).inject(cache.controlsEl);
 		}
 
-		if (this.minimizable){
-			this.minimizeButtonEl = new Element('div', {
+		if (options.minimizable){
+			cache.minimizeButtonEl = new Element('div', {
 				'class': 'minimizeToggle',
 				'title': 'Minimize',
-				'id': this.options.id + '_minimizeButton'
-			}).inject(this.controlsEl);
+				'id': id + '_minimizeButton'
+			}).inject(cache.controlsEl);
 		}
 		
-		if ( this.options.shape != 'gauge' && this.options.type != 'notification'){
-			this.canvasIconEl = new Element('canvas', {
+		if (options.shape != 'gauge' && options.type != 'notification'){
+			cache.canvasIconEl = new Element('canvas', {
 				'class': 'mochaLoadingIcon',
 				'width': 18,
 				'height': 18,
-				'id': this.options.id + '_canvasIcon'
+				'id': id + '_canvasIcon'
 			}).inject(this.windowEl, 'bottom');	
 		
 			if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas') {
-				G_vmlCanvasManager.initElement(this.canvasIconEl);
+				G_vmlCanvasManager.initElement(cache.canvasIconEl);
 			    // getContext() method does not exist before retrieving the element via getElement
 				// element via getElement
-				this.canvasIconEl = this.windowEl.getElement('.mochaLoadingIcon');
+				cache.canvasIconEl = this.windowEl.getElement('.mochaLoadingIcon');
 			}
 		}
 		
 		if ( Browser.Engine.trident ) {
-			this.overlayEl.setStyle('zIndex', 2);
+			cache.overlayEl.setStyle('zIndex', 2);
 		}
 
 		// For Mac Firefox 2 to help reduce scrollbar bugs in that browser
 		if (Browser.Platform.mac && Browser.Engine.gecko) {
-			this.overlayEl.setStyle('overflow', 'auto');
+			cache.overlayEl.setStyle('overflow', 'auto');
 		}
 
-		if (this.options.type != 'notification'){
-			this.setMochaControlsWidth();
-		}
-
-		if (this.options.resizable){			
-			this.n = new Element('div', {
-				'id': this.options.id + '_resizeHandle_n',
+		if (options.resizable){			
+			cache.n = new Element('div', {
+				'id': id + '_resizeHandle_n',
 				'class': 'handle',		
 				'styles': {
 					'top': 0,
 					'left': 10,
 					'cursor': 'n-resize'
 				}
-			}).inject(this.overlayEl, 'after');
+			}).inject(cache.overlayEl, 'after');
 			
-			this.ne = new Element('div', {
-				'id': this.options.id + '_resizeHandle_ne',
+			cache.ne = new Element('div', {
+				'id': id + '_resizeHandle_ne',
 				'class': 'handle corner',		
 				'styles': {
 					'top': 0,
 					'right': 0,
 					'cursor': 'ne-resize'
 				}
-			}).inject(this.overlayEl, 'after');
+			}).inject(cache.overlayEl, 'after');
 			
-			this.e = new Element('div', {
-				'id': this.options.id + '_resizeHandle_e',
+			cache.e = new Element('div', {
+				'id': id + '_resizeHandle_e',
 				'class': 'handle',		
 				'styles': {
 					'top': 10,
 					'right': 0,
 					'cursor': 'e-resize'
 				}
-			}).inject(this.overlayEl, 'after');
+			}).inject(cache.overlayEl, 'after');
 			
-			this.se = new Element('div', {
-				'id': this.options.id + '_resizeHandle_se',
+			cache.se = new Element('div', {
+				'id': id + '_resizeHandle_se',
 				'class': 'handle cornerSE',		
 				'styles': {
 					'bottom': 0,
 					'right': 0,
 					'cursor': 'se-resize'
 				}
-			}).inject(this.overlayEl, 'after');
+			}).inject(cache.overlayEl, 'after');
 			
-			this.s = new Element('div', {
-				'id': this.options.id + '_resizeHandle_s',
+			cache.s = new Element('div', {
+				'id': id + '_resizeHandle_s',
 				'class': 'handle',		
 				'styles': {
 					'bottom': 0,
 					'left': 10,
 					'cursor': 's-resize'
 				}
-			}).inject(this.overlayEl, 'after');
+			}).inject(cache.overlayEl, 'after');
 			
-			this.sw = new Element('div', {
-				'id': this.options.id + '_resizeHandle_sw',
+			cache.sw = new Element('div', {
+				'id': id + '_resizeHandle_sw',
 				'class': 'handle corner',		
 				'styles': {
 					'bottom': 0,
 					'left': 0,
 					'cursor': 'sw-resize'
 				}
-			}).inject(this.overlayEl, 'after');
+			}).inject(cache.overlayEl, 'after');
 			
-			this.w = new Element('div', {
-				'id': this.options.id + '_resizeHandle_w',
+			cache.w = new Element('div', {
+				'id': id + '_resizeHandle_w',
 				'class': 'handle',		
 				'styles': {
 					'top': 10,
 					'left': 0,
 					'cursor': 'w-resize'
 				}
-			}).inject(this.overlayEl, 'after');
+			}).inject(cache.overlayEl, 'after');
 			
-			this.nw = new Element('div', {
-				'id': this.options.id + '_resizeHandle_nw',
+			cache.nw = new Element('div', {
+				'id': id + '_resizeHandle_nw',
 				'class': 'handle corner',		
 				'styles': {
 					'top': 0,
 					'left': 0,
 					'cursor': 'nw-resize'
 				}
-			}).inject(this.overlayEl, 'after');
-		}		
+			}).inject(cache.overlayEl, 'after');
+		}
+
+		$extend(this, cache);
+		
+		if (options.type != 'notification'){
+			this.setMochaControlsWidth();
+		}
+		
+		
 	},
 	/*
 
@@ -889,7 +897,9 @@ MochaUI.Window = new Class({
 	drawWindow: function(windowEl, shadows) {
 		
 		// Shorten object chain
-		var shadowBlur = this.options.shadowBlur;
+		var options = this.options;
+		var shadowBlur = options.shadowBlur;
+		var shadowBlur2x = shadowBlur * 2;
 		
 		this.contentBorderEl.setStyles({
 			'width': this.contentWrapperEl.offsetWidth
@@ -901,10 +911,10 @@ MochaUI.Window = new Class({
 				'height': this.contentWrapperEl.offsetHeight
 			});
 		}
-
-		this.HeaderFooterShadow = this.options.headerHeight + this.options.footerHeight + (shadowBlur * 2);
+		
+		this.HeaderFooterShadow = options.headerHeight + options.footerHeight + shadowBlur2x;
 		var height = this.contentWrapperEl.getStyle('height').toInt() + this.HeaderFooterShadow;
-		var width = this.contentWrapperEl.getStyle('width').toInt() + (shadowBlur * 2);
+		var width = this.contentWrapperEl.getStyle('width').toInt() + shadowBlur2x;
 		this.windowEl.setStyle('height', height);
 		
 		this.overlayEl.setStyles({
@@ -929,12 +939,12 @@ MochaUI.Window = new Class({
 		this.windowEl.setStyle('width', width);
 		this.overlayEl.setStyle('width', width);
 		this.titleBarEl.setStyles({
-			'width': width - (shadowBlur * 2),
-			'height': this.options.headerHeight
+			'width': width - shadowBlur2x,
+			'height': options.headerHeight
 		});
 	
 		// Make sure loading icon is placed correctly.
-		if ( this.options.shape != 'gauge' && this.options.type != 'notification'){
+		if (options.shape != 'gauge' && options.type != 'notification'){
 			this.canvasIconEl.setStyles({
 				'left': shadowBlur + 3,
 				'bottom': shadowBlur + 4
@@ -953,15 +963,15 @@ MochaUI.Window = new Class({
 		});
 
 		// Calculate X position for controlbuttons
-		this.closebuttonX = this.options.closable ? this.mochaControlsWidth - 12 : this.mochaControlsWidth + 7;
-		this.maximizebuttonX = this.closebuttonX - (this.maximizable ? 19 : 0);
-		this.minimizebuttonX = this.maximizebuttonX - (this.minimizable ? 19 : 0);		
+		this.closebuttonX = options.closable ? this.mochaControlsWidth - 12 : this.mochaControlsWidth + 7;
+		this.maximizebuttonX = this.closebuttonX - (options.maximizable ? 19 : 0);
+		this.minimizebuttonX = this.maximizebuttonX - (options.minimizable ? 19 : 0);		
 
 		// Draw shapes
 		var ctx = this.canvasEl.getContext('2d');
 		ctx.clearRect(0, 0, width, height);	
 
-		switch(this.options.shape) {
+		switch(options.shape) {
 			case 'box':
 				this.drawBox(ctx, width, height, shadows);
 				break;
@@ -978,30 +988,30 @@ MochaUI.Window = new Class({
 				ctx2,
 				this.closebuttonX,
 				7,
-				this.options.closeBgColor,
+				options.closeBgColor,
 				1.0,
-				this.options.closeColor,
+				options.closeColor,
 				1.0
 			);
 		}
-		if (this.maximizable){
+		if (this.options.maximizable){
 			this.maximizebutton(ctx2,
 				this.maximizebuttonX,
 				7,
-				this.options.maximizeBgColor,
+				options.maximizeBgColor,
 				1.0,
-				this.options.maximizeColor,
+				options.maximizeColor,
 				1.0
 			);
 		}
-		if (this.minimizable){
+		if (this.options.minimizable){
 			this.minimizebutton(
 				ctx2,
 				this.minimizebuttonX,
 				7,
-				this.options.minimizeBgColor,
+				options.minimizeBgColor,
 				1.0,
-				this.options.minimizeColor,
+				options.minimizeColor,
 				1.0
 			);
 		}
@@ -1012,7 +1022,7 @@ MochaUI.Window = new Class({
 				height - (shadowBlur + 18),
 				11,
 				11,
-				this.options.resizableColor,
+				options.resizableColor,
 				1.0
 			);
 		}
@@ -1020,7 +1030,7 @@ MochaUI.Window = new Class({
 		// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
 		if ( Browser.Engine.trident4 ){
 			MochaUI.triangle(
-				ctx, 0, 0, 10, 10, this.options.resizableColor, 0);
+				ctx, 0, 0, 10, 10, options.resizableColor, 0);
 		}		
 
 	},
@@ -1074,9 +1084,16 @@ MochaUI.Window = new Class({
 		var shadowBlur = this.options.shadowBlur;
 		
 		// This is the drop shadow. It is created onion style.
-		if ( shadows != false ) {	
+		if (shadows != false) {	
 			for (var x = 0; x <= shadowBlur; x++){				
-				MochaUI.circle(ctx, width * .5, height * .5, (width *.5) - (x * 2), [0, 0, 0], x == shadowBlur ? .6 : .06 + (x * .04));
+				MochaUI.circle(
+					ctx,
+					width * .5,
+					height * .5,
+					(width *.5) - (x * 2),
+					[0, 0, 0],
+					x == shadowBlur ? .6 : .06 + (x * .04)
+				);
 			}
 		}
 		MochaUI.circle(ctx, width * .5, height * .5, (width *.5) - (shadowBlur), [250, 250, 250], 1);		
@@ -1101,10 +1118,8 @@ MochaUI.Window = new Class({
 
 		var lingrad = ctx.createLinearGradient(0, 0, 0, this.options.headerHeight);
 		lingrad.addColorStop(0, 'rgba(' + headerStartColor.join(',') + ', 1)');
-		lingrad.addColorStop(1, 'rgba(' + headerStopColor.join(',') + ', 1)');
-		
+		lingrad.addColorStop(1, 'rgba(' + headerStopColor.join(',') + ', 1)');		
 		ctx.fillStyle = lingrad;
-		// Draw header
 		ctx.beginPath();
 		ctx.moveTo(x, y);
 		ctx.lineTo(x, y + height);
@@ -1116,7 +1131,7 @@ MochaUI.Window = new Class({
 		ctx.fill();
 
 	},
-	maximizebutton: function(ctx, x, y, rgbBg, aBg, rgb, a){ // This could reuse the circle method above
+	maximizebutton: function(ctx, x, y, rgbBg, aBg, rgb, a){
 		// Circle
 		ctx.beginPath();
 		ctx.moveTo(x, y);
@@ -1134,7 +1149,7 @@ MochaUI.Window = new Class({
 		ctx.lineTo(x + 4, y);
 		ctx.stroke();
 	},
-	closebutton: function(ctx, x, y, rgbBg, aBg, rgb, a){ // This could reuse the circle method above
+	closebutton: function(ctx, x, y, rgbBg, aBg, rgb, a){
 		// Circle
 		ctx.beginPath();
 		ctx.moveTo(x, y);
@@ -1152,7 +1167,7 @@ MochaUI.Window = new Class({
 		ctx.lineTo(x - 3, y + 3);
 		ctx.stroke();
 	},
-	minimizebutton: function(ctx, x, y, rgbBg, aBg, rgb, a){ // This could reuse the circle method above
+	minimizebutton: function(ctx, x, y, rgbBg, aBg, rgb, a){
 		// Circle
 		ctx.beginPath();
 		ctx.moveTo(x,y);
@@ -1184,7 +1199,7 @@ MochaUI.Window = new Class({
 			ctx.translate(9, 9);
 			ctx.rotate(t*(Math.PI / 8));	
 			var color = 0;
-			for (i=0; i < 8; i++){ // Draw individual dots
+			for (var i=0; i < 8; i++){
 				color = Math.floor(255 / 8 * i);
 				ctx.fillStyle = "rgb(" + color + "," + color + "," + color + ")";
 				ctx.rotate(-Math.PI / 4);
@@ -1201,9 +1216,9 @@ MochaUI.Window = new Class({
 		var controlWidth = 14;
 		var marginWidth = 5;
 		this.mochaControlsWidth = 0;
-		if ( this.minimizable )
+		if ( this.options.minimizable )
 			this.mochaControlsWidth += (marginWidth + controlWidth);
-		if ( this.maximizable ) {
+		if ( this.options.maximizable ) {
 			this.mochaControlsWidth += (marginWidth + controlWidth);
 			this.maximizeButtonEl.setStyle('margin-left', marginWidth);
 		}

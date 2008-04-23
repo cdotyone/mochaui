@@ -15,14 +15,14 @@ MochaUI.extend({
 	addRadiusSlider: function(){
 		if ($('radiusSliderarea')) {
 			var sliderFirst = true;
-			mochaSlide = new Slider($('radiusSliderarea'), $('radiusSliderknob'), {
+			var mochaSlide = new Slider($('radiusSliderarea'), $('radiusSliderknob'), {
 				steps: 20,
 				offset: 0,
 				onChange: function(pos){
 					$('radiusUpdatevalue').set('html', pos);
 					// Change default corner radius of the original class
-					windowOptions.cornerRadius = pos;
-					MochaUI.Window.implement({ options: windowOptions });
+					MochaUI.windowOptions.cornerRadius = pos;
+					MochaUI.Window.implement({ options: MochaUI.windowOptions });
 					// Don't redraw windows the first time the slider is initialized
 					if (sliderFirst == true) {
 						sliderFirst = false;
@@ -35,13 +35,13 @@ MochaUI.extend({
 					}.bind(this));					
 					MochaUI.indexLevel++; 
 				}.bind(this)
-			}).set(windowOptions.cornerRadius);
+			}).set(MochaUI.windowOptions.cornerRadius);
 		}
 	},
 	addShadowSlider: function(){
 		if ($('shadowSliderarea')) {
 			var sliderFirst = true;
-			mochaSlide = new Slider($('shadowSliderarea'), $('shadowSliderknob'), {
+			var mochaSlide = new Slider($('shadowSliderarea'), $('shadowSliderknob'), {
 				range: [1, 10],											 
 				offset: 0,
 				onStart: function(){
@@ -53,8 +53,8 @@ MochaUI.extend({
 				onChange: function(pos){
 					$('shadowUpdatevalue').set('html', pos);					
 					// Change default shadow width of the original class
-					windowOptions.shadowBlur = pos;					
-					MochaUI.Window.implement({ options: windowOptions });					
+					MochaUI.windowOptions.shadowBlur = pos;					
+					MochaUI.Window.implement({ options: MochaUI.windowOptions });					
 					// Don't redraw windows the first time the slider is initialized
 					// !!! Probably need to make this separate from the corner radius slider
 					if (sliderFirst == true) { 
@@ -80,7 +80,7 @@ MochaUI.extend({
 						}
 					}.bind(this));			
 				}.bind(this)				
-			}).set(windowOptions.shadowBlur);
+			}).set(MochaUI.windowOptions.shadowBlur);
 		}
 	}	
 });

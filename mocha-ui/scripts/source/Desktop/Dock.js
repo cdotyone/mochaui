@@ -91,20 +91,23 @@ MochaUI.Dock = new Class({
 		if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas'){
 			G_vmlCanvasManager.initElement(canvas);
 		}
+		
+		var dockPlacement = $('dockPlacement');
+		var dockAutoHide = $('dockAutoHide');
 
 		// Position top or bottom selector
-		$('dockPlacement').setProperty('title','Position Dock Top');
+		dockPlacement.setProperty('title','Position Dock Top');
 
-		// Auto Hide toggle switch
-		$('dockAutoHide').setProperty('title','Turn Auto Hide On');
-		
 		// Attach event
-		$('dockPlacement').addEvent('click', function(){
+		dockPlacement.addEvent('click', function(){
 			this.moveDock();
 		}.bind(this));
 
+		// Auto Hide toggle switch
+		dockAutoHide.setProperty('title','Turn Auto Hide On');
+		
 		// Attach event Auto Hide 
-		$('dockAutoHide').addEvent('click', function(event){
+		dockAutoHide.addEvent('click', function(event){
 			if ( this.dockWrapper.getProperty('dockPosition') == 'top' )
 				return false;
 			
@@ -195,31 +198,31 @@ MochaUI.Dock = new Class({
 	minimizeWindow: function(windowEl){		
 		if (windowEl != $(windowEl)) return;
 			
-		currentWindowClass = MochaUI.Windows.instances.get(windowEl.id);
-		currentWindowClass.isMinimized = true;
+		currentInstance = MochaUI.Windows.instances.get(windowEl.id);
+		currentInstance.isMinimized = true;
 
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
-		if ( currentWindowClass.iframe ) {
-			currentWindowClass.iframeEl.setStyle('visibility', 'hidden');
+		if ( currentInstance.iframe ) {
+			currentInstance.iframeEl.setStyle('visibility', 'hidden');
 		}
 		
-		if (currentWindowClass.options.shape == 'gauge'){
-			currentWindowClass.canvasControlsEl.setStyle('opacity', 0);
+		if (currentInstance.options.shape == 'gauge'){
+			currentInstance.canvasControlsEl.setStyle('opacity', 0);
 		}
 		
-		var titleText = currentWindowClass.titleEl.innerHTML;
+		var titleText = currentInstance.titleEl.innerHTML;
 
 		// Hide window and add to dock
 		windowEl.setStyle('visibility', 'hidden');
 
 		 // Fixes a scrollbar issue in Mac FF2
 		if (Browser.Platform.mac && Browser.Engine.gecko){
-			currentWindowClass.contentWrapperEl.setStyle('overflow', 'hidden');
+			currentInstance.contentWrapperEl.setStyle('overflow', 'hidden');
 		}
 		
 		var dockTab = new Element('div', {
-			'id': currentWindowClass.options.id + '_dockTab',
+			'id': currentInstance.options.id + '_dockTab',
 			'class': 'dockTab',
 			'title': titleText
 		}).inject($('dockClear'), 'before');
@@ -239,7 +242,7 @@ MochaUI.Dock = new Class({
 
 		//Insert canvas
 		var dockTabCanvas = new Element('canvas', {
-			'id': currentWindowClass.options.id + '_dockTabCanvas',
+			'id': currentInstance.options.id + '_dockTabCanvas',
 			'class': 'dockCanvas', 
 			'width': 120,
 			'height': 20			
@@ -250,11 +253,11 @@ MochaUI.Dock = new Class({
 			G_vmlCanvasManager.initElement(dockTabCanvas);
 		}
 
-		var ctx = $(currentWindowClass.options.id + '_dockTabCanvas').getContext('2d');
+		var ctx = $(currentInstance.options.id + '_dockTabCanvas').getContext('2d');
 		MochaUI.roundedRect(ctx, 0, 0, 120, 20, 5, this.options.dockTabColor, 1);	
 		
 		var dockTabText = new Element('div', {
-			'id': currentWindowClass.options.id + '_dockTabText',
+			'id': currentInstance.options.id + '_dockTabText',
 			'class': 'dockText'
 		}).set('html', titleText.substring(0,18) + (titleText.length > 18 ? '...' : '')).inject($(dockTab));
 		
@@ -263,31 +266,31 @@ MochaUI.Dock = new Class({
 		// Fixes a scrollbar issue in Mac FF2.
 		// Have to use timeout because window gets focused when you click on the minimize button 	
 		setTimeout(function(){ windowEl.setStyle('zIndex', 1); }.bind(this),100);
-		currentWindowClass.isFocused = false;
-		currentWindowClass.fireEvent('onMinimize', windowEl);		
+		currentInstance.isFocused = false;
+		currentInstance.fireEvent('onMinimize', windowEl);		
 	},
 	restoreMinimized: function(windowEl) {
 
-		currentWindowClass = MochaUI.Windows.instances.get(windowEl.id);
-		currentButton = $(currentWindowClass.options.id + '_dockTab');		
+		currentInstance = MochaUI.Windows.instances.get(windowEl.id);
+		currentButton = $(currentInstance.options.id + '_dockTab');		
 		
 		this.dockSortables.removeItems(currentButton ).destroy();
 		MochaUI.Desktop.setDesktopSize();
 
 		 // Part of Mac FF2 scrollbar fix
-		if (currentWindowClass.options.scrollbars == true && currentWindowClass.iframe == false){ 
-			currentWindowClass.contentWrapperEl.setStyle('overflow', 'auto');
+		if (currentInstance.options.scrollbars == true && currentInstance.iframe == false){ 
+			currentInstance.contentWrapperEl.setStyle('overflow', 'auto');
 		}
 
 		windowEl.setStyle('visibility', 'visible');
 
 		// Show iframe
-		if ( currentWindowClass.iframe ) {
-			currentWindowClass.iframeEl.setStyle('visibility', 'visible');
+		if ( currentInstance.iframe ) {
+			currentInstance.iframeEl.setStyle('visibility', 'visible');
 		}
-		currentWindowClass.isMinimized = false;
+		currentInstance.isMinimized = false;
 		MochaUI.focusWindow(windowEl);
-		currentWindowClass.fireEvent('onRestore', windowEl);		
+		currentInstance.fireEvent('onRestore', windowEl);		
 	}	
 });
 MochaUI.Dock.implement(new Options, new Events);

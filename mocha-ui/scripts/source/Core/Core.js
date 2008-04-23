@@ -132,10 +132,9 @@ var MochaUI = new Hash({
 	closeWindow: function(windowEl) {
 		// Does window exist and is not already in process of closing ?		
 
-		currentInstance = MochaUI.Windows.instances.get(windowEl.id);
-
-		if ( !(windowEl = $(windowEl)) || currentInstance.isClosing )
-			return;
+		var instances = MochaUI.Windows.instances;
+		var currentInstance = instances.get(windowEl.id);
+		if (windowEl != $(windowEl) || currentInstance.isClosing )	return;
 			
 		currentInstance.isClosing = true;
 		currentInstance.fireEvent('onClose', windowEl);
@@ -146,10 +145,7 @@ var MochaUI = new Hash({
 			}
 			windowEl.destroy();
 			currentInstance.fireEvent('onCloseComplete');
-			MochaUI.Windows.instances.erase(currentInstance.options.id); // see how this effects on close complete
-			if(this.loadingWorkspace == true){
-				this.windowUnload();
-			}
+			instances.erase(currentInstance.options.id); // see how this effects on close complete
 		}
 		else {
 			// Redraws IE windows without shadows since IE messes up canvas alpha when you change element opacity
@@ -164,10 +160,7 @@ var MochaUI = new Hash({
 				onComplete: function(){
 					windowEl.destroy();
 					currentInstance.fireEvent('onCloseComplete');
-					MochaUI.Windows.instances.erase(currentInstance.options.id); // see how this effects on close complete
-					if(this.loadingWorkspace == true){
-						this.windowUnload();
-					}
+					instances.erase(currentInstance.options.id); // see how this effects on close complete
 				}.bind(this)
 			});
 			closeMorph.start({
@@ -207,12 +200,13 @@ var MochaUI = new Hash({
 	*/	
 	toggleWindowVisibility: function() {		
 		MochaUI.Windows.instances.each(function(instance) {
-			if ($(instance.options.id).getStyle('visibility') == 'visible'){												
-				$(instance.options.id).setStyle('visibility', 'hidden');
+			var id = $(instance.options.id);									
+			if (id.getStyle('visibility') == 'visible'){												
+				id.setStyle('visibility', 'hidden');
 				MochaUI.windowsVisible = false;
 			}
 			else {
-				$(instance.options.id).setStyle('visibility', 'visible');
+				id.setStyle('visibility', 'visible');
 				MochaUI.windowsVisible = true;
 			}
 		}.bind(this));
@@ -327,9 +321,9 @@ var MochaUI = new Hash({
 		
 	*/		
 	dynamicResize: function(windowEl){
-		currentInstance = MochaUI.Windows.instances.get(windowEl.id);
-		contentWrapperEl = currentInstance.contentWrapperEl;
-		contentEl = currentInstance.contentEl;
+		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
+		var contentWrapperEl = currentInstance.contentWrapperEl;
+		var contentEl = currentInstance.contentEl;
 		
 		contentWrapperEl.setStyle('height', contentEl.offsetHeight);
 		contentWrapperEl.setStyle('width', contentEl.offsetWidth);			

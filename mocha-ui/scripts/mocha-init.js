@@ -211,8 +211,8 @@ initializeWindows = function(){
 			loadMethod: 'xhr',
 			contentURL: 'pages/corner_radius.html',
 			onContentLoaded: function(){
-				MochaUI.addRadiusSlider.delay(100); // Delay is for IE6
-				MochaUI.addShadowSlider.delay(100); // Delay is for IE6					
+				MochaUI.addRadiusSlider.delay(10); // Delay is for IE6
+				MochaUI.addShadowSlider.delay(10); // Delay is for IE6					
 			},
 			width: 300,
 			height: 105,
@@ -249,7 +249,7 @@ initializeWindows = function(){
 									CoolClock.findAndCreateClocks();
 								};
 								window.addEvent('domready', function(){
-									myClockInit.delay(100); // Delay is for IE
+									myClockInit.delay(10); // Delay is for IE
 								});
 								MochaUI.clockScript = true;
 							}
@@ -265,7 +265,7 @@ initializeWindows = function(){
 							CoolClock.findAndCreateClocks();
 						};
 						window.addEvent('domready', function(){
-							myClockInit.delay(100); // Delay is for IE
+							myClockInit.delay(10); // Delay is for IE
 						});
 						MochaUI.clockScript = true;
 					}
@@ -396,7 +396,7 @@ initializeWindows = function(){
 						}.bind(this)									   
 					}, $('overview'));
 				}.bind(this)
-				accordianDelay.delay(100, this); // Delay is a fix for IE
+				accordianDelay.delay(10, this); // Delay is a fix for IE
 			}				
 		});
 	}	
@@ -563,6 +563,6 @@ window.addEvent('domready', function(){
 
 
 // This runs when a person leaves your page.
-window.addEvent('unload', function(){
-	if (MochaUI) MochaUI.garbageCleanUp();
-});
+//window.addEvent('unload', function(){
+	//if (MochaUI) MochaUI.garbageCleanUp();
+//});
