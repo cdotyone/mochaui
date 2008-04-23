@@ -555,9 +555,13 @@ initializeWindows = function(){
 // Initialize MochaUI when the DOM is ready
 window.addEvent('domready', function(){									 
 	MochaUI.Desktop = new MochaUI.Desktop();									 
-	MochaUI.Dock = new MochaUI.Dock();									 
-	MochaUI.Workspaces = new MochaUI.Workspaces();	
+	MochaUI.Dock = new MochaUI.Dock();	
 	MochaUI.Modal = new MochaUI.Modal();
+	
+	MochaUI.Desktop.pageWrapper.setStyles({
+		'background': '#8caac7'		
+	});	
+	
 	initializeWindows();	
 });
 

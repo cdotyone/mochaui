@@ -23,10 +23,6 @@ MochaUI.options.extend({
 	mochaLeftOffset:   40     // Initial horizontal spacing of each window	
 });
 
-MochaUI.extend({
-	cascadeInstalled:  true
-});
-
 MochaUI.extend({   
 	arrangeCascade: function(){
 		var x = this.options.desktopLeftOffset;

@@ -30,7 +30,7 @@ MochaUI.WindowForm = new Class({
 	},
 	initialize: function(options){
 		this.setOptions(options);
-		this.options.id = 'win' + (++MochaUI.windowIDCount);
+		this.options.id = 'win' + (++MochaUI.Windows.windowIDCount);
 		this.options.title = $('newWindowHeaderTitle').value;
 		if ($('htmlLoadMethod').checked){
 			this.options.loadMethod = 'html';

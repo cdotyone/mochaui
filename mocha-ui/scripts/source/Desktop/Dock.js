@@ -23,7 +23,6 @@ MochaUI.options.extend({
 
 MochaUI.dockVisible = true;
 
-
 MochaUI.Dock = new Class({
 	Extends: MochaUI.Window,
 	
@@ -198,7 +197,7 @@ MochaUI.Dock = new Class({
 	minimizeWindow: function(windowEl){		
 		if (windowEl != $(windowEl)) return;
 			
-		currentInstance = MochaUI.Windows.instances.get(windowEl.id);
+		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
 		currentInstance.isMinimized = true;
 
 		// Hide iframe
@@ -271,7 +270,7 @@ MochaUI.Dock = new Class({
 	},
 	restoreMinimized: function(windowEl) {
 
-		currentInstance = MochaUI.Windows.instances.get(windowEl.id);
+		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
 		currentButton = $(currentInstance.options.id + '_dockTab');		
 		
 		this.dockSortables.removeItems(currentButton ).destroy();

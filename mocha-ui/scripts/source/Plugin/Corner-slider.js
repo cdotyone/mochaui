@@ -14,6 +14,7 @@ Requires:
 MochaUI.extend({
 	addRadiusSlider: function(){
 		if ($('radiusSliderarea')) {
+			var windowOptions = MochaUI.Windows.windowOptions;
 			var sliderFirst = true;
 			var mochaSlide = new Slider($('radiusSliderarea'), $('radiusSliderknob'), {
 				steps: 20,
@@ -21,8 +22,8 @@ MochaUI.extend({
 				onChange: function(pos){
 					$('radiusUpdatevalue').set('html', pos);
 					// Change default corner radius of the original class
-					MochaUI.windowOptions.cornerRadius = pos;
-					MochaUI.Window.implement({ options: MochaUI.windowOptions });
+					windowOptions.cornerRadius = pos;
+					MochaUI.Window.implement({ options: windowOptions });
 					// Don't redraw windows the first time the slider is initialized
 					if (sliderFirst == true) {
 						sliderFirst = false;
@@ -33,13 +34,14 @@ MochaUI.extend({
 						instance.options.cornerRadius = pos;					
 						instance.drawWindow($(instance.options.id));
 					}.bind(this));					
-					MochaUI.indexLevel++; 
+					MochaUI.Windows.indexLevel++; 
 				}.bind(this)
-			}).set(MochaUI.windowOptions.cornerRadius);
+			}).set(windowOptions.cornerRadius);
 		}
 	},
 	addShadowSlider: function(){
 		if ($('shadowSliderarea')) {
+			var windowOptions = MochaUI.Windows.windowOptions;			
 			var sliderFirst = true;
 			var mochaSlide = new Slider($('shadowSliderarea'), $('shadowSliderknob'), {
 				range: [1, 10],											 
@@ -53,8 +55,8 @@ MochaUI.extend({
 				onChange: function(pos){
 					$('shadowUpdatevalue').set('html', pos);					
 					// Change default shadow width of the original class
-					MochaUI.windowOptions.shadowBlur = pos;					
-					MochaUI.Window.implement({ options: MochaUI.windowOptions });					
+					windowOptions.shadowBlur = pos;					
+					MochaUI.Window.implement({ options: windowOptions });					
 					// Don't redraw windows the first time the slider is initialized
 					// !!! Probably need to make this separate from the corner radius slider
 					if (sliderFirst == true) { 
@@ -71,7 +73,7 @@ MochaUI.extend({
 						});
 						instance.drawWindow($(instance.options.id));
 					}.bind(this));					
-					MochaUI.indexLevel++; 
+					MochaUI.Windows.indexLevel++; 
 				}.bind(this),
 				onComplete: function(){
 					MochaUI.Windows.instances.each(function(instance) {
@@ -80,7 +82,7 @@ MochaUI.extend({
 						}
 					}.bind(this));			
 				}.bind(this)				
-			}).set(MochaUI.windowOptions.shadowBlur);
+			}).set(windowOptions.shadowBlur);
 		}
 	}	
 });

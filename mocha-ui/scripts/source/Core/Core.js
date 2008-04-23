@@ -19,18 +19,18 @@ Note:
 */
 
 var MochaUI = new Hash({
-	Windows: {	  
-		instances: new Hash()
-	},	
 	options: new Hash({
 		useEffects: true,     // Toggles the majority of window fade and move effects.
 		useLoadingIcon: true  // Toggles whether or not the ajax spinners are displayed in window footers.
 
 	}),	
-	ieSupport:      'excanvas',   // Makes it easier to switch between Excanvas and Moocanvas for testing	
-	indexLevel:     1,            // Used for z-Index
-	windowIDCount:  0,	          // Used for windows without an ID defined by the user
-	windowsVisible: true,         // Ctrl-Alt-Q to toggle window visibility
+	Windows: {	  
+		instances:      new Hash(),
+		indexLevel:     1,            // Used for z-Index
+		windowIDCount:  0,	          // Used for windows without an ID defined by the user
+		windowsVisible: true          // Ctrl-Alt-Q to toggle window visibility		
+	},
+	ieSupport:  'excanvas',   // Makes it easier to switch between Excanvas and Moocanvas for testing
 	/*
 	
 	Function: updateContent
@@ -146,6 +146,9 @@ var MochaUI = new Hash({
 			windowEl.destroy();
 			currentInstance.fireEvent('onCloseComplete');
 			instances.erase(currentInstance.options.id); // see how this effects on close complete
+			if(this.loadingWorkspace == true){
+				this.windowUnload();
+			}
 		}
 		else {
 			// Redraws IE windows without shadows since IE messes up canvas alpha when you change element opacity
@@ -161,6 +164,9 @@ var MochaUI = new Hash({
 					windowEl.destroy();
 					currentInstance.fireEvent('onCloseComplete');
 					instances.erase(currentInstance.options.id); // see how this effects on close complete
+					if(this.loadingWorkspace == true){
+						this.windowUnload();
+					}
 				}.bind(this)
 			});
 			closeMorph.start({
@@ -203,11 +209,11 @@ var MochaUI = new Hash({
 			var id = $(instance.options.id);									
 			if (id.getStyle('visibility') == 'visible'){												
 				id.setStyle('visibility', 'hidden');
-				MochaUI.windowsVisible = false;
+				MochaUI.Windows.windowsVisible = false;
 			}
 			else {
 				id.setStyle('visibility', 'visible');
-				MochaUI.windowsVisible = true;
+				MochaUI.Windows.windowsVisible = true;
 			}
 		}.bind(this));
 
@@ -219,11 +225,11 @@ var MochaUI = new Hash({
 		
 		var currentInstance = instances.get(windowEl.id);			
 		// Only focus when needed
-		if ( windowEl.getStyle('zIndex').toInt() == MochaUI.indexLevel || currentInstance.isFocused == true)
+		if ( windowEl.getStyle('zIndex').toInt() == MochaUI.Windows.indexLevel || currentInstance.isFocused == true)
 			return;
 
-		MochaUI.indexLevel++;
-		windowEl.setStyle('zIndex', MochaUI.indexLevel);
+		MochaUI.Windows.indexLevel++;
+		windowEl.setStyle('zIndex', MochaUI.Windows.indexLevel);
 
 		// Fire onBlur for the window that lost focus.
 		instances.each(function(instance){
@@ -298,7 +304,7 @@ var MochaUI = new Hash({
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
 		var options = currentInstance.options;
 		var dimensions = options.container.getCoordinates();
-		var windowPosTop = (dimensions.height * .5) - ((options.height + currentInstance.HeaderFooterShadow) * .5);
+		var windowPosTop = (dimensions.height * .5) - ((options.height + currentInstance.headerFooterShadow) * .5);
 		var windowPosLeft =	(dimensions.width * .5) - (options.width * .5);
 		
 		if (MochaUI.options.useEffects == true){

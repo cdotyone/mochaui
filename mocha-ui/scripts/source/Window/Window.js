@@ -73,7 +73,7 @@ Example:
 */   
 
 // Having these options outside of the Class allows us to add, change, and remove individual options without rewriting all of them.
-MochaUI.windowOptions = {
+MochaUI.Windows.windowOptions = {
 	id:                null,
 	title:             'New Window',
 	modal:             false,
@@ -150,7 +150,7 @@ MochaUI.windowOptions = {
 };
 
 MochaUI.Window = new Class({
-	options: MochaUI.windowOptions,
+	options: MochaUI.Windows.windowOptions,
 	initialize: function(options){
 		this.setOptions(options);
 
@@ -163,7 +163,7 @@ MochaUI.Window = new Class({
 			minimizebuttonX:  0,  // Minimize button horizontal position
 			maximizebuttonX: 0,  // Maximize button horizontal position
 			closebuttonX: 0,  // Close button horizontal position
-			HeaderFooterShadow: options.headerHeight + options.footerHeight + (options.shadowBlur * 2),
+			headerFooterShadow: options.headerHeight + options.footerHeight + (options.shadowBlur * 2),
 			oldTop: 0,
 			oldLeft: 0,
 			iframe: options.loadMethod == 'iframe' ? true : false,
@@ -218,7 +218,7 @@ MochaUI.Window = new Class({
 		
 		// If window has no ID, give it one.
 		if (options.id == null){
-			options.id = 'win' + (++MochaUI.windowIDCount);		
+			options.id = 'win' + (++MochaUI.Windows.windowIDCount);		
 		}
 		this.windowEl = $(options.id);
 		
@@ -342,7 +342,7 @@ MochaUI.Window = new Class({
 		var dimensions = this.options.container.getCoordinates();
 
 		if (!this.options.y) {
-			var windowPosTop = (dimensions.height * .5) - ((this.options.height + this.HeaderFooterShadow) * .5);
+			var windowPosTop = (dimensions.height * .5) - ((this.options.height + this.headerFooterShadow) * .5);
 		}
 		else {
 			var windowPosTop = this.options.y - this.options.shadowBlur;
@@ -542,7 +542,7 @@ MochaUI.Window = new Class({
 			handle: this.se,
 			limit: {
 				x: [this.options.resizeLimit.x[0] - (this.options.shadowBlur * 2), this.options.resizeLimit.x[1] - (this.options.shadowBlur * 2) ],
-				y: [this.options.resizeLimit.y[0] - this.HeaderFooterShadow, this.options.resizeLimit.y[1] - this.HeaderFooterShadow]					
+				y: [this.options.resizeLimit.y[0] - this.headerFooterShadow, this.options.resizeLimit.y[1] - this.headerFooterShadow]					
 			},	
 			modifiers: {x: 'width', y: 'height'},
 			onBeforeStart: function(){this.resizeOnBeforeStart();}.bind(this),		
@@ -556,7 +556,7 @@ MochaUI.Window = new Class({
 		this.contentWrapperEl.makeResizable({
 			handle: [this.s, this.sw],
 			limit: {
-				y: [this.options.resizeLimit.y[0] - this.HeaderFooterShadow, this.options.resizeLimit.y[1] - this.HeaderFooterShadow]	
+				y: [this.options.resizeLimit.y[0] - this.headerFooterShadow, this.options.resizeLimit.y[1] - this.headerFooterShadow]	
 			},	
 			modifiers: {x: false, y: 'height'},
 			onBeforeStart: function(){this.resizeOnBeforeStart();}.bind(this),		
@@ -912,8 +912,8 @@ MochaUI.Window = new Class({
 			});
 		}
 		
-		this.HeaderFooterShadow = options.headerHeight + options.footerHeight + shadowBlur2x;
-		var height = this.contentWrapperEl.getStyle('height').toInt() + this.HeaderFooterShadow;
+		this.headerFooterShadow = options.headerHeight + options.footerHeight + shadowBlur2x;
+		var height = this.contentWrapperEl.getStyle('height').toInt() + this.headerFooterShadow;
 		var width = this.contentWrapperEl.getStyle('width').toInt() + shadowBlur2x;
 		this.windowEl.setStyle('height', height);
 		
