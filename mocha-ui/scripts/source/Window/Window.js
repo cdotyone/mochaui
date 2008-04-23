@@ -329,7 +329,7 @@ MochaUI.Window = new Class({
 		this.drawWindow(this.windowEl);
 
 		// Attach events to the window
-		this.attachDraggable(this.windowEl, this.titleBarEl);		
+		this.attachDraggable(this.windowEl);		
 		this.attachResizable(this.windowEl);
 		this.setupEvents(this.windowEl);
 		
@@ -431,25 +431,48 @@ MochaUI.Window = new Class({
 
 		// Set events
 		// Note: if a button does not exist, its due to properties passed to newWindow() stating otherwice
-		if (this.closeButtonEl)
-			this.closeButtonEl.addEvent('click', function() { MochaUI.closeWindow(windowEl); }.bind(this));
+		if (this.closeButtonEl){
+			this.closeButtonEl.addEvent('click', function() {
+				MochaUI.closeWindow(windowEl);
+			}.bind(this));
+		}
 
-		if (this.options.type != 'modal')		
-			windowEl.addEvent('click', function() { MochaUI.focusWindow(windowEl); }.bind(this));
+		if (this.options.type != 'modal'){		
+			windowEl.addEvent('click', function() {
+				MochaUI.focusWindow(windowEl);
+			}.bind(this));
+		}
 
-		if (this.minimizeButtonEl)
-			this.minimizeButtonEl.addEvent('click', function() { MochaUI.Dock.minimizeWindow(windowEl); }.bind(this));
+		if (this.minimizeButtonEl) {
+			this.minimizeButtonEl.addEvent('click', function() {
+				MochaUI.Dock.minimizeWindow(windowEl);
+		}.bind(this));
+		}
 
 		if (this.maximizeButtonEl) {
 			this.maximizeButtonEl.addEvent('click', function() { 
 				if (this.isMaximized) {
-					MochaUI.Desktop.restoreWindow(windowEl);
-					this.maximizeButtonEl.setProperty('title', 'Maximize');
+					MochaUI.Desktop.restoreWindow(windowEl);					
 				} else {
-					MochaUI.Desktop.maximizeWindow(windowEl); 
-					this.maximizeButtonEl.setProperty('title', 'Restore');
+					MochaUI.Desktop.maximizeWindow(windowEl); 					
 				}
 			}.bind(this));
+			// Keep titlebar text from being selected on double click in Safari.
+			this.titleEl.addEvent('selectstart', function(e) {
+				e = new Event(e).stop();							  													   
+			}.bind(this));
+			// Keep titlebar text from being selected on double click in Opera.			
+			this.titleEl.addEvent('mousedown', function(e) {
+				e = new Event(e).stop();							  													   
+			}.bind(this));		
+			this.titleBarEl.addEvent('dblclick', function(e) {
+				e = new Event(e).stop();								  
+				if (this.isMaximized) {
+					MochaUI.Desktop.restoreWindow(windowEl);					
+				} else {
+					MochaUI.Desktop.maximizeWindow(windowEl); 					
+				}
+			}.bind(this));			
 		}
 		
 	},
@@ -462,10 +485,10 @@ MochaUI.Window = new Class({
 		windowEl
 		
 	*/
-	attachDraggable: function(windowEl, handleEl){
+	attachDraggable: function(windowEl){
 		if (!this.options.draggable) return;
 		this.windowDrag = new Drag.Move(windowEl, {
-			handle: handleEl,
+			handle: this.titleBarEl,
 			container: this.options.restrict ? $(this.options.container) : false,			
 			grid: this.options.draggableGrid,
 			limit: this.options.draggableLimit,

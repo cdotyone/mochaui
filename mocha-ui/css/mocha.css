@@ -286,7 +286,9 @@ div.mocha .handle {
 	z-index: 2;
 	opacity: .0;
 	filter: alpha(opacity=0);
-	-moz-opacity: .0;	
+	-moz-opacity: .0;
+	overflow: hidden;
+	font-size: 1px; /* For IE6 */ 	
 }
 
 div.mocha .corner { /* Corner resize handles */

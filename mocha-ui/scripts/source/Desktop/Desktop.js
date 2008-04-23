@@ -14,6 +14,8 @@ Options:
 	headerStartColor - Header gradient's top color - RGB.
 	headerStopColor - Header gradient's bottom color.
 	sidebarLimitX - Sidebar minimum and maximum widths when resizing.
+	
+Todo: Add dblclick to window titlebars to maximize/restore	
 
 */
 
@@ -275,7 +277,8 @@ MochaUI.Desktop = new Class({
 						'left': -shadowBlur
 				}
 			});		
-		}		
+		}
+		currentInstance.maximizeButtonEl.setProperty('title', 'Restore');
 
 	},
 	/*
@@ -358,6 +361,8 @@ MochaUI.Desktop = new Class({
 				}
 			});
 		}
+		currentInstance.maximizeButtonEl.setProperty('title', 'Maximize');		
+		
 	},
 	sidebarInitialize: function(){
 		this.sidebarResizable = this.sidebar.makeResizable({
