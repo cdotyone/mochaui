@@ -328,7 +328,8 @@ initializeWindows = function(){
 			width: 370,
 			height: 400,
 			x: 20,
-			y: 70
+			y: 70,
+			maximizable: false
 		});
 	}
 	if ($('builderLinkCheck')){

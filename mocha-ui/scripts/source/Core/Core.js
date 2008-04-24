@@ -251,14 +251,14 @@ var MochaUI = new Hash({
 		}.bind(this));
 
 	},	
-	focusWindow: function(windowEl){
+	focusWindow: function(windowEl, fireEvent){
 		if (windowEl != $(windowEl)) return;
 		
 		var instances =  MochaUI.Windows.instances;
 		
 		var currentInstance = instances.get(windowEl.id);			
 		// Only focus when needed
-		if ( windowEl.getStyle('zIndex').toInt() == MochaUI.Windows.indexLevel || currentInstance.isFocused == true)
+		if ( windowEl.getStyle('zIndex') == MochaUI.Windows.indexLevel || currentInstance.isFocused == true)
 			return;
 
 		MochaUI.Windows.indexLevel++;
@@ -271,8 +271,10 @@ var MochaUI = new Hash({
 			}
 			instance.isFocused = false;			
 		});			
-		currentInstance.isFocused = true;		
-		currentInstance.fireEvent('onFocus', windowEl);
+		currentInstance.isFocused = true;
+		if (fireEvent != false){
+			currentInstance.fireEvent('onFocus', windowEl);
+		}
 	},	
 	roundedRect: function(ctx, x, y, width, height, radius, rgb, a){
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';

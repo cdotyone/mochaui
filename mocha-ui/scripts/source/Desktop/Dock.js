@@ -282,6 +282,10 @@ MochaUI.Dock = new Class({
 			currentInstance.contentWrapperEl.setStyle('overflow', 'auto');
 		}
 
+		if (currentInstance.isCollapsed) {
+			MochaUI.collapseToggle(windowEl);					
+		}
+
 		windowEl.setStyle('visibility', 'visible');
 		currentInstance.contentBorderEl.setStyle('visibility', 'visible');		
 

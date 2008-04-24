@@ -257,10 +257,17 @@ MochaUI.Window = new Class({
 		
 		// Check if window already exists and is not in progress of closing
 		if ( this.windowEl && !this.isClosing ) {
-			if (currentInstance.isMinimized) { // If minimized -> restore
+			 // Restore if minimized
+			if (currentInstance.isMinimized) {
 				MochaUI.Dock.restoreMinimized(this.windowEl);
 			}
-			else { // else focus
+			// Expand and focus if collapsed			
+			if (currentInstance.isCollapsed) {
+				MochaUI.collapseToggle(this.windowEl);
+				setTimeout(MochaUI.focusWindow.pass(this.windowEl, this),10);					
+			}			
+			// Else focus
+			else {
 				setTimeout(MochaUI.focusWindow.pass(this.windowEl, this),10);	
 			}
 			return;
@@ -286,7 +293,7 @@ MochaUI.Window = new Class({
 
 		this.windowEl.addClass(this.options.addClass);		
 
-		if ((this.options.type == 'modal') || (Browser.Platform.mac && Browser.Engine.gecko)){
+		if (Browser.Platform.mac && Browser.Engine.gecko){
 			this.windowEl.setStyle('position', 'fixed');	
 		}
 
@@ -370,6 +377,7 @@ MochaUI.Window = new Class({
 			'left': x
 		});
 		
+		// Create opacityMorph
 		if (MochaUI.options.useEffects == true){
 			// IE cannot handle both element opacity and VML alpha at the same time.
 			if (Browser.Engine.trident){
@@ -409,6 +417,7 @@ MochaUI.Window = new Class({
 		}
 		else if (MochaUI.options.useEffects == false){
 			this.windowEl.setStyle('opacity', 1);
+			setTimeout(MochaUI.focusWindow.pass(this.windowEl, this), 10);			
 		}
 		else {
 			this.opacityMorph.start({
@@ -447,7 +456,7 @@ MochaUI.Window = new Class({
 			}.bind(this));
 		}
 
-		if (this.options.type != 'modal'){		
+		if (this.options.type == 'window'){		
 			windowEl.addEvent('click', function() {
 				MochaUI.focusWindow(windowEl);
 			}.bind(this));

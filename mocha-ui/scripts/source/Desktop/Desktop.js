@@ -331,7 +331,7 @@ MochaUI.Desktop = new Class({
 				'top': currentInstance.oldTop,
 				'left': currentInstance.oldLeft
 			});
-			if (container != this.options.desktop){
+			if (currentInstance.container != this.options.desktop){
 				$(options.container).grab(windowEl);
 				currentInstance.windowDrag.container = $(options.container);
 			}
