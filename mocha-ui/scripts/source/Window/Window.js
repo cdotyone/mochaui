@@ -293,7 +293,7 @@ MochaUI.Window = new Class({
 
 		this.windowEl.addClass(this.options.addClass);		
 
-		if (Browser.Platform.mac && Browser.Engine.gecko){
+		if ((this.options.type == 'modal' && !Browser.Engine.gecko && !Browser.Engine.trident) || (Browser.Platform.mac && Browser.Engine.gecko)){
 			this.windowEl.setStyle('position', 'fixed');	
 		}
 
