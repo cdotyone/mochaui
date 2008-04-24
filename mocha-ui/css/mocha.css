@@ -228,7 +228,8 @@ body {
 	border: 1px solid #fff;
 	width: 4px;
 	height: 8px;
-	cursor: pointer;	
+	cursor: pointer;
+	font-size: 1px; /* For IE6 */	
 }
 	
 /* Windows */
@@ -612,24 +613,14 @@ div.mocha.notification .mochaTitlebar {
 	opacity: .0;
 	filter: alpha(opacity=0);
 	-moz-opacity: 0;
-	display: none;
 }
 
 div.mocha.notification .mochaContentBorder {
 	border-width: 0px;
-
-}
-
-div.mocha.notification .mochaCanvasControls {
-	display: none;	
 }
 
 div.mocha.notification .mochaContentWrapper {
 	text-align: center;
 	font-size: 12px;
 	font-weight: bold;
-}
-
-div.mocha.notification .mochaContent {
-
 }
