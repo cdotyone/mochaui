@@ -110,7 +110,37 @@ var MochaUI = new Hash({
 				break;
 		}
 
-	},	
+	},
+	collapseToggle: function(windowEl){
+		var instances = MochaUI.Windows.instances;
+		var currentInstance = instances.get(windowEl.id);		
+		if (currentInstance.isCollapsed == false) {
+			currentInstance.isCollapsed = true;
+			if ( currentInstance.iframe ) {
+				currentInstance.iframeEl.setStyle('visibility', 'hidden');
+			}			
+			currentInstance.contentBorderEl.setStyles({
+				visibility: 'hidden',
+				position: 'absolute',
+				top: -10000,
+				left: -10000
+			});				
+			currentInstance.drawWindowCollapsed(windowEl);
+		}
+		else {			
+			currentInstance.isCollapsed = false;
+			currentInstance.drawWindow(windowEl);					
+			currentInstance.contentBorderEl.setStyles({
+				visibility: 'visible',
+				position: null,
+				top: null,
+				left: null
+			});
+			if ( currentInstance.iframe ) {
+				currentInstance.iframeEl.setStyle('visibility', 'visible');
+			}			
+		}		
+	},
 	/*
 	
 	Function: closeWindow

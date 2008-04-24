@@ -17,7 +17,7 @@ MochaUI.extend({
 			var windowOptions = MochaUI.Windows.windowOptions;
 			var sliderFirst = true;
 			var mochaSlide = new Slider($('radiusSliderarea'), $('radiusSliderknob'), {
-				steps: 20,
+				steps: 14,
 				offset: 0,
 				onChange: function(pos){
 					$('radiusUpdatevalue').set('html', pos);
