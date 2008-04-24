@@ -95,7 +95,8 @@ MochaUI.Windows.windowOptions = {
 	restrict:          true,  // Restrict window to container when dragging.
 	shape:             'box', // Shape of window; box or gauge.
 	
-	// Window Events  
+	// Window Events
+	collapsible:       true,
 	minimizable:       true,  // Requires MochaUI.Desktop and MochaUI.Dock.
 	maximizable:       true,  // Requires MochaUI.Desktop.
 	closable:          true,  
@@ -202,6 +203,7 @@ MochaUI.Window = new Class({
 		
 		// Gauges are not maximizable or resizable
 		if (options.shape == 'gauge'|| options.type == 'notification'){
+			options.collapsible = false;
 			options.maximizable = false;
 			options.bodyBgColor = 'transparent';
 			options.scrollbars = false;
@@ -462,7 +464,7 @@ MochaUI.Window = new Class({
 			}.bind(this));			
 		}
 		
-		
+		if (this.options.collapsible == true){
 			// Keep titlebar text from being selected on double click in Safari.
 			this.titleEl.addEvent('selectstart', function(e) {
 				e = new Event(e).stop();							  													   
@@ -475,8 +477,7 @@ MochaUI.Window = new Class({
 				e = new Event(e).stop();
 				MochaUI.collapseToggle(this.windowEl);
 			}.bind(this));			
-				
-		
+		}		
 		
 	},
 	/*
