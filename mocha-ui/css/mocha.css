@@ -612,14 +612,24 @@ div.mocha.notification .mochaTitlebar {
 	opacity: .0;
 	filter: alpha(opacity=0);
 	-moz-opacity: 0;
+	display: none;
 }
 
 div.mocha.notification .mochaContentBorder {
 	border-width: 0px;
+
+}
+
+div.mocha.notification .mochaCanvasControls {
+	display: none;	
 }
 
 div.mocha.notification .mochaContentWrapper {
 	text-align: center;
 	font-size: 12px;
 	font-weight: bold;
+}
+
+div.mocha.notification .mochaContent {
+
 }

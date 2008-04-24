@@ -211,7 +211,8 @@ MochaUI.Window = new Class({
 		}
 		if (options.type == 'notification'){
 			options.minimizable = false;
-			options.closable = false;			
+			options.closable = false;
+			options.headerHeight = 0;
 		}
 		
 		// Minimizable, dock is required and window cannot be modal
@@ -343,18 +344,25 @@ MochaUI.Window = new Class({
 		}
 
 		// Move new window into position. If position not specified by user then center the window on the page.
-		// We do this last so that the effects are as smooth as possible, not interrupted by other functions.
-		var dimensions = this.options.container.getCoordinates();
+		// We do this last so that the effects are as smooth as possible, not interrupted by other functions.	
+		
+		// Should use container
+		if (this.options.container == document.body || this.options.container == MochaUI.Desktop.desktop){
+			var dimensions = window.getSize();
+		}
+		else {
+			var dimensions = this.options.container.getCoordinates();			
+		}
 
 		if (!this.options.y) {
-			var windowPosTop = (dimensions.height * .5) - ((this.options.height + this.headerFooterShadow) * .5);
+			var windowPosTop = (dimensions.y * .5) - ((this.options.height + this.headerFooterShadow) * .5);
 		}
 		else {
 			var windowPosTop = this.options.y - this.options.shadowBlur;
 		}
 
 		if (!this.options.x) {
-			var windowPosLeft =	(dimensions.width * .5) - (this.options.width * .5);
+			var windowPosLeft =	(dimensions.x * .5) - (this.options.width * .5);
 		}
 		else {
 			var windowPosLeft = this.options.x - this.options.shadowBlur;
@@ -954,7 +962,7 @@ MochaUI.Window = new Class({
 			'left': shadowBlur
 		});		
 
-		// Opera height and width must be set like this, when resizing:
+		// Opera requires the canvas height and width be set this way when resizing:
 		this.canvasEl.height = height;
 		this.canvasEl.width = width;
 
@@ -995,7 +1003,9 @@ MochaUI.Window = new Class({
 				break;				
 		}		
 		
-		this.drawControls(width, height, shadows);
+		if (this.options.type != 'notification'){
+			this.drawControls(width, height, shadows);
+		}
 
 		if (this.options.resizable){ 
 			MochaUI.triangle(
@@ -1160,8 +1170,7 @@ MochaUI.Window = new Class({
 
 	},	
 	drawBox: function(ctx, width, height, shadows){	
-	
-		// Shorten object chain
+
 		var shadowBlur = this.options.shadowBlur;
 		var shadowBlur2x = shadowBlur * 2;
 		var cornerRadius = this.options.cornerRadius		
@@ -1179,7 +1188,7 @@ MochaUI.Window = new Class({
 				);
 			}
 		}
-		// Mocha body
+		// Window body.
 		this.bodyRoundedRect(
 			ctx,                         // context
 			shadowBlur,                  // x
@@ -1190,22 +1199,22 @@ MochaUI.Window = new Class({
 			this.options.footerBgColor   // Footer color
 		);
 
-		// Mocha header
-		this.topRoundedRect(
-			ctx,                            // context
-			shadowBlur,                     // x
-			shadowBlur - 1,                 // y
-			width - shadowBlur2x,           // width
-			this.options.headerHeight,      // height
-			cornerRadius,                   // corner radius
-			this.options.headerStartColor,  // Header gradient's top color
-			this.options.headerStopColor    // Header gradient's bottom color
-		);
-
+		if (this.options.type != 'notification'){
+		// Window header.
+			this.topRoundedRect(
+				ctx,                            // context
+				shadowBlur,                     // x
+				shadowBlur - 1,                 // y
+				width - shadowBlur2x,           // width
+				this.options.headerHeight,      // height
+				cornerRadius,                   // corner radius
+				this.options.headerStartColor,  // Header gradient's top color
+				this.options.headerStopColor    // Header gradient's bottom color
+			);		
+		}	
 	},
 	drawGauge: function(ctx, width, height, shadows){
-		
-		// Shorten object chain
+
 		var shadowBlur = this.options.shadowBlur;
 		
 		var radius = (width *.5) - (shadowBlur) + 16;

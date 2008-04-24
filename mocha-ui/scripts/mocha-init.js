@@ -547,7 +547,7 @@ initializeWindows = function(){
 	MochaUI.overviewWindow(); 
 	//MochaUI.dataGridWindow(); 
 	MochaUI.cornerRadiusWindow();
-	MochaUI.clockWindow();
+	//MochaUI.clockWindow();
 	MochaUI.featuresWindow();
 	
 }
