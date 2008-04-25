@@ -203,13 +203,12 @@ initializeWindows = function(){
 		});
 	}	
 	
-	MochaUI.cornerRadiusWindow = function(){	
+	MochaUI.parametricsWindow = function(){	
 		new MochaUI.Window({
-			id: 'cornerRadius',
-			title: 'Window Parametrics',
-			addClass: 'darkWindow',		
+			id: 'parametrics',
+			title: 'Window Parametrics',	
 			loadMethod: 'xhr',
-			contentURL: 'pages/corner_radius.html',
+			contentURL: 'plugins/parametrics/',
 			onContentLoaded: function(){
 				MochaUI.addRadiusSlider.delay(10); // Delay is for IE6
 				MochaUI.addShadowSlider.delay(10); // Delay is for IE6					
@@ -224,10 +223,10 @@ initializeWindows = function(){
 			bodyBgColor: '#fff'			
 		});
 	}
-	if ($('cornerRadiusLinkCheck')){
-		$('cornerRadiusLinkCheck').addEvent('click', function(e){	
+	if ($('parametricsLinkCheck')){
+		$('parametricsLinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			MochaUI.cornerRadiusWindow();
+			MochaUI.parametricsWindow();
 		});
 	}	
 	
@@ -318,7 +317,7 @@ initializeWindows = function(){
 			id: 'builder',
 			title: 'Window Builder',
 			loadMethod: 'xhr',
-			contentURL: 'pages/builder.html',
+			contentURL: 'plugins/windowform/',
 			onContentLoaded: function(){
 				$('newWindowSubmit').addEvent('click', function(e){
 					new Event(e).stop();
@@ -547,7 +546,7 @@ initializeWindows = function(){
 	// Build windows onDomReady
 	MochaUI.overviewWindow(); 
 	//MochaUI.dataGridWindow(); 
-	MochaUI.cornerRadiusWindow();
+	MochaUI.parametricsWindow();
 	//MochaUI.clockWindow();
 	MochaUI.featuresWindow();
 	
