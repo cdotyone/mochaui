@@ -256,7 +256,7 @@ div.mocha .mochaTitlebar h3 {
 	font-size: 12px;
 	line-height: 15px;	
 	font-weight: bold;
-	margin: 6px 10px 4px 12px;
+	margin: 5px 10px 4px 12px;
 	padding: 0;
 }
 	
@@ -613,21 +613,8 @@ iframe.zIndexFix {
 
 /* Window Themes */
 
-div.mocha.darkWindow {
-	color: #666;
-}
-
-div.mocha.darkWindow .mochaContentBorder {
-}
-
-div.mocha.darkWindow .mochaTitlebar h3 {
-	color: #333;
-}
-
-div.mocha.transparent .mochaTitlebar {
-	opacity: .0;
-	filter: alpha(opacity=0);
-	-moz-opacity: 0;
+div.mocha.transparent .mochaTitlebar h3 {
+	color: #fff;
 }
 
 div.mocha.notification .mochaTitlebar {

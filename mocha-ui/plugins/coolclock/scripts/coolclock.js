@@ -153,6 +153,7 @@ CoolClock.prototype = {
 		this.gmtOffset = gmtOffset != null ? parseFloat(gmtOffset) : gmtOffset;
 
 		CoolClock.config.clockTracker[canvasId] = this;
+		this.initializing = true;
 		this.tick();
 		return this;
 	},
@@ -290,7 +291,39 @@ CoolClock.prototype = {
 		}
 		else {
 			// use local time
-			this.render(now.getHours(),now.getMinutes(),now.getSeconds());
+			var hours = now.getHours();
+			var minutes = now.getMinutes();
+			var seconds = now.getSeconds();
+			var time;
+			this.refreshTime(hours, minutes, seconds);			
+			this.render(hours,minutes,seconds);
+		}
+	},
+	
+	refreshTime: function(hours, minutes, seconds){
+		var now = new Date();		
+		var time;
+		if (hours >= 12) {
+			time = " PM";
+		}
+		else {
+			time = " AM";
+		}
+		if (hours > 12) {
+			hours -= 12;
+		}
+		if (hours == 0) {
+			hours = 12;
+		}
+		if (minutes < 10) {
+			minutes = "0" + minutes;
+		}
+		if (seconds == 0 || this.initializing == true){
+			$('clock_title').set('html', hours + ":" + minutes + time);
+			if ($('clock_dockTabText')){
+				$('clock_dockTabText').set('html', hours + ":" + minutes + time);
+			}
+			this.initializing = false;
 		}
 	},
 
@@ -300,4 +333,4 @@ CoolClock.prototype = {
 			this.nextTick();
 		}
 	}
-}				
+}

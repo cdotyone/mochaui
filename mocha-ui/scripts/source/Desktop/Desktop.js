@@ -424,6 +424,7 @@ MochaUI.Desktop = new Class({
 
 	*/		
 	sidebarToggle: function(){
+		// Hide sidebar.
 		if (this.sidebarWrapper.getStyle('display') == 'block'){
 			this.sidebarWrapper.setStyle('display', 'none');
 			this.sidebarCheck.setStyle('display', 'none');
@@ -432,6 +433,7 @@ MochaUI.Desktop = new Class({
 				this.page.set('margin-left', 0);
 			}
 		}
+		// Show sidebar.
 		else {
 			// If the sidebar is minimized when toggling it's visibility on the sidebar will be restored.
 			if (this.sidebarIsMinimized){			
@@ -457,28 +459,37 @@ MochaUI.Desktop = new Class({
 
 	*/		
 	sidebarMinimizeToggle: function(){
-			if (!this.sidebarIsMinimized){				
-				this.sidebarResizable.detach();
-				this.sidebarHandle.setStyle('cursor', 'default');						
-				this.sidebar.setStyle('display', 'none');
-				// Part of IE6 3px jox bug fix			
-				if (Browser.Engine.trident4){
-					this.sidebarMinimize.setStyle('margin-right', 0);
-				}
-				this.sidebarIsMinimized = true;				
+		// Expand sidebar.
+		var windows = $$('div.mocha');
+		if (!this.sidebarIsMinimized){				
+			this.sidebarResizable.detach();
+			this.sidebarHandle.setStyle('cursor', 'default');						
+			this.sidebar.setStyle('display', 'none');
+			// Part of IE6 3px jox bug fix			
+			if (Browser.Engine.trident4){
+				this.sidebarMinimize.setStyle('margin-right', 0);
 			}
-			else {
-				this.sidebarResizable.attach();	
-				this.sidebarHandle.setStyles({
-					'cursor': 'e-resize', /* This is for Opera which does not support the col-resize cursor */
-					'cursor': 'col-resize'
-				});				
-				this.sidebar.setStyle('display', 'block');				
-				if (Browser.Engine.trident4){
-					this.sidebarMinimize.setStyle('margin-right', 1);
-				}				
-				this.sidebarIsMinimized = false;
-			}				
+			if (!Browser.Platform.mac && Browser.Engine.gecko){
+				windows.setStyle('position', 'absolute');	
+			}			
+			this.sidebarIsMinimized = true;				
+		}
+		// Collapse sidebar
+		else {
+			this.sidebarResizable.attach();	
+			this.sidebarHandle.setStyles({
+				'cursor': 'e-resize', /* This is for Opera which does not support the col-resize cursor */
+				'cursor': 'col-resize'
+			});				
+			this.sidebar.setStyle('display', 'block');				
+			if (Browser.Engine.trident4){
+				this.sidebarMinimize.setStyle('margin-right', 1);
+			}
+			if (!Browser.Platform.mac && Browser.Engine.gecko){
+				windows.setStyle('position', 'absolute');	
+			}			
+			this.sidebarIsMinimized = false;
+		}				
 	}
 });
 MochaUI.Desktop.implement(new Options, new Events);
