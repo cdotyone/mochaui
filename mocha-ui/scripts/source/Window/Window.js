@@ -325,16 +325,24 @@ MochaUI.Window = new Class({
 			'padding-right': this.options.padding.right
 		});		
 		
-		/*
+		
 		if (this.options.shape == 'gauge'){
 			this.canvasControlsEl.setStyle('opacity', 0);
 			this.windowEl.addEvent('mouseover', function(){
-				this.canvasControlsEl.setStyle('opacity', 1);
+				this.mouseover = true;										 
+				var showControls = function(){
+					if (this.mouseover != false){
+						this.canvasControlsEl.setStyle('opacity', 1);
+					}
+				};
+				showControls.delay(130, this);
+				
 			}.bind(this));
 			this.windowEl.addEvent('mouseleave', function(){
+				this.mouseover = false;														  
 				this.canvasControlsEl.setStyle('opacity', 0);
 			}.bind(this));			
-		} */
+		}
 
 		// Inject window into DOM		
 		this.windowEl.injectInside(this.options.container);
@@ -1222,8 +1230,7 @@ MochaUI.Window = new Class({
 	},	
 	drawGauge: function(ctx, width, height, shadows){
 
-		var shadowBlur = this.options.shadowBlur;
-		
+		var shadowBlur = this.options.shadowBlur;		
 		var radius = (width *.5) - (shadowBlur) + 16;
 		var shadowOpacity = 1;		
 
@@ -1240,7 +1247,7 @@ MochaUI.Window = new Class({
 				);
 			}
 		}
-		
+		/*
 		if (shadows != false) {	
 			for (var x = 0; x <= shadowBlur; x++){				
 			
@@ -1261,14 +1268,14 @@ MochaUI.Window = new Class({
 			ctx.stroke();				
 				
 			}
-		}
+		}*/
 		ctx.beginPath();		
 		ctx.lineWidth = 24;
 		ctx.lineCap = 'round';
 		
 		ctx.moveTo(shadowBlur + 12, shadowBlur + 12);
 		ctx.lineTo(width - shadowBlur - 12, shadowBlur + 12);
-		ctx.strokeStyle = 'rgba(230, 230, 230, 1)';
+		ctx.strokeStyle = 'rgba(0, 0, 0, .15)';
 		ctx.stroke();
 		
 		MochaUI.circle(

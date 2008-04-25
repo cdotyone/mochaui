@@ -51,9 +51,7 @@ MochaUI.extend({
 			y: 25,
 			padding:  { top: 10, right: 12, bottom: 10, left: 12 },
 			shadowBlur: 5,
-			headerStartColor:  [255, 255, 255],
-			headerStopColor:   [245, 245, 245],
-			footerBgColor:     [245, 245, 245]	
+			footerBgColor: [245, 245, 245]	
 		});
 		
 	},
@@ -62,9 +60,7 @@ MochaUI.extend({
 			this.myChain.callChain();			
 		}		
 	},
-	loadWorkspace2: function(){
-		this.cookie = new Hash.Cookie('mochaUIworkspaceCookie', {duration: 3600});
-		workspaceWindows = this.cookie.load();
+	loadWorkspace2: function(workspaceWindows){		
 		workspaceWindows.each(function(instance) {		
 			eval('MochaUI.' + instance.id + 'Window();');
 			$(instance.id).setStyles({
@@ -86,6 +82,25 @@ MochaUI.extend({
 	
 	*/
 	loadWorkspace: function(){
+		cookie = new Hash.Cookie('mochaUIworkspaceCookie', {duration: 3600});
+		workspaceWindows = cookie.load();
+
+		if(!cookie.getKeys().length){
+			new MochaUI.Window({
+				loadMethod: 'html',
+				type: 'notification',
+				addClass: 'notification',
+				content: 'You have no saved workspace.',
+				width: 220,
+				height: 40,
+				y: 25,
+				padding:  { top: 10, right: 12, bottom: 10, left: 12 },
+				shadowBlur: 5,
+				footerBgColor: [245, 245, 245]	
+			});
+			return;
+		}
+		
 		if ($$('div.mocha').length != 0){
 			this.loadingWorkspace = true;
 			this.myChain = new Chain();
@@ -97,13 +112,13 @@ MochaUI.extend({
 					$$('div.dockButton').destroy();
 				}.bind(this),			
     			function(){
-					this.loadWorkspace2();			
+					this.loadWorkspace2(workspaceWindows);			
 				}.bind(this)
 			);
 			this.myChain.callChain();
 		}
 		else {
-			this.loadWorkspace2();
+			this.loadWorkspace2(workspaceWindows);
 		}
 	
 	}

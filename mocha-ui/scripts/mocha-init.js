@@ -274,7 +274,7 @@ initializeWindows = function(){
 				}				
 			},
 			shape: 'gauge',
-			headerHeight: 18,			
+			headerHeight: 30,			
 			width: 160,
 			height: 160,
 			x: 650,
@@ -547,7 +547,7 @@ initializeWindows = function(){
 	MochaUI.overviewWindow(); 
 	//MochaUI.dataGridWindow(); 
 	MochaUI.parametricsWindow();
-	//MochaUI.clockWindow();
+	MochaUI.clockWindow();
 	MochaUI.featuresWindow();
 	
 }
