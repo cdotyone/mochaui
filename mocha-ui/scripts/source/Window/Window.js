@@ -9,9 +9,6 @@ License:
 Requires:
 	Core.js
 
-Todo:
-	- Try setting window opacity to .99 for IE. See if opacity effects will work with shadows then.
-
 */
    
 /*
@@ -27,7 +24,61 @@ Arguments:
 	options
 
 Options:
-	to be listed
+	id - The ID of the window. If not defined, it will be set to 'win' + windowIDCount.	
+	title - The title of the window.
+	type - ('window', 'modal' or 'notification') Defaults to 'window'.	
+	loadMethod - ('html', 'xhr', or 'iframe') Defaults to 'html'.
+	contentURL - Used if loadMethod is set to 'xhr' or 'iframe'.
+	evalScripts - (boolean) An xhr loadMethod option. Defaults to true.    
+	evalResponse - (boolean) An xhr loadMethod option. Defaults to false.
+	content - (string or element) An html loadMethod option. 
+	container - (element ID) Element the window is injected in. The container defaults to 'desktop'. If no desktop then to document.body. Use 'pageWrapper' if you don't want the windows to overlap the toolbars.
+	restrict - (boolean) Restrict window to container when dragging.
+	shape - ('box' or 'gauge') Shape of window. Defaults to 'box'.
+	collapsible - (boolean) Defaults to true.
+	minimizable - (boolean) Requires MochaUI.Desktop and MochaUI.Dock. Defaults to true if dependenices are met. 
+	maximizable - (boolean) Requires MochaUI.Desktop. Defaults to true if dependenices are met.
+	closable - (boolean) Defaults to true. 
+	draggable - (boolean) Defaults to false for modals; otherwise true.
+	draggableGrid - (false or number) Distance in pixels for snap-to-grid dragging. Defaults to false. 
+	draggableLimit - (false or number) An object with x and y properties used to limit the movement of the Window. Defaults to false.	
+	draggableSnap - (boolean) The distance to drag before the Window starts to respond to the drag. Defaults to false.
+	resizable - (boolean) Defaults to false for modals, notifications and gauges; otherwise true.
+	resizeLimit - (object) Minimum and maximum width and height of window when resized.
+	addClass - (string) Add a class to your window to give you more control over styling.	
+	width - (number) Width of content area.	
+	height - (number) Height of content area.
+	x - (number) If x and y are left undefined the window is centered on the page.
+	y - (number)    
+	scrollbars - (boolean)
+	padding - (object)
+	shadowBlur -(number) Width of shadows.		
+	headerHeight - (number) Height of window titlebar.
+	footerHeight - (number) Height of window footer.
+	cornerRadius - (number)
+	bodyBgColor - (hex) Body background color
+	headerStartColor - ([r,g,b,]) Header gradient's top color - RGB
+	headerStopColor - ([r,g,b,]) Header gradient's bottom color
+	footerBgColor - ([r,g,b,]) Background color of the main canvas shape
+	minimizeBgColor - ([r,g,b,]) Minimize button background color
+	minimizeColor - ([r,g,b,]) Minimize button color	
+	maximizeBgColor - ([r,g,b,]) Maximize button background color
+	maximizeColor - ([r,g,b,]) Maximize button color	
+	closeBgColor - ([r,g,b,]) Close button background color
+	closeColor - ([r,g,b,]) Close button color	
+	resizableColor - ([r,g,b,]) Resizable icon color
+
+Events:
+	onBeforeBuild - (function) Fired just before the window is built.
+	onContentLoaded - (function) Fired when content is successfully loaded via XHR or Iframe.
+	onFocus - (function)  Fired when the window is focused.
+	onBlur - (function) Fired when window loses focus.
+	onResize - (function) Fired when the window is resized.
+	onMinimize - (function) Fired when the window is minimized.
+	onMaximize - (function) Fired when the window is maximized.
+	onRestore - (function) Fired when a window is restored from minimized or maximized.
+	onClose - (function) Fired just before the window is closed.
+	onCloseComplete - (function) Fired after the window is closed.
 
 Returns:
 	Window object.
@@ -72,15 +123,17 @@ Example:
 
 */   
 
-// Having these options outside of the Class allows us to add, change, and remove individual options without rewriting all of them.
+// Having these options outside of the Class allows us to add, change, and remove
+// individual options without rewriting all of them.
+
 MochaUI.Windows.windowOptions = {
 	id:                null,
 	title:             'New Window',
-	type:              'window',  // window, modal or notification.
+	type:              'window',
 	
-	loadMethod:        'html', 	             // Can be set to 'html', 'xhr', or 'iframe'.
-	contentURL:        'pages/lipsum.html',	 // Used if loadMethod is set to 'xhr' or 'iframe'.  
-
+	loadMethod:        'html',
+	contentURL:        'pages/lipsum.html',
+	
 	// xhr options
 	evalScripts:       true,       
 	evalResponse:      false,         
@@ -89,64 +142,63 @@ MochaUI.Windows.windowOptions = {
 	content:           'Window content',
 	
 	// Container options
-	// The container defaults to 'desktop'. If no desktop then to document.body. Use 'pageWrapper' if you don't want the windows to overlap the toolbars.
-	container:         null,  // Element the window is injected in. 
-	restrict:          true,  // Restrict window to container when dragging.
-	shape:             'box', // Shape of window; box or gauge.
+	container:         null,
+	restrict:          true,
+	shape:             'box',
 	
 	// Window Events
 	collapsible:       true,
-	minimizable:       true,  // Requires MochaUI.Desktop and MochaUI.Dock.
-	maximizable:       true,  // Requires MochaUI.Desktop.
+	minimizable:       true,
+	maximizable:       true,
 	closable:          true,  
 
 	// Draggable
-	draggable:         null,  // Defaults to false for modals; otherwise true.
-	draggableGrid:     false, // Distance in pixels for snap-to-grid dragging.
-	draggableLimit:    false, // An object with x and y properties used to limit the movement of the Window.	
-	draggableSnap:     false, // The distance to drag before the Window starts to respond to the drag.
+	draggable:         null,
+	draggableGrid:     false,
+	draggableLimit:    false,
+	draggableSnap:     false,
 
 	// Resizable
-	resizable:         null,  // Defaults to false for modals, notifications and gauges; otherwise true.
-	resizeLimit:       {'x': [250, 2500], 'y': [125, 2000]}, // Minimum and maximum width and height of window when resized.
+	resizable:         null,
+	resizeLimit:       {'x': [250, 2500], 'y': [125, 2000]},
 	
 	// Style options:
-	addClass:          '',    // Add a class to your window to give you more control over styling.	
-	width:             300,     // Width of content area.	
-	height:            125,     // Height of content area.
-	x:                 null,    // If x and y are left undefined the window is centered on the page. !!! NEED TO MAKE THIS WORK WITH THE CONTAINER OPTION. 
+	addClass:          '',
+	width:             300,
+	height:            125, 
+	x:                 null,    // !!! NEED TO MAKE THIS WORK WITH THE CONTAINER OPTION. 
 	y:                 null,    
 	scrollbars:        true,
 	padding:   		   { top: 10, right: 12, bottom: 10, left: 12 },
-	shadowBlur:        3,       // Width of shadows.
+	shadowBlur:        3,
 	
 	// Color options:		
-	headerHeight:      25,               // Height of window titlebar
+	headerHeight:      25,
 	footerHeight:      27,
 	cornerRadius:      10,
-	bodyBgColor:	   '#fff',           // Body background color - Hex
-	headerStartColor:  [250, 250, 250],  // Header gradient's top color - RGB
-	headerStopColor:   [229, 229, 229],  // Header gradient's bottom color
-	footerBgColor:     [229, 229, 229],	 // Background color of the main canvas shape
-	minimizeBgColor:   [255, 255, 255],  // Minimize button background color
-	minimizeColor:     [0, 0, 0],        // Minimize button color	
-	maximizeBgColor:   [255, 255, 255],  // Maximize button background color
-	maximizeColor:     [0, 0, 0],        // Maximize button color	
-	closeBgColor:      [255, 255, 255],  // Close button background color
-	closeColor:        [0, 0, 0],        // Close button color	
-	resizableColor:    [254, 254, 254],  // Resizable icon color
+	bodyBgColor:	   '#fff',
+	headerStartColor:  [250, 250, 250],
+	headerStopColor:   [229, 229, 229],
+	footerBgColor:     [229, 229, 229],
+	minimizeBgColor:   [255, 255, 255],
+	minimizeColor:     [0, 0, 0],
+	maximizeBgColor:   [255, 255, 255],
+	maximizeColor:     [0, 0, 0],
+	closeBgColor:      [255, 255, 255],
+	closeColor:        [0, 0, 0],
+	resizableColor:    [254, 254, 254],
 
 	// Events
-	onBeforeBuild:     $empty,  // Fired just before the window is built.
-	onContentLoaded:   $empty,  // Fired when content is successfully loaded via XHR or Iframe.
-	onFocus:           $empty,  // Fired when the window is focused.
-	onBlur:            $empty,  // Fired when window loses focus.
-	onResize:          $empty,  // Fired when the window is resized.
-	onMinimize:        $empty,  // Fired when the window is minimized.
-	onMaximize:        $empty,  // Fired when the window is maximized.
-	onRestore:         $empty,  // Fired when a window is restored from minimized or maximized.
-	onClose:           $empty,  // Fired just before the window is closed.
-	onCloseComplete:   $empty   // Fired after the window is closed.
+	onBeforeBuild:     $empty,
+	onContentLoaded:   $empty,
+	onFocus:           $empty,
+	onBlur:            $empty,
+	onResize:          $empty,
+	onMinimize:        $empty,
+	onMaximize:        $empty,
+	onRestore:         $empty,
+	onClose:           $empty,
+	onCloseComplete:   $empty
 };
 
 MochaUI.Window = new Class({
