@@ -394,7 +394,10 @@ MochaUI.Window = new Class({
 		}
 
 		if (this.options.type == 'modal') {
-			$('modalOverlay').setStyle('display', 'block');
+			if (Browser.Engine.trident4){
+				$('modalFix').setStyle('display', 'block');	
+			}
+			$('modalOverlay').setStyle('display', 'block');			
 			if (MochaUI.options.useEffects == false){			
 				$('modalOverlay').setStyle('opacity', .55);
 				this.windowEl.setStyles({

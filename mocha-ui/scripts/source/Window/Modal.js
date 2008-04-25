@@ -36,8 +36,21 @@ MochaUI.Modal = new Class({
 				'height': document.getCoordinates().height
 			}
 		});
-		modalOverlay.injectInside(document.body);
+		modalOverlay.inject(document.body);
 		
+		if (Browser.Engine.trident4){
+			var modalFix = new Element('iframe', {
+				'id': 'modalFix',							 
+				'scrolling': 'no',
+				'marginWidth': 0,
+				'marginHeight': 0,
+				'src': '',
+				'styles': {
+					'height': document.getCoordinates().height
+				}				
+			}).inject(document.body);
+		}		
+
 		modalOverlay.setStyle('opacity', .4);
 		this.modalOverlayOpenMorph = new Fx.Morph($('modalOverlay'), {
 				'duration': 200
@@ -46,11 +59,17 @@ MochaUI.Modal = new Class({
 			'duration': 200,
 			onComplete: function(){
 				$('modalOverlay').setStyle('display', 'none');
+				if (Browser.Engine.trident4){
+					$('modalFix').setStyle('display', 'none');
+				}				
 			}.bind(this)
 		});
 	},
 	setModalSize: function(){
 		$('modalOverlay').setStyle('height', document.getCoordinates().height);
+		if (Browser.Engine.trident4){
+			$('modalFix').setStyle('height', document.getCoordinates().height);			
+		}
 	}
 });
 MochaUI.Modal.implement(new Options, new Events);

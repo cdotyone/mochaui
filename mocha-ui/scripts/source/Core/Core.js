@@ -175,7 +175,8 @@ var MochaUI = new Hash({
 		if (MochaUI.options.useEffects == false){
 			if (currentInstance.options.type == 'modal') {
 				$('modalOverlay').setStyle('opacity', 0);
-			}
+				$('modalFix').setStyle('display', 'block');
+			}		
 			windowEl.destroy();
 			currentInstance.fireEvent('onCloseComplete');
 			instances.erase(currentInstance.options.id); // see how this effects on close complete
@@ -190,10 +191,11 @@ var MochaUI = new Hash({
 				MochaUI.Modal.modalOverlayCloseMorph.start({
 					'opacity': 0
 				});
+				
 			}
 			var closeMorph = new Fx.Morph(windowEl, {
 				duration: 180,
-				onComplete: function(){
+				onComplete: function(){					
 					windowEl.destroy();
 					currentInstance.fireEvent('onCloseComplete');
 					instances.erase(currentInstance.options.id); // see how this effects on close complete

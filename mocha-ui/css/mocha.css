@@ -445,7 +445,6 @@ div.mocha .cornerSE { /* Bottom right resize handle */
 }
 	
 /* Modal Windows */
-
 #modalOverlay {
 	display: none;
 	position: fixed;
@@ -462,11 +461,22 @@ div.mocha .cornerSE { /* Bottom right resize handle */
 * html 	#modalOverlay {
 	position: absolute;
 }	
-	
-/* fix for IE6 select z-index issue */
 
-iframe.zIndexFix {
+/* Fix for IE6 select z-index issue */
+#modalFix {
 	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	opacity: 0;
+	filter: alpha(opacity=0);
+	-moz-opacity: 0;
+	z-index: 9500;
+}
+	
+/* Fix for IE6 select z-index issue */
+iframe.zIndexFix {
 	display: block;
 	position: absolute;
 	top: 0;

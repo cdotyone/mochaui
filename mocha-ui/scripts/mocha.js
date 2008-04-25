@@ -20,7 +20,7 @@ Note:
 
 var MochaUI = new Hash({
 	options: new Hash({
-		useEffects: false,     // Toggles the majority of window fade and move effects.
+		useEffects: true,     // Toggles the majority of window fade and move effects.
 		useLoadingIcon: true  // Toggles whether or not the ajax spinners are displayed in window footers.
 
 	}),	
@@ -175,7 +175,8 @@ var MochaUI = new Hash({
 		if (MochaUI.options.useEffects == false){
 			if (currentInstance.options.type == 'modal') {
 				$('modalOverlay').setStyle('opacity', 0);
-			}
+				$('modalFix').setStyle('display', 'block');
+			}		
 			windowEl.destroy();
 			currentInstance.fireEvent('onCloseComplete');
 			instances.erase(currentInstance.options.id); // see how this effects on close complete
@@ -190,10 +191,11 @@ var MochaUI = new Hash({
 				MochaUI.Modal.modalOverlayCloseMorph.start({
 					'opacity': 0
 				});
+				
 			}
 			var closeMorph = new Fx.Morph(windowEl, {
 				duration: 180,
-				onComplete: function(){
+				onComplete: function(){					
 					windowEl.destroy();
 					currentInstance.fireEvent('onCloseComplete');
 					instances.erase(currentInstance.options.id); // see how this effects on close complete
@@ -689,7 +691,7 @@ MochaUI.Window = new Class({
 
 		this.windowEl.addClass(this.options.addClass);		
 
-		if (Browser.Platform.mac && Browser.Engine.gecko){
+		if ((this.options.type == 'modal' && !Browser.Engine.gecko && !Browser.Engine.trident) || (Browser.Platform.mac && Browser.Engine.gecko)){
 			this.windowEl.setStyle('position', 'fixed');	
 		}
 
@@ -790,7 +792,10 @@ MochaUI.Window = new Class({
 		}
 
 		if (this.options.type == 'modal') {
-			$('modalOverlay').setStyle('display', 'block');
+			if (Browser.Engine.trident4){
+				$('modalFix').setStyle('display', 'block');	
+			}
+			$('modalOverlay').setStyle('display', 'block');			
 			if (MochaUI.options.useEffects == false){			
 				$('modalOverlay').setStyle('opacity', .55);
 				this.windowEl.setStyles({
@@ -1891,8 +1896,21 @@ MochaUI.Modal = new Class({
 				'height': document.getCoordinates().height
 			}
 		});
-		modalOverlay.injectInside(document.body);
+		modalOverlay.inject(document.body);
 		
+		if (Browser.Engine.trident4){
+			var modalFix = new Element('iframe', {
+				'id': 'modalFix',							 
+				'scrolling': 'no',
+				'marginWidth': 0,
+				'marginHeight': 0,
+				'src': '',
+				'styles': {
+					'height': document.getCoordinates().height
+				}				
+			}).inject(document.body);
+		}		
+
 		modalOverlay.setStyle('opacity', .4);
 		this.modalOverlayOpenMorph = new Fx.Morph($('modalOverlay'), {
 				'duration': 200
@@ -1901,11 +1919,17 @@ MochaUI.Modal = new Class({
 			'duration': 200,
 			onComplete: function(){
 				$('modalOverlay').setStyle('display', 'none');
+				if (Browser.Engine.trident4){
+					$('modalFix').setStyle('display', 'none');
+				}
 			}.bind(this)
 		});
 	},
 	setModalSize: function(){
 		$('modalOverlay').setStyle('height', document.getCoordinates().height);
+		if (Browser.Engine.trident4){
+			$('modalFix').setStyle('height', document.getCoordinates().height);			
+		}
 	}
 });
 MochaUI.Modal.implement(new Options, new Events);
