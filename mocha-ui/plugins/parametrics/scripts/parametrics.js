@@ -1,7 +1,7 @@
 /*
 
-Script: Corner-slider.js
-	Initializes the corner radius slider.
+Script: Parametrics.js
+	Initializes the GUI property sliders.
 
 License:
 	MIT-style license.

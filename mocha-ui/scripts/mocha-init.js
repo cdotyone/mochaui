@@ -210,8 +210,22 @@ initializeWindows = function(){
 			loadMethod: 'xhr',
 			contentURL: 'plugins/parametrics/',
 			onContentLoaded: function(){
-				MochaUI.addRadiusSlider.delay(10); // Delay is for IE6
-				MochaUI.addShadowSlider.delay(10); // Delay is for IE6					
+				
+				if ( !MochaUI.parametricsScript == true ){
+					new Request({
+						url: 'plugins/parametrics/scripts/parametrics.js',
+						method: 'get',
+						onSuccess: function() {
+						MochaUI.addRadiusSlider.delay(10); // Delay is for IE6
+						MochaUI.addShadowSlider.delay(10); // Delay is for IE6
+						MochaUI.parametricsScript = true;							
+						}.bind(this)							
+					}).send();					
+				}
+				else {							
+					MochaUI.addRadiusSlider.delay(10); // Delay is for IE6
+					MochaUI.addShadowSlider.delay(10); // Delay is for IE6
+				}			
 			},
 			width: 300,
 			height: 105,

@@ -23,8 +23,8 @@ $aFiles = array(
 	'dev/mocha/scripts/source/Window/Arrange-cascade.js',		
 	'dev/mocha/scripts/source/Desktop/Desktop.js',	
 	'dev/mocha/scripts/source/Desktop/Dock.js',
-	'dev/mocha/scripts/source/Desktop/Workspaces.js',									
-	'dev/mocha/scripts/source/Plugin/Corner-slider.js'
+	'dev/mocha/scripts/source/Desktop/Workspaces.js'								
+	//'dev/mocha/scripts/source/Plugin/Corner-slider.js'
 );
 
 // Get the path to your web directory

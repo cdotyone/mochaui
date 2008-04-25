@@ -248,7 +248,7 @@ MochaUI.Window = new Class({
 
 		// Shorten object chain
 		var instances = MochaUI.Windows.instances;
-		var instanceID = instances.get(this.options.id)
+		var instanceID = instances.get(this.options.id);
 	
 		// Here we check to see if there is already a class instance for this window
 		if (instanceID){			
@@ -1166,7 +1166,7 @@ MochaUI.Window = new Class({
 
 		var shadowBlur = this.options.shadowBlur;
 		var shadowBlur2x = shadowBlur * 2;
-		var cornerRadius = this.options.cornerRadius		
+		var cornerRadius = this.options.cornerRadius;		
 	
 		// This is the drop shadow. It is created onion style.
 		if ( shadows != false ) {	
@@ -1211,7 +1211,7 @@ MochaUI.Window = new Class({
 		// Shorten object chain
 		var shadowBlur = this.options.shadowBlur;
 		var shadowBlur2x = shadowBlur * 2;
-		var cornerRadius = this.options.cornerRadius		
+		var cornerRadius = this.options.cornerRadius;		
 	
 		// This is the drop shadow. It is created onion style.
 		if ( shadows != false ) {	
