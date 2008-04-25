@@ -303,6 +303,18 @@ div.mocha .cornerSE { /* Bottom right resize handle */
 	height: 20px;
 }
 
+.mochaCanvasHeader {
+	position: absolute;
+	top: 0;
+	left: 0;
+	background: transparent;
+	z-index: -1;
+	opacity: .0;
+	filter: alpha(opacity=0);
+	-moz-opacity: .0;	
+	overflow: hidden;			
+}
+
 .mochaControls {
 	position: absolute;
 	top: 8px;
@@ -317,7 +329,7 @@ div.mocha .cornerSE { /* Bottom right resize handle */
 	height: 16px;
 	top: 8px;
 	right: 8px;	
-	z-index: 2;
+	z-index: 3;
 	background: transparent;		
 }
 

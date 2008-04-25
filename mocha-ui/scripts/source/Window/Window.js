@@ -333,14 +333,16 @@ MochaUI.Window = new Class({
 				var showControls = function(){
 					if (this.mouseover != false){
 						this.canvasControlsEl.setStyle('opacity', 1);
+						this.canvasHeaderEl.setStyle('opacity', 1);						
 					}
 				};
-				showControls.delay(130, this);
+				showControls.delay(150, this);
 				
 			}.bind(this));
 			this.windowEl.addEvent('mouseleave', function(){
 				this.mouseover = false;														  
 				this.canvasControlsEl.setStyle('opacity', 0);
+				this.canvasHeaderEl.setStyle('opacity', 0);					
 			}.bind(this));			
 		}
 
@@ -716,41 +718,41 @@ MochaUI.Window = new Class({
 		
 		if (Browser.Engine.trident4){
 			cache.zIndexFixEl = new Element('iframe', {
+				'id': id + '_zIndexFix',											
 				'class': 'zIndexFix',
 				'scrolling': 'no',
 				'marginWidth': 0,
 				'marginHeight': 0,
-				'src': '',
-				'id': id + '_zIndexFix'
+				'src': ''
 			}).inject(this.windowEl);
 		}
 		
 		cache.overlayEl = new Element('div', {
-			'class': 'mochaOverlay',
-			'id': id + '_overlay'
+			'id': id + '_overlay',									  
+			'class': 'mochaOverlay'
 		}).inject(this.windowEl);
 
 		cache.titleBarEl = new Element('div', {
+			'id': id + '_titleBar',									   
 			'class': 'mochaTitlebar',
-			'id': id + '_titleBar',
 			'styles': {
 				'cursor': options.draggable ? 'move' : 'default'
 			}
 		}).inject(cache.overlayEl, 'top');
 
 		cache.titleEl = new Element('h3', {
-			'class': 'mochaTitle',
-			'id': id + '_title'
+			'id': id + '_title',									
+			'class': 'mochaTitle'
 		}).inject(cache.titleBarEl);
 		
 		cache.contentBorderEl = new Element('div', {
-			'class': 'mochaContentBorder',
-			'id': id + '_contentBorder'
+			'id': id + '_contentBorder',											
+			'class': 'mochaContentBorder'
 		}).inject(cache.overlayEl);
 
 		cache.contentWrapperEl = new Element('div', {
-			'class': 'mochaContentWrapper',
 			'id': id + '_contentWrapper',
+			'class': 'mochaContentWrapper',
 			'styles': {
 				'width': width + 'px',
 				'height': height + 'px'
@@ -762,80 +764,90 @@ MochaUI.Window = new Class({
 		}		
 		
 		cache.contentEl = new Element('div', {
-			'class': 'mochaContent',
-			'id': id + '_content'
+			'id': id + '_content',
+			'class': 'mochaContent'
 		}).inject(cache.contentWrapperEl);
 
 		cache.canvasEl = new Element('canvas', {
+			'id': id + '_canvas',
 			'class': 'mochaCanvas',
 			'width': 1,
-			'height': 1,
-			'id': id + '_canvas'
+			'height': 1
 		}).inject(this.windowEl);
 		
-		if ( Browser.Engine.trident && MochaUI.ieSupport == 'excanvas'  ) {
-			G_vmlCanvasManager.initElement(cache.canvasEl);			
-			// getContext() method does not exist before retrieving the element via getElement
+		if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas') {
+			G_vmlCanvasManager.initElement(cache.canvasEl);
 			cache.canvasEl = this.windowEl.getElement('.mochaCanvas');			
-		}	
+		}
 		
 		cache.controlsEl = new Element('div', {
-			'class': 'mochaControls',
-			'id': id + '_controls'
+			'id': id + '_controls',
+			'class': 'mochaControls'
 		}).inject(cache.overlayEl, 'after');
 		
 		cache.canvasControlsEl = new Element('canvas', {
+			'id': id + '_canvasControls',
 			'class': 'mochaCanvasControls',
 			'width': 14,
-			'height': 16,
-			'id': id + '_canvasControls'
+			'height': 16
 		}).inject(this.windowEl);
 		
-		if ( Browser.Engine.trident && MochaUI.ieSupport == 'excanvas'  ) {
-			G_vmlCanvasManager.initElement(cache.canvasControlsEl);			
-			// getContext() method does not exist before retrieving the element via getElement
+		if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas') {
+			G_vmlCanvasManager.initElement(cache.canvasControlsEl);
 			cache.canvasControlsEl = this.windowEl.getElement('.mochaCanvasControls');			
 		}
 		
 		if (options.closable){
 			cache.closeButtonEl = new Element('div', {
+				'id': id + '_closeButton',
 				'class': 'mochaClose',
-				'title': 'Close',
-				'id': id + '_closeButton'
+				'title': 'Close'
 			}).inject(cache.controlsEl);
 		}
 
 		if (options.maximizable){
 			cache.maximizeButtonEl = new Element('div', {
+				'id': id + '_maximizeButton',
 				'class': 'maximizeToggle',
-				'title': 'Maximize',
-				'id': id + '_maximizeButton'
+				'title': 'Maximize'
 			}).inject(cache.controlsEl);
 		}
 
 		if (options.minimizable){
 			cache.minimizeButtonEl = new Element('div', {
+				'id': id + '_minimizeButton',
 				'class': 'minimizeToggle',
-				'title': 'Minimize',
-				'id': id + '_minimizeButton'
+				'title': 'Minimize'
 			}).inject(cache.controlsEl);
 		}
 		
 		if (options.shape != 'gauge' && options.type != 'notification'){
 			cache.canvasIconEl = new Element('canvas', {
+				'id': id + '_canvasIcon',
 				'class': 'mochaLoadingIcon',
 				'width': 18,
-				'height': 18,
-				'id': id + '_canvasIcon'
+				'height': 18
 			}).inject(this.windowEl, 'bottom');	
 		
 			if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas') {
 				G_vmlCanvasManager.initElement(cache.canvasIconEl);
-			    // getContext() method does not exist before retrieving the element via getElement
-				// element via getElement
 				cache.canvasIconEl = this.windowEl.getElement('.mochaLoadingIcon');
 			}
 		}
+		
+		if (this.options.shape == 'gauge'){
+			cache.canvasHeaderEl = new Element('canvas', {
+				'id': id + '_canvasHeader',											   
+				'class': 'mochaCanvasHeader',
+				'width': this.options.width,
+				'height': 26
+			}).inject(this.windowEl, 'bottom');
+		
+			if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas') {
+				G_vmlCanvasManager.initElement(cache.canvasHeaderEl);
+				cache.canvasHeaderEl = this.windowEl.getElement('.mochaCanvasHeader');			
+			}		
+		}		
 		
 		if ( Browser.Engine.trident ) {
 			cache.overlayEl.setStyle('zIndex', 2);
@@ -1004,7 +1016,7 @@ MochaUI.Window = new Class({
 			this.canvasIconEl.setStyles({
 				'left': shadowBlur + 3,
 				'bottom': shadowBlur + 4
-			})
+			});
 		}
 		
 		// Draw Window
@@ -1094,7 +1106,7 @@ MochaUI.Window = new Class({
 	},	
 	drawControls : function(width, height, shadows){
 		var options = this.options;
-		var shadowBlur = options.shadowBlur;		
+		var shadowBlur = options.shadowBlur;
 		
 		// Make sure controls are placed correctly.
 		this.controlsEl.setStyles({
@@ -1228,12 +1240,10 @@ MochaUI.Window = new Class({
 		);
 
 	},	
-	drawGauge: function(ctx, width, height, shadows){
-
+	drawGauge: function(ctx, width, height, shadows){		
 		var shadowBlur = this.options.shadowBlur;		
 		var radius = (width *.5) - (shadowBlur) + 16;
-		var shadowOpacity = 1;		
-
+		var shadowOpacity = 1;
 		// This is the drop shadow. It is created onion style.
 		if (shadows != false) {	
 			for (var x = 0; x <= shadowBlur; x++){				
@@ -1247,37 +1257,6 @@ MochaUI.Window = new Class({
 				);
 			}
 		}
-		/*
-		if (shadows != false) {	
-			for (var x = 0; x <= shadowBlur; x++){				
-			
-			if (x == shadowBlur){
-				shadowOpacity = .6;
-			}
-			else {
-				shadowOpacity = .04 + (x * .01);	
-			}
-			
-			ctx.lineWidth = 24 + (shadowBlur * 2) - (x * 2);
-			ctx.lineCap = 'round';
-
-			ctx.beginPath();
-			ctx.moveTo(shadowBlur + 12, shadowBlur + 12);
-			ctx.lineTo(width - shadowBlur - 12, shadowBlur + 12);
-			ctx.strokeStyle = 'rgba(0, 0, 0,' + shadowOpacity + ')';
-			ctx.stroke();				
-				
-			}
-		}*/
-		ctx.beginPath();		
-		ctx.lineWidth = 24;
-		ctx.lineCap = 'round';
-		
-		ctx.moveTo(shadowBlur + 12, shadowBlur + 12);
-		ctx.lineTo(width - shadowBlur - 12, shadowBlur + 12);
-		ctx.strokeStyle = 'rgba(0, 0, 0, .15)';
-		ctx.stroke();
-		
 		MochaUI.circle(
 			ctx,
 			width * .5,
@@ -1285,39 +1264,25 @@ MochaUI.Window = new Class({
 			(width *.5) - (shadowBlur),
 			[250, 250, 250],
 			1
-		); 
-
-		//var arcStartAngle = Math.PI * (- 0.5 + 2 * 0); // -0.5 sets set the start to be top
-		//var arcEndAngle = Math.PI * (- 0.5 + 2 * .125);
-
-		/*
-		ctx.arc(
-			width * .5,
-			(height  + this.options.headerHeight )* .5,
-			radius,         // radius
-			arcStartAngle,         // Start angle
-			arcEndAngle, // End angle
-			false
 		);
-		ctx.strokeStyle = 'rgba(250,250,250,.5)';
+		this.drawGaugeHeader(width);
+	},
+	drawGaugeHeader: function(width){
+		var shadowBlur = this.options.shadowBlur;		
+		this.canvasHeaderEl.setStyles({
+			'top': shadowBlur,
+			'left': shadowBlur
+		});		
+		var ctx = this.canvasHeaderEl.getContext('2d');
+		ctx.clearRect(0, 0, width, 100);
+		ctx.beginPath();		
+		ctx.lineWidth = 24;
+		ctx.lineCap = 'round';		
+		ctx.moveTo(12, 12);
+		ctx.lineTo(width - (shadowBlur*2) - 12, 12);
+		ctx.strokeStyle = 'rgba(0, 0, 0, .15)';
 		ctx.stroke();
-		*/
-		
-		/*
-		ctx.arc(
-			width * .5,
-			(height  + this.options.headerHeight )* .5,
-			(width *.5) - (shadowBlur) - 3,         // radius
-			arcEndAngle,     
-			arcStartAngle,
-			true
-		);
-
-		ctx.closePath();
-		ctx.fill();	
-		*/		
-		
-	},		
+	},
 	bodyRoundedRect: function(ctx, x, y, width, height, radius, rgb){
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ', 100)';
 		ctx.beginPath();
@@ -1333,7 +1298,6 @@ MochaUI.Window = new Class({
 		ctx.fill();
 	
 	},
-	// Window header with gradient background
 	topRoundedRect: function(ctx, x, y, width, height, radius, headerStartColor, headerStopColor){
 		var lingrad = ctx.createLinearGradient(0, 0, 0, this.options.headerHeight);
 		lingrad.addColorStop(0, 'rgba(' + headerStartColor.join(',') + ', 1)');
@@ -1364,8 +1328,7 @@ MochaUI.Window = new Class({
 		ctx.quadraticCurveTo(x + width, y, x + width - radius, y);
 		ctx.lineTo(x + radius, y);
 		ctx.quadraticCurveTo(x, y, x, y + radius);
-		ctx.fill();
-	
+		ctx.fill();	
 	},	
 	maximizebutton: function(ctx, x, y, rgbBg, aBg, rgb, a){
 		// Circle
