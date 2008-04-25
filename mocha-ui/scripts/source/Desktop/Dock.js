@@ -206,10 +206,6 @@ MochaUI.Dock = new Class({
 			currentInstance.iframeEl.setStyle('visibility', 'hidden');
 		}
 		
-		if (currentInstance.options.shape == 'gauge'){
-			currentInstance.canvasControlsEl.setStyle('opacity', 0);
-		}
-		
 		var titleText = currentInstance.titleEl.innerHTML;
 
 		// Hide window and add to dock

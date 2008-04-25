@@ -309,9 +309,7 @@ div.mocha .cornerSE { /* Bottom right resize handle */
 	left: 0;
 	background: transparent;
 	z-index: -1;
-	opacity: .0;
-	filter: alpha(opacity=0);
-	-moz-opacity: .0;	
+	display: none;		
 	overflow: hidden;			
 }
 
@@ -615,6 +613,7 @@ iframe.zIndexFix {
 
 div.mocha.transparent .mochaTitlebar h3 {
 	color: #fff;
+	display: none;	
 }
 
 div.mocha.notification .mochaTitlebar {

@@ -327,13 +327,14 @@ MochaUI.Window = new Class({
 		
 		
 		if (this.options.shape == 'gauge'){
-			this.canvasControlsEl.setStyle('opacity', 0);
+			this.canvasControlsEl.setStyle('display', 'none');
 			this.windowEl.addEvent('mouseover', function(){
 				this.mouseover = true;										 
 				var showControls = function(){
 					if (this.mouseover != false){
-						this.canvasControlsEl.setStyle('opacity', 1);
-						this.canvasHeaderEl.setStyle('opacity', 1);						
+						this.canvasControlsEl.setStyle('display', 'block');
+						this.canvasHeaderEl.setStyle('display', 'block');
+						this.titleEl.setStyle('display', 'block');							
 					}
 				};
 				showControls.delay(150, this);
@@ -341,8 +342,9 @@ MochaUI.Window = new Class({
 			}.bind(this));
 			this.windowEl.addEvent('mouseleave', function(){
 				this.mouseover = false;														  
-				this.canvasControlsEl.setStyle('opacity', 0);
-				this.canvasHeaderEl.setStyle('opacity', 0);					
+				this.canvasControlsEl.setStyle('display', 'none');
+				this.canvasHeaderEl.setStyle('display', 'none');
+				this.titleEl.setStyle('display', 'none');				
 			}.bind(this));			
 		}
 
@@ -1280,7 +1282,7 @@ MochaUI.Window = new Class({
 		ctx.lineCap = 'round';		
 		ctx.moveTo(12, 12);
 		ctx.lineTo(width - (shadowBlur*2) - 12, 12);
-		ctx.strokeStyle = 'rgba(0, 0, 0, .15)';
+		ctx.strokeStyle = 'rgba(0, 0, 0, .18)';
 		ctx.stroke();
 	},
 	bodyRoundedRect: function(ctx, x, y, width, height, radius, rgb){
