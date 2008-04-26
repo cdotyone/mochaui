@@ -6,7 +6,7 @@ Script: mocha.js.php
 	Dynamically concatenate source javascript files during development.
 	
 Note:
-	This is not recommended for live sites since it does not cache or gzip the outputted file. 	 
+	This is not recommended for live sites since it does not cache, compress or gzip the outputted file. 	 
 
 Use:
 	In the source code, edit the files you wish to merge. By default all the javascript files in the source directory are merged. When your site is ready to go live, it is recommended that you take the output of this file, compress it and rename it "mocha.js".
@@ -25,7 +25,6 @@ $aFiles = array(
 	'dev/mocha/scripts/source/Window/Modal.js',		
 	'dev/mocha/scripts/source/Window/Windows-from-html.js',		
 	'dev/mocha/scripts/source/Window/Windows-from-json.js',
-	'dev/mocha/scripts/source/Window/Window-from-form.js',
 	'dev/mocha/scripts/source/Window/Arrange-cascade.js',		
 	'dev/mocha/scripts/source/Desktop/Desktop.js',	
 	'dev/mocha/scripts/source/Desktop/Dock.js',

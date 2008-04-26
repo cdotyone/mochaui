@@ -10,12 +10,10 @@ Requires:
 	Core.js, Window.js
 	
 Options:
-	useHeaderCanvas - Toggle canvas header gradient.
+	useHeaderCanvas - (boolean) Toggle canvas header gradient.
 	headerStartColor - Header gradient's top color - RGB.
 	headerStopColor - Header gradient's bottom color.
 	sidebarLimitX - Sidebar minimum and maximum widths when resizing.
-	
-Todo: Add dblclick to window titlebars to maximize/restore	
 
 */
 

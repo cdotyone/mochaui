@@ -209,8 +209,7 @@ initializeWindows = function(){
 			title: 'Window Parametrics',	
 			loadMethod: 'xhr',
 			contentURL: 'plugins/parametrics/',
-			onContentLoaded: function(){
-				
+			onContentLoaded: function(){				
 				if ( !MochaUI.parametricsScript == true ){
 					new Request({
 						url: 'plugins/parametrics/scripts/parametrics.js',
@@ -333,10 +332,19 @@ initializeWindows = function(){
 			loadMethod: 'xhr',
 			contentURL: 'plugins/windowform/',
 			onContentLoaded: function(){
-				$('newWindowSubmit').addEvent('click', function(e){
-					new Event(e).stop();
-					new MochaUI.WindowForm();
-				});
+				if ( !MochaUI.windowformScript == true ){
+					new Request({
+						url: 'plugins/windowform/scripts/Window-from-form.js',
+						method: 'get',
+						onSuccess: function() {
+							$('newWindowSubmit').addEvent('click', function(e){
+								new Event(e).stop();
+								new MochaUI.WindowForm();
+							});							
+							MochaUI.windowformScript = true;							
+						}.bind(this)							
+					}).send();					
+				}
 			},
 			width: 370,
 			height: 400,
