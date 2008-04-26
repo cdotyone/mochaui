@@ -267,8 +267,12 @@ MochaUI.Dock = new Class({
 	},
 	restoreMinimized: function(windowEl) {
 
+		if (MochaUI.Windows.windowsVisible == false){
+			MochaUI.toggleWindowVisibility();
+		}
+
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
-		currentButton = $(currentInstance.options.id + '_dockTab');		
+		currentButton = $(currentInstance.options.id + '_dockTab');				
 		
 		this.dockSortables.removeItems(currentButton ).destroy();
 		MochaUI.Desktop.setDesktopSize();

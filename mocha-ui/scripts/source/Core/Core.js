@@ -155,25 +155,25 @@ var MochaUI = new Hash({
 	(end)
 
 	Arguments: 
-		windowEl: the ID of the window to be closed
+		windowEl - the ID of the window to be closed
 		
 	Returns:
-		true: the window was closed
-		false: the window was not closed
+		true - the window was closed
+		false - the window was not closed
 		
 	*/
-	closeWindow: function(windowEl) {
+	closeWindow: function(windowEl){
 		// Does window exist and is not already in process of closing ?		
 
 		var instances = MochaUI.Windows.instances;
 		var currentInstance = instances.get(windowEl.id);
-		if (windowEl != $(windowEl) || currentInstance.isClosing )	return;
+		if (windowEl != $(windowEl) || currentInstance.isClosing) return;
 			
 		currentInstance.isClosing = true;
 		currentInstance.fireEvent('onClose', windowEl);
 
 		if (MochaUI.options.useEffects == false){
-			if (currentInstance.options.type == 'modal') {
+			if (currentInstance.options.type == 'modal'){
 				$('modalOverlay').setStyle('opacity', 0);
 				$('modalFix').setStyle('display', 'block');
 			}		
@@ -187,7 +187,7 @@ var MochaUI = new Hash({
 		else {
 			// Redraws IE windows without shadows since IE messes up canvas alpha when you change element opacity
 			if (Browser.Engine.trident) currentInstance.drawWindow(windowEl, false);
-			if (currentInstance.options.type == 'modal') {
+			if (currentInstance.options.type == 'modal'){
 				MochaUI.Modal.modalOverlayCloseMorph.start({
 					'opacity': 0
 				});
@@ -213,9 +213,8 @@ var MochaUI = new Hash({
 	},	
 	/*
 	
-	Function: closeAll
-	
-	Notes: This closes all the windows
+	Function: closeAll	
+		Close all open windows.
 
 	Returns:
 		true: the windows were closed
@@ -223,7 +222,7 @@ var MochaUI = new Hash({
 
 	*/
 	closeAll: function() {		
-		$$('div.mocha').each(function(el) {
+		$$('div.mocha').each(function(el){
 			this.closeWindow(el);			
 		}.bind(this));
 		MochaUI.Windows.instances.empty();				
@@ -235,19 +234,25 @@ var MochaUI = new Hash({
 	Function: toggleWindowVisibility
 		Toggle window visibility with Ctrl-Alt-Q.
 	
-	Todo:
-		Don't toggle modal visibility. If new window is created make all windows visible except for those that are minimized. If window is restored from dock make all windows visible except for any others that are still minimized.
-
 	*/	
-	toggleWindowVisibility: function() {		
-		MochaUI.Windows.instances.each(function(instance) {
+	toggleWindowVisibility: function(){		
+		MochaUI.Windows.instances.each(function(instance){
+			if (instance.options.type == 'modal' || instance.isMinimized == true) return;									
 			var id = $(instance.options.id);									
-			if (id.getStyle('visibility') == 'visible'){												
-				id.setStyle('visibility', 'hidden');
+			if (id.getStyle('visibility') == 'visible'){
+				if (instance.iframe){
+					instance.iframeEl.setStyle('visibility', 'hidden');
+				}				
+				instance.contentBorderEl.setStyle('visibility', 'hidden');				
+				id.setStyle('visibility', 'hidden');				
 				MochaUI.Windows.windowsVisible = false;
 			}
 			else {
 				id.setStyle('visibility', 'visible');
+				instance.contentBorderEl.setStyle('visibility', 'visible');
+				if (instance.iframe){
+					instance.iframeEl.setStyle('visibility', 'visible');
+				}				
 				MochaUI.Windows.windowsVisible = true;
 			}
 		}.bind(this));
@@ -308,16 +313,16 @@ var MochaUI = new Hash({
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
 		ctx.fill();
 	},	
-	serialize: function(obj) {
+	serialize: function(obj){
 		var newobj = {};
-		$each(obj, function(prop,i) {
+		$each(obj, function(prop,i){
 			newobj[i] = prop.toString().clean();
 		}, this);
 		return newobj;
 	},	
-	unserialize: function(obj) {
+	unserialize: function(obj){
 		var newobj = {};
-		$each(obj, function(prop,i) {
+		$each(obj, function(prop,i){
 			eval("newobj[i] = " + prop);
 		}, this);
 		return newobj;
@@ -383,8 +388,8 @@ var MochaUI = new Hash({
 	(end)
 	
 	*/	
-	garbageCleanUp: function() {
-		$$('div.mocha').each(function(el) {
+	garbageCleanUp: function(){
+		$$('div.mocha').each(function(el){
 			el.destroy();
 		}.bind(this));		
 	}	
