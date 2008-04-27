@@ -272,7 +272,7 @@ MochaUI.Desktop = new Class({
 				}.bind(this)
 			});
 			maximizeMorph.start({
-				'0': {	'height': windowDimensions.height - options.headerHeight - options.footerHeight,
+				'0': {	'height': function(){ return windowDimensions.height - options.headerHeight - options.footerHeight - currentInstance.contentBorderEl.getStyle('border-top').toInt() - currentInstance.contentBorderEl.getStyle('border-bottom').toInt() - (  currentInstance.toolbarWrapperEl ? currentInstance.toolbarWrapperEl.getStyle('height').toInt() + currentInstance.toolbarWrapperEl.getStyle('border-top').toInt() : 0)},
 						'width':  windowDimensions.width
 				},
 				'1': {	'top':  -shadowBlur,

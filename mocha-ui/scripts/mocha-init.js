@@ -143,7 +143,7 @@ initializeWindows = function(){
 				padding: { top: 0, right: 0, bottom: 0, left: 0 },				
 				x: 20,
 				y: 380,
-				bodyBgColor: '#fff',
+				contentBgColor: '#fff',
 				scrollbars: false
 			});		
 		}		
@@ -233,7 +233,7 @@ initializeWindows = function(){
 			padding: { top: 12, right: 12, bottom: 10, left: 12 },			
 			resizable: false,
 			maximizable: false,
-			bodyBgColor: '#fff'			
+			contentBgColor: '#fff'			
 		});
 	}
 	if ($('parametricsLinkCheck')){
@@ -292,7 +292,8 @@ initializeWindows = function(){
 			height: 160,
 			x: 650,
 			y: 75,
-			padding: { top: 0, right: 0, bottom: 0, left: 0 }							
+			padding: { top: 0, right: 0, bottom: 0, left: 0 },
+			bodyBgColor: [250,250,250]
 		});	
 	}
 	if ($('clockLinkCheck')){
@@ -438,7 +439,8 @@ initializeWindows = function(){
 			width: 300,
 			height: 210,
 			x: 650,
-			y: 280
+			y: 280,
+			toolbar: true
 		});	
 	}
 	if ($('featuresLinkCheck')){

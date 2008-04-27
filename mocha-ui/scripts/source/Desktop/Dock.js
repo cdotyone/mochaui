@@ -210,6 +210,9 @@ MochaUI.Dock = new Class({
 
 		// Hide window and add to dock
 		currentInstance.contentBorderEl.setStyle('visibility', 'hidden');
+		if(currentInstance.toolbarWrapperEl){		
+			currentInstance.toolbarWrapperEl.setStyle('visibility', 'hidden');
+		}
 		windowEl.setStyle('visibility', 'hidden');
 
 		 // Fixes a scrollbar issue in Mac FF2
@@ -287,7 +290,10 @@ MochaUI.Dock = new Class({
 		}
 
 		windowEl.setStyle('visibility', 'visible');
-		currentInstance.contentBorderEl.setStyle('visibility', 'visible');		
+		currentInstance.contentBorderEl.setStyle('visibility', 'visible');
+		if(currentInstance.toolbarWrapperEl){		
+			currentInstance.toolbarWrapperEl.setStyle('visibility', 'visible');
+		}		
 
 		// Show iframe
 		if ( currentInstance.iframe ) {

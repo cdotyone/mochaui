@@ -56,10 +56,10 @@ Options:
 	headerHeight - (number) Height of window titlebar.
 	footerHeight - (number) Height of window footer.
 	cornerRadius - (number)
-	bodyBgColor - (hex) Body background color
+	contentBgColor - (hex) Body background color
 	headerStartColor - ([r,g,b,]) Header gradient's top color - RGB
 	headerStopColor - ([r,g,b,]) Header gradient's bottom color
-	footerBgColor - ([r,g,b,]) Background color of the main canvas shape
+	bodyBgColor - ([r,g,b,]) Background color of the main canvas shape
 	minimizeBgColor - ([r,g,b,]) Minimize button background color
 	minimizeColor - ([r,g,b,]) Minimize button color	
 	maximizeBgColor - ([r,g,b,]) Maximize button background color
@@ -141,6 +141,12 @@ MochaUI.Windows.windowOptions = {
 	// html options
 	content:           'Window content',
 	
+	// Toolbar
+	toolbar:           false, // (boolean) Create window toolbar. Defaults to false. This can be used for tabs, media controls, or if your window content is an iframe you might use the toolbar for back, forward, and refresh buttons.
+	toolbarPosition:   'top', // 'top' or 'bottom'. Defaults to top.
+	toolbarHeight:     29,
+	toolbarContent:    'pages/lipsum.html',
+	
 	// Container options
 	container:         null,
 	restrict:          true,
@@ -174,12 +180,12 @@ MochaUI.Windows.windowOptions = {
 	
 	// Color options:		
 	headerHeight:      25,
-	footerHeight:      27,
+	footerHeight:      25,
 	cornerRadius:      10,
-	bodyBgColor:	   '#fff',
+	contentBgColor:	   '#fff',
 	headerStartColor:  [250, 250, 250],
 	headerStopColor:   [229, 229, 229],
-	footerBgColor:     [229, 229, 229],
+	bodyBgColor:     [229, 229, 229],
 	minimizeBgColor:   [255, 255, 255],
 	minimizeColor:     [0, 0, 0],
 	maximizeBgColor:   [255, 255, 255],
@@ -256,7 +262,7 @@ MochaUI.Window = new Class({
 		if (options.shape == 'gauge'|| options.type == 'notification'){
 			options.collapsible = false;
 			options.maximizable = false;
-			options.bodyBgColor = 'transparent';
+			options.contentBgColor = 'transparent';
 			options.scrollbars = false;
 			options.footerHeight = 0;			
 		}
@@ -367,7 +373,7 @@ MochaUI.Window = new Class({
 		// Set scrollbars, always use 'hidden' for iframe windows
 		this.contentWrapperEl.setStyles({
 			'overflow': this.options.scrollbars && !this.options.iframe ? 'auto' : 'hidden',
-			'background': this.options.bodyBgColor
+			'background': this.options.contentBgColor
 		});
 
 		this.contentEl.setStyles({
@@ -618,7 +624,9 @@ MochaUI.Window = new Class({
 				]
 			},	
 			modifiers: {x: false, y: 'top'},
-			onBeforeStart: function(){this.resizeOnBeforeStart();}.bind(this),		
+			onBeforeStart: function(){
+				this.resizeOnBeforeStart();
+			}.bind(this),		
 			onStart: function(){
 				this.coords = this.contentWrapperEl.getCoordinates();			
 				this.y2 = this.coords.top.toInt() + this.contentWrapperEl.offsetHeight;
@@ -629,7 +637,9 @@ MochaUI.Window = new Class({
 				this.drawWindow(windowEl);
 				this.adjustHandles();
 			}.bind(this),
-			onComplete: function(){this.resizeOnComplete();}.bind(this)		
+			onComplete: function(){
+				this.resizeOnComplete();
+			}.bind(this)		
 		});
 	
 		this.contentWrapperEl.makeResizable({
@@ -638,12 +648,16 @@ MochaUI.Window = new Class({
 				x: [this.options.resizeLimit.x[0] - (this.options.shadowBlur * 2), this.options.resizeLimit.x[1] - (this.options.shadowBlur * 2) ]		
 			},	
 			modifiers: {x: 'width', y: false},
-			onBeforeStart: function(){this.resizeOnBeforeStart();}.bind(this),		
+			onBeforeStart: function(){
+				this.resizeOnBeforeStart();
+			}.bind(this),		
 			onDrag: function(){
 				this.drawWindow(windowEl);
 				this.adjustHandles();
 			}.bind(this),
-			onComplete: function(){this.resizeOnComplete();}.bind(this)	
+			onComplete: function(){
+				this.resizeOnComplete();
+			}.bind(this)	
 		});	
 	
 		this.contentWrapperEl.makeResizable({
@@ -653,12 +667,16 @@ MochaUI.Window = new Class({
 				y: [this.options.resizeLimit.y[0] - this.headerFooterShadow, this.options.resizeLimit.y[1] - this.headerFooterShadow]					
 			},	
 			modifiers: {x: 'width', y: 'height'},
-			onBeforeStart: function(){this.resizeOnBeforeStart();}.bind(this),		
+			onBeforeStart: function(){
+				this.resizeOnBeforeStart();
+			}.bind(this),		
 			onDrag: function(){
 				this.drawWindow(windowEl);	
 				this.adjustHandles();
 			}.bind(this),
-			onComplete: function(){this.resizeOnComplete();}.bind(this)	
+			onComplete: function(){
+				this.resizeOnComplete();
+			}.bind(this)	
 		});		
 		
 		this.contentWrapperEl.makeResizable({
@@ -667,12 +685,16 @@ MochaUI.Window = new Class({
 				y: [this.options.resizeLimit.y[0] - this.headerFooterShadow, this.options.resizeLimit.y[1] - this.headerFooterShadow]	
 			},	
 			modifiers: {x: false, y: 'height'},
-			onBeforeStart: function(){this.resizeOnBeforeStart();}.bind(this),		
+			onBeforeStart: function(){
+				this.resizeOnBeforeStart();
+			}.bind(this),		
 			onDrag: function(){
 				this.drawWindow(windowEl);			
 				this.adjustHandles();
 			}.bind(this),
-			onComplete: function(){this.resizeOnComplete();}.bind(this)	
+			onComplete: function(){
+				this.resizeOnComplete();
+			}.bind(this)	
 		});
 		
 		this.windowEl.makeResizable({
@@ -688,7 +710,9 @@ MochaUI.Window = new Class({
 				]
 			},	
 			modifiers: {x: 'left', y: false},
-			onBeforeStart: function(){this.resizeOnBeforeStart();}.bind(this),		
+			onBeforeStart: function(){
+				this.resizeOnBeforeStart();
+			}.bind(this),		
 			onStart: function(){
 				this.coords = this.contentWrapperEl.getCoordinates();			
 				this.x2 = this.coords.left.toInt() + this.contentWrapperEl.offsetWidth;
@@ -699,7 +723,9 @@ MochaUI.Window = new Class({
 				this.drawWindow(windowEl);
 				this.adjustHandles();
 			}.bind(this),
-			onComplete: function(){this.resizeOnComplete();}.bind(this)
+			onComplete: function(){
+				this.resizeOnComplete();
+			}.bind(this)
 		});
 	
 	},
@@ -804,6 +830,19 @@ MochaUI.Window = new Class({
 			'class': 'mochaContentBorder'
 		}).inject(cache.overlayEl);
 
+		if (options.toolbar){
+			cache.toolbarWrapperEl = new Element('div', {
+				'id': id + '_toolbarWrapper',											
+				'class': 'mochaToolbarWrapper'
+			}).inject(cache.contentBorderEl, 'before');
+			
+			cache.toolbarEl = new Element('div', {
+				'id': id + '_toolbar',											
+				'class': 'mochaToolbar'
+			}).inject(cache.toolbarWrapperEl).set('html', '<ul class="tab-menu"><li class="tab-selected"><a href="#" onclick="MochaUI.updateContent($(\'features\'), null, \'pages/features.html\')">Option 1</a></li><li><a href="#" onclick="MochaUI.updateContent($(\'features\'), null, \'pages/lipsum.html\')">Option 2</a></li><li><a href="#" onclick="MochaUI.updateContent($(\'features\'), null, \'pages/docs.html\')">Update</a></li></ul><div class="clear"></div>');			
+			
+		}
+
 		cache.contentWrapperEl = new Element('div', {
 			'id': id + '_contentWrapper',
 			'class': 'mochaContentWrapper',
@@ -815,6 +854,7 @@ MochaUI.Window = new Class({
 		
 		if (this.options.shape == 'gauge'){
 			cache.contentBorderEl.setStyle('borderWidth', 0);
+			//cache.contentBorderEl.setStyle('margin', 0);			
 		}		
 		
 		cache.contentEl = new Element('div', {
@@ -1022,8 +1062,22 @@ MochaUI.Window = new Class({
 		var options = this.options;
 		var shadowBlur = options.shadowBlur;
 		var shadowBlur2x = shadowBlur * 2;
+
+		/*
+		var borderHeight = 0;
+		var styleDimensions = this.contentBorderEl.getStyles('margin-top', 'margin-bottom', 'border-top', 'border-bottom');		
+		for(var style in styleDimensions){
+			borderHeight += styleDimensions[style].toInt();
+		}
 		
-		this.contentBorderEl.setStyles({
+		var borderWidth = 0;
+		var styleDimensions = this.contentBorderEl.getStyles('margin-left', 'margin-right', 'border-left', 'border-right');		
+		for(var style in styleDimensions){
+			borderWidth += styleDimensions[style].toInt();
+		}
+		*/
+
+		this.overlayEl.setStyles({
 			'width': this.contentWrapperEl.offsetWidth
 		});
 
@@ -1034,8 +1088,11 @@ MochaUI.Window = new Class({
 			});
 		}
 		
+		var borderHeight = this.contentBorderEl.getStyle('border-top').toInt() + this.contentBorderEl.getStyle('border-bottom').toInt();
+		var toolbarHeight = this.toolbarWrapperEl ? this.toolbarWrapperEl.getStyle('height').toInt() + this.toolbarWrapperEl.getStyle('border-top').toInt() : 0;
+		
 		this.headerFooterShadow = options.headerHeight + options.footerHeight + shadowBlur2x;
-		var height = this.contentWrapperEl.getStyle('height').toInt() + this.headerFooterShadow;
+		var height = this.contentWrapperEl.getStyle('height').toInt() + this.headerFooterShadow + toolbarHeight + borderHeight;
 		var width = this.contentWrapperEl.getStyle('width').toInt() + shadowBlur2x;
 		this.windowEl.setStyle('height', height);
 		
@@ -1059,7 +1116,6 @@ MochaUI.Window = new Class({
 
 		// Set width
 		this.windowEl.setStyle('width', width);
-		this.overlayEl.setStyle('width', width);
 		this.titleBarEl.setStyles({
 			'width': width - shadowBlur2x,
 			'height': options.headerHeight
@@ -1243,7 +1299,7 @@ MochaUI.Window = new Class({
 			width - shadowBlur2x,        // width
 			height - shadowBlur2x,       // height
 			cornerRadius,                // corner radius
-			this.options.footerBgColor   // Footer color
+			this.options.bodyBgColor   // Footer color
 		);
 
 		if (this.options.type != 'notification'){
@@ -1316,7 +1372,7 @@ MochaUI.Window = new Class({
 			width * .5,
 			(height  + this.options.headerHeight )* .5,
 			(width *.5) - (shadowBlur),
-			[250, 250, 250],
+			this.options.bodyBgColor,
 			1
 		);
 		this.drawGaugeHeader(width);
@@ -1334,7 +1390,7 @@ MochaUI.Window = new Class({
 		ctx.lineCap = 'round';		
 		ctx.moveTo(12, 12);
 		ctx.lineTo(width - (shadowBlur*2) - 12, 12);
-		ctx.strokeStyle = 'rgba(0, 0, 0, .18)';
+		ctx.strokeStyle = 'rgba(0, 0, 0, .25)';
 		ctx.stroke();
 	},
 	bodyRoundedRect: function(ctx, x, y, width, height, radius, rgb){
@@ -1353,7 +1409,7 @@ MochaUI.Window = new Class({
 	
 	},
 	topRoundedRect: function(ctx, x, y, width, height, radius, headerStartColor, headerStopColor){
-		var lingrad = ctx.createLinearGradient(0, 0, 0, this.options.headerHeight);
+		var lingrad = ctx.createLinearGradient(0, 0, 0, height);
 		lingrad.addColorStop(0, 'rgba(' + headerStartColor.join(',') + ', 1)');
 		lingrad.addColorStop(1, 'rgba(' + headerStopColor.join(',') + ', 1)');		
 		ctx.fillStyle = lingrad;
@@ -1366,6 +1422,15 @@ MochaUI.Window = new Class({
 		ctx.lineTo(x + radius, y);
 		ctx.quadraticCurveTo(x, y, x, y + radius);
 		ctx.fill();
+		/*
+		ctx.beginPath();
+		ctx.strokeStyle = '#000';
+		ctx.lineWidth = 1;
+		ctx.moveTo(x, y + height + .5);
+		ctx.lineTo(x + width, y + height + .5);
+		ctx.stroke();
+		*/
+		
 	},
 	topRoundedRect2: function(ctx, x, y, width, height, radius, headerStartColor, headerStopColor){
 		var lingrad = ctx.createLinearGradient(0, this.options.shadowBlur - 1, 0, height + this.options.shadowBlur + 3);
@@ -1434,11 +1499,23 @@ MochaUI.Window = new Class({
 		ctx.lineTo(x + 4, y);
 		ctx.stroke();
 	},
+	/*
+	
+	Function: hideLoadingIcon
+		Hides the spinner.
+		
+	*/	
 	hideLoadingIcon: function(canvas) {
 		if (!MochaUI.options.useLoadingIcon || this.options.shape == 'gauge' || this.options.type == 'notification') return;		
 		$(canvas).setStyle('display', 'none');		
 		$clear(canvas.iconAnimation);
 	},
+	/*
+	
+	Function: showLoadingIcon
+		Shows the spinner.
+		
+	*/	
 	showLoadingIcon: function(canvas) {
 		if (!MochaUI.options.useLoadingIcon || this.options.shape == 'gauge' || this.options.type == 'notification') return;		
 		$(canvas).setStyles({

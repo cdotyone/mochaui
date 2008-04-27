@@ -65,10 +65,10 @@ var MochaUI = new Hash({
 					}.bind(this),
 					onFailure: function(){
 						contentEl.set('html','<p><strong>Error Loading XMLHttpRequest</strong></p><p>Make sure all of your content is uploaded to your server, and that you are attempting to load a document from the same domain as this page. XMLHttpRequests will not work on your local machine.</p>');
-						currentInstance.hideLoadingIcon.delay(150, currentInstance, canvasIconEl);
+						currentInstance.hideLoadingIcon(canvasIconEl);
 					}.bind(this),
 					onSuccess: function() {
-						currentInstance.hideLoadingIcon.delay(150, currentInstance, canvasIconEl);
+						currentInstance.hideLoadingIcon(canvasIconEl);
 						currentInstance.fireEvent('onContentLoaded', windowEl);
 					}.bind(this)
 				}).get();
@@ -126,7 +126,15 @@ var MochaUI = new Hash({
 				position: 'absolute',
 				top: -10000,
 				left: -10000
-			});				
+			});
+			if(currentInstance.toolbarWrapperEl){
+				currentInstance.toolbarWrapperEl.setStyles({
+					visibility: 'hidden',
+					position: 'absolute',
+					top: -10000,
+					left: -10000
+				});
+			}
 			currentInstance.drawWindowCollapsed(windowEl);
 		}
 		else {			
@@ -138,6 +146,14 @@ var MochaUI = new Hash({
 				top: null,
 				left: null
 			});
+			if(currentInstance.toolbarWrapperEl){
+				currentInstance.toolbarWrapperEl.setStyles({
+					visibility: 'visible',
+					position: null,
+					top: null,
+					left: null
+				});				
+			}
 			if ( currentInstance.iframe ) {
 				currentInstance.iframeEl.setStyle('visibility', 'visible');
 			}
