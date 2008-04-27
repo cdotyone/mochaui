@@ -834,12 +834,12 @@ MochaUI.Window = new Class({
 			cache.toolbarWrapperEl = new Element('div', {
 				'id': id + '_toolbarWrapper',											
 				'class': 'mochaToolbarWrapper'
-			}).inject(cache.contentBorderEl, 'before');
+			}).inject(cache.contentBorderEl, options.toolbarPosition == 'bottom' ? 'after' : 'before');
 			
 			cache.toolbarEl = new Element('div', {
 				'id': id + '_toolbar',											
 				'class': 'mochaToolbar'
-			}).inject(cache.toolbarWrapperEl).set('html', '<ul class="tab-menu"><li class="tab-selected"><a href="#" onclick="MochaUI.updateContent($(\'features\'), null, \'pages/features.html\')">Option 1</a></li><li><a href="#" onclick="MochaUI.updateContent($(\'features\'), null, \'pages/lipsum.html\')">Option 2</a></li><li><a href="#" onclick="MochaUI.updateContent($(\'features\'), null, \'pages/docs.html\')">Update</a></li></ul><div class="clear"></div>');			
+			}).inject(cache.toolbarWrapperEl).set('html', '<ul class="tab-menu"><li class="tab-selected"><a href="#" onclick="MochaUI.updateContent($(\'features\'), null, \'pages/features.html\')">Option 1</a></li><li><a href="#" onclick="MochaUI.updateContent($(\'features\'), null, \'pages/lipsum.html\')">Option 2</a></li><li><a href="#" onclick="MochaUI.updateContent($(\'features\'), null, \'pages/docs.html\')">Update</a></li></ul><div class="clear"></div>');
 			
 		}
 

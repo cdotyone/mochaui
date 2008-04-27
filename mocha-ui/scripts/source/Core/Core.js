@@ -242,7 +242,7 @@ var MochaUI = new Hash({
 			this.closeWindow(el);			
 		}.bind(this));
 		MochaUI.Windows.instances.empty();				
-		$$('div.dockButton').destroy();
+		$$('div.dockTab').destroy();
 		return true;
 	},	
 	/*
