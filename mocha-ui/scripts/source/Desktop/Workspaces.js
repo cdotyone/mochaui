@@ -51,7 +51,7 @@ MochaUI.extend({
 			y: 25,
 			padding:  { top: 10, right: 12, bottom: 10, left: 12 },
 			shadowBlur: 5,
-			footerBgColor: [245, 245, 245]	
+			bodyBgColor: [255, 255, 255]	
 		});
 		
 	},
@@ -96,7 +96,7 @@ MochaUI.extend({
 				y: 25,
 				padding:  { top: 10, right: 12, bottom: 10, left: 12 },
 				shadowBlur: 5,
-				footerBgColor: [245, 245, 245]	
+				bodyBgColor: [255, 255, 255]	
 			});
 			return;
 		}
