@@ -1108,7 +1108,10 @@ MochaUI.Window = new Class({
 		this.headerFooterShadow = options.headerHeight + options.footerHeight + shadowBlur2x;
 		var height = this.contentWrapperEl.getStyle('height').toInt() + this.headerFooterShadow + toolbarHeight + borderHeight;
 		var width = this.contentWrapperEl.getStyle('width').toInt() + shadowBlur2x;
-		this.windowEl.setStyle('height', height);
+		this.windowEl.setStyles({
+			'height': height,
+			'width': width
+		});
 		
 		this.overlayEl.setStyles({
 			'height': height,
@@ -1128,8 +1131,6 @@ MochaUI.Window = new Class({
 			})
 		}
 
-		// Set width
-		this.windowEl.setStyle('width', width);
 		this.titleBarEl.setStyles({
 			'width': width - shadowBlur2x,
 			'height': options.headerHeight
@@ -1149,10 +1150,10 @@ MochaUI.Window = new Class({
 
 		switch(options.shape) {
 			case 'box':
-				this.drawBox(ctx, width, height, shadows);
+				this.drawBox(ctx, width, height, shadowBlur, shadowOffset, shadows);
 				break;
 			case 'gauge':
-				this.drawGauge(ctx, width, height, shadows);
+				this.drawGauge(ctx, width, height, shadowBlur, shadowOffset, shadows);
 				break;				
 		}		
 		
@@ -1183,7 +1184,7 @@ MochaUI.Window = new Class({
 		var options = this.options;
 		var shadowBlur = options.shadowBlur;
 		var shadowBlur2x = shadowBlur * 2;
-		var shadowOffset = this.options.shadowOffset;		
+		var shadowOffset = options.shadowOffset;		
 		
 		var headerShadow = options.headerHeight + shadowBlur2x + 3;
 		var height = headerShadow;
@@ -1220,7 +1221,7 @@ MochaUI.Window = new Class({
 		var ctx = this.canvasEl.getContext('2d');
 		ctx.clearRect(0, 0, width, height);
 		
-		this.drawBoxCollapsed(ctx, width, height, shadows);		
+		this.drawBoxCollapsed(ctx, width, height, shadowBlur, shadowOffset, shadows);		
 		this.drawControls(width, height, shadows);
 
 		// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
@@ -1288,11 +1289,9 @@ MochaUI.Window = new Class({
 		}		
 		
 	},
-	drawBox: function(ctx, width, height, shadows){	
+	drawBox: function(ctx, width, height, shadowBlur, shadowOffset, shadows){	
 
-		var shadowBlur = this.options.shadowBlur;
-		var shadowBlur2x = shadowBlur * 2;
-		var shadowOffset = this.options.shadowOffset;		
+		var shadowBlur2x = shadowBlur * 2;	
 		var cornerRadius = this.options.cornerRadius;		
 	
 		// This is the drop shadow. It is created onion style.
@@ -1335,12 +1334,11 @@ MochaUI.Window = new Class({
 			);		
 		}	
 	},
-	drawBoxCollapsed: function(ctx, width, height, shadows){	
+	drawBoxCollapsed: function(ctx, width, height, shadowBlur, shadowOffset, shadows){	
 
-		var shadowBlur = this.options.shadowBlur;
-		var shadowBlur2x = shadowBlur * 2;
-		var shadowOffset = this.options.shadowOffset;		
-		var cornerRadius = this.options.cornerRadius;		
+		var options = this.options;
+		var shadowBlur2x = shadowBlur * 2;		
+		var cornerRadius = options.cornerRadius;		
 	
 		// This is the drop shadow. It is created onion style.
 		if ( shadows != false ) {	
@@ -1360,27 +1358,26 @@ MochaUI.Window = new Class({
 
 		// Window header
 		this.topRoundedRect2(
-			ctx,                            // context
-			shadowBlur - shadowOffset.x,    // x
-			shadowBlur - shadowOffset.y,    // y
-			width - shadowBlur2x,           // width
-			this.options.headerHeight + 3,  // height
-			cornerRadius,                   // corner radius
-			this.options.headerStartColor,  // Header gradient's top color
-			this.options.headerStopColor    // Header gradient's bottom color
+			ctx,                          // context
+			shadowBlur - shadowOffset.x,  // x
+			shadowBlur - shadowOffset.y,  // y
+			width - shadowBlur2x,         // width
+			options.headerHeight + 3,     // height
+			cornerRadius,                 // corner radius
+			options.headerStartColor,     // Header gradient's top color
+			options.headerStopColor       // Header gradient's bottom color
 		);
 
 	},	
-	drawGauge: function(ctx, width, height, shadows){		
-		var shadowBlur = this.options.shadowBlur;
-		var shadowOffset = this.options.shadowOffset;
-		var radius = (width *.5) - (shadowBlur) + 16;
+	drawGauge: function(ctx, width, height, shadowBlur, shadowOffset, shadows){
+		var options = this.options;
+		var radius = (width * .5) - (shadowBlur) + 16;
 		if (shadows != false) {	
 			for (var x = 0; x <= shadowBlur; x++){				
 				MochaUI.circle(
 					ctx,
 					width * .5 + shadowOffset.x,
-					(height  + this.options.headerHeight) * .5 + shadowOffset.x,
+					(height  + options.headerHeight) * .5 + shadowOffset.x,
 					(width *.5) - (x * 2) - shadowOffset.x,
 					[0, 0, 0],
 					x == shadowBlur ? .6 : .06 + (x * .04)
@@ -1390,16 +1387,13 @@ MochaUI.Window = new Class({
 		MochaUI.circle(
 			ctx,
 			width * .5  - shadowOffset.x,
-			(height + this.options.headerHeight ) * .5  - shadowOffset.y,
-			(width *.5) - (shadowBlur),
-			this.options.bodyBgColor,
+			(height + options.headerHeight) * .5  - shadowOffset.y,
+			(width *.5) - shadowBlur,
+			options.bodyBgColor,
 			1
 		);
-		this.drawGaugeHeader(width);
-	},
-	drawGaugeHeader: function(width){
-		var shadowBlur = this.options.shadowBlur;
-		var shadowOffset = this.options.shadowOffset;		
+		
+		// Draw gauge header
 		this.canvasHeaderEl.setStyles({
 			'top': shadowBlur - shadowOffset.y,
 			'left': shadowBlur - shadowOffset.x
