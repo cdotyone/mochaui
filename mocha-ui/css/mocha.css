@@ -291,8 +291,6 @@ div.mocha .mochaToolbar {
 }
 
 .tab-menu li {
-	display: block;
-	padding: 3px 15px;
 	background-color: #ebebeb;
 	cursor: pointer;	
 }
@@ -302,6 +300,8 @@ div.mocha .mochaToolbar {
 }
 
 .tab-menu li a {
+	display: block;
+	padding: 3px 15px;
 	color: #808080;
 }
 

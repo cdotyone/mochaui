@@ -145,7 +145,7 @@ MochaUI.Windows.windowOptions = {
 	toolbar:           false, // (boolean) Create window toolbar. Defaults to false. This can be used for tabs, media controls, or if your window content is an iframe you might use the toolbar for back, forward, and refresh buttons.
 	toolbarPosition:   'top', // 'top' or 'bottom'. Defaults to top.
 	toolbarHeight:     29,
-	toolbarContent:    'pages/lipsum.html',
+	toolbarContent:    null,
 	
 	// Container options
 	container:         null,
@@ -368,9 +368,6 @@ MochaUI.Window = new Class({
 		// Set title		
 		this.titleEl.set('html',this.options.title);
 
-		// Add content to window
-		MochaUI.updateContent(this.windowEl, this.options.content, this.options.contentURL);	
-		
 		// Set scrollbars, always use 'hidden' for iframe windows
 		this.contentWrapperEl.setStyles({
 			'overflow': this.options.scrollbars && !this.options.iframe ? 'auto' : 'hidden',
@@ -410,6 +407,14 @@ MochaUI.Window = new Class({
 		// Inject window into DOM		
 		this.windowEl.injectInside(this.options.container);
 		this.drawWindow(this.windowEl);
+		
+		// Add content to window
+
+		if (this.options.toolbarContent != null){
+			MochaUI.updateContent(this.windowEl, this.options.toolbarContent, null, this.toolbarEl, 'html');
+		}
+		
+		MochaUI.updateContent(this.windowEl, this.options.content, this.options.contentURL);		
 
 		// Attach events to the window
 		this.attachDraggable(this.windowEl);		
@@ -852,7 +857,7 @@ MochaUI.Window = new Class({
 			cache.toolbarEl = new Element('div', {
 				'id': id + '_toolbar',											
 				'class': 'mochaToolbar'
-			}).inject(cache.toolbarWrapperEl).set('html', '<ul id="featuresTabs" class="tab-menu"><li class="selected"><a href="#1" onclick="MochaUI.updateContent($(\'features\'), null, \'pages/features.html\')">Option 1</a></li><li><a href="#2" onclick="MochaUI.updateContent($(\'features\'), null, \'pages/lipsum.html\')">Option 2</a></li><li><a href="#3" onclick="MochaUI.updateContent($(\'features\'), null, \'pages/docs.html\')">Update</a></li></ul><div class="clear"></div>');
+			}).inject(cache.toolbarWrapperEl);
 			
 		}
 

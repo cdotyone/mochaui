@@ -40,7 +40,7 @@ var MochaUI = new Hash({
 		windowEl, content, url
 		
 	*/	
-	updateContent: function(windowEl, content, url, element){
+	updateContent: function(windowEl, content, url, element, loadMethod){
 		
 		if (!windowEl) return;		
 		
@@ -58,8 +58,11 @@ var MochaUI = new Hash({
 		// Remove old content.
 		currentInstance.contentEl.empty();
 
+		//alert(loadMethod);
+		var loadMethod = loadMethod ? loadMethod : currentInstance.options.loadMethod;
+
 		// Load new content.
-		switch(currentInstance.options.loadMethod) {
+		switch(loadMethod) {
 			case 'xhr':
 				new Request.HTML({
 					url: url,
@@ -358,20 +361,6 @@ var MochaUI = new Hash({
 		ctx.arc(x, y, diameter, 0, Math.PI*2, true);
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
 		ctx.fill();
-	},	
-	serialize: function(obj){
-		var newobj = {};
-		$each(obj, function(prop,i){
-			newobj[i] = prop.toString().clean();
-		}, this);
-		return newobj;
-	},	
-	unserialize: function(obj){
-		var newobj = {};
-		$each(obj, function(prop,i){
-			eval("newobj[i] = " + prop);
-		}, this);
-		return newobj;
 	},
 	/*
 	
