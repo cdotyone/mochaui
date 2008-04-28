@@ -210,7 +210,9 @@ MochaUI.Desktop = new Class({
 		// temporarily move the window to the desktop while it is minimized.
 		if (currentInstance.options.container != this.options.desktop){
 			this.desktop.grab(windowEl);
-			windowDrag.container = this.desktop;
+			if (this.options.restrict){
+				windowDrag.container = this.desktop;
+			}
 		}		
 		
 		// Save original position
@@ -232,11 +234,12 @@ MochaUI.Desktop = new Class({
 		var windowDimensions = document.getCoordinates();
 		var options = currentInstance.options;
 		var shadowBlur = options.shadowBlur;
+		var shadowOffset = options.shadowOffset;
 
 		if (MochaUI.options.useEffects == false){
 			windowEl.setStyles({
-				'top': -shadowBlur,
-				'left': -shadowBlur
+				'top': shadowOffset.y - shadowBlur,
+				'left': shadowOffset.x - shadowBlur
 			});
 			currentInstance.contentWrapperEl.setStyles({
 				'height': windowDimensions.height - options.headerHeight - options.footerHeight,
@@ -251,15 +254,12 @@ MochaUI.Desktop = new Class({
 		}
 		else {
 			
-			// Todo: Initialize the variables for these morphs once and reuse them
+			// Todo: Initialize the variables for these morphs once in an initialize function and reuse them
 			
-			//var maximizePositionMorph = new Fx.Morph(windowEl, {
-			//	'duration': 300
-			//});
 			var maximizeMorph = new Fx.Elements([contentWrapperEl, windowEl], { 
 				duration: 70,
 				onStart: function(windowEl){
-						currentInstance.maximizeAnimation = currentInstance.drawWindow.periodical(20, currentInstance, windowEl);
+					currentInstance.maximizeAnimation = currentInstance.drawWindow.periodical(20, currentInstance, windowEl);
 				}.bind(this),
 				onComplete: function(windowEl){
 					$clear(currentInstance.maximizeAnimation);
@@ -275,8 +275,8 @@ MochaUI.Desktop = new Class({
 				'0': {	'height': function(){ return windowDimensions.height - options.headerHeight - options.footerHeight - currentInstance.contentBorderEl.getStyle('border-top').toInt() - currentInstance.contentBorderEl.getStyle('border-bottom').toInt() - (  currentInstance.toolbarWrapperEl ? currentInstance.toolbarWrapperEl.getStyle('height').toInt() + currentInstance.toolbarWrapperEl.getStyle('border-top').toInt() : 0)},
 						'width':  windowDimensions.width
 				},
-				'1': {	'top':  -shadowBlur,
-						'left': -shadowBlur
+				'1': {	'top': shadowOffset.y - shadowBlur,
+						'left': shadowOffset.x - shadowBlur 
 				}
 			});		
 		}
@@ -299,11 +299,9 @@ MochaUI.Desktop = new Class({
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
 		
 		// Window exists and is maximized ?
-		if ( !(windowEl = $(windowEl)) || !currentInstance.isMaximized )
-			return;
+		if (windowEl != $(windowEl) || !currentInstance.isMaximized) return;
 			
-		var options = currentInstance.options;			
-		
+		var options = currentInstance.options;		
 		currentInstance.isMaximized = false;
 		
 		if (options.restrict){
@@ -331,7 +329,9 @@ MochaUI.Desktop = new Class({
 			});
 			if (currentInstance.container != this.options.desktop){
 				$(options.container).grab(windowEl);
-				currentInstance.windowDrag.container = $(options.container);
+				if (options.restrict){
+					currentInstance.windowDrag.container = $(options.container);
+				}
 			}
 			currentInstance.fireEvent('onRestore', windowEl);
 		}
@@ -349,7 +349,9 @@ MochaUI.Desktop = new Class({
 					}
 					if (options.container != this.options.desktop){
 						$(options.container).grab(windowEl);
-						currentInstance.windowDrag.container = $(options.container);
+						if (options.restrict){	
+							currentInstance.windowDrag.container = $(options.container);
+						}
 					}
 					currentInstance.fireEvent('onRestore', windowEl);
 				}.bind(this)

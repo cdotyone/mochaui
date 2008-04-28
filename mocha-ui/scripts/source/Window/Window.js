@@ -581,7 +581,7 @@ MochaUI.Window = new Class({
 		if (!this.options.draggable) return;
 		this.windowDrag = new Drag.Move(windowEl, {
 			handle: this.titleBarEl,
-			container: this.options.restrict ? $(this.options.container) : false,			
+			container: this.options.restrict == true ? $(this.options.container) : false,			
 			grid: this.options.draggableGrid,
 			limit: this.options.draggableLimit,
 			snap: this.options.draggableSnap,
