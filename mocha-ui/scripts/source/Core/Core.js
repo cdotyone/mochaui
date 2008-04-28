@@ -40,13 +40,19 @@ var MochaUI = new Hash({
 		windowEl, content, url
 		
 	*/	
-	updateContent: function(windowEl, content, url){
+	updateContent: function(windowEl, content, url, element){
 		
 		if (!windowEl) return;		
 		
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
-		var options = currentInstance.options;
 		var contentEl = currentInstance.contentEl;
+		var options = currentInstance.options;
+		if (element){
+			var contentContainer = element; 
+		}
+		else {
+			var contentContainer = currentInstance.contentEl;
+		}
 		var canvasIconEl = currentInstance.canvasIconEl;
 		
 		// Remove old content.
@@ -57,14 +63,14 @@ var MochaUI = new Hash({
 			case 'xhr':
 				new Request.HTML({
 					url: url,
-					update: contentEl,
+					update: contentContainer,
 					evalScripts: options.evalScripts,
 					evalResponse: options.evalResponse,
 					onRequest: function(){
 						currentInstance.showLoadingIcon(canvasIconEl);
 					}.bind(this),
 					onFailure: function(){
-						contentEl.set('html','<p><strong>Error Loading XMLHttpRequest</strong></p><p>Make sure all of your content is uploaded to your server, and that you are attempting to load a document from the same domain as this page. XMLHttpRequests will not work on your local machine.</p>');
+						contentContainer.set('html','<p><strong>Error Loading XMLHttpRequest</strong></p>');
 						currentInstance.hideLoadingIcon(canvasIconEl);
 					}.bind(this),
 					onSuccess: function() {
@@ -74,7 +80,7 @@ var MochaUI = new Hash({
 				}).get();
 				break;
 			case 'iframe': // May be able to streamline this if the iframe already exists.
-				if ( options.contentURL == '') {
+				if ( options.contentURL == '' || contentContainer != contentEl) {
 					break;
 				}
 				currentInstance.iframeEl = new Element('iframe', {
@@ -102,14 +108,38 @@ var MochaUI = new Hash({
 				// Need to test injecting elements as content.
 				var elementTypes = new Array('element', 'textnode', 'whitespace', 'collection');
 				if (elementTypes.contains($type(content))) {
-					content.inject(contentEl);
+					content.inject(contentContainer);
 				} else {
-					contentEl.set('html', content);
+					contentContainer.set('html', content);
 				}				
 				currentInstance.fireEvent('onContentLoaded', windowEl);
 				break;
 		}
 
+	},
+	/*
+	
+	Function: initializeTabs		
+		
+	*/	
+	initializeTabs: function(el){
+		$(el).getElements('li').each(function(li){
+			li.addEvent('click', function(e){
+				MochaUI.selected(this, el);						  
+			});
+		});
+	},
+	/*
+	
+	Function: selected
+		Add "selected" class to current list item and remove it from sibling list items.
+		
+	*/	
+	selected: function(el, parent){
+		$(parent).getChildren().each(function(li){
+			li.removeClass('selected');						   
+		});
+		el.addClass('selected');	
 	},
 	collapseToggle: function(windowEl){
 		var instances = MochaUI.Windows.instances;

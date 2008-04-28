@@ -436,6 +436,9 @@ initializeWindows = function(){
 			title: 'Features',
 			loadMethod: 'xhr',
 			contentURL: 'pages/features.html',
+			onContentLoaded: function(){
+				MochaUI.initializeTabs('featuresTabs');	
+			},
 			width: 320,
 			height: 185,
 			x: 600,

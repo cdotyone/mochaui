@@ -297,7 +297,7 @@ div.mocha .mochaToolbar {
 	cursor: pointer;	
 }
 
-.tab-menu li.tab-selected {
+.tab-menu li.selected {
 	background-color: #8caac7;
 }
 
@@ -305,7 +305,7 @@ div.mocha .mochaToolbar {
 	color: #808080;
 }
 
-.tab-menu li.tab-selected a {
+.tab-menu li.selected a {
 	color: #fff;
 }	
 
