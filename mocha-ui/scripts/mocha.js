@@ -44,10 +44,12 @@ var MochaUI = new Hash({
 		
 		if (!windowEl) return;		
 		
+		//alert('test');
+		
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
 		var contentEl = currentInstance.contentEl;
 		var options = currentInstance.options;
-		if (element){
+		if (element != null){
 			var contentContainer = element; 
 		}
 		else {
@@ -56,8 +58,10 @@ var MochaUI = new Hash({
 		var canvasIconEl = currentInstance.canvasIconEl;
 		
 		// Remove old content.
-		currentInstance.contentEl.empty();
-
+		if (contentContainer == contentEl){
+			currentInstance.contentEl.empty();
+		}		
+		
 		//alert(loadMethod);
 		var loadMethod = loadMethod ? loadMethod : currentInstance.options.loadMethod;
 
@@ -70,20 +74,26 @@ var MochaUI = new Hash({
 					evalScripts: options.evalScripts,
 					evalResponse: options.evalResponse,
 					onRequest: function(){
-						currentInstance.showLoadingIcon(canvasIconEl);
+						if (contentContainer == contentEl){
+							currentInstance.showLoadingIcon(canvasIconEl);
+						}
 					}.bind(this),
 					onFailure: function(){
-						contentContainer.set('html','<p><strong>Error Loading XMLHttpRequest</strong></p>');
-						currentInstance.hideLoadingIcon(canvasIconEl);
+						if (contentContainer == contentEl){
+							contentContainer.set('html','<p><strong>Error Loading XMLHttpRequest</strong></p>');
+							currentInstance.hideLoadingIcon(canvasIconEl);
+						}
 					}.bind(this),
 					onSuccess: function() {
-						currentInstance.hideLoadingIcon(canvasIconEl);
-						currentInstance.fireEvent('onContentLoaded', windowEl);
+						if (contentContainer == contentEl){
+							currentInstance.hideLoadingIcon(canvasIconEl);
+							currentInstance.fireEvent('onContentLoaded', windowEl);
+						}
 					}.bind(this)
 				}).get();
 				break;
 			case 'iframe': // May be able to streamline this if the iframe already exists.
-				if ( options.contentURL == '') {
+				if ( options.contentURL == '' || contentContainer != contentEl) {
 					break;
 				}
 				currentInstance.iframeEl = new Element('iframe', {
@@ -126,8 +136,8 @@ var MochaUI = new Hash({
 		
 	*/	
 	initializeTabs: function(el){
-		$(el).getElements('li').each(function(li){
-			li.addEvent('click', function(e){
+		$(el).getElements('li').each(function(listitem){
+			listitem.addEvent('click', function(e){
 				MochaUI.selected(this, el);						  
 			});
 		});
@@ -139,8 +149,8 @@ var MochaUI = new Hash({
 		
 	*/	
 	selected: function(el, parent){
-		$(parent).getChildren().each(function(li){
-			li.removeClass('selected');						   
+		$(parent).getChildren().each(function(listitem){
+			listitem.removeClass('selected');						   
 		});
 		el.addClass('selected');	
 	},
@@ -583,8 +593,8 @@ MochaUI.Windows.windowOptions = {
 	toolbar:           false, // (boolean) Create window toolbar. Defaults to false. This can be used for tabs, media controls, or if your window content is an iframe you might use the toolbar for back, forward, and refresh buttons.
 	toolbarPosition:   'top', // 'top' or 'bottom'. Defaults to top.
 	toolbarHeight:     29,
-	toolbarURL:        null,	
-	toolbarContent:    null,
+	toolbarURL:        'pages/lipsum.html',	
+	toolbarContent:    '',
 	
 	// Container options
 	container:         null,
@@ -844,16 +854,19 @@ MochaUI.Window = new Class({
 			}.bind(this));			
 		}
 
-		MochaUI.updateContent(this.windowEl, this.options.content, this.options.contentURL);
+		// Add content to window
+
 
 		// Inject window into DOM		
 		this.windowEl.injectInside(this.options.container);
-		this.drawWindow(this.windowEl);
-		
-		// Add content to window
 
-		if (this.options.toolbarContent != null){
-			MochaUI.updateContent(this.windowEl, this.options.toolbarContent, this.options.toolbarURL, this.toolbarEl, 'html');
+		MochaUI.updateContent(this.windowEl, this.options.content, this.options.contentURL);
+
+
+		this.drawWindow(this.windowEl);		
+		
+		if (this.options.toolbar == true){
+			MochaUI.updateContent(this.windowEl, this.options.toolbarContent, this.options.toolbarURL, this.toolbarEl, 'xhr');
 		}
 		
 		// Attach events to the window
@@ -865,7 +878,7 @@ MochaUI.Window = new Class({
 			this.adjustHandles();
 		}
 
-		// Move window into position. If position not specified by user then center the window on the page.			
+		// Move window into position. If position not specified by user then center the window on the page.		
 		if (this.options.container == document.body || this.options.container == MochaUI.Desktop.desktop){
 			var dimensions = window.getSize();
 		}
@@ -909,6 +922,7 @@ MochaUI.Window = new Class({
 		}
 
 		if (this.options.type == 'modal') {
+
 			if (Browser.Engine.trident4){
 				$('modalFix').setStyle('display', 'block');	
 			}

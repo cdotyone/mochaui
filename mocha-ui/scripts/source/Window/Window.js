@@ -276,7 +276,12 @@ MochaUI.Window = new Class({
 		}
 		
 		// Minimizable, dock is required and window cannot be modal
-		options.minimizable = MochaUI.options.dock && options.minimizable && options.type != 'modal';		
+		if (MochaUI.options.dock == true && options.type != 'modal'){
+			options.minimizable = options.minimizable;
+		}
+		else {
+			options.minimizable = false;			
+		}
 
 		// Maximizable, desktop is required
 		options.maximizable = MochaUI.Desktop.desktop && options.maximizable && options.type != 'modal';
