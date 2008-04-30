@@ -44,6 +44,8 @@ var MochaUI = new Hash({
 		
 		if (!windowEl) return;		
 		
+		//alert('test');
+		
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
 		var contentEl = currentInstance.contentEl;
 		var options = currentInstance.options;
@@ -55,11 +57,8 @@ var MochaUI = new Hash({
 		}
 		var canvasIconEl = currentInstance.canvasIconEl;
 		
-		// Remove old content.
-		currentInstance.contentEl.empty();
-
 		//alert(loadMethod);
-		var loadMethod = loadMethod ? loadMethod : currentInstance.options.loadMethod;
+		var loadMethod = 'xhr';
 
 		// Load new content.
 		switch(loadMethod) {
@@ -132,8 +131,8 @@ var MochaUI = new Hash({
 		
 	*/	
 	initializeTabs: function(el){
-		$(el).getElements('li').each(function(li){
-			li.addEvent('click', function(e){
+		$(el).getElements('li').each(function(listitem){
+			listitem.addEvent('click', function(e){
 				MochaUI.selected(this, el);						  
 			});
 		});
@@ -145,8 +144,8 @@ var MochaUI = new Hash({
 		
 	*/	
 	selected: function(el, parent){
-		$(parent).getChildren().each(function(li){
-			li.removeClass('selected');						   
+		$(parent).getChildren().each(function(listitem){
+			listitem.removeClass('selected');						   
 		});
 		el.addClass('selected');	
 	},

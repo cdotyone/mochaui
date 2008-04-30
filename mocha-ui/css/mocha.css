@@ -266,18 +266,19 @@ div.mocha .mochaTitlebar a {
 
 div.mocha .mochaToolbarWrapper {
 	position: relative;
-	height: 27px;
+	height: 29px;
 	background: #f9f9f9;	
 	overflow: hidden;
 	border-top: 1px solid #d9d9d9;
 }
 
-div.mocha .mochaToolbar {	
+div.mocha .mochaToolbar {
+	border-top: 1px solid #fff;	
 }
 
 .tabs {
 	padding: 0 10px 2px 2px;
-	background: #fff url(../images/tabs.gif) repeat-x;
+	background: #e4e4e4 url(../images/tabs.gif) repeat-x;
 	background-position: left -60px;	
 }
 
@@ -310,7 +311,10 @@ div.mocha .mochaToolbar {
 .tab-menu li a {
 	display: block;
 	margin-left: 8px;
-	padding: 6px 15px 3px 7px;
+	padding: 6px 15px 5px 9px;
+	width: 56px;
+	text-align: center;
+	font-weight: bold;
 	color: #141414;
 	background: url(../images/tabs.gif) repeat-x;
 	background-position: right -30px;	

@@ -405,15 +405,14 @@ MochaUI.Window = new Class({
 				this.titleEl.setStyle('display', 'none');				
 			}.bind(this));			
 		}
-		
+
+		// Add content to window
 		MochaUI.updateContent(this.windowEl, this.options.content, this.options.contentURL);		
 
 		// Inject window into DOM		
 		this.windowEl.injectInside(this.options.container);
-		this.drawWindow(this.windowEl);
+		this.drawWindow(this.windowEl);		
 		
-		// Add content to window
-
 		if (this.options.toolbar == true){
 			MochaUI.updateContent(this.windowEl, this.options.toolbarContent, this.options.toolbarURL, this.toolbarEl, 'xhr');
 		}
