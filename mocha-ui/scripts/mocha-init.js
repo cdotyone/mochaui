@@ -437,14 +437,14 @@ initializeWindows = function(){
 			loadMethod: 'xhr',
 			contentURL: 'pages/features.html',
 			onContentLoaded: function(){
-				MochaUI.initializeTabs('featuresTabs');
+				//MochaUI.initializeTabs('featuresTabs');
 			},
 			width: 330,
 			height: 180,
 			x: 600,
 			y: 280,
 			toolbar: true,
-			toolbarContent: '<ul id="featuresTabs" class="tab-menu"><li class="selected"><a href="#1" onclick="MochaUI.updateContent($(\'features\'), null, \'pages/features.html\')">Option 1</a></li><li><a href="#2" onclick="MochaUI.updateContent($(\'features\'), null, \'pages/lipsum.html\')">Option 2</a></li><li><a href="#3" onclick="MochaUI.updateContent($(\'features\'), null, \'pages/docs.html\')">Update</a></li></ul><div class="clear"></div>'
+			toolbarURL: 'pages/features-tabs.html'
 		});	
 	}
 	if ($('featuresLinkCheck')){

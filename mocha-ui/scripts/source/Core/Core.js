@@ -70,15 +70,21 @@ var MochaUI = new Hash({
 					evalScripts: options.evalScripts,
 					evalResponse: options.evalResponse,
 					onRequest: function(){
-						currentInstance.showLoadingIcon(canvasIconEl);
+						if (contentContainer == contentEl){
+							currentInstance.showLoadingIcon(canvasIconEl);
+						}
 					}.bind(this),
 					onFailure: function(){
-						contentContainer.set('html','<p><strong>Error Loading XMLHttpRequest</strong></p>');
-						currentInstance.hideLoadingIcon(canvasIconEl);
+						if (contentContainer == contentEl){
+							contentContainer.set('html','<p><strong>Error Loading XMLHttpRequest</strong></p>');
+							currentInstance.hideLoadingIcon(canvasIconEl);
+						}
 					}.bind(this),
 					onSuccess: function() {
-						currentInstance.hideLoadingIcon(canvasIconEl);
-						currentInstance.fireEvent('onContentLoaded', windowEl);
+						if (contentContainer == contentEl){
+							currentInstance.hideLoadingIcon(canvasIconEl);
+							currentInstance.fireEvent('onContentLoaded', windowEl);
+						}
 					}.bind(this)
 				}).get();
 				break;

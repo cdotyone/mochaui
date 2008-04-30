@@ -266,47 +266,60 @@ div.mocha .mochaTitlebar a {
 
 div.mocha .mochaToolbarWrapper {
 	position: relative;
-	height: 26px;
+	height: 27px;
 	background: #f9f9f9;	
 	overflow: hidden;
 	border-top: 1px solid #d9d9d9;
 }
 
-div.mocha .mochaToolbar {
-	padding: 2px 10px 0 2px;	
+div.mocha .mochaToolbar {	
+}
+
+.tabs {
+	padding: 0 10px 2px 2px;
+	background: #fff url(../images/tabs.gif) repeat-x;
+	background-position: left -60px;	
 }
 
 .tab-menu {
+	padding-top: 1px;
 	list-style:	none;
 	margin: 0;
 	padding: 0;
 	clear: both;
 	line-height: 16px;
 	font-size: 11px;
+	
 }
 
 .tab-menu li {
 	float: left;
-	margin:	0 2px 0 0;
-}
-
-.tab-menu li {
+	margin:	0;
 	background-color: #ebebeb;
 	cursor: pointer;	
+	background: url(../images/tabs.gif) repeat-x;
+	background-position: left -30px;	
 }
 
 .tab-menu li.selected {
 	background-color: #8caac7;
+	background: url(../images/tabs.gif) repeat-x;
+	background-position: left 0;	
 }
 
 .tab-menu li a {
 	display: block;
-	padding: 3px 15px;
-	color: #808080;
+	margin-left: 8px;
+	padding: 6px 15px 3px 7px;
+	color: #141414;
+	background: url(../images/tabs.gif) repeat-x;
+	background-position: right -30px;	
 }
 
 .tab-menu li.selected a {
-	color: #fff;
+	color: #141414;
+	background: url(../images/tabs.gif) repeat-x;
+	background-position: right 0;	
 }	
 
 div.mocha .mochaContentBorder {

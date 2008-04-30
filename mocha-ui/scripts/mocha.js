@@ -40,35 +40,44 @@ var MochaUI = new Hash({
 		windowEl, content, url
 		
 	*/	
-	updateContent: function(windowEl, content, url){
+	updateContent: function(windowEl, content, url, element, loadMethod){
 		
 		if (!windowEl) return;		
 		
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
-		var options = currentInstance.options;
 		var contentEl = currentInstance.contentEl;
+		var options = currentInstance.options;
+		if (element){
+			var contentContainer = element; 
+		}
+		else {
+			var contentContainer = currentInstance.contentEl;
+		}
 		var canvasIconEl = currentInstance.canvasIconEl;
 		
 		// Remove old content.
 		currentInstance.contentEl.empty();
 
+		//alert(loadMethod);
+		var loadMethod = loadMethod ? loadMethod : currentInstance.options.loadMethod;
+
 		// Load new content.
-		switch(currentInstance.options.loadMethod) {
+		switch(loadMethod) {
 			case 'xhr':
 				new Request.HTML({
 					url: url,
-					update: contentEl,
+					update: contentContainer,
 					evalScripts: options.evalScripts,
 					evalResponse: options.evalResponse,
 					onRequest: function(){
 						currentInstance.showLoadingIcon(canvasIconEl);
 					}.bind(this),
 					onFailure: function(){
-						contentEl.set('html','<p><strong>Error Loading XMLHttpRequest</strong></p><p>Make sure all of your content is uploaded to your server, and that you are attempting to load a document from the same domain as this page. XMLHttpRequests will not work on your local machine.</p>');
-						currentInstance.hideLoadingIcon.delay(150, currentInstance, canvasIconEl);
+						contentContainer.set('html','<p><strong>Error Loading XMLHttpRequest</strong></p>');
+						currentInstance.hideLoadingIcon(canvasIconEl);
 					}.bind(this),
 					onSuccess: function() {
-						currentInstance.hideLoadingIcon.delay(150, currentInstance, canvasIconEl);
+						currentInstance.hideLoadingIcon(canvasIconEl);
 						currentInstance.fireEvent('onContentLoaded', windowEl);
 					}.bind(this)
 				}).get();
@@ -102,14 +111,38 @@ var MochaUI = new Hash({
 				// Need to test injecting elements as content.
 				var elementTypes = new Array('element', 'textnode', 'whitespace', 'collection');
 				if (elementTypes.contains($type(content))) {
-					content.inject(contentEl);
+					content.inject(contentContainer);
 				} else {
-					contentEl.set('html', content);
+					contentContainer.set('html', content);
 				}				
 				currentInstance.fireEvent('onContentLoaded', windowEl);
 				break;
 		}
 
+	},
+	/*
+	
+	Function: initializeTabs		
+		
+	*/	
+	initializeTabs: function(el){
+		$(el).getElements('li').each(function(li){
+			li.addEvent('click', function(e){
+				MochaUI.selected(this, el);						  
+			});
+		});
+	},
+	/*
+	
+	Function: selected
+		Add "selected" class to current list item and remove it from sibling list items.
+		
+	*/	
+	selected: function(el, parent){
+		$(parent).getChildren().each(function(li){
+			li.removeClass('selected');						   
+		});
+		el.addClass('selected');	
 	},
 	collapseToggle: function(windowEl){
 		var instances = MochaUI.Windows.instances;
@@ -126,7 +159,15 @@ var MochaUI = new Hash({
 				position: 'absolute',
 				top: -10000,
 				left: -10000
-			});				
+			});
+			if(currentInstance.toolbarWrapperEl){
+				currentInstance.toolbarWrapperEl.setStyles({
+					visibility: 'hidden',
+					position: 'absolute',
+					top: -10000,
+					left: -10000
+				});
+			}
 			currentInstance.drawWindowCollapsed(windowEl);
 		}
 		else {			
@@ -138,6 +179,14 @@ var MochaUI = new Hash({
 				top: null,
 				left: null
 			});
+			if(currentInstance.toolbarWrapperEl){
+				currentInstance.toolbarWrapperEl.setStyles({
+					visibility: 'visible',
+					position: null,
+					top: null,
+					left: null
+				});				
+			}
 			if ( currentInstance.iframe ) {
 				currentInstance.iframeEl.setStyle('visibility', 'visible');
 			}
@@ -155,25 +204,25 @@ var MochaUI = new Hash({
 	(end)
 
 	Arguments: 
-		windowEl: the ID of the window to be closed
+		windowEl - the ID of the window to be closed
 		
 	Returns:
-		true: the window was closed
-		false: the window was not closed
+		true - the window was closed
+		false - the window was not closed
 		
 	*/
-	closeWindow: function(windowEl) {
+	closeWindow: function(windowEl){
 		// Does window exist and is not already in process of closing ?		
 
 		var instances = MochaUI.Windows.instances;
 		var currentInstance = instances.get(windowEl.id);
-		if (windowEl != $(windowEl) || currentInstance.isClosing )	return;
+		if (windowEl != $(windowEl) || currentInstance.isClosing) return;
 			
 		currentInstance.isClosing = true;
 		currentInstance.fireEvent('onClose', windowEl);
 
 		if (MochaUI.options.useEffects == false){
-			if (currentInstance.options.type == 'modal') {
+			if (currentInstance.options.type == 'modal'){
 				$('modalOverlay').setStyle('opacity', 0);
 				$('modalFix').setStyle('display', 'block');
 			}		
@@ -187,7 +236,7 @@ var MochaUI = new Hash({
 		else {
 			// Redraws IE windows without shadows since IE messes up canvas alpha when you change element opacity
 			if (Browser.Engine.trident) currentInstance.drawWindow(windowEl, false);
-			if (currentInstance.options.type == 'modal') {
+			if (currentInstance.options.type == 'modal'){
 				MochaUI.Modal.modalOverlayCloseMorph.start({
 					'opacity': 0
 				});
@@ -213,9 +262,8 @@ var MochaUI = new Hash({
 	},	
 	/*
 	
-	Function: closeAll
-	
-	Notes: This closes all the windows
+	Function: closeAll	
+		Close all open windows.
 
 	Returns:
 		true: the windows were closed
@@ -223,11 +271,11 @@ var MochaUI = new Hash({
 
 	*/
 	closeAll: function() {		
-		$$('div.mocha').each(function(el) {
+		$$('div.mocha').each(function(el){
 			this.closeWindow(el);			
 		}.bind(this));
 		MochaUI.Windows.instances.empty();				
-		$$('div.dockButton').destroy();
+		$$('div.dockTab').destroy();
 		return true;
 	},	
 	/*
@@ -235,19 +283,25 @@ var MochaUI = new Hash({
 	Function: toggleWindowVisibility
 		Toggle window visibility with Ctrl-Alt-Q.
 	
-	Todo:
-		Don't toggle modal visibility. If new window is created make all windows visible except for those that are minimized. If window is restored from dock make all windows visible except for any others that are still minimized.
-
 	*/	
-	toggleWindowVisibility: function() {		
-		MochaUI.Windows.instances.each(function(instance) {
+	toggleWindowVisibility: function(){		
+		MochaUI.Windows.instances.each(function(instance){
+			if (instance.options.type == 'modal' || instance.isMinimized == true) return;									
 			var id = $(instance.options.id);									
-			if (id.getStyle('visibility') == 'visible'){												
-				id.setStyle('visibility', 'hidden');
+			if (id.getStyle('visibility') == 'visible'){
+				if (instance.iframe){
+					instance.iframeEl.setStyle('visibility', 'hidden');
+				}				
+				instance.contentBorderEl.setStyle('visibility', 'hidden');				
+				id.setStyle('visibility', 'hidden');				
 				MochaUI.Windows.windowsVisible = false;
 			}
 			else {
 				id.setStyle('visibility', 'visible');
+				instance.contentBorderEl.setStyle('visibility', 'visible');
+				if (instance.iframe){
+					instance.iframeEl.setStyle('visibility', 'visible');
+				}				
 				MochaUI.Windows.windowsVisible = true;
 			}
 		}.bind(this));
@@ -307,20 +361,6 @@ var MochaUI = new Hash({
 		ctx.arc(x, y, diameter, 0, Math.PI*2, true);
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
 		ctx.fill();
-	},	
-	serialize: function(obj) {
-		var newobj = {};
-		$each(obj, function(prop,i) {
-			newobj[i] = prop.toString().clean();
-		}, this);
-		return newobj;
-	},	
-	unserialize: function(obj) {
-		var newobj = {};
-		$each(obj, function(prop,i) {
-			eval("newobj[i] = " + prop);
-		}, this);
-		return newobj;
 	},
 	/*
 	
@@ -383,8 +423,8 @@ var MochaUI = new Hash({
 	(end)
 	
 	*/	
-	garbageCleanUp: function() {
-		$$('div.mocha').each(function(el) {
+	garbageCleanUp: function(){
+		$$('div.mocha').each(function(el){
 			el.destroy();
 		}.bind(this));		
 	}	
@@ -407,9 +447,6 @@ License:
 Requires:
 	Core.js
 
-Todo:
-	- Try setting window opacity to .99 for IE. See if opacity effects will work with shadows then.
-
 */
    
 /*
@@ -425,7 +462,61 @@ Arguments:
 	options
 
 Options:
-	to be listed
+	id - The ID of the window. If not defined, it will be set to 'win' + windowIDCount.	
+	title - The title of the window.
+	type - ('window', 'modal' or 'notification') Defaults to 'window'.	
+	loadMethod - ('html', 'xhr', or 'iframe') Defaults to 'html'.
+	contentURL - Used if loadMethod is set to 'xhr' or 'iframe'.
+	evalScripts - (boolean) An xhr loadMethod option. Defaults to true.    
+	evalResponse - (boolean) An xhr loadMethod option. Defaults to false.
+	content - (string or element) An html loadMethod option. 
+	container - (element ID) Element the window is injected in. The container defaults to 'desktop'. If no desktop then to document.body. Use 'pageWrapper' if you don't want the windows to overlap the toolbars.
+	restrict - (boolean) Restrict window to container when dragging.
+	shape - ('box' or 'gauge') Shape of window. Defaults to 'box'.
+	collapsible - (boolean) Defaults to true.
+	minimizable - (boolean) Requires MochaUI.Desktop and MochaUI.Dock. Defaults to true if dependenices are met. 
+	maximizable - (boolean) Requires MochaUI.Desktop. Defaults to true if dependenices are met.
+	closable - (boolean) Defaults to true. 
+	draggable - (boolean) Defaults to false for modals; otherwise true.
+	draggableGrid - (false or number) Distance in pixels for snap-to-grid dragging. Defaults to false. 
+	draggableLimit - (false or number) An object with x and y properties used to limit the movement of the Window. Defaults to false.	
+	draggableSnap - (boolean) The distance to drag before the Window starts to respond to the drag. Defaults to false.
+	resizable - (boolean) Defaults to false for modals, notifications and gauges; otherwise true.
+	resizeLimit - (object) Minimum and maximum width and height of window when resized.
+	addClass - (string) Add a class to your window to give you more control over styling.	
+	width - (number) Width of content area.	
+	height - (number) Height of content area.
+	x - (number) If x and y are left undefined the window is centered on the page.
+	y - (number)    
+	scrollbars - (boolean)
+	padding - (object)
+	shadowBlur -(number) Width of shadows.		
+	headerHeight - (number) Height of window titlebar.
+	footerHeight - (number) Height of window footer.
+	cornerRadius - (number)
+	contentBgColor - (hex) Body background color
+	headerStartColor - ([r,g,b,]) Header gradient's top color - RGB
+	headerStopColor - ([r,g,b,]) Header gradient's bottom color
+	bodyBgColor - ([r,g,b,]) Background color of the main canvas shape
+	minimizeBgColor - ([r,g,b,]) Minimize button background color
+	minimizeColor - ([r,g,b,]) Minimize button color	
+	maximizeBgColor - ([r,g,b,]) Maximize button background color
+	maximizeColor - ([r,g,b,]) Maximize button color	
+	closeBgColor - ([r,g,b,]) Close button background color
+	closeColor - ([r,g,b,]) Close button color	
+	resizableColor - ([r,g,b,]) Resizable icon color
+
+Events:
+	onBeforeBuild - (function) Fired just before the window is built.
+	onContentLoaded - (function) Fired when content is successfully loaded via XHR or Iframe.
+	onFocus - (function)  Fired when the window is focused.
+	onBlur - (function) Fired when window loses focus.
+	onResize - (function) Fired when the window is resized.
+	onMinimize - (function) Fired when the window is minimized.
+	onMaximize - (function) Fired when the window is maximized.
+	onRestore - (function) Fired when a window is restored from minimized or maximized.
+	onClose - (function) Fired just before the window is closed.
+	onCloseComplete - (function) Fired after the window is closed.
 
 Returns:
 	Window object.
@@ -470,15 +561,17 @@ Example:
 
 */   
 
-// Having these options outside of the Class allows us to add, change, and remove individual options without rewriting all of them.
+// Having these options outside of the Class allows us to add, change, and remove
+// individual options without rewriting all of them.
+
 MochaUI.Windows.windowOptions = {
 	id:                null,
 	title:             'New Window',
-	type:              'window',  // window, modal or notification.
+	type:              'window',
 	
-	loadMethod:        'html', 	             // Can be set to 'html', 'xhr', or 'iframe'.
-	contentURL:        'pages/lipsum.html',	 // Used if loadMethod is set to 'xhr' or 'iframe'.  
-
+	loadMethod:        'html',
+	contentURL:        'pages/lipsum.html',
+	
 	// xhr options
 	evalScripts:       true,       
 	evalResponse:      false,         
@@ -486,65 +579,73 @@ MochaUI.Windows.windowOptions = {
 	// html options
 	content:           'Window content',
 	
+	// Toolbar
+	toolbar:           false, // (boolean) Create window toolbar. Defaults to false. This can be used for tabs, media controls, or if your window content is an iframe you might use the toolbar for back, forward, and refresh buttons.
+	toolbarPosition:   'top', // 'top' or 'bottom'. Defaults to top.
+	toolbarHeight:     29,
+	toolbarURL:        null,	
+	toolbarContent:    null,
+	
 	// Container options
-	// The container defaults to 'desktop'. If no desktop then to document.body. Use 'pageWrapper' if you don't want the windows to overlap the toolbars.
-	container:         null,  // Element the window is injected in. 
-	restrict:          true,  // Restrict window to container when dragging.
-	shape:             'box', // Shape of window; box or gauge.
+	container:         null,
+	restrict:          true,
+	shape:             'box',
 	
 	// Window Events
 	collapsible:       true,
-	minimizable:       true,  // Requires MochaUI.Desktop and MochaUI.Dock.
-	maximizable:       true,  // Requires MochaUI.Desktop.
+	minimizable:       true,
+	maximizable:       true,
 	closable:          true,  
 
 	// Draggable
-	draggable:         null,  // Defaults to false for modals; otherwise true.
-	draggableGrid:     false, // Distance in pixels for snap-to-grid dragging.
-	draggableLimit:    false, // An object with x and y properties used to limit the movement of the Window.	
-	draggableSnap:     false, // The distance to drag before the Window starts to respond to the drag.
+	draggable:         null,
+	draggableGrid:     false,
+	draggableLimit:    false,
+	draggableSnap:     false,
 
 	// Resizable
-	resizable:         null,  // Defaults to false for modals, notifications and gauges; otherwise true.
-	resizeLimit:       {'x': [250, 2500], 'y': [125, 2000]}, // Minimum and maximum width and height of window when resized.
+	resizable:         null,
+	resizeLimit:       {'x': [250, 2500], 'y': [125, 2000]},
 	
 	// Style options:
-	addClass:          '',    // Add a class to your window to give you more control over styling.	
-	width:             300,     // Width of content area.	
-	height:            125,     // Height of content area.
-	x:                 null,    // If x and y are left undefined the window is centered on the page. !!! NEED TO MAKE THIS WORK WITH THE CONTAINER OPTION. 
+	addClass:          '',
+	width:             300,
+	height:            125, 
+	x:                 null,    // !!! NEED TO MAKE THIS WORK WITH THE CONTAINER OPTION. 
 	y:                 null,    
 	scrollbars:        true,
 	padding:   		   { top: 10, right: 12, bottom: 10, left: 12 },
-	shadowBlur:        3,       // Width of shadows.
+	shadowBlur:        4,
+	shadowOffset:      {'x': 0, 'y': 1},  // Should be positive and not be greater than the ShadowBlur.
+	useCanvasControls: true, // NOT YET IMPLEMENTED.
 	
 	// Color options:		
-	headerHeight:      25,               // Height of window titlebar
-	footerHeight:      27,
+	headerHeight:      25,
+	footerHeight:      25,
 	cornerRadius:      10,
-	bodyBgColor:	   '#fff',           // Body background color - Hex
-	headerStartColor:  [250, 250, 250],  // Header gradient's top color - RGB
-	headerStopColor:   [229, 229, 229],  // Header gradient's bottom color
-	footerBgColor:     [229, 229, 229],	 // Background color of the main canvas shape
-	minimizeBgColor:   [255, 255, 255],  // Minimize button background color
-	minimizeColor:     [0, 0, 0],        // Minimize button color	
-	maximizeBgColor:   [255, 255, 255],  // Maximize button background color
-	maximizeColor:     [0, 0, 0],        // Maximize button color	
-	closeBgColor:      [255, 255, 255],  // Close button background color
-	closeColor:        [0, 0, 0],        // Close button color	
-	resizableColor:    [254, 254, 254],  // Resizable icon color
+	contentBgColor:	   '#fff',
+	headerStartColor:  [250, 250, 250],
+	headerStopColor:   [229, 229, 229],
+	bodyBgColor:       [229, 229, 229],
+	minimizeBgColor:   [255, 255, 255],
+	minimizeColor:     [0, 0, 0],
+	maximizeBgColor:   [255, 255, 255],
+	maximizeColor:     [0, 0, 0],
+	closeBgColor:      [255, 255, 255],
+	closeColor:        [0, 0, 0],
+	resizableColor:    [254, 254, 254],
 
 	// Events
-	onBeforeBuild:     $empty,  // Fired just before the window is built.
-	onContentLoaded:   $empty,  // Fired when content is successfully loaded via XHR or Iframe.
-	onFocus:           $empty,  // Fired when the window is focused.
-	onBlur:            $empty,  // Fired when window loses focus.
-	onResize:          $empty,  // Fired when the window is resized.
-	onMinimize:        $empty,  // Fired when the window is minimized.
-	onMaximize:        $empty,  // Fired when the window is maximized.
-	onRestore:         $empty,  // Fired when a window is restored from minimized or maximized.
-	onClose:           $empty,  // Fired just before the window is closed.
-	onCloseComplete:   $empty   // Fired after the window is closed.
+	onBeforeBuild:     $empty,
+	onContentLoaded:   $empty,
+	onFocus:           $empty,
+	onBlur:            $empty,
+	onResize:          $empty,
+	onMinimize:        $empty,
+	onMaximize:        $empty,
+	onRestore:         $empty,
+	onClose:           $empty,
+	onCloseComplete:   $empty
 };
 
 MochaUI.Window = new Class({
@@ -602,7 +703,7 @@ MochaUI.Window = new Class({
 		if (options.shape == 'gauge'|| options.type == 'notification'){
 			options.collapsible = false;
 			options.maximizable = false;
-			options.bodyBgColor = 'transparent';
+			options.contentBgColor = 'transparent';
 			options.scrollbars = false;
 			options.footerHeight = 0;			
 		}
@@ -646,7 +747,7 @@ MochaUI.Window = new Class({
 
 		// Shorten object chain
 		var instances = MochaUI.Windows.instances;
-		var instanceID = instances.get(this.options.id)
+		var instanceID = instances.get(this.options.id);
 	
 		// Here we check to see if there is already a class instance for this window
 		if (instanceID){			
@@ -707,13 +808,10 @@ MochaUI.Window = new Class({
 		// Set title		
 		this.titleEl.set('html',this.options.title);
 
-		// Add content to window
-		MochaUI.updateContent(this.windowEl, this.options.content, this.options.contentURL);	
-		
 		// Set scrollbars, always use 'hidden' for iframe windows
 		this.contentWrapperEl.setStyles({
 			'overflow': this.options.scrollbars && !this.options.iframe ? 'auto' : 'hidden',
-			'background': this.options.bodyBgColor
+			'background': this.options.contentBgColor
 		});
 
 		this.contentEl.setStyles({
@@ -723,21 +821,41 @@ MochaUI.Window = new Class({
 			'padding-right': this.options.padding.right
 		});		
 		
-		/*
+		
 		if (this.options.shape == 'gauge'){
-			this.canvasControlsEl.setStyle('opacity', 0);
+			this.canvasControlsEl.setStyle('display', 'none');
 			this.windowEl.addEvent('mouseover', function(){
-				this.canvasControlsEl.setStyle('opacity', 1);
+				this.mouseover = true;										 
+				var showControls = function(){
+					if (this.mouseover != false){
+						this.canvasControlsEl.setStyle('display', 'block');
+						this.canvasHeaderEl.setStyle('display', 'block');
+						this.titleEl.setStyle('display', 'block');							
+					}
+				};
+				showControls.delay(150, this);
+				
 			}.bind(this));
 			this.windowEl.addEvent('mouseleave', function(){
-				this.canvasControlsEl.setStyle('opacity', 0);
+				this.mouseover = false;														  
+				this.canvasControlsEl.setStyle('display', 'none');
+				this.canvasHeaderEl.setStyle('display', 'none');
+				this.titleEl.setStyle('display', 'none');				
 			}.bind(this));			
-		} */
+		}
+
+		MochaUI.updateContent(this.windowEl, this.options.content, this.options.contentURL);
 
 		// Inject window into DOM		
 		this.windowEl.injectInside(this.options.container);
 		this.drawWindow(this.windowEl);
+		
+		// Add content to window
 
+		if (this.options.toolbarContent != null){
+			MochaUI.updateContent(this.windowEl, this.options.toolbarContent, this.options.toolbarURL, this.toolbarEl, 'html');
+		}
+		
 		// Attach events to the window
 		this.attachDraggable(this.windowEl);		
 		this.attachResizable(this.windowEl);
@@ -747,8 +865,7 @@ MochaUI.Window = new Class({
 			this.adjustHandles();
 		}
 
-		// Move window into position. If position not specified by user then center the window on the page.	
-		
+		// Move window into position. If position not specified by user then center the window on the page.			
 		if (this.options.container == document.body || this.options.container == MochaUI.Desktop.desktop){
 			var dimensions = window.getSize();
 		}
@@ -908,7 +1025,7 @@ MochaUI.Window = new Class({
 		if (!this.options.draggable) return;
 		this.windowDrag = new Drag.Move(windowEl, {
 			handle: this.titleBarEl,
-			container: this.options.restrict ? $(this.options.container) : false,			
+			container: this.options.restrict == true ? $(this.options.container) : false,			
 			grid: this.options.draggableGrid,
 			limit: this.options.draggableLimit,
 			snap: this.options.draggableSnap,
@@ -952,7 +1069,9 @@ MochaUI.Window = new Class({
 				]
 			},	
 			modifiers: {x: false, y: 'top'},
-			onBeforeStart: function(){this.resizeOnBeforeStart();}.bind(this),		
+			onBeforeStart: function(){
+				this.resizeOnBeforeStart();
+			}.bind(this),		
 			onStart: function(){
 				this.coords = this.contentWrapperEl.getCoordinates();			
 				this.y2 = this.coords.top.toInt() + this.contentWrapperEl.offsetHeight;
@@ -963,7 +1082,9 @@ MochaUI.Window = new Class({
 				this.drawWindow(windowEl);
 				this.adjustHandles();
 			}.bind(this),
-			onComplete: function(){this.resizeOnComplete();}.bind(this)		
+			onComplete: function(){
+				this.resizeOnComplete();
+			}.bind(this)		
 		});
 	
 		this.contentWrapperEl.makeResizable({
@@ -972,12 +1093,16 @@ MochaUI.Window = new Class({
 				x: [this.options.resizeLimit.x[0] - (this.options.shadowBlur * 2), this.options.resizeLimit.x[1] - (this.options.shadowBlur * 2) ]		
 			},	
 			modifiers: {x: 'width', y: false},
-			onBeforeStart: function(){this.resizeOnBeforeStart();}.bind(this),		
+			onBeforeStart: function(){
+				this.resizeOnBeforeStart();
+			}.bind(this),		
 			onDrag: function(){
 				this.drawWindow(windowEl);
 				this.adjustHandles();
 			}.bind(this),
-			onComplete: function(){this.resizeOnComplete();}.bind(this)	
+			onComplete: function(){
+				this.resizeOnComplete();
+			}.bind(this)	
 		});	
 	
 		this.contentWrapperEl.makeResizable({
@@ -987,12 +1112,16 @@ MochaUI.Window = new Class({
 				y: [this.options.resizeLimit.y[0] - this.headerFooterShadow, this.options.resizeLimit.y[1] - this.headerFooterShadow]					
 			},	
 			modifiers: {x: 'width', y: 'height'},
-			onBeforeStart: function(){this.resizeOnBeforeStart();}.bind(this),		
+			onBeforeStart: function(){
+				this.resizeOnBeforeStart();
+			}.bind(this),		
 			onDrag: function(){
 				this.drawWindow(windowEl);	
 				this.adjustHandles();
 			}.bind(this),
-			onComplete: function(){this.resizeOnComplete();}.bind(this)	
+			onComplete: function(){
+				this.resizeOnComplete();
+			}.bind(this)	
 		});		
 		
 		this.contentWrapperEl.makeResizable({
@@ -1001,12 +1130,16 @@ MochaUI.Window = new Class({
 				y: [this.options.resizeLimit.y[0] - this.headerFooterShadow, this.options.resizeLimit.y[1] - this.headerFooterShadow]	
 			},	
 			modifiers: {x: false, y: 'height'},
-			onBeforeStart: function(){this.resizeOnBeforeStart();}.bind(this),		
+			onBeforeStart: function(){
+				this.resizeOnBeforeStart();
+			}.bind(this),		
 			onDrag: function(){
 				this.drawWindow(windowEl);			
 				this.adjustHandles();
 			}.bind(this),
-			onComplete: function(){this.resizeOnComplete();}.bind(this)	
+			onComplete: function(){
+				this.resizeOnComplete();
+			}.bind(this)	
 		});
 		
 		this.windowEl.makeResizable({
@@ -1022,7 +1155,9 @@ MochaUI.Window = new Class({
 				]
 			},	
 			modifiers: {x: 'left', y: false},
-			onBeforeStart: function(){this.resizeOnBeforeStart();}.bind(this),		
+			onBeforeStart: function(){
+				this.resizeOnBeforeStart();
+			}.bind(this),		
 			onStart: function(){
 				this.coords = this.contentWrapperEl.getCoordinates();			
 				this.x2 = this.coords.left.toInt() + this.contentWrapperEl.offsetWidth;
@@ -1033,7 +1168,9 @@ MochaUI.Window = new Class({
 				this.drawWindow(windowEl);
 				this.adjustHandles();
 			}.bind(this),
-			onComplete: function(){this.resizeOnComplete();}.bind(this)
+			onComplete: function(){
+				this.resizeOnComplete();
+			}.bind(this)
 		});
 	
 	},
@@ -1049,42 +1186,54 @@ MochaUI.Window = new Class({
 		this.fireEvent('onResize', this.windowEl);	
 	},
 	adjustHandles: function(){
-		this.coords = this.windowEl.getCoordinates();
+		
+		var shadowBlur = this.options.shadowBlur;
+		var shadowBlur2x = shadowBlur * 2;		
+		var shadowOffset = this.options.shadowOffset;
+		var top = shadowBlur - shadowOffset.y - 1;
+		var right = shadowBlur + shadowOffset.x - 1;
+		var bottom = shadowBlur + shadowOffset.y - 1;
+		var left = shadowBlur - shadowOffset.x - 1;
+		
+		var coords = this.windowEl.getCoordinates();		
+		var width = coords.width - shadowBlur2x + 2;
+		var height = coords.height - shadowBlur2x + 2;		
+
 		this.n.setStyles({
-			'top': this.options.shadowBlur - 1,	
-			'left': this.options.shadowBlur - 1 + 10,				
-			'width': this.coords.width - (this.options.shadowBlur * 2) + 2 - 20
+			'top': top,	
+			'left': left + 10,				
+			'width': width - 20
 		});
 		this.e.setStyles({
-			'top': this.options.shadowBlur - 1 + 10,						 
-			'right': this.options.shadowBlur - 1,			 
-			'height': this.coords.height - (this.options.shadowBlur * 2) + 2 - 30
+			'top': top + 10,						 
+			'right': right,			 
+			'height': height - 30
 		});
 		this.s.setStyles({
-			'bottom': this.options.shadowBlur - 1,
-			'left': this.options.shadowBlur - 1 + 10,			
-			'width': this.coords.width - (this.options.shadowBlur * 2) + 2 - 30
+			'bottom': bottom,
+			'left': left + 10,			
+			'width': width - 30
 		});
 		this.w.setStyles({
-			'top': this.options.shadowBlur - 1 + 10,						 
-			'left': this.options.shadowBlur - 1,			 
-			'height': this.coords.height - (this.options.shadowBlur * 2) + 2 - 20
+			'top': top + 10,						 
+			'left': left,			 
+			'height': height - 20
 		});
 		this.ne.setStyles({
-			'top': this.options.shadowBlur - 1,			 
-			'right': this.options.shadowBlur - 1	
+			'top': top,			 
+			'right': right	
 		});
 		this.se.setStyles({
-			'bottom': this.options.shadowBlur - 1,			 
-			'right': this.options.shadowBlur - 1	
+			'bottom': bottom,			 
+			'right': right
 		});
 		this.sw.setStyles({
-			'bottom': this.options.shadowBlur - 1,			 
-			'left': this.options.shadowBlur - 1	
+			'bottom': bottom,			 
+			'left': left
 		});
 		this.nw.setStyles({
-			'top': this.options.shadowBlur - 1,			 
-			'left': this.options.shadowBlur - 1	
+			'top': top,			 
+			'left': left
 		});			
 	},	
 	/*
@@ -1106,41 +1255,54 @@ MochaUI.Window = new Class({
 		
 		if (Browser.Engine.trident4){
 			cache.zIndexFixEl = new Element('iframe', {
+				'id': id + '_zIndexFix',											
 				'class': 'zIndexFix',
 				'scrolling': 'no',
 				'marginWidth': 0,
 				'marginHeight': 0,
-				'src': '',
-				'id': id + '_zIndexFix'
+				'src': ''
 			}).inject(this.windowEl);
 		}
 		
 		cache.overlayEl = new Element('div', {
-			'class': 'mochaOverlay',
-			'id': id + '_overlay'
+			'id': id + '_overlay',									  
+			'class': 'mochaOverlay'
 		}).inject(this.windowEl);
 
 		cache.titleBarEl = new Element('div', {
+			'id': id + '_titleBar',									   
 			'class': 'mochaTitlebar',
-			'id': id + '_titleBar',
 			'styles': {
 				'cursor': options.draggable ? 'move' : 'default'
 			}
 		}).inject(cache.overlayEl, 'top');
 
 		cache.titleEl = new Element('h3', {
-			'class': 'mochaTitle',
-			'id': id + '_title'
+			'id': id + '_title',									
+			'class': 'mochaTitle'
 		}).inject(cache.titleBarEl);
 		
 		cache.contentBorderEl = new Element('div', {
-			'class': 'mochaContentBorder',
-			'id': id + '_contentBorder'
+			'id': id + '_contentBorder',											
+			'class': 'mochaContentBorder'
 		}).inject(cache.overlayEl);
 
+		if (options.toolbar){
+			cache.toolbarWrapperEl = new Element('div', {
+				'id': id + '_toolbarWrapper',											
+				'class': 'mochaToolbarWrapper'
+			}).inject(cache.contentBorderEl, options.toolbarPosition == 'bottom' ? 'after' : 'before');
+			
+			cache.toolbarEl = new Element('div', {
+				'id': id + '_toolbar',											
+				'class': 'mochaToolbar'
+			}).inject(cache.toolbarWrapperEl);
+			
+		}
+
 		cache.contentWrapperEl = new Element('div', {
-			'class': 'mochaContentWrapper',
 			'id': id + '_contentWrapper',
+			'class': 'mochaContentWrapper',
 			'styles': {
 				'width': width + 'px',
 				'height': height + 'px'
@@ -1149,83 +1311,94 @@ MochaUI.Window = new Class({
 		
 		if (this.options.shape == 'gauge'){
 			cache.contentBorderEl.setStyle('borderWidth', 0);
+			//cache.contentBorderEl.setStyle('margin', 0);			
 		}		
 		
 		cache.contentEl = new Element('div', {
-			'class': 'mochaContent',
-			'id': id + '_content'
+			'id': id + '_content',
+			'class': 'mochaContent'
 		}).inject(cache.contentWrapperEl);
 
 		cache.canvasEl = new Element('canvas', {
+			'id': id + '_canvas',
 			'class': 'mochaCanvas',
 			'width': 1,
-			'height': 1,
-			'id': id + '_canvas'
+			'height': 1
 		}).inject(this.windowEl);
 		
-		if ( Browser.Engine.trident && MochaUI.ieSupport == 'excanvas'  ) {
-			G_vmlCanvasManager.initElement(cache.canvasEl);			
-			// getContext() method does not exist before retrieving the element via getElement
+		if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas') {
+			G_vmlCanvasManager.initElement(cache.canvasEl);
 			cache.canvasEl = this.windowEl.getElement('.mochaCanvas');			
-		}	
+		}
 		
 		cache.controlsEl = new Element('div', {
-			'class': 'mochaControls',
-			'id': id + '_controls'
+			'id': id + '_controls',
+			'class': 'mochaControls'
 		}).inject(cache.overlayEl, 'after');
 		
 		cache.canvasControlsEl = new Element('canvas', {
+			'id': id + '_canvasControls',
 			'class': 'mochaCanvasControls',
 			'width': 14,
-			'height': 16,
-			'id': id + '_canvasControls'
+			'height': 16
 		}).inject(this.windowEl);
 		
-		if ( Browser.Engine.trident && MochaUI.ieSupport == 'excanvas'  ) {
-			G_vmlCanvasManager.initElement(cache.canvasControlsEl);			
-			// getContext() method does not exist before retrieving the element via getElement
+		if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas') {
+			G_vmlCanvasManager.initElement(cache.canvasControlsEl);
 			cache.canvasControlsEl = this.windowEl.getElement('.mochaCanvasControls');			
 		}
 		
 		if (options.closable){
 			cache.closeButtonEl = new Element('div', {
+				'id': id + '_closeButton',
 				'class': 'mochaClose',
-				'title': 'Close',
-				'id': id + '_closeButton'
+				'title': 'Close'
 			}).inject(cache.controlsEl);
 		}
 
 		if (options.maximizable){
 			cache.maximizeButtonEl = new Element('div', {
+				'id': id + '_maximizeButton',
 				'class': 'maximizeToggle',
-				'title': 'Maximize',
-				'id': id + '_maximizeButton'
+				'title': 'Maximize'
 			}).inject(cache.controlsEl);
 		}
 
 		if (options.minimizable){
 			cache.minimizeButtonEl = new Element('div', {
+				'id': id + '_minimizeButton',
 				'class': 'minimizeToggle',
-				'title': 'Minimize',
-				'id': id + '_minimizeButton'
+				'title': 'Minimize'
 			}).inject(cache.controlsEl);
 		}
 		
 		if (options.shape != 'gauge' && options.type != 'notification'){
 			cache.canvasIconEl = new Element('canvas', {
+				'id': id + '_canvasIcon',
 				'class': 'mochaLoadingIcon',
 				'width': 18,
-				'height': 18,
-				'id': id + '_canvasIcon'
+				'height': 18
 			}).inject(this.windowEl, 'bottom');	
 		
 			if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas') {
 				G_vmlCanvasManager.initElement(cache.canvasIconEl);
-			    // getContext() method does not exist before retrieving the element via getElement
-				// element via getElement
 				cache.canvasIconEl = this.windowEl.getElement('.mochaLoadingIcon');
 			}
 		}
+		
+		if (this.options.shape == 'gauge'){
+			cache.canvasHeaderEl = new Element('canvas', {
+				'id': id + '_canvasHeader',											   
+				'class': 'mochaCanvasHeader',
+				'width': this.options.width,
+				'height': 26
+			}).inject(this.windowEl, 'bottom');
+		
+			if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas') {
+				G_vmlCanvasManager.initElement(cache.canvasHeaderEl);
+				cache.canvasHeaderEl = this.windowEl.getElement('.mochaCanvasHeader');			
+			}		
+		}		
 		
 		if ( Browser.Engine.trident ) {
 			cache.overlayEl.setStyle('zIndex', 2);
@@ -1346,8 +1519,23 @@ MochaUI.Window = new Class({
 		var options = this.options;
 		var shadowBlur = options.shadowBlur;
 		var shadowBlur2x = shadowBlur * 2;
+		var shadowOffset = this.options.shadowOffset;		
+
+		/*
+		var borderHeight = 0;
+		var styleDimensions = this.contentBorderEl.getStyles('margin-top', 'margin-bottom', 'border-top', 'border-bottom');		
+		for(var style in styleDimensions){
+			borderHeight += styleDimensions[style].toInt();
+		}
 		
-		this.contentBorderEl.setStyles({
+		var borderWidth = 0;
+		var styleDimensions = this.contentBorderEl.getStyles('margin-left', 'margin-right', 'border-left', 'border-right');		
+		for(var style in styleDimensions){
+			borderWidth += styleDimensions[style].toInt();
+		}
+		*/
+
+		this.overlayEl.setStyles({
 			'width': this.contentWrapperEl.offsetWidth
 		});
 
@@ -1358,15 +1546,21 @@ MochaUI.Window = new Class({
 			});
 		}
 		
+		var borderHeight = this.contentBorderEl.getStyle('border-top').toInt() + this.contentBorderEl.getStyle('border-bottom').toInt();
+		var toolbarHeight = this.toolbarWrapperEl ? this.toolbarWrapperEl.getStyle('height').toInt() + this.toolbarWrapperEl.getStyle('border-top').toInt() : 0;
+		
 		this.headerFooterShadow = options.headerHeight + options.footerHeight + shadowBlur2x;
-		var height = this.contentWrapperEl.getStyle('height').toInt() + this.headerFooterShadow;
+		var height = this.contentWrapperEl.getStyle('height').toInt() + this.headerFooterShadow + toolbarHeight + borderHeight;
 		var width = this.contentWrapperEl.getStyle('width').toInt() + shadowBlur2x;
-		this.windowEl.setStyle('height', height);
+		this.windowEl.setStyles({
+			'height': height,
+			'width': width
+		});
 		
 		this.overlayEl.setStyles({
 			'height': height,
-			'top': shadowBlur,
-			'left': shadowBlur
+			'top': shadowBlur - shadowOffset.y,
+			'left': shadowBlur - shadowOffset.x
 		});		
 
 		// Opera requires the canvas height and width be set this way when resizing:
@@ -1381,9 +1575,6 @@ MochaUI.Window = new Class({
 			})
 		}
 
-		// Set width
-		this.windowEl.setStyle('width', width);
-		this.overlayEl.setStyle('width', width);
 		this.titleBarEl.setStyles({
 			'width': width - shadowBlur2x,
 			'height': options.headerHeight
@@ -1392,9 +1583,9 @@ MochaUI.Window = new Class({
 		// Make sure loading icon is placed correctly.
 		if (options.shape != 'gauge' && options.type != 'notification'){
 			this.canvasIconEl.setStyles({
-				'left': shadowBlur + 3,
-				'bottom': shadowBlur + 4
-			})
+				'left': shadowBlur - shadowOffset.x + 3,
+				'bottom': shadowBlur + shadowOffset.y +  4
+			});
 		}
 		
 		// Draw Window
@@ -1403,10 +1594,10 @@ MochaUI.Window = new Class({
 
 		switch(options.shape) {
 			case 'box':
-				this.drawBox(ctx, width, height, shadows);
+				this.drawBox(ctx, width, height, shadowBlur, shadowOffset, shadows);
 				break;
 			case 'gauge':
-				this.drawGauge(ctx, width, height, shadows);
+				this.drawGauge(ctx, width, height, shadowBlur, shadowOffset, shadows);
 				break;				
 		}		
 		
@@ -1417,8 +1608,8 @@ MochaUI.Window = new Class({
 		if (this.options.resizable){ 
 			MochaUI.triangle(
 				ctx,
-				width - (shadowBlur + 17),
-				height - (shadowBlur + 18),
+				width - (shadowBlur + shadowOffset.x + 17),
+				height - (shadowBlur + shadowOffset.y + 18),
 				11,
 				11,
 				options.resizableColor,
@@ -1437,6 +1628,7 @@ MochaUI.Window = new Class({
 		var options = this.options;
 		var shadowBlur = options.shadowBlur;
 		var shadowBlur2x = shadowBlur * 2;
+		var shadowOffset = options.shadowOffset;		
 		
 		var headerShadow = options.headerHeight + shadowBlur2x + 3;
 		var height = headerShadow;
@@ -1445,8 +1637,8 @@ MochaUI.Window = new Class({
 		
 		this.overlayEl.setStyles({
 			'height': height,
-			'top': shadowBlur,
-			'left': shadowBlur
+			'top': shadowBlur - shadowOffset.y,
+			'left': shadowBlur - shadowOffset.x
 		});		
 
 		// Opera height and width must be set like this, when resizing:
@@ -1458,7 +1650,7 @@ MochaUI.Window = new Class({
 			this.zIndexFixEl.setStyles({
 				'width': width,
 				'height': height
-			})
+			});
 		}
 
 		// Set width
@@ -1473,7 +1665,7 @@ MochaUI.Window = new Class({
 		var ctx = this.canvasEl.getContext('2d');
 		ctx.clearRect(0, 0, width, height);
 		
-		this.drawBoxCollapsed(ctx, width, height, shadows);		
+		this.drawBoxCollapsed(ctx, width, height, shadowBlur, shadowOffset, shadows);		
 		this.drawControls(width, height, shadows);
 
 		// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
@@ -1484,17 +1676,18 @@ MochaUI.Window = new Class({
 	},	
 	drawControls : function(width, height, shadows){
 		var options = this.options;
-		var shadowBlur = options.shadowBlur;		
+		var shadowBlur = options.shadowBlur;
+		var shadowOffset = this.options.shadowOffset;		
 		
 		// Make sure controls are placed correctly.
 		this.controlsEl.setStyles({
-			'right': shadowBlur + 5,
-			'top': shadowBlur + 5	
+			'right': shadowBlur + shadowOffset.x + 6,
+			'top': shadowBlur - shadowOffset.y + 6
 		});
 
 		this.canvasControlsEl.setStyles({
-			'right': shadowBlur + 5,
-			'top': shadowBlur + 5	
+			'right': shadowBlur + shadowOffset.x + 6,
+			'top': shadowBlur - shadowOffset.y + 6
 		});
 
 		// Calculate X position for controlbuttons
@@ -1540,42 +1733,43 @@ MochaUI.Window = new Class({
 		}		
 		
 	},
-	drawBox: function(ctx, width, height, shadows){	
+	drawBox: function(ctx, width, height, shadowBlur, shadowOffset, shadows){	
 
-		var shadowBlur = this.options.shadowBlur;
-		var shadowBlur2x = shadowBlur * 2;
-		var cornerRadius = this.options.cornerRadius		
+		var shadowBlur2x = shadowBlur * 2;	
+		var cornerRadius = this.options.cornerRadius;		
 	
 		// This is the drop shadow. It is created onion style.
 		if ( shadows != false ) {	
 			for (var x = 0; x <= shadowBlur; x++){
 				MochaUI.roundedRect(
-					ctx, x, x,
-					width - (x * 2),
-					height - (x * 2),
+					ctx,
+					shadowOffset.x + x,
+					shadowOffset.y + x,
+					width - (x * 2) - shadowOffset.x,
+					height - (x * 2) - shadowOffset.y,
 					cornerRadius + (shadowBlur - x),
 					[0, 0, 0],
-					x == shadowBlur ? .3 : .06 + (x * .01)
+					x == shadowBlur ? .28 : .06 + (x * .01)
 				);
 			}
 		}
 		// Window body.
 		this.bodyRoundedRect(
-			ctx,                         // context
-			shadowBlur,                  // x
-			shadowBlur - 1,              // y
-			width - shadowBlur2x,        // width
-			height - shadowBlur2x,       // height
-			cornerRadius,                // corner radius
-			this.options.footerBgColor   // Footer color
+			ctx,                          // context
+			shadowBlur - shadowOffset.x,  // x
+			shadowBlur - shadowOffset.y,  // y
+			width - shadowBlur2x,         // width
+			height - shadowBlur2x,        // height
+			cornerRadius,                 // corner radius
+			this.options.bodyBgColor      // Footer color
 		);
 
 		if (this.options.type != 'notification'){
 		// Window header.
 			this.topRoundedRect(
 				ctx,                            // context
-				shadowBlur,                     // x
-				shadowBlur - 1,                 // y
+				shadowBlur - shadowOffset.x,    // x
+				shadowBlur - shadowOffset.y,    // y
 				width - shadowBlur2x,           // width
 				this.options.headerHeight,      // height
 				cornerRadius,                   // corner radius
@@ -1584,20 +1778,21 @@ MochaUI.Window = new Class({
 			);		
 		}	
 	},
-	drawBoxCollapsed: function(ctx, width, height, shadows){	
-	
-		// Shorten object chain
-		var shadowBlur = this.options.shadowBlur;
-		var shadowBlur2x = shadowBlur * 2;
-		var cornerRadius = this.options.cornerRadius		
+	drawBoxCollapsed: function(ctx, width, height, shadowBlur, shadowOffset, shadows){	
+
+		var options = this.options;
+		var shadowBlur2x = shadowBlur * 2;		
+		var cornerRadius = options.cornerRadius;		
 	
 		// This is the drop shadow. It is created onion style.
 		if ( shadows != false ) {	
 			for (var x = 0; x <= shadowBlur; x++){
 				MochaUI.roundedRect(
-					ctx, x, x,
-					width - (x * 2),
-					height - (x * 2),
+					ctx,
+					shadowOffset.x + x,
+					shadowOffset.y + x,
+					width - (x * 2) - shadowOffset.x,
+					height - (x * 2) - shadowOffset.y,
 					cornerRadius + (shadowBlur - x),
 					[0, 0, 0],
 					x == shadowBlur ? .3 : .06 + (x * .01)
@@ -1605,110 +1800,58 @@ MochaUI.Window = new Class({
 			}
 		}
 
-		// Mocha header
+		// Window header
 		this.topRoundedRect2(
-			ctx,                            // context
-			shadowBlur,                     // x
-			shadowBlur - 1,                 // y
-			width - shadowBlur2x,           // width
-			this.options.headerHeight + 3,  // height
-			cornerRadius,                   // corner radius
-			this.options.headerStartColor,  // Header gradient's top color
-			this.options.headerStopColor    // Header gradient's bottom color
+			ctx,                          // context
+			shadowBlur - shadowOffset.x,  // x
+			shadowBlur - shadowOffset.y,  // y
+			width - shadowBlur2x,         // width
+			options.headerHeight + 3,     // height
+			cornerRadius,                 // corner radius
+			options.headerStartColor,     // Header gradient's top color
+			options.headerStopColor       // Header gradient's bottom color
 		);
 
 	},	
-	drawGauge: function(ctx, width, height, shadows){
-
-		var shadowBlur = this.options.shadowBlur;
-		
-		var radius = (width *.5) - (shadowBlur) + 16;
-		var shadowOpacity = 1;		
-
-		// This is the drop shadow. It is created onion style.
+	drawGauge: function(ctx, width, height, shadowBlur, shadowOffset, shadows){
+		var options = this.options;
+		var radius = (width * .5) - (shadowBlur) + 16;
 		if (shadows != false) {	
 			for (var x = 0; x <= shadowBlur; x++){				
 				MochaUI.circle(
 					ctx,
-					width * .5,
-					(height  + this.options.headerHeight )* .5,
-					(width *.5) - (x * 2),
+					width * .5 + shadowOffset.x,
+					(height  + options.headerHeight) * .5 + shadowOffset.x,
+					(width *.5) - (x * 2) - shadowOffset.x,
 					[0, 0, 0],
 					x == shadowBlur ? .6 : .06 + (x * .04)
 				);
 			}
 		}
-		
-		if (shadows != false) {	
-			for (var x = 0; x <= shadowBlur; x++){				
-			
-			if (x == shadowBlur){
-				shadowOpacity = .6;
-			}
-			else {
-				shadowOpacity = .04 + (x * .01);	
-			}
-			
-			ctx.lineWidth = 24 + (shadowBlur * 2) - (x * 2);
-			ctx.lineCap = 'round';
-
-			ctx.beginPath();
-			ctx.moveTo(shadowBlur + 12, shadowBlur + 12);
-			ctx.lineTo(width - shadowBlur - 12, shadowBlur + 12);
-			ctx.strokeStyle = 'rgba(0, 0, 0,' + shadowOpacity + ')';
-			ctx.stroke();				
-				
-			}
-		}
-		ctx.beginPath();		
-		ctx.lineWidth = 24;
-		ctx.lineCap = 'round';
-		
-		ctx.moveTo(shadowBlur + 12, shadowBlur + 12);
-		ctx.lineTo(width - shadowBlur - 12, shadowBlur + 12);
-		ctx.strokeStyle = 'rgba(230, 230, 230, 1)';
-		ctx.stroke();
-		
 		MochaUI.circle(
 			ctx,
-			width * .5,
-			(height  + this.options.headerHeight )* .5,
-			(width *.5) - (shadowBlur),
-			[250, 250, 250],
+			width * .5  - shadowOffset.x,
+			(height + options.headerHeight) * .5  - shadowOffset.y,
+			(width *.5) - shadowBlur,
+			options.bodyBgColor,
 			1
-		); 
-
-		//var arcStartAngle = Math.PI * (- 0.5 + 2 * 0); // -0.5 sets set the start to be top
-		//var arcEndAngle = Math.PI * (- 0.5 + 2 * .125);
-
-		/*
-		ctx.arc(
-			width * .5,
-			(height  + this.options.headerHeight )* .5,
-			radius,         // radius
-			arcStartAngle,         // Start angle
-			arcEndAngle, // End angle
-			false
 		);
-		ctx.strokeStyle = 'rgba(250,250,250,.5)';
+		
+		// Draw gauge header
+		this.canvasHeaderEl.setStyles({
+			'top': shadowBlur - shadowOffset.y,
+			'left': shadowBlur - shadowOffset.x
+		});		
+		var ctx = this.canvasHeaderEl.getContext('2d');
+		ctx.clearRect(0, 0, width, 100);
+		ctx.beginPath();		
+		ctx.lineWidth = 24;
+		ctx.lineCap = 'round';		
+		ctx.moveTo(13, 13);
+		ctx.lineTo(width - (shadowBlur*2) - 13, 13);
+		ctx.strokeStyle = 'rgba(0, 0, 0, .25)';
 		ctx.stroke();
-		*/
-		
-		/*
-		ctx.arc(
-			width * .5,
-			(height  + this.options.headerHeight )* .5,
-			(width *.5) - (shadowBlur) - 3,         // radius
-			arcEndAngle,     
-			arcStartAngle,
-			true
-		);
-
-		ctx.closePath();
-		ctx.fill();	
-		*/		
-		
-	},		
+	},
 	bodyRoundedRect: function(ctx, x, y, width, height, radius, rgb){
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ', 100)';
 		ctx.beginPath();
@@ -1724,9 +1867,8 @@ MochaUI.Window = new Class({
 		ctx.fill();
 	
 	},
-	// Window header with gradient background
 	topRoundedRect: function(ctx, x, y, width, height, radius, headerStartColor, headerStopColor){
-		var lingrad = ctx.createLinearGradient(0, 0, 0, this.options.headerHeight);
+		var lingrad = ctx.createLinearGradient(0, 0, 0, height);
 		lingrad.addColorStop(0, 'rgba(' + headerStartColor.join(',') + ', 1)');
 		lingrad.addColorStop(1, 'rgba(' + headerStopColor.join(',') + ', 1)');		
 		ctx.fillStyle = lingrad;
@@ -1739,6 +1881,15 @@ MochaUI.Window = new Class({
 		ctx.lineTo(x + radius, y);
 		ctx.quadraticCurveTo(x, y, x, y + radius);
 		ctx.fill();
+		/*
+		ctx.beginPath();
+		ctx.strokeStyle = '#000';
+		ctx.lineWidth = 1;
+		ctx.moveTo(x, y + height + .5);
+		ctx.lineTo(x + width, y + height + .5);
+		ctx.stroke();
+		*/
+		
 	},
 	topRoundedRect2: function(ctx, x, y, width, height, radius, headerStartColor, headerStopColor){
 		var lingrad = ctx.createLinearGradient(0, this.options.shadowBlur - 1, 0, height + this.options.shadowBlur + 3);
@@ -1755,8 +1906,7 @@ MochaUI.Window = new Class({
 		ctx.quadraticCurveTo(x + width, y, x + width - radius, y);
 		ctx.lineTo(x + radius, y);
 		ctx.quadraticCurveTo(x, y, x, y + radius);
-		ctx.fill();
-	
+		ctx.fill();	
 	},	
 	maximizebutton: function(ctx, x, y, rgbBg, aBg, rgb, a){
 		// Circle
@@ -1808,11 +1958,23 @@ MochaUI.Window = new Class({
 		ctx.lineTo(x + 4, y);
 		ctx.stroke();
 	},
+	/*
+	
+	Function: hideLoadingIcon
+		Hides the spinner.
+		
+	*/	
 	hideLoadingIcon: function(canvas) {
 		if (!MochaUI.options.useLoadingIcon || this.options.shape == 'gauge' || this.options.type == 'notification') return;		
 		$(canvas).setStyle('display', 'none');		
 		$clear(canvas.iconAnimation);
 	},
+	/*
+	
+	Function: showLoadingIcon
+		Shows the spinner.
+		
+	*/	
 	showLoadingIcon: function(canvas) {
 		if (!MochaUI.options.useLoadingIcon || this.options.shape == 'gauge' || this.options.type == 'notification') return;		
 		$(canvas).setStyles({
@@ -1921,7 +2083,7 @@ MochaUI.Modal = new Class({
 				$('modalOverlay').setStyle('display', 'none');
 				if (Browser.Engine.trident4){
 					$('modalFix').setStyle('display', 'none');
-				}
+				}				
 			}.bind(this)
 		});
 	},
@@ -2030,67 +2192,6 @@ MochaUI.extend({
 });
 /*
 
-Script: Window-from-form.js
-	Create a window from a form.
-
-License:
-	MIT-style license.
-	
-Requires:
-	Core.js, Window.js
-	
-See Also:
-	<Window>	
-
-*/
-
-MochaUI.WindowForm = new Class({
-	options: {
-		id: null,
-		title: 'New Window',
-		loadMethod: 'html', // html, xhr, or iframe
-		content: '', // used if loadMethod is set to 'html'
-		contentURL: 'pages/lipsum.html', // used if loadMethod is set to 'xhr' or 'iframe'
-		modal: false,
-		width: 300,
-		height: 125,
-		scrollbars: true, // true sets the overflow to auto and false sets it to hidden
-		x: null, // if x or y is null or modal is false the new window is centered in the browser window
-		y: null
-	},
-	initialize: function(options){
-		this.setOptions(options);
-		this.options.id = 'win' + (++MochaUI.Windows.windowIDCount);
-		this.options.title = $('newWindowHeaderTitle').value;
-		if ($('htmlLoadMethod').checked){
-			this.options.loadMethod = 'html';
-		}
-		if ($('iframeLoadMethod').checked){
-			this.options.loadMethod = 'iframe';
-		}
-		this.options.content = $('newWindowContent').value;
-		
-		// Remove eval(), javascript:, and script from User Provided Markup		
-		this.options.content = this.options.content.replace(/\<(.*)script(.*)\<\/(.*)script(.*)\>/g, ""); 
-    	this.options.content = this.options.content.replace(/[\"\'][\s]*javascript:(.*)[\"\']/g, "\"\"");    
-    	this.options.content = this.options.content.replace(/eval\((.*)\)/g, "");		
-		
-		if ($('newWindowContentURL').value){
-			this.options.contentURL = $('newWindowContentURL').value;
-		}		
-		if ($('newWindowModal').checked) {
-			this.options.modal = true;
-		}
-		this.options.width = $('newWindowWidth').value.toInt();
-		this.options.height = $('newWindowHeight').value.toInt();	
-		this.options.x = $('newWindowX').value.toInt();
-		this.options.y = $('newWindowY').value.toInt();
-		new MochaUI.Window(this.options);
-	}
-});
-MochaUI.WindowForm.implement(new Options);
-/*
-
 Script: Arrange-cascade.js
 	Cascade windows.
 
@@ -2157,12 +2258,10 @@ Requires:
 	Core.js, Window.js
 	
 Options:
-	useHeaderCanvas - Toggle canvas header gradient.
+	useHeaderCanvas - (boolean) Toggle canvas header gradient.
 	headerStartColor - Header gradient's top color - RGB.
 	headerStopColor - Header gradient's bottom color.
 	sidebarLimitX - Sidebar minimum and maximum widths when resizing.
-	
-Todo: Add dblclick to window titlebars to maximize/restore	
 
 */
 
@@ -2359,7 +2458,9 @@ MochaUI.Desktop = new Class({
 		// temporarily move the window to the desktop while it is minimized.
 		if (currentInstance.options.container != this.options.desktop){
 			this.desktop.grab(windowEl);
-			windowDrag.container = this.desktop;
+			if (this.options.restrict){
+				windowDrag.container = this.desktop;
+			}
 		}		
 		
 		// Save original position
@@ -2381,11 +2482,12 @@ MochaUI.Desktop = new Class({
 		var windowDimensions = document.getCoordinates();
 		var options = currentInstance.options;
 		var shadowBlur = options.shadowBlur;
+		var shadowOffset = options.shadowOffset;
 
 		if (MochaUI.options.useEffects == false){
 			windowEl.setStyles({
-				'top': -shadowBlur,
-				'left': -shadowBlur
+				'top': shadowOffset.y - shadowBlur,
+				'left': shadowOffset.x - shadowBlur
 			});
 			currentInstance.contentWrapperEl.setStyles({
 				'height': windowDimensions.height - options.headerHeight - options.footerHeight,
@@ -2400,15 +2502,12 @@ MochaUI.Desktop = new Class({
 		}
 		else {
 			
-			// Todo: Initialize the variables for these morphs once and reuse them
+			// Todo: Initialize the variables for these morphs once in an initialize function and reuse them
 			
-			//var maximizePositionMorph = new Fx.Morph(windowEl, {
-			//	'duration': 300
-			//});
 			var maximizeMorph = new Fx.Elements([contentWrapperEl, windowEl], { 
 				duration: 70,
 				onStart: function(windowEl){
-						currentInstance.maximizeAnimation = currentInstance.drawWindow.periodical(20, currentInstance, windowEl);
+					currentInstance.maximizeAnimation = currentInstance.drawWindow.periodical(20, currentInstance, windowEl);
 				}.bind(this),
 				onComplete: function(windowEl){
 					$clear(currentInstance.maximizeAnimation);
@@ -2421,11 +2520,11 @@ MochaUI.Desktop = new Class({
 				}.bind(this)
 			});
 			maximizeMorph.start({
-				'0': {	'height': windowDimensions.height - options.headerHeight - options.footerHeight,
+				'0': {	'height': function(){ return windowDimensions.height - options.headerHeight - options.footerHeight - currentInstance.contentBorderEl.getStyle('border-top').toInt() - currentInstance.contentBorderEl.getStyle('border-bottom').toInt() - (  currentInstance.toolbarWrapperEl ? currentInstance.toolbarWrapperEl.getStyle('height').toInt() + currentInstance.toolbarWrapperEl.getStyle('border-top').toInt() : 0)},
 						'width':  windowDimensions.width
 				},
-				'1': {	'top':  -shadowBlur,
-						'left': -shadowBlur
+				'1': {	'top': shadowOffset.y - shadowBlur,
+						'left': shadowOffset.x - shadowBlur 
 				}
 			});		
 		}
@@ -2448,11 +2547,9 @@ MochaUI.Desktop = new Class({
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
 		
 		// Window exists and is maximized ?
-		if ( !(windowEl = $(windowEl)) || !currentInstance.isMaximized )
-			return;
+		if (windowEl != $(windowEl) || !currentInstance.isMaximized) return;
 			
-		var options = currentInstance.options;			
-		
+		var options = currentInstance.options;		
 		currentInstance.isMaximized = false;
 		
 		if (options.restrict){
@@ -2480,7 +2577,9 @@ MochaUI.Desktop = new Class({
 			});
 			if (currentInstance.container != this.options.desktop){
 				$(options.container).grab(windowEl);
-				currentInstance.windowDrag.container = $(options.container);
+				if (options.restrict){
+					currentInstance.windowDrag.container = $(options.container);
+				}
 			}
 			currentInstance.fireEvent('onRestore', windowEl);
 		}
@@ -2498,7 +2597,9 @@ MochaUI.Desktop = new Class({
 					}
 					if (options.container != this.options.desktop){
 						$(options.container).grab(windowEl);
-						currentInstance.windowDrag.container = $(options.container);
+						if (options.restrict){	
+							currentInstance.windowDrag.container = $(options.container);
+						}
 					}
 					currentInstance.fireEvent('onRestore', windowEl);
 				}.bind(this)
@@ -2571,6 +2672,7 @@ MochaUI.Desktop = new Class({
 
 	*/		
 	sidebarToggle: function(){
+		// Hide sidebar.
 		if (this.sidebarWrapper.getStyle('display') == 'block'){
 			this.sidebarWrapper.setStyle('display', 'none');
 			this.sidebarCheck.setStyle('display', 'none');
@@ -2579,6 +2681,7 @@ MochaUI.Desktop = new Class({
 				this.page.set('margin-left', 0);
 			}
 		}
+		// Show sidebar.
 		else {
 			// If the sidebar is minimized when toggling it's visibility on the sidebar will be restored.
 			if (this.sidebarIsMinimized){			
@@ -2604,28 +2707,37 @@ MochaUI.Desktop = new Class({
 
 	*/		
 	sidebarMinimizeToggle: function(){
-			if (!this.sidebarIsMinimized){				
-				this.sidebarResizable.detach();
-				this.sidebarHandle.setStyle('cursor', 'default');						
-				this.sidebar.setStyle('display', 'none');
-				// Part of IE6 3px jox bug fix			
-				if (Browser.Engine.trident4){
-					this.sidebarMinimize.setStyle('margin-right', 0);
-				}
-				this.sidebarIsMinimized = true;				
+		// Expand sidebar.
+		var windows = $$('div.mocha');
+		if (!this.sidebarIsMinimized){				
+			this.sidebarResizable.detach();
+			this.sidebarHandle.setStyle('cursor', 'default');						
+			this.sidebar.setStyle('display', 'none');
+			// Part of IE6 3px jox bug fix			
+			if (Browser.Engine.trident4){
+				this.sidebarMinimize.setStyle('margin-right', 0);
 			}
-			else {
-				this.sidebarResizable.attach();	
-				this.sidebarHandle.setStyles({
-					'cursor': 'e-resize', /* This is for Opera which does not support the col-resize cursor */
-					'cursor': 'col-resize'
-				});				
-				this.sidebar.setStyle('display', 'block');				
-				if (Browser.Engine.trident4){
-					this.sidebarMinimize.setStyle('margin-right', 1);
-				}				
-				this.sidebarIsMinimized = false;
-			}				
+			if (!Browser.Platform.mac && Browser.Engine.gecko){
+				windows.setStyle('position', 'absolute');	
+			}			
+			this.sidebarIsMinimized = true;				
+		}
+		// Collapse sidebar
+		else {
+			this.sidebarResizable.attach();	
+			this.sidebarHandle.setStyles({
+				'cursor': 'e-resize', /* This is for Opera which does not support the col-resize cursor */
+				'cursor': 'col-resize'
+			});				
+			this.sidebar.setStyle('display', 'block');				
+			if (Browser.Engine.trident4){
+				this.sidebarMinimize.setStyle('margin-right', 1);
+			}
+			if (!Browser.Platform.mac && Browser.Engine.gecko){
+				windows.setStyle('position', 'absolute');	
+			}			
+			this.sidebarIsMinimized = false;
+		}				
 	}
 });
 MochaUI.Desktop.implement(new Options, new Events);
@@ -2837,14 +2949,13 @@ MochaUI.Dock = new Class({
 			currentInstance.iframeEl.setStyle('visibility', 'hidden');
 		}
 		
-		if (currentInstance.options.shape == 'gauge'){
-			currentInstance.canvasControlsEl.setStyle('opacity', 0);
-		}
-		
 		var titleText = currentInstance.titleEl.innerHTML;
 
 		// Hide window and add to dock
 		currentInstance.contentBorderEl.setStyle('visibility', 'hidden');
+		if(currentInstance.toolbarWrapperEl){		
+			currentInstance.toolbarWrapperEl.setStyle('visibility', 'hidden');
+		}
 		windowEl.setStyle('visibility', 'hidden');
 
 		 // Fixes a scrollbar issue in Mac FF2
@@ -2902,8 +3013,12 @@ MochaUI.Dock = new Class({
 	},
 	restoreMinimized: function(windowEl) {
 
+		if (MochaUI.Windows.windowsVisible == false){
+			MochaUI.toggleWindowVisibility();
+		}
+
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
-		currentButton = $(currentInstance.options.id + '_dockTab');		
+		currentButton = $(currentInstance.options.id + '_dockTab');				
 		
 		this.dockSortables.removeItems(currentButton ).destroy();
 		MochaUI.Desktop.setDesktopSize();
@@ -2918,7 +3033,10 @@ MochaUI.Dock = new Class({
 		}
 
 		windowEl.setStyle('visibility', 'visible');
-		currentInstance.contentBorderEl.setStyle('visibility', 'visible');		
+		currentInstance.contentBorderEl.setStyle('visibility', 'visible');
+		if(currentInstance.toolbarWrapperEl){		
+			currentInstance.toolbarWrapperEl.setStyle('visibility', 'visible');
+		}		
 
 		// Show iframe
 		if ( currentInstance.iframe ) {
@@ -2983,9 +3101,7 @@ MochaUI.extend({
 			y: 25,
 			padding:  { top: 10, right: 12, bottom: 10, left: 12 },
 			shadowBlur: 5,
-			headerStartColor:  [255, 255, 255],
-			headerStopColor:   [245, 245, 245],
-			footerBgColor:     [245, 245, 245]	
+			bodyBgColor: [255, 255, 255]	
 		});
 		
 	},
@@ -2994,9 +3110,7 @@ MochaUI.extend({
 			this.myChain.callChain();			
 		}		
 	},
-	loadWorkspace2: function(){
-		this.cookie = new Hash.Cookie('mochaUIworkspaceCookie', {duration: 3600});
-		workspaceWindows = this.cookie.load();
+	loadWorkspace2: function(workspaceWindows){		
 		workspaceWindows.each(function(instance) {		
 			eval('MochaUI.' + instance.id + 'Window();');
 			$(instance.id).setStyles({
@@ -3018,6 +3132,25 @@ MochaUI.extend({
 	
 	*/
 	loadWorkspace: function(){
+		cookie = new Hash.Cookie('mochaUIworkspaceCookie', {duration: 3600});
+		workspaceWindows = cookie.load();
+
+		if(!cookie.getKeys().length){
+			new MochaUI.Window({
+				loadMethod: 'html',
+				type: 'notification',
+				addClass: 'notification',
+				content: 'You have no saved workspace.',
+				width: 220,
+				height: 40,
+				y: 25,
+				padding:  { top: 10, right: 12, bottom: 10, left: 12 },
+				shadowBlur: 5,
+				bodyBgColor: [255, 255, 255]	
+			});
+			return;
+		}
+		
 		if ($$('div.mocha').length != 0){
 			this.loadingWorkspace = true;
 			this.myChain = new Chain();
@@ -3026,105 +3159,17 @@ MochaUI.extend({
 					$$('div.mocha').each(function(el) {
 						this.closeWindow(el);
 					}.bind(this));
-					$$('div.dockButton').destroy();
+					$$('div.dockTab').destroy();
 				}.bind(this),			
     			function(){
-					this.loadWorkspace2();			
+					this.loadWorkspace2(workspaceWindows);			
 				}.bind(this)
 			);
 			this.myChain.callChain();
 		}
 		else {
-			this.loadWorkspace2();
+			this.loadWorkspace2(workspaceWindows);
 		}
 	
 	}
-});
-/*
-
-Script: Corner-slider.js
-	Initializes the corner radius slider.
-
-License:
-	MIT-style license.
-	
-Requires:
-	Core.js, Window.js		
-
-*/
-
-MochaUI.extend({
-	addRadiusSlider: function(){
-		if ($('radiusSliderarea')) {
-			var windowOptions = MochaUI.Windows.windowOptions;
-			var sliderFirst = true;
-			var mochaSlide = new Slider($('radiusSliderarea'), $('radiusSliderknob'), {
-				steps: 14,
-				offset: 0,
-				onChange: function(pos){
-					$('radiusUpdatevalue').set('html', pos);
-					// Change default corner radius of the original class
-					windowOptions.cornerRadius = pos;
-					MochaUI.Window.implement({ options: windowOptions });
-					// Don't redraw windows the first time the slider is initialized
-					if (sliderFirst == true) {
-						sliderFirst = false;
-						return;
-					}
-					// Change corner radius of all active classes and their windows
-					MochaUI.Windows.instances.each(function(instance) {
-						instance.options.cornerRadius = pos;					
-						instance.drawWindow($(instance.options.id));
-					}.bind(this));					
-					MochaUI.Windows.indexLevel++; 
-				}.bind(this)
-			}).set(windowOptions.cornerRadius);
-		}
-	},
-	addShadowSlider: function(){
-		if ($('shadowSliderarea')) {
-			var windowOptions = MochaUI.Windows.windowOptions;			
-			var sliderFirst = true;
-			var mochaSlide = new Slider($('shadowSliderarea'), $('shadowSliderknob'), {
-				range: [1, 10],											 
-				offset: 0,
-				onStart: function(){
-					// Set variable to adjust position in relation to shadow width
-					MochaUI.Windows.instances.each(function(instance) {
-						instance.adjusted = false;
-					}.bind(this));			
-				}.bind(this),
-				onChange: function(pos){
-					$('shadowUpdatevalue').set('html', pos);					
-					// Change default shadow width of the original class
-					windowOptions.shadowBlur = pos;					
-					MochaUI.Window.implement({ options: windowOptions });					
-					// Don't redraw windows the first time the slider is initialized
-					// !!! Probably need to make this separate from the corner radius slider
-					if (sliderFirst == true) { 
-						sliderFirst = false;
-						return;
-					}					
-					// Change shadow width of all active classes and their windows
-					MochaUI.Windows.instances.each(function(instance) {															
-						instance.oldshadowBlur = instance.options.shadowBlur;									
-						instance.options.shadowBlur = pos;					
-						instance.windowEl.setStyles({
-							'top': instance.windowEl.getStyle('top').toInt() - (instance.options.shadowBlur - instance.oldshadowBlur) ,
-							'left': instance.windowEl.getStyle('left').toInt() - (instance.options.shadowBlur - instance.oldshadowBlur)
-						});
-						instance.drawWindow($(instance.options.id));
-					}.bind(this));					
-					MochaUI.Windows.indexLevel++; 
-				}.bind(this),
-				onComplete: function(){
-					MochaUI.Windows.instances.each(function(instance) {
-						if (instance.options.resizable){										
-							instance.adjustHandles();
-						}
-					}.bind(this));			
-				}.bind(this)				
-			}).set(windowOptions.shadowBlur);
-		}
-	}	
 });

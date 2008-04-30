@@ -145,7 +145,8 @@ MochaUI.Windows.windowOptions = {
 	toolbar:           false, // (boolean) Create window toolbar. Defaults to false. This can be used for tabs, media controls, or if your window content is an iframe you might use the toolbar for back, forward, and refresh buttons.
 	toolbarPosition:   'top', // 'top' or 'bottom'. Defaults to top.
 	toolbarHeight:     29,
-	toolbarContent:    null,
+	toolbarURL:        'pages/lipsum.html',	
+	toolbarContent:    '',
 	
 	// Container options
 	container:         null,
@@ -178,6 +179,7 @@ MochaUI.Windows.windowOptions = {
 	padding:   		   { top: 10, right: 12, bottom: 10, left: 12 },
 	shadowBlur:        4,
 	shadowOffset:      {'x': 0, 'y': 1},  // Should be positive and not be greater than the ShadowBlur.
+	useCanvasControls: true, // NOT YET IMPLEMENTED.
 	
 	// Color options:		
 	headerHeight:      25,
@@ -403,6 +405,8 @@ MochaUI.Window = new Class({
 				this.titleEl.setStyle('display', 'none');				
 			}.bind(this));			
 		}
+		
+		MochaUI.updateContent(this.windowEl, this.options.content, this.options.contentURL);		
 
 		// Inject window into DOM		
 		this.windowEl.injectInside(this.options.container);
@@ -410,12 +414,10 @@ MochaUI.Window = new Class({
 		
 		// Add content to window
 
-		if (this.options.toolbarContent != null){
-			MochaUI.updateContent(this.windowEl, this.options.toolbarContent, null, this.toolbarEl, 'html');
+		if (this.options.toolbar == true){
+			MochaUI.updateContent(this.windowEl, this.options.toolbarContent, this.options.toolbarURL, this.toolbarEl, 'xhr');
 		}
 		
-		MochaUI.updateContent(this.windowEl, this.options.content, this.options.contentURL);		
-
 		// Attach events to the window
 		this.attachDraggable(this.windowEl);		
 		this.attachResizable(this.windowEl);
@@ -425,8 +427,7 @@ MochaUI.Window = new Class({
 			this.adjustHandles();
 		}
 
-		// Move window into position. If position not specified by user then center the window on the page.	
-		
+		// Move window into position. If position not specified by user then center the window on the page.		
 		if (this.options.container == document.body || this.options.container == MochaUI.Desktop.desktop){
 			var dimensions = window.getSize();
 		}
