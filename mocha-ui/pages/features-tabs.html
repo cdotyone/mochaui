@@ -1,4 +1,4 @@
-<div class="tabs">
+<div class="toolbarTabs">
 	<ul id="featuresTabs" class="tab-menu">
 		<li id="features1Link" class="selected"><a>Option 1</a></li>
 		<li id="features2Link"><a>Option 2</a></li>
@@ -8,8 +8,8 @@
 </div>
 
 <script type="text/javascript">
+
 	MochaUI.initializeTabs('featuresTabs');
-	
 
 	$('features1Link').addEvent('click', function(e){	
 		new Event(e).stop();
@@ -24,7 +24,6 @@
 	$('features3Link').addEvent('click', function(e){	
 		new Event(e).stop();
 		MochaUI.updateContent($('features'), null, 'pages/docs.html');
-	});		
-
+	});
 	
 </script>
