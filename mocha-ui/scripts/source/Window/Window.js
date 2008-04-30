@@ -276,7 +276,7 @@ MochaUI.Window = new Class({
 		}
 		
 		// Minimizable, dock is required and window cannot be modal
-		if (MochaUI.options.dock == true && options.type != 'modal'){
+		if (MochaUI.Dock.dock && options.type != 'modal'){
 			options.minimizable = options.minimizable;
 		}
 		else {

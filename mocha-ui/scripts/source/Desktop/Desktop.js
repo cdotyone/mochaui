@@ -208,10 +208,10 @@ MochaUI.Desktop = new Class({
 		
 		// If the window has a container that is not the desktop
 		// temporarily move the window to the desktop while it is minimized.
-		if (currentInstance.options.container != this.options.desktop){
+		if (currentInstance.options.container != this.desktop){
 			this.desktop.grab(windowEl);
 			if (this.options.restrict){
-				windowDrag.container = this.desktop;
+			windowDrag.container = this.desktop;
 			}
 		}		
 		
@@ -327,7 +327,7 @@ MochaUI.Desktop = new Class({
 				'top': currentInstance.oldTop,
 				'left': currentInstance.oldLeft
 			});
-			if (currentInstance.container != this.options.desktop){
+			if (currentInstance.container != this.desktop){
 				$(options.container).grab(windowEl);
 				if (options.restrict){
 					currentInstance.windowDrag.container = $(options.container);
@@ -347,7 +347,7 @@ MochaUI.Desktop = new Class({
 					if ( currentInstance.iframe ) {
 						currentInstance.iframeEl.setStyle('visibility', 'visible');
 					}
-					if (options.container != this.options.desktop){
+					if (options.container != this.desktop){
 						$(options.container).grab(windowEl);
 						if (options.restrict){	
 							currentInstance.windowDrag.container = $(options.container);

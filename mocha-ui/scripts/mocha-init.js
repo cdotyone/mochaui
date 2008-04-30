@@ -108,6 +108,26 @@ initializeWindows = function(){
 		new Event(e).stop();
 			MochaUI.youtubeWindow();
 		});
+	}
+	
+	MochaUI.mootoolsWindow = function(){
+		new MochaUI.Window({
+			id: 'mootools',
+			title: 'Mootools Forums in an Iframe',
+			loadMethod: 'iframe',
+			contentURL: 'http://forum.mootools.net/',
+			width: 650,
+			height: 400,
+			scrollbars: false,
+			paddingVertical: 0,
+			paddingHorizontal: 0			
+		});
+	}
+	if ($('mootoolsLinkCheck')) {
+		$('mootoolsLinkCheck').addEvent('click', function(e){
+		new Event(e).stop();
+			MochaUI.mootoolsWindow();
+		});
 	}	
 	
 	MochaUI.dataGridWindow = function(){

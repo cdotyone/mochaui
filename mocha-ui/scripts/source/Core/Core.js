@@ -97,7 +97,8 @@ var MochaUI = new Hash({
 					break;
 				}
 				currentInstance.iframeEl = new Element('iframe', {
-					'id': currentInstance.options.id + '_iframe', 
+					'id': currentInstance.options.id + '_iframe',
+					'name':  currentInstance.options.id + '_iframe',
 					'class': 'mochaIframe',
 					'src': url,
 					'marginwidth':  0,
