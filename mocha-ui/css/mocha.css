@@ -67,6 +67,8 @@ body {
 	color: #555;
 }		
 
+/* Navbar */
+
 #desktopNavbar {
 	margin: 1px 0 0 0;
 	background: #eeeeee;
@@ -90,13 +92,19 @@ body {
 }	
 	
 #desktopNavbar ul li a {
-	padding: 2px 9px 2px 9px;	
+	padding: 2px 11px 2px 9px;	
 	color: #141414;
 }
 
 #desktopNavbar ul li a:hover {
-	background: #ddd;
+	background-color: #ddd;
 }
+
+#desktopNavbar ul li a.arrow-right, #desktopNavbar ul li a:hover.arrow-right {
+	background-image: url(../images/arrow-right.gif);
+	background-repeat: no-repeat;
+	background-position: right 6px;	
+} 
 	
 #desktopNavbar li ul {
 	padding: 2px;
@@ -278,22 +286,19 @@ div.mocha .mochaToolbar {
 	border-top: 1px solid #fff;
 }
 
-.toolbarTabs {
-	
+.toolbarTabs {	
 	padding: 0 10px 2px 2px;
 	background: #e4e4e4 url(../images/tabs.gif) repeat-x;
 	background-position: left -60px;	
 }
 
 .tab-menu {
-
 	padding-top: 1px;
 	list-style:	none;
 	margin: 0;
 	padding: 0;
 	line-height: 16px;
-	font-size: 11px;
-	
+	font-size: 11px;	
 }
 
 .tab-menu li {
