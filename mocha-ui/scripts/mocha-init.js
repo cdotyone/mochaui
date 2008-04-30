@@ -97,7 +97,10 @@ initializeWindows = function(){
 			width: 340,
 			height: 285,
 			scrollbars: false,
-			padding: { top: 0, right: 0, bottom: 0, left: 0 }
+			padding: { top: 0, right: 0, bottom: 0, left: 0 },
+			contentBgColor: '#000',
+			toolbar: true,
+			toolbarURL: 'pages/youtube-tabs.html'			
 		});
 	}	
 	if ($('youtubeLinkCheck')) {

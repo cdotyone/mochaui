@@ -407,10 +407,14 @@ MochaUI.Window = new Class({
 		}
 
 		// Add content to window
-		MochaUI.updateContent(this.windowEl, this.options.content, this.options.contentURL);		
+
 
 		// Inject window into DOM		
 		this.windowEl.injectInside(this.options.container);
+
+		MochaUI.updateContent(this.windowEl, this.options.content, this.options.contentURL);
+
+
 		this.drawWindow(this.windowEl);		
 		
 		if (this.options.toolbar == true){

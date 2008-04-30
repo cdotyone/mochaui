@@ -294,6 +294,7 @@ div.mocha .mochaToolbar {
 }
 
 .tab-menu li {
+	display: block;
 	float: left;
 	margin:	0;
 	background-color: #ebebeb;

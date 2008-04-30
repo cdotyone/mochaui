@@ -49,7 +49,7 @@ var MochaUI = new Hash({
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
 		var contentEl = currentInstance.contentEl;
 		var options = currentInstance.options;
-		if (element){
+		if (element != null){
 			var contentContainer = element; 
 		}
 		else {
@@ -57,8 +57,13 @@ var MochaUI = new Hash({
 		}
 		var canvasIconEl = currentInstance.canvasIconEl;
 		
+		// Remove old content.
+		if (contentContainer == contentEl){
+			currentInstance.contentEl.empty();
+		}		
+		
 		//alert(loadMethod);
-		var loadMethod = 'xhr';
+		var loadMethod = loadMethod ? loadMethod : currentInstance.options.loadMethod;
 
 		// Load new content.
 		switch(loadMethod) {
