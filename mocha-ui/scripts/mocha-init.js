@@ -439,6 +439,7 @@ initializeWindows = function(){
 			height: 180,
 			x: 600,
 			y: 280,
+			resizeLimit: {'x': [275, 2500], 'y': [125, 2000]},			
 			toolbar: true,
 			toolbarURL: 'pages/features-tabs.html'
 		});	

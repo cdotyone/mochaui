@@ -910,8 +910,8 @@ MochaUI.Window = new Class({
 		cache.canvasControlsEl = new Element('canvas', {
 			'id': id + '_canvasControls',
 			'class': 'mochaCanvasControls',
-			'width': 14,
-			'height': 16
+			'width': 52,
+			'height': 14
 		}).inject(this.windowEl);
 		
 		if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas') {
@@ -922,7 +922,7 @@ MochaUI.Window = new Class({
 		if (options.closable){
 			cache.closeButtonEl = new Element('div', {
 				'id': id + '_closeButton',
-				'class': 'mochaClose',
+				'class': 'mochaCloseButton',
 				'title': 'Close'
 			}).inject(cache.controlsEl);
 		}
@@ -930,7 +930,7 @@ MochaUI.Window = new Class({
 		if (options.maximizable){
 			cache.maximizeButtonEl = new Element('div', {
 				'id': id + '_maximizeButton',
-				'class': 'maximizeToggle',
+				'class': 'mochaMaximizeButton',
 				'title': 'Maximize'
 			}).inject(cache.controlsEl);
 		}
@@ -938,7 +938,7 @@ MochaUI.Window = new Class({
 		if (options.minimizable){
 			cache.minimizeButtonEl = new Element('div', {
 				'id': id + '_minimizeButton',
-				'class': 'minimizeToggle',
+				'class': 'mochaMinimizeButton',
 				'title': 'Minimize'
 			}).inject(cache.controlsEl);
 		}
@@ -1065,7 +1065,7 @@ MochaUI.Window = new Class({
 		$extend(this, cache);
 		
 		if (options.type != 'notification'){
-			this.setMochaControlsWidth();
+		//	this.setMochaControlsWidth();
 		}
 		
 		
@@ -1262,7 +1262,8 @@ MochaUI.Window = new Class({
 		});
 
 		// Calculate X position for controlbuttons
-		this.closebuttonX = options.closable ? this.mochaControlsWidth - 12 : this.mochaControlsWidth + 7;
+		var mochaControlsWidth = 52;
+		this.closebuttonX = options.closable ? mochaControlsWidth - 7 : mochaControlsWidth + 12;
 		this.maximizebuttonX = this.closebuttonX - (options.maximizable ? 19 : 0);
 		this.minimizebuttonX = this.maximizebuttonX - (options.minimizable ? 19 : 0);
 		
@@ -1586,7 +1587,7 @@ MochaUI.Window = new Class({
 			this.mochaControlsWidth += (marginWidth + controlWidth);
 			this.closeButtonEl.setStyle('margin-left', marginWidth);
 		}
-		this.controlsEl.setStyle('width', this.mochaControlsWidth - marginWidth);
+		// this.controlsEl.setStyle('width', this.mochaControlsWidth - marginWidth);
 		this.canvasControlsEl.setProperty('width', this.mochaControlsWidth - marginWidth);
 	}
 });
