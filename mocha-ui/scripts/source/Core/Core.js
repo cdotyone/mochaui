@@ -131,30 +131,6 @@ var MochaUI = new Hash({
 		}
 
 	},
-	/*
-	
-	Function: initializeTabs		
-		
-	*/	
-	initializeTabs: function(el){
-		$(el).getElements('li').each(function(listitem){
-			listitem.addEvent('click', function(e){
-				MochaUI.selected(this, el);						  
-			});
-		});
-	},
-	/*
-	
-	Function: selected
-		Add "selected" class to current list item and remove it from sibling list items.
-		
-	*/	
-	selected: function(el, parent){
-		$(parent).getChildren().each(function(listitem){
-			listitem.removeClass('selected');						   
-		});
-		el.addClass('selected');	
-	},
 	collapseToggle: function(windowEl){
 		var instances = MochaUI.Windows.instances;
 		var currentInstance = instances.get(windowEl.id);
