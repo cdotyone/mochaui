@@ -132,30 +132,6 @@ var MochaUI = new Hash({
 
 
 	},
-	/*
-	
-	Function: initializeTabs		
-		
-	*/	
-	initializeTabs: function(el){
-		$(el).getElements('li').each(function(listitem){
-			listitem.addEvent('click', function(e){
-				MochaUI.selected(this, el);						  
-			});
-		});
-	},
-	/*
-	
-	Function: selected
-		Add "selected" class to current list item and remove it from sibling list items.
-		
-	*/	
-	selected: function(el, parent){
-		$(parent).getChildren().each(function(listitem){
-			listitem.removeClass('selected');						   
-		});
-		el.addClass('selected');	
-	},
 	collapseToggle: function(windowEl){
 		var instances = MochaUI.Windows.instances;
 		var currentInstance = instances.get(windowEl.id);
@@ -451,7 +427,10 @@ document.addEvent('keydown', function(event){
 /*
 
 Script: Window.js
-	Build windows.	
+	Build windows.
+	
+Copyright:
+	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
 
 License:
 	MIT-style license.	
@@ -629,7 +608,7 @@ MochaUI.Windows.windowOptions = {
 	padding:   		   { top: 10, right: 12, bottom: 10, left: 12 },
 	shadowBlur:        4,
 	shadowOffset:      {'x': 0, 'y': 1},  // Should be positive and not be greater than the ShadowBlur.
-	useCanvasControls: false, // NOT YET IMPLEMENTED.
+	useCanvasControls: true,
 	
 	// Color options:		
 	headerHeight:      25,
@@ -840,12 +819,16 @@ MochaUI.Window = new Class({
 		
 		
 		if (this.options.shape == 'gauge'){
-			this.canvasControlsEl.setStyle('display', 'none');
+			if (this.canvasControlsEl){
+				this.canvasControlsEl.setStyle('display', 'none');
+			}
 			this.windowEl.addEvent('mouseover', function(){
 				this.mouseover = true;										 
 				var showControls = function(){
 					if (this.mouseover != false){
-						this.canvasControlsEl.setStyle('display', 'block');
+						if (this.canvasControlsEl){
+							this.canvasControlsEl.setStyle('display', 'block');
+						}
 						this.canvasHeaderEl.setStyle('display', 'block');
 						this.titleEl.setStyle('display', 'block');							
 					}
@@ -854,8 +837,10 @@ MochaUI.Window = new Class({
 				
 			}.bind(this));
 			this.windowEl.addEvent('mouseleave', function(){
-				this.mouseover = false;														  
-				this.canvasControlsEl.setStyle('display', 'none');
+				this.mouseover = false;
+				if (this.canvasControlsEl){
+					this.canvasControlsEl.setStyle('display', 'none');
+				}
 				this.canvasHeaderEl.setStyle('display', 'none');
 				this.titleEl.setStyle('display', 'none');				
 			}.bind(this));			
@@ -1210,6 +1195,7 @@ MochaUI.Window = new Class({
 		
 		var shadowBlur = this.options.shadowBlur;
 		var shadowBlur2x = shadowBlur * 2;		
+
 		var shadowOffset = this.options.shadowOffset;
 		var top = shadowBlur - shadowOffset.y - 1;
 		var right = shadowBlur + shadowOffset.x - 1;
@@ -2047,6 +2033,9 @@ MochaUI.Window.implement(new Options, new Events);
 
 Script: Modal.js
 	Create modal dialog windows.
+	
+Copyright:
+	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
 
 License:
 	MIT-style license.	
@@ -2122,6 +2111,9 @@ MochaUI.Modal.implement(new Options, new Events);
 
 Script: Windows-from-html.js
 	Create windows from html markup in page.
+	
+Copyright:
+	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
 
 License:
 	MIT-style license.	
@@ -2178,6 +2170,9 @@ MochaUI.extend({
 
 Script: Windows-from-json.js
 	Create one or more windows from JSON data. You can define all the same properties as you can for new MochaUI.Window(). Undefined properties are set to their defaults.
+	
+Copyright:
+	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
 
 License:
 	MIT-style license.	
@@ -2217,6 +2212,9 @@ MochaUI.extend({
 
 Script: Arrange-cascade.js
 	Cascade windows.
+	
+Copyright:
+	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
 
 License:
 	MIT-style license.	
@@ -2271,8 +2269,56 @@ MochaUI.extend({
 });
 /*
 
+Script: Tabs.js	
+	
+Copyright:
+	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
+	
+License:
+	MIT-style license.
+
+Requires:
+	Core.js, Window.js
+
+To do:
+	- Move to Window
+
+*/
+
+MochaUI.extend({
+	/*
+	
+	Function: initializeTabs		
+		
+	*/	
+	initializeTabs: function(el){
+		$(el).getElements('li').each(function(listitem){
+			listitem.addEvent('click', function(e){
+				MochaUI.selected(this, el);						  
+			});
+		});
+	},
+	/*
+	
+	Function: selected
+		Add "selected" class to current list item and remove it from sibling list items.
+		
+	*/	
+	selected: function(el, parent){
+		$(parent).getChildren().each(function(listitem){
+			listitem.removeClass('selected');						   
+		});
+		el.addClass('selected');	
+	}	
+});
+
+/*
+
 Script: Desktop.js
 	Creates a desktop. Enables window maximize. 
+	
+Copyright:
+	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.		
 	
 License:
 	MIT-style license.	
@@ -2749,8 +2795,7 @@ MochaUI.Desktop = new Class({
 		else {
 			this.sidebarResizable.attach();	
 			this.sidebarHandle.setStyles({
-				'cursor': 'e-resize', /* This is for Opera which does not support the col-resize cursor */
-				'cursor': 'col-resize'
+				'cursor': Browser.Engine.presto ? 'e-resize' : 'col-resize'
 			});				
 			this.sidebar.setStyle('display', 'block');				
 			if (Browser.Engine.trident4){
@@ -2767,7 +2812,10 @@ MochaUI.Desktop.implement(new Options, new Events);
 /*
 
 Script: Dock.js
-	Create windows from a form
+	Implements the dock/taskbar. Enables window minimize.
+	
+Copyright:
+	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.		
 
 License:
 	MIT-style license.
@@ -3075,7 +3123,10 @@ MochaUI.Dock.implement(new Options, new Events);
 
 Script: Workspaces.js
 	Save and load workspaces. The Workspaces emulate Adobe Illustrator functionality remembering what windows are open and where they are positioned. There will be two versions, a limited version that saves state to a cookie, and a fully functional version that saves state to a database.
-	
+
+Copyright:
+	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
+
 License:
 	MIT-style license.
 

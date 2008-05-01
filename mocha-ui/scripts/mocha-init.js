@@ -118,63 +118,13 @@ initializeWindows = function(){
 			loadMethod: 'iframe',
 			contentURL: 'http://forum.mootools.net/',
 			width: 650,
-			height: 400,
-			scrollbars: false,
-			paddingVertical: 0,
-			paddingHorizontal: 0			
+			height: 400			
 		});
 	}
 	if ($('mootoolsLinkCheck')) {
 		$('mootoolsLinkCheck').addEvent('click', function(e){
 		new Event(e).stop();
 			MochaUI.mootoolsWindow();
-		});
-	}	
-	
-	MochaUI.eventsWindow = function(){	
-		new MochaUI.Window({
-			id: 'windowevents',
-			title: 'Window Events',
-			loadMethod: 'xhr',
-			contentURL: 'pages/events.html',
-			onBeforeBuild: function(){
-				alert('This window is about to be built.');
-			},			
-			onContentLoaded: function(windowEl){
-				alert(windowEl.id + '\'s content was loaded.');
-			},			
-			onClose: function(){
-				alert('The window is closing.');
-			},
-			onCloseComplete: function(){
-				alert('The window is closed.');
-			},			
-			onMinimize: function(windowEl){
-				alert(windowEl.id + ' was minimized.');
-			},
-			onMaximize: function(windowEl){
-				alert(windowEl.id + ' was maximized.');
-			},
-			onRestore: function(windowEl){
-				alert(windowEl.id + ' was restored.');
-			},			
-			onResize: function(windowEl){
-				alert(windowEl.id + ' was resized.');
-			},
-			onFocus: function(windowEl){
-				alert(windowEl.id + ' was focused.');
-			},
-			onBlur: function(windowEl){
-				alert(windowEl.id + ' lost focus.');
-			},			
-			width: 340,
-			height: 250
-		});
-	}	
-	if ($('windoweventsLinkCheck')){
-		$('windoweventsLinkCheck').addEvent('click', function(e){
-			new Event(e).stop();
-			MochaUI.eventsWindow();
 		});
 	}	
 	
@@ -278,6 +228,54 @@ initializeWindows = function(){
 		});
 	}
 	
+	// Examples > Tests
+	MochaUI.eventsWindow = function(){	
+		new MochaUI.Window({
+			id: 'windowevents',
+			title: 'Window Events',
+			loadMethod: 'xhr',
+			contentURL: 'pages/events.html',
+			onBeforeBuild: function(){
+				alert('This window is about to be built.');
+			},			
+			onContentLoaded: function(windowEl){
+				alert(windowEl.id + '\'s content was loaded.');
+			},			
+			onClose: function(){
+				alert('The window is closing.');
+			},
+			onCloseComplete: function(){
+				alert('The window is closed.');
+			},			
+			onMinimize: function(windowEl){
+				alert(windowEl.id + ' was minimized.');
+			},
+			onMaximize: function(windowEl){
+				alert(windowEl.id + ' was maximized.');
+			},
+			onRestore: function(windowEl){
+				alert(windowEl.id + ' was restored.');
+			},			
+			onResize: function(windowEl){
+				alert(windowEl.id + ' was resized.');
+			},
+			onFocus: function(windowEl){
+				alert(windowEl.id + ' was focused.');
+			},
+			onBlur: function(windowEl){
+				alert(windowEl.id + ' lost focus.');
+			},			
+			width: 340,
+			height: 250
+		});
+	}	
+	if ($('windoweventsLinkCheck')){
+		$('windoweventsLinkCheck').addEvent('click', function(e){
+			new Event(e).stop();
+			MochaUI.eventsWindow();
+		});
+	}	
+	
 	MochaUI.containertestWindow = function(){ 
 		new MochaUI.Window({
 			id: 'containertest',
@@ -296,8 +294,71 @@ initializeWindows = function(){
 			new Event(e).stop();
 			MochaUI.containertestWindow();
 		});
-	}	
+	}
 	
+	MochaUI.iframetestWindow = function(){
+		new MochaUI.Window({
+			id: 'iframetest',
+			title: 'Iframe Tests',
+			loadMethod: 'iframe',
+			contentURL: 'pages/iframetest.html'			
+		});
+	}
+	if ($('iframetestLinkCheck')) {
+		$('iframetestLinkCheck').addEvent('click', function(e){
+		new Event(e).stop();
+			MochaUI.iframetestWindow();
+		});
+	}
+	
+	MochaUI.accordiantestWindow = function(){
+		var id = 'accordiantest';		
+		new MochaUI.Window({
+			id: id,
+			title: 'Accordian Test',
+			loadMethod: 'xhr',
+			contentURL: 'pages/overview.html',
+			width: 300,
+			height: 200,
+			scrollbars: false,
+			resizable: false,
+			maximizable: false,				
+			padding: { top: 0, right: 0, bottom: 0, left: 0 },			
+			onContentLoaded: function(windowEl){
+				this.windowEl = windowEl;
+				var accordianDelay = function(){					
+					new Accordion('#' + id + ' h3.accordianToggler', "#" + id + ' div.accordianElement', {
+					//	start: 'all-closed',															   
+						opacity: false,
+						alwaysHide: true,
+						onActive: function(toggler, element){
+								toggler.addClass('open');
+						},
+						onBackground: function(toggler, element){
+								toggler.removeClass('open');
+						},							
+						onStart: function(toggler, element){
+							this.windowEl.accordianResize = function(){
+								MochaUI.dynamicResize($(id));
+							}
+							this.windowEl.accordianTimer = this.windowEl.accordianResize.periodical(10);								
+						}.bind(this),												
+						onComplete: function(){	
+							this.windowEl.accordianTimer = $clear(this.windowEl.accordianTimer);
+							MochaUI.dynamicResize($(id)) // once more for good measure
+						}.bind(this)									   
+					}, $(id));
+				}.bind(this)
+				accordianDelay.delay(10, this); // Delay is a fix for IE
+			}				
+		});
+	}	
+	if ($('accordiantestLinkCheck')){ 
+		$('accordiantestLinkCheck').addEvent('click', function(e){	
+			new Event(e).stop();
+			MochaUI.accordiantestWindow();
+		});
+	}	
 
 	// View
 	if ($('sidebarLinkCheck')){
@@ -426,55 +487,6 @@ initializeWindows = function(){
 			MochaUI.overviewWindow();
 		});
 	}
-	
-	MochaUI.accordiantestWindow = function(){
-		var id = 'accordiantest';		
-		new MochaUI.Window({
-			id: id,
-			title: 'Accordian Test',
-			loadMethod: 'xhr',
-			contentURL: 'pages/overview.html',
-			width: 300,
-			height: 200,
-			scrollbars: false,
-			resizable: false,
-			maximizable: false,				
-			padding: { top: 0, right: 0, bottom: 0, left: 0 },			
-			onContentLoaded: function(windowEl){
-				this.windowEl = windowEl;
-				var accordianDelay = function(){					
-					new Accordion('#' + id + ' h3.accordianToggler', "#" + id + ' div.accordianElement', {
-					//	start: 'all-closed',															   
-						opacity: false,
-						alwaysHide: true,
-						onActive: function(toggler, element){
-								toggler.addClass('open');
-						},
-						onBackground: function(toggler, element){
-								toggler.removeClass('open');
-						},							
-						onStart: function(toggler, element){
-							this.windowEl.accordianResize = function(){
-								MochaUI.dynamicResize($(id));
-							}
-							this.windowEl.accordianTimer = this.windowEl.accordianResize.periodical(10);								
-						}.bind(this),												
-						onComplete: function(){	
-							this.windowEl.accordianTimer = $clear(this.windowEl.accordianTimer);
-							MochaUI.dynamicResize($(id)) // once more for good measure
-						}.bind(this)									   
-					}, $(id));
-				}.bind(this)
-				accordianDelay.delay(10, this); // Delay is a fix for IE
-			}				
-		});
-	}	
-	if ($('accordiantestLinkCheck')){ 
-		$('accordiantestLinkCheck').addEvent('click', function(e){	
-			new Event(e).stop();
-			MochaUI.accordiantestWindow();
-		});
-	}	
 	
 	MochaUI.featuresWindow = function(){		
 		new MochaUI.Window({
