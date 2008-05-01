@@ -2,7 +2,10 @@
 
 Script: Workspaces.js
 	Save and load workspaces. The Workspaces emulate Adobe Illustrator functionality remembering what windows are open and where they are positioned. There will be two versions, a limited version that saves state to a cookie, and a fully functional version that saves state to a database.
-	
+
+Copyright:
+	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
+
 License:
 	MIT-style license.
 

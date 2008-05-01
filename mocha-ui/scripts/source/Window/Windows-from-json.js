@@ -2,6 +2,9 @@
 
 Script: Windows-from-json.js
 	Create one or more windows from JSON data. You can define all the same properties as you can for new MochaUI.Window(). Undefined properties are set to their defaults.
+	
+Copyright:
+	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
 
 License:
 	MIT-style license.	

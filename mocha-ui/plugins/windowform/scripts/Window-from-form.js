@@ -2,6 +2,9 @@
 
 Script: Window-from-form.js
 	Create a window from a form.
+	
+Copyright:
+	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
 
 License:
 	MIT-style license.

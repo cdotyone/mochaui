@@ -5,6 +5,9 @@
 Script: mocha.js.php
 	Dynamically concatenate source javascript files during development.
 	
+Copyright:
+	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.		
+	
 Note:
 	This is not recommended for live sites since it does not cache, compress or gzip the outputted file. 	 
 
@@ -19,7 +22,7 @@ Example:
 */
 
 // Array of files to merge
-$aFiles = array(
+$files = array(
 	'dev/mocha/scripts/source/Core/Core.js',
 	'dev/mocha/scripts/source/Window/Window.js',
 	'dev/mocha/scripts/source/Window/Modal.js',		
@@ -33,23 +36,23 @@ $aFiles = array(
 );
 
 // Get the path to your web directory
-$sDocRoot = $_SERVER['DOCUMENT_ROOT'];
+$docRoot = $_SERVER['DOCUMENT_ROOT'];
 
 // Merge code
-$sCode = '';
-foreach ($aFiles as $sFile) {
-	$sCode .= file_get_contents("$sDocRoot/$sFile");
+$code = '';
+foreach ($files as $file) {
+	$code .= file_get_contents("$docRoot/$file");
 }
 
-$file = "mocha.js";	 
+$filename = "mocha.js";	 
 
 // Send HTTP headers
 header("Cache-Control: must-revalidate");
 header("Content-Type: text/javascript");
-header('Content-Length: '.strlen($sCode));
-header("Content-Disposition: inline; filename=$file");	
+header('Content-Length: '.strlen($code));
+header("Content-Disposition: inline; filename=$filename");	
    
 // Output merged code
-echo $sCode;
+echo $code;
 
 ?>

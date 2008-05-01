@@ -3,6 +3,9 @@
 Script: Desktop.js
 	Creates a desktop. Enables window maximize. 
 	
+Copyright:
+	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.		
+	
 License:
 	MIT-style license.	
 
@@ -478,8 +481,7 @@ MochaUI.Desktop = new Class({
 		else {
 			this.sidebarResizable.attach();	
 			this.sidebarHandle.setStyles({
-				'cursor': 'e-resize', /* This is for Opera which does not support the col-resize cursor */
-				'cursor': 'col-resize'
+				'cursor': Browser.Engine.presto ? 'e-resize' : 'col-resize'
 			});				
 			this.sidebar.setStyle('display', 'block');				
 			if (Browser.Engine.trident4){

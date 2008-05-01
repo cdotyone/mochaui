@@ -1,7 +1,10 @@
 /*
 
 Script: Window.js
-	Build windows.	
+	Build windows.
+	
+Copyright:
+	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
 
 License:
 	MIT-style license.	
