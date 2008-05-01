@@ -13,9 +13,6 @@ Requires:
 	Core.js, Window.js
 	
 Options:
-	useHeaderCanvas - (boolean) Toggle canvas header gradient.
-	headerStartColor - Header gradient's top color - RGB.
-	headerStopColor - Header gradient's bottom color.
 	sidebarLimitX - Sidebar minimum and maximum widths when resizing.
 
 */
@@ -26,13 +23,11 @@ MochaUI.Desktop = new Class({
 	
 	Implements: [Events, Options],
 	
-	options: {
-		useHeaderCanvas: true,          		
+	options: {         		
 		// Naming options:
 		// If you change the IDs of the Mocha Desktop containers in your HTML, you need to change them here as well.
 		desktop:                'desktop',
 		desktopHeader:          'desktopHeader',
-		desktopTitlebarWrapper: 'desktopTitlebarWrapper',
 		desktopNavBar:          'desktopNavbar',
 		pageWrapper:            'pageWrapper',
 		page:                   'page',
@@ -41,17 +36,13 @@ MochaUI.Desktop = new Class({
 		sidebarContentWrapper:  'sidebarContentWrapper',		
 		sidebarMinimize:        'sidebarControl',
 		sidebarHandle:          'sidebarHandle',
-		// Style options:
-		headerStartColor:       [250, 250, 250],  // Header gradient's top color - RGB.
-		headerStopColor:        [229, 229, 229],  // Header gradient's bottom color.
 		// Sidebar options:
 		sidebarLimitX:          [180, 280]        // Sidebar minimum and maximum widths when resizing.
 	},	
 	initialize: function(options){
 		this.setOptions(options);
 		this.desktop                = $(this.options.desktop);
-		this.desktopHeader          = $(this.options.desktopHeader);
-		this.desktopTitlebarWrapper = $(this.options.desktopTitlebarWrapper);		
+		this.desktopHeader          = $(this.options.desktopHeader);		
 		this.desktopNavBar          = $(this.options.desktopNavBar);
 		this.pageWrapper            = $(this.options.pageWrapper);
 		this.page                   = $(this.options.page);
@@ -60,22 +51,7 @@ MochaUI.Desktop = new Class({
 		this.sidebarContentWrapper  = $(this.options.sidebarContentWrapper);
 		this.sidebarMinimize        = $(this.options.sidebarMinimize);
 		this.sidebarHandle          = $(this.options.sidebarHandle);		
-		
-		//Insert canvas
-		if (this.options.useHeaderCanvas){		
-		this.desktopHeaderHeight = 35; //this.desktopTitlebarWrapper.offsetHeight;
-			this.titlebarCanvas = new Element('canvas', {
-				'id':     'titlebarCanvas',
-				'width':  1000,
-				'height': this.desktopHeaderHeight
-			}).injectBottom(this.desktopTitlebarWrapper);
-		}
-
-		// Dynamically initialize canvas using excanvas. This is only required by IE
-		if ( Browser.Engine.trident && MochaUI.ieSupport == 'excanvas'  ) {
-			G_vmlCanvasManager.initElement(this.titlebarCanvas);			
-		}
-		
+	
 		this.setDesktopSize();
 		this.menuInitialize();
 		
@@ -87,19 +63,6 @@ MochaUI.Desktop = new Class({
 		window.addEvent('resize', function(){
 			this.onBrowserResize();
 		}.bind(this));		
-	},
-	drawHeaderCanvas: function(){
-		var windowDimensions = document.getCoordinates();
-		
-		$('titlebarCanvas').setProperty('width', windowDimensions.width);	
-		
-		var ctx = $('titlebarCanvas').getContext('2d');		
-		var lingrad = ctx.createLinearGradient(0, 0, 0, 35);
-
-		lingrad.addColorStop(0, 'rgba(' + this.options.headerStartColor.join(',') + ', 1)');
-		lingrad.addColorStop(1, 'rgba(' + this.options.headerStopColor.join(',') + ', 1)');			
-		ctx.fillStyle = lingrad;
-		ctx.fillRect(0, 0, windowDimensions.width, this.desktopHeaderHeight);			
 	},
 	menuInitialize: function(){
 		// Fix for dropdown menus in IE6
@@ -146,10 +109,6 @@ MochaUI.Desktop = new Class({
 	},
 	setDesktopSize: function(){
 		var windowDimensions = window.getCoordinates();
-
-		if (this.options.useHeaderCanvas){
-			this.drawHeaderCanvas.delay(10, this);
-		}
 
 		// var dock = $(MochaUI.options.dock);
 		var dockWrapper = $(MochaUI.options.dockWrapper);

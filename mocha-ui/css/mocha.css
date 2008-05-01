@@ -42,16 +42,12 @@ body {
 #desktopTitlebarWrapper {
 	position: relative;
 	height: 35px;
-	background: #eeeeef;		
+	background: #eeeeef url(../images/bg-desktopTitlebar.gif) repeat-x;			
 }
 	
 #desktopTitlebar {
-	position: absolute;
-	top: 0;
-	left: 0;
 	padding: 4px 8px 6px 8px;
 	height: 23px;
-	z-index: 2;
 }	
 	
 #desktopTitlebar h1 {
