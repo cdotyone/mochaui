@@ -60,8 +60,8 @@ Options:
 	footerHeight - (number) Height of window footer.
 	cornerRadius - (number)
 	contentBgColor - (hex) Body background color
-	headerStartColor - ([r,g,b,]) Header gradient's top color - RGB
-	headerStopColor - ([r,g,b,]) Header gradient's bottom color
+	headerStartColor - ([r,g,b,]) Titlebar gradient's top color
+	headerStopColor - ([r,g,b,]) Titlebar gradient's bottom color
 	bodyBgColor - ([r,g,b,]) Background color of the main canvas shape
 	minimizeBgColor - ([r,g,b,]) Minimize button background color
 	minimizeColor - ([r,g,b,]) Minimize button color	
@@ -70,8 +70,6 @@ Options:
 	closeBgColor - ([r,g,b,]) Close button background color
 	closeColor - ([r,g,b,]) Close button color	
 	resizableColor - ([r,g,b,]) Resizable icon color
-
-Events:
 	onBeforeBuild - (function) Fired just before the window is built.
 	onContentLoaded - (function) Fired when content is successfully loaded via XHR or Iframe.
 	onFocus - (function)  Fired when the window is focused.
@@ -111,6 +109,9 @@ Example:
 	
 Example:	
 	Add link events to build future windows. It is suggested you give your anchor the same ID as your window + "WindowLink" or + "WindowLinkCheck". Use the latter if it is a link in the menu toolbar.
+	
+	If you wish to add links in windows that open other windows remember to add events to those links when the windows are created.	
+	
 	(start code)	
 	// Javascript:
 	if ($('mywindowLink')){
@@ -123,6 +124,13 @@ Example:
 	// HTML:
 	<a id="mywindowLink" href="pages/lipsum.html">My Window</a>	
 	(end)
+	
+Notes:
+	*Loading Content with an XMLHttpRequest(xhr)*
+	For content to load via xhr all the files must be online and in the same domain. If you need to load content from another domain or wish to have it work offline, load the content in an iframe instead of using the xhr option.
+	
+	*Iframes*
+	If you use the iframe loadMethod your iframe will automatically be resized when the window it is in is resized. If you want this same functionality when using one of the other load options simply add class="mochaIframe" to those iframes and they will be resized for you as well.
 
 */   
 
@@ -145,7 +153,7 @@ MochaUI.Windows.windowOptions = {
 	content:           'Window content',
 	
 	// Toolbar
-	toolbar:           false, // (boolean) Create window toolbar. Defaults to false. This can be used for tabs, media controls, or if your window content is an iframe you might use the toolbar for back, forward, and refresh buttons.
+	toolbar:           false, // (boolean) Create window toolbar. Defaults to false. This can be used for tabs, media controls, and so forth.
 	toolbarPosition:   'top', // 'top' or 'bottom'. Defaults to top.
 	toolbarHeight:     29,
 	toolbarURL:        'pages/lipsum.html',	

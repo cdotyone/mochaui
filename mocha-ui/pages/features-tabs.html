@@ -1,8 +1,8 @@
 <div class="toolbarTabs">
 	<ul id="featuresTabs" class="tab-menu">
-		<li id="features1Link" class="selected"><a>Option 1</a></li>
-		<li id="features2Link"><a>Option 2</a></li>
-		<li id="features3Link"><a>Update</a></li>
+		<li id="features1Link" class="selected"><a>Tab 1</a></li>
+		<li id="features2Link"><a>Tab 2</a></li>
+		<li id="features3Link"><a>Tab 3</a></li>
 	</ul>
 	<div class="clear"></div>
 </div>
@@ -23,7 +23,7 @@
 	
 	$('features3Link').addEvent('click', function(e){	
 		new Event(e).stop();
-		MochaUI.updateContent($('features'), null, 'pages/docs.html');
+		MochaUI.updateContent($('features'), null, 'pages/lipsum2.html');
 	});
 	
 </script>
