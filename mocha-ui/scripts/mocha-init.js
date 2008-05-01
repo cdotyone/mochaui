@@ -376,9 +376,10 @@ initializeWindows = function(){
 	}	
 	
 	// Help
-	MochaUI.overviewWindow = function(){	
+	MochaUI.overviewWindow = function(){
+		var id = 'overview';
 		new MochaUI.Window({
-			id: 'overview',
+			id: id,
 			title: 'Overview',
 			loadMethod: 'xhr',
 			contentURL: 'pages/overview.html',
@@ -393,7 +394,7 @@ initializeWindows = function(){
 			onContentLoaded: function(windowEl){
 				this.windowEl = windowEl;
 				var accordianDelay = function(){					
-					new Accordion('h3.accordianToggler', 'div.accordianElement', {
+					new Accordion('#' + id + ' h3.accordianToggler', "#" + id + ' div.accordianElement', {
 					//	start: 'all-closed',															   
 						opacity: false,
 						alwaysHide: true,
@@ -405,15 +406,15 @@ initializeWindows = function(){
 						},							
 						onStart: function(toggler, element){
 							this.windowEl.accordianResize = function(){
-								MochaUI.dynamicResize($('overview'));
+								MochaUI.dynamicResize($(id));
 							}
 							this.windowEl.accordianTimer = this.windowEl.accordianResize.periodical(10);								
 						}.bind(this),												
 						onComplete: function(){	
 							this.windowEl.accordianTimer = $clear(this.windowEl.accordianTimer);
-							MochaUI.dynamicResize($('overview')) // once more for good measure
+							MochaUI.dynamicResize($(id)) // once more for good measure
 						}.bind(this)									   
-					}, $('overview'));
+					}, $(id));
 				}.bind(this)
 				accordianDelay.delay(10, this); // Delay is a fix for IE
 			}				
@@ -423,6 +424,55 @@ initializeWindows = function(){
 		$('overviewLinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
 			MochaUI.overviewWindow();
+		});
+	}
+	
+	MochaUI.accordiantestWindow = function(){
+		var id = 'accordiantest';		
+		new MochaUI.Window({
+			id: id,
+			title: 'Accordian Test',
+			loadMethod: 'xhr',
+			contentURL: 'pages/overview.html',
+			width: 300,
+			height: 200,
+			scrollbars: false,
+			resizable: false,
+			maximizable: false,				
+			padding: { top: 0, right: 0, bottom: 0, left: 0 },			
+			onContentLoaded: function(windowEl){
+				this.windowEl = windowEl;
+				var accordianDelay = function(){					
+					new Accordion('#' + id + ' h3.accordianToggler', "#" + id + ' div.accordianElement', {
+					//	start: 'all-closed',															   
+						opacity: false,
+						alwaysHide: true,
+						onActive: function(toggler, element){
+								toggler.addClass('open');
+						},
+						onBackground: function(toggler, element){
+								toggler.removeClass('open');
+						},							
+						onStart: function(toggler, element){
+							this.windowEl.accordianResize = function(){
+								MochaUI.dynamicResize($(id));
+							}
+							this.windowEl.accordianTimer = this.windowEl.accordianResize.periodical(10);								
+						}.bind(this),												
+						onComplete: function(){	
+							this.windowEl.accordianTimer = $clear(this.windowEl.accordianTimer);
+							MochaUI.dynamicResize($(id)) // once more for good measure
+						}.bind(this)									   
+					}, $(id));
+				}.bind(this)
+				accordianDelay.delay(10, this); // Delay is a fix for IE
+			}				
+		});
+	}	
+	if ($('accordiantestLinkCheck')){ 
+		$('accordiantestLinkCheck').addEvent('click', function(e){	
+			new Event(e).stop();
+			MochaUI.accordiantestWindow();
 		});
 	}	
 	
