@@ -399,7 +399,9 @@ div.mocha .cornerSE { /* Bottom right resize handle */
 
 /*
 	To use images for these buttons:
-	1. Set the useCanvasControls window option to false.		
+	1. Set the useCanvasControls window option to false.
+	2. If you use a different button size you may need to reposition the controls.
+	   Modify the controlsOffset window option.		
 	2. Add background images to each button.
 
 */
