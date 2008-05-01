@@ -173,7 +173,7 @@ MochaUI.Windows.windowOptions = {
 	addClass:          '',
 	width:             300,
 	height:            125, 
-	x:                 null,    // !!! NEED TO MAKE THIS WORK WITH THE CONTAINER OPTION. 
+	x:                 null,
 	y:                 null,    
 	scrollbars:        true,
 	padding:   		   { top: 10, right: 12, bottom: 10, left: 12 },
@@ -440,7 +440,7 @@ MochaUI.Window = new Class({
 			var dimensions = window.getSize();
 		}
 		else {
-			var dimensions = this.options.container.getCoordinates();			
+			var dimensions = $(this.options.container).getSize();			
 		}
 
 		if (!this.options.y) {
@@ -676,6 +676,7 @@ MochaUI.Window = new Class({
 		});	
 	
 		this.contentWrapperEl.makeResizable({
+			container: this.options.restrict == true ? $(this.options.container) : false,											
 			handle: this.se,
 			limit: {
 				x: [this.options.resizeLimit.x[0] - (this.options.shadowBlur * 2), this.options.resizeLimit.x[1] - (this.options.shadowBlur * 2) ],

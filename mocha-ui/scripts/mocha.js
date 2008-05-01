@@ -97,7 +97,8 @@ var MochaUI = new Hash({
 					break;
 				}
 				currentInstance.iframeEl = new Element('iframe', {
-					'id': currentInstance.options.id + '_iframe', 
+					'id': currentInstance.options.id + '_iframe',
+					'name':  currentInstance.options.id + '_iframe',
 					'class': 'mochaIframe',
 					'src': url,
 					'marginwidth':  0,
@@ -128,6 +129,7 @@ var MochaUI = new Hash({
 				currentInstance.fireEvent('onContentLoaded', windowEl);
 				break;
 		}
+
 
 	},
 	/*
@@ -724,7 +726,12 @@ MochaUI.Window = new Class({
 		}
 		
 		// Minimizable, dock is required and window cannot be modal
-		options.minimizable = MochaUI.options.dock && options.minimizable && options.type != 'modal';		
+		if (MochaUI.Dock.dock && options.type != 'modal'){
+			options.minimizable = options.minimizable;
+		}
+		else {
+			options.minimizable = false;			
+		}
 
 		// Maximizable, desktop is required
 		options.maximizable = MochaUI.Desktop.desktop && options.maximizable && options.type != 'modal';
@@ -854,17 +861,15 @@ MochaUI.Window = new Class({
 			}.bind(this));			
 		}
 
-		// Add content to window
-
-
-		// Inject window into DOM		
+		// Inject window into DOM.	
 		this.windowEl.injectInside(this.options.container);
 
+		// Add content to window.
 		MochaUI.updateContent(this.windowEl, this.options.content, this.options.contentURL);
-
 
 		this.drawWindow(this.windowEl);		
 		
+		// Add content to window toolbar.
 		if (this.options.toolbar == true){
 			MochaUI.updateContent(this.windowEl, this.options.toolbarContent, this.options.toolbarURL, this.toolbarEl, 'xhr');
 		}
@@ -883,7 +888,7 @@ MochaUI.Window = new Class({
 			var dimensions = window.getSize();
 		}
 		else {
-			var dimensions = this.options.container.getCoordinates();			
+			var dimensions = $(this.options.container).getCoordinates();			
 		}
 
 		if (!this.options.y) {
@@ -922,7 +927,6 @@ MochaUI.Window = new Class({
 		}
 
 		if (this.options.type == 'modal') {
-
 			if (Browser.Engine.trident4){
 				$('modalFix').setStyle('display', 'block');	
 			}
@@ -1644,7 +1648,7 @@ MochaUI.Window = new Class({
 		var shadowBlur2x = shadowBlur * 2;
 		var shadowOffset = options.shadowOffset;		
 		
-		var headerShadow = options.headerHeight + shadowBlur2x + 3;
+		var headerShadow = options.headerHeight + shadowBlur2x + 2;
 		var height = headerShadow;
 		var width = this.contentWrapperEl.getStyle('width').toInt() + shadowBlur2x;
 		this.windowEl.setStyle('height', height);
@@ -1820,7 +1824,7 @@ MochaUI.Window = new Class({
 			shadowBlur - shadowOffset.x,  // x
 			shadowBlur - shadowOffset.y,  // y
 			width - shadowBlur2x,         // width
-			options.headerHeight + 3,     // height
+			options.headerHeight + 2,     // height
 			cornerRadius,                 // corner radius
 			options.headerStartColor,     // Header gradient's top color
 			options.headerStopColor       // Header gradient's bottom color
@@ -2470,10 +2474,10 @@ MochaUI.Desktop = new Class({
 		
 		// If the window has a container that is not the desktop
 		// temporarily move the window to the desktop while it is minimized.
-		if (currentInstance.options.container != this.options.desktop){
+		if (currentInstance.options.container != this.desktop){
 			this.desktop.grab(windowEl);
 			if (this.options.restrict){
-				windowDrag.container = this.desktop;
+			windowDrag.container = this.desktop;
 			}
 		}		
 		
@@ -2589,7 +2593,7 @@ MochaUI.Desktop = new Class({
 				'top': currentInstance.oldTop,
 				'left': currentInstance.oldLeft
 			});
-			if (currentInstance.container != this.options.desktop){
+			if (currentInstance.container != this.desktop){
 				$(options.container).grab(windowEl);
 				if (options.restrict){
 					currentInstance.windowDrag.container = $(options.container);
@@ -2609,7 +2613,7 @@ MochaUI.Desktop = new Class({
 					if ( currentInstance.iframe ) {
 						currentInstance.iframeEl.setStyle('visibility', 'visible');
 					}
-					if (options.container != this.options.desktop){
+					if (options.container != this.desktop){
 						$(options.container).grab(windowEl);
 						if (options.restrict){	
 							currentInstance.windowDrag.container = $(options.container);

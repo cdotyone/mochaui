@@ -277,6 +277,27 @@ initializeWindows = function(){
 			MochaUI.clockWindow();
 		});
 	}
+	
+	MochaUI.containertestWindow = function(){ 
+		new MochaUI.Window({
+			id: 'containertest',
+			title: 'Container Test',
+			loadMethod: 'xhr',
+			contentURL: 'pages/lipsum.html',
+			container: 'pageWrapper',
+			width: 340,
+			height: 150,
+			x: 100,
+			y: 100
+		});
+	}	
+	if ($('containertestLinkCheck')){ 
+		$('containertestLinkCheck').addEvent('click', function(e){	
+			new Event(e).stop();
+			MochaUI.containertestWindow();
+		});
+	}	
+	
 
 	// View
 	if ($('sidebarLinkCheck')){
