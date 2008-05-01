@@ -1,47 +1,3 @@
-
-<h3>Creating a New Window</h3>
-
-<p><strong>Syntax:</strong></p>
-<pre>
-new MochaUI.Window();
-</pre>
-
-<p><strong>Arguments: </strong>Options</p>
-
-<p><strong>Options:</strong></p>
-<ul>
-	<li>id: (string)</li>
-	<li>title: (string)</li>
-	<li>loadMethod: (string: 'html', 'xhr', or 'iframe')</li>
-	<li>content: (string) used if contentType is set to 'html'</li>
-	<li>contentURL: (string) used if contentType is set to 'xhr' or 'iframe'</li>
-	<li>modal: (boolean)</li>
-	<li>draggable: (boolean)</li>
-	<li>resizable: (boolean)</li>
-	<li>minimizable: (boolean)</li>
-	<li>maximizable: (boolean)</li>
-	<li>closable: (boolean)</li>	
-	<li>width: (number)</li>
-	<li>height: (number)</li>
-	<li>scrollbars: (boolean)</li>
-	<li>x: (number) If x or y are not set the new window is centered in the browser window.</li>
-	<li>y: (number)</li>
-	<li>paddingVertical: (number)</li>
-	<li>paddingHorizontal: (number)</li>
-	<li>bgColor: (string, defaults to '#fff')</li>
-</ul>
-
-<p><strong>Events:</strong></p>
-<ul>
-	<li>onContentLoaded: (function)	Event, fired when content is successfully loaded via xhr</li>
-	<li>onFocus: (function) Event, fired when window is focused</li>
-	<li>onResize: (function) Event, fired when window is resized</li>	
-	<li>onMinimize: (function) Event, fired when window is minimized</li>
-	<li>onMaximize: (function) Event, fired when window is maximized</li>
-	<li>onClose: (function)	Event, fired just before window is closed</li>
-	<li>onCloseComplete: (function)	Event, fired after window is disposed</li>		
-</ul>	
-
 <h3>Loading Content with an XMLHttpRequest(XHR)</h3>
 <p>For content to load via xhr all the files must be online and in the same domain. If you need to load content from another domain or wish to have it work offline, load the content in a iframe instead of using the xhr option.</p>
 
@@ -90,14 +46,6 @@ this.getSubElement($('windowID'), 'content');
 If you used the iframe load method, you can change the src of that window's iframe as follows:
 <pre>
 this.getSubElement($('windowID'), 'iframe').src = 'http://www.mydomain.com/';
-</pre>
-
-<h3>Closing a Window</h3>
-<p>Closing a window requires that you know the ID property of the window. Setting the ID is an option when creating a window.</p>
-
-Example Javascript:
-<pre>
-MochaUI.closeWindow($('windowID'));
 </pre>
 
 <h3>MooCanvas and ExCanvas</h3>

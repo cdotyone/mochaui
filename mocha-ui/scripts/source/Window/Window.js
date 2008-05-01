@@ -1200,7 +1200,7 @@ MochaUI.Window = new Class({
 		var shadowBlur2x = shadowBlur * 2;
 		var shadowOffset = options.shadowOffset;		
 		
-		var headerShadow = options.headerHeight + shadowBlur2x + 3;
+		var headerShadow = options.headerHeight + shadowBlur2x + 2;
 		var height = headerShadow;
 		var width = this.contentWrapperEl.getStyle('width').toInt() + shadowBlur2x;
 		this.windowEl.setStyle('height', height);
@@ -1376,7 +1376,7 @@ MochaUI.Window = new Class({
 			shadowBlur - shadowOffset.x,  // x
 			shadowBlur - shadowOffset.y,  // y
 			width - shadowBlur2x,         // width
-			options.headerHeight + 3,     // height
+			options.headerHeight + 2,     // height
 			cornerRadius,                 // corner radius
 			options.headerStartColor,     // Header gradient's top color
 			options.headerStopColor       // Header gradient's bottom color

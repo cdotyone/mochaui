@@ -98,6 +98,7 @@ initializeWindows = function(){
 			height: 285,
 			scrollbars: false,
 			padding: { top: 0, right: 0, bottom: 0, left: 0 },
+			resizeLimit:  {'x': [330, 2500], 'y': [250, 2000]},			
 			contentBgColor: '#000',
 			toolbar: true,
 			toolbarURL: 'pages/youtube-tabs.html'			
@@ -129,55 +130,6 @@ initializeWindows = function(){
 			MochaUI.mootoolsWindow();
 		});
 	}	
-	
-	MochaUI.dataGridWindow = function(){
-		// It's a good idea to load your css before the window
-		if ( !$('tablesoortcss') ) {
-			new Asset.css('plugins/tablesoort/css/tablesoort.css', {id: 'tablesoortcss'});
-		}		
-		if ( $('tablesoortcss') ) {
-			new MochaUI.Window({
-				id: 'dataGrid',
-				title: 'Example Data Grid',
-				loadMethod: 'xhr',
-				contentURL: 'plugins/tablesoort/index.html?t=' + new Date().getTime(),
-				onContentLoaded: function(){				
-					if ( !MochaUI.tablesoortScript == true ){
-						new Request({
-							url: 'plugins/tablesoort/scripts/tablesoort.js?t=' + new Date().getTime(),
-							method: 'get',
-							onSuccess: function() {
-								$$('table.sortTable').each(function(sort){
-									new tableSoort(sort.id);
-								});
-								MochaUI.tablesoortScript = true;							
-							}.bind(this)							
-						}).send();					
-					}
-					else {							
-						$$('table.sortTable').each(function(sort){
-							new tableSoort(sort.id);
-						});
-					}					
-				},
-				resizable: false,
-				width: 615,
-				height: 205,
-				padding: { top: 0, right: 0, bottom: 0, left: 0 },				
-				x: 20,
-				y: 380,
-				contentBgColor: '#fff',
-				scrollbars: false
-			});		
-		}		
-	}	
-	if ($('dataGridLinkCheck')){ 
-		$('dataGridLinkCheck').addEvent('click', function(e){	
-			new Event(e).stop();
-			MochaUI.dataGridWindow();
-		});
-	}	
-
 	
 	MochaUI.eventsWindow = function(){	
 		new MochaUI.Window({
@@ -596,7 +548,6 @@ initializeWindows = function(){
 	
 	// Build windows onDomReady
 	MochaUI.overviewWindow(); 
-	//MochaUI.dataGridWindow(); 
 	MochaUI.parametricsWindow();
 	MochaUI.clockWindow();
 	MochaUI.featuresWindow();
@@ -618,6 +569,6 @@ window.addEvent('domready', function(){
 
 
 // This runs when a person leaves your page.
-//window.addEvent('unload', function(){
-	//if (MochaUI) MochaUI.garbageCleanUp();
-//});
+window.addEvent('unload', function(){
+	if (MochaUI) MochaUI.garbageCleanUp();
+});
