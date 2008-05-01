@@ -608,7 +608,7 @@ MochaUI.Windows.windowOptions = {
 	padding:   		   { top: 10, right: 12, bottom: 10, left: 12 },
 	shadowBlur:        4,
 	shadowOffset:      {'x': 0, 'y': 1},  // Should be positive and not be greater than the ShadowBlur.
-	useCanvasControls: false,
+	useCanvasControls: true,              // Set this to false if you wish to use images for the buttons.
 	
 	// Color options:		
 	headerHeight:      25,
@@ -823,7 +823,7 @@ MochaUI.Window = new Class({
 				this.canvasControlsEl.setStyle('display', 'none');
 			}
 			else {
-				this.controlsEl.setStyle('display', 'none');							
+				this.controlsEl.setStyle('display', 'none');			
 			}
 			this.windowEl.addEvent('mouseover', function(){
 				this.mouseover = true;										 
@@ -833,8 +833,8 @@ MochaUI.Window = new Class({
 							this.canvasControlsEl.setStyle('display', 'block');
 						}
 						else {
-							this.controlsEl.setStyle('display', 'block');							
-						}
+							this.controlsEl.setStyle('display', 'block');			
+						}						
 						this.canvasHeaderEl.setStyle('display', 'block');
 						this.titleEl.setStyle('display', 'block');							
 					}
@@ -848,27 +848,29 @@ MochaUI.Window = new Class({
 					this.canvasControlsEl.setStyle('display', 'none');
 				}
 				else {
-					this.controlsEl.setStyle('display', 'none');							
-				}
+					this.controlsEl.setStyle('display', 'none');			
+				}				
 				this.canvasHeaderEl.setStyle('display', 'none');
 				this.titleEl.setStyle('display', 'none');				
 			}.bind(this));			
 		}
 
-		// Add content to window
-
-
 		// Inject window into DOM		
 		this.windowEl.injectInside(this.options.container);
-
-		MochaUI.updateContent(this.windowEl, this.options.content, this.options.contentURL);
-
-
-		this.drawWindow(this.windowEl);		
 		
+		if (this.options.type != 'notification'){
+			this.setMochaControlsWidth();
+		}		
+
+		// Add content to window.
+		MochaUI.updateContent(this.windowEl, this.options.content, this.options.contentURL);	
+		
+		// Add content to window toolbar.
 		if (this.options.toolbar == true){
 			MochaUI.updateContent(this.windowEl, this.options.toolbarContent, this.options.toolbarURL, this.toolbarEl, 'xhr');
 		}
+		
+		this.drawWindow(this.windowEl);			
 		
 		// Attach events to the window
 		this.attachDraggable(this.windowEl);		
@@ -1354,7 +1356,7 @@ MochaUI.Window = new Class({
 			cache.canvasControlsEl = new Element('canvas', {
 				'id': id + '_canvasControls',
 				'class': 'mochaCanvasControls',
-				'width': 52,
+				'width': 14,
 				'height': 14
 			}).inject(this.windowEl);
 		
@@ -1368,35 +1370,35 @@ MochaUI.Window = new Class({
 			cache.closeButtonEl = new Element('div', {
 				'id': id + '_closeButton',
 				'class': 'mochaCloseButton',
-				'title': 'Close',
-				'styles': {
-					opacity: options.useCanvasControls == true ? 0 : 1 	
-				}
+				'title': 'Close'
 			}).inject(cache.controlsEl);
+			if (options.useCanvasControls == true){
+				cache.closeButtonEl.setStyle('background', 'none');			
+			}			
 		}
 
 		if (options.maximizable){
 			cache.maximizeButtonEl = new Element('div', {
 				'id': id + '_maximizeButton',
 				'class': 'mochaMaximizeButton',
-				'title': 'Maximize',
-				'styles': {
-					opacity: options.useCanvasControls == true ? 0 : 1 	
-				}
+				'title': 'Maximize'
 			}).inject(cache.controlsEl);
+			if (options.useCanvasControls == true){
+				cache.maximizeButtonEl.setStyle('background', 'none');			
+			}			
 		}
 
 		if (options.minimizable){
 			cache.minimizeButtonEl = new Element('div', {
 				'id': id + '_minimizeButton',
 				'class': 'mochaMinimizeButton',
-				'title': 'Minimize',
-				'styles': {
-					opacity: options.useCanvasControls == true ? 0 : 1 	
-				}
+				'title': 'Minimize'
 			}).inject(cache.controlsEl);
+			if (options.useCanvasControls == true){
+				cache.minimizeButtonEl.setStyle('background', 'none');			
+			}			
 		}
-		
+
 		if (options.shape != 'gauge' && options.type != 'notification'){
 			cache.canvasIconEl = new Element('canvas', {
 				'id': id + '_canvasIcon',
@@ -1490,6 +1492,7 @@ MochaUI.Window = new Class({
 				'class': 'handle corner',		
 				'styles': {
 					'bottom': 0,
+
 					'left': 0,
 					'cursor': 'sw-resize'
 				}
@@ -1515,13 +1518,7 @@ MochaUI.Window = new Class({
 				}
 			}).inject(cache.overlayEl, 'after');
 		}
-
 		$extend(this, cache);
-		
-		if (options.type != 'notification'){
-			this.setMochaControlsWidth();
-		}
-		
 		
 	},
 	/*
@@ -1690,8 +1687,7 @@ MochaUI.Window = new Class({
 		var ctx = this.canvasEl.getContext('2d');
 		ctx.clearRect(0, 0, width, height);
 		
-		this.drawBoxCollapsed(ctx, width, height, shadowBlur, shadowOffset, shadows);
-		
+		this.drawBoxCollapsed(ctx, width, height, shadowBlur, shadowOffset, shadows);		
 		if (options.useCanvasControls == true){
 			this.drawControls(width, height, shadows);
 		}
@@ -2025,7 +2021,7 @@ MochaUI.Window = new Class({
 				ctx.arc(0, 7, 2, 0, Math.PI*2, true);
 				ctx.fill();
 			}
-				ctx.restore();
+			ctx.restore();
 			t++;
 		}.bind(this);
 		canvas.iconAnimation = iconAnimation.periodical(125, this, canvas);
@@ -2033,12 +2029,13 @@ MochaUI.Window = new Class({
 	setMochaControlsWidth: function(){
 		this.mochaControlsWidth = 0;
 		var options = this.options;
-		if (options.minimizable)
+		if (options.minimizable){
 			this.mochaControlsWidth += (this.minimizeButtonEl.getStyle('margin-left').toInt() + this.minimizeButtonEl.getStyle('width').toInt());
-		if (options.maximizable) {
+		}
+		if (options.maximizable){
 			this.mochaControlsWidth += (this.maximizeButtonEl.getStyle('margin-left').toInt() + this.maximizeButtonEl.getStyle('width').toInt());
 		}
-		if (options.closable) {
+		if (options.closable){
 			this.mochaControlsWidth += (this.closeButtonEl.getStyle('margin-left').toInt() + this.closeButtonEl.getStyle('width').toInt());
 		}
 		this.controlsEl.setStyle('width', this.mochaControlsWidth);
@@ -2346,9 +2343,6 @@ Requires:
 	Core.js, Window.js
 	
 Options:
-	useHeaderCanvas - (boolean) Toggle canvas header gradient.
-	headerStartColor - Header gradient's top color - RGB.
-	headerStopColor - Header gradient's bottom color.
 	sidebarLimitX - Sidebar minimum and maximum widths when resizing.
 
 */
@@ -2359,13 +2353,11 @@ MochaUI.Desktop = new Class({
 	
 	Implements: [Events, Options],
 	
-	options: {
-		useHeaderCanvas: true,          		
+	options: {         		
 		// Naming options:
 		// If you change the IDs of the Mocha Desktop containers in your HTML, you need to change them here as well.
 		desktop:                'desktop',
 		desktopHeader:          'desktopHeader',
-		desktopTitlebarWrapper: 'desktopTitlebarWrapper',
 		desktopNavBar:          'desktopNavbar',
 		pageWrapper:            'pageWrapper',
 		page:                   'page',
@@ -2374,17 +2366,13 @@ MochaUI.Desktop = new Class({
 		sidebarContentWrapper:  'sidebarContentWrapper',		
 		sidebarMinimize:        'sidebarControl',
 		sidebarHandle:          'sidebarHandle',
-		// Style options:
-		headerStartColor:       [250, 250, 250],  // Header gradient's top color - RGB.
-		headerStopColor:        [229, 229, 229],  // Header gradient's bottom color.
 		// Sidebar options:
 		sidebarLimitX:          [180, 280]        // Sidebar minimum and maximum widths when resizing.
 	},	
 	initialize: function(options){
 		this.setOptions(options);
 		this.desktop                = $(this.options.desktop);
-		this.desktopHeader          = $(this.options.desktopHeader);
-		this.desktopTitlebarWrapper = $(this.options.desktopTitlebarWrapper);		
+		this.desktopHeader          = $(this.options.desktopHeader);		
 		this.desktopNavBar          = $(this.options.desktopNavBar);
 		this.pageWrapper            = $(this.options.pageWrapper);
 		this.page                   = $(this.options.page);
@@ -2393,22 +2381,7 @@ MochaUI.Desktop = new Class({
 		this.sidebarContentWrapper  = $(this.options.sidebarContentWrapper);
 		this.sidebarMinimize        = $(this.options.sidebarMinimize);
 		this.sidebarHandle          = $(this.options.sidebarHandle);		
-		
-		//Insert canvas
-		if (this.options.useHeaderCanvas){		
-		this.desktopHeaderHeight = 35; //this.desktopTitlebarWrapper.offsetHeight;
-			this.titlebarCanvas = new Element('canvas', {
-				'id':     'titlebarCanvas',
-				'width':  1000,
-				'height': this.desktopHeaderHeight
-			}).injectBottom(this.desktopTitlebarWrapper);
-		}
-
-		// Dynamically initialize canvas using excanvas. This is only required by IE
-		if ( Browser.Engine.trident && MochaUI.ieSupport == 'excanvas'  ) {
-			G_vmlCanvasManager.initElement(this.titlebarCanvas);			
-		}
-		
+	
 		this.setDesktopSize();
 		this.menuInitialize();
 		
@@ -2420,19 +2393,6 @@ MochaUI.Desktop = new Class({
 		window.addEvent('resize', function(){
 			this.onBrowserResize();
 		}.bind(this));		
-	},
-	drawHeaderCanvas: function(){
-		var windowDimensions = document.getCoordinates();
-		
-		$('titlebarCanvas').setProperty('width', windowDimensions.width);	
-		
-		var ctx = $('titlebarCanvas').getContext('2d');		
-		var lingrad = ctx.createLinearGradient(0, 0, 0, 35);
-
-		lingrad.addColorStop(0, 'rgba(' + this.options.headerStartColor.join(',') + ', 1)');
-		lingrad.addColorStop(1, 'rgba(' + this.options.headerStopColor.join(',') + ', 1)');			
-		ctx.fillStyle = lingrad;
-		ctx.fillRect(0, 0, windowDimensions.width, this.desktopHeaderHeight);			
 	},
 	menuInitialize: function(){
 		// Fix for dropdown menus in IE6
@@ -2479,10 +2439,6 @@ MochaUI.Desktop = new Class({
 	},
 	setDesktopSize: function(){
 		var windowDimensions = window.getCoordinates();
-
-		if (this.options.useHeaderCanvas){
-			this.drawHeaderCanvas.delay(10, this);
-		}
 
 		// var dock = $(MochaUI.options.dock);
 		var dockWrapper = $(MochaUI.options.dockWrapper);
@@ -2834,7 +2790,7 @@ Script: Dock.js
 	Implements the dock/taskbar. Enables window minimize.
 	
 Copyright:
-	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.		
+	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
 
 License:
 	MIT-style license.
@@ -3041,7 +2997,7 @@ MochaUI.Dock = new Class({
 		
 		var titleText = currentInstance.titleEl.innerHTML;
 
-		// Hide window and add to dock
+		// Hide window and add to dock	
 		currentInstance.contentBorderEl.setStyle('visibility', 'hidden');
 		if(currentInstance.toolbarWrapperEl){		
 			currentInstance.toolbarWrapperEl.setStyle('visibility', 'hidden');

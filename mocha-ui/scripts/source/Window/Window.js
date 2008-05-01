@@ -437,14 +437,14 @@ MochaUI.Window = new Class({
 		}		
 
 		// Add content to window.
-		MochaUI.updateContent(this.windowEl, this.options.content, this.options.contentURL);
-
-		this.drawWindow(this.windowEl);		
+		MochaUI.updateContent(this.windowEl, this.options.content, this.options.contentURL);	
 		
 		// Add content to window toolbar.
 		if (this.options.toolbar == true){
 			MochaUI.updateContent(this.windowEl, this.options.toolbarContent, this.options.toolbarURL, this.toolbarEl, 'xhr');
 		}
+		
+		this.drawWindow(this.windowEl);			
 		
 		// Attach events to the window
 		this.attachDraggable(this.windowEl);		
