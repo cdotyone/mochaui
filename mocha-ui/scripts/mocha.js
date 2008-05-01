@@ -623,13 +623,13 @@ MochaUI.Windows.windowOptions = {
 	addClass:          '',
 	width:             300,
 	height:            125, 
-	x:                 null,    // !!! NEED TO MAKE THIS WORK WITH THE CONTAINER OPTION. 
+	x:                 null,
 	y:                 null,    
 	scrollbars:        true,
 	padding:   		   { top: 10, right: 12, bottom: 10, left: 12 },
 	shadowBlur:        4,
 	shadowOffset:      {'x': 0, 'y': 1},  // Should be positive and not be greater than the ShadowBlur.
-	useCanvasControls: true, // NOT YET IMPLEMENTED.
+	useCanvasControls: false, // NOT YET IMPLEMENTED.
 	
 	// Color options:		
 	headerHeight:      25,
@@ -861,15 +861,17 @@ MochaUI.Window = new Class({
 			}.bind(this));			
 		}
 
-		// Inject window into DOM.	
+		// Add content to window
+
+
+		// Inject window into DOM		
 		this.windowEl.injectInside(this.options.container);
 
-		// Add content to window.
 		MochaUI.updateContent(this.windowEl, this.options.content, this.options.contentURL);
+
 
 		this.drawWindow(this.windowEl);		
 		
-		// Add content to window toolbar.
 		if (this.options.toolbar == true){
 			MochaUI.updateContent(this.windowEl, this.options.toolbarContent, this.options.toolbarURL, this.toolbarEl, 'xhr');
 		}
@@ -888,7 +890,7 @@ MochaUI.Window = new Class({
 			var dimensions = window.getSize();
 		}
 		else {
-			var dimensions = $(this.options.container).getCoordinates();			
+			var dimensions = $(this.options.container).getSize();			
 		}
 
 		if (!this.options.y) {
@@ -1124,6 +1126,7 @@ MochaUI.Window = new Class({
 		});	
 	
 		this.contentWrapperEl.makeResizable({
+			container: this.options.restrict == true ? $(this.options.container) : false,											
 			handle: this.se,
 			limit: {
 				x: [this.options.resizeLimit.x[0] - (this.options.shadowBlur * 2), this.options.resizeLimit.x[1] - (this.options.shadowBlur * 2) ],
@@ -1328,8 +1331,7 @@ MochaUI.Window = new Class({
 		}).inject(cache.contentBorderEl);
 		
 		if (this.options.shape == 'gauge'){
-			cache.contentBorderEl.setStyle('borderWidth', 0);
-			//cache.contentBorderEl.setStyle('margin', 0);			
+			cache.contentBorderEl.setStyle('borderWidth', 0);			
 		}		
 		
 		cache.contentEl = new Element('div', {
@@ -1354,22 +1356,24 @@ MochaUI.Window = new Class({
 			'class': 'mochaControls'
 		}).inject(cache.overlayEl, 'after');
 		
-		cache.canvasControlsEl = new Element('canvas', {
-			'id': id + '_canvasControls',
-			'class': 'mochaCanvasControls',
-			'width': 14,
-			'height': 16
-		}).inject(this.windowEl);
+		if (options.useCanvasControls == true){
+			cache.canvasControlsEl = new Element('canvas', {
+				'id': id + '_canvasControls',
+				'class': 'mochaCanvasControls',
+				'width': 52,
+				'height': 14
+			}).inject(this.windowEl);
 		
-		if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas') {
-			G_vmlCanvasManager.initElement(cache.canvasControlsEl);
-			cache.canvasControlsEl = this.windowEl.getElement('.mochaCanvasControls');			
+			if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas') {
+				G_vmlCanvasManager.initElement(cache.canvasControlsEl);
+				cache.canvasControlsEl = this.windowEl.getElement('.mochaCanvasControls');			
+			}
 		}
 		
 		if (options.closable){
 			cache.closeButtonEl = new Element('div', {
 				'id': id + '_closeButton',
-				'class': 'mochaClose',
+				'class': 'mochaCloseButton',
 				'title': 'Close'
 			}).inject(cache.controlsEl);
 		}
@@ -1377,7 +1381,7 @@ MochaUI.Window = new Class({
 		if (options.maximizable){
 			cache.maximizeButtonEl = new Element('div', {
 				'id': id + '_maximizeButton',
-				'class': 'maximizeToggle',
+				'class': 'mochaMaximizeButton',
 				'title': 'Maximize'
 			}).inject(cache.controlsEl);
 		}
@@ -1385,7 +1389,7 @@ MochaUI.Window = new Class({
 		if (options.minimizable){
 			cache.minimizeButtonEl = new Element('div', {
 				'id': id + '_minimizeButton',
-				'class': 'minimizeToggle',
+				'class': 'mochaMinimizeButton',
 				'title': 'Minimize'
 			}).inject(cache.controlsEl);
 		}
@@ -1512,7 +1516,7 @@ MochaUI.Window = new Class({
 		$extend(this, cache);
 		
 		if (options.type != 'notification'){
-			this.setMochaControlsWidth();
+		//	this.setMochaControlsWidth();
 		}
 		
 		
@@ -1619,11 +1623,11 @@ MochaUI.Window = new Class({
 				break;				
 		}		
 		
-		if (this.options.type != 'notification'){
+		if (options.type != 'notification' && options.useCanvasControls == true){
 			this.drawControls(width, height, shadows);
 		}
 
-		if (this.options.resizable){ 
+		if (options.resizable){ 
 			MochaUI.triangle(
 				ctx,
 				width - (shadowBlur + shadowOffset.x + 17),
@@ -1636,7 +1640,7 @@ MochaUI.Window = new Class({
 		}
 
 		// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
-		if ( Browser.Engine.trident ){
+		if (Browser.Engine.trident){
 			MochaUI.triangle(ctx, 0, 0, 10, 10, options.resizableColor, 0);
 		}		
 
@@ -1709,7 +1713,8 @@ MochaUI.Window = new Class({
 		});
 
 		// Calculate X position for controlbuttons
-		this.closebuttonX = options.closable ? this.mochaControlsWidth - 12 : this.mochaControlsWidth + 7;
+		var mochaControlsWidth = 52;
+		this.closebuttonX = options.closable ? mochaControlsWidth - 7 : mochaControlsWidth + 12;
 		this.maximizebuttonX = this.closebuttonX - (options.maximizable ? 19 : 0);
 		this.minimizebuttonX = this.maximizebuttonX - (options.minimizable ? 19 : 0);
 		
@@ -2033,7 +2038,7 @@ MochaUI.Window = new Class({
 			this.mochaControlsWidth += (marginWidth + controlWidth);
 			this.closeButtonEl.setStyle('margin-left', marginWidth);
 		}
-		this.controlsEl.setStyle('width', this.mochaControlsWidth - marginWidth);
+		// this.controlsEl.setStyle('width', this.mochaControlsWidth - marginWidth);
 		this.canvasControlsEl.setProperty('width', this.mochaControlsWidth - marginWidth);
 	}
 });

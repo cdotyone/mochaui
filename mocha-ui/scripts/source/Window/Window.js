@@ -179,7 +179,7 @@ MochaUI.Windows.windowOptions = {
 	padding:   		   { top: 10, right: 12, bottom: 10, left: 12 },
 	shadowBlur:        4,
 	shadowOffset:      {'x': 0, 'y': 1},  // Should be positive and not be greater than the ShadowBlur.
-	useCanvasControls: true, // NOT YET IMPLEMENTED.
+	useCanvasControls: true,
 	
 	// Color options:		
 	headerHeight:      25,
@@ -390,12 +390,16 @@ MochaUI.Window = new Class({
 		
 		
 		if (this.options.shape == 'gauge'){
-			this.canvasControlsEl.setStyle('display', 'none');
+			if (this.canvasControlsEl){
+				this.canvasControlsEl.setStyle('display', 'none');
+			}
 			this.windowEl.addEvent('mouseover', function(){
 				this.mouseover = true;										 
 				var showControls = function(){
 					if (this.mouseover != false){
-						this.canvasControlsEl.setStyle('display', 'block');
+						if (this.canvasControlsEl){
+							this.canvasControlsEl.setStyle('display', 'block');
+						}
 						this.canvasHeaderEl.setStyle('display', 'block');
 						this.titleEl.setStyle('display', 'block');							
 					}
@@ -404,8 +408,10 @@ MochaUI.Window = new Class({
 				
 			}.bind(this));
 			this.windowEl.addEvent('mouseleave', function(){
-				this.mouseover = false;														  
-				this.canvasControlsEl.setStyle('display', 'none');
+				this.mouseover = false;
+				if (this.canvasControlsEl){
+					this.canvasControlsEl.setStyle('display', 'none');
+				}
 				this.canvasHeaderEl.setStyle('display', 'none');
 				this.titleEl.setStyle('display', 'none');				
 			}.bind(this));			
@@ -881,8 +887,7 @@ MochaUI.Window = new Class({
 		}).inject(cache.contentBorderEl);
 		
 		if (this.options.shape == 'gauge'){
-			cache.contentBorderEl.setStyle('borderWidth', 0);
-			//cache.contentBorderEl.setStyle('margin', 0);			
+			cache.contentBorderEl.setStyle('borderWidth', 0);			
 		}		
 		
 		cache.contentEl = new Element('div', {
@@ -907,16 +912,18 @@ MochaUI.Window = new Class({
 			'class': 'mochaControls'
 		}).inject(cache.overlayEl, 'after');
 		
-		cache.canvasControlsEl = new Element('canvas', {
-			'id': id + '_canvasControls',
-			'class': 'mochaCanvasControls',
-			'width': 52,
-			'height': 14
-		}).inject(this.windowEl);
+		if (options.useCanvasControls == true){
+			cache.canvasControlsEl = new Element('canvas', {
+				'id': id + '_canvasControls',
+				'class': 'mochaCanvasControls',
+				'width': 52,
+				'height': 14
+			}).inject(this.windowEl);
 		
-		if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas') {
-			G_vmlCanvasManager.initElement(cache.canvasControlsEl);
-			cache.canvasControlsEl = this.windowEl.getElement('.mochaCanvasControls');			
+			if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas') {
+				G_vmlCanvasManager.initElement(cache.canvasControlsEl);
+				cache.canvasControlsEl = this.windowEl.getElement('.mochaCanvasControls');			
+			}
 		}
 		
 		if (options.closable){
@@ -1172,11 +1179,11 @@ MochaUI.Window = new Class({
 				break;				
 		}		
 		
-		if (this.options.type != 'notification'){
+		if (options.type != 'notification' && options.useCanvasControls == true){
 			this.drawControls(width, height, shadows);
 		}
 
-		if (this.options.resizable){ 
+		if (options.resizable){ 
 			MochaUI.triangle(
 				ctx,
 				width - (shadowBlur + shadowOffset.x + 17),
@@ -1189,7 +1196,7 @@ MochaUI.Window = new Class({
 		}
 
 		// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
-		if ( Browser.Engine.trident ){
+		if (Browser.Engine.trident){
 			MochaUI.triangle(ctx, 0, 0, 10, 10, options.resizableColor, 0);
 		}		
 
