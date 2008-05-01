@@ -211,7 +211,7 @@ MochaUI.Dock = new Class({
 		
 		var titleText = currentInstance.titleEl.innerHTML;
 
-		// Hide window and add to dock
+		// Hide window and add to dock	
 		currentInstance.contentBorderEl.setStyle('visibility', 'hidden');
 		if(currentInstance.toolbarWrapperEl){		
 			currentInstance.toolbarWrapperEl.setStyle('visibility', 'hidden');

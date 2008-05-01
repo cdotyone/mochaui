@@ -182,7 +182,7 @@ MochaUI.Windows.windowOptions = {
 	padding:   		   { top: 10, right: 12, bottom: 10, left: 12 },
 	shadowBlur:        4,
 	shadowOffset:      {'x': 0, 'y': 1},  // Should be positive and not be greater than the ShadowBlur.
-	useCanvasControls: true,
+	useCanvasControls: true,              // Set this to false if you wish to use images for the buttons.
 	
 	// Color options:		
 	headerHeight:      25,
@@ -393,16 +393,22 @@ MochaUI.Window = new Class({
 		
 		
 		if (this.options.shape == 'gauge'){
-			if (this.canvasControlsEl){
+			if (this.options.useCanvasControls){
 				this.canvasControlsEl.setStyle('display', 'none');
+			}
+			else {
+				this.controlsEl.setStyle('display', 'none');			
 			}
 			this.windowEl.addEvent('mouseover', function(){
 				this.mouseover = true;										 
 				var showControls = function(){
 					if (this.mouseover != false){
-						if (this.canvasControlsEl){
+						if (this.options.useCanvasControls){
 							this.canvasControlsEl.setStyle('display', 'block');
 						}
+						else {
+							this.controlsEl.setStyle('display', 'block');			
+						}						
 						this.canvasHeaderEl.setStyle('display', 'block');
 						this.titleEl.setStyle('display', 'block');							
 					}
@@ -412,25 +418,30 @@ MochaUI.Window = new Class({
 			}.bind(this));
 			this.windowEl.addEvent('mouseleave', function(){
 				this.mouseover = false;
-				if (this.canvasControlsEl){
+				if (this.options.useCanvasControls){
 					this.canvasControlsEl.setStyle('display', 'none');
 				}
+				else {
+					this.controlsEl.setStyle('display', 'none');			
+				}				
 				this.canvasHeaderEl.setStyle('display', 'none');
 				this.titleEl.setStyle('display', 'none');				
 			}.bind(this));			
 		}
 
-		// Add content to window
-
-
 		// Inject window into DOM		
 		this.windowEl.injectInside(this.options.container);
+		
+		if (this.options.type != 'notification'){
+			this.setMochaControlsWidth();
+		}		
 
+		// Add content to window.
 		MochaUI.updateContent(this.windowEl, this.options.content, this.options.contentURL);
-
 
 		this.drawWindow(this.windowEl);		
 		
+		// Add content to window toolbar.
 		if (this.options.toolbar == true){
 			MochaUI.updateContent(this.windowEl, this.options.toolbarContent, this.options.toolbarURL, this.toolbarEl, 'xhr');
 		}
@@ -919,7 +930,7 @@ MochaUI.Window = new Class({
 			cache.canvasControlsEl = new Element('canvas', {
 				'id': id + '_canvasControls',
 				'class': 'mochaCanvasControls',
-				'width': 52,
+				'width': 14,
 				'height': 14
 			}).inject(this.windowEl);
 		
@@ -935,6 +946,9 @@ MochaUI.Window = new Class({
 				'class': 'mochaCloseButton',
 				'title': 'Close'
 			}).inject(cache.controlsEl);
+			if (options.useCanvasControls == true){
+				cache.closeButtonEl.setStyle('background', 'none');			
+			}			
 		}
 
 		if (options.maximizable){
@@ -943,6 +957,9 @@ MochaUI.Window = new Class({
 				'class': 'mochaMaximizeButton',
 				'title': 'Maximize'
 			}).inject(cache.controlsEl);
+			if (options.useCanvasControls == true){
+				cache.maximizeButtonEl.setStyle('background', 'none');			
+			}			
 		}
 
 		if (options.minimizable){
@@ -951,8 +968,11 @@ MochaUI.Window = new Class({
 				'class': 'mochaMinimizeButton',
 				'title': 'Minimize'
 			}).inject(cache.controlsEl);
+			if (options.useCanvasControls == true){
+				cache.minimizeButtonEl.setStyle('background', 'none');			
+			}			
 		}
-		
+
 		if (options.shape != 'gauge' && options.type != 'notification'){
 			cache.canvasIconEl = new Element('canvas', {
 				'id': id + '_canvasIcon',
@@ -1071,13 +1091,7 @@ MochaUI.Window = new Class({
 				}
 			}).inject(cache.overlayEl, 'after');
 		}
-
 		$extend(this, cache);
-		
-		if (options.type != 'notification'){
-		//	this.setMochaControlsWidth();
-		}
-		
 		
 	},
 	/*
@@ -1247,7 +1261,9 @@ MochaUI.Window = new Class({
 		ctx.clearRect(0, 0, width, height);
 		
 		this.drawBoxCollapsed(ctx, width, height, shadowBlur, shadowOffset, shadows);		
-		this.drawControls(width, height, shadows);
+		if (options.useCanvasControls == true){
+			this.drawControls(width, height, shadows);
+		}
 
 		// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
 		if ( Browser.Engine.trident ){
@@ -1272,8 +1288,8 @@ MochaUI.Window = new Class({
 		});
 
 		// Calculate X position for controlbuttons
-		var mochaControlsWidth = 52;
-		this.closebuttonX = options.closable ? mochaControlsWidth - 7 : mochaControlsWidth + 12;
+		//var mochaControlsWidth = 52;
+		this.closebuttonX = options.closable ? this.mochaControlsWidth - 7 : this.mochaControlsWidth + 12;
 		this.maximizebuttonX = this.closebuttonX - (options.maximizable ? 19 : 0);
 		this.minimizebuttonX = this.maximizebuttonX - (options.minimizable ? 19 : 0);
 		
@@ -1578,27 +1594,27 @@ MochaUI.Window = new Class({
 				ctx.arc(0, 7, 2, 0, Math.PI*2, true);
 				ctx.fill();
 			}
-				ctx.restore();
+			ctx.restore();
 			t++;
 		}.bind(this);
 		canvas.iconAnimation = iconAnimation.periodical(125, this, canvas);
 	},	
-	setMochaControlsWidth: function(){	
-		var controlWidth = 14;
-		var marginWidth = 5;
+	setMochaControlsWidth: function(){
 		this.mochaControlsWidth = 0;
-		if ( this.options.minimizable )
-			this.mochaControlsWidth += (marginWidth + controlWidth);
-		if ( this.options.maximizable ) {
-			this.mochaControlsWidth += (marginWidth + controlWidth);
-			this.maximizeButtonEl.setStyle('margin-left', marginWidth);
+		var options = this.options;
+		if (options.minimizable){
+			this.mochaControlsWidth += (this.minimizeButtonEl.getStyle('margin-left').toInt() + this.minimizeButtonEl.getStyle('width').toInt());
 		}
-		if ( this.options.closable ) {
-			this.mochaControlsWidth += (marginWidth + controlWidth);
-			this.closeButtonEl.setStyle('margin-left', marginWidth);
+		if (options.maximizable){
+			this.mochaControlsWidth += (this.maximizeButtonEl.getStyle('margin-left').toInt() + this.maximizeButtonEl.getStyle('width').toInt());
 		}
-		// this.controlsEl.setStyle('width', this.mochaControlsWidth - marginWidth);
-		this.canvasControlsEl.setProperty('width', this.mochaControlsWidth - marginWidth);
+		if (options.closable){
+			this.mochaControlsWidth += (this.closeButtonEl.getStyle('margin-left').toInt() + this.closeButtonEl.getStyle('width').toInt());
+		}
+		this.controlsEl.setStyle('width', this.mochaControlsWidth);
+		if (options.useCanvasControls == true){
+			this.canvasControlsEl.setProperty('width', this.mochaControlsWidth);
+		}
 	}
 });
 MochaUI.Window.implement(new Options, new Events);

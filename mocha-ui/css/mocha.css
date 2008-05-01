@@ -383,10 +383,6 @@ div.mocha .cornerSE { /* Bottom right resize handle */
 	overflow: hidden;			
 }
 
-/* 
-	If you use background images for these controls, set .mochaControls width as so:
-	minimizeButton width + margin width + maximizeButton width + margin width + closeButton width	
-*/
 .mochaControls {
 	position: absolute;
 	width: 52px;
@@ -398,9 +394,7 @@ div.mocha .cornerSE { /* Bottom right resize handle */
 }
 
 .mochaCanvasControls {
-	position: absolute;
-	height: 14px;
-	width: 52px;	
+	position: absolute;	
 	top: 8px;
 	right: 8px;	
 	z-index: 3;
@@ -408,9 +402,9 @@ div.mocha .cornerSE { /* Bottom right resize handle */
 }
 
 /*
-	To use images for these buttons:	
-	1. remove the opacity properties and add background images.
-	2. Set the useCanvasControls window option to false.
+	To use images for these buttons:
+	1. Set the useCanvasControls window option to false.		
+	2. Add background images to each button.
 
 */
 .mochaMinimizeButton, .mochaMaximizeButton, .mochaCloseButton {
@@ -420,10 +414,7 @@ div.mocha .cornerSE { /* Bottom right resize handle */
 	font-size: 1px;	
 	cursor: pointer;
 	z-index: 4;
-	background: #f00;
-	opacity: .0;
-	filter: alpha(opacity=0);
-	-moz-opacity: 0;	
+	background: #f00;	
 	margin-left: 5px;		
 }
 

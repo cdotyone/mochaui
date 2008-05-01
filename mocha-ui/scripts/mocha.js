@@ -608,7 +608,7 @@ MochaUI.Windows.windowOptions = {
 	padding:   		   { top: 10, right: 12, bottom: 10, left: 12 },
 	shadowBlur:        4,
 	shadowOffset:      {'x': 0, 'y': 1},  // Should be positive and not be greater than the ShadowBlur.
-	useCanvasControls: true,
+	useCanvasControls: false,
 	
 	// Color options:		
 	headerHeight:      25,
@@ -819,15 +819,21 @@ MochaUI.Window = new Class({
 		
 		
 		if (this.options.shape == 'gauge'){
-			if (this.canvasControlsEl){
+			if (this.options.useCanvasControls){
 				this.canvasControlsEl.setStyle('display', 'none');
+			}
+			else {
+				this.controlsEl.setStyle('display', 'none');							
 			}
 			this.windowEl.addEvent('mouseover', function(){
 				this.mouseover = true;										 
 				var showControls = function(){
 					if (this.mouseover != false){
-						if (this.canvasControlsEl){
+						if (this.options.useCanvasControls){
 							this.canvasControlsEl.setStyle('display', 'block');
+						}
+						else {
+							this.controlsEl.setStyle('display', 'block');							
 						}
 						this.canvasHeaderEl.setStyle('display', 'block');
 						this.titleEl.setStyle('display', 'block');							
@@ -838,8 +844,11 @@ MochaUI.Window = new Class({
 			}.bind(this));
 			this.windowEl.addEvent('mouseleave', function(){
 				this.mouseover = false;
-				if (this.canvasControlsEl){
+				if (this.options.useCanvasControls){
 					this.canvasControlsEl.setStyle('display', 'none');
+				}
+				else {
+					this.controlsEl.setStyle('display', 'none');							
 				}
 				this.canvasHeaderEl.setStyle('display', 'none');
 				this.titleEl.setStyle('display', 'none');				
@@ -1195,7 +1204,6 @@ MochaUI.Window = new Class({
 		
 		var shadowBlur = this.options.shadowBlur;
 		var shadowBlur2x = shadowBlur * 2;		
-
 		var shadowOffset = this.options.shadowOffset;
 		var top = shadowBlur - shadowOffset.y - 1;
 		var right = shadowBlur + shadowOffset.x - 1;
@@ -1360,7 +1368,10 @@ MochaUI.Window = new Class({
 			cache.closeButtonEl = new Element('div', {
 				'id': id + '_closeButton',
 				'class': 'mochaCloseButton',
-				'title': 'Close'
+				'title': 'Close',
+				'styles': {
+					opacity: options.useCanvasControls == true ? 0 : 1 	
+				}
 			}).inject(cache.controlsEl);
 		}
 
@@ -1368,7 +1379,10 @@ MochaUI.Window = new Class({
 			cache.maximizeButtonEl = new Element('div', {
 				'id': id + '_maximizeButton',
 				'class': 'mochaMaximizeButton',
-				'title': 'Maximize'
+				'title': 'Maximize',
+				'styles': {
+					opacity: options.useCanvasControls == true ? 0 : 1 	
+				}
 			}).inject(cache.controlsEl);
 		}
 
@@ -1376,7 +1390,10 @@ MochaUI.Window = new Class({
 			cache.minimizeButtonEl = new Element('div', {
 				'id': id + '_minimizeButton',
 				'class': 'mochaMinimizeButton',
-				'title': 'Minimize'
+				'title': 'Minimize',
+				'styles': {
+					opacity: options.useCanvasControls == true ? 0 : 1 	
+				}
 			}).inject(cache.controlsEl);
 		}
 		
@@ -1502,7 +1519,7 @@ MochaUI.Window = new Class({
 		$extend(this, cache);
 		
 		if (options.type != 'notification'){
-		//	this.setMochaControlsWidth();
+			this.setMochaControlsWidth();
 		}
 		
 		
@@ -1673,8 +1690,11 @@ MochaUI.Window = new Class({
 		var ctx = this.canvasEl.getContext('2d');
 		ctx.clearRect(0, 0, width, height);
 		
-		this.drawBoxCollapsed(ctx, width, height, shadowBlur, shadowOffset, shadows);		
-		this.drawControls(width, height, shadows);
+		this.drawBoxCollapsed(ctx, width, height, shadowBlur, shadowOffset, shadows);
+		
+		if (options.useCanvasControls == true){
+			this.drawControls(width, height, shadows);
+		}
 
 		// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
 		if ( Browser.Engine.trident ){
@@ -1699,8 +1719,8 @@ MochaUI.Window = new Class({
 		});
 
 		// Calculate X position for controlbuttons
-		var mochaControlsWidth = 52;
-		this.closebuttonX = options.closable ? mochaControlsWidth - 7 : mochaControlsWidth + 12;
+		//var mochaControlsWidth = 52;
+		this.closebuttonX = options.closable ? this.mochaControlsWidth - 7 : this.mochaControlsWidth + 12;
 		this.maximizebuttonX = this.closebuttonX - (options.maximizable ? 19 : 0);
 		this.minimizebuttonX = this.maximizebuttonX - (options.minimizable ? 19 : 0);
 		
@@ -2010,22 +2030,21 @@ MochaUI.Window = new Class({
 		}.bind(this);
 		canvas.iconAnimation = iconAnimation.periodical(125, this, canvas);
 	},	
-	setMochaControlsWidth: function(){	
-		var controlWidth = 14;
-		var marginWidth = 5;
+	setMochaControlsWidth: function(){
 		this.mochaControlsWidth = 0;
-		if ( this.options.minimizable )
-			this.mochaControlsWidth += (marginWidth + controlWidth);
-		if ( this.options.maximizable ) {
-			this.mochaControlsWidth += (marginWidth + controlWidth);
-			this.maximizeButtonEl.setStyle('margin-left', marginWidth);
+		var options = this.options;
+		if (options.minimizable)
+			this.mochaControlsWidth += (this.minimizeButtonEl.getStyle('margin-left').toInt() + this.minimizeButtonEl.getStyle('width').toInt());
+		if (options.maximizable) {
+			this.mochaControlsWidth += (this.maximizeButtonEl.getStyle('margin-left').toInt() + this.maximizeButtonEl.getStyle('width').toInt());
 		}
-		if ( this.options.closable ) {
-			this.mochaControlsWidth += (marginWidth + controlWidth);
-			this.closeButtonEl.setStyle('margin-left', marginWidth);
+		if (options.closable) {
+			this.mochaControlsWidth += (this.closeButtonEl.getStyle('margin-left').toInt() + this.closeButtonEl.getStyle('width').toInt());
 		}
-		// this.controlsEl.setStyle('width', this.mochaControlsWidth - marginWidth);
-		this.canvasControlsEl.setProperty('width', this.mochaControlsWidth - marginWidth);
+		this.controlsEl.setStyle('width', this.mochaControlsWidth);
+		if (options.useCanvasControls == true){
+			this.canvasControlsEl.setProperty('width', this.mochaControlsWidth);
+		}
 	}
 });
 MochaUI.Window.implement(new Options, new Events);
