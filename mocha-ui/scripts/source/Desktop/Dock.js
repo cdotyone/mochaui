@@ -26,6 +26,23 @@ MochaUI.options.extend({
 
 MochaUI.dockVisible = true;
 
+MochaUI.extend({
+	/*
+
+	Function: minimizeAll
+		Minimize all windows.
+
+	*/	
+	minimizeAll: function() {		
+		$$('div.mocha').each(function(windowEl){
+		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);									  
+			if (!currentInstance.isMinimized){
+				MochaUI.Dock.minimizeWindow(windowEl);
+			}			
+		}.bind(this));		
+	}
+});	
+
 MochaUI.Dock = new Class({
 	Extends: MochaUI.Window,
 	

@@ -252,19 +252,14 @@ var MochaUI = new Hash({
 	Function: closeAll	
 		Close all open windows.
 
-	Returns:
-		true - the windows were closed
-		false - the windows were not closed
-
 	*/
 	closeAll: function() {		
-		$$('div.mocha').each(function(el){
-			this.closeWindow(el);			
+		$$('div.mocha').each(function(windowEl){
+			this.closeWindow(windowEl);			
 		}.bind(this));
 		MochaUI.Windows.instances.empty();				
 		$$('div.dockTab').destroy();
-		return true;
-	},	
+	},
 	/*
 	
 	Function: toggleWindowVisibility

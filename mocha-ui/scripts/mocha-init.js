@@ -380,6 +380,13 @@ initializeWindows = function(){
 			new Event(e).stop();
 			MochaUI.closeAll();
 		});
+	}
+	
+	if ($('minimizeLink')){
+		$('minimizeLink').addEvent('click', function(e){	
+			new Event(e).stop();
+			MochaUI.minimizeAll();
+		});
 	}	
 	
 	// Tools

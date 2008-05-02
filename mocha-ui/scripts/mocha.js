@@ -254,8 +254,8 @@ var MochaUI = new Hash({
 		Close all open windows.
 
 	Returns:
-		true: the windows were closed
-		false: the windows were not closed
+		true - the windows were closed
+		false - the windows were not closed
 
 	*/
 	closeAll: function() {		
@@ -486,8 +486,8 @@ Options:
 	footerHeight - (number) Height of window footer.
 	cornerRadius - (number)
 	contentBgColor - (hex) Body background color
-	headerStartColor - ([r,g,b,]) Header gradient's top color - RGB
-	headerStopColor - ([r,g,b,]) Header gradient's bottom color
+	headerStartColor - ([r,g,b,]) Titlebar gradient's top color
+	headerStopColor - ([r,g,b,]) Titlebar gradient's bottom color
 	bodyBgColor - ([r,g,b,]) Background color of the main canvas shape
 	minimizeBgColor - ([r,g,b,]) Minimize button background color
 	minimizeColor - ([r,g,b,]) Minimize button color	
@@ -496,8 +496,6 @@ Options:
 	closeBgColor - ([r,g,b,]) Close button background color
 	closeColor - ([r,g,b,]) Close button color	
 	resizableColor - ([r,g,b,]) Resizable icon color
-
-Events:
 	onBeforeBuild - (function) Fired just before the window is built.
 	onContentLoaded - (function) Fired when content is successfully loaded via XHR or Iframe.
 	onFocus - (function)  Fired when the window is focused.
@@ -537,6 +535,9 @@ Example:
 	
 Example:	
 	Add link events to build future windows. It is suggested you give your anchor the same ID as your window + "WindowLink" or + "WindowLinkCheck". Use the latter if it is a link in the menu toolbar.
+	
+	If you wish to add links in windows that open other windows remember to add events to those links when the windows are created.	
+	
 	(start code)	
 	// Javascript:
 	if ($('mywindowLink')){
@@ -549,6 +550,13 @@ Example:
 	// HTML:
 	<a id="mywindowLink" href="pages/lipsum.html">My Window</a>	
 	(end)
+	
+
+	Loading Content with an XMLHttpRequest(xhr):
+		For content to load via xhr all the files must be online and in the same domain. If you need to load content from another domain or wish to have it work offline, load the content in an iframe instead of using the xhr option.
+	
+	Iframes:
+		If you use the iframe loadMethod your iframe will automatically be resized when the window it is in is resized. If you want this same functionality when using one of the other load options simply add class="mochaIframe" to those iframes and they will be resized for you as well.
 
 */   
 
@@ -571,7 +579,7 @@ MochaUI.Windows.windowOptions = {
 	content:           'Window content',
 	
 	// Toolbar
-	toolbar:           false, // (boolean) Create window toolbar. Defaults to false. This can be used for tabs, media controls, or if your window content is an iframe you might use the toolbar for back, forward, and refresh buttons.
+	toolbar:           false, // (boolean) Create window toolbar. Defaults to false. This can be used for tabs, media controls, and so forth.
 	toolbarPosition:   'top', // 'top' or 'bottom'. Defaults to top.
 	toolbarHeight:     29,
 	toolbarURL:        'pages/lipsum.html',	
@@ -607,8 +615,9 @@ MochaUI.Windows.windowOptions = {
 	scrollbars:        true,
 	padding:   		   { top: 10, right: 12, bottom: 10, left: 12 },
 	shadowBlur:        4,
-	shadowOffset:      {'x': 0, 'y': 1},  // Should be positive and not be greater than the ShadowBlur.
-	useCanvasControls: true,              // Set this to false if you wish to use images for the buttons.
+	shadowOffset:      {'x': 0, 'y': 1},       // Should be positive and not be greater than the ShadowBlur.
+	controlsOffset:    {'right': 6, 'top': 6}, // Change this if you want to reposition the window controls.
+	useCanvasControls: true,                   // Set this to false if you wish to use images for the buttons.
 	
 	// Color options:		
 	headerHeight:      25,
@@ -1212,9 +1221,9 @@ MochaUI.Window = new Class({
 		var bottom = shadowBlur + shadowOffset.y - 1;
 		var left = shadowBlur - shadowOffset.x - 1;
 		
-		var coords = this.windowEl.getCoordinates();		
-		var width = coords.width - shadowBlur2x + 2;
-		var height = coords.height - shadowBlur2x + 2;		
+		var coordinates = this.windowEl.getCoordinates();		
+		var width = coordinates.width - shadowBlur2x + 2;
+		var height = coordinates.height - shadowBlur2x + 2;		
 
 		this.n.setStyles({
 			'top': top,	
@@ -1322,6 +1331,7 @@ MochaUI.Window = new Class({
 			'class': 'mochaContentWrapper',
 			'styles': {
 				'width': width + 'px',
+
 				'height': height + 'px'
 			}
 		}).inject(cache.contentBorderEl);
@@ -1492,7 +1502,6 @@ MochaUI.Window = new Class({
 				'class': 'handle corner',		
 				'styles': {
 					'bottom': 0,
-
 					'left': 0,
 					'cursor': 'sw-resize'
 				}
@@ -1701,17 +1710,18 @@ MochaUI.Window = new Class({
 	drawControls : function(width, height, shadows){
 		var options = this.options;
 		var shadowBlur = options.shadowBlur;
-		var shadowOffset = this.options.shadowOffset;		
+		var shadowOffset = options.shadowOffset;
+		var controlsOffset = options.controlsOffset;
 		
 		// Make sure controls are placed correctly.
 		this.controlsEl.setStyles({
-			'right': shadowBlur + shadowOffset.x + 6,
-			'top': shadowBlur - shadowOffset.y + 6
+			'right': shadowBlur + shadowOffset.x + controlsOffset.right,
+			'top': shadowBlur - shadowOffset.y + controlsOffset.top
 		});
 
 		this.canvasControlsEl.setStyles({
-			'right': shadowBlur + shadowOffset.x + 6,
-			'top': shadowBlur - shadowOffset.y + 6
+			'right': shadowBlur + shadowOffset.x + controlsOffset.right,
+			'top': shadowBlur - shadowOffset.y + controlsOffset.top
 		});
 
 		// Calculate X position for controlbuttons
@@ -2304,7 +2314,8 @@ To do:
 MochaUI.extend({
 	/*
 	
-	Function: initializeTabs		
+	Function: initializeTabs
+		Add click event to each list item that fires the selected function. 
 		
 	*/	
 	initializeTabs: function(el){
@@ -2318,7 +2329,16 @@ MochaUI.extend({
 	
 	Function: selected
 		Add "selected" class to current list item and remove it from sibling list items.
-		
+	
+	Syntax:
+		(start code)
+			selected(el, parent);
+		(end)	
+
+Arguments:
+	el - the list item
+	parent - the ul
+
 	*/	
 	selected: function(el, parent){
 		$(parent).getChildren().each(function(listitem){
@@ -2341,6 +2361,7 @@ License:
 
 Requires:
 	Core.js, Window.js
+
 	
 Options:
 	sidebarLimitX - Sidebar minimum and maximum widths when resizing.
@@ -2391,7 +2412,7 @@ MochaUI.Desktop = new Class({
 
 		// Resize desktop, page wrapper, modal overlay, and maximized windows when browser window is resized
 		window.addEvent('resize', function(){
-			this.onBrowserResize();
+			//this.onBrowserResize();
 		}.bind(this));		
 	},
 	menuInitialize: function(){
@@ -2419,10 +2440,12 @@ MochaUI.Desktop = new Class({
 						instance.iframeEl.setStyle('visibility', 'hidden');
 					}
 
-					var windowDimensions = document.getCoordinates();
+					var coordinates = document.getCoordinates();
+					var borderHeight = instance.contentBorderEl.getStyle('border-top').toInt() + instance.contentBorderEl.getStyle('border-bottom').toInt();
+					var toolbarHeight = instance.toolbarWrapperEl ? instance.toolbarWrapperEl.getStyle('height').toInt() + instance.toolbarWrapperEl.getStyle('border-top').toInt() : 0;					
 					instance.contentWrapperEl.setStyles({
-						'height': windowDimensions.height - instance.options.headerHeight - instance.options.footerHeight,
-						'width': windowDimensions.width
+						'height': coordinates.height - instance.options.headerHeight - instance.options.footerHeight - borderHeight - toolbarHeight,
+						'width': coordinates.width
 					});
 
 					instance.drawWindow($(instance.options.id));
@@ -2692,6 +2715,7 @@ MochaUI.Desktop = new Class({
 		this.sidebarWrapper.setStyle('display', 'block');
 
 		this.sidebarIsMinimized = false;
+
 		this.sidebarMinimize.addEvent('click', function(event){
 			this.sidebarMinimizeToggle();
 		}.bind(this));
