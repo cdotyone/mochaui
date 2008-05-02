@@ -49,8 +49,9 @@ MochaUI.Dock = new Class({
 	Implements: [Events, Options],
 	
 	options: {
-		useControls:          true,       // Toggles autohide and dock placement controls - NOT FULLY IMPLEMENTED
-		dockPosition:         'bottom',   // Position the dock starts in, top or bottom.
+		useControls:          true,      // Toggles autohide and dock placement controls.
+		useCanvas:            false,     // Toggle use of canvas tab graphics. NOT YET IMPLEMENTED
+		dockPosition:         'bottom',  // Position the dock starts in, top or bottom.
 		// Style options
 		dockTabColor:         [255, 255, 255],
 		trueButtonColor:      [70, 245, 70],     // Color for autohide on		
@@ -66,6 +67,15 @@ MochaUI.Dock = new Class({
 		this.dock          = $(MochaUI.options.dock);
 		this.autoHideEvent = null;		
 		this.dockAutoHide  = false;  // True when dock autohide is set to on, false if set to off
+
+		if (!this.options.useControls){
+			if($('dockPlacement')){
+				$('dockPlacement').setStyle('cursor', 'default');
+			}
+			if($('dockAutoHide')){
+				$('dockAutoHide').setStyle('cursor', 'default');
+			}
+		}
 
 		this.dockWrapper.setStyles({
 			'display':  'block',
