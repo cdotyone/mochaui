@@ -19,7 +19,8 @@ To do:
 MochaUI.extend({
 	/*
 	
-	Function: initializeTabs		
+	Function: initializeTabs
+		Add click event to each list item that fires the selected function. 
 		
 	*/	
 	initializeTabs: function(el){
@@ -33,7 +34,16 @@ MochaUI.extend({
 	
 	Function: selected
 		Add "selected" class to current list item and remove it from sibling list items.
-		
+	
+	Syntax:
+		(start code)
+			selected(el, parent);
+		(end)	
+
+Arguments:
+	el - the list item
+	parent - the ul
+
 	*/	
 	selected: function(el, parent){
 		$(parent).getChildren().each(function(listitem){

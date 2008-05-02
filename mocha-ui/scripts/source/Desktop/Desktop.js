@@ -89,10 +89,12 @@ MochaUI.Desktop = new Class({
 						instance.iframeEl.setStyle('visibility', 'hidden');
 					}
 
-					var windowDimensions = document.getCoordinates();
+					var coordinates = document.getCoordinates();
+					var borderHeight = instance.contentBorderEl.getStyle('border-top').toInt() + instance.contentBorderEl.getStyle('border-bottom').toInt();
+					var toolbarHeight = instance.toolbarWrapperEl ? instance.toolbarWrapperEl.getStyle('height').toInt() + instance.toolbarWrapperEl.getStyle('border-top').toInt() : 0;					
 					instance.contentWrapperEl.setStyles({
-						'height': windowDimensions.height - instance.options.headerHeight - instance.options.footerHeight,
-						'width': windowDimensions.width
+						'height': coordinates.height - instance.options.headerHeight - instance.options.footerHeight - borderHeight - toolbarHeight,
+						'width': coordinates.width
 					});
 
 					instance.drawWindow($(instance.options.id));

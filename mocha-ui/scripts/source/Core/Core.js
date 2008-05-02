@@ -253,8 +253,8 @@ var MochaUI = new Hash({
 		Close all open windows.
 
 	Returns:
-		true: the windows were closed
-		false: the windows were not closed
+		true - the windows were closed
+		false - the windows were not closed
 
 	*/
 	closeAll: function() {		

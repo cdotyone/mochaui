@@ -125,12 +125,12 @@ Example:
 	<a id="mywindowLink" href="pages/lipsum.html">My Window</a>	
 	(end)
 	
-Notes:
-	*Loading Content with an XMLHttpRequest(xhr)*
-	For content to load via xhr all the files must be online and in the same domain. If you need to load content from another domain or wish to have it work offline, load the content in an iframe instead of using the xhr option.
+
+	Loading Content with an XMLHttpRequest(xhr):
+		For content to load via xhr all the files must be online and in the same domain. If you need to load content from another domain or wish to have it work offline, load the content in an iframe instead of using the xhr option.
 	
-	*Iframes*
-	If you use the iframe loadMethod your iframe will automatically be resized when the window it is in is resized. If you want this same functionality when using one of the other load options simply add class="mochaIframe" to those iframes and they will be resized for you as well.
+	Iframes:
+		If you use the iframe loadMethod your iframe will automatically be resized when the window it is in is resized. If you want this same functionality when using one of the other load options simply add class="mochaIframe" to those iframes and they will be resized for you as well.
 
 */   
 
@@ -795,9 +795,9 @@ MochaUI.Window = new Class({
 		var bottom = shadowBlur + shadowOffset.y - 1;
 		var left = shadowBlur - shadowOffset.x - 1;
 		
-		var coords = this.windowEl.getCoordinates();		
-		var width = coords.width - shadowBlur2x + 2;
-		var height = coords.height - shadowBlur2x + 2;		
+		var coordinates = this.windowEl.getCoordinates();		
+		var width = coordinates.width - shadowBlur2x + 2;
+		var height = coordinates.height - shadowBlur2x + 2;		
 
 		this.n.setStyles({
 			'top': top,	
