@@ -253,19 +253,14 @@ var MochaUI = new Hash({
 	Function: closeAll	
 		Close all open windows.
 
-	Returns:
-		true - the windows were closed
-		false - the windows were not closed
-
 	*/
 	closeAll: function() {		
-		$$('div.mocha').each(function(el){
-			this.closeWindow(el);			
+		$$('div.mocha').each(function(windowEl){
+			this.closeWindow(windowEl);			
 		}.bind(this));
 		MochaUI.Windows.instances.empty();				
 		$$('div.dockTab').destroy();
-		return true;
-	},	
+	},
 	/*
 	
 	Function: toggleWindowVisibility
@@ -279,7 +274,10 @@ var MochaUI = new Hash({
 			if (id.getStyle('visibility') == 'visible'){
 				if (instance.iframe){
 					instance.iframeEl.setStyle('visibility', 'hidden');
-				}				
+				}
+				if (instance.toolbarEl){
+					instance.toolbarWrapperEl.setStyle('visibility', 'hidden');		
+				}
 				instance.contentBorderEl.setStyle('visibility', 'hidden');				
 				id.setStyle('visibility', 'hidden');				
 				MochaUI.Windows.windowsVisible = false;
@@ -289,6 +287,9 @@ var MochaUI = new Hash({
 				instance.contentBorderEl.setStyle('visibility', 'visible');
 				if (instance.iframe){
 					instance.iframeEl.setStyle('visibility', 'visible');
+				}
+				if (instance.toolbarEl){
+					instance.toolbarWrapperEl.setStyle('visibility', 'visible');		
 				}				
 				MochaUI.Windows.windowsVisible = true;
 			}
@@ -1331,7 +1332,6 @@ MochaUI.Window = new Class({
 			'class': 'mochaContentWrapper',
 			'styles': {
 				'width': width + 'px',
-
 				'height': height + 'px'
 			}
 		}).inject(cache.contentBorderEl);
@@ -1890,6 +1890,7 @@ MochaUI.Window = new Class({
 	bodyRoundedRect: function(ctx, x, y, width, height, radius, rgb){
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ', 100)';
 		ctx.beginPath();
+
 		ctx.moveTo(x, y + radius);
 		ctx.lineTo(x, y + height - radius);
 		ctx.quadraticCurveTo(x, y + height, x + radius, y + height);
@@ -2295,6 +2296,98 @@ MochaUI.extend({
 });
 /*
 
+Script: Arrange-cascade.js
+	Cascade windows.
+	
+Authors:
+	Harry Roberts and Greg Houston
+
+License:
+	MIT-style license.	
+
+Requires:
+	Core.js, Window.js
+	
+Syntax:
+	(start code)
+	MochaUI.arrangeTile();
+	(end)
+
+*/
+	 
+MochaUI.extend({	 
+	arrangeTile: function(){
+		var x = 10;
+		var y = 10;			
+	
+		var instances =  MochaUI.Windows.instances;
+
+		var windowsNum = 0;
+
+		instances.each(function(instance){
+			if (!instance.isMinimized && !instance.isMaximized){
+				windowsNum++;
+			}
+		});	
+
+		var cols = 3;
+		var rows = Math.ceil(windowsNum / cols);
+		
+		var coordinates = document.getCoordinates();
+	
+		var col_width = ((coordinates.width - this.options.desktopLeftOffset) / cols);
+		var col_height = ((coordinates.height - this.options.desktopTopOffset) / rows);
+		
+		var row = 0;
+		var col = 0;
+		
+		instances.each(function(instance){
+			if (!instance.isMinimized && !instance.isMaximized){
+				
+				var content = instance.contentWrapperEl;
+				var content_coords = content.getCoordinates();
+				var window_coords = instance.windowEl.getCoordinates();
+				
+				// Calculate the amount of padding around the content window				
+				var padding_top = content_coords.top - window_coords.top;
+				var padding_bottom = window_coords.height - content_coords.height - padding_top;				
+				var padding_left = content_coords.left - window_coords.left;
+				var padding_right = window_coords.width - content_coords.width - padding_left;
+				
+				if (instance.options.shape != 'gauge' && instance.options.resizable == true){
+					var width = (col_width - 3 - padding_left - padding_right);
+					var height = (col_height - 3 - padding_top - padding_bottom);
+					
+					if (width > instance.options.resizeLimit.x[0] && width < instance.options.resizeLimit.x[1]){
+						content.setStyle('width', width);
+					}
+					if (height > instance.options.resizeLimit.y[0] && height < instance.options.resizeLimit.y[1]){
+						content.setStyle('height', height);
+					}
+				
+				}
+				
+				var left = (x + (col * col_width));
+				var top = (y + (row * col_height));
+				
+				instance.windowEl.setStyles({
+					'left': left,
+					'top': top			
+				});
+																
+				instance.drawWindow(instance.windowEl);			
+
+				MochaUI.focusWindow(instance.windowEl);
+
+				if (++col === cols) {
+					row++;
+					col = 0;
+				}
+			}
+		}.bind(this));
+	}
+});/*
+
 Script: Tabs.js	
 	
 Copyright:
@@ -2361,7 +2454,6 @@ License:
 
 Requires:
 	Core.js, Window.js
-
 	
 Options:
 	sidebarLimitX - Sidebar minimum and maximum widths when resizing.
@@ -2412,7 +2504,7 @@ MochaUI.Desktop = new Class({
 
 		// Resize desktop, page wrapper, modal overlay, and maximized windows when browser window is resized
 		window.addEvent('resize', function(){
-			//this.onBrowserResize();
+			this.onBrowserResize();
 		}.bind(this));		
 	},
 	menuInitialize: function(){
@@ -2715,7 +2807,6 @@ MochaUI.Desktop = new Class({
 		this.sidebarWrapper.setStyle('display', 'block');
 
 		this.sidebarIsMinimized = false;
-
 		this.sidebarMinimize.addEvent('click', function(event){
 			this.sidebarMinimizeToggle();
 		}.bind(this));
@@ -2836,14 +2927,32 @@ MochaUI.options.extend({
 
 MochaUI.dockVisible = true;
 
+MochaUI.extend({
+	/*
+
+	Function: minimizeAll
+		Minimize all windows.
+
+	*/	
+	minimizeAll: function() {		
+		$$('div.mocha').each(function(windowEl){
+		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);									  
+			if (!currentInstance.isMinimized){
+				MochaUI.Dock.minimizeWindow(windowEl);
+			}			
+		}.bind(this));		
+	}
+});	
+
 MochaUI.Dock = new Class({
 	Extends: MochaUI.Window,
 	
 	Implements: [Events, Options],
 	
 	options: {
-		useControls:          true,       // Toggles autohide and dock placement controls - NOT FULLY IMPLEMENTED
-		dockPosition:         'bottom',   // Position the dock starts in, top or bottom.
+		useControls:          true,      // Toggles autohide and dock placement controls.
+		useCanvasTabs:        true,     // Toggle use of canvas tab graphics. NOT YET IMPLEMENTED
+		dockPosition:         'bottom',  // Position the dock starts in, top or bottom.
 		// Style options
 		dockTabColor:         [255, 255, 255],
 		trueButtonColor:      [70, 245, 70],     // Color for autohide on		
@@ -2859,6 +2968,15 @@ MochaUI.Dock = new Class({
 		this.dock          = $(MochaUI.options.dock);
 		this.autoHideEvent = null;		
 		this.dockAutoHide  = false;  // True when dock autohide is set to on, false if set to off
+
+		if (!this.options.useControls){
+			if($('dockPlacement')){
+				$('dockPlacement').setStyle('cursor', 'default');
+			}
+			if($('dockAutoHide')){
+				$('dockAutoHide').setStyle('cursor', 'default');
+			}
+		}
 
 		this.dockWrapper.setStyles({
 			'display':  'block',
@@ -2892,16 +3010,18 @@ MochaUI.Dock = new Class({
 	},
 	initializeDockControls: function(){
 		
-		// Insert canvas
-		var canvas = new Element('canvas', {
-			'id':     'dockCanvas',
-			'width':  '15',
-			'height': '18'
-		}).inject(this.dock);
+		if (this.options.useControls){
+			// Insert canvas
+			var canvas = new Element('canvas', {
+				'id':     'dockCanvas',
+				'width':  '15',
+				'height': '18'
+			}).inject(this.dock);
 		
-		// Dynamically initialize canvas using excanvas. This is only required by IE
-		if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas'){
-			G_vmlCanvasManager.initElement(canvas);
+			// Dynamically initialize canvas using excanvas. This is only required by IE
+			if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas'){
+				G_vmlCanvasManager.initElement(canvas);
+			}
 		}
 		
 		var dockPlacement = $('dockPlacement');
@@ -3053,20 +3173,22 @@ MochaUI.Dock = new Class({
 		this.dockSortables.addItems(dockTab);
 
 		//Insert canvas
-		var dockTabCanvas = new Element('canvas', {
-			'id': currentInstance.options.id + '_dockTabCanvas',
-			'class': 'dockCanvas', 
-			'width': 120,
-			'height': 20			
-		}).inject(dockTab);	
-		
-		// Dynamically initialize canvas using excanvas. This is only required by IE
-		if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas') {
-			G_vmlCanvasManager.initElement(dockTabCanvas);
-		}
+		if (this.options.useCanvasTabs){	
+			var dockTabCanvas = new Element('canvas', {
+				'id': currentInstance.options.id + '_dockTabCanvas',
+				'class': 'dockCanvas', 
+				'width': 120,
+				'height': 20			
+			}).inject(dockTab);	
+			
+			// Dynamically initialize canvas using excanvas. This is only required by IE
+			if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas') {
+				G_vmlCanvasManager.initElement(dockTabCanvas);
+			}
 
-		var ctx = $(currentInstance.options.id + '_dockTabCanvas').getContext('2d');
-		MochaUI.roundedRect(ctx, 0, 0, 120, 20, 5, this.options.dockTabColor, 1);	
+			var ctx = $(currentInstance.options.id + '_dockTabCanvas').getContext('2d');
+			MochaUI.roundedRect(ctx, 0, 0, 120, 20, 5, this.options.dockTabColor, 1);
+		}
 		
 		var dockTabText = new Element('div', {
 			'id': currentInstance.options.id + '_dockTabText',

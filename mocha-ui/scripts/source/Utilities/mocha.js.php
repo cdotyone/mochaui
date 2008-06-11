@@ -29,6 +29,7 @@ $files = array(
 	'dev/mocha/scripts/source/Window/Windows-from-html.js',		
 	'dev/mocha/scripts/source/Window/Windows-from-json.js',
 	'dev/mocha/scripts/source/Window/Arrange-cascade.js',
+	'dev/mocha/scripts/source/Window/Arrange-tile.js',	
 	'dev/mocha/scripts/source/Desktop/Tabs.js',			
 	'dev/mocha/scripts/source/Desktop/Desktop.js',	
 	'dev/mocha/scripts/source/Desktop/Dock.js',

@@ -375,6 +375,13 @@ initializeWindows = function(){
 		});
 	}
 	
+	if ($('tileLink')){
+		$('tileLink').addEvent('click', function(e){	
+			new Event(e).stop();
+			MochaUI.arrangeTile();
+		});
+	}	
+	
 	if ($('closeLink')){
 		$('closeLink').addEvent('click', function(e){	
 			new Event(e).stop();
@@ -652,10 +659,10 @@ window.addEvent('domready', function(){
 	MochaUI.Modal = new MochaUI.Modal();
 	
 	MochaUI.Desktop.pageWrapper.setStyles({
-		'background': '#8caac7'		
+		//'background': '#8caac7'		
 	});	
 	
-	initializeWindows();	
+	initializeWindows();
 });
 
 
