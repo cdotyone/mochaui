@@ -34,7 +34,12 @@ Options:
 	contentURL - Used if loadMethod is set to 'xhr' or 'iframe'.
 	evalScripts - (boolean) An xhr loadMethod option. Defaults to true.    
 	evalResponse - (boolean) An xhr loadMethod option. Defaults to false.
-	content - (string or element) An html loadMethod option. 
+	content - (string or element) An html loadMethod option.
+	toolbar - (boolean) Create window toolbar. Defaults to false. This can be used for tabs, media controls, and so forth.
+	toolbarPosition - ('top' or 'bottom') Defaults to top.
+	toolbarHeight - (number)
+	toolbarURL - (url) Defaults to 'pages/lipsum.html'.	
+	toolbarContent - (string)	
 	container - (element ID) Element the window is injected in. The container defaults to 'desktop'. If no desktop then to document.body. Use 'pageWrapper' if you don't want the windows to overlap the toolbars.
 	restrict - (boolean) Restrict window to container when dragging.
 	shape - ('box' or 'gauge') Shape of window. Defaults to 'box'.
@@ -153,8 +158,8 @@ MochaUI.Windows.windowOptions = {
 	content:           'Window content',
 	
 	// Toolbar
-	toolbar:           false, // (boolean) Create window toolbar. Defaults to false. This can be used for tabs, media controls, and so forth.
-	toolbarPosition:   'top', // 'top' or 'bottom'. Defaults to top.
+	toolbar:           false, 
+	toolbarPosition:   'top',
 	toolbarHeight:     29,
 	toolbarURL:        'pages/lipsum.html',	
 	toolbarContent:    '',
@@ -218,6 +223,7 @@ MochaUI.Windows.windowOptions = {
 	onMinimize:        $empty,
 	onMaximize:        $empty,
 	onRestore:         $empty,
+	onMove:            $empty, // NOT YET IMPLEMENTED
 	onClose:           $empty,
 	onCloseComplete:   $empty
 };
@@ -274,7 +280,7 @@ MochaUI.Window = new Class({
 		}		
 		
 		// Gauges are not maximizable or resizable
-		if (options.shape == 'gauge'|| options.type == 'notification'){
+		if (options.shape == 'gauge' || options.type == 'notification'){
 			options.collapsible = false;
 			options.maximizable = false;
 			options.contentBgColor = 'transparent';

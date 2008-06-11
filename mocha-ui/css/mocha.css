@@ -168,18 +168,22 @@ body {
 #pageWrapper {
 	position: relative;
 	width: auto;
+	height: 100%;
 	overflow: auto; /* This can be set to hidden or auto */
 }
 
 #page {
-	padding: 20px 30px;
+	padding: 20px 20px;
+}
+
+.aside {
+	width: 500px;
 }
 
 #sidebarWrapper {
 	display: none;
 	float: left;
-	background: #bebebe;
-	font-size: 11px;			
+	background: #bebebe;			
 }
 
 #sidebar {

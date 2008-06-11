@@ -153,7 +153,7 @@ initializeWindows = function(){
 			},
 			width: 300,
 			height: 105,
-			x: 280,
+			x: 250,
 			y: 385,
 			padding: { top: 12, right: 12, bottom: 10, left: 12 },			
 			resizable: false,
@@ -215,7 +215,7 @@ initializeWindows = function(){
 			headerHeight: 30,			
 			width: 160,
 			height: 160,
-			x: 600,
+			x: 570,
 			y: 75,
 			padding: { top: 0, right: 0, bottom: 0, left: 0 },
 			bodyBgColor: [250,250,250]
@@ -460,7 +460,7 @@ initializeWindows = function(){
 			contentURL: 'pages/overview.html',
 			width: 300,
 			height: 200,
-			x: 280,
+			x: 250,
 			y: 75,
 			scrollbars: false,
 			resizable: false,
@@ -513,7 +513,7 @@ initializeWindows = function(){
 			//},
 			width: 330,
 			height: 180,
-			x: 600,
+			x: 570,
 			y: 280,
 			resizeLimit: {'x': [275, 2500], 'y': [125, 2000]},			
 			toolbar: true,
@@ -622,7 +622,7 @@ initializeWindows = function(){
 	MochaUI.aboutWindow = function(){
 		new MochaUI.Window({
 			id: 'about',
-			title: 'Mocha UI Version 0.8',
+			title: 'Mocha UI Version 0.9',
 			loadMethod: 'xhr',
 			contentURL: 'pages/about.html',
 			type: 'modal',
@@ -657,11 +657,6 @@ window.addEvent('domready', function(){
 	MochaUI.Desktop = new MochaUI.Desktop();									 
 	MochaUI.Dock = new MochaUI.Dock();	
 	MochaUI.Modal = new MochaUI.Modal();
-	
-	MochaUI.Desktop.pageWrapper.setStyles({
-		//'background': '#8caac7'		
-	});	
-	
 	initializeWindows();
 });
 

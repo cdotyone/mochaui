@@ -16,30 +16,83 @@
 	<!-- <script type="text/javascript" src="scripts/mocha.js" charset="utf-8"></script> -->
 	
 	<script type="text/javascript">
+	
+	MochaUI.aboutWindow = function(){
+		new MochaUI.Window({
+			id: 'about',
+			title: 'Mocha UI Version 0.9',
+			loadMethod: 'xhr',
+			contentURL: 'pages/about.html',
+			type: 'modal',
+			width: 300,
+			height: 150
+		});
+	}	
+	
 	window.addEvent('domready', function(){
+		MochaUI.Desktop = new MochaUI.Desktop();
+		MochaUI.Modal = new MochaUI.Modal();			
 		MochaUI.NewWindowsFromHTML = new MochaUI.NewWindowsFromHTML();		
+
+		$('aboutLink').addEvent('click', function(e){	
+			new Event(e).stop();
+			MochaUI.aboutWindow();
+		});		
+				
 	});	
 	</script>			
 
 </head>
 <body>
 
-<div id="mochaDesktop">
+<div id="desktop">
 
-<div id="mochaPageWrapper">
-	<div id="mochaPage">
+<div id="pageWrapper">
+	<div id="page">
 	
 	<!-- PAGE CONTENT BEGINS HERE -->
 
 		<div class="aside">
 			<h3>My Page Content</h3>
 			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-		</div><!-- aside end -->
+			
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+						
+
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+			
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+			
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+			
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+			
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>												
+			
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+			
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+			
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+			
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+			
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>												
+			
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+			
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+			
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+		
+		<p><a id="aboutLink" href="pages/about.html">Modal Test</a></p>
+				
+	</div><!-- aside end -->									
 
 	<!-- PAGE CONTENT ENDS HERE -->
 
-	</div><!-- mochaPage end -->
-</div><!-- mochaPageWrapper end -->
+	</div><!-- page end -->
+</div><!-- pageWrapper end -->
 
 <div class="mocha" id="myWindow01" style="width:300px;height:255px;top:50px;left:350px">
 	<h3 class="mochaTitle">My Window 01</h3>
@@ -56,7 +109,7 @@
 	<p>My Window Content</p>
 </div>
 
-</div><!-- mochaDesktop end -->
+</div><!-- desktop end -->
 
 </body>
 </html>
