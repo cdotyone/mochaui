@@ -1,6 +1,7 @@
 /*
 
-Script: Tabs.js	
+Script: Tabs.js
+	Functionality for window tabs.
 	
 Copyright:
 	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
