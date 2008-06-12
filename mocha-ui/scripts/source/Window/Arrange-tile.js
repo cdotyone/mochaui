@@ -77,7 +77,7 @@ MochaUI.extend({
 				instance.windowEl.setStyles({
 					'left': left,
 					'top': top			
-				});
+				});			
 																
 				instance.drawWindow(instance.windowEl);			
 

@@ -36,6 +36,7 @@ MochaUI.extend({
 		this.cookie = new Hash.Cookie('mochaUIworkspaceCookie', {duration: 3600});
 		this.cookie.empty();		
 		MochaUI.Windows.instances.each(function(instance) {
+			instance.saveValues();									
 			this.cookie.set(instance.options.id, {
 				'id': instance.options.id,
 				'top': instance.options.y,

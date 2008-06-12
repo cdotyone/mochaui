@@ -1125,7 +1125,7 @@ MochaUI.Window = new Class({
 			this.drawWindowCollapsed(windowEl, shadows);
 			return;
 		}
-		
+				
 		var options = this.options;
 		var shadowBlur = options.shadowBlur;
 		var shadowBlur2x = shadowBlur * 2;
