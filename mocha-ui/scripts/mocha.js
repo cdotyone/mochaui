@@ -461,7 +461,12 @@ Options:
 	contentURL - Used if loadMethod is set to 'xhr' or 'iframe'.
 	evalScripts - (boolean) An xhr loadMethod option. Defaults to true.    
 	evalResponse - (boolean) An xhr loadMethod option. Defaults to false.
-	content - (string or element) An html loadMethod option. 
+	content - (string or element) An html loadMethod option.
+	toolbar - (boolean) Create window toolbar. Defaults to false. This can be used for tabs, media controls, and so forth.
+	toolbarPosition - ('top' or 'bottom') Defaults to top.
+	toolbarHeight - (number)
+	toolbarURL - (url) Defaults to 'pages/lipsum.html'.	
+	toolbarContent - (string)	
 	container - (element ID) Element the window is injected in. The container defaults to 'desktop'. If no desktop then to document.body. Use 'pageWrapper' if you don't want the windows to overlap the toolbars.
 	restrict - (boolean) Restrict window to container when dragging.
 	shape - ('box' or 'gauge') Shape of window. Defaults to 'box'.
@@ -580,8 +585,8 @@ MochaUI.Windows.windowOptions = {
 	content:           'Window content',
 	
 	// Toolbar
-	toolbar:           false, // (boolean) Create window toolbar. Defaults to false. This can be used for tabs, media controls, and so forth.
-	toolbarPosition:   'top', // 'top' or 'bottom'. Defaults to top.
+	toolbar:           false, 
+	toolbarPosition:   'top',
 	toolbarHeight:     29,
 	toolbarURL:        'pages/lipsum.html',	
 	toolbarContent:    '',
@@ -645,6 +650,7 @@ MochaUI.Windows.windowOptions = {
 	onMinimize:        $empty,
 	onMaximize:        $empty,
 	onRestore:         $empty,
+	onMove:            $empty, // NOT YET IMPLEMENTED
 	onClose:           $empty,
 	onCloseComplete:   $empty
 };
@@ -701,7 +707,7 @@ MochaUI.Window = new Class({
 		}		
 		
 		// Gauges are not maximizable or resizable
-		if (options.shape == 'gauge'|| options.type == 'notification'){
+		if (options.shape == 'gauge' || options.type == 'notification'){
 			options.collapsible = false;
 			options.maximizable = false;
 			options.contentBgColor = 'transparent';
@@ -1167,6 +1173,7 @@ MochaUI.Window = new Class({
 			onComplete: function(){
 				this.resizeOnComplete();
 			}.bind(this)	
+
 		});
 		
 		this.windowEl.makeResizable({
@@ -1546,7 +1553,7 @@ MochaUI.Window = new Class({
 			this.drawWindowCollapsed(windowEl, shadows);
 			return;
 		}
-		
+				
 		var options = this.options;
 		var shadowBlur = options.shadowBlur;
 		var shadowBlur2x = shadowBlur * 2;
@@ -1890,7 +1897,6 @@ MochaUI.Window = new Class({
 	bodyRoundedRect: function(ctx, x, y, width, height, radius, rgb){
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ', 100)';
 		ctx.beginPath();
-
 		ctx.moveTo(x, y + radius);
 		ctx.lineTo(x, y + height - radius);
 		ctx.quadraticCurveTo(x, y + height, x + radius, y + height);
@@ -2296,7 +2302,7 @@ MochaUI.extend({
 });
 /*
 
-Script: Arrange-cascade.js
+Script: Arrange-tile.js
 	Cascade windows.
 	
 Authors:
@@ -2373,7 +2379,7 @@ MochaUI.extend({
 				instance.windowEl.setStyles({
 					'left': left,
 					'top': top			
-				});
+				});			
 																
 				instance.drawWindow(instance.windowEl);			
 
@@ -2388,7 +2394,8 @@ MochaUI.extend({
 	}
 });/*
 
-Script: Tabs.js	
+Script: Tabs.js
+	Functionality for window tabs.
 	
 Copyright:
 	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
@@ -2688,6 +2695,7 @@ MochaUI.Desktop = new Class({
 			});		
 		}
 		currentInstance.maximizeButtonEl.setProperty('title', 'Restore');
+		MochaUI.focusWindow(windowEl);
 
 	},
 	/*
@@ -3278,6 +3286,7 @@ MochaUI.extend({
 		this.cookie = new Hash.Cookie('mochaUIworkspaceCookie', {duration: 3600});
 		this.cookie.empty();		
 		MochaUI.Windows.instances.each(function(instance) {
+			instance.saveValues();									
 			this.cookie.set(instance.options.id, {
 				'id': instance.options.id,
 				'top': instance.options.y,

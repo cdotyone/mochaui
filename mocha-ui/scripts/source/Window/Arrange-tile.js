@@ -1,6 +1,6 @@
 /*
 
-Script: Arrange-cascade.js
+Script: Arrange-tile.js
 	Cascade windows.
 	
 Authors:

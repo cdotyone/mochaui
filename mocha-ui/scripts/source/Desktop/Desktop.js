@@ -245,6 +245,7 @@ MochaUI.Desktop = new Class({
 			});		
 		}
 		currentInstance.maximizeButtonEl.setProperty('title', 'Restore');
+		MochaUI.focusWindow(windowEl);
 
 	},
 	/*
