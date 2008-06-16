@@ -721,8 +721,10 @@ MochaUI.Window = new Class({
 		}
 		
 		// Minimizable, dock is required and window cannot be modal
-		if (MochaUI.Dock.dock && options.type != 'modal'){
-			options.minimizable = options.minimizable;
+		if (MochaUI.Dock){
+			if (MochaUI.Dock.dock && options.type != 'modal'){
+				options.minimizable = options.minimizable;
+			}
 		}
 		else {
 			options.minimizable = false;			
@@ -992,6 +994,7 @@ MochaUI.Window = new Class({
 		}
 		
 		if (this.options.type == 'notification'){
+			// !!! Make this time an option
 			MochaUI.closeWindow.delay(1400, this, this.windowEl);	
 		}
 
@@ -1173,7 +1176,6 @@ MochaUI.Window = new Class({
 			onComplete: function(){
 				this.resizeOnComplete();
 			}.bind(this)	
-
 		});
 		
 		this.windowEl.makeResizable({
