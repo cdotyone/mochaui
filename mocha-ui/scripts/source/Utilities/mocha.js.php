@@ -23,21 +23,21 @@ Example:
 
 // Array of files to merge
 $files = array(
-	'dev/mocha/scripts/source/Core/Core.js',
-	'dev/mocha/scripts/source/Window/Window.js',
-	'dev/mocha/scripts/source/Window/Modal.js',		
-	'dev/mocha/scripts/source/Window/Windows-from-html.js',		
-	'dev/mocha/scripts/source/Window/Windows-from-json.js',
-	'dev/mocha/scripts/source/Window/Arrange-cascade.js',
-	'dev/mocha/scripts/source/Window/Arrange-tile.js',	
-	'dev/mocha/scripts/source/Window/Tabs.js',			
-	'dev/mocha/scripts/source/Desktop/Desktop.js',	
-	'dev/mocha/scripts/source/Desktop/Dock.js',
-	'dev/mocha/scripts/source/Desktop/Workspaces.js'
+	'Core/Core.js',
+	'Window/Window.js',
+	'Window/Modal.js',		
+	'Window/Windows-from-html.js',		
+	'Window/Windows-from-json.js',
+	'Window/Arrange-cascade.js',
+	'Window/Arrange-tile.js',	
+	'Window/Tabs.js',			
+	'Desktop/Desktop.js',	
+	'Desktop/Dock.js',
+	'Desktop/Workspaces.js'
 );
 
 // Get the path to your web directory
-$docRoot = $_SERVER['DOCUMENT_ROOT'];
+$docRoot = substr($_SERVER['SCRIPT_FILENAME'],0,strpos($_SERVER['SCRIPT_FILENAME'],'Utilities'));
 
 // Merge code
 $code = '';
