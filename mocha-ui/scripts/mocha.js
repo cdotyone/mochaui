@@ -804,7 +804,12 @@ MochaUI.Window = new Class({
 			}
 		});		
 
-		this.windowEl.addClass(this.options.addClass);		
+		this.windowEl.addClass(this.options.addClass);
+		
+		// Fix a mouseover issue with gauges in IE7
+		if ( Browser.Engine.trident && this.options.shape == 'gauge') {
+			this.windowEl.setStyle('background', 'url(../images/spacer.gif)');
+		}		
 
 		if ((this.options.type == 'modal' && !Browser.Engine.gecko && !Browser.Engine.trident) || (Browser.Platform.mac && Browser.Engine.gecko)){
 			this.windowEl.setStyle('position', 'fixed');	
@@ -2160,6 +2165,7 @@ Example:
 	HTML markup.
 	(start code)
 <div class="mocha" id="mywindow" style="width:300px;height:255px;top:50px;left:350px">
+
 	<h3 class="mochaTitle">My Window</h3>
 	<p>My Window Content</p>
 </div>	

@@ -377,7 +377,12 @@ MochaUI.Window = new Class({
 			}
 		});		
 
-		this.windowEl.addClass(this.options.addClass);		
+		this.windowEl.addClass(this.options.addClass);
+		
+		// Fix a mouseover issue with gauges in IE7
+		if ( Browser.Engine.trident && this.options.shape == 'gauge') {
+			this.windowEl.setStyle('background', 'url(../images/spacer.gif)');
+		}		
 
 		if ((this.options.type == 'modal' && !Browser.Engine.gecko && !Browser.Engine.trident) || (Browser.Platform.mac && Browser.Engine.gecko)){
 			this.windowEl.setStyle('position', 'fixed');	
