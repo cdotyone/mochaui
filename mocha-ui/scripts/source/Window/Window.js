@@ -150,6 +150,8 @@ MochaUI.Windows.windowOptions = {
 	loadMethod:        'html',
 	contentURL:        'pages/lipsum.html',
 	
+	closeAfter:        false, // Close the window after a certain period of time in milliseconds. This is particularly useful for notifications.
+		
 	// xhr options
 	evalScripts:       true,       
 	evalResponse:      false,         
@@ -169,7 +171,7 @@ MochaUI.Windows.windowOptions = {
 	restrict:          true,
 	shape:             'box',
 	
-	// Window Events
+	// Window Controls
 	collapsible:       true,
 	minimizable:       true,
 	maximizable:       true,
@@ -571,12 +573,8 @@ MochaUI.Window = new Class({
 			}).injectInside(this.windowEl.id + 'LinkCheck');
 		}
 		
-		if (this.options.type == 'notification'){
-			// !!! Make this time an option
-			MochaUI.closeWindow.delay(1400, this, this.windowEl);
-			//this.windowEl.addEvent('click', function() {
-			//	MochaUI.closeWindow(this.windowEl);
-			//}.bind(this));
+		if (this.options.closeAfter != false){			
+			MochaUI.closeWindow.delay(this.options.closeAfter, this, this.windowEl);	
 		}
 
 	},

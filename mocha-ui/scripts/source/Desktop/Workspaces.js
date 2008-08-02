@@ -50,6 +50,7 @@ MochaUI.extend({
 			type: 'notification',
 			addClass: 'notification',
 			content: 'Workspace saved.',
+			closeAfter: '1400',
 			width: 200,
 			height: 40,
 			y: 25,
