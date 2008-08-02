@@ -573,7 +573,10 @@ MochaUI.Window = new Class({
 		
 		if (this.options.type == 'notification'){
 			// !!! Make this time an option
-			MochaUI.closeWindow.delay(1400, this, this.windowEl);	
+			MochaUI.closeWindow.delay(1400, this, this.windowEl);
+			//this.windowEl.addEvent('click', function() {
+			//	MochaUI.closeWindow(this.windowEl);
+			//}.bind(this));
 		}
 
 	},
