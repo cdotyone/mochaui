@@ -145,6 +145,7 @@ Example:
 MochaUI.Windows.windowOptions = {
 	id:                null,
 	title:             'New Window',
+	icon:              false, // Not yet implemented.
 	type:              'window',
 	
 	loadMethod:        'html',
@@ -892,11 +893,18 @@ MochaUI.Window = new Class({
 				'cursor': options.draggable ? 'move' : 'default'
 			}
 		}).inject(cache.overlayEl, 'top');
-
+		
 		cache.titleEl = new Element('h3', {
 			'id': id + '_title',									
 			'class': 'mochaTitle'
 		}).inject(cache.titleBarEl);
+
+		if (options.icon != false){
+			cache.titleBarEl.setStyles({
+				'padding-left': 15,
+				'background': 'url(' + options.icon + ') 5px 5px no-repeat'
+			}) 	
+		}
 		
 		cache.contentBorderEl = new Element('div', {
 			'id': id + '_contentBorder',											

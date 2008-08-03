@@ -131,7 +131,8 @@ initializeWindows = function(){
 	MochaUI.parametricsWindow = function(){	
 		new MochaUI.Window({
 			id: 'parametrics',
-			title: 'Window Parametrics',	
+			title: 'Window Parametrics',
+			icon: 'images/icons/page_red.gif',							
 			loadMethod: 'xhr',
 			contentURL: 'plugins/parametrics/',
 			onContentLoaded: function(){				
@@ -455,7 +456,8 @@ initializeWindows = function(){
 		var id = 'overview';
 		new MochaUI.Window({
 			id: id,
-			title: 'Overview',
+			title: 'Overview',			
+			icon: 'images/icons/page.gif',
 			loadMethod: 'xhr',
 			contentURL: 'pages/overview.html',
 			width: 300,
@@ -506,6 +508,7 @@ initializeWindows = function(){
 		new MochaUI.Window({
 			id: 'features',
 			title: 'Features',
+			icon: 'images/icons/page_green.gif',			
 			loadMethod: 'xhr',
 			contentURL: 'pages/features.html',
 			//onContentLoaded: function(){
