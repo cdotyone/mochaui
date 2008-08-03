@@ -250,7 +250,8 @@ MochaUI.Window = new Class({
 			iframe: options.loadMethod == 'iframe' ? true : false,
 			isMaximized: false,
 			isMinimized: false,
-			isCollapsed: false
+			isCollapsed: false,
+			timestamp: $time()
 		});
 		
 		// May be better to use if type != window
