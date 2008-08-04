@@ -515,7 +515,7 @@ initializeWindows = function(){
 				//MochaUI.initializeTabs('featuresTabs');
 			//},
 			width: 330,
-			height: 180,
+			height: 190,
 			x: 570,
 			y: 85,
 			resizeLimit: {'x': [275, 2500], 'y': [125, 2000]},			

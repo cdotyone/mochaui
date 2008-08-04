@@ -53,7 +53,7 @@ MochaUI.extend({
 			closeAfter: '1400',
 			width: 200,
 			height: 40,
-			y: 25,
+			y: 15,
 			padding:  { top: 10, right: 12, bottom: 10, left: 12 },
 			shadowBlur: 5,
 			bodyBgColor: [255, 255, 255]	
