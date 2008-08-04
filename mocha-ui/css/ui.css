@@ -46,21 +46,22 @@ body {
 }
 	
 #desktopTitlebar {
-	padding: 7px 8px 6px 15px;
+	padding: 7px 8px 6px 13px;
 	height: 23px;
 }	
 	
 #desktopTitlebar h1 {
 	margin: 0;
-	padding: 4px 0 0 0;
-	font-size: 18px;
+	padding: 5px 0 0 0;
+	font-size: 20px;
 	font-weight: bold;
 	color: #fff;
 }
 	
-#desktopTitlebar h1 .version {
-	font-size: 12px;
-	color: #9d9d9d;
+#desktopTitlebar h1 .tagline {
+	font-size: 11px;
+	color: #a2a2a2;
+	padding-left: 5px;
 }		
 
 /* Navbar */
@@ -132,7 +133,7 @@ body {
 	width: 5px;
 	height: 5px;
 	background: #00CC33;
-	overflow: none;
+	overflow: hidden;
 	line-height: 1px;
 	font-size: 1px;
 }
@@ -349,7 +350,7 @@ div.mocha .mochaContentBorder {
 }
 	
 div.mocha .mochaContentWrapper { /* Has a fixed height and scrollbars if required. */
-	font-size: 11px;
+	font-size: 12px;
 	overflow: auto;	
 }
 	
@@ -478,7 +479,7 @@ div.mocha .cornerSE { /* Bottom right resize handle */
 	width: 13px;
 	font-size: 1px;
 	line-height: 1px;	
-	background: #ce1717;
+	background: #888;
 	border-right: 1px solid #eee;
 	border-left: 1px solid #eee;	
 	cursor: pointer;
@@ -688,7 +689,7 @@ iframe.zIndexFix {
 	padding: 4px 10px;
 	background: #f3f3f3;
 	border-top: 1px solid #fff;
-	font-size: 11px;
+	font-size: 12px;
 	cursor: pointer;
 }
 

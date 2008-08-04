@@ -257,7 +257,8 @@ MochaUI.Window = new Class({
 		
 		// May be better to use if type != window
 		if (options.type == 'modal' || options.type == 'notification'){
-			options.container = document.body;			 
+			options.container = document.body;
+			options.minimizable = false;			 
 		}		
 		if (!options.container){
 			options.container = MochaUI.Desktop.desktop ? MochaUI.Desktop.desktop : document.body;			 
@@ -292,7 +293,6 @@ MochaUI.Window = new Class({
 			options.footerHeight = 0;			
 		}
 		if (options.type == 'notification'){
-			options.minimizable = false;
 			options.closable = false;
 			options.headerHeight = 0;
 		}
