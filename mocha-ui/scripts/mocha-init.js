@@ -155,7 +155,7 @@ initializeWindows = function(){
 			width: 300,
 			height: 105,
 			x: 250,
-			y: 385,
+			y: 395,
 			padding: { top: 12, right: 12, bottom: 10, left: 12 },			
 			resizable: false,
 			maximizable: false,
@@ -463,7 +463,7 @@ initializeWindows = function(){
 			width: 300,
 			height: 200,
 			x: 250,
-			y: 75,
+			y: 85,
 			scrollbars: false,
 			resizable: false,
 			maximizable: false,				
@@ -517,7 +517,7 @@ initializeWindows = function(){
 			width: 330,
 			height: 180,
 			x: 570,
-			y: 280,
+			y: 85,
 			resizeLimit: {'x': [275, 2500], 'y': [125, 2000]},			
 			toolbar: true,
 			toolbarURL: 'pages/features-tabs.html'
@@ -650,7 +650,6 @@ initializeWindows = function(){
 	// Build windows onDomReady
 	MochaUI.overviewWindow(); 
 	MochaUI.parametricsWindow();
-	MochaUI.clockWindow();
 	MochaUI.featuresWindow();
 	
 }

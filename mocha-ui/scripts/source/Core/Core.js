@@ -26,7 +26,7 @@ var MochaUI = new Hash({
 	}),	
 	Windows: {	  
 		instances:      new Hash(),
-		indexLevel:     1,            // Used for z-Index
+		indexLevel:     10,           // Used for z-Index
 		windowIDCount:  0,	          // Used for windows without an ID defined by the user
 		windowsVisible: true          // Ctrl-Alt-Q to toggle window visibility		
 	},

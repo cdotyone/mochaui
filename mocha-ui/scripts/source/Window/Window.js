@@ -196,7 +196,7 @@ MochaUI.Windows.windowOptions = {
 	y:                 null,    
 	scrollbars:        true,
 	padding:   		   { top: 10, right: 12, bottom: 10, left: 12 },
-	shadowBlur:        4,
+	shadowBlur:        5,
 	shadowOffset:      {'x': 0, 'y': 1},       // Should be positive and not be greater than the ShadowBlur.
 	controlsOffset:    {'right': 6, 'top': 6}, // Change this if you want to reposition the window controls.
 	useCanvasControls: true,                   // Set this to false if you wish to use images for the buttons.
@@ -1381,7 +1381,7 @@ MochaUI.Window = new Class({
 					height - (x * 2) - shadowOffset.y,
 					cornerRadius + (shadowBlur - x),
 					[0, 0, 0],
-					x == shadowBlur ? .28 : .06 + (x * .01)
+					x == shadowBlur ? .29 : .065 + (x * .01)
 				);
 			}
 		}

@@ -35,18 +35,18 @@ body {
 }			  				
 
 #desktopHeader {
-	background: #bebebe; /* Will be the margin color between toolbars */
+	background: #888; /* Will be the margin color between toolbars */
 	padding: 0 0 1px 0;
 }
 
 #desktopTitlebarWrapper {
 	position: relative;
-	height: 35px;
-	background: #eeeeef url(../images/bg-desktopTitlebar.gif) repeat-x;			
+	height: 40px;
+	background: #333 url(../images/bg-desktopTitlebar-bk.gif) repeat-x;			
 }
 	
 #desktopTitlebar {
-	padding: 4px 8px 6px 8px;
+	padding: 7px 8px 6px 15px;
 	height: 23px;
 }	
 	
@@ -55,21 +55,22 @@ body {
 	padding: 4px 0 0 0;
 	font-size: 18px;
 	font-weight: bold;
-	color: #ce1717;
+	color: #fff;
 }
 	
 #desktopTitlebar h1 .version {
 	font-size: 12px;
-	color: #555;
+	color: #9d9d9d;
 }		
 
 /* Navbar */
 
 #desktopNavbar {
-	margin: 1px 0 0 0;
-	background: #eeeeee;
-	border: 1px solid #fff;
-	height: 22px;
+	margin: 0 0 0 0;
+	background: #eeeeef url(../images/bg-desktopTitlebar.gif) bottom repeat-x;
+	border-top: 1px solid #fff;	
+	border-bottom: 1px solid #fff;
+	height: 27px;
 }
 
 #desktopNavbar ul {	
@@ -88,8 +89,9 @@ body {
 }	
 	
 #desktopNavbar ul li a {
-	padding: 2px 11px 2px 9px;	
+	padding: 5px 16px 4px 14px;	
 	color: #141414;
+	font-weight: bold;
 }
 
 #desktopNavbar ul li a:hover {
@@ -140,6 +142,7 @@ body {
 	padding: 1px 9px 1px 19px;
 	width: 130px;
 	color: #333;
+	font-weight: normal;
 }
 
 #desktopNavbar li ul li a:hover {
@@ -170,7 +173,13 @@ body {
 	width: auto;
 	height: 100%;
 	overflow: auto; /* This can be set to hidden or auto */
+	background: #7C9DBF;
 }
+
+#wrapper {
+	position: relative;
+	width: 100%;	
+}	
 
 #page {
 	padding: 20px 20px;
@@ -183,7 +192,7 @@ body {
 #sidebarWrapper {
 	display: none;
 	float: left;
-	background: #bebebe;			
+	background: #888;			
 }
 
 #sidebar {
@@ -194,13 +203,13 @@ body {
 
 #sidebarContentWrapper {
 	margin-right: 1px;
-	background: #fff;
+	background: #f8f8f8;
 	border: 1px solid #fff;
 	color: #141414;		
 }
 
 #sidebarContent {
-	padding: 15px;
+	padding: 10px;
 }
 
 #sidebarHandle {
@@ -226,8 +235,8 @@ body {
 	position: absolute;
 	left: -1px;
 	top: 150px;
-	border-top: 1px solid #bebebe;
-	border-bottom: 1px solid #bebebe;		
+	border-top: 1px solid #888;
+	border-bottom: 1px solid #888;		
 }
 
 .columnControl {
@@ -287,7 +296,7 @@ div.mocha .mochaToolbar {
 }
 
 .toolbarTabs {	
-	padding: 0 10px 2px 2px;
+	padding: 0 5px 2px 2px;
 	background: #e4e4e4 url(../images/tabs.gif) repeat-x;
 	background-position: left -60px;	
 }
@@ -588,7 +597,7 @@ iframe.zIndexFix {
 
 #dockWrapper{
 	display: none;
-	background: #bebebe;
+	background: #888;
 	padding: 1px 0 0 0;
 	width: 100%;	
 }
