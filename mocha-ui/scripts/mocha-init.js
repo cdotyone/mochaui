@@ -114,9 +114,9 @@ initializeWindows = function(){
 	MochaUI.mootoolsWindow = function(){
 		new MochaUI.Window({
 			id: 'mootools',
-			title: 'Mootools Forums in an Iframe',
+			title: 'Mootools in an Iframe',
 			loadMethod: 'iframe',
-			contentURL: 'http://forum.mootools.net/',
+			contentURL: 'http://mootools.net/',
 			width: 650,
 			height: 400			
 		});

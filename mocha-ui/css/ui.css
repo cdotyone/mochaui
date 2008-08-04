@@ -60,20 +60,20 @@ body {
 	
 #desktopTitlebar h1 .tagline {
 	font-size: 12px;
-	color: #a7a7a7;
+	color: #a8a8a8;
 	padding-left: 5px;
 	font-weight: normal;
 }
 
 #topNav {
 	float: right;
-	color: #a7a7a7;
+	color: #a8a8a8;
 	text-align right;
 	padding: 7px 5px 0 0;
 }
 
 #topNav a {
-	color: #a7a7a7;
+	color: #fff;
 	font-weight: bold;
 }
 
