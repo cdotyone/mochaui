@@ -762,7 +762,11 @@ div.mocha.notification .mochaContentWrapper {
 }
 
 .tree ul {
-	margin: 0;	
+	margin: 0 0 0 18px;	
+}
+
+.tree li.doc {
+	margin: 0 0 0 18px;	
 }	
 
 .tree li {

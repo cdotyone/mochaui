@@ -660,6 +660,52 @@ window.addEvent('domready', function(){
 	MochaUI.Dock = new MochaUI.Dock();	
 	MochaUI.Modal = new MochaUI.Modal();
 	initializeWindows();
+
+
+	$$('li.folder').each(function(folder){
+		var elements = folder.getElements('ul');
+		var image = new Element('img', {
+			'src': 'images/icons/tree/_open.gif',									  
+			'width': 18,
+			'height': 18
+		}).inject(folder, 'top');		
+		var image = new Element('img', {
+			'src': 'images/icons/tree/minus.gif',									  
+			'width': 18,
+			'height': 18
+		}).addEvent('click', function(){
+			if (folder.hasClass('f-open')){
+				image.setProperty('src', 'images/icons/tree/plus.gif');
+				elements.each(function(el){
+					el.setStyle('display', 'none');	
+				});
+				folder.removeClass('f-open');
+			}
+			else {
+				image.setProperty('src', 'images/icons/tree/minus.gif');
+				elements.each(function(el){
+					el.setStyle('display', 'block');	
+				});
+				folder.addClass('f-open');
+			}							
+		}).inject(folder, 'top');
+		if (!folder.hasClass('f-open')) {
+				image.setProperty('src', 'images/icons/tree/plus.gif');
+				elements.each(function(el){
+					el.setStyle('display', 'none');	
+				});
+				folder.removeClass('f-open');
+		}
+	});		
+
+	$$('ul.tree li.doc').each(function(el){
+		new Element('img', {
+			'src': 'images/icons/tree/_doc.gif',									  
+			'width': 18,
+			'height': 18
+		}).inject(el, 'top');		
+	});	
+	
 });
 
 
