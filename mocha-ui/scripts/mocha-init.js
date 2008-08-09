@@ -662,49 +662,103 @@ window.addEvent('domready', function(){
 	initializeWindows();
 
 
-	$$('li.folder').each(function(folder){
-		var elements = folder.getElements('ul');
-		var image = new Element('img', {
-			'src': 'images/icons/tree/_open.gif',									  
-			'width': 18,
-			'height': 18
-		}).inject(folder, 'top');		
-		var image = new Element('img', {
-			'src': 'images/icons/tree/minus.gif',									  
-			'width': 18,
-			'height': 18
-		}).addEvent('click', function(){
-			if (folder.hasClass('f-open')){
-				image.setProperty('src', 'images/icons/tree/plus.gif');
-				elements.each(function(el){
-					el.setStyle('display', 'none');	
-				});
-				folder.removeClass('f-open');
-			}
-			else {
-				image.setProperty('src', 'images/icons/tree/minus.gif');
-				elements.each(function(el){
-					el.setStyle('display', 'block');	
-				});
-				folder.addClass('f-open');
-			}							
-		}).inject(folder, 'top');
-		if (!folder.hasClass('f-open')) {
-				image.setProperty('src', 'images/icons/tree/plus.gif');
-				elements.each(function(el){
-					el.setStyle('display', 'none');	
-				});
-				folder.removeClass('f-open');
-		}
-	});		
-
-	$$('ul.tree li.doc').each(function(el){
-		new Element('img', {
-			'src': 'images/icons/tree/_doc.gif',									  
-			'width': 18,
-			'height': 18
-		}).inject(el, 'top');		
-	});	
+    $$('li.folder').each(function(folder){
+        var elements = folder.getChildren('ul');
+        var image = new Element('img', {
+            'src': 'images/icons/tree/_open.gif',
+            'width': 18,
+            'height': 18
+        }).inject(folder, 'top');
+        
+        if (folder.hasClass('root')) {
+            folder.minus = 'images/icons/tree/Rminus.gif'
+            folder.plus = 'images/icons/tree/Rplus.gif'
+        }
+        else {
+            folder.minus = 'images/icons/tree/Tminus.gif'
+            folder.plus = 'images/icons/tree/Tplus.gif'
+        }
+        
+        var image = new Element('img', {
+            'src': folder.minus,
+            'width': 18,
+            'height': 18
+        }).addEvent('click', function(){
+            if (folder.hasClass('f-open')) {
+                image.setProperty('src', folder.plus);
+                elements.each(function(el){
+                    el.setStyle('display', 'none');
+                });
+                folder.removeClass('f-open');
+            }
+            else {
+                image.setProperty('src', folder.minus);
+                elements.each(function(el){
+                    el.setStyle('display', 'block');
+                });
+                folder.addClass('f-open');
+            }
+        }).inject(folder, 'top');
+        
+        if (!folder.hasClass('f-open')) {
+            image.setProperty('src', folder.plus);
+            elements.each(function(el){
+                el.setStyle('display', 'none');
+            });
+            folder.removeClass('f-open');
+        }
+        
+        elements.each(function(element){
+        
+            var docs = element.getChildren('li.doc');
+            docs.each(function(el){
+                if (el == docs.getLast() && !el.getNext()) {
+                    new Element('img', {
+                        'src': 'images/icons/tree/L.gif',
+                        'width': 18,
+                        'height': 18
+                    }).inject(el.getElement('span'), 'before');
+                }
+                else {
+                    new Element('img', {
+                        'src': 'images/icons/tree/T.gif',
+                        'width': 18,
+                        'height': 18
+                    }).inject(el.getElement('span'), 'before');
+                }
+            });
+            
+            
+        });
+        
+    });
+    
+    $$('ul.tree li').each(function(doc){
+        doc.getParents('li').each(function(parent){
+            if (parent.getNext()) {
+                new Element('img', {
+                    'src': 'images/icons/tree/I.gif',
+                    'width': 18,
+                    'height': 18
+                }).inject(doc, 'top');
+            }
+            else {
+                new Element('img', {
+                    'src': 'images/spacer.gif',
+                    'width': 18,
+                    'height': 18
+                }).inject(doc, 'top');
+            }
+        });
+    });
+    
+    $$('ul.tree li.doc').each(function(el){
+        new Element('img', {
+            'src': 'images/icons/tree/_doc.gif',
+            'width': 18,
+            'height': 18
+        }).inject(el.getElement('span'), 'before');
+    });
 	
 });
 
