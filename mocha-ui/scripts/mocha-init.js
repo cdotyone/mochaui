@@ -712,8 +712,7 @@ window.addEvent('domready', function(){
 			folder.removeClass('f-open');
 		}
         
-		elements.each(function(element){
-        
+		elements.each(function(element){        
 			var docs = element.getChildren('li.doc');
 			docs.each(function(el){
 				if (el == docs.getLast() && !el.getNext()) {
@@ -732,7 +731,7 @@ window.addEvent('domready', function(){
 				}
 			});            
 		});
-        
+		        
 	});
     
 	$$('ul.tree li').each(function(doc){
