@@ -145,7 +145,7 @@ Example:
 MochaUI.Windows.windowOptions = {
 	id:                null,
 	title:             'New Window',
-	icon:              false, // Not yet implemented.
+	icon:              false,
 	type:              'window',
 	
 	loadMethod:        'html',
@@ -154,8 +154,8 @@ MochaUI.Windows.windowOptions = {
 	closeAfter:        false, // Close the window after a certain period of time in milliseconds. This is particularly useful for notifications.
 		
 	// xhr options
-	evalScripts:       true,       
-	evalResponse:      false,         
+	evalScripts:       true,
+	evalResponse:      false,
 	
 	// html options
 	content:           'Window content',
