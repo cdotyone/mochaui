@@ -579,6 +579,10 @@ MochaUI.Window = new Class({
 			MochaUI.closeWindow.delay(this.options.closeAfter, this, this.windowEl);	
 		}
 
+		if (MochaUI.Dock) {
+			MochaUI.Dock.createDockTab(this.windowEl);
+		}
+
 	},
 	setupEvents: function(windowEl) {
 

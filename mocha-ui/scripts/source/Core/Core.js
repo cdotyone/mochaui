@@ -215,7 +215,8 @@ var MochaUI = new Hash({
 					$('modalFix').setStyle('display', 'block');
 				}
 			}		
-			windowEl.destroy();
+			windowEl.destroy();	
+			
 			currentInstance.fireEvent('onCloseComplete');
 			instances.erase(currentInstance.options.id); // see how this effects on close complete
 			if(this.loadingWorkspace == true){
@@ -246,6 +247,12 @@ var MochaUI = new Hash({
 				'opacity': .4
 			});
 		}
+
+		if (MochaUI.Dock) {
+			currentButton = $(currentInstance.options.id + '_dockTab');
+			MochaUI.Dock.dockSortables.removeItems(currentButton).destroy();
+		}		
+		
 		if (currentInstance.check) currentInstance.check.destroy();
 		return true;
 	},	
@@ -321,6 +328,13 @@ var MochaUI = new Hash({
 		if (fireEvent != false){
 			currentInstance.fireEvent('onFocus', windowEl);
 		}
+		
+		if (MochaUI.Dock) {
+			currentButton = $(currentInstance.options.id + '_dockTab');
+			$$('div.dockTab').removeClass('activeDockTab');
+			currentButton.addClass('activeDockTab');
+		}		
+		
 	},	
 	roundedRect: function(ctx, x, y, width, height, radius, rgb, a){
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';

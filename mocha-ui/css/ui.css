@@ -653,8 +653,13 @@ iframe.zIndexFix {
 	height: 20px;
 	margin: 0 2px 2px 0;
 	overflow: hidden;	
-	cursor: pointer;		 
+	cursor: pointer;
+	background: #fff;		 
 }
+
+.dockTab.activeDockTab {
+	background: #ddd;	
+}	
 
 .dockText {
 	position: absolute;
