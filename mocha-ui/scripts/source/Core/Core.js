@@ -211,7 +211,9 @@ var MochaUI = new Hash({
 		if (MochaUI.options.useEffects == false){
 			if (currentInstance.options.type == 'modal'){
 				$('modalOverlay').setStyle('opacity', 0);
-				$('modalFix').setStyle('display', 'block');
+				if (Browser.Engine.trident4) {
+					$('modalFix').setStyle('display', 'block');
+				}
 			}		
 			windowEl.destroy();
 			currentInstance.fireEvent('onCloseComplete');
