@@ -243,9 +243,14 @@ MochaUI.Dock = new Class({
 		dockTab.addEvent('mouseup', function(e){
 			this.timeUp = $time();
 			if ((this.timeUp - this.timeDown) < 275){
-				MochaUI.Dock.restoreMinimized.delay(25, MochaUI.Dock, windowEl);
+				if (currentInstance.isMinimized == true) {
+					MochaUI.Dock.restoreMinimized.delay(25, MochaUI.Dock, windowEl);
+				}
+				else{
+					(currentInstance.isFocused == true) ? MochaUI.Dock.minimizeWindow(windowEl) : MochaUI.focusWindow(windowEl);
+				}					
 			}
-		});		
+		});			
 
 		this.dockSortables.addItems(dockTab);
 
@@ -336,10 +341,7 @@ MochaUI.Dock = new Class({
 
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
 
-		if (currentInstance.isMinimized == false) {
-			MochaUI.focusWindow(windowEl);
-			return;
-		}
+		if (currentInstance.isMinimized == false) return;
 
 		if (MochaUI.Windows.windowsVisible == false){
 			MochaUI.toggleWindowVisibility();
