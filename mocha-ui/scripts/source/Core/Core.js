@@ -215,7 +215,8 @@ var MochaUI = new Hash({
 					$('modalFix').setStyle('display', 'block');
 				}
 			}		
-			this.closingJobs(windowEl);	
+			this.closingJobs(windowEl);
+			return true;	
 		}
 		else {
 			// Redraws IE windows without shadows since IE messes up canvas alpha when you change element opacity
@@ -228,7 +229,8 @@ var MochaUI = new Hash({
 			var closeMorph = new Fx.Morph(windowEl, {
 				duration: 180,
 				onComplete: function(){					
-					this.closingJobs(windowEl);					
+					MochaUI.closingJobs(windowEl);
+					return true;					
 				}.bind(this)
 			});
 			closeMorph.start({
@@ -236,8 +238,7 @@ var MochaUI = new Hash({
 			});
 		}
 		
-		if (currentInstance.check) currentInstance.check.destroy();
-		return true;
+		if (currentInstance.check) currentInstance.check.destroy();		
 	},
 	closingJobs: function(windowEl){
 
@@ -245,16 +246,18 @@ var MochaUI = new Hash({
 		var instances = MochaUI.Windows.instances;
 		var currentInstance = instances.get(windowEl.id);
 		currentInstance.fireEvent('onCloseComplete');
+		
+		if (this.options.type != 'modal' && this.options.type != 'notification') {
+			var newFocus = this.getWindowWithHighestZindex();
+			this.focusWindow(newFocus);
+		}
 					
-		var newFocus = this.getWindowWithHighestZindex();
-		this.focusWindow(newFocus);
-					
-		instances.erase(currentInstance.options.id); // see how this effects on close complete
+		instances.erase(currentInstance.options.id);
 		if (this.loadingWorkspace == true) {
 			this.windowUnload();
 		}
 		
-		if (MochaUI.Dock) {
+		if (MochaUI.Dock && currentInstance.options.type == 'window') {
 			currentButton = $(currentInstance.options.id + '_dockTab');
 			MochaUI.Dock.dockSortables.removeItems(currentButton).destroy();
 		}
@@ -320,7 +323,7 @@ var MochaUI = new Hash({
 		MochaUI.Windows.indexLevel++;
 		windowEl.setStyle('zIndex', MochaUI.Windows.indexLevel);
 		
-		if (MochaUI.Dock) {
+		if (MochaUI.Dock && currentInstance.options.type == 'window') {
 			MochaUI.Dock.makeActiveTab();
 		}		
 
