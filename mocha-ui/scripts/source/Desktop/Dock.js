@@ -278,14 +278,11 @@ MochaUI.Dock = new Class({
 			
 	},
 	makeActiveTab: function(){
-
-		var windowEl = MochaUI.getWindowWithHighestZindex();				
-
+		var windowEl = MochaUI.getWindowWithHighestZindex();
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
 		currentButton = $(currentInstance.options.id + '_dockTab');
 		$$('div.dockTab').removeClass('activeDockTab');
 		currentButton.addClass('activeDockTab');
-
 	},	
 	minimizeWindow: function(windowEl){		
 		if (windowEl != $(windowEl)) return;

@@ -215,13 +215,7 @@ var MochaUI = new Hash({
 					$('modalFix').setStyle('display', 'block');
 				}
 			}		
-			windowEl.destroy();	
-			
-			currentInstance.fireEvent('onCloseComplete');
-			instances.erase(currentInstance.options.id); // see how this effects on close complete
-			if(this.loadingWorkspace == true){
-				this.windowUnload();
-			}
+			this.closingJobs(windowEl);	
 		}
 		else {
 			// Redraws IE windows without shadows since IE messes up canvas alpha when you change element opacity
@@ -229,32 +223,41 @@ var MochaUI = new Hash({
 			if (currentInstance.options.type == 'modal'){
 				MochaUI.Modal.modalOverlayCloseMorph.start({
 					'opacity': 0
-				});
-				
+				});				
 			}
 			var closeMorph = new Fx.Morph(windowEl, {
 				duration: 180,
 				onComplete: function(){					
-					windowEl.destroy();
-					currentInstance.fireEvent('onCloseComplete');
-					instances.erase(currentInstance.options.id); // see how this effects on close complete
-					if(this.loadingWorkspace == true){
-						this.windowUnload();
-					}
+					this.closingJobs(windowEl);					
 				}.bind(this)
 			});
 			closeMorph.start({
 				'opacity': .4
 			});
 		}
-
-		if (MochaUI.Dock) {
-			currentButton = $(currentInstance.options.id + '_dockTab');
-			MochaUI.Dock.dockSortables.removeItems(currentButton).destroy();
-		}		
 		
 		if (currentInstance.check) currentInstance.check.destroy();
 		return true;
+	},
+	closingJobs: function(windowEl){
+
+		windowEl.destroy();
+		var instances = MochaUI.Windows.instances;
+		var currentInstance = instances.get(windowEl.id);
+		currentInstance.fireEvent('onCloseComplete');
+					
+		var newFocus = this.getWindowWithHighestZindex();
+		this.focusWindow(newFocus);
+					
+		instances.erase(currentInstance.options.id); // see how this effects on close complete
+		if (this.loadingWorkspace == true) {
+			this.windowUnload();
+		}
+		
+		if (MochaUI.Dock) {
+			currentButton = $(currentInstance.options.id + '_dockTab');
+			MochaUI.Dock.dockSortables.removeItems(currentButton).destroy();
+		}
 	},	
 	/*
 	
@@ -339,7 +342,6 @@ var MochaUI = new Hash({
 		this.highestZindex = 0;
 		$$('div.mocha').each(function(element){
 			this.zIndex = element.getStyle('zIndex');
-			//alert(this.zIndex);						
 			if (this.zIndex >= this.highestZindex) {
 				this.highestZindex = this.zIndex;
 			}	
