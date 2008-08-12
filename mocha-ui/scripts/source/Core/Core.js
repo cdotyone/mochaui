@@ -31,6 +31,7 @@ var MochaUI = new Hash({
 		windowsVisible: true          // Ctrl-Alt-Q to toggle window visibility		
 	},
 	ieSupport:  'excanvas',   // Makes it easier to switch between Excanvas and Moocanvas for testing
+	focusingWindow: 'false',
 	/*
 	
 	Function: updateContent
@@ -311,13 +312,14 @@ var MochaUI = new Hash({
 
 	},	
 	focusWindow: function(windowEl, fireEvent){
+		MochaUI.focusingWindow = 'true';
 		if (windowEl != $(windowEl)) return;
 		
-		var instances =  MochaUI.Windows.instances;
-		
-		var currentInstance = instances.get(windowEl.id);			
+		var instances =  MochaUI.Windows.instances;		
+		var currentInstance = instances.get(windowEl.id);
+					
 		// Only focus when needed
-		if (windowEl.getStyle('zIndex') == MochaUI.Windows.indexLevel || currentInstance.isFocused == true) {
+		if (currentInstance.isFocused == true) {
 			return;
 		}	
 
@@ -341,8 +343,14 @@ var MochaUI = new Hash({
 		currentInstance.windowEl.addClass('isFocused');
 		if (fireEvent != false){
 			currentInstance.fireEvent('onFocus', windowEl);
+		}
+		
+		// This is used with blurAll
+		var windowClicked = function(){
+			MochaUI.focusingWindow = 'false';
 		}		
 		
+		windowClicked.delay(100, this);	
 	},
 	getWindowWithHighestZindex: function(){
 		this.highestZindex = 0;
@@ -358,6 +366,18 @@ var MochaUI = new Hash({
 			}	
 		}.bind(this));
 		return this.windowWithHighestZindex;
+	},
+	blurAll: function(){
+		//alert(MochaUI.focusingWindow);
+		if (MochaUI.focusingWindow == 'false') {
+			$$('.mocha').each(function(windowEl){
+				var instances =  MochaUI.Windows.instances;
+				var currentInstance = instances.get(windowEl.id);
+				windowEl.removeClass('isFocused');
+				currentInstance.isFocused = false;				
+			});
+			$$('div.dockTab').removeClass('activeDockTab');
+		}
 	},	
 	roundedRect: function(ctx, x, y, width, height, radius, rgb, a){
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
@@ -462,4 +482,9 @@ document.addEvent('keydown', function(event){
 	if (event.key == 'q' && event.control && event.alt) {
 		MochaUI.toggleWindowVisibility();
 	}
+});
+
+// Blur all windows if user clicks anywhere else on the page
+document.addEvent('click', function(event){
+	MochaUI.blurAll.delay(50);	
 });

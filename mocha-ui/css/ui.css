@@ -295,32 +295,22 @@ div.mochaOverlay {
 	
 div.mocha .mochaTitlebar {
 	width: 100%;
-	overflow: hidden;
-	opacity: .4;
-	filter: alpha(opacity=40);
-	-moz-opacity: .4;	
+	overflow: hidden;	
 }
 
-div.mocha.isFocused .mochaTitlebar {
-	width: 100%;
-	overflow: hidden;
-	opacity: 1.0;
-	filter: alpha(opacity=100);
-	-moz-opacity: 1.0;	
-}		
-	
 div.mocha .mochaTitlebar h3 {
 	font-size: 12px;
 	line-height: 15px;	
 	font-weight: bold;
 	margin: 5px 10px 4px 12px;
 	padding: 0;
-}
-	
-div.mocha .mochaTitlebar a {
-	color: #141414;
+	color: #888;
 }
 
+div.mocha.isFocused .mochaTitlebar h3 {
+	color: #141414;	
+}
+	
 div.mocha .mochaToolbarWrapper {
 	width: 100%; /* For IE */
 	position: relative;
