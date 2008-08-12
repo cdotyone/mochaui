@@ -277,7 +277,9 @@ MochaUI.Dock = new Class({
 		}).set('html', titleText.substring(0,18) + (titleText.length > 18 ? '...' : '')).inject($(dockTab));
 			
 	},
-	makeActiveTab: function(windowEl){
+	makeActiveTab: function(){
+
+		var windowEl = MochaUI.getWindowWithHighestZindex();				
 
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
 		currentButton = $(currentInstance.options.id + '_dockTab');
@@ -313,8 +315,13 @@ MochaUI.Dock = new Class({
 		
 		// Fixes a scrollbar issue in Mac FF2.
 		// Have to use timeout because window gets focused when you click on the minimize button 	
-		setTimeout(function(){ windowEl.setStyle('zIndex', 1); }.bind(this),100);
-		currentInstance.isFocused = false;
+		setTimeout(function(){
+			windowEl.setStyle('zIndex', 1);
+			this.makeActiveTab();
+		}.bind(this),100);
+		
+		currentInstance.isFocused = false;		
+		
 		currentInstance.fireEvent('onMinimize', windowEl);		
 	},
 	restoreMinimized: function(windowEl) {

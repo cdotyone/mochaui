@@ -316,6 +316,10 @@ var MochaUI = new Hash({
 
 		MochaUI.Windows.indexLevel++;
 		windowEl.setStyle('zIndex', MochaUI.Windows.indexLevel);
+		
+		if (MochaUI.Dock) {
+			MochaUI.Dock.makeActiveTab();
+		}		
 
 		// Fire onBlur for the window that lost focus.
 		instances.each(function(instance){
@@ -324,17 +328,28 @@ var MochaUI = new Hash({
 			}
 			instance.isFocused = false;			
 		});			
+				
 		currentInstance.isFocused = true;
 		if (fireEvent != false){
 			currentInstance.fireEvent('onFocus', windowEl);
-		}
-		
-		if (MochaUI.Dock) {
-			currentButton = $(currentInstance.options.id + '_dockTab');
-			$$('div.dockTab').removeClass('activeDockTab');
-			currentButton.addClass('activeDockTab');
 		}		
 		
+	},
+	getWindowWithHighestZindex: function(){
+		this.highestZindex = 0;
+		$$('div.mocha').each(function(element){
+			this.zIndex = element.getStyle('zIndex');
+			//alert(this.zIndex);						
+			if (this.zIndex >= this.highestZindex) {
+				this.highestZindex = this.zIndex;
+			}	
+		}.bind(this));
+		$$('div.mocha').each(function(element){			
+			if (element.getStyle('zIndex') == this.highestZindex) {
+				this.windowWithHighestZindex = element;
+			}	
+		}.bind(this));
+		return this.windowWithHighestZindex;
 	},	
 	roundedRect: function(ctx, x, y, width, height, radius, rgb, a){
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
