@@ -114,7 +114,6 @@ MochaUI.extend({
 					$$('div.mocha').each(function(el) {
 						this.closeWindow(el);
 					}.bind(this));
-					$$('div.dockTab').destroy();
 				}.bind(this),			
     			function(){
 					this.loadWorkspace2(workspaceWindows);			

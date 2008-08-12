@@ -272,8 +272,6 @@ var MochaUI = new Hash({
 		$$('div.mocha').each(function(windowEl){
 			this.closeWindow(windowEl);			
 		}.bind(this));
-		MochaUI.Windows.instances.empty();				
-		$$('div.dockTab').destroy();
 	},
 	/*
 	
