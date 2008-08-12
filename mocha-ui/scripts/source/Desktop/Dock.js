@@ -285,6 +285,8 @@ MochaUI.Dock = new Class({
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
 		$$('div.dockTab').removeClass('activeDockTab');		
 		if (currentInstance.isMinimized != true) {
+			currentInstance.isFocused = true;
+			currentInstance.windowEl.addClass('isFocused');			
 			currentButton = $(currentInstance.options.id + '_dockTab');
 			currentButton.addClass('activeDockTab');
 		}

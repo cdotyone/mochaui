@@ -312,7 +312,14 @@ var MochaUI = new Hash({
 
 	},	
 	focusWindow: function(windowEl, fireEvent){
+
+		// This is used with blurAll
 		MochaUI.focusingWindow = 'true';
+		var windowClicked = function(){
+			MochaUI.focusingWindow = 'false';
+		}		
+		windowClicked.delay(100, this);
+				
 		if (windowEl != $(windowEl)) return;
 		
 		var instances =  MochaUI.Windows.instances;		
@@ -343,14 +350,8 @@ var MochaUI = new Hash({
 		currentInstance.windowEl.addClass('isFocused');
 		if (fireEvent != false){
 			currentInstance.fireEvent('onFocus', windowEl);
-		}
-		
-		// This is used with blurAll
-		var windowClicked = function(){
-			MochaUI.focusingWindow = 'false';
 		}		
-		
-		windowClicked.delay(100, this);	
+	
 	},
 	getWindowWithHighestZindex: function(){
 		this.highestZindex = 0;
