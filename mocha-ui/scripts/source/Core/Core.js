@@ -333,10 +333,12 @@ var MochaUI = new Hash({
 			if (instance.isFocused == true){
 				instance.fireEvent('onBlur', instance.windowEl);
 			}
-			instance.isFocused = false;			
+			instance.isFocused = false;
+			instance.windowEl.removeClass('isFocused');			
 		});			
 				
 		currentInstance.isFocused = true;
+		currentInstance.windowEl.addClass('isFocused');
 		if (fireEvent != false){
 			currentInstance.fireEvent('onFocus', windowEl);
 		}		

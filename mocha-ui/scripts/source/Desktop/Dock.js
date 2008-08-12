@@ -283,9 +283,15 @@ MochaUI.Dock = new Class({
 	makeActiveTab: function(){
 		var windowEl = MochaUI.getWindowWithHighestZindex();
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
-		currentButton = $(currentInstance.options.id + '_dockTab');
-		$$('div.dockTab').removeClass('activeDockTab');
-		currentButton.addClass('activeDockTab');
+		$$('div.dockTab').removeClass('activeDockTab');		
+		if (currentInstance.isMinimized != true) {
+			currentButton = $(currentInstance.options.id + '_dockTab');
+			currentButton.addClass('activeDockTab');
+		}
+		else {
+			currentInstance.isFocused = false;
+			currentInstance.windowEl.removeClass('isFocused');
+		}	
 	},	
 	minimizeWindow: function(windowEl){		
 		if (windowEl != $(windowEl)) return;
