@@ -275,6 +275,9 @@ MochaUI.Dock = new Class({
 			'id': currentInstance.options.id + '_dockTabText',
 			'class': 'dockText'
 		}).set('html', titleText.substring(0,18) + (titleText.length > 18 ? '...' : '')).inject($(dockTab));
+		
+		// Need to resize everything in case the dock wraps when a new tab is added
+		MochaUI.Desktop.setDesktopSize();
 			
 	},
 	makeActiveTab: function(){

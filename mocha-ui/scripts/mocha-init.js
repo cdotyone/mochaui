@@ -422,7 +422,7 @@ initializeWindows = function(){
 			width: 370,
 			height: 400,
 			x: 20,
-			y: 70,
+			y: 80,
 			maximizable: false
 		});
 	}
@@ -574,7 +574,7 @@ initializeWindows = function(){
 				width: 300,
 				height: 275,
 				x: 20,
-				y: 70
+				y: 80 
 			});
 	}
 	if ($('resourcesLinkCheck')){
@@ -593,7 +593,7 @@ initializeWindows = function(){
 				width: 320,
 				height: 320,
 				x: 20,
-				y: 70
+				y: 80 
 			});
 	}
 	if ($('helpLinkCheck')){
@@ -612,7 +612,7 @@ initializeWindows = function(){
 			width: 320,
 			height: 320,
 			x: 20,
-			y: 70
+			y: 80 
 		});
 	}
 	if ($('contributeLinkCheck')){

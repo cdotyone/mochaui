@@ -26,7 +26,7 @@ var MochaUI = new Hash({
 	}),	
 	Windows: {	  
 		instances:      new Hash(),
-		indexLevel:     10,           // Used for z-Index
+		indexLevel:     100,          // Used for z-Index
 		windowIDCount:  0,	          // Used for windows without an ID defined by the user
 		windowsVisible: true          // Ctrl-Alt-Q to toggle window visibility		
 	},
@@ -260,6 +260,8 @@ var MochaUI = new Hash({
 		if (MochaUI.Dock && currentInstance.options.type == 'window') {
 			currentButton = $(currentInstance.options.id + '_dockTab');
 			MochaUI.Dock.dockSortables.removeItems(currentButton).destroy();
+			// Need to resize everything in case the dock becomes smaller when a tab is removed
+			MochaUI.Desktop.setDesktopSize();
 		}
 	},	
 	/*
@@ -315,8 +317,9 @@ var MochaUI = new Hash({
 		
 		var currentInstance = instances.get(windowEl.id);			
 		// Only focus when needed
-		if ( windowEl.getStyle('zIndex') == MochaUI.Windows.indexLevel || currentInstance.isFocused == true)
+		if (windowEl.getStyle('zIndex') == MochaUI.Windows.indexLevel || currentInstance.isFocused == true) {
 			return;
+		}	
 
 		MochaUI.Windows.indexLevel++;
 		windowEl.setStyle('zIndex', MochaUI.Windows.indexLevel);

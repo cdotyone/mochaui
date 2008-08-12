@@ -370,6 +370,7 @@ MochaUI.Window = new Class({
 		this.fireEvent('onBeforeBuild');		
 		
 		// Create window div
+		MochaUI.Windows.indexLevel++;		
 		this.windowEl = new Element('div', {
 			'class': 'mocha',
 			'id':    this.options.id,
@@ -377,7 +378,8 @@ MochaUI.Window = new Class({
 				'width':   this.options.width,
 				'height':  this.options.height,
 				'display': 'block',
-				'opacity': 0
+				'opacity': 0,
+				'zIndex': MochaUI.Windows.indexLevel
 			}
 		});		
 
