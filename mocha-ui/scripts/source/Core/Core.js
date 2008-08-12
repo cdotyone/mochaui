@@ -326,28 +326,31 @@ var MochaUI = new Hash({
 		var currentInstance = instances.get(windowEl.id);
 					
 		// Only focus when needed
-		if (currentInstance.isFocused == true) {
-			return;
+		if (currentInstance.windowEl.hasClass('isFocused')) {
+		//	return;
 		}	
 
 		MochaUI.Windows.indexLevel++;
 		windowEl.setStyle('zIndex', MochaUI.Windows.indexLevel);
-		
-		if (MochaUI.Dock && currentInstance.options.type == 'window') {
-			MochaUI.Dock.makeActiveTab();
-		}		
 
 		// Fire onBlur for the window that lost focus.
 		instances.each(function(instance){
-			if (instance.isFocused == true){
+			if (instance.windowEl.hasClass('isFocused')){
 				instance.fireEvent('onBlur', instance.windowEl);
 			}
-			instance.isFocused = false;
 			instance.windowEl.removeClass('isFocused');			
-		});			
+		});
+		
+		// --------------------
+		
+		if (MochaUI.Dock && currentInstance.options.type == 'window') {
+			MochaUI.Dock.makeActiveTab();
+		}					
 				
-		currentInstance.isFocused = true;
 		currentInstance.windowEl.addClass('isFocused');
+		
+		// --------------------		
+		
 		if (fireEvent != false){
 			currentInstance.fireEvent('onFocus', windowEl);
 		}		
@@ -374,8 +377,7 @@ var MochaUI = new Hash({
 			$$('.mocha').each(function(windowEl){
 				var instances =  MochaUI.Windows.instances;
 				var currentInstance = instances.get(windowEl.id);
-				windowEl.removeClass('isFocused');
-				currentInstance.isFocused = false;				
+				windowEl.removeClass('isFocused');				
 			});
 			$$('div.dockTab').removeClass('activeDockTab');
 		}
@@ -420,7 +422,7 @@ var MochaUI = new Hash({
 		
 		if(!windowEl){
 			MochaUI.Windows.instances.each(function(instance){
-				if (instance.isFocused == true){
+				if (instance.windowEl.hasClass('isFocused')){
 					windowEl = instance.windowEl;
 				}				
 			});		

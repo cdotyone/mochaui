@@ -243,11 +243,19 @@ MochaUI.Dock = new Class({
 		dockTab.addEvent('mouseup', function(e){
 			this.timeUp = $time();
 			if ((this.timeUp - this.timeDown) < 275){
+				// If window is minimized, restore window.
 				if (currentInstance.isMinimized == true) {
 					MochaUI.Dock.restoreMinimized.delay(25, MochaUI.Dock, windowEl);
 				}
 				else{
-					(currentInstance.isFocused == true) ? MochaUI.Dock.minimizeWindow(windowEl) : MochaUI.focusWindow(windowEl);
+					// If window is maximized and focused, minimize window.
+					if (currentInstance.windowEl.hasClass('isFocused')) {
+						MochaUI.Dock.minimizeWindow(windowEl)
+					}
+					// If window is maximized and not focused, focus window.	
+					else{
+						MochaUI.focusWindow(windowEl);
+					}
 				}					
 			}
 		});			
@@ -286,17 +294,21 @@ MochaUI.Dock = new Class({
 			
 	},
 	makeActiveTab: function(){
+
+		// getWindowWith HighestZindex is used in case the currently focused window
+		// is closed.		
 		var windowEl = MochaUI.getWindowWithHighestZindex();
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
+		
 		$$('div.dockTab').removeClass('activeDockTab');		
 		if (currentInstance.isMinimized != true) {
-			currentInstance.isFocused = true;
+			
 			currentInstance.windowEl.addClass('isFocused');			
-			currentButton = $(currentInstance.options.id + '_dockTab');
+
+			currentButton = $(currentInstance.options.id + '_dockTab');			
 			currentButton.addClass('activeDockTab');
 		}
 		else {
-			currentInstance.isFocused = false;
 			currentInstance.windowEl.removeClass('isFocused');
 		}	
 	},	
@@ -304,7 +316,7 @@ MochaUI.Dock = new Class({
 		if (windowEl != $(windowEl)) return;
 			
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
-		currentInstance.isMinimized = true;
+		currentInstance.isMinimized = true;		
 
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
@@ -330,11 +342,11 @@ MochaUI.Dock = new Class({
 		// Have to use timeout because window gets focused when you click on the minimize button 	
 		setTimeout(function(){
 			windowEl.setStyle('zIndex', 1);
+		// --------------------			
 			this.makeActiveTab();
-		}.bind(this),100);
-		
-		currentInstance.isFocused = false;		
-		
+		// --------------------			
+		}.bind(this),100);	
+
 		currentInstance.fireEvent('onMinimize', windowEl);		
 	},
 	restoreMinimized: function(windowEl) {
@@ -368,9 +380,11 @@ MochaUI.Dock = new Class({
 		if ( currentInstance.iframe ) {
 			currentInstance.iframeEl.setStyle('visibility', 'visible');
 		}
+
 		currentInstance.isMinimized = false;
 		MochaUI.focusWindow(windowEl);
-		currentInstance.fireEvent('onRestore', windowEl);		
+		currentInstance.fireEvent('onRestore', windowEl);
+		
 	}	
 });
 MochaUI.Dock.implement(new Options, new Events);
