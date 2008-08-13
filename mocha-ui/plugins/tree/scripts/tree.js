@@ -1,3 +1,16 @@
+/*
+
+Script: Tree.js
+	Create folder trees.
+	
+Copyright:
+	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
+
+License:
+	MIT-style license.	
+	
+*/
+
 function buildTree(treeID){
 
 	$$('#'+treeID+' li.folder').each(function(folder){

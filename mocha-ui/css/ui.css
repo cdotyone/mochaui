@@ -79,7 +79,18 @@ body {
 
 #topNav a:hover {
 	color: #fff;
-}			
+}
+
+/* Toolboxes */
+
+.toolbox {	
+	float: right;
+	margin-top: 1px;
+	padding: 4px 10px 0 10px;
+	border-left: 1px solid #bbb;
+	height: 20px;
+	overflow: hidden;	
+}				
 
 /* Navbar */
 

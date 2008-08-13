@@ -1,3 +1,20 @@
+/*
+
+Script: Layout.js
+	Create web application layouts.
+	
+Copyright:
+	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
+
+License:
+	MIT-style license.	
+
+Requires:
+	Core.js, Desktop.js, Window.js 
+	
+*/
+
+
 	// Remaining Height
 	function rHeight(){	
 		$$('div.rHeight').each(function(el){
