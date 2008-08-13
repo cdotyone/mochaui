@@ -318,17 +318,13 @@ var MochaUI = new Hash({
 		var windowClicked = function(){
 			MochaUI.focusingWindow = 'false';
 		}		
-		windowClicked.delay(100, this);
-				
-		if (windowEl != $(windowEl)) return;
-		
+		windowClicked.delay(170, this);
+
+		// Only focus when needed				
+		if (windowEl != $(windowEl) || windowEl.hasClass('isFocused')) return;		
+
 		var instances =  MochaUI.Windows.instances;		
-		var currentInstance = instances.get(windowEl.id);
-					
-		// Only focus when needed
-		if (currentInstance.windowEl.hasClass('isFocused')) {
-		//	return;
-		}	
+		var currentInstance = instances.get(windowEl.id);			
 
 		MochaUI.Windows.indexLevel++;
 		windowEl.setStyle('zIndex', MochaUI.Windows.indexLevel);

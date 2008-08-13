@@ -315,7 +315,7 @@ MochaUI.Dock = new Class({
 	minimizeWindow: function(windowEl){		
 		if (windowEl != $(windowEl)) return;
 			
-		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
+		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);		
 		currentInstance.isMinimized = true;		
 
 		// Hide iframe
@@ -340,8 +340,9 @@ MochaUI.Dock = new Class({
 		
 		// Fixes a scrollbar issue in Mac FF2.
 		// Have to use timeout because window gets focused when you click on the minimize button 	
-		setTimeout(function(){
+		setTimeout(function(){		
 			windowEl.setStyle('zIndex', 1);
+			windowEl.removeClass('isFocused');			
 		// --------------------			
 			this.makeActiveTab();
 		// --------------------			
