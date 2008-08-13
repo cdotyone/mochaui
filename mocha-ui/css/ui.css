@@ -217,63 +217,18 @@ body {
 	width: 500px;
 }
 
-#sidebarWrapper {
-	display: none;
-	float: left;
-	background: #888;			
+/* Footer */
+#desktopFooterWrapper {
+    background: #888;
+    padding: 1px 0 0 0;
 }
 
-#sidebar {
-	width: 230px;
-	float: left;
-	overflow: hidden;	
-}
-
-#sidebarContentWrapper {
-	margin-right: 1px;
-	background: #f8f8f8;
-	border: 1px solid #fff;
-	color: #141414;		
-}
-
-#sidebarContent {
-	padding: 10px;
-}
-
-#sidebarHandle {
-	float: left;
-	position: relative;
-	background: #eeeeef;
-	border: 1px solid #fff;
-	width: 4px;
-	margin: 0 1px 0 0;
-	cursor: e-resize; /* This is for Opera which does not support the col-resize cursor */
-	cursor: col-resize;
-}
-
-* html #sidebarWrapper {
-	margin-right: -4px; /* Fix for IE6 3px jox bug */
-}
-
-* html #sidebarHandle {
-	margin-right: 1px; /* Fix for IE6 3px jox bug */
-}
-
-.columnControlWrapper {
-	position: absolute;
-	left: -1px;
-	top: 150px;
-	border-top: 1px solid #888;
-	border-bottom: 1px solid #888;		
-}
-
-.columnControl {
-	background: #ddd;
-	border: 1px solid #fff;
-	width: 4px;
-	height: 8px;
-	cursor: pointer;
-	font-size: 1px; /* For IE6 */	
+#desktopFooter {
+    font-size: 11px;
+    height: 21px;
+    padding: 4px 10px 0 10px;
+    background: #eee url(../images/bg-desktopTitlebar.gif) repeat-x;
+    border: 1px solid #fff;
 }
 
 /* Menus */

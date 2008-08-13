@@ -31,6 +31,7 @@ MochaUI.Desktop = new Class({
 		desktopNavBar:          'desktopNavbar',
 		pageWrapper:            'pageWrapper',
 		page:                   'page',
+		desktopFooter:          'desktopFooterWrapper',
 		sidebarWrapper:         'sidebarWrapper',		
 		sidebar:                'sidebar',
 		sidebarContentWrapper:  'sidebarContentWrapper',		
@@ -46,6 +47,7 @@ MochaUI.Desktop = new Class({
 		this.desktopNavBar          = $(this.options.desktopNavBar);
 		this.pageWrapper            = $(this.options.pageWrapper);
 		this.page                   = $(this.options.page);
+		this.desktopFooter          = $(this.options.desktopFooter);		
 		this.sidebarWrapper         = $(this.options.sidebarWrapper);		
 		this.sidebar                = $(this.options.sidebar);
 		this.sidebarContentWrapper  = $(this.options.sidebarContentWrapper);
@@ -124,7 +126,7 @@ MochaUI.Desktop = new Class({
 		if (this.pageWrapper && this.desktopHeader) {
 					
 			var dockOffset = MochaUI.dockVisible ? dockWrapper.offsetHeight : 0;			
-			var pageWrapperHeight = windowDimensions.height - this.desktopHeader.offsetHeight - dockOffset;
+			var pageWrapperHeight = windowDimensions.height - this.desktopHeader.offsetHeight - this.desktopFooter.offsetHeight - dockOffset;
 			
 			if ( pageWrapperHeight < 0 ) {
 				pageWrapperHeight = 0;
