@@ -104,8 +104,7 @@ MochaUI.Dock = new Class({
     		revert: false			
 		});		
 
-		MochaUI.Desktop.setDesktopSize();		
-		this.installed     = true;		
+		MochaUI.Desktop.setDesktopSize();
 	},
 	initializeDockControls: function(){
 		
@@ -342,10 +341,8 @@ MochaUI.Dock = new Class({
 		// Have to use timeout because window gets focused when you click on the minimize button 	
 		setTimeout(function(){		
 			windowEl.setStyle('zIndex', 1);
-			windowEl.removeClass('isFocused');			
-		// --------------------			
-			this.makeActiveTab();
-		// --------------------			
+			windowEl.removeClass('isFocused');		
+			this.makeActiveTab();	
 		}.bind(this),100);	
 
 		currentInstance.fireEvent('onMinimize', windowEl);		

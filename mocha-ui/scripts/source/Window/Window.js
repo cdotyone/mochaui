@@ -550,6 +550,11 @@ MochaUI.Window = new Class({
 					'opacity': 1
 				});				
 			}
+
+			$$('.dockTab').removeClass('activeDockTab');			
+			$$('.mocha').removeClass('isFocused');
+			this.windowEl.addClass('isFocused');
+			
 		}
 		else if (MochaUI.options.useEffects == false){
 			this.windowEl.setStyle('opacity', 1);
@@ -581,7 +586,7 @@ MochaUI.Window = new Class({
 			MochaUI.closeWindow.delay(this.options.closeAfter, this, this.windowEl);	
 		}
 
-		if (MochaUI.Dock && this.options.type == 'window' ) {
+		if (MochaUI.Dock && $(MochaUI.options.dock) && this.options.type == 'window' ) {
 			MochaUI.Dock.createDockTab(this.windowEl);
 		}
 
