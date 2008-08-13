@@ -704,16 +704,17 @@ iframe.zIndexFix {
 /* Accordian */
 
 .accordianWrapper {
-	padding: 5px;
+	padding: 0;
+	background: #fff;	
 }
 
 .accordianToggler {
 	margin: 0;
-	padding: 4px 10px;
-	background: #f3f3f3;
-	border-top: 1px solid #fff;
+	padding: 6px 10px;
+	background: #343E47 url(../images/bg-desktopTitlebar.gif) repeat-x;
 	font-size: 12px;
 	cursor: pointer;
+	border-top: 1px solid #e3e3e3;	
 }
 
 .topToggler {
@@ -721,7 +722,7 @@ iframe.zIndexFix {
 }
 
 .accordianToggler.open {
-	background: #f3f3f3;	
+	background: #343E47 url(../images/bg-desktopTitlebar.gif) repeat-x;	
 }
 
 .accordianContent {
