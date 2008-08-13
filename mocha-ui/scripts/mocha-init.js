@@ -111,6 +111,26 @@ initializeWindows = function(){
 		});
 	}
 	
+	MochaUI.slideshareWindow = function(){
+		new MochaUI.Window({
+			id: 'slideshare',
+			title: 'Slideshare in Iframe',
+			loadMethod: 'iframe',
+			contentURL: 'pages/slideshare.html',
+			width: 415,
+			height: 355,
+			scrollbars: false,
+			padding: { top: 0, right: 0, bottom: 0, left: 0 },
+			resizeLimit:  {'x': [330, 2500], 'y': [250, 2000]}
+		});
+	}	
+	if ($('slideshareLinkCheck')) {
+		$('slideshareLinkCheck').addEvent('click', function(e){
+		new Event(e).stop();
+			MochaUI.slideshareWindow();
+		});
+	}	
+	
 	MochaUI.mootoolsWindow = function(){
 		new MochaUI.Window({
 			id: 'mootools',
@@ -155,7 +175,7 @@ initializeWindows = function(){
 			width: 300,
 			height: 105,
 			x: 250,
-			y: 405,
+			y: 475,
 			padding: { top: 12, right: 12, bottom: 10, left: 12 },			
 			resizable: false,
 			maximizable: false,
@@ -463,7 +483,7 @@ initializeWindows = function(){
 			width: 300,
 			height: 200,
 			x: 250,
-			y: 85,
+			y: 145,
 			scrollbars: false,
 			resizable: false,
 			maximizable: false,				
@@ -517,7 +537,7 @@ initializeWindows = function(){
 			width: 330,
 			height: 190,
 			x: 570,
-			y: 85,
+			y: 145,
 			resizeLimit: {'x': [275, 2500], 'y': [125, 2000]},			
 			toolbar: true,
 			toolbarURL: 'pages/features-tabs.html'
@@ -657,7 +677,23 @@ initializeWindows = function(){
 // Initialize MochaUI when the DOM is ready
 window.addEvent('domready', function(){									 
 	MochaUI.Desktop = new MochaUI.Desktop();									 
-	MochaUI.Dock = new MochaUI.Dock();	
+	MochaUI.Dock = new MochaUI.Dock();
+	
+	rHeight();
+	rWidth();
+	$$('.pad').setStyle('display','block'); // IE6 Fix
+		
+	window.addEvent('resize', function(){
+		$$('.pad').setStyle('display','none'); // IE6 Fix
+		rHeight();
+		rWidth();		
+		$$('.pad').setStyle('display','block'); // IE6 Fix			
+	});
+	
+	addResizeRight('sideColumn1', 100, 300);
+	addResizeLeft('sideColumn2', 150, 250);		
+	
+		
 	MochaUI.Modal = new MochaUI.Modal();
 	buildTree('tree1');
 	initializeWindows();
