@@ -66,6 +66,7 @@ p {
 ul {
 	list-style: outside;
 	margin: 0 0 9px 16px;
+	list-style-type: square;
 }
 
 dt {
