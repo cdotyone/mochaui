@@ -42,15 +42,19 @@ body {
 #desktopTitlebarWrapper {
 	position: relative;
 	height: 40px;
+	overflow: hidden;
 	background: #333 url(../images/bg-desktopTitlebar-bk.gif) repeat-x;	
 }
 	
 #desktopTitlebar {
-	padding: 7px 8px 6px 13px;
+	padding: 7px 8px 6px 125px;
 	height: 23px;
+	background: url(../images/logo.gif) no-repeat;
+	background-position: 10px 0;		
 }	
 	
-#desktopTitlebar h1 {
+#desktopTitlebar h1.applicationTitle {
+	display: none;	
 	margin: 0;
 	padding: 5px 0 0 0;
 	font-size: 20px;
@@ -58,18 +62,23 @@ body {
 	color: #fff;
 }
 	
-#desktopTitlebar h1 .tagline {
+#desktopTitlebar h1.tagline {
 	font-size: 12px;
-	color: #ccc;
-	padding-left: 5px;
+	color: #d9d9d9;
 	font-weight: normal;
+	padding: 5px 0 0 0;	
 }
+
+#desktopTitlebar h1.tagline .taglineEm {
+	color: #fff;
+	font-weight: bold;	
+}	
 
 #topNav {
 	float: right;
-	color: #ccc;
+	color: #d9d9d9;
 	text-align: right;
-	padding: 7px 5px 0 0;
+	padding: 5px 5px 0 0;
 }
 
 #topNav a {
@@ -79,6 +88,7 @@ body {
 
 #topNav a:hover {
 	color: #fff;
+	text-decoration: underline;
 }
 
 /* Toolboxes */
@@ -219,17 +229,27 @@ body {
 
 /* Footer */
 #desktopFooterWrapper {
-    background: #888;
-    padding: 1px 0 0 0;
+	background: #888;
+	padding: 1px 0 0 0;
 }
 
 #desktopFooter {
-    font-size: 11px;
-    height: 21px;
-    padding: 4px 10px 0 10px;
-    background: #eee url(../images/bg-desktopTitlebar.gif) repeat-x;
-    border: 1px solid #fff;
+	font-size: 11px;
+	height: 21px;
+	padding: 4px 10px 0 10px;
+	background: #343E47;
+	color: #fff;
+	border: 1px solid #202A33;
 }
+
+#desktopFooter a {
+	color: #fff;
+	font-weight: bold;	
+}
+
+#desktopFooter a:hover {
+	text-decoration: underline;
+}		
 
 /* Menus */
 
