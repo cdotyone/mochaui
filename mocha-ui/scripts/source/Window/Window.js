@@ -598,9 +598,7 @@ MochaUI.Window = new Class({
 
 		if (this.options.type == 'window'){		
 			windowEl.addEvent('click', function() {
-				if (!windowEl.hasClass('isFocused')){	
 					MochaUI.focusWindow(windowEl);
-				}
 			}.bind(this));
 		}
 
