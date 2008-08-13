@@ -1470,7 +1470,7 @@ MochaUI.Window = new Class({
 					(height  + options.headerHeight) * .5 + shadowOffset.x,
 					(width *.5) - (x * 2) - shadowOffset.x,
 					[0, 0, 0],
-					x == shadowBlur ? .7 : .08 + (x * .04)
+					x == shadowBlur ? .75 : .075 + (x * .04)
 				);
 			}
 		}
