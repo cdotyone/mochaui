@@ -596,25 +596,28 @@ MochaUI.Window = new Class({
 		// Set events
 		// Note: if a button does not exist, its due to properties passed to newWindow() stating otherwice
 		if (this.closeButtonEl){
-			this.closeButtonEl.addEvent('click', function() {
+			this.closeButtonEl.addEvent('click', function(e) {
+				new Event(e).stop();
 				MochaUI.closeWindow(windowEl);
 			}.bind(this));
 		}
 
 		if (this.options.type == 'window'){		
 			windowEl.addEvent('click', function() {
-					MochaUI.focusWindow(windowEl);
+				MochaUI.focusWindow(windowEl);
 			}.bind(this));
 		}
 
 		if (this.minimizeButtonEl) {
-			this.minimizeButtonEl.addEvent('click', function() {
+			this.minimizeButtonEl.addEvent('click', function(e) {
+				new Event(e).stop();
 				MochaUI.Dock.minimizeWindow(windowEl);
 		}.bind(this));
 		}
 
 		if (this.maximizeButtonEl) {
-			this.maximizeButtonEl.addEvent('click', function() { 
+			this.maximizeButtonEl.addEvent('click', function(e) {
+				new Event(e).stop(); 
 				if (this.isMaximized) {
 					MochaUI.Desktop.restoreWindow(windowEl);					
 				} else {

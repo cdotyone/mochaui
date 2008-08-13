@@ -679,17 +679,9 @@ window.addEvent('domready', function(){
 	MochaUI.Desktop = new MochaUI.Desktop();									 
 	MochaUI.Dock = new MochaUI.Dock();
 	
-	rHeight();
-	rWidth();
-	$$('.pad').setStyle('display','block'); // IE6 Fix
-		
-	window.addEvent('resize', function(){
-		$$('.pad').setStyle('display','none'); // IE6 Fix
-		rHeight();
-		rWidth();		
-		$$('.pad').setStyle('display','block'); // IE6 Fix			
-	});
-	
+
+	// Layout
+	initLayout();
 	addResizeRight('sideColumn1', 100, 300);
 	addResizeLeft('sideColumn2', 150, 250);		
 	

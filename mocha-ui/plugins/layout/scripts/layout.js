@@ -103,3 +103,16 @@ function addResizeLeft(element, minWidth, maxWidth){
 		}.bind(this)		
 	});
 }
+
+function initLayout(){	
+	rHeight();
+	rWidth();
+	$$('.pad').setStyle('display','block'); // IE6 Fix
+		
+	window.addEvent('resize', function(){
+		$$('.pad').setStyle('display','none'); // IE6 Fix
+		rHeight();
+		rWidth();		
+		$$('.pad').setStyle('display','block'); // IE6 Fix			
+	});
+}
