@@ -579,7 +579,7 @@ MochaUI.Window = new Class({
 			this.check = new Element('div', {
 				'class': 'check',
 				'id': this.options.id + '_check'
-			}).injectInside(this.windowEl.id + 'LinkCheck');
+			}).inject(this.windowEl.id + 'LinkCheck');
 		}
 		
 		if (this.options.closeAfter != false){			

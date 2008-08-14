@@ -1,10 +1,14 @@
-#parent {
-	position: relative;
-	height: 100%;
-	min-height: 100%;
-	background: #f0f0f0;
-	overflow: hidden;
-}
+/*
+
+CSS for Mocha UI
+
+Copyright:
+	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.
+	
+License:
+	MIT-style license.
+   
+*/
 
 .column {
 	position: relative;	
@@ -16,7 +20,7 @@
 .panel {
 	overflow: auto;
 	border: 1px solid #a7a7a7;
-	background: #D5DDE6;
+	background: #d5dde6;
 }
 
 .panel.color2 {
@@ -48,6 +52,7 @@
 }
 
 .panel-header {
+	position: relative;	
 	background: #e9e9e9 url(../images/bg-panel-header.gif)  repeat-x;
 	border-top: 1px solid #a7a7a7;
 	border-right: 1px solid #a7a7a7;
@@ -76,3 +81,27 @@
 	display: none;
 	padding: 8px;	
 }
+
+/* Components */
+
+.viewToggle {
+	position: absolute;
+	top: 4px;
+	right: 0px;
+	width: 60px;
+}
+
+.viewToggle img.viewToggleList, .viewToggle img.viewToggleGrid {
+	width: 28px;
+	height: 21px;	
+}	
+
+.viewToggle img.viewToggleList {
+	background: url(../images/view-toggle.gif) no-repeat;
+	background-position: 0 -63px;
+}
+
+.viewToggle img.viewToggleGrid {
+	background: url(../images/view-toggle.gif) no-repeat;
+	background-position: 0 0;
+}			
