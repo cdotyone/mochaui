@@ -346,14 +346,15 @@ div.mocha .mochaToolbar {
 	margin-left: 8px;
 	padding: 6px 16px 5px 10px;
 	text-align: center;
-	font-weight: bold;
-	color: #777;
+	font-weight: normal;
+	color: #141414;
 	background: url(../images/tabs.gif) repeat-x;
 	background-position: right -30px;	
 }
 
 .tab-menu li.selected a {
 	color: #141414;
+	font-weight: bold;	
 	background: url(../images/tabs.gif) repeat-x;
 	background-position: right 0;	
 }	

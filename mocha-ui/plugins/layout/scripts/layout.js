@@ -121,15 +121,25 @@ function addResizeLeft(element, minWidth, maxWidth){
 	});
 }
 
-function initLayout(){	
+function initLayout(){
+	if (Browser.Engine.trident4) {
+		$$('.pad').setStyle('display', 'none'); // IE6 Fix
+	}	
 	rHeight();
 	rWidth();
-	$$('.pad').setStyle('display','block'); // IE6 Fix
+	if (Browser.Engine.trident4) {
+		$$('.pad').setStyle('display', 'block'); // IE6 Fix
+	}
+	$$('.column').setStyle('visibility','visible');
 		
 	window.addEvent('resize', function(){
-		$$('.pad').setStyle('display','none'); // IE6 Fix
+		if (Browser.Engine.trident4) {
+			$$('.pad').setStyle('display', 'none'); // IE6 Fix
+		}
 		rHeight();
-		rWidth();		
-		$$('.pad').setStyle('display','block'); // IE6 Fix			
+		rWidth();
+		if (Browser.Engine.trident4) {
+			$$('.pad').setStyle('display', 'block'); // IE6 Fix
+		}			
 	});
 }

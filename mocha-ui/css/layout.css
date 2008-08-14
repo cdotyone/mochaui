@@ -11,6 +11,7 @@ License:
 */
 
 .column {
+	visibility: hidden;
 	position: relative;	
 	float: left;
 	height: 100%;
@@ -78,7 +79,6 @@ License:
 }
 
 .pad {
-	display: none;
 	padding: 8px;	
 }
 
@@ -87,8 +87,9 @@ License:
 .viewToggle {
 	position: absolute;
 	top: 4px;
-	right: 0px;
+	right: 5px;
 	width: 60px;
+	text-align: right;
 }
 
 .viewToggle img.viewToggleList, .viewToggle img.viewToggleGrid {
