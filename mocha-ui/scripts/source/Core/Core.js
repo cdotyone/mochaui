@@ -20,7 +20,7 @@ Note:
 
 var MochaUI = new Hash({
 	options: new Hash({
-		useEffects: true,     // Toggles the majority of window fade and move effects.
+		useEffects: true,    // Toggles the majority of window fade and move effects.
 		useLoadingIcon: true  // Toggles whether or not the ajax spinners are displayed in window footers.
 
 	}),	
@@ -208,13 +208,15 @@ var MochaUI = new Hash({
 			
 		currentInstance.isClosing = true;
 		currentInstance.fireEvent('onClose', windowEl);
+		if (currentInstance.check) currentInstance.check.destroy();			
+
+		if (currentInstance.options.type == 'modal' && Browser.Engine.trident4){
+				$('modalFix').setStyle('display', 'none');
+		}
 
 		if (MochaUI.options.useEffects == false){
 			if (currentInstance.options.type == 'modal'){
 				$('modalOverlay').setStyle('opacity', 0);
-				if (Browser.Engine.trident4) {
-					$('modalFix').setStyle('display', 'block');
-				}
 			}		
 			this.closingJobs(windowEl);
 			return true;	
@@ -225,7 +227,7 @@ var MochaUI = new Hash({
 			if (currentInstance.options.type == 'modal'){
 				MochaUI.Modal.modalOverlayCloseMorph.start({
 					'opacity': 0
-				});				
+				});								
 			}
 			var closeMorph = new Fx.Morph(windowEl, {
 				duration: 180,
@@ -237,9 +239,8 @@ var MochaUI = new Hash({
 			closeMorph.start({
 				'opacity': .4
 			});
-		}
-		
-		if (currentInstance.check) currentInstance.check.destroy();		
+		}		
+	
 	},
 	closingJobs: function(windowEl){
 
