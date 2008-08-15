@@ -326,8 +326,11 @@ var MochaUI = new Hash({
 		var instances =  MochaUI.Windows.instances;		
 		var currentInstance = instances.get(windowEl.id);			
 
-		MochaUI.Windows.indexLevel++;
+		MochaUI.Windows.indexLevel += 2;
 		windowEl.setStyle('zIndex', MochaUI.Windows.indexLevel);
+
+		// Used when dragging and resizing windows
+		$('windowUnderlay').setStyle('zIndex', MochaUI.Windows.indexLevel - 1).inject($(windowEl),'after');		
 
 		// Fire onBlur for the window that lost focus.
 		instances.each(function(instance){
@@ -468,7 +471,27 @@ var MochaUI = new Hash({
 		$$('div.mocha').each(function(el){
 			el.destroy();
 		}.bind(this));		
-	}	
+	},
+	/*
+	
+	The underlay is inserted directly under windows when they are being dragged or resized
+	so that the cursor is not captured by iframes or other plugins (such as Flash)
+	underneath the window.
+	
+	*/
+	underlayInitialize: function(){
+		var windowUnderlay = new Element('div', {
+			'id': 'windowUnderlay',
+			'styles': {
+				'height': parent.getCoordinates().height,
+				'opacity': .01,
+				'visibility': 'hidden'
+			}
+		}).inject(document.body);
+	},
+	setUnderlaySize: function(){
+		$('windowUnderlay').setStyle('height', parent.getCoordinates().height);
+	}		
 });
 
 // Toggle window visibility with Ctrl-Alt-Q
@@ -481,4 +504,12 @@ document.addEvent('keydown', function(event){
 // Blur all windows if user clicks anywhere else on the page
 document.addEvent('click', function(event){
 	MochaUI.blurAll.delay(50);	
+});
+
+window.addEvent('domready', function(){
+	MochaUI.underlayInitialize();
+});	
+		
+window.addEvent('resize', function(){
+	MochaUI.setUnderlaySize();
 });

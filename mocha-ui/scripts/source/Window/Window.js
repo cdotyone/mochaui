@@ -379,7 +379,7 @@ MochaUI.Window = new Class({
 				'height':  this.options.height,
 				'display': 'block',
 				'opacity': 0,
-				'zIndex': MochaUI.Windows.indexLevel
+				'zIndex': MochaUI.Windows.indexLevel += 2
 			}
 		});		
 
@@ -660,6 +660,7 @@ MochaUI.Window = new Class({
 			limit: this.options.draggableLimit,
 			snap: this.options.draggableSnap,
 			onStart: function() {
+				$('windowUnderlay').setStyle('visibility','visible');
 				if (this.options.type != 'modal'){ 
 					MochaUI.focusWindow(windowEl);
 				}
@@ -667,6 +668,7 @@ MochaUI.Window = new Class({
 					this.iframeEl.setStyle('visibility', 'hidden');
 			}.bind(this),
 			onComplete: function() {
+				$('windowUnderlay').setStyle('visibility','hidden');
 				if ( this.iframe ){
 					this.iframeEl.setStyle('visibility', 'visible');
 				}
@@ -698,11 +700,9 @@ MochaUI.Window = new Class({
 					}.bind(this)
 				]
 			},	
-			modifiers: {x: false, y: 'top'},
-			onBeforeStart: function(){
-				this.resizeOnBeforeStart();
-			}.bind(this),		
+			modifiers: {x: false, y: 'top'},		
 			onStart: function(){
+				this.resizeOnStart();
 				this.coords = this.contentWrapperEl.getCoordinates();			
 				this.y2 = this.coords.top.toInt() + this.contentWrapperEl.offsetHeight;
 			}.bind(this),
@@ -723,8 +723,8 @@ MochaUI.Window = new Class({
 				x: [this.options.resizeLimit.x[0] - (this.options.shadowBlur * 2), this.options.resizeLimit.x[1] - (this.options.shadowBlur * 2) ]		
 			},	
 			modifiers: {x: 'width', y: false},
-			onBeforeStart: function(){
-				this.resizeOnBeforeStart();
+			onStart: function(){
+				this.resizeOnStart();
 			}.bind(this),		
 			onDrag: function(){
 				this.drawWindow(windowEl);
@@ -743,8 +743,8 @@ MochaUI.Window = new Class({
 				y: [this.options.resizeLimit.y[0] - this.headerFooterShadow, this.options.resizeLimit.y[1] - this.headerFooterShadow]					
 			},	
 			modifiers: {x: 'width', y: 'height'},
-			onBeforeStart: function(){
-				this.resizeOnBeforeStart();
+			onStart: function(){
+				this.resizeOnStart();
 			}.bind(this),		
 			onDrag: function(){
 				this.drawWindow(windowEl);	
@@ -761,8 +761,8 @@ MochaUI.Window = new Class({
 				y: [this.options.resizeLimit.y[0] - this.headerFooterShadow, this.options.resizeLimit.y[1] - this.headerFooterShadow]	
 			},	
 			modifiers: {x: false, y: 'height'},
-			onBeforeStart: function(){
-				this.resizeOnBeforeStart();
+			onStart: function(){
+				this.resizeOnStart();
 			}.bind(this),		
 			onDrag: function(){
 				this.drawWindow(windowEl);			
@@ -785,11 +785,9 @@ MochaUI.Window = new Class({
 					}.bind(this)
 				]
 			},	
-			modifiers: {x: 'left', y: false},
-			onBeforeStart: function(){
-				this.resizeOnBeforeStart();
-			}.bind(this),		
+			modifiers: {x: 'left', y: false},	
 			onStart: function(){
+				this.resizeOnStart();
 				this.coords = this.contentWrapperEl.getCoordinates();			
 				this.x2 = this.coords.left.toInt() + this.contentWrapperEl.offsetWidth;
 			}.bind(this),
@@ -805,14 +803,16 @@ MochaUI.Window = new Class({
 		});
 	
 	},
-	resizeOnBeforeStart: function(){
+	resizeOnStart: function(){
+		$('windowUnderlay').setStyle('visibility','visible');
 		if (this.iframeEl){
-			this.iframeEl.setStyle('visibility', 'hidden');
+			this.iframeEl.setStyle('visibility', 'hidden');			
 		}	
 	},	
 	resizeOnComplete: function(){
+		$('windowUnderlay').setStyle('visibility','hidden');
 		if (this.iframeEl){
-			this.iframeEl.setStyle('visibility', 'visible');
+			this.iframeEl.setStyle('visibility', 'visible');			
 		}
 		this.fireEvent('onResize', this.windowEl);	
 	},

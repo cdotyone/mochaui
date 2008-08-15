@@ -18,7 +18,10 @@
 <body>
 
 <div style="padding: 10px;">
-	<a href="#1" onclick="new parent.MochaUI.Window({x: 100, y: 100});">Open a new window in the parent document.</a>
+	<ul>
+		<li><a href="#1" onclick="new parent.MochaUI.Window({x: 100, y: 100});">Open a new window in the parent document.</a></li>
+		<li><a href="#2" onclick="parent.MochaUI.closeWindow(parent.$('iframetest'));">Close this window</a></li>
+	</ul>	
 </div>
 
 </body>

@@ -163,7 +163,7 @@ body {
 	margin: -22px 0 0 158px;
 } 
 
-#desktopNavbar li ul li div.check {
+#desktopNavbar li ul li .check {
 	position: absolute;
 	top: 7px;
 	left: 6px;
@@ -261,7 +261,7 @@ body {
 	
 /* Windows */
 	
-div.mocha {
+.mocha {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -269,21 +269,21 @@ div.mocha {
 	overflow: hidden;	
 }
 
-div.mocha.isFocused {	
+.mocha.isFocused {	
 }	
 
-div.mochaOverlay {
+.mochaOverlay {
 	position: absolute;
 	top: 0;
 	left: 0;	
 }
 	
-div.mocha .mochaTitlebar {
+.mochaTitlebar {
 	width: 100%;
 	overflow: hidden;	
 }
 
-div.mocha .mochaTitlebar h3 {
+.mochaTitlebar h3 {
 	font-size: 12px;
 	line-height: 15px;	
 	font-weight: bold;
@@ -292,11 +292,11 @@ div.mocha .mochaTitlebar h3 {
 	color: #888;
 }
 
-div.mocha.isFocused .mochaTitlebar h3 {
+.mocha.isFocused .mochaTitlebar h3 {
 	color: #141414;	
 }
 	
-div.mocha .mochaToolbarWrapper {
+.mochaToolbarWrapper {
 	width: 100%; /* For IE */
 	position: relative;
 	height: 29px;
@@ -305,7 +305,7 @@ div.mocha .mochaToolbarWrapper {
 	border-top: 1px solid #d9d9d9;
 }
 
-div.mocha .mochaToolbar {
+.mochaToolbar {
 	width: 100%; /* For IE */
 	border-top: 1px solid #fff;
 }
@@ -359,21 +359,21 @@ div.mocha .mochaToolbar {
 	background-position: right 0;	
 }	
 
-div.mocha .mochaContentBorder {
+.mochaContentBorder {
 	border-top: 1px solid #d9d9d9;	
 	border-bottom: 1px solid #d9d9d9;
 }
 	
-div.mocha .mochaContentWrapper { /* Has a fixed height and scrollbars if required. */
+.mochaContentWrapper { /* Has a fixed height and scrollbars if required. */
 	font-size: 12px;
 	overflow: auto;	
 }
 	
-div.mocha .mochaContent {
+.mochaContent {
 	padding: 10px 12px;
 }		
 
-div.mocha .handle {
+.mocha .handle {
 	position: absolute;
 	background: #0f0;
 	width: 3px;
@@ -386,13 +386,13 @@ div.mocha .handle {
 	font-size: 1px; /* For IE6 */ 	
 }
 
-div.mocha .corner { /* Corner resize handles */
+.mocha .corner { /* Corner resize handles */
 	background: #f00;
 	width: 10px;
 	height: 10px;
 }
 
-div.mocha .cornerSE { /* Bottom right resize handle */
+.mocha .cornerSE { /* Bottom right resize handle */
 	background: #f00;
 	width: 20px;
 	height: 20px;
@@ -526,25 +526,17 @@ div.mocha .cornerSE { /* Bottom right resize handle */
 	width: 320px;
 }
 
-#desktop textarea, #desktop input {
-	color: #555;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 12px;		
-}
-	
 #desktop .input {
-	background: #fbfbfb;
 	width: 225px;
 	padding: 1px 0 1px 3px;
-	border: 1px solid #ccc;	
+	border: 1px solid #bbb;	
 }
 
 #desktop textarea {
-	background: #fbfbfb;
 	width: 225px;
 	height: 100px;
 	padding: 1px 0 1px 3px;
-	border: 1px solid #ccc;	
+	border: 1px solid #bbb;	
 }		
 
 #desktop .formLabel {
@@ -581,7 +573,7 @@ div.mocha .cornerSE { /* Bottom right resize handle */
 
 * html 	#modalOverlay {
 	position: absolute;
-}	
+}
 
 /* Fix for IE6 select z-index issue */
 #modalFix {
@@ -595,7 +587,21 @@ div.mocha .cornerSE { /* Bottom right resize handle */
 	-moz-opacity: 0;
 	z-index: 9500;
 }
-	
+
+/* Overlay */
+
+#windowUnderlay { 
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	background: #fff;	
+}
+
+* html #windowUnderlay { 
+	position: absolute;
+}	
+
 /* Fix for IE6 select z-index issue */
 iframe.zIndexFix {
 	display: block;
@@ -712,7 +718,7 @@ iframe.zIndexFix {
 .accordianToggler {
 	margin: 0;
 	padding: 6px 10px;
-	background: #343E47 url(../images/bg-desktopTitlebar.gif) repeat-x;
+	background: #fff url(../images/bg-desktopTitlebar.gif) repeat-x;
 	font-size: 12px;
 	cursor: pointer;
 	border-top: 1px solid #e3e3e3;	
@@ -723,7 +729,7 @@ iframe.zIndexFix {
 }
 
 .accordianToggler.open {
-	background: #343E47 url(../images/bg-desktopTitlebar.gif) repeat-x;	
+	background: #fff url(../images/bg-desktopTitlebar.gif) repeat-x;	
 }
 
 .accordianContent {
@@ -732,22 +738,22 @@ iframe.zIndexFix {
 
 /* Window Themes */
 
-div.mocha.transparent .mochaTitlebar h3 {
+.mocha.transparent .mochaTitlebar h3 {
 	color: #fff;
 	display: none;	
 }
 
-div.mocha.notification .mochaTitlebar {
+.mocha.notification .mochaTitlebar {
 	opacity: .0;
 	filter: alpha(opacity=0);
 	-moz-opacity: 0;
 }
 
-div.mocha.notification .mochaContentBorder {
+.mocha.notification .mochaContentBorder {
 	border-width: 0px;
 }
 
-div.mocha.notification .mochaContentWrapper {
+.mocha.notification .mochaContentWrapper {
 	text-align: center;
 	font-size: 12px;
 	font-weight: bold;

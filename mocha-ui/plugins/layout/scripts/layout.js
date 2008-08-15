@@ -88,34 +88,12 @@ function addResizeLeft(element, minWidth, maxWidth){
 	element.makeResizable({
 		handle: handle,
 		modifiers: {x: 'width' , y: false},
-		//	limit: {
-		//		x: [
-		//			function(){
-		//				return element.getCoordinates().right.toInt() - element.offsetWidth.toInt() + minWidth;
-		//			}.bind(this),
-		//			function(){
-		//				//return element.getCoordinates().left.toInt() - element.offsetWidth.toInt() + maxWidth;
-		//			}.bind(this)
-		//		]
-		//	},	
-		onBeforeStart: function(){
-			this.originalWidth = element.offsetWidth.toInt();
-		}.bind(this),							
+		invert: true,
+		limit: { x: [minWidth, maxWidth] },							
 		onDrag: function(){
-			var newWidth = this.originalWidth + (this.originalWidth - element.offsetWidth.toInt());
-			if (newWidth < minWidth) {
-				newWidth = minWidth;
-			}
-			else if (newWidth > maxWidth) {
-				newWidth = maxWidth;
-			}			
-			$(element).setStyles({
-				'width': newWidth
-			});
 			rWidth();
 		}.bind(this),
 		onComplete: function(){
-			//var newWidth = element.offsetWidth.toInt();
 			rWidth();
 		}.bind(this)		
 	});

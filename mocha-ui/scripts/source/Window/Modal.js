@@ -25,7 +25,6 @@ MochaUI.Modal = new Class({
 	
 	initialize: function(options){
 		this.modalInitialize();
-		this.installed = true;
 		
 		window.addEvent('resize', function(){
 			this.setModalSize();
@@ -36,10 +35,10 @@ MochaUI.Modal = new Class({
 		var modalOverlay = new Element('div', {
 			'id': 'modalOverlay',
 			'styles': {
-				'height': document.getCoordinates().height
+				'height': document.getCoordinates().height,
+				'opacity': .4
 			}
-		});
-		modalOverlay.inject(document.body);
+		}).inject(document.body);
 		
 		if (Browser.Engine.trident4){
 			var modalFix = new Element('iframe', {
@@ -54,7 +53,6 @@ MochaUI.Modal = new Class({
 			}).inject(document.body);
 		}		
 
-		modalOverlay.setStyle('opacity', .4);
 		this.modalOverlayOpenMorph = new Fx.Morph($('modalOverlay'), {
 				'duration': 200
 				});
