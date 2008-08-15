@@ -682,7 +682,9 @@ window.addEvent('domready', function(){
 	// Layout
 	initLayout();
 	addResizeRight('sideColumn1', 100, 300);
-	addResizeLeft('sideColumn2', 150, 250);		
+	addResizeLeft('sideColumn2', 150, 250);
+	addResizeBottom('panel1', 150, 400);
+	addResizeTop('panel2', 150, 400);			
 	
 		
 	MochaUI.Modal = new MochaUI.Modal();

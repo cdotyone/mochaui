@@ -62,27 +62,24 @@ Requires:
 	
 function addResizeRight(element, minWidth, maxWidth){
 	if (!$(element)) return;
-	var handle = $(element).getNext('div.columnHandle')
+	var handle = $(element).getNext('.columnHandle');
 	handle.setStyle('cursor', 'e-resize');
 	$(element).makeResizable({
 		handle: handle,
 		modifiers: {x: 'width', y: false},
 		limit: { x: [minWidth, maxWidth] },					
 		onDrag: function(){
-
 			rWidth();
 		}.bind(this),
 		onComplete: function(){
-
 			rWidth();
 		}.bind(this)		
-	});
-	
+	});	
 }
 
 function addResizeLeft(element, minWidth, maxWidth){
 	if (!$(element)) return;
-	var handle = $(element).getPrevious('div.columnHandle');
+	var handle = $(element).getPrevious('.columnHandle');
 	element = $(element);
 	handle.setStyle('cursor', 'e-resize');
 	element.makeResizable({
@@ -97,6 +94,41 @@ function addResizeLeft(element, minWidth, maxWidth){
 			rWidth();
 		}.bind(this)		
 	});
+}
+
+function addResizeBottom(element, min, max){
+	if (!$(element)) return;
+	var handle = $(element).getNext('.horizontalHandle');
+	handle.setStyle('cursor', 'n-resize');
+	$(element).makeResizable({
+		handle: handle,
+		modifiers: {x: false, y: 'height'},
+		limit: { y: [min, max] },					
+		onDrag: function(){
+			rHeight();
+		}.bind(this),
+		onComplete: function(){
+			rHeight();
+		}.bind(this)		
+	});	
+}
+
+function addResizeTop(element, min, max){
+	if (!$(element)) return;
+	var handle = $(element).getPrevious('.horizontalHandle');
+	handle.setStyle('cursor', 'n-resize');
+	$(element).makeResizable({
+		handle: handle,
+		modifiers: {x: false, y: 'height'},
+		invert: true,		
+		limit: { y: [min, max] },					
+		onDrag: function(){
+			rHeight();
+		}.bind(this),
+		onComplete: function(){
+			rHeight();
+		}.bind(this)		
+	});	
 }
 
 function initLayout(){
