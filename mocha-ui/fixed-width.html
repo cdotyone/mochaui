@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-	<title>Mootools Mocha UI - Fixed Width and No Toolbars</title>
+	<title>Mootools Mocha UI - Fixed Width with Dock</title>
 
 	<link rel="stylesheet" href="css/content.css" type="text/css" />
 	<link rel="stylesheet" href="css/ui.css" type="text/css" />
@@ -32,6 +32,7 @@
 	
 	window.addEvent('domready', function(){
 		MochaUI.Desktop = new MochaUI.Desktop();
+		MochaUI.Dock = new MochaUI.Dock();		
 		MochaUI.Modal = new MochaUI.Modal();			
 		MochaUI.NewWindowsFromHTML = new MochaUI.NewWindowsFromHTML();		
 
@@ -45,6 +46,7 @@
 	
 	
 <style>	
+
 	
 #pageWrapper {
 	overflow: auto;	
@@ -56,13 +58,8 @@
 	background: #fff;	
 }
 	
-#header {
-	padding: 10px;
-	background: #fafafa;
-}
-
 #content {
-	padding: 10px;
+	padding: 20px;
 }		
 			
 </style>				
@@ -71,15 +68,34 @@
 <body>
 
 <div id="desktop">
+	
+<div id="desktopHeader">
+	<div id="desktopTitlebarWrapper">
+		<div id="desktopTitlebar">
+			<div id="topNav">
+				<ul class="menu-right">
+					<li>Welcome <a href="#">Demo User</a>.</li>
+					<li><a href="#">Sign Out</a></li>				
+				</ul>
+			</div>						
+			<h1 class="applicationTitle">Mocha UI</h1>
+			<h1 class="tagline">A Web Applications <span class="taglineEm">User Interface Library</span></h1>
+		</div>
+	</div>	
+</div>
+<div id="dockWrapper">
+	<div id="dock">
+		<div id="dockPlacement"></div>
+		<div id="dockAutoHide"></div>
+		<div id="dockSort"><div id="dockClear" class="clear"></div></div>		
+	</div>
+</div>	
 
 <div id="pageWrapper">
 	<div id="page">
 	
 		<!-- PAGE CONTENT BEGINS HERE -->
 
-		<div id="header">
-			<h1>My Site</h1>
-		</div>
 		<div id="content">	
 			<h3>My Page Content</h3>
 			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
@@ -124,6 +140,12 @@
 			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
 			
 			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+			
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>												
+			
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
 			
 		</div><!-- content end -->
 
@@ -131,17 +153,17 @@
 	</div><!-- page end -->
 </div><!-- pageWrapper end -->
 
-<div class="mocha" id="myWindow01" style="width:300px;height:255px;top:50px;left:350px">
+<div class="mocha" id="myWindow01" style="width:300px;height:255px;top:90px;left:350px">
 	<h3 class="mochaTitle">My Window 01</h3>
 	<p>My Window Content</p>
 </div>
 
-<div class="mocha" id="myWindow02" style="width:300px;height:275px;top:120px;left:420px">
+<div class="mocha" id="myWindow02" style="width:300px;height:275px;top:160px;left:420px">
 	<h3 class="mochaTitle">My Window 02</h3>
 	<p>My Window Content</p>
 </div>
 
-<div class="mocha" id="myWindow03" style="width:300px;height:105px;top:190px;left:490px">
+<div class="mocha" id="myWindow03" style="width:300px;height:105px;top:230px;left:490px">
 	<h3 class="mochaTitle">My Window 03</h3>
 	<p>My Window Content</p>
 </div>

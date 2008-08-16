@@ -121,20 +121,17 @@ MochaUI.Desktop = new Class({
 		if (this.pageWrapper && this.desktopHeader) {
 		
 			var dockOffset = MochaUI.dockVisible ? dockWrapper.offsetHeight : 0;
-			var pageWrapperHeight = windowDimensions.height - this.desktopHeader.offsetHeight - this.desktopFooter.offsetHeight - dockOffset;
-			
+			var pageWrapperHeight = windowDimensions.height;
+			if (this.desktopHeader){ pageWrapperHeight -= this.desktopHeader.offsetHeight; }
+			if (this.desktopFooter){ pageWrapperHeight -= this.desktopFooter.offsetHeight; }
+			pageWrapperHeight -= dockOffset;
+									
 			if (pageWrapperHeight < 0) {
 				pageWrapperHeight = 0;
 			}
 			this.pageWrapper.setStyle('height', pageWrapperHeight + 'px');
 		}
-		else if (this.pageWrapper) {
-			var pageWrapperHeight = windowDimensions.height;
-			if (pageWrapperHeight < 0) {
-				pageWrapperHeight = 0;
-			}
-			this.pageWrapper.setStyle('height', pageWrapperHeight + 'px');			
-		}
+
 		this.resizePanels();		
 	},
 
