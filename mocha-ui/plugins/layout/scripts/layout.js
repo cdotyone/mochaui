@@ -49,7 +49,6 @@ Requires:
 			
 			// Get the total width of all the parent element's children
 			parent.getChildren().each(function(el){
-				// el.setStyle('left', this.width);
 				this.width += el.offsetWidth.toInt();														
 			}.bind(this));
 		

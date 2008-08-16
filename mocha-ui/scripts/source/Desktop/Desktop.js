@@ -134,10 +134,13 @@ MochaUI.Desktop = new Class({
 			this.pageWrapper.setStyle('height', pageWrapperHeight + 'px');
 		}
 		
-			if (Browser.Engine.trident4) $$('.pad').setStyle('display', 'none'); // IE6 Fix
-			rHeight();
-			rWidth();
-			if (Browser.Engine.trident4) $$('.pad').setStyle('display', 'block'); // IE6 Fix		
+		if (Browser.Engine.trident4) {
+			$$('.pad').setStyle('display', 'none');
+			$$('.rHeight').setStyle('height', 1);
+		}	
+		rHeight();
+		rWidth();
+		if (Browser.Engine.trident4) $$('.pad').setStyle('display', 'block');
 		
 	},
 	/*
