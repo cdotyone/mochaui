@@ -55,7 +55,6 @@ Requires:
 			// Add the remaining width to the current element
 			var remainingWidth = parent.offsetWidth.toInt() - this.width;		
 			el.setStyle('width', currentWidth + remainingWidth);			
-			
 		});
 	}
 	
@@ -69,11 +68,19 @@ function addResizeRight(element, minWidth, maxWidth){
 		limit: { x: [minWidth, maxWidth] },					
 		onDrag: function(){
 			rWidth();
-			rHeight();
+			if (Browser.Engine.trident4) {
+				$(element).getChildren().each(function(el){
+					var width = $(element).getStyle('width').toInt();
+					width -= el.getStyle('border-right').toInt();
+					width -= el.getStyle('border-left').toInt();
+					width -= el.getStyle('padding-right').toInt();
+					width -= el.getStyle('padding-left').toInt();
+					el.setStyle('width', width);
+				}.bind(this));
+			}						
 		}.bind(this),
 		onComplete: function(){
 			rWidth();
-			rHeight();
 		}.bind(this)		
 	});	
 }
@@ -88,8 +95,8 @@ function addResizeLeft(element, minWidth, maxWidth){
 		modifiers: {x: 'width' , y: false},
 		invert: true,
 		limit: { x: [minWidth, maxWidth] },							
-		onDrag: function(){
-			rWidth();
+		onDrag: function(){	
+			rWidth();	
 		}.bind(this),
 		onComplete: function(){
 			rWidth();

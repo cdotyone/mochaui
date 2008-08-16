@@ -668,7 +668,7 @@ MochaUI.Window = new Class({
 			limit: this.options.draggableLimit,
 			snap: this.options.draggableSnap,
 			onStart: function() {
-				//$('windowUnderlay').setStyle('visibility','visible');
+				$('windowUnderlay').setStyle('visibility','visible');
 				if (this.options.type != 'modal'){ 
 					MochaUI.focusWindow(windowEl);
 				}
@@ -676,7 +676,7 @@ MochaUI.Window = new Class({
 					this.iframeEl.setStyle('visibility', 'hidden');
 			}.bind(this),
 			onComplete: function() {
-				//$('windowUnderlay').setStyle('visibility','hidden');
+				$('windowUnderlay').setStyle('visibility','hidden');
 				if ( this.iframe ){
 					this.iframeEl.setStyle('visibility', 'visible');
 				}
@@ -812,13 +812,13 @@ MochaUI.Window = new Class({
 	
 	},
 	resizeOnStart: function(){
-		//$('windowUnderlay').setStyle('visibility','visible');
+		$('windowUnderlay').setStyle('visibility','visible');
 		if (this.iframeEl){
 			this.iframeEl.setStyle('visibility', 'hidden');			
 		}	
 	},	
 	resizeOnComplete: function(){
-		//$('windowUnderlay').setStyle('visibility','hidden');
+		$('windowUnderlay').setStyle('visibility','hidden');
 		if (this.iframeEl){
 			this.iframeEl.setStyle('visibility', 'visible');			
 		}
