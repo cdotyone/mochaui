@@ -196,7 +196,7 @@ MochaUI.Windows.windowOptions = {
 	y:                 null,    
 	scrollbars:        true,
 	padding:   		   { top: 10, right: 12, bottom: 10, left: 12 },
-	shadowBlur:        5,
+	shadowBlur:        4,
 	shadowOffset:      {'x': 0, 'y': 1},       // Should be positive and not be greater than the ShadowBlur.
 	controlsOffset:    {'right': 6, 'top': 6}, // Change this if you want to reposition the window controls.
 	useCanvasControls: true,                   // Set this to false if you wish to use images for the buttons.
@@ -204,11 +204,11 @@ MochaUI.Windows.windowOptions = {
 	// Color options:		
 	headerHeight:      25,
 	footerHeight:      25,
-	cornerRadius:      10,
+	cornerRadius:      8,
 	contentBgColor:	   '#fff',
 	headerStartColor:  [250, 250, 250],
 	headerStopColor:   [229, 229, 229],
-	bodyBgColor:       [229, 229, 229],
+	bodyBgColor:       [235, 235, 235],
 	minimizeBgColor:   [255, 255, 255],
 	minimizeColor:     [0, 0, 0],
 	maximizeBgColor:   [255, 255, 255],

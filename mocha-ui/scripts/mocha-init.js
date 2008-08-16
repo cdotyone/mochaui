@@ -172,10 +172,10 @@ initializeWindows = function(){
 					MochaUI.addShadowSlider.delay(10); // Delay is for IE6
 				}			
 			},
-			width: 300,
+			width: 305,
 			height: 105,
-			x: 250,
-			y: 475,
+			x: 570,
+			y: 420,
 			padding: { top: 12, right: 12, bottom: 10, left: 12 },			
 			resizable: false,
 			maximizable: false,
@@ -534,8 +534,8 @@ initializeWindows = function(){
 			//onContentLoaded: function(){
 				//MochaUI.initializeTabs('featuresTabs');
 			//},
-			width: 330,
-			height: 190,
+			width: 305,
+			height: 175,
 			x: 570,
 			y: 145,
 			resizeLimit: {'x': [275, 2500], 'y': [125, 2000]},			
@@ -668,7 +668,7 @@ initializeWindows = function(){
 	});
 	
 	// Build windows onDomReady
-	MochaUI.overviewWindow(); 
+	// MochaUI.overviewWindow(); 
 	MochaUI.parametricsWindow();
 	MochaUI.featuresWindow();
 	
@@ -684,7 +684,7 @@ window.addEvent('domready', function(){
 	addResizeRight('sideColumn1', 100, 300);
 	addResizeLeft('sideColumn2', 150, 250);
 	addResizeBottom('panel1', 150, 400);
-	addResizeTop('panel2', 150, 400);			
+	addResizeTop('panel2', 150, 400);		
 	
 		
 	MochaUI.Modal = new MochaUI.Modal();

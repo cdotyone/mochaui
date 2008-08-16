@@ -20,12 +20,16 @@ License:
 
 .panel {
 	overflow: auto;
-	border: 1px solid #a7a7a7;
-	background: #d5dde6;
+	background: #f1f1f1;
 }
 
 .panel.color2 {
 	background: #f1f1f1;	
+}
+
+.panel.color3 {
+	background: #202A33;
+	color: #fff;	
 }	
 
 #mainPanel {
@@ -41,7 +45,8 @@ License:
 	height: 2px;
 	line-height: 1px;
 	font-size: 1px;
-	overflow: hidden;	
+	overflow: hidden;
+	background: #d0d0d0;	
 }	
 
 .columnHandle {
@@ -49,24 +54,19 @@ License:
 	min-height: 10px;	
 	float: left;
 	width: 2px;
-	overflow: hidden;	
+	overflow: hidden;
+	background: #d0d0d0;		
 }
 
 .panel-header {
 	position: relative;	
-	background: #e9e9e9 url(../images/bg-panel-header.gif)  repeat-x;
-	border-top: 1px solid #a7a7a7;
-	border-right: 1px solid #a7a7a7;
-	border-left: 1px solid #a7a7a7;
+	background: #e9e9e9 url(../images/bg-desktopTitlebar.gif)  repeat-x;
 	height: 29px;
 	overflow: hidden;
 }
 
 .panel-footer {
-	background: #e9e9e9 url(../images/bg-panel-header.gif)  repeat-x;
-	border-bottom: 1px solid #a7a7a7;
-	border-right: 1px solid #a7a7a7;
-	border-left: 1px solid #a7a7a7;
+	background: #e9e9e9 url(../images/bg-desktopTitlebar.gif)  repeat-x;
 	padding: 5px 8px;
 }
 

@@ -510,7 +510,14 @@ document.addEvent('click', function(event){
 window.addEvent('domready', function(){
 	MochaUI.underlayInitialize();
 });	
-		
+	
 window.addEvent('resize', function(){
-	MochaUI.setUnderlaySize();
+		MochaUI.setUnderlaySize();
+});
+
+window.addEvent('mousemove', function(event){
+	if ($('mochaStats')){
+		$('cursorX').set('html', event.client.x);
+		$('cursorY').set('html', event.client.y);
+	}	
 });

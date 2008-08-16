@@ -35,8 +35,7 @@ body {
 }			  				
 
 #desktopHeader {
-	background: #888; /* Will be the margin color between toolbars */
-	padding: 0 0 1px 0;
+	background: #fff; /* Will be the margin color between toolbars */
 }
 
 #desktopTitlebarWrapper {
@@ -95,9 +94,9 @@ body {
 
 .toolbox {	
 	float: right;
-	margin-top: 1px;
+	margin-top: 3px;
 	padding: 4px 10px 0 10px;
-	border-left: 1px solid #bebebe;
+	border-left: 1px solid #ccc;
 	height: 20px;
 	overflow: hidden;	
 }				
@@ -105,11 +104,8 @@ body {
 /* Navbar */
 
 #desktopNavbar {
-	margin: 0 0 0 0;
-	background: #eee;
-	border-top: 1px solid #fff;	
-	border-bottom: 1px solid #fff;
-	height: 25px;
+	background: #f1f1f1;
+	height: 30px;
 }
 
 #desktopNavbar ul {	
@@ -128,7 +124,7 @@ body {
 }	
 	
 #desktopNavbar ul li a {
-	padding: 4px 10px 3px 10px;	
+	padding: 6px 10px 6px 10px;	
 	color: #141414;
 }
 
@@ -209,7 +205,6 @@ body {
 #pageWrapper {
 	position: relative;
 	overflow: hidden; /* This can be set to hidden or auto */
-	background: #ebebeb;
 }
 
 /* Footer */
@@ -345,8 +340,8 @@ body {
 }	
 
 .mochaContentBorder {
-	border-top: 1px solid #d9d9d9;	
-	border-bottom: 1px solid #d9d9d9;
+	border-top: 1px solid #dadada;	
+	border-bottom: 1px solid #dadada;
 }
 	
 .mochaContentWrapper { /* Has a fixed height and scrollbars if required. */
@@ -604,9 +599,12 @@ iframe.zIndexFix {
 
 #dockWrapper {
 	display: none;
-	background: #888;
-	padding: 1px 0 0 0;
+	background: #f1f1f1;
 	width: 100%;	
+}
+
+#dockWrapper.top {
+	border-top: 1px solid #d0d0d0;
 }
 
 #dock {
@@ -615,35 +613,28 @@ iframe.zIndexFix {
 	bottom: 0;
 	left: 0;
 	width: 100%;
-	background: #eee;
-	border: 1px solid #fff;
+	background: #f1f1f1;
+	border: 1px solid #f1f1f1;
 	min-height: 26px;
 	height: auto;
    _height: 26px; /* IE 6.0 hack, for not supporting min-height */
-}
-
-#dockWrapper.top {
-	padding: 0 0 1px 0;	
 }
 
 .dockTab {
 	float: left;
 	font-size: 11px;
 	position: relative;
-	width: 120px;
+	width: 140px;
 	height: 22px;
 	margin: 0 2px 2px 0;
-	padding: 0 0 0 20px;
 	overflow: hidden;	
 	cursor: pointer;
-	border: 1px solid #cbcbcb;
-	background: url(../images/icons/page.gif) no-repeat;
-	background-position: 2px 3px;
+	background: transparent url(../images/bg-desktopTitlebar.gif)  repeat-x;
+	border: 1px solid #ccc;
 }	
 
 .dockTab.activeDockTab {
-	background: #fff url(../images/icons/page.gif) no-repeat;
-	background-position: 2px 3px;	
+	background: #fff;
 }	
 
 .dockText {
@@ -656,6 +647,8 @@ iframe.zIndexFix {
 	width: 115px;
 	height: 19px;
 	overflow: hidden;
+	background: url(../images/icons/page.gif) no-repeat;
+	background-position: 2px 3px;			
 }			
 
 #dockCanvas {
