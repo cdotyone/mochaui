@@ -16,7 +16,7 @@ Use:
 
 Example:
 	(start code)
-	<script type="text/javascript" src="scripts/source/combine-javascript.php"></script>
+	<script type="text/javascript" src="scripts/source/Utilities/mocha.js.php"></script>
 	(end)
 
 */
@@ -31,9 +31,9 @@ $files = array(
 	'Window/Arrange-cascade.js',
 	'Window/Arrange-tile.js',	
 	'Window/Tabs.js',			
-	'Desktop/Desktop.js',	
-	'Desktop/Dock.js',
-	'Desktop/Workspaces.js'
+	'Layout/Layout.js',	
+	'Layout/Dock.js',
+	'Layout/Workspaces.js'
 );
 
 // Get the path to your web directory
