@@ -70,9 +70,11 @@ function addResizeRight(element, minWidth, maxWidth){
 		limit: { x: [minWidth, maxWidth] },					
 		onDrag: function(){
 			rWidth();
+			rHeight();
 		}.bind(this),
 		onComplete: function(){
 			rWidth();
+			rHeight();
 		}.bind(this)		
 	});	
 }
@@ -132,24 +134,12 @@ function addResizeTop(element, min, max){
 }
 
 function initLayout(){
-	if (Browser.Engine.trident4) {
-		$$('.pad').setStyle('display', 'none'); // IE6 Fix
-	}	
+	$$('column').each(function(element){
+	//	element.setStyle('height', element.getParent().offsetHeight.toInt());
+	});		
+	if (Browser.Engine.trident4) $$('.pad').setStyle('display', 'none'); // IE6 Fix	
 	rHeight();
 	rWidth();
-	if (Browser.Engine.trident4) {
-		$$('.pad').setStyle('display', 'block'); // IE6 Fix
-	}
+	if (Browser.Engine.trident4) $$('.pad').setStyle('display', 'block'); // IE6 Fix
 	$$('.column').setStyle('visibility','visible');
-		
-	window.addEvent('resize', function(){
-		if (Browser.Engine.trident4) {
-			$$('.pad').setStyle('display', 'none'); // IE6 Fix
-		}
-		rHeight();
-		rWidth();
-		if (Browser.Engine.trident4) {
-			$$('.pad').setStyle('display', 'block'); // IE6 Fix
-		}			
-	});
 }

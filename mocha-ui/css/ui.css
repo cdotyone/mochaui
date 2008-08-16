@@ -208,8 +208,6 @@ body {
 
 #pageWrapper {
 	position: relative;
-	width: auto;
-	height: 100%;
 	overflow: hidden; /* This can be set to hidden or auto */
 	background: #ebebeb;
 }

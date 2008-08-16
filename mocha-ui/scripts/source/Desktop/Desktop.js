@@ -109,7 +109,7 @@ MochaUI.Desktop = new Class({
 
 				}
 			}.bind(this));
-		}.bind(this), 100);
+		}.bind(this), 100);		
 	},
 	setDesktopSize: function(){
 		var windowDimensions = window.getCoordinates();
@@ -134,12 +134,11 @@ MochaUI.Desktop = new Class({
 			this.pageWrapper.setStyle('height', pageWrapperHeight + 'px');
 		}
 		
-		if (this.sidebar){
-			var sidebarBorderOffset = Browser.Engine.trident4 ? 3 : 2;  
-			this.sidebarContentWrapper.setStyle('height', pageWrapperHeight - sidebarBorderOffset + 'px');
-			this.sidebarMinimize.setStyle('top', ((pageWrapperHeight * .5) - (this.sidebarMinimize.offsetHeight * .5))  + 'px');
-			this.sidebarHandle.setStyle('height', pageWrapperHeight - sidebarBorderOffset + 'px');			
-		}
+			if (Browser.Engine.trident4) $$('.pad').setStyle('display', 'none'); // IE6 Fix
+			rHeight();
+			rWidth();
+			if (Browser.Engine.trident4) $$('.pad').setStyle('display', 'block'); // IE6 Fix		
+		
 	},
 	/*
 	

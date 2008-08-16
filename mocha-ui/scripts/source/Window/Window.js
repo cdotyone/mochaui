@@ -629,12 +629,20 @@ MochaUI.Window = new Class({
 		if (this.options.collapsible == true){
 			// Keep titlebar text from being selected on double click in Safari.
 			this.titleEl.addEvent('selectstart', function(e) {
-				e = new Event(e).stop();							  													   
+				e = new Event(e).stop();											  													   
 			}.bind(this));
 			// Keep titlebar text from being selected on double click in Opera.			
 			this.titleBarEl.addEvent('mousedown', function(e) {
-				e = new Event(e).stop();							  													   
-			}.bind(this));		
+				e = new Event(e).stop();
+				if (Browser.Engine.trident) {
+					this.titleEl.setCapture();
+				}							  													   
+			}.bind(this));
+			this.titleBarEl.addEvent('mouseup', function(e) {
+				if (Browser.Engine.trident) {
+					this.titleEl.releaseCapture();
+				}								  													   
+			}.bind(this));					
 			this.titleBarEl.addEvent('dblclick', function(e) {
 				e = new Event(e).stop();
 				MochaUI.collapseToggle(this.windowEl);
@@ -660,7 +668,7 @@ MochaUI.Window = new Class({
 			limit: this.options.draggableLimit,
 			snap: this.options.draggableSnap,
 			onStart: function() {
-				$('windowUnderlay').setStyle('visibility','visible');
+				//$('windowUnderlay').setStyle('visibility','visible');
 				if (this.options.type != 'modal'){ 
 					MochaUI.focusWindow(windowEl);
 				}
@@ -668,7 +676,7 @@ MochaUI.Window = new Class({
 					this.iframeEl.setStyle('visibility', 'hidden');
 			}.bind(this),
 			onComplete: function() {
-				$('windowUnderlay').setStyle('visibility','hidden');
+				//$('windowUnderlay').setStyle('visibility','hidden');
 				if ( this.iframe ){
 					this.iframeEl.setStyle('visibility', 'visible');
 				}
@@ -804,13 +812,13 @@ MochaUI.Window = new Class({
 	
 	},
 	resizeOnStart: function(){
-		$('windowUnderlay').setStyle('visibility','visible');
+		//$('windowUnderlay').setStyle('visibility','visible');
 		if (this.iframeEl){
 			this.iframeEl.setStyle('visibility', 'hidden');			
 		}	
 	},	
 	resizeOnComplete: function(){
-		$('windowUnderlay').setStyle('visibility','hidden');
+		//$('windowUnderlay').setStyle('visibility','hidden');
 		if (this.iframeEl){
 			this.iframeEl.setStyle('visibility', 'visible');			
 		}
@@ -901,7 +909,7 @@ MochaUI.Window = new Class({
 		}).inject(this.windowEl);
 
 		cache.titleBarEl = new Element('div', {
-			'id': id + '_titleBar',									   
+			'id': id + '_titleBar',												   
 			'class': 'mochaTitlebar',
 			'styles': {
 				'cursor': options.draggable ? 'move' : 'default'
