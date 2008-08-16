@@ -1,3 +1,19 @@
+/*
+
+CSS for Mocha UI
+
+Copyright:
+	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.
+	
+License:
+	MIT-style license.
+
+Note:	
+	If you are adding MochaUI to an existing site, this CSS file may not be necessary.
+   
+*/
+
+
 /* Reset */
 
 ul,ol,dl,li,dt,dd,h1,h2,h3,h4,h5,h6,pre,form,body,html,p,blockquote,fieldset,input,object,iframe { margin: 0; padding: 0; }
@@ -8,7 +24,6 @@ table { border-collapse: collapse; border-spacing: 0; }
 /* Structure */
 
 body {
-	margin: 0;
 	text-align: left;
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;

@@ -125,7 +125,7 @@ body {
 	
 #desktopNavbar ul li a {
 	padding: 6px 10px 6px 10px;	
-	color: #141414;
+	color: #3f3f3f;
 }
 
 #desktopNavbar ul li a:hover {
@@ -630,7 +630,7 @@ iframe.zIndexFix {
 	overflow: hidden;	
 	cursor: pointer;
 	background: transparent url(../images/bg-desktopTitlebar.gif)  repeat-x;
-	border: 1px solid #ccc;
+	border: 1px solid #c0c0c0;
 }	
 
 .dockTab.activeDockTab {

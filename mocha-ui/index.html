@@ -179,6 +179,9 @@
 					<span class="label">Cursor x:</span> <span id="cursorX"></span><br />
 					<span class="label">Cursor y:</span> <span id="cursorY"></span>
 				</div>	
+				<a href="#" onclick="frames[frames.length - 1].document.write('hello');">Test</a>
+
+
 			</div>
 		</div>
 		<div class="panel-footer">
@@ -206,6 +209,7 @@
 				<ul>
 					<li>If any or all of the panels in a column do not have their height set, divide the remaining height among them.</li>
 					<li>Make it so maximized windows can not be resized or collapsed.</li>
+					<li>See if you can focus iframes via parent.document. Add event to onComplete in Window.js.</li>
 				</ul>
 				
 				<!--
