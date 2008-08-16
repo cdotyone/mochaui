@@ -1,7 +1,7 @@
 /*
 
 Script: Desktop.js
-	Creates a desktop. Enables window maximize. 
+	Create web application layouts. Enables window maximize. 
 	
 Copyright:
 	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.		
@@ -12,9 +12,6 @@ License:
 Requires:
 	Core.js, Window.js
 	
-Options:
-	sidebarLimitX - Sidebar minimum and maximum widths when resizing.
-
 */
 
 MochaUI.Desktop = new Class({
@@ -32,7 +29,7 @@ MochaUI.Desktop = new Class({
 		pageWrapper:            'pageWrapper',
 		page:                   'page',
 		desktopFooter:          'desktopFooterWrapper',
-		sidebarWrapper:         'sidebarWrapper',		
+		sidebarWrapper:         'sideColumn1',		
 		sidebar:                'sidebar',
 		sidebarContentWrapper:  'sidebarContentWrapper',		
 		sidebarMinimize:        'sidebarControl',
@@ -55,11 +52,9 @@ MochaUI.Desktop = new Class({
 		this.sidebarHandle          = $(this.options.sidebarHandle);		
 	
 		this.setDesktopSize();
-		this.menuInitialize();
+		this.menuInitialize();		
 		
-		if(this.sidebar){
-			this.sidebarInitialize();
-		}
+		this.sidebarInitialize();		
 
 		// Resize desktop, page wrapper, modal overlay, and maximized windows when browser window is resized
 		window.addEvent('resize', function(){
@@ -133,7 +128,10 @@ MochaUI.Desktop = new Class({
 			}
 			this.pageWrapper.setStyle('height', pageWrapperHeight + 'px');
 		}
-		
+		this.resizePanels();		
+	},
+
+	resizePanels: function(){
 		if (Browser.Engine.trident4) {
 			$$('.pad').setStyle('display', 'none');
 			$$('.rHeight').setStyle('height', 1);
@@ -141,7 +139,6 @@ MochaUI.Desktop = new Class({
 		rHeight();
 		rWidth();
 		if (Browser.Engine.trident4) $$('.pad').setStyle('display', 'block');
-		
 	},
 	/*
 	
@@ -337,41 +334,15 @@ MochaUI.Desktop = new Class({
 		currentInstance.maximizeButtonEl.setProperty('title', 'Maximize');		
 		
 	},
-	sidebarInitialize: function(){
-		this.sidebarResizable = this.sidebar.makeResizable({
-			handle: this.sidebarHandle ? this.sidebarHandle : false,
-			modifiers: {
-				x: 'width',
-				y: false				
-			},
-			limit: {
-				x: this.options.sidebarLimitX
-			},
-			onBeforeStart: function(){
- 				// Using postion fixed fixes a minor display glitch while resizing the sidebar in Firefox PC
-				// Mac Firefox needs position fixed all the time though it does not render as well as absolute
-				if (!Browser.Platform.mac && Browser.Engine.gecko){
-					$$('div.mocha').setStyle('position', 'fixed');	
-				}
-			},
-			onComplete: function(){
-				if (!Browser.Platform.mac && Browser.Engine.gecko){
-					$$('div.mocha').setStyle('position', 'absolute');	
-				}
-			}			
-		});
-		
-		// Part of IE6 3px jox bug fix
-		if (Browser.Engine.trident4){
-			this.page.set('margin-left', -3);
-		}		
-			
-		this.sidebarWrapper.setStyle('display', 'block');
+	sidebarInitialize: function(){		
+		/*
 
 		this.sidebarIsMinimized = false;
 		this.sidebarMinimize.addEvent('click', function(event){
 			this.sidebarMinimizeToggle();
 		}.bind(this));
+		
+		*/
 		
 		// Add check mark to menu if link exists in menu
 		if ($('sidebarLinkCheck')){			
@@ -397,10 +368,6 @@ MochaUI.Desktop = new Class({
 		if (this.sidebarWrapper.getStyle('display') == 'block'){
 			this.sidebarWrapper.setStyle('display', 'none');
 			this.sidebarCheck.setStyle('display', 'none');
-			// Part of IE6 3px jox bug fix			
-			if (Browser.Engine.trident4){
-				this.page.set('margin-left', 0);
-			}
 		}
 		// Show sidebar.
 		else {
@@ -409,12 +376,9 @@ MochaUI.Desktop = new Class({
 				this.sidebarMinimizeToggle();			
 			}			
 			this.sidebarWrapper.setStyle('display', 'block');
-			this.sidebarCheck.setStyle('display', 'block');
-			// Part of IE6 3px jox bug fix
-			if (Browser.Engine.trident4){
-				this.page.set('margin-left', -3);
-			}			
+			this.sidebarCheck.setStyle('display', 'block');			
 		}
+		this.resizePanels();		
 	},
 	/*
 	
@@ -434,10 +398,6 @@ MochaUI.Desktop = new Class({
 			this.sidebarResizable.detach();
 			this.sidebarHandle.setStyle('cursor', 'default');						
 			this.sidebar.setStyle('display', 'none');
-			// Part of IE6 3px jox bug fix			
-			if (Browser.Engine.trident4){
-				this.sidebarMinimize.setStyle('margin-right', 0);
-			}
 			if (!Browser.Platform.mac && Browser.Engine.gecko){
 				windows.setStyle('position', 'absolute');	
 			}			
@@ -449,10 +409,7 @@ MochaUI.Desktop = new Class({
 			this.sidebarHandle.setStyles({
 				'cursor': Browser.Engine.presto ? 'e-resize' : 'col-resize'
 			});				
-			this.sidebar.setStyle('display', 'block');				
-			if (Browser.Engine.trident4){
-				this.sidebarMinimize.setStyle('margin-right', 1);
-			}
+			this.sidebar.setStyle('display', 'block');
 			if (!Browser.Platform.mac && Browser.Engine.gecko){
 				windows.setStyle('position', 'absolute');	
 			}			
