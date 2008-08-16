@@ -119,14 +119,21 @@ MochaUI.Desktop = new Class({
 
 		// Set pageWrapper height so the dock doesn't cover the pageWrapper scrollbars.
 		if (this.pageWrapper && this.desktopHeader) {
-					
-			var dockOffset = MochaUI.dockVisible ? dockWrapper.offsetHeight : 0;			
+		
+			var dockOffset = MochaUI.dockVisible ? dockWrapper.offsetHeight : 0;
 			var pageWrapperHeight = windowDimensions.height - this.desktopHeader.offsetHeight - this.desktopFooter.offsetHeight - dockOffset;
 			
-			if ( pageWrapperHeight < 0 ) {
+			if (pageWrapperHeight < 0) {
 				pageWrapperHeight = 0;
 			}
 			this.pageWrapper.setStyle('height', pageWrapperHeight + 'px');
+		}
+		else if (this.pageWrapper) {
+			var pageWrapperHeight = windowDimensions.height;
+			if (pageWrapperHeight < 0) {
+				pageWrapperHeight = 0;
+			}
+			this.pageWrapper.setStyle('height', pageWrapperHeight + 'px');			
 		}
 		this.resizePanels();		
 	},

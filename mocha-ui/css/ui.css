@@ -212,19 +212,6 @@ body {
 	background: #ebebeb;
 }
 
-#wrapper {
-	position: relative;
-	width: 100%;	
-}	
-
-#page {
-	padding: 20px 20px;
-}
-
-.aside {
-	width: 500px;
-}
-
 /* Footer */
 #desktopFooterWrapper {
 	background: #888;
