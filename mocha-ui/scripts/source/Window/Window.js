@@ -696,7 +696,7 @@ MochaUI.Window = new Class({
 	*/
 	attachResizable: function(windowEl){
 		if (!this.options.resizable) return;	
-		this.windowEl.makeResizable({
+		this.resizable1 = this.windowEl.makeResizable({
 			handle: [this.n, this.ne, this.nw],
 			limit: {
 				y: [
@@ -725,7 +725,7 @@ MochaUI.Window = new Class({
 			}.bind(this)		
 		});
 	
-		this.contentWrapperEl.makeResizable({
+		this.resizable2 = this.contentWrapperEl.makeResizable({
 			handle: [this.e, this.ne],
 			limit: {
 				x: [this.options.resizeLimit.x[0] - (this.options.shadowBlur * 2), this.options.resizeLimit.x[1] - (this.options.shadowBlur * 2) ]		
@@ -743,7 +743,7 @@ MochaUI.Window = new Class({
 			}.bind(this)	
 		});	
 	
-		this.contentWrapperEl.makeResizable({
+		this.resizable3 = this.contentWrapperEl.makeResizable({
 			container: this.options.restrict == true ? $(this.options.container) : false,											
 			handle: this.se,
 			limit: {
@@ -763,7 +763,7 @@ MochaUI.Window = new Class({
 			}.bind(this)	
 		});		
 		
-		this.contentWrapperEl.makeResizable({
+		this.resizable4 = this.contentWrapperEl.makeResizable({
 			handle: [this.s, this.sw],
 			limit: {
 				y: [this.options.resizeLimit.y[0] - this.headerFooterShadow, this.options.resizeLimit.y[1] - this.headerFooterShadow]	
@@ -781,7 +781,7 @@ MochaUI.Window = new Class({
 			}.bind(this)	
 		});
 		
-		this.windowEl.makeResizable({
+		this.resizable5 = this.windowEl.makeResizable({
 			handle: [this.w, this.sw, this.nw],
 			limit: {
 				x: [
@@ -874,7 +874,23 @@ MochaUI.Window = new Class({
 			'top': top,			 
 			'left': left
 		});			
-	},	
+	},
+	detachResizable: function(){
+			this.resizable1.detach();
+			this.resizable2.detach();
+			this.resizable3.detach();
+			this.resizable4.detach();
+			this.resizable5.detach();
+			this.windowEl.getElements('.handle').setStyle('display', 'none');	
+	},
+	reattachResizable: function(){
+			this.resizable1.attach();
+			this.resizable2.attach();
+			this.resizable3.attach();
+			this.resizable4.attach();
+			this.resizable5.attach();
+			this.windowEl.getElements('.handle').setStyle('display', 'block');	
+	},		
 	/*
 	
 	Internal Function: insertWindowElements

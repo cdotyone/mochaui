@@ -1,6 +1,6 @@
 /*
 
-Script: Desktop.js
+Script: Layout.js
 	Create web application layouts. Enables window maximize. 
 	
 Copyright:
@@ -158,6 +158,7 @@ MochaUI.Desktop = new Class({
 	maximizeWindow: function(windowEl) {
 
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
+		var options = currentInstance.options;
 		var windowDrag = currentInstance.windowDrag;
 
 		// If window no longer exists or is maximized, stop
@@ -172,12 +173,15 @@ MochaUI.Desktop = new Class({
 		// If window is restricted to a container, it should not be draggable when maximized.
 		if (currentInstance.options.restrict){
 			windowDrag.detach();
+			if (options.resizable) {
+				currentInstance.detachResizable();
+			}
 			currentInstance.titleBarEl.setStyle('cursor', 'default');
 		}	
 		
 		// If the window has a container that is not the desktop
 		// temporarily move the window to the desktop while it is minimized.
-		if (currentInstance.options.container != this.desktop){
+		if (options.container != this.desktop){
 			this.desktop.grab(windowEl);
 			if (this.options.restrict){
 			windowDrag.container = this.desktop;
@@ -276,6 +280,9 @@ MochaUI.Desktop = new Class({
 		
 		if (options.restrict){
 			currentInstance.windowDrag.attach();
+			if (options.resizable) {
+				currentInstance.reattachResizable();
+			}			
 			currentInstance.titleBarEl.setStyle('cursor', 'move');
 		}		
 		

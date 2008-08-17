@@ -10,7 +10,7 @@ License:
 	MIT-style license.
 
 Requires:
-	Core.js, Window.js, Desktop.js	
+	Core.js, Window.js, Layout.js	
 
 Todo:
 	- Make it so the dock requires no initial html markup.
