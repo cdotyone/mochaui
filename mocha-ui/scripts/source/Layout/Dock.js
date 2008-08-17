@@ -247,7 +247,18 @@ MochaUI.Dock = new Class({
 		dockTab.addEvent('mouseup', function(e){
 			this.timeUp = $time();
 			if ((this.timeUp - this.timeDown) < 275){
-				// If window is minimized, restore window.
+				// If the visibility of the windows on the page are toggled off, toggle visibility on.
+				if (MochaUI.Windows.windowsVisible == false) {
+					MochaUI.toggleWindowVisibility();
+					if (currentInstance.isMinimized == true) {
+						MochaUI.Dock.restoreMinimized.delay(25, MochaUI.Dock, windowEl);
+					}
+					else {
+						MochaUI.focusWindow(windowEl);
+					}										
+					return;
+				}
+				// If window is minimized, restore window.								
 				if (currentInstance.isMinimized == true) {
 					MochaUI.Dock.restoreMinimized.delay(25, MochaUI.Dock, windowEl);
 				}
@@ -322,7 +333,7 @@ MochaUI.Dock = new Class({
 	},	
 	minimizeWindow: function(windowEl){		
 		if (windowEl != $(windowEl)) return;
-			
+		
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);		
 		currentInstance.isMinimized = true;		
 
