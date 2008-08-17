@@ -12,18 +12,15 @@
 
 	MochaUI.initializeTabs('featuresTabs');
 
-	$('features1Link').addEvent('click', function(e){	
-		new Event(e).stop();
+	$('features1Link').addEvent('click', function(e){
 		MochaUI.updateContent($('features'), null, 'pages/features.html');
 	});
 	
-	$('features2Link').addEvent('click', function(e){	
-		new Event(e).stop();
+	$('features2Link').addEvent('click', function(e){
 		MochaUI.updateContent($('features'), null, 'pages/lipsum.html');
 	});
 	
-	$('features3Link').addEvent('click', function(e){	
-		new Event(e).stop();
+	$('features3Link').addEvent('click', function(e){
 		MochaUI.updateContent($('features'), null, 'pages/lipsum2.html');
 	});
 	
