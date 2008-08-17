@@ -507,7 +507,7 @@ document.addEvent('click', function(event){
 	MochaUI.blurAll.delay(50);	
 });
 
-window.addEvent('domready', function(){
+document.addEvent('domready', function(){
 	MochaUI.underlayInitialize();
 });	
 	
@@ -515,7 +515,7 @@ window.addEvent('resize', function(){
 		MochaUI.setUnderlaySize();
 });
 
-window.addEvent('mousemove', function(event){
+document.addEvent('mousemove', function(event){
 	if ($('mochaStats')){
 		$('cursorX').set('html', event.client.x);
 		$('cursorY').set('html', event.client.y);
