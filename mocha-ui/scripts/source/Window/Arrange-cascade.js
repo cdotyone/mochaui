@@ -20,23 +20,45 @@ Syntax:
 */
 
 MochaUI.options.extend({
-	desktopTopOffset:  30,    // Use a negative number if neccessary to place first window where you want it
-	desktopLeftOffset: 20,
-	mochaTopOffset:    50,    // Initial vertical spacing of each window
-	mochaLeftOffset:   40     // Initial horizontal spacing of each window	
+	viewportTopOffset:  30,    // Use a negative number if neccessary to place first window where you want it
+	viewportLeftOffset: 20,
+	windowTopOffset:    50,    // Initial vertical spacing of each window
+	windowLeftOffset:   40     // Initial horizontal spacing of each window	
 });
 
 MochaUI.extend({   
 	arrangeCascade: function(){
-		var x = this.options.desktopLeftOffset;
-		var y = this.options.desktopTopOffset;
+		// See how much space we have to work with
+		var coordinates = document.getCoordinates();
+		
+		var openWindows = 0;
+		MochaUI.Windows.instances.each(function(instance){
+			if (!instance.isMinimized) openWindows ++; 
+		});
+		
+		if ((this.options.windowTopOffset * (openWindows + 1)) >= (coordinates.height - this.options.viewportTopOffset)) {
+			var topOffset = (coordinates.height - this.options.viewportTopOffset) / (openWindows + 1);
+		}
+		else {
+			var topOffset = this.options.windowTopOffset;
+		}
+		
+		if ((this.options.windowLeftOffset * (openWindows + 1)) >= (coordinates.width - this.options.viewportLeftOffset - 20)) {
+			var leftOffset = (coordinates.width - this.options.viewportLeftOffset - 20) / (openWindows + 1);
+		}
+		else {
+			var leftOffset = this.options.windowLeftOffset;
+		}		
+		
+		var x = this.options.viewportLeftOffset;
+		var y = this.options.viewportTopOffset;
 		$$('div.mocha').each(function(windowEl){
 			var currentWindowClass = MochaUI.Windows.instances.get(windowEl.id);
 			if (!currentWindowClass.isMinimized && !currentWindowClass.isMaximized){
 				id = windowEl.id;
 				MochaUI.focusWindow(windowEl);
-				x += this.options.mochaLeftOffset;
-				y += this.options.mochaTopOffset;
+				x += leftOffset;
+				y += topOffset;
 
 				if (MochaUI.options.useEffects == false){
 					windowEl.setStyles({

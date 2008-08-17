@@ -307,14 +307,12 @@ body {
 	display: block;
 	float: left;
 	margin:	0;
-	background-color: #ebebeb;
 	cursor: pointer;	
 	background: url(../images/tabs.gif) repeat-x;
 	background-position: left -30px;	
 }
 
 .tab-menu li.selected {
-	background-color: #8caac7;
 	background: url(../images/tabs.gif) repeat-x;
 	background-position: left 0;	
 }

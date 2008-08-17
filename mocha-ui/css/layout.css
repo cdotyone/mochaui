@@ -95,12 +95,12 @@ License:
 
 .viewToggle img.viewToggleList, .viewToggle img.viewToggleGrid {
 	width: 28px;
-	height: 21px;	
+	height: 22px;	
 }	
 
 .viewToggle img.viewToggleList {
 	background: url(../images/view-toggle.gif) no-repeat;
-	background-position: 0 -63px;
+	background-position: 0 -66px;
 }
 
 .viewToggle img.viewToggleGrid {
