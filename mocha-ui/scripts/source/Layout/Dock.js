@@ -292,6 +292,10 @@ MochaUI.Dock = new Class({
 			'id': currentInstance.options.id + '_dockTabText',
 			'class': 'dockText'
 		}).set('html', titleText.substring(0,18) + (titleText.length > 18 ? '...' : '')).inject($(dockTab));
+
+		if (currentInstance.options.icon != false){
+			dockTabText.setStyle('background', 'url(' + currentInstance.options.icon + ') 2px 3px no-repeat'); 	
+		}
 		
 		// Need to resize everything in case the dock wraps when a new tab is added
 		MochaUI.Desktop.setDesktopSize();

@@ -645,8 +645,7 @@ iframe.zIndexFix {
 	width: 115px;
 	height: 19px;
 	overflow: hidden;
-	background: url(../images/icons/page.gif) no-repeat;
-	background-position: 2px 3px;			
+	background: url(../images/icons/page.gif) 2px 3px no-repeat;		
 }			
 
 #dockCanvas {
