@@ -128,6 +128,8 @@
 		<div class="horizontalHandle"></div>
 		
 		<div class="panel-header">
+			<div class="panel-corner-nw"></div>
+			<div class="panel-corner-ne"></div>		
 			<h2>File View</h2>
 		</div>
 		<div id="panel1" class="panel" style="height:300px;">
@@ -171,6 +173,8 @@
 		<div class="horizontalHandle"></div>
 
 		<div class="panel-header">
+			<div class="panel-corner-nw"></div>
+			<div class="panel-corner-ne"></div>			
 			<h2>Stats</h2>
 		</div>
 		<div class="panel rHeight">
@@ -200,6 +204,8 @@
 		<div class="horizontalHandle"></div>		
 
 		<div class="panel-header">
+			<div class="panel-corner-nw"></div>
+			<div class="panel-corner-ne"></div>
 			<h2>Introduction</h2>
 		</div>
 		<div id="mainPanel" class="panel rHeight">
@@ -207,6 +213,7 @@
 				<h3>Todo for Milestone:</h3>
 				
 				<ul>
+					<li>If you have three columns, two with the width set, what happens if the viewport is smaller than their width? Right now this throws an error in IE6.</li>
 					<li>Consider logic for closing a panel.</li>
 					<li>Consider logic for minimizing panels (vertical).</li>
 					<li>Consider logic for minimizing columns (horizontal).</li>
@@ -216,6 +223,7 @@
 				<h3>Optional Todo:</h3>
 				
 				<ul>
+					<li>Consider putting the panel footers inside their respective panels.</li>
 					<li>Can you dynamically add and remove panels?</li>
 					<li>Can you drag and drop panels from one column to another?</li>					
 					<li>If any or all of the panels in a column do not have their height set, divide the remaining height among them.</li>
@@ -245,6 +253,8 @@
 		<div class="horizontalHandle"></div>
 
 		<div class="panel-header">
+			<div class="panel-corner-nw"></div>
+			<div class="panel-corner-ne"></div>			
 			<div id="viewToggle01" class="viewToggle">
 				<img class="viewToggleList" src="images/spacer.gif" width="28" height="22" alt="List View" /><img class="viewToggleGrid" src="images/spacer.gif" width="28" height="22" alt="Grid View" />					
 			</div>	
@@ -267,14 +277,16 @@
 	
 		<div class="horizontalHandle"></div>	
 
-		<div class="panel-header">
-<div class="toolbarTabs">
-	<ul id="testTabs" class="tab-menu">
-		<li id="test1Link" class="selected"><a>Help</a></li>
-		<li id="test2Link"><a>Tab 2</a></li>
-	</ul>
-	<div class="clear"></div>
-</div>
+		<div class="panel-header">			
+			<div class="toolbarTabs">
+				<ul id="testTabs" class="tab-menu">
+					<li id="test1Link" class="selected"><a>Help</a></li>
+					<li id="test2Link"><a>Tab 2</a></li>
+				</ul>
+				<div class="clear"></div>
+			</div>
+			<div class="panel-corner-nw"></div>
+			<div class="panel-corner-ne"></div>
 		</div>
 		<div class="panel color2 rHeight">
 			<div class="pad">
@@ -285,6 +297,8 @@
 		<div class="horizontalHandle"></div>		
 
 		<div class="panel-header">
+			<div class="panel-corner-nw"></div>
+			<div class="panel-corner-ne"></div>			
 			<h2>Tips</h2>
 		</div>
 		<div id="panel2" class="panel color2" style="height: 220px;">

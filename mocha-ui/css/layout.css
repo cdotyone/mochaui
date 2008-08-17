@@ -66,8 +66,28 @@ License:
 	overflow: hidden;
 }
 
+.panel-corner-nw {
+	position: absolute;
+	top: 0;
+	left: 0;
+	background: #e9e9e9 url(../images/panel-corners.gif) no-repeat;
+	width: 4px;
+	height: 4px;
+	overflow: hidden;	
+}
+
+.panel-corner-ne {
+	position: absolute;
+	top: 0;
+	right: 0;	
+	background: #e9e9e9 url(../images/panel-corners.gif) right top no-repeat;
+	width: 4px;
+	height: 4px;
+	overflow: hidden;	
+}	
+
 .panel-footer {
-	background: #e9e9e9 url(../images/bg-desktopTitlebar.gif)  repeat-x;
+	background: #fafafa;
 	padding: 5px 8px;
 }
 
