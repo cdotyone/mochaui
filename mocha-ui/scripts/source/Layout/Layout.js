@@ -473,14 +473,20 @@ MochaUI.Desktop.implement(new Options, new Events);
 		});
 	}
 	
-function addResizeRight(element, minWidth, maxWidth){
+function addResizeRight(element, min, max){
 	if (!$(element)) return;
 	var handle = $(element).getNext('.columnHandle');
 	handle.setStyle('cursor', 'e-resize');
+	if (!min) min = 50;
+	if (!max) {
+		// var sibling = $(element).getNext('.column');
+		// max = $(element).offsetWidth + sibling.offsetWidth;
+		max = 250;
+	}	
 	$(element).makeResizable({
 		handle: handle,
 		modifiers: {x: 'width', y: false},
-		limit: { x: [minWidth, maxWidth] },					
+		limit: { x: [min, max] },					
 		onDrag: function(){
 			rWidth();
 			if (Browser.Engine.trident4) {
@@ -500,16 +506,22 @@ function addResizeRight(element, minWidth, maxWidth){
 	});	
 }
 
-function addResizeLeft(element, minWidth, maxWidth){
+function addResizeLeft(element, min, max){
 	if (!$(element)) return;
 	var handle = $(element).getPrevious('.columnHandle');
 	element = $(element);
 	handle.setStyle('cursor', 'e-resize');
+	if (!min) min = 50;
+	if (!max) {
+		// var sibling = $(element).getPrevious('.column');
+		// max = $(element).offsetWidth + sibling.offsetWidth;
+		max = 250;		
+	}	
 	element.makeResizable({
 		handle: handle,
 		modifiers: {x: 'width' , y: false},
 		invert: true,
-		limit: { x: [minWidth, maxWidth] },							
+		limit: { x: [min, max] },							
 		onDrag: function(){	
 			rWidth();	
 		}.bind(this),
@@ -523,6 +535,11 @@ function addResizeBottom(element, min, max){
 	if (!$(element)) return;
 	var handle = $(element).getNext('.horizontalHandle');
 	handle.setStyle('cursor', 'n-resize');
+	if (!min) min = 0;
+	if (!max) {
+		var sibling = $(element).getNext('.panel');
+		max = $(element).offsetHeight + sibling.offsetHeight;
+	}	
 	$(element).makeResizable({
 		handle: handle,
 		modifiers: {x: false, y: 'height'},
@@ -539,7 +556,12 @@ function addResizeBottom(element, min, max){
 function addResizeTop(element, min, max){
 	if (!$(element)) return;
 	var handle = $(element).getPrevious('.horizontalHandle');
-	handle.setStyle('cursor', 'n-resize');
+	handle.setStyle('cursor', 'n-resize');	
+	if (!min) min = 0;
+	if (!max) {
+		var sibling = $(element).getPrevious('.panel');
+		max = $(element).offsetHeight + sibling.offsetHeight;
+	}
 	$(element).makeResizable({
 		handle: handle,
 		modifiers: {x: false, y: 'height'},
