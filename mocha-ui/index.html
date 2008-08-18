@@ -171,7 +171,7 @@
 			<div class="panel-header-buttons"><img class="panelMinimize" src="images/minimize.gif" width="14" height="14" alt="Minimize Panel" /></div>						
 			<h2>Stats</h2>
 		</div>
-		<div id="panel-Stats" class="panel rHeight">
+		<div id="panel-Stats" class="panel">
 			<div class="pad">
 				<div id="mochaStats">
 					<span class="label">Cursor x:</span> <span id="cursorX"></span><br />
@@ -202,14 +202,15 @@
 			<div class="panel-corner-ne"></div>
 			<h2>Introduction</h2>
 		</div>
-		<div id="mainPanel" class="panel rHeight">
+		<div id="mainPanel" class="panel">
 			<div class="pad">
 				<h3>Todo for Milestone:</h3>
 				
 				<ul>
-					<li>If you have three columns, two with the width set, what happens if the viewport is smaller than their width? Right now this throws an error in IE6.</li>
+					<li>If you have three columns, two with the width set, what happens if the viewport is smaller than their width? Right now this throws an error in IE6 since IE6 has no min-width.</li>
 					<li>Consider logic for minimizing panels (vertical).</li>
-					<li>Consider logic for minimizing columns (horizontal).</li>										
+					<li>Consider logic for minimizing columns (horizontal).</li>
+					<li>Try to get original height ratio of panels more accurate over the course of many broswer resizes. The innaccuracy only seems to be produced if the browser is resized too small for the column. Setting a min-height based on the number of panels in a column may solve it. Make sure the height of a panel cannot become less than zero.</li>															
 				</ul>
 				
 				<h3>Optional Todo:</h3>
@@ -217,8 +218,7 @@
 				<ul>
 					<li>Consider putting the panel footers inside their respective panels.</li>
 					<li>Can you dynamically add and remove panels?</li>
-					<li>Can you drag and drop panels from one column to another?</li>					
-					<li>If any or all of the panels in a column do not have their height set, divide the remaining height among them.</li>
+					<li>Can you drag and drop panels from one column to another?</li>
 					<li>See if you can focus iframes via parent.document. Add event to onComplete in Window.js.</li>
 					<li>Create Illustrator source file for graphic assets.</li>
 				</ul>				
@@ -276,7 +276,7 @@
 				<div class="clear"></div>
 			</div>
 		</div>
-		<div class="panel color2 rHeight">
+		<div class="panel color2">
 			<div class="pad">
 				<p><strong>This SVN copy of MochaUI is in a very experimental state. It is not recommended that you try to use it on a live site.</strong></p>
 				<p>The code and implementation for this new layout module is going to change dramatically as I continue working on it.</p>
@@ -288,7 +288,7 @@
 			<div class="panel-corner-nw"></div>		
 			<h2>Tips</h2>
 		</div>
-		<div id="panel2" class="panel color2" style="height: 220px;">
+		<div id="panel2" class="panel color2">
 			<div class="pad">
 				<ul>
 					<li>Ctrl-Alt-Q toggles window visibility.</li>

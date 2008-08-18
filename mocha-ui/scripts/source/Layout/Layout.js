@@ -53,7 +53,10 @@ MochaUI.Desktop = new Class({
 		this.sidebarMinimize        = $(this.options.sidebarMinimize);
 		this.sidebarHandle          = $(this.options.sidebarHandle);		
 	
-		this.setDesktopSize();
+		// This is run on dock initialize so no need to do it twice.
+		if (!MochaUI.Dock) {
+			this.setDesktopSize();
+		}
 		this.menuInitialize();		
 		
 		this.sidebarInitialize();		
@@ -141,10 +144,10 @@ MochaUI.Desktop = new Class({
 		if (Browser.Engine.trident4) {
 			$$('.pad').setStyle('display', 'none');
 			$$('.rHeight').setStyle('height', 1);
-		}	
-		rHeight();
+		}
+		panelHeight();
 		rWidth();
-		if (Browser.Engine.trident4) $$('.pad').setStyle('display', 'block');
+		if (Browser.Engine.trident4) $$('.pad').setStyle('display', 'block');		
 	},
 	/*
 	
@@ -469,7 +472,58 @@ MochaUI.Desktop.implement(new Options, new Events);
 	*/
 	
 	function panelHeight(){
-	
+		$$('.column').each(function(column){
+			
+			var columnHeight = column.offsetHeight.toInt();			
+			var heightNotSet = [];
+			var panels = [];
+			this.panelsHeight = 0;			
+			this.height = 0;
+			
+			// Get the total height of all the column's children
+			column.getChildren().each(function(el){			
+
+				if (el.hasClass('panel')){
+					panels.push(el);
+					this.panelsHeight += el.offsetHeight.toInt();
+					if (el.style.height) {
+						this.height += el.getStyle('height').toInt();
+					}
+					// Add children without height set to an array
+					else {
+						heightNotSet.push(el);
+					}	
+				}
+				else {
+					this.height += el.offsetHeight.toInt();	
+				}											
+			}.bind(this));
+		
+			// Get the remaining height
+			var remainingHeight = column.offsetHeight.toInt() - this.height;		
+							
+			if (heightNotSet.length != 0) {				
+				var heightToAdd = remainingHeight / heightNotSet.length;
+				heightNotSet.each(function(panel){
+					panel.setStyle('height', heightToAdd);
+				});
+			}
+			//
+			else {
+				this.height = 0;				
+				
+				column.getChildren().each(function(el){
+					this.height += el.offsetHeight.toInt();												
+				}.bind(this));
+				
+				var remainingHeight = column.offsetHeight.toInt() - this.height;				
+				
+				panels.each(function(panel){
+					var ratio = this.panelsHeight / panel.offsetHeight.toInt();
+					panel.setStyle('height', panel.getStyle('height').toInt() + (remainingHeight / ratio));
+				});	
+			}			
+		});
 	}
 	
 	// Remaining Width
@@ -563,12 +617,16 @@ function addResizeBottom(element, min, max){
 	$(element).makeResizable({
 		handle: handle,
 		modifiers: {x: false, y: 'height'},
-		limit: { y: [min, max] },					
+		limit: { y: [min, max] },
+		onBeforeStart: function(){
+			this.originalHeight = $(element).offsetHeight;
+			this.siblingOriginalHeight = sibling.offsetHeight;
+		}.bind(this),							
 		onDrag: function(){
-			rHeight();
+			sibling.setStyle('height', siblingOriginalHeight + (this.originalHeight - $(element).offsetHeight));
 		}.bind(this),
 		onComplete: function(){
-			rHeight();
+			sibling.setStyle('height', siblingOriginalHeight + (this.originalHeight - $(element).offsetHeight));
 		}.bind(this)		
 	});	
 }
@@ -586,20 +644,34 @@ function addResizeTop(element, min, max){
 		handle: handle,
 		modifiers: {x: false, y: 'height'},
 		invert: true,		
-		limit: { y: [min, max] },					
+		limit: { y: [min, max] },
+		onBeforeStart: function(){
+			this.originalHeight = $(element).offsetHeight;
+			this.siblingOriginalHeight = sibling.offsetHeight;
+		}.bind(this),				
 		onDrag: function(){
-			rHeight();
+			sibling.setStyle('height', siblingOriginalHeight + (this.originalHeight - $(element).offsetHeight));
 		}.bind(this),
 		onComplete: function(){
-			rHeight();
+			sibling.setStyle('height', siblingOriginalHeight + (this.originalHeight - $(element).offsetHeight));
 		}.bind(this)		
 	});	
 }
 
 function initLayout(){		
 	if (Browser.Engine.trident4) $$('.pad').setStyle('display', 'none'); // IE6 Fix	
-	rHeight();
-	rWidth();
+	//rHeight();
+	//rWidth();
+	//panelHeight();
+	
+	/*$$('.panel').each(function(el){
+		alert(el.style.height.toInt());
+		if (el.style.height.toInt() >= 0) {
+			el.setStyle('background','#ff0');
+		}
+	});*/
+	
+	
 	if (Browser.Engine.trident4) $$('.pad').setStyle('display', 'block'); // IE6 Fix
 	$$('.columnHandle').setStyle('visibility','visible');
 	$$('.column').setStyle('visibility','visible');
