@@ -25,6 +25,7 @@ MochaUI.Desktop = new Class({
 		// If you change the IDs of the Mocha Desktop containers in your HTML, you need to change them here as well.
 		desktop:                'desktop',
 		desktopHeader:          'desktopHeader',
+		desktopFooter:          'desktopFooter',		
 		desktopNavBar:          'desktopNavbar',
 		pageWrapper:            'pageWrapper',
 		page:                   'page',
@@ -40,7 +41,8 @@ MochaUI.Desktop = new Class({
 	initialize: function(options){
 		this.setOptions(options);
 		this.desktop                = $(this.options.desktop);
-		this.desktopHeader          = $(this.options.desktopHeader);		
+		this.desktopHeader          = $(this.options.desktopHeader);
+		this.desktopFooter          = $(this.options.desktopFooter);				
 		this.desktopNavBar          = $(this.options.desktopNavBar);
 		this.pageWrapper            = $(this.options.pageWrapper);
 		this.page                   = $(this.options.page);
@@ -426,13 +428,16 @@ MochaUI.Desktop = new Class({
 			}			
 			this.sidebarIsMinimized = false;
 		}				
+	},
+	panelMinimizeToggle: function(el){
+		el.addClass('panel-closed');
 	}
 });
 MochaUI.Desktop.implement(new Options, new Events);
 
 	// Remaining Height
 	function rHeight(){	
-		$$('div.rHeight').each(function(el){
+		$$('.rHeight').each(function(el){
 			var currentHeight = el.offsetHeight.toInt();
 			currentHeight -= el.getStyle('border-top').toInt();		
 			currentHeight -= el.getStyle('border-bottom').toInt();						
@@ -452,9 +457,24 @@ MochaUI.Desktop.implement(new Options, new Events);
 		});
 	}
 	
+	// Panel Height
+	
+	/*
+	For each column, find the column height. Get the available space.
+	Add available space to any panel that does not have its height set.
+	If there is more than one, divide the available space among them.
+	If all panels have their height set, divide the available space among
+	the open panels equally.
+	
+	*/
+	
+	function panelHeight(){
+	
+	}
+	
 	// Remaining Width
 	function rWidth(){	
-		$$('div.rWidth').each(function(el){
+		$$('.rWidth').each(function(el){
 			var currentWidth = el.offsetWidth.toInt();
 			currentWidth -= el.getStyle('border-left').toInt();		
 			currentWidth -= el.getStyle('border-right').toInt();						
@@ -576,13 +596,22 @@ function addResizeTop(element, min, max){
 	});	
 }
 
-function initLayout(){
-	$$('column').each(function(element){
-	//	element.setStyle('height', element.getParent().offsetHeight.toInt());
-	});		
+function initLayout(){		
 	if (Browser.Engine.trident4) $$('.pad').setStyle('display', 'none'); // IE6 Fix	
 	rHeight();
 	rWidth();
 	if (Browser.Engine.trident4) $$('.pad').setStyle('display', 'block'); // IE6 Fix
+	$$('.columnHandle').setStyle('visibility','visible');
 	$$('.column').setStyle('visibility','visible');
+	/* $$('.panelMinimize').addEvent('click', function(event){		
+		el = event.target.getParent().getParent().getNext('.panel');
+		if (el.getStyle('height') != 0) {
+			el.setStyle('height', 0);
+			rHeight();
+		}
+		else {
+			el.setStyle('height', null);
+			rHeight();
+		}
+	});	*/
 }

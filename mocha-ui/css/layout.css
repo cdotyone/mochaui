@@ -24,6 +24,10 @@ License:
 	background: #f1f1f1;
 }
 
+.panel-closed {
+	height: 0px;	
+}	
+
 .panel.color2 {
 	background: #f1f1f1;	
 }
@@ -43,7 +47,7 @@ License:
 }
 
 .horizontalHandle {
-	height: 2px;
+	height: 3px;
 	line-height: 1px;
 	font-size: 1px;
 	overflow: hidden;
@@ -51,12 +55,13 @@ License:
 }	
 
 .columnHandle {
+	visibility: hidden;	
 	height: 100%;
 	min-height: 10px;	
 	float: left;
-	width: 2px;
+	width: 3px;
 	overflow: hidden;
-	background: #d0d0d0;		
+	background: #d0d0d0;			
 }
 
 .panel-header {
@@ -64,6 +69,14 @@ License:
 	background: #e9e9e9 url(../images/bg-desktopTitlebar.gif)  repeat-x;
 	height: 29px;
 	overflow: hidden;
+}
+
+.panel-header-buttons {
+	position: absolute;
+	top: 7px;
+	right: 5px;
+	width: 60px;
+	text-align: right;
 }
 
 .panel-corner-nw {

@@ -121,15 +121,13 @@
 </div>
 
 <div id="pageWrapper">
-
-
 	
 	<div id="sideColumn1" class="column" style="width: 200px;">		
 		<div class="horizontalHandle"></div>
 		
 		<div class="panel-header">
-			<div class="panel-corner-nw"></div>
-			<div class="panel-corner-ne"></div>		
+			<div class="panel-corner-ne"></div>
+			<div class="panel-header-buttons"><img class="panelMinimize" src="images/minimize.gif" width="14" height="14" alt="Minimize Panel" /></div>		
 			<h2>File View</h2>
 		</div>
 		<div id="panel1" class="panel" style="height:300px;">
@@ -155,35 +153,34 @@
 							</ul>
 						</li>	
 						<li class="doc"><span>File 1</span></li>							
-						<li class="folder f-open last"><span>Subnode 2</span>
+						<li class="folder f-open last"><span>Experiments</span>
 							<ul>
-								<li class="doc"><span>File 2:1</span></li>
-								<li class="doc"><span>File 2:2</span></li>
+								<li class="doc"><span><a>Canvas Sketchpad</a></span></li>
 							</ul>						
 						</li>					
 					</ul>	
 				</li>
 			</ul>	
 			</div>
-		</div>
-		<div class="panel-footer">
-			<span>Footer Text</span>
 		</div>		
 		
 		<div class="horizontalHandle"></div>
 
 		<div class="panel-header">
-			<div class="panel-corner-nw"></div>
-			<div class="panel-corner-ne"></div>			
+			<div class="panel-corner-ne"></div>
+			<div class="panel-header-buttons"><img class="panelMinimize" src="images/minimize.gif" width="14" height="14" alt="Minimize Panel" /></div>						
 			<h2>Stats</h2>
 		</div>
-		<div class="panel rHeight">
+		<div id="panel-Stats" class="panel rHeight">
 			<div class="pad">
 				<div id="mochaStats">
 					<span class="label">Cursor x:</span> <span id="cursorX"></span><br />
 					<span class="label">Cursor y:</span> <span id="cursorY"></span>
-				</div>	
+				</div>
+				
+				<!--	
 				<a href="#" onclick="frames[frames.length - 1].document.write('hello');">Test</a>
+				-->
 
 
 			</div>
@@ -192,10 +189,7 @@
 			<span>Footer Text</span>
 		</div>		
 		
-		<div class="horizontalHandle"></div>		
-		
-	</div>	
-	
+	</div>		
 	
 	<div class="columnHandle"></div>
 
@@ -262,9 +256,7 @@
 			<div class="pad">
 				Donec quis dui. Mauris vulputate lorem vehicula erat ullamcorper ornare.
 			</div>
-		</div>
-		
-		<div class="horizontalHandle"></div>				
+		</div>				
 		
 	</div>
 
@@ -293,8 +285,7 @@
 		<div class="horizontalHandle"></div>		
 
 		<div class="panel-header">
-			<div class="panel-corner-nw"></div>
-			<div class="panel-corner-ne"></div>			
+			<div class="panel-corner-nw"></div>		
 			<h2>Tips</h2>
 		</div>
 		<div id="panel2" class="panel color2" style="height: 220px;">
@@ -307,9 +298,7 @@
 		</div>
 		<div class="panel-footer">
 			<span>Footer Text</span>
-		</div>		
-		
-		<div class="horizontalHandle"></div>		
+		</div>	
 
 	</div>
 

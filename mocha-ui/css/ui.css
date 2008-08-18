@@ -11,8 +11,7 @@ License:
 */   
 
 html, body {
-	height: 100%;
-	overflow: auto; /* Removes empty vertical scrollbars in IE */
+	overflow: hidden; /* Removes empty vertical scrollbars in IE */
 }		
 
 body {
