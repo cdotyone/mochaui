@@ -352,12 +352,16 @@ MochaUI.Dock = new Class({
 
 		 // Fixes a scrollbar issue in Mac FF2
 		if (Browser.Platform.mac && Browser.Engine.gecko){
-			currentInstance.contentWrapperEl.setStyle('overflow', 'hidden');
+			if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent)) {
+				var ffversion = new Number(RegExp.$1);
+				if (ffversion < 3) {					
+					currentInstance.contentWrapperEl.setStyle('overflow', 'hidden');
+				}					
+			}
 		}
 	
 		MochaUI.Desktop.setDesktopSize();
-		
-		// Fixes a scrollbar issue in Mac FF2.
+
 		// Have to use timeout because window gets focused when you click on the minimize button 	
 		setTimeout(function(){		
 			windowEl.setStyle('zIndex', 1);

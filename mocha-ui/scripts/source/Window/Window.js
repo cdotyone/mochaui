@@ -389,10 +389,15 @@ MochaUI.Window = new Class({
 		if ( Browser.Engine.trident && this.options.shape == 'gauge') {
 			this.windowEl.setStyle('background', 'url(../images/spacer.gif)');
 		}		
-
-		if ((this.options.type == 'modal' && !Browser.Engine.gecko && !Browser.Engine.trident) || (Browser.Platform.mac && Browser.Engine.gecko)){
-			this.windowEl.setStyle('position', 'fixed');	
-		}
+		
+		if ((this.options.type == 'modal' && Browser.Platform.mac && Browser.Engine.gecko)){
+			if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent)) {
+				var ffversion = new Number(RegExp.$1);
+				if (ffversion < 3) {				
+					this.windowEl.setStyle('position', 'fixed');
+				}					
+			}				
+		}		
 
 		if (this.options.loadMethod == 'iframe') {
 			// Iframes have their own scrollbars and padding.
@@ -1078,7 +1083,12 @@ MochaUI.Window = new Class({
 
 		// For Mac Firefox 2 to help reduce scrollbar bugs in that browser
 		if (Browser.Platform.mac && Browser.Engine.gecko) {
-			cache.overlayEl.setStyle('overflow', 'auto');
+			if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent)) {
+				var ffversion = new Number(RegExp.$1);
+				if (ffversion < 3) {				
+					cache.overlayEl.setStyle('overflow', 'auto');
+				}					
+			}
 		}
 
 		if (options.resizable){			
