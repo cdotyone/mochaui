@@ -123,7 +123,7 @@ MochaUI.Desktop = new Class({
 		}
 
 		// Set pageWrapper height so the dock doesn't cover the pageWrapper scrollbars.
-		if (this.pageWrapper && this.desktopHeader) {
+		if (this.pageWrapper) {
 		
 			var dockOffset = MochaUI.dockVisible ? dockWrapper.offsetHeight : 0;
 			var pageWrapperHeight = windowDimensions.height;

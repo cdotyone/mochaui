@@ -53,7 +53,7 @@ initializeWindows = function(){
 	MochaUI.ajaxpageWindow = function(){ 
 		new MochaUI.Window({
 			id: 'ajaxpage',
-			title: 'Content Loaded with an XMLHttpRequest',
+			title: '',
 			loadMethod: 'xhr',
 			contentURL: 'pages/lipsum.html',
 			width: 340,
@@ -425,6 +425,9 @@ initializeWindows = function(){
 			loadMethod: 'xhr',
 			contentURL: 'plugins/windowform/',
 			onContentLoaded: function(){
+
+			$('newWindowHeaderTitle').focus();
+			
 				if ( !MochaUI.windowformScript == true ){
 					new Request({
 						url: 'plugins/windowform/scripts/Window-from-form.js',
@@ -443,7 +446,8 @@ initializeWindows = function(){
 			height: 400,
 			x: 20,
 			y: 80,
-			maximizable: false
+			maximizable: false,
+			type: 'modal'
 		});
 	}
 	if ($('builderLinkCheck')){

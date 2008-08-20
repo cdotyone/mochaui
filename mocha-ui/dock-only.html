@@ -32,7 +32,9 @@
 	
 	window.addEvent('domready', function(){
 		MochaUI.Desktop = new MochaUI.Desktop();
-		MochaUI.Dock = new MochaUI.Dock();		
+		MochaUI.Dock = new MochaUI.Dock({
+			dockPosition: 'bottom'		
+		});				
 		MochaUI.Modal = new MochaUI.Modal();			
 		MochaUI.NewWindowsFromHTML = new MochaUI.NewWindowsFromHTML();		
 
@@ -58,6 +60,16 @@
 	width: 800px;
 	background: #fff;	
 }
+
+#header {
+	background: #f0f0f0;
+	padding: 20px;	
+}
+
+#navigation {
+	background: #f5f5f5;
+	padding: 5px 20px;	
+}	
 	
 #content {
 	padding: 20px;
@@ -85,20 +97,6 @@
 
 <div id="desktop">
 	
-<div id="desktopHeader">
-	<div id="desktopTitlebarWrapper">
-		<div id="desktopTitlebar">
-			<div id="topNav">
-				<ul class="menu-right">
-					<li>Welcome <a href="#">Demo User</a>.</li>
-					<li><a href="#">Sign Out</a></li>				
-				</ul>
-			</div>						
-			<h1 class="applicationTitle">Mocha UI</h1>
-			<h1 class="tagline">A Web Applications <span class="taglineEm">User Interface Library</span></h1>
-		</div>
-	</div>	
-</div>
 <div id="dockWrapper">
 	<div id="dock">
 		<div id="dockPlacement"></div>
@@ -111,6 +109,14 @@
 	<div id="page">
 	
 		<!-- PAGE CONTENT BEGINS HERE -->
+
+		<div id="header">
+			<h1>My Website</h1>
+		</div>
+		
+		<div id="navigation">
+			Site menu
+		</div>			
 
 		<div id="content">	
 			<h3>My Page Content</h3>
