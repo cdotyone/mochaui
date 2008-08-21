@@ -20,6 +20,7 @@ License:
 }
 
 .panel {
+	position: relative;	
 	overflow: auto;
 	background: #f1f1f1;
 }
@@ -99,10 +100,17 @@ License:
 	overflow: hidden;	
 }	
 
-.panel-footer {
+.panel-footerWrapper {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;	
 	background: #fafafa;
-	padding: 5px 8px;
 }
+
+.panel-footer {
+	padding: 5px 8px;	
+}	
 
 .panel-header h2 {
 	font-size: 12px;

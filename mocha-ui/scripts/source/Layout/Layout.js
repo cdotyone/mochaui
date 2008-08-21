@@ -475,8 +475,10 @@ MochaUI.Desktop.implement(new Options, new Events);
 		$$('.column').each(function(column){
 			
 			var columnHeight = column.offsetHeight.toInt();			
-			var heightNotSet = [];
-			var panels = [];
+			var heightNotSet = []; // Panels than do not have their height set
+			var heightIsZero = []; // Panels whose height is zero. NOT USED YET
+			var panels = []; // All the panels in the column
+			var panelsFixed = []; // Panels with the fixed class. NOT USED YET
 			this.panelsHeight = 0;			
 			this.height = 0;
 			
@@ -484,6 +486,7 @@ MochaUI.Desktop.implement(new Options, new Events);
 			column.getChildren().each(function(el){			
 
 				if (el.hasClass('panel')){
+
 					panels.push(el);
 					this.panelsHeight += el.offsetHeight.toInt();
 					if (el.style.height) {
@@ -501,14 +504,17 @@ MochaUI.Desktop.implement(new Options, new Events);
 		
 			// Get the remaining height
 			var remainingHeight = column.offsetHeight.toInt() - this.height;		
-							
+			
+			// If any of the panels do not have their height set, i.e., on startup or a panel
+			// was dynamically added ...				
 			if (heightNotSet.length != 0) {				
 				var heightToAdd = remainingHeight / heightNotSet.length;
 				heightNotSet.each(function(panel){
 					panel.setStyle('height', heightToAdd);
 				});
 			}
-			//
+			
+			// If all the panels have their height set ...
 			else {
 				this.height = 0;				
 				
@@ -518,9 +524,21 @@ MochaUI.Desktop.implement(new Options, new Events);
 				
 				var remainingHeight = column.offsetHeight.toInt() - this.height;				
 				
+				// Todo: Need to check each panel. If it's height is less than zero we shouldn't
+				// try to subtract more height from it. Instead the height should be subtracted
+				// from panels with height greater than 0. This gets more complicated if the
+				// panel has a height of 5 and we want to subtract 10px from it. We need to
+				// subtract the five and split the difference to the other panels.
+				//
+				// Once a panel reaches 0 or there abouts the ratio is broken for returning to later.
+				
 				panels.each(function(panel){
 					var ratio = this.panelsHeight / panel.offsetHeight.toInt();
-					panel.setStyle('height', panel.getStyle('height').toInt() + (remainingHeight / ratio));
+					var newPanelHeight = panel.getStyle('height').toInt() + (remainingHeight / ratio);
+					if (newPanelHeight < 1) {
+						newPanelHeight = 0;
+					}
+					panel.setStyle('height', newPanelHeight);
 				});	
 			}			
 		});
@@ -612,7 +630,9 @@ function addResizeBottom(element, min, max){
 	if (!min) min = 0;
 	if (!max) {
 		var sibling = $(element).getNext('.panel');
-		max = $(element).offsetHeight + sibling.offsetHeight;
+		max = function(){
+			return $(element).offsetHeight + sibling.offsetHeight;
+		}.bind(this)
 	}	
 	$(element).makeResizable({
 		handle: handle,
@@ -623,6 +643,9 @@ function addResizeBottom(element, min, max){
 			this.siblingOriginalHeight = sibling.offsetHeight;
 		}.bind(this),							
 		onDrag: function(){
+			//if ($(element).offsetHeight < 1){
+			//	$(element).offsetHeight = 0;
+			//}
 			sibling.setStyle('height', siblingOriginalHeight + (this.originalHeight - $(element).offsetHeight));
 		}.bind(this),
 		onComplete: function(){
@@ -638,7 +661,9 @@ function addResizeTop(element, min, max){
 	if (!min) min = 0;
 	if (!max) {
 		var sibling = $(element).getPrevious('.panel');
-		max = $(element).offsetHeight + sibling.offsetHeight;
+		max = function(){
+			return $(element).offsetHeight + sibling.offsetHeight;
+		}.bind(this)
 	}
 	$(element).makeResizable({
 		handle: handle,

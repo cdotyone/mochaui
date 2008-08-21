@@ -688,6 +688,7 @@ window.addEvent('domready', function(){
 	addResizeRight('sideColumn1', 100, 300);
 	addResizeLeft('sideColumn2', 150, 250);
 	addResizeBottom('panel1');
+	addResizeBottom('panel-Test');	
 	addResizeTop('panel2');		
 	addResizeTop('panel3');	
 		
