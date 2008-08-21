@@ -631,7 +631,7 @@ function addResizeBottom(element, min, max){
 	if (!max) {
 		var sibling = $(element).getNext('.panel');
 		max = function(){
-			return $(element).offsetHeight + sibling.offsetHeight;
+			return $(element).getStyle('height').toInt() + sibling.getStyle('height').toInt();
 		}.bind(this)
 	}	
 	$(element).makeResizable({
@@ -639,17 +639,14 @@ function addResizeBottom(element, min, max){
 		modifiers: {x: false, y: 'height'},
 		limit: { y: [min, max] },
 		onBeforeStart: function(){
-			this.originalHeight = $(element).offsetHeight;
-			this.siblingOriginalHeight = sibling.offsetHeight;
+			this.originalHeight = $(element).getStyle('height').toInt();
+			this.siblingOriginalHeight = sibling.getStyle('height').toInt();
 		}.bind(this),							
 		onDrag: function(){
-			//if ($(element).offsetHeight < 1){
-			//	$(element).offsetHeight = 0;
-			//}
-			sibling.setStyle('height', siblingOriginalHeight + (this.originalHeight - $(element).offsetHeight));
+			sibling.setStyle('height', siblingOriginalHeight + (this.originalHeight - $(element).getStyle('height').toInt()));
 		}.bind(this),
 		onComplete: function(){
-			sibling.setStyle('height', siblingOriginalHeight + (this.originalHeight - $(element).offsetHeight));
+			sibling.setStyle('height', siblingOriginalHeight + (this.originalHeight - $(element).getStyle('height').toInt()));
 		}.bind(this)		
 	});	
 }
@@ -708,7 +705,11 @@ MochaUI.Panel = new Class({
 	initialize: function(options){
 		this.setOptions(options);
 		this.header = null; // add logic for grabbing the header
-		this.originalHeight = 0;			
+		this.originalHeight = 0;
+		
+		// Todo: Make this so it only effects the column in question
+		panelHeight();
+					
 	}
 });
 MochaUI.Panel.implement(new Options, new Events);	
