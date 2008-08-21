@@ -223,7 +223,7 @@ var MochaUI = new Hash({
 			if (currentInstance.options.type == 'modal'){
 				$('modalOverlay').setStyle('opacity', 0);
 			}		
-			this.closingJobs(windowEl);
+			MochaUI.closingJobs(windowEl);
 			return true;	
 		}
 		else {
