@@ -689,7 +689,13 @@ window.addEvent('domready', function(){
 	addResizeBottom('panel1');
 	addResizeBottom('panel-Test');	
 	addResizeBottom('mainPanel');		
-	addResizeBottom('panel2');	
+	addResizeBottom('panel2');
+	
+	new MochaUI.Panel({
+		id: 'testpanel',
+		title: 'This is a Test',
+		column: 'sideColumn1'
+	});	
 		
 	MochaUI.Modal = new MochaUI.Modal();
 	buildTree('tree1');

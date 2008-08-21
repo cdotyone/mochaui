@@ -651,35 +651,34 @@ function addResizeBottom(element, min, max){
 	});	
 }
 
-/*
 function addResizeTop(element, min, max){
 	if (!$(element)) return;
-	var handle = $(element).getPrevious('.horizontalHandle');
-	handle.setStyle('cursor', 'n-resize');	
+	var handle = $(element+'_handle');
+	handle.setStyle('cursor', 'n-resize');
 	if (!min) min = 0;
 	if (!max) {
 		var sibling = $(element).getPrevious('.panel');
 		max = function(){
-			return $(element).offsetHeight + sibling.offsetHeight;
+			return $(element).getStyle('height').toInt() + sibling.getStyle('height').toInt();
 		}.bind(this)
-	}
+	}	
 	$(element).makeResizable({
 		handle: handle,
 		modifiers: {x: false, y: 'height'},
-		invert: true,		
 		limit: { y: [min, max] },
+		invert: true,		
 		onBeforeStart: function(){
-			this.originalHeight = $(element).offsetHeight;
-			this.siblingOriginalHeight = sibling.offsetHeight;
-		}.bind(this),				
+			this.originalHeight = $(element).getStyle('height').toInt();
+			this.siblingOriginalHeight = sibling.getStyle('height').toInt();
+		}.bind(this),							
 		onDrag: function(){
-			sibling.setStyle('height', siblingOriginalHeight + (this.originalHeight - $(element).offsetHeight));
+			sibling.setStyle('height', siblingOriginalHeight + (this.originalHeight - $(element).getStyle('height').toInt()));
 		}.bind(this),
 		onComplete: function(){
-			sibling.setStyle('height', siblingOriginalHeight + (this.originalHeight - $(element).offsetHeight));
+			sibling.setStyle('height', siblingOriginalHeight + (this.originalHeight - $(element).getStyle('height').toInt()));
 		}.bind(this)		
-	});	
-}*/
+	});
+}
 
 MochaUI.Panel = new Class({
 							
@@ -689,6 +688,7 @@ MochaUI.Panel = new Class({
 	
 	options: {
 		id:                null, // This must be set when creating the panel
+		title:             'New Panel',
 		column:            null, // Where to inject the panel. This must be set when creating the panel
 		loadMethod:        'html',
 		contentURL:        'pages/lipsum.html',	
@@ -700,15 +700,49 @@ MochaUI.Panel = new Class({
 		// html options
 		content:           'Panel content',		
 
-		footer:            false
+		footer:            false,
+		
+		// Style options:
+		height:            125 		
+		
 	},	
 	initialize: function(options){
 		this.setOptions(options);
 		this.header = null; // add logic for grabbing the header
 		this.originalHeight = 0;
+
+
+		this.panelEl = new Element('div', {
+			'id': this.options.id,												   
+			'class': 'panel',
+			'styles': {
+				'height': this.options.height
+			}			
+		}).inject($(this.options.column));
+		
+		this.panelPadEl = new Element('div', {
+			'id': this.options.id + '_pad',												   
+			'class': 'pad',
+			'html': 'This is a test'
+		}).inject(this.panelEl);
+		
+		this.panelHeaderEl = new Element('div', {
+			'id': this.options.id + '_header',												   
+			'class': 'panel-header',
+			'html': '<h2>' + this.options.title + '</h2>'
+		}).inject(this.panelEl, 'before');
+		
+		// Todo: If not only panel in column
+		this.panelHandleEl = new Element('div', {
+			'id': this.options.id + '_handle',												   
+			'class': 'horizontalHandle'
+		}).inject(this.panelHeaderEl, 'before');						
+
 		
 		// Todo: Make this so it only effects the column in question
 		panelHeight();
+		addResizeTop(this.options.id);
+				
 					
 	}
 });

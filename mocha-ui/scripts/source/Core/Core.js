@@ -43,10 +43,8 @@ var MochaUI = new Hash({
 	*/	
 	updateContent: function(windowEl, content, url, element, loadMethod){
 		
-		if (!windowEl) return;		
-		
-		//alert('test');
-		
+		if (!windowEl) return;
+					
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
 		var contentEl = currentInstance.contentEl;
 		var options = currentInstance.options;
