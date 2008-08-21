@@ -52,6 +52,15 @@ License:
 /*	border: 1px solid #bbb; */	
 }
 
+.panel-header h2 {
+	font-size: 12px;
+	margin: 0;
+	padding: 5px 8px 0 8px;
+	height: 22px;	
+	overflow: hidden;
+	color: #69727A;	
+}
+
 .panel-header-buttons {
 	position: absolute;
 	top: 7px;
@@ -61,6 +70,7 @@ License:
 }
 
 .panel-corner-nw {
+	display: none;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -71,6 +81,7 @@ License:
 }
 
 .panel-corner-ne {
+	display: none;	
 	position: absolute;
 	top: 0;
 	right: 0;	
@@ -91,14 +102,6 @@ License:
 .panel-footer {
 	padding: 5px 8px;	
 }	
-
-.panel-header h2 {
-	font-size: 12px;
-	margin: 0;
-	padding: 5px 8px 0 8px;
-	height: 22px;	
-	overflow: hidden;	
-}
 
 .pad {
 	padding: 8px;	
@@ -124,7 +127,7 @@ License:
 	float: left;
 	width: 4px;
 	overflow: hidden;
-	background: #ddd;				
+	background: #d9d9d9;				
 }
 
 /* Components */

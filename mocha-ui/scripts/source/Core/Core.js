@@ -41,15 +41,24 @@ var MochaUI = new Hash({
 		windowEl, content, url
 		
 	*/	
-	updateContent: function(windowEl, content, url, element, loadMethod){
+	updateContent: function(updateOptions){
+
+		var options = {
+			windowEl:   null,
+			element:    null,			
+			content:    null,
+			url:        null,
+			loadMethod: null
+		};
+		$extend(options, updateOptions);
 		
-		if (!windowEl) return;
-					
+		if (!options.windowEl) return;
+		var windowEl = options.windowEl;
+			
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
-		var contentEl = currentInstance.contentEl;
-		var options = currentInstance.options;
-		if (element != null){
-			var contentContainer = element; 
+		var contentEl = currentInstance.contentEl
+		if (options.element != null){
+			var contentContainer = options.element; 
 		}
 		else {
 			var contentContainer = currentInstance.contentEl;
@@ -60,18 +69,16 @@ var MochaUI = new Hash({
 		if (contentContainer == contentEl){
 			currentInstance.contentEl.empty();
 		}		
-		
-		//alert(loadMethod);
-		var loadMethod = loadMethod ? loadMethod : currentInstance.options.loadMethod;
+		var loadMethod = options.loadMethod ? options.loadMethod : currentInstance.options.loadMethod;
 
 		// Load new content.
 		switch(loadMethod) {
 			case 'xhr':
 				new Request.HTML({
-					url: url,
+					url: options.url,
 					update: contentContainer,
-					evalScripts: options.evalScripts,
-					evalResponse: options.evalResponse,
+					evalScripts: currentInstance.options.evalScripts,
+					evalResponse: currentInstance.options.evalResponse,
 					onRequest: function(){
 						if (contentContainer == contentEl){
 							currentInstance.showLoadingIcon(canvasIconEl);
@@ -92,14 +99,14 @@ var MochaUI = new Hash({
 				}).get();
 				break;
 			case 'iframe': // May be able to streamline this if the iframe already exists.
-				if ( options.contentURL == '' || contentContainer != contentEl) {
+				if ( currentInstance.options.contentURL == '' || contentContainer != contentEl) {
 					break;
 				}
 				currentInstance.iframeEl = new Element('iframe', {
 					'id': currentInstance.options.id + '_iframe',
 					'name':  currentInstance.options.id + '_iframe',
 					'class': 'mochaIframe',
-					'src': url,
+					'src': options.url,
 					'marginwidth':  0,
 					'marginheight': 0,
 					'frameBorder':  0,
@@ -120,10 +127,10 @@ var MochaUI = new Hash({
 			default:
 				// Need to test injecting elements as content.
 				var elementTypes = new Array('element', 'textnode', 'whitespace', 'collection');
-				if (elementTypes.contains($type(content))) {
-					content.inject(contentContainer);
+				if (elementTypes.contains($type(options.content))) {
+					options.content.inject(contentContainer);
 				} else {
-					contentContainer.set('html', content);
+					contentContainer.set('html', options.content);
 				}				
 				currentInstance.fireEvent('onContentLoaded', windowEl);
 				break;

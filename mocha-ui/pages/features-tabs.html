@@ -13,15 +13,24 @@
 	MochaUI.initializeTabs('featuresTabs');
 
 	$('features1Link').addEvent('click', function(e){
-		MochaUI.updateContent($('features'), null, 'pages/features.html');
+		MochaUI.updateContent({
+			'windowEl':  $('features'),
+			'url':       'pages/features.html'
+		});
 	});
 	
 	$('features2Link').addEvent('click', function(e){
-		MochaUI.updateContent($('features'), null, 'pages/lipsum.html');
+		MochaUI.updateContent({
+			'windowEl':  $('features'),
+			'url':       'pages/lipsum.html'
+		});
 	});
 	
 	$('features3Link').addEvent('click', function(e){
-		MochaUI.updateContent($('features'), null, 'pages/lipsum2.html');
+		MochaUI.updateContent({
+			'windowEl':  $('features'),
+			'url':       'pages/lipsum2.html'
+		});
 	});
 	
 </script>
