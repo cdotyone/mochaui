@@ -12,14 +12,14 @@ License:
 
 html, body {
 	overflow: hidden;
-}		
+}
 
 body {
 	margin: 0; /* Required */
 	background: #fff;
 }
 
-#desktop {
+#desktop { 
 	position: relative;
 	top: 0;
 	left: 0;

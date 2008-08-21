@@ -622,7 +622,7 @@ function addResizeLeft(element, min, max){
 		}.bind(this)		
 	});
 }
-
+// May remove the ability to set min and max as an option
 function addResizeBottom(element, min, max){
 	if (!$(element)) return;
 	var handle = $(element).getNext('.horizontalHandle');
@@ -654,6 +654,7 @@ function addResizeBottom(element, min, max){
 	});	
 }
 
+/*
 function addResizeTop(element, min, max){
 	if (!$(element)) return;
 	var handle = $(element).getPrevious('.horizontalHandle');
@@ -681,34 +682,49 @@ function addResizeTop(element, min, max){
 			sibling.setStyle('height', siblingOriginalHeight + (this.originalHeight - $(element).offsetHeight));
 		}.bind(this)		
 	});	
-}
+}*/
 
-function initLayout(){		
-	if (Browser.Engine.trident4) $$('.pad').setStyle('display', 'none'); // IE6 Fix	
-	//rHeight();
-	//rWidth();
-	//panelHeight();
+MochaUI.Panel = new Class({
+							
+	Extends: MochaUI.Desktop,
 	
-	/*$$('.panel').each(function(el){
-		alert(el.style.height.toInt());
-		if (el.style.height.toInt() >= 0) {
-			el.setStyle('background','#ff0');
-		}
-	});*/
+	Implements: [Events, Options],
 	
+	options: {
+		id:                null, // This must be set when creating the panel
+		column:            null, // Where to inject the panel. This must be set when creating the panel
+		loadMethod:        'html',
+		contentURL:        'pages/lipsum.html',	
 	
-	if (Browser.Engine.trident4) $$('.pad').setStyle('display', 'block'); // IE6 Fix
+		// xhr options
+		evalScripts:       true,
+		evalResponse:      false,
+	
+		// html options
+		content:           'Panel content',		
+
+		footer:            false
+	},	
+	initialize: function(options){
+		this.setOptions(options);
+		this.header = null; // add logic for grabbing the header
+		this.originalHeight = 0;			
+	}
+});
+MochaUI.Panel.implement(new Options, new Events);	
+
+function initLayout(){	
 	$$('.columnHandle').setStyle('visibility','visible');
 	$$('.column').setStyle('visibility','visible');
-	/* $$('.panelMinimize').addEvent('click', function(event){		
+/*	$$('.panelMinimize').addEvent('click', function(event){		
 		el = event.target.getParent().getParent().getNext('.panel');
-		if (el.getStyle('height') != 0) {
+		if (!el.getStyle('height') < 1) {
 			el.setStyle('height', 0);
-			rHeight();
+			panelHeight();
 		}
 		else {
 			el.setStyle('height', null);
-			rHeight();
+			panelHeight();
 		}
-	});	*/
+	}); */
 }

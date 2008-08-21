@@ -446,8 +446,7 @@ initializeWindows = function(){
 			height: 400,
 			x: 20,
 			y: 80,
-			maximizable: false,
-			type: 'modal'
+			maximizable: false
 		});
 	}
 	if ($('builderLinkCheck')){
@@ -689,8 +688,8 @@ window.addEvent('domready', function(){
 	addResizeLeft('sideColumn2', 150, 250);
 	addResizeBottom('panel1');
 	addResizeBottom('panel-Test');	
-	addResizeTop('panel2');		
-	addResizeTop('panel3');	
+	addResizeBottom('mainPanel');		
+	addResizeBottom('panel2');	
 		
 	MochaUI.Modal = new MochaUI.Modal();
 	buildTree('tree1');
