@@ -706,7 +706,16 @@ MochaUI.Panel = new Class({
 		footer:           false,
 		
 		// Style options:
-		height:           125		
+		height:           125,
+		
+		// Events
+		onBeforeBuild:     $empty, // NOT YET IMPLEMENTED
+		onContentLoaded:   $empty,
+		onResize:          $empty, // NOT YET IMPLEMENTED
+		onMinimize:        $empty, // NOT YET IMPLEMENTED
+		onRestore:         $empty, // NOT YET IMPLEMENTED
+		onClose:           $empty, // NOT YET IMPLEMENTED
+		onCloseComplete:   $empty  // NOT YET IMPLEMENTED				
 		
 	},	
 	initialize: function(options){

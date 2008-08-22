@@ -53,7 +53,6 @@ initializeWindows = function(){
 	MochaUI.ajaxpageWindow = function(){ 
 		new MochaUI.Window({
 			id: 'ajaxpage',
-			title: '',
 			loadMethod: 'xhr',
 			contentURL: 'pages/lipsum.html',
 			width: 340,
@@ -98,8 +97,7 @@ initializeWindows = function(){
 			height: 280,
 			scrollbars: false,
 			padding: { top: 0, right: 0, bottom: 0, left: 0 },
-			resizeLimit:  {'x': [330, 2500], 'y': [250, 2000]},			
-			contentBgColor: '#000',
+			resizeLimit:  {'x': [330, 2500], 'y': [250, 2000]},
 			toolbar: true,
 			toolbarURL: 'pages/youtube-tabs.html'			
 		});
@@ -152,7 +150,7 @@ initializeWindows = function(){
 		new MochaUI.Window({
 			id: 'parametrics',
 			title: 'Window Parametrics',
-			icon: 'images/icons/page_red.gif',							
+			icon: 'images/icons/generic.gif',							
 			loadMethod: 'xhr',
 			contentURL: 'plugins/parametrics/',
 			onContentLoaded: function(){				
@@ -529,7 +527,7 @@ initializeWindows = function(){
 		new MochaUI.Window({
 			id: 'features',
 			title: 'Features',
-			icon: 'images/icons/page_green.gif',			
+			icon: 'images/icons/sheet.gif',			
 			loadMethod: 'xhr',
 			contentURL: 'pages/features.html',
 			//onContentLoaded: function(){
@@ -735,7 +733,7 @@ window.addEvent('domready', function(){
 		id: 'mainPanel',
 		title: 'Introduction',
 		loadMethod: 'xhr',
-		contentURL: 'pages/todo.html',
+		contentURL: 'pages/lipsum.html',
 		column: 'mainColumn'
 	});			
 	

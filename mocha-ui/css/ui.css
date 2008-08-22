@@ -30,21 +30,22 @@ body {
 }			  				
 
 #desktopHeader {
-	background: #fff; /* Will be the margin color between toolbars */
+	background: #f1f1f1;
 }
 
 #desktopTitlebarWrapper {
-	position: relative;
+	position: relative;	
 	height: 40px;
 	overflow: hidden;
-	background: #333 url(../images/bg-desktopTitlebar-bk.gif) repeat-x;	
+	background: #f1f1f1 url(../images/bg-desktopTitlebar2.gif) repeat-x;
+	border-top: 1px solid #7C8791;	
 }
 	
 #desktopTitlebar {
 	padding: 7px 8px 6px 125px;
 	height: 23px;
-	background: url(../images/logo.gif) no-repeat;
-	background-position: 10px 0;		
+	background: url(../images/logo2.gif) no-repeat;
+	background-position: center 0;		
 }	
 	
 #desktopTitlebar h1.applicationTitle {
@@ -53,35 +54,36 @@ body {
 	padding: 5px 0 0 0;
 	font-size: 20px;
 	font-weight: bold;
-	color: #fff;
+	color: #69727A;
 }
 	
 #desktopTitlebar h1.tagline {
+	display: none;
 	font-size: 12px;
-	color: #d9d9d9;
+	color: #69727A;
 	font-weight: normal;
 	padding: 5px 0 0 0;	
 }
 
 #desktopTitlebar h1.tagline .taglineEm {
-	color: #fff;
+	color: #69727A;
 	font-weight: bold;	
 }	
 
 #topNav {
 	float: right;
-	color: #d9d9d9;
+	color: #69727A;
 	text-align: right;
 	padding: 5px 5px 0 0;
 }
 
 #topNav a {
-	color: #fff;
+	color: #69727A;
 	font-weight: bold;
 }
 
 #topNav a:hover {
-	color: #fff;
+	color: #69727A;
 	text-decoration: underline;
 }
 
@@ -91,7 +93,6 @@ body {
 	float: right;
 	margin-top: 3px;
 	padding: 4px 10px 0 10px;
-	border-left: 1px solid #ccc;
 	height: 20px;
 	overflow: hidden;	
 }				
@@ -99,9 +100,9 @@ body {
 /* Navbar */
 
 #desktopNavbar {
-	background: #e9e9e9 url(../images/bg-desktopTitlebar.gif)  repeat-x;
+	background: #f1f1f1 url(../images/bg-glass-lite.gif) repeat-x;
 	height: 30px;
-	border-bottom: 1px solid #d0d0d0;	
+	margin: 0;	
 }
 
 #desktopNavbar ul {	
@@ -122,10 +123,11 @@ body {
 #desktopNavbar ul li a {
 	padding: 6px 10px 6px 10px;	
 	color: #3f3f3f;
+	font-weight: bold;		
 }
 
 #desktopNavbar ul li a:hover {
-	background-color: #ddd;
+	color: #0983d1;
 }
 
 #desktopNavbar ul li a.arrow-right, #desktopNavbar ul li a:hover.arrow-right {
@@ -176,7 +178,8 @@ body {
 }
 
 #desktopNavbar li ul li a:hover {
-	background: #eee;
+	background: #6C91B7;
+	color: #fff;
 }
 
 #desktopNavbar li:hover ul,
@@ -207,16 +210,15 @@ body {
 #desktopFooterWrapper {
 	clear: both;
 	background: #888;
-	padding: 1px 0 0 0;
+	padding: 0;
 }
 
 #desktopFooter {
 	font-size: 11px;
 	height: 21px;
 	padding: 4px 10px 0 10px;
-	background: #343E47;
+	background: #7C8791;
 	color: #fff;
-	border: 1px solid #202A33;
 }
 
 #desktopFooter a {
@@ -469,7 +471,7 @@ body {
 	width: 13px;
 	font-size: 1px;
 	line-height: 1px;	
-	background: #7c8791;
+	background: #888;
 	border-right: 1px solid #eee;
 	border-left: 1px solid #eee;	
 	cursor: pointer;
@@ -599,63 +601,69 @@ iframe.zIndexFix {
 }
 
 #dockWrapper.top {
-	border-bottom: 1px solid #d0d0d0;
+	border-bottom: 3px solid #D5D7D9;
 }
 
 #dock {
 	position: relative;
-	padding: 3px 15px 1px 15px;
+	padding: 2px 15px 0 8px;
 	bottom: 0;
 	left: 0;
-	width: 100%;
 	background: #f1f1f1;
 	border: 1px solid #f1f1f1;
-	min-height: 26px;
+	min-height: 27px;
 	height: auto;
-   _height: 26px; /* IE 6.0 hack, for not supporting min-height */
+   _height: 27px; /* IE 6.0 hack, for not supporting min-height */
 }
 
 .dockTab {
 	float: left;
 	font-size: 11px;
 	position: relative;
-	width: 140px;
-	height: 22px;
-	margin: 0 2px 2px 0;
+	width: 150px;
+	height: 26px;
+	margin: 0 3px 2px 0;
 	overflow: hidden;	
 	cursor: pointer;
-	background: transparent url(../images/bg-desktopTitlebar.gif)  repeat-x;
-	border: 1px solid #c0c0c0;
+	background: url(../images/dock-tab.gif) no-repeat;
 }	
 
 .dockTab.activeDockTab {
-	background: #fff;
-}	
+	color: #fff;
+	background: url(../images/dock-tab-active.gif) no-repeat;
+}
+
+.dockTab.activeDockTab .dockText {
+	color: #fff;	
+}		
 
 .dockText {
 	position: absolute;
 	top: 0;
 	left: 0;
 	display: block;
+	font-weight: bold;
+	color: #fff;	
 	text-align: left;
-	padding: 2px 0 0 23px;
+	padding: 3px 0 0 25px;
 	width: 115px;
 	height: 19px;
 	overflow: hidden;
-	background: url(../images/icons/page.gif) 2px 3px no-repeat;		
+	background: url(../images/icons/sheet.gif) 4px 4px no-repeat;		
 }			
 
 #dockCanvas {
 	position: absolute;
-	top: 4px;
-	left: 2px;
+	top: 5px;
+	right: 2px;
 	z-index: 2;
+	text-align: right;
 }
 
 #dockPlacement {
 	position: absolute;
-	top: 3px;
-	left: 2px;
+	top: 4px;
+	right: 7px;
 	width: 10px;
 	height: 9px;
 	opacity: 0;
@@ -663,13 +671,14 @@ iframe.zIndexFix {
 	-moz-opacity: 0;
 	background: #f00; /* for troubleshooting */
 	cursor: pointer;
-	z-index: 3; /* for IE */	
+	z-index: 3; /* for IE */
+	text-align: right;		
 }
 
 #dockAutoHide {
 	position: absolute;
-	top: 13px;
-	left: 2px;
+	top: 14px;
+	right: 7px;
 	width: 10px;
 	height: 9px;
 	opacity: 0;

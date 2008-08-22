@@ -48,8 +48,7 @@ License:
 	position: relative;	
 	background: #e9e9e9 url(../images/bg-desktopTitlebar.gif)  repeat-x;
 	height: 29px;
-	overflow: hidden;
-/*	border: 1px solid #bbb; */	
+	overflow: hidden;	
 }
 
 .panel-header h2 {
@@ -117,7 +116,7 @@ License:
 	line-height: 1px;
 	font-size: 1px;
 	overflow: hidden;
-	background: #d9d9d9;		
+	background: #D5D7D9;		
 }	
 
 .columnHandle {
@@ -127,7 +126,7 @@ License:
 	float: left;
 	width: 4px;
 	overflow: hidden;
-	background: #d9d9d9;				
+	background: #D5D7D9;				
 }
 
 /* Components */

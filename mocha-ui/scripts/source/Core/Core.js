@@ -57,7 +57,7 @@ var MochaUI = new Hash({
 		
 		if (!options.windowEl) return;
 		var windowEl = options.windowEl;
-		
+        
 		if (MochaUI.Windows.instances.get(windowEl.id)) {
 			var recipient = 'window';
 			var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
@@ -65,16 +65,21 @@ var MochaUI = new Hash({
 		}
 		else {
 			var recipient = 'panel';
-			var currentInstance = MochaUI.Panels.instances.get(windowEl.id);	
+			var currentInstance = MochaUI.Panels.instances.get(windowEl.id);
 		}
-		
-			var contentEl = currentInstance.contentEl
-			if (options.element != null) {
-				var contentContainer = options.element;
-			}
-			else {
-				var contentContainer = currentInstance.contentEl;
-			}		
+        
+		var contentEl = currentInstance.contentEl
+		if (options.element != null) {
+			var contentContainer = options.element;
+		}
+		else {
+			var contentContainer = currentInstance.contentEl;
+		}
+        
+		// Remove old content.
+		if (contentContainer == contentEl) {
+			currentInstance.contentEl.empty();
+		}		
 				
 		var loadMethod = options.loadMethod ? options.loadMethod : currentInstance.options.loadMethod;
 
@@ -530,3 +535,5 @@ document.addEvent('domready', function(){
 window.addEvent('resize', function(){
 		MochaUI.setUnderlaySize();
 });
+
+
