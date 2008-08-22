@@ -161,9 +161,9 @@ initializeWindows = function(){
 						url: 'plugins/parametrics/scripts/parametrics.js',
 						method: 'get',
 						onSuccess: function() {
-						MochaUI.addRadiusSlider.delay(10); // Delay is for IE6
-						MochaUI.addShadowSlider.delay(10); // Delay is for IE6
-						MochaUI.parametricsScript = true;							
+							MochaUI.addRadiusSlider.delay(10); // Delay is for IE6
+							MochaUI.addShadowSlider.delay(10); // Delay is for IE6
+							MochaUI.parametricsScript = true;							
 						}.bind(this)							
 					}).send();					
 				}
@@ -425,9 +425,7 @@ initializeWindows = function(){
 			loadMethod: 'xhr',
 			contentURL: 'plugins/windowform/',
 			onContentLoaded: function(){
-
-			$('newWindowHeaderTitle').focus();
-			
+				$('newWindowHeaderTitle').focus();			
 				if ( !MochaUI.windowformScript == true ){
 					new Request({
 						url: 'plugins/windowform/scripts/Window-from-form.js',
@@ -694,10 +692,35 @@ window.addEvent('domready', function(){
 		loadMethod: 'xhr',
 		contentURL: 'pages/file-view.html',
 		column: 'sideColumn1',
-		onContentLoaded: function(){
-			buildTree('tree1');
-		}.bind(this)
+		onContentLoaded: function(){			
+			if ( !MochaUI.treeScript == true ){
+				new Request({
+					url: 'plugins/tree/scripts/tree.js',
+					method: 'get',
+					onSuccess: function() {
+						buildTree('tree1');							
+						MochaUI.treeScript = true;							
+					}.bind(this)							
+				}).send();					
+			}
+		}
 	});
+	
+	new MochaUI.Panel({
+		id: 'stats-panel',
+		title: 'Stats',
+		loadMethod: 'xhr',
+		contentURL: 'pages/stats.html',
+		column: 'sideColumn1',
+		onContentLoaded: function(){			
+			document.addEvent('mousemove', function(event){
+				if ($('mochaStats')){
+					$('cursorX').set('html', event.client.x);
+					$('cursorY').set('html', event.client.y);
+				}	
+			});
+		}		
+	});		
 	
 	new MochaUI.Panel({
 		id: 'test-panel',

@@ -530,10 +530,3 @@ document.addEvent('domready', function(){
 window.addEvent('resize', function(){
 		MochaUI.setUnderlaySize();
 });
-
-document.addEvent('mousemove', function(event){
-	if ($('mochaStats')){
-		$('cursorX').set('html', event.client.x);
-		$('cursorY').set('html', event.client.y);
-	}	
-});
