@@ -62,11 +62,6 @@ var MochaUI = new Hash({
 			var recipient = 'window';
 			var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
 			var canvasIconEl = currentInstance.canvasIconEl;
-			
-			// Remove old content.
-			if (contentContainer == contentEl) {
-				currentInstance.contentEl.empty();
-			}
 		}
 		else {
 			var recipient = 'panel';

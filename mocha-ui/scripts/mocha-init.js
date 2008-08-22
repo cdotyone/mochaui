@@ -726,6 +726,15 @@ window.addEvent('domready', function(){
 	});
 	
 	// Add panels to second side column
+	
+	new MochaUI.Panel({
+		id: 'help-panel',
+		loadMethod: 'xhr',
+		contentURL: 'pages/notice.html',
+		column: 'sideColumn2',
+		tabsURL: 'pages/panel-tabs.html'
+	});	
+	
 	new MochaUI.Panel({
 		id: 'tips-panel',
 		title: 'Tips',

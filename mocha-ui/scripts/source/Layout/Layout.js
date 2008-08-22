@@ -687,23 +687,26 @@ MochaUI.Panel = new Class({
 	Implements: [Events, Options],
 	
 	options: {
-		id:                null,        // This must be set when creating the panel
-		title:             'New Panel',
-		column:            null,        // Where to inject the panel. This must be set when creating the panel
-		loadMethod:        'html',
-		contentURL:        'pages/lipsum.html',	
+		id:               null,        // This must be set when creating the panel
+		title:            'New Panel',
+		column:           null,        // Where to inject the panel. This must be set when creating the panel
+		loadMethod:       'html',
+		contentURL:       'pages/lipsum.html',	
 	
 		// xhr options
-		evalScripts:       true,
-		evalResponse:      false,
+		evalScripts:      true,
+		evalResponse:     false,
 	
 		// html options
-		content:           'Panel content',		
+		content:          'Panel content',		
+		
+		// Tabs
+		tabsURL:          null,				
 
-		footer:            false,
+		footer:           false,
 		
 		// Style options:
-		height:            125		
+		height:           125		
 		
 	},	
 	initialize: function(options){
@@ -747,9 +750,21 @@ MochaUI.Panel = new Class({
 		
 		this.panelHeaderEl = new Element('div', {
 			'id': this.options.id + '_header',												   
-			'class': 'panel-header',
-			'html': '<h2>' + this.options.title + '</h2>'
+			'class': 'panel-header'
 		}).inject(this.panelEl, 'before');
+		
+		
+		if (this.options.tabsURL == null) {
+			this.panelHeaderEl.set('html', '<h2>' + this.options.title + '</h2>');
+		}
+		else {
+			MochaUI.updateContent({
+				'windowEl':   this.panelEl,
+				'url':        this.options.tabsURL,
+				'element':    this.panelHeaderEl,
+				'loadMethod': 'xhr'
+			});		
+		}
 		
 		// Only add handle if not only panel in column		
 		if (addHandle == true) {		
