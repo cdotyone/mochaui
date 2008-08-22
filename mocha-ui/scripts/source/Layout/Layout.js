@@ -687,9 +687,9 @@ MochaUI.Panel = new Class({
 	Implements: [Events, Options],
 	
 	options: {
-		id:                null, // This must be set when creating the panel
+		id:                null,        // This must be set when creating the panel
 		title:             'New Panel',
-		column:            null, // Where to inject the panel. This must be set when creating the panel
+		column:            null,        // Where to inject the panel. This must be set when creating the panel
 		loadMethod:        'html',
 		contentURL:        'pages/lipsum.html',	
 	
@@ -708,9 +708,24 @@ MochaUI.Panel = new Class({
 	},	
 	initialize: function(options){
 		this.setOptions(options);
-		this.header = null; // add logic for grabbing the header
-		this.originalHeight = 0;
-
+		this.originalHeight = this.options.height; // NOT USED YET
+		
+		// Shorten object chain
+		var instances = MochaUI.Panels.instances;
+		var instanceID = instances.get(this.options.id);
+	
+		// Here we check to see if there is already a class instance for this panel
+		if (instanceID){			
+			var currentInstance = instanceID;		
+		}
+		
+		// Check if window already exists and is not in progress of closing
+		if ( this.panelEl ) {
+			return;
+		}
+		else {			
+			instances.set(this.options.id, this);
+		}
 
 		this.panelEl = new Element('div', {
 			'id': this.options.id,												   
@@ -720,10 +735,9 @@ MochaUI.Panel = new Class({
 			}			
 		}).inject($(this.options.column));
 		
-		this.panelPadEl = new Element('div', {
+		this.contentEl = new Element('div', {
 			'id': this.options.id + '_pad',												   
-			'class': 'pad',
-			'html': 'This is a test'
+			'class': 'pad'
 		}).inject(this.panelEl);
 		
 		this.panelHeaderEl = new Element('div', {
@@ -732,15 +746,24 @@ MochaUI.Panel = new Class({
 			'html': '<h2>' + this.options.title + '</h2>'
 		}).inject(this.panelEl, 'before');
 		
-		// Todo: If not only panel in column
+		// Todo: Only add if not only panel in column
 		this.panelHandleEl = new Element('div', {
 			'id': this.options.id + '_handle',												   
 			'class': 'horizontalHandle'
 		}).inject(this.panelHeaderEl, 'before');						
 
-		
+			
+		// Add content to window.
+		MochaUI.updateContent({
+			'windowEl': this.panelEl,
+			'content':  this.options.content,
+			'url':      this.options.contentURL
+		});			
+
 		// Todo: Make this so it only effects the column in question
+		// This should probably happen before updateContent
 		panelHeight();
+		
 		addResizeTop(this.options.id);
 				
 					

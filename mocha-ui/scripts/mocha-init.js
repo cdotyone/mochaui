@@ -694,6 +694,8 @@ window.addEvent('domready', function(){
 	new MochaUI.Panel({
 		id: 'testpanel',
 		title: 'This is a Test',
+		loadMethod: 'xhr',
+		contentURL: 'pages/lipsum.html',
 		column: 'sideColumn1'
 	});	
 		

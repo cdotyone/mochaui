@@ -23,13 +23,16 @@ var MochaUI = new Hash({
 		useEffects: false,    // Toggles the majority of window fade and move effects.
 		useLoadingIcon: true  // Toggles whether or not the ajax spinners are displayed in window footers.
 
-	}),	
+	}),
+	Panels: {	  
+		instances:      new Hash()	
+	},		
 	Windows: {	  
 		instances:      new Hash(),
 		indexLevel:     100,          // Used for z-Index
 		windowIDCount:  0,	          // Used for windows without an ID defined by the user
 		windowsVisible: true          // Ctrl-Alt-Q to toggle window visibility		
-	},
+	},	
 	ieSupport:  'excanvas',   // Makes it easier to switch between Excanvas and Moocanvas for testing
 	focusingWindow: 'false',
 	/*
@@ -54,21 +57,30 @@ var MochaUI = new Hash({
 		
 		if (!options.windowEl) return;
 		var windowEl = options.windowEl;
+		
+		if (MochaUI.Windows.instances.get(windowEl.id)) {
+			var recipient = 'window';
+			var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
+			var canvasIconEl = currentInstance.canvasIconEl;
 			
-		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
-		var contentEl = currentInstance.contentEl
-		if (options.element != null){
-			var contentContainer = options.element; 
+			// Remove old content.
+			if (contentContainer == contentEl) {
+				currentInstance.contentEl.empty();
+			}
 		}
 		else {
-			var contentContainer = currentInstance.contentEl;
+			var recipient = 'panel';
+			var currentInstance = MochaUI.Panels.instances.get(windowEl.id);	
 		}
-		var canvasIconEl = currentInstance.canvasIconEl;
 		
-		// Remove old content.
-		if (contentContainer == contentEl){
-			currentInstance.contentEl.empty();
-		}		
+			var contentEl = currentInstance.contentEl
+			if (options.element != null) {
+				var contentContainer = options.element;
+			}
+			else {
+				var contentContainer = currentInstance.contentEl;
+			}		
+				
 		var loadMethod = options.loadMethod ? options.loadMethod : currentInstance.options.loadMethod;
 
 		// Load new content.
@@ -80,19 +92,23 @@ var MochaUI = new Hash({
 					evalScripts: currentInstance.options.evalScripts,
 					evalResponse: currentInstance.options.evalResponse,
 					onRequest: function(){
-						if (contentContainer == contentEl){
+						if (recipient == 'window' && contentContainer == contentEl){
 							currentInstance.showLoadingIcon(canvasIconEl);
 						}
 					}.bind(this),
 					onFailure: function(){
 						if (contentContainer == contentEl){
 							contentContainer.set('html','<p><strong>Error Loading XMLHttpRequest</strong></p>');
-							currentInstance.hideLoadingIcon(canvasIconEl);
+							if (recipient == 'window') {
+								currentInstance.hideLoadingIcon(canvasIconEl);
+							}
 						}
 					}.bind(this),
 					onSuccess: function() {
 						if (contentContainer == contentEl){
-							currentInstance.hideLoadingIcon(canvasIconEl);
+							if (recipient == 'window') {
+								currentInstance.hideLoadingIcon(canvasIconEl);
+							}	
 							currentInstance.fireEvent('onContentLoaded', windowEl);
 						}
 					}.bind(this)
