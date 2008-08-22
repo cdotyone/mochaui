@@ -703,7 +703,7 @@ MochaUI.Panel = new Class({
 		footer:            false,
 		
 		// Style options:
-		height:            125 		
+		height:            125		
 		
 	},	
 	initialize: function(options){
@@ -726,6 +726,11 @@ MochaUI.Panel = new Class({
 		else {			
 			instances.set(this.options.id, this);
 		}
+		
+		var addHandle = true;
+		if ($(this.options.column).getChildren().length == 0) {
+			addHandle = false;
+		}		
 
 		this.panelEl = new Element('div', {
 			'id': this.options.id,												   
@@ -746,14 +751,16 @@ MochaUI.Panel = new Class({
 			'html': '<h2>' + this.options.title + '</h2>'
 		}).inject(this.panelEl, 'before');
 		
-		// Todo: Only add if not only panel in column
-		this.panelHandleEl = new Element('div', {
-			'id': this.options.id + '_handle',												   
-			'class': 'horizontalHandle'
-		}).inject(this.panelHeaderEl, 'before');						
-
+		// Only add handle if not only panel in column		
+		if (addHandle == true) {		
+			this.panelHandleEl = new Element('div', {
+				'id': this.options.id + '_handle',
+				'class': 'horizontalHandle'
+			}).inject(this.panelHeaderEl, 'before');
+			addResizeTop(this.options.id);
+		}
 			
-		// Add content to window.
+		// Add content to panel.
 		MochaUI.updateContent({
 			'windowEl': this.panelEl,
 			'content':  this.options.content,
@@ -762,18 +769,8 @@ MochaUI.Panel = new Class({
 
 		// Todo: Make this so it only effects the column in question
 		// This should probably happen before updateContent
-		panelHeight();
+		panelHeight();		
 		
-		addResizeTop(this.options.id);
-				
-					
-	}
-});
-MochaUI.Panel.implement(new Options, new Events);	
-
-function initLayout(){	
-	$$('.columnHandle').setStyle('visibility','visible');
-	$$('.column').setStyle('visibility','visible');
 /*	$$('.panelMinimize').addEvent('click', function(event){		
 		el = event.target.getParent().getParent().getNext('.panel');
 		if (!el.getStyle('height') < 1) {
@@ -784,5 +781,14 @@ function initLayout(){
 			el.setStyle('height', null);
 			panelHeight();
 		}
-	}); */
+	}); */		
+				
+					
+	}
+});
+MochaUI.Panel.implement(new Options, new Events);	
+
+function initLayout(){	
+	$$('.columnHandle').setStyle('visibility','visible');
+	$$('.column').setStyle('visibility','visible');
 }

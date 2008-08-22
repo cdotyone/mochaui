@@ -205,6 +205,7 @@ body {
 
 /* Footer */
 #desktopFooterWrapper {
+	clear: both;
 	background: #888;
 	padding: 1px 0 0 0;
 }

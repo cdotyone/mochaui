@@ -686,21 +686,56 @@ window.addEvent('domready', function(){
 	initLayout();
 	addResizeRight('sideColumn1', 100, 300);
 	addResizeLeft('sideColumn2', 150, 250);
-	addResizeBottom('panel1');
-	addResizeBottom('panel-Test');	
-	addResizeBottom('mainPanel');		
-	addResizeBottom('panel2');
+
+	// Add panels to first side column
+	new MochaUI.Panel({
+		id: 'files-panel',
+		title: 'File View',
+		loadMethod: 'xhr',
+		contentURL: 'pages/file-view.html',
+		column: 'sideColumn1',
+		onContentLoaded: function(){
+			buildTree('tree1');
+		}.bind(this)
+	});
 	
 	new MochaUI.Panel({
-		id: 'testpanel',
+		id: 'test-panel',
 		title: 'This is a Test',
 		loadMethod: 'xhr',
 		contentURL: 'pages/lipsum.html',
 		column: 'sideColumn1'
-	});	
+	});
+	
+	// Add panels to main column	
+	new MochaUI.Panel({
+		id: 'mainPanel',
+		title: 'Introduction',
+		loadMethod: 'xhr',
+		contentURL: 'pages/todo.html',
+		column: 'mainColumn'
+	});			
+	
+	new MochaUI.Panel({
+		id: 'panel7',
+		title: 'Panel',
+		loadMethod: 'xhr',
+		contentURL: 'pages/lipsum.html',
+		column: 'mainColumn',
+		height: 200
+	});
+	
+	// Add panels to second side column
+	new MochaUI.Panel({
+		id: 'tips-panel',
+		title: 'Tips',
+		loadMethod: 'xhr',
+		contentURL: 'pages/tips.html',
+		column: 'sideColumn2',
+		height: 300
+	});		
 		
 	MochaUI.Modal = new MochaUI.Modal();
-	buildTree('tree1');
 	initializeWindows();
 });	
 
