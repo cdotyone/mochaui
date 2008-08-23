@@ -55,7 +55,6 @@ MochaUI.Dock = new Class({
 	
 	options: {
 		useControls:          true,      // Toggles autohide and dock placement controls.
-		useCanvasTabs:        false,     // Toggle use of canvas tab graphics. NOT YET IMPLEMENTED
 		dockPosition:         'top',     // Position the dock starts in, top or bottom.
 		// Style options
 		dockTabColor:         [255, 255, 255],
@@ -276,27 +275,7 @@ MochaUI.Dock = new Class({
 		});			
 
 		this.dockSortables.addItems(dockTab);
-
-		//Insert canvas
-		if (this.options.useControls){
-			if (this.options.useCanvasTabs){	
-				var dockTabCanvas = new Element('canvas', {
-					'id': currentInstance.options.id + '_dockTabCanvas',
-					'class': 'dockCanvas', 
-					'width': 120,
-					'height': 20			
-				}).inject(dockTab);	
-				
-				// Dynamically initialize canvas using excanvas. This is only required by IE
-				if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas') {
-					G_vmlCanvasManager.initElement(dockTabCanvas);
-				}
-
-				var ctx = $(currentInstance.options.id + '_dockTabCanvas').getContext('2d');
-				MochaUI.roundedRect(ctx, 0, 0, 120, 20, 5, this.options.dockTabColor, 1);
-			}
-		}
-		
+	
 		var titleText = currentInstance.titleEl.innerHTML;		
 		
 		var dockTabText = new Element('div', {
