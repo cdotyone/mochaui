@@ -750,7 +750,10 @@ MochaUI.Panel = new Class({
 		height:           125,
 		addClass:         '',  // NOT YET IMPLEMENTED   
 		scrollbars:       true, // NOT YET IMPLEMENTED
-		padding:   		  { top: 8, right: 8, bottom: 8, left: 8 },	 // NOT YET IMPLEMENTED	
+		padding:   		  { top: 8, right: 8, bottom: 8, left: 8 },	 // NOT YET IMPLEMENTED
+		
+		// Color options:		
+		panelBackground:   '#f1f1f1',			
 		
 		// Events
 		onBeforeBuild:     $empty, // NOT YET IMPLEMENTED
@@ -798,7 +801,8 @@ MochaUI.Panel = new Class({
 			'id': this.options.id,												   
 			'class': 'panel',
 			'styles': {
-				'height': this.options.height
+				'height': this.options.height,
+				'background': this.options.panelBackground
 			}			
 		}).inject($(this.options.column));
 		
