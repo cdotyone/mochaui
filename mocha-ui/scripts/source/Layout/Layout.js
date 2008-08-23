@@ -127,6 +127,8 @@ MochaUI.Desktop = new Class({
 		
 			var dockOffset = MochaUI.dockVisible ? dockWrapper.offsetHeight : 0;
 			var pageWrapperHeight = windowDimensions.height;
+			pageWrapperHeight -= this.pageWrapper.getStyle('border-top').toInt();
+			pageWrapperHeight -= this.pageWrapper.getStyle('border-bottom').toInt();
 			if (this.desktopHeader){ pageWrapperHeight -= this.desktopHeader.offsetHeight; }
 			if (this.desktopFooter){ pageWrapperHeight -= this.desktopFooter.offsetHeight; }
 			pageWrapperHeight -= dockOffset;

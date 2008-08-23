@@ -59,8 +59,8 @@ MochaUI.Dock = new Class({
 		// Style options
 		dockTabColor:         [255, 255, 255],
 		trueButtonColor:      [70, 245, 70],     // Color for autohide on		
-		enabledButtonColor:   [255, 70, 70], 
-		disabledButtonColor:  [150, 150, 150]		
+		enabledButtonColor:   [9, 131, 209], 
+		disabledButtonColor:  [170, 170, 170]		
 	},
 	initialize: function(options){
 		// Stops if MochaUI.Desktop is not implemented
@@ -150,7 +150,7 @@ MochaUI.Dock = new Class({
 			if (this.dockAutoHide){
 				$('dockAutoHide').setProperty('title', 'Turn Auto Hide Off');
 				//ctx.clearRect(0, 11, 100, 100);				
-				MochaUI.circle(ctx, 5 , 14, 3, this.options.trueButtonColor, 1.0); // green
+				MochaUI.circle(ctx, 5 , 14, 3, this.options.trueButtonColor, 1.0);
 				
 				// Define event
 				this.autoHideEvent = function(event) {
@@ -177,7 +177,7 @@ MochaUI.Dock = new Class({
 			} else {
 				$('dockAutoHide').setProperty('title', 'Turn Auto Hide On');
 				//ctx.clearRect(0, 11, 100, 100);
-				MochaUI.circle(ctx, 5 , 14, 3, this.options.enabledButtonColor, 1.0); // red
+				MochaUI.circle(ctx, 5 , 14, 3, this.options.enabledButtonColor, 1.0);
 				// Remove event
 				document.removeEvent('mousemove', this.autoHideEvent);
 			}
@@ -187,8 +187,8 @@ MochaUI.Dock = new Class({
 		// Draw dock controls
 		var ctx = $('dockCanvas').getContext('2d');
 		ctx.clearRect(0, 0, 100, 100);
-		MochaUI.circle(ctx, 5 , 4, 3, this.options.enabledButtonColor, 1.0);  // red
-		MochaUI.circle(ctx, 5 , 14, 3, this.options.enabledButtonColor, 1.0); // red
+		MochaUI.circle(ctx, 5 , 4, 3, this.options.enabledButtonColor, 1.0); 
+		MochaUI.circle(ctx, 5 , 14, 3, this.options.enabledButtonColor, 1.0);
 		
 		if (this.options.dockPosition == 'top'){
 			this.moveDock();	
@@ -207,7 +207,7 @@ MochaUI.Dock = new Class({
 				MochaUI.Desktop.setDesktopSize();
 				this.dockWrapper.setProperty('dockPosition','top');
 				ctx.clearRect(0, 0, 100, 100);
-				MochaUI.circle(ctx, 5, 4, 3, this.options.trueButtonColor, 1.0); // green
+				MochaUI.circle(ctx, 5, 4, 3, this.options.enabledButtonColor, 1.0);
 				MochaUI.circle(ctx, 5, 14, 3, this.options.disabledButtonColor, 1.0); // gray
 				$('dockPlacement').setProperty('title', 'Position Dock Bottom');
 				$('dockAutoHide').setProperty('title', 'Auto Hide Disabled in Top Dock Position');
@@ -223,8 +223,8 @@ MochaUI.Dock = new Class({
 				MochaUI.Desktop.setDesktopSize();
 				this.dockWrapper.setProperty('dockPosition', 'bottom');
 				ctx.clearRect(0, 0, 100, 100);
-				MochaUI.circle(ctx, 5, 4, 3, this.options.enabledButtonColor, 1.0); // red
-				MochaUI.circle(ctx, 5 , 14, 3, this.options.enabledButtonColor, 1.0); // red 
+				MochaUI.circle(ctx, 5, 4, 3, this.options.enabledButtonColor, 1.0);
+				MochaUI.circle(ctx, 5 , 14, 3, this.options.enabledButtonColor, 1.0);
 				$('dockPlacement').setProperty('title', 'Position Dock Top');
 				$('dockAutoHide').setProperty('title', 'Turn Auto Hide On');
 			}		

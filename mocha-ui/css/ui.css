@@ -204,6 +204,7 @@ body {
 #pageWrapper {
 	position: relative;
 	overflow: hidden; /* This can be set to hidden or auto */
+	border-top: 3px solid #d1d1d1;
 }
 
 /* Footer */
@@ -600,7 +601,6 @@ iframe.zIndexFix {
 }
 
 #dockWrapper.top {
-	border-bottom: 3px solid #D5D7D9;
 }
 
 #dock {
