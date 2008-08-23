@@ -598,16 +598,14 @@ function addResizeRight(element, min, max){
 		// max = $(element).offsetWidth + sibling.offsetWidth;
 		max = 250;
 	}
-	handle.addEvent('mousedown', function(e) {
-		if (Browser.Engine.trident) {
+	if (Browser.Engine.trident) {	
+		handle.addEvent('mousedown', function(e) {
 			handle.setCapture();
-		}							  													   
-	}.bind(this));
-	handle.addEvent('mouseup', function(e) {
-		if (Browser.Engine.trident) {
+		}.bind(this));
+		handle.addEvent('mouseup', function(e) {
 			handle.releaseCapture();
-		}								  													   
-	}.bind(this));		
+		}.bind(this));								  													   
+	}		
 	element.makeResizable({
 		handle: handle,
 		modifiers: {x: 'width', y: false},
@@ -649,16 +647,14 @@ function addResizeLeft(element, min, max){
 		// max = $(element).offsetWidth + sibling.offsetWidth;
 		max = 250;		
 	}
-	handle.addEvent('mousedown', function(e) {
-		if (Browser.Engine.trident) {
+	if (Browser.Engine.trident) {	
+		handle.addEvent('mousedown', function(e) {
 			handle.setCapture();
-		}							  													   
-	}.bind(this));
-	handle.addEvent('mouseup', function(e) {
-		if (Browser.Engine.trident) {
+		}.bind(this));
+		handle.addEvent('mouseup', function(e) {
 			handle.releaseCapture();
-		}								  													   
-	}.bind(this));		
+		}.bind(this));								  													   
+	}		
 	element.makeResizable({
 		handle: handle,
 		modifiers: {x: 'width' , y: false},
@@ -689,7 +685,15 @@ function addResizeBottom(element, min, max){
 		max = function(){
 			return $(element).getStyle('height').toInt() + sibling.getStyle('height').toInt();
 		}.bind(this)
-	}	
+	}
+	if (Browser.Engine.trident) {	
+		handle.addEvent('mousedown', function(e) {
+			handle.setCapture();
+		}.bind(this));
+		handle.addEvent('mouseup', function(e) {
+			handle.releaseCapture();
+		}.bind(this));								  													   
+	}		
 	$(element).makeResizable({
 		handle: handle,
 		modifiers: {x: false, y: 'height'},
@@ -717,7 +721,15 @@ function addResizeTop(element, min, max){
 		max = function(){
 			return $(element).getStyle('height').toInt() + sibling.getStyle('height').toInt();
 		}.bind(this)
-	}	
+	}
+	if (Browser.Engine.trident) {	
+		handle.addEvent('mousedown', function(e) {
+			handle.setCapture();
+		}.bind(this));
+		handle.addEvent('mouseup', function(e) {
+			handle.releaseCapture();
+		}.bind(this));								  													   
+	}		
 	$(element).makeResizable({
 		handle: handle,
 		modifiers: {x: false, y: 'height'},
