@@ -209,8 +209,10 @@ body {
 
 /* Footer */
 #desktopFooterWrapper {
-	clear: both;
-	padding: 0;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: 30px;
 }
 
 #desktopFooter {
@@ -598,11 +600,12 @@ iframe.zIndexFix {
 	display: none;
 	background: #f1f1f1;
 	width: 100%;
-	border-bottom: 0;	
+	border-bottom: 0;
+	border-top: 3px solid #d1d1d1;		
 }
 
 #dockWrapper.top {
-	border-bottom: 1px solid #fff;	
+	border-top: 0;	
 }
 
 #dock {
@@ -612,9 +615,9 @@ iframe.zIndexFix {
 	left: 0;
 	background: #f1f1f1;
 	border: 1px solid #f1f1f1;
-	min-height: 27px;
+	min-height: 28px;
 	height: auto;
-   _height: 27px; /* IE 6.0 hack, for not supporting min-height */
+   _height: 28px; /* IE 6.0 hack, for not supporting min-height */
 }
 
 .dockTab {
@@ -623,7 +626,7 @@ iframe.zIndexFix {
 	position: relative;
 	width: 150px;
 	height: 26px;
-	margin: 0 3px 2px 0;
+	margin: 0 3px 0px 0;
 	overflow: hidden;	
 	cursor: pointer;
 	background: url(../images/dock-tab.gif) no-repeat;
