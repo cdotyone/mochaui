@@ -588,27 +588,38 @@ MochaUI.Desktop.implement(new Options, new Events);
 	
 function addResizeRight(element, min, max){
 	if (!$(element)) return;
-	var handle = $(element).getNext('.columnHandle');
+	element = $(element);	
+	var handle = element.getNext('.columnHandle');
 	handle.setStyle('cursor', 'e-resize');
-	var sibling = $(element).getNext('.column');	
+	var sibling = element.getNext('.column');	
 	if (!min) min = 50;
 	if (!max) {
 		// var sibling = $(element).getNext('.column');
 		// max = $(element).offsetWidth + sibling.offsetWidth;
 		max = 250;
-	}	
-	$(element).makeResizable({
+	}
+	handle.addEvent('mousedown', function(e) {
+		if (Browser.Engine.trident) {
+			handle.setCapture();
+		}							  													   
+	}.bind(this));
+	handle.addEvent('mouseup', function(e) {
+		if (Browser.Engine.trident) {
+			handle.releaseCapture();
+		}								  													   
+	}.bind(this));		
+	element.makeResizable({
 		handle: handle,
 		modifiers: {x: 'width', y: false},
 		limit: { x: [min, max] },
 		onStart: function(){
-			$(element).getElements('iframe').setStyle('visibility','hidden');
+			element.getElements('iframe').setStyle('visibility','hidden');
 			sibling.getElements('iframe').setStyle('visibility','hidden');
 		}.bind(this),							
 		onDrag: function(){
 			rWidth();
 			if (Browser.Engine.trident4) {
-				$(element).getChildren().each(function(el){
+				element.getChildren().each(function(el){
 					var width = $(element).getStyle('width').toInt();
 					width -= el.getStyle('border-right').toInt();
 					width -= el.getStyle('border-left').toInt();
@@ -620,7 +631,7 @@ function addResizeRight(element, min, max){
 		}.bind(this),
 		onComplete: function(){
 			rWidth();
-			$(element).getElements('iframe').setStyle('visibility','visible');
+			element.getElements('iframe').setStyle('visibility','visible');
 			sibling.getElements('iframe').setStyle('visibility','visible');			
 		}.bind(this)		
 	});	
@@ -628,8 +639,8 @@ function addResizeRight(element, min, max){
 
 function addResizeLeft(element, min, max){
 	if (!$(element)) return;
-	var handle = $(element).getPrevious('.columnHandle');
-	element = $(element);
+	element = $(element);	
+	var handle = element.getPrevious('.columnHandle');
 	handle.setStyle('cursor', 'e-resize');
 	var sibling = $(element).getPrevious('.column');	
 	if (!min) min = 50;
@@ -637,7 +648,17 @@ function addResizeLeft(element, min, max){
 		// var sibling = $(element).getPrevious('.column');
 		// max = $(element).offsetWidth + sibling.offsetWidth;
 		max = 250;		
-	}	
+	}
+	handle.addEvent('mousedown', function(e) {
+		if (Browser.Engine.trident) {
+			handle.setCapture();
+		}							  													   
+	}.bind(this));
+	handle.addEvent('mouseup', function(e) {
+		if (Browser.Engine.trident) {
+			handle.releaseCapture();
+		}								  													   
+	}.bind(this));		
 	element.makeResizable({
 		handle: handle,
 		modifiers: {x: 'width' , y: false},
@@ -727,6 +748,49 @@ function addResizeTop(element, min, max){
 	});
 }
 
+/*
+
+Class: Column
+	Create a column.
+
+Syntax:
+(start code)
+	MochaUI.Panel();
+(end)
+		
+*/
+MochaUI.Column = new Class({
+							
+	Extends: MochaUI.Desktop,
+	
+	Implements: [Events, Options],
+	
+	options: {
+		id:               null        // This must be set when creating the column
+
+	},	
+	initialize: function(options){
+		this.setOptions(options);
+		
+		$extend(this, {
+			isCollapsed: false,
+			timestamp: $time()
+		});
+	}
+});	
+MochaUI.Column.implement(new Options, new Events);		
+
+/*
+
+Class: Panel
+	Create a panel.
+
+Syntax:
+(start code)
+	MochaUI.Panel();
+(end)
+		
+*/
 MochaUI.Panel = new Class({
 							
 	Extends: MochaUI.Desktop,

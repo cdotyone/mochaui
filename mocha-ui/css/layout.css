@@ -56,7 +56,8 @@ License:
 }
 
 .icon16 {
-	margin: 5px 0 0 2px; 
+	margin: 5px 0 0 2px;
+	cursor: pointer; 
 }	
 
 .panel-corner-nw {

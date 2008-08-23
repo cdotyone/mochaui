@@ -681,7 +681,7 @@ window.addEvent('domready', function(){
 	// Layout
 	initLayout();
 	addResizeRight('sideColumn1', 100, 300);
-	addResizeLeft('sideColumn2', 150, 250);
+	addResizeLeft('sideColumn2', 150, 300);
 
 	// Add panels to first side column
 	new MochaUI.Panel({
