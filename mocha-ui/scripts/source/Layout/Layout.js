@@ -511,6 +511,10 @@ MochaUI.Desktop.implement(new Options, new Events);
 				var heightToAdd = remainingHeight / heightNotSet.length;
 				heightNotSet.each(function(panel){
 					panel.setStyle('height', heightToAdd);
+					var instances = MochaUI.Panels.instances;
+					var contentEl = instances.get(panel.id).contentEl;
+					contentEl.setStyle('height', newPanelHeight - contentEl.getStyle('padding-top').toInt() - contentEl.getStyle('padding-bottom').toInt());	
+					contentEl.getChildren('iframe').setStyle('height', newPanelHeight - contentEl.getStyle('padding-top').toInt() - contentEl.getStyle('padding-bottom').toInt());						
 				});
 			}
 			
@@ -539,10 +543,21 @@ MochaUI.Desktop.implement(new Options, new Events);
 						newPanelHeight = 0;
 					}
 					panel.setStyle('height', newPanelHeight);
+					
+					resizeChildren(panel, newPanelHeight);
+
 				});	
 			}			
 		});
 	}
+	
+	function resizeChildren(element, newPanelHeight){
+		var instances = MochaUI.Panels.instances;
+		var contentEl = instances.get(element.id).contentEl;
+		contentEl.setStyle('height', newPanelHeight - contentEl.getStyle('padding-top').toInt() - contentEl.getStyle('padding-bottom').toInt());	
+		contentEl.getChildren('iframe').setStyle('height', newPanelHeight - contentEl.getStyle('padding-top').toInt() - contentEl.getStyle('padding-bottom').toInt());			
+	}
+	
 	
 	// Remaining Width
 	function rWidth(){	
@@ -569,6 +584,7 @@ function addResizeRight(element, min, max){
 	if (!$(element)) return;
 	var handle = $(element).getNext('.columnHandle');
 	handle.setStyle('cursor', 'e-resize');
+	var sibling = $(element).getNext('.column');	
 	if (!min) min = 50;
 	if (!max) {
 		// var sibling = $(element).getNext('.column');
@@ -578,7 +594,11 @@ function addResizeRight(element, min, max){
 	$(element).makeResizable({
 		handle: handle,
 		modifiers: {x: 'width', y: false},
-		limit: { x: [min, max] },					
+		limit: { x: [min, max] },
+		onStart: function(){
+			$(element).getElements('iframe').setStyle('visibility','hidden');
+			sibling.getElements('iframe').setStyle('visibility','hidden');
+		}.bind(this),							
 		onDrag: function(){
 			rWidth();
 			if (Browser.Engine.trident4) {
@@ -594,6 +614,8 @@ function addResizeRight(element, min, max){
 		}.bind(this),
 		onComplete: function(){
 			rWidth();
+			$(element).getElements('iframe').setStyle('visibility','visible');
+			sibling.getElements('iframe').setStyle('visibility','visible');			
 		}.bind(this)		
 	});	
 }
@@ -603,6 +625,7 @@ function addResizeLeft(element, min, max){
 	var handle = $(element).getPrevious('.columnHandle');
 	element = $(element);
 	handle.setStyle('cursor', 'e-resize');
+	var sibling = $(element).getPrevious('.column');	
 	if (!min) min = 50;
 	if (!max) {
 		// var sibling = $(element).getPrevious('.column');
@@ -613,12 +636,18 @@ function addResizeLeft(element, min, max){
 		handle: handle,
 		modifiers: {x: 'width' , y: false},
 		invert: true,
-		limit: { x: [min, max] },							
+		limit: { x: [min, max] },
+		onStart: function(){
+			$(element).getElements('iframe').setStyle('visibility','hidden');
+			sibling.getElements('iframe').setStyle('visibility','hidden');
+		}.bind(this),									
 		onDrag: function(){	
 			rWidth();	
 		}.bind(this),
 		onComplete: function(){
 			rWidth();
+			$(element).getElements('iframe').setStyle('visibility','visible');
+			sibling.getElements('iframe').setStyle('visibility','visible');			
 		}.bind(this)		
 	});
 }
@@ -655,9 +684,9 @@ function addResizeTop(element, min, max){
 	if (!$(element)) return;
 	var handle = $(element+'_handle');
 	handle.setStyle('cursor', 'n-resize');
+	var sibling = $(element).getPrevious('.panel');	
 	if (!min) min = 0;
 	if (!max) {
-		var sibling = $(element).getPrevious('.panel');
 		max = function(){
 			return $(element).getStyle('height').toInt() + sibling.getStyle('height').toInt();
 		}.bind(this)
@@ -670,12 +699,24 @@ function addResizeTop(element, min, max){
 		onBeforeStart: function(){
 			this.originalHeight = $(element).getStyle('height').toInt();
 			this.siblingOriginalHeight = sibling.getStyle('height').toInt();
+		}.bind(this),
+		onStart: function(){
+			$(element).getElements('iframe').setStyle('visibility','hidden');
+			sibling.getElements('iframe').setStyle('visibility','hidden');
 		}.bind(this),							
 		onDrag: function(){
-			sibling.setStyle('height', siblingOriginalHeight + (this.originalHeight - $(element).getStyle('height').toInt()));
+			siblingHeight = siblingOriginalHeight + (this.originalHeight - $(element).getStyle('height').toInt());
+			sibling.setStyle('height', siblingHeight);
+			resizeChildren($(element), $(element).getStyle('height').toInt());
+			resizeChildren(sibling, siblingHeight);
 		}.bind(this),
 		onComplete: function(){
-			sibling.setStyle('height', siblingOriginalHeight + (this.originalHeight - $(element).getStyle('height').toInt()));
+			siblingHeight = siblingOriginalHeight + (this.originalHeight - $(element).getStyle('height').toInt());
+			sibling.setStyle('height', siblingHeight);
+			resizeChildren($(element), $(element).getStyle('height').toInt());
+			resizeChildren(sibling, siblingHeight);
+			$(element).getElements('iframe').setStyle('visibility','visible');	
+			sibling.getElements('iframe').setStyle('visibility','visible');			
 		}.bind(this)		
 	});
 }
@@ -707,6 +748,9 @@ MochaUI.Panel = new Class({
 		
 		// Style options:
 		height:           125,
+		addClass:         '',  // NOT YET IMPLEMENTED   
+		scrollbars:       true, // NOT YET IMPLEMENTED
+		padding:   		  { top: 8, right: 8, bottom: 8, left: 8 },	 // NOT YET IMPLEMENTED	
 		
 		// Events
 		onBeforeBuild:     $empty, // NOT YET IMPLEMENTED
@@ -739,10 +783,16 @@ MochaUI.Panel = new Class({
 			instances.set(this.options.id, this);
 		}
 		
+		if (this.options.loadMethod == 'iframe') {
+			// Iframes have their own scrollbars and padding.
+			this.options.scrollbars = false;
+			this.options.padding = { top: 0, right: 0, bottom: 0, left: 0 };
+		}				
+
 		var addHandle = true;
 		if ($(this.options.column).getChildren().length == 0) {
 			addHandle = false;
-		}		
+		}
 
 		this.panelEl = new Element('div', {
 			'id': this.options.id,												   
@@ -756,6 +806,22 @@ MochaUI.Panel = new Class({
 			'id': this.options.id + '_pad',												   
 			'class': 'pad'
 		}).inject(this.panelEl);
+		
+		this.contentWrapperEl = this.panelEl;
+		
+		
+		// Set scrollbars, always use 'hidden' for iframe windows
+		this.contentWrapperEl.setStyles({
+			'overflow': this.options.scrollbars && !this.options.iframe ? 'auto' : 'hidden'
+		});
+
+		this.contentEl.setStyles({
+			'padding-top': this.options.padding.top,
+			'padding-bottom': this.options.padding.bottom,
+			'padding-left': this.options.padding.left,
+			'padding-right': this.options.padding.right
+		});		
+		
 		
 		this.panelHeaderEl = new Element('div', {
 			'id': this.options.id + '_header',												   

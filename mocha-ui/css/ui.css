@@ -38,14 +38,15 @@ body {
 	height: 40px;
 	overflow: hidden;
 	background: #f1f1f1 url(../images/bg-desktopTitlebar2.gif) repeat-x;
-	border-top: 1px solid #7C8791;	
+	border-top: 1px solid #7C8791;
+	border-bottom: 1px solid #ccc;			
 }
 	
 #desktopTitlebar {
 	padding: 7px 8px 6px 125px;
 	height: 23px;
 	background: url(../images/logo2.gif) no-repeat;
-	background-position: center 0;		
+	background-position: center 0;	
 }	
 	
 #desktopTitlebar h1.applicationTitle {
@@ -91,18 +92,17 @@ body {
 
 .toolbox {	
 	float: right;
-	margin-top: 3px;
-	padding: 4px 10px 0 10px;
-	height: 20px;
-	overflow: hidden;	
+	padding: 7px 10px 0 10px;
+	height: 23px;
+	overflow: hidden;		
 }				
 
 /* Navbar */
 
 #desktopNavbar {
-	background: #f1f1f1 url(../images/bg-glass-lite.gif) repeat-x;
+	background: #f1f1f1;
 	height: 30px;
-	margin: 0;	
+	margin: 0 0px;	
 }
 
 #desktopNavbar ul {	
@@ -122,8 +122,8 @@ body {
 	
 #desktopNavbar ul li a {
 	padding: 6px 10px 6px 10px;	
-	color: #3f3f3f;
-	font-weight: bold;		
+	color: #69727A;
+	font-weight: normal;		
 }
 
 #desktopNavbar ul li a:hover {
@@ -606,7 +606,7 @@ iframe.zIndexFix {
 
 #dock {
 	position: relative;
-	padding: 2px 15px 0 8px;
+	padding: 2px 15px 0 5px;
 	bottom: 0;
 	left: 0;
 	background: #f1f1f1;
@@ -629,7 +629,6 @@ iframe.zIndexFix {
 }	
 
 .dockTab.activeDockTab {
-	color: #fff;
 	background: url(../images/dock-tab-active.gif) no-repeat;
 }
 
@@ -642,8 +641,8 @@ iframe.zIndexFix {
 	top: 0;
 	left: 0;
 	display: block;
-	font-weight: bold;
-	color: #fff;	
+	font-weight: normal;
+	color: #69727A;	
 	text-align: left;
 	padding: 3px 0 0 25px;
 	width: 115px;

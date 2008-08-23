@@ -732,8 +732,8 @@ window.addEvent('domready', function(){
 	new MochaUI.Panel({
 		id: 'mainPanel',
 		title: 'Introduction',
-		loadMethod: 'xhr',
-		contentURL: 'pages/lipsum.html',
+		loadMethod: 'iframe',
+		contentURL: 'pages/youtube4.html',
 		column: 'mainColumn'
 	});			
 	

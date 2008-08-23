@@ -134,10 +134,14 @@ var MochaUI = new Hash({
 				
 				// Add onload event to iframe so we can stop the loading icon and run onContentLoaded()
 				currentInstance.iframeEl.addEvent('load', function(e) {
-					currentInstance.hideLoadingIcon.delay(150, currentInstance, canvasIconEl);
+					if (recipient == 'window') {
+						currentInstance.hideLoadingIcon.delay(150, currentInstance, canvasIconEl);
+					}
 					currentInstance.fireEvent('onContentLoaded', windowEl);
 				}.bind(this));
-				currentInstance.showLoadingIcon(canvasIconEl);
+				if (recipient == 'window') {
+					currentInstance.showLoadingIcon(canvasIconEl);
+				}
 				break;
 			case 'html':
 			default:
