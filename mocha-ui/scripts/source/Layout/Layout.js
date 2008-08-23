@@ -213,6 +213,10 @@ MochaUI.Desktop = new Class({
 		var options = currentInstance.options;
 		var shadowBlur = options.shadowBlur;
 		var shadowOffset = options.shadowOffset;
+		var newHeight = windowDimensions.height - options.headerHeight - options.footerHeight;
+		newHeight -= currentInstance.contentBorderEl.getStyle('border-top').toInt();
+		newHeight -= currentInstance.contentBorderEl.getStyle('border-bottom').toInt();
+		newHeight -= (  currentInstance.toolbarWrapperEl ? currentInstance.toolbarWrapperEl.getStyle('height').toInt() + currentInstance.toolbarWrapperEl.getStyle('border-top').toInt() : 0);
 
 		if (MochaUI.options.useEffects == false){
 			windowEl.setStyles({
@@ -220,7 +224,7 @@ MochaUI.Desktop = new Class({
 				'left': shadowOffset.x - shadowBlur
 			});
 			currentInstance.contentWrapperEl.setStyles({
-				'height': windowDimensions.height - options.headerHeight - options.footerHeight,
+				'height': newHeight,
 				'width':  windowDimensions.width
 			});
 			currentInstance.drawWindow(windowEl);
@@ -231,7 +235,7 @@ MochaUI.Desktop = new Class({
 			currentInstance.fireEvent('onMaximize', windowEl);
 		}
 		else {
-			
+						
 			// Todo: Initialize the variables for these morphs once in an initialize function and reuse them
 			
 			var maximizeMorph = new Fx.Elements([contentWrapperEl, windowEl], { 
@@ -250,7 +254,7 @@ MochaUI.Desktop = new Class({
 				}.bind(this)
 			});
 			maximizeMorph.start({
-				'0': {	'height': function(){ return windowDimensions.height - options.headerHeight - options.footerHeight - currentInstance.contentBorderEl.getStyle('border-top').toInt() - currentInstance.contentBorderEl.getStyle('border-bottom').toInt() - (  currentInstance.toolbarWrapperEl ? currentInstance.toolbarWrapperEl.getStyle('height').toInt() + currentInstance.toolbarWrapperEl.getStyle('border-top').toInt() : 0)},
+				'0': {	'height': newHeight,
 						'width':  windowDimensions.width
 				},
 				'1': {	'top': shadowOffset.y - shadowBlur,

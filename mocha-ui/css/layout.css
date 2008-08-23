@@ -27,19 +27,6 @@ License:
 	border-top: 0; */	 
 }
 
-.panel-closed {
-	height: 0px;	
-}	
-
-.panel.color2 {
-	background: #f1f1f1;	
-}
-
-.panel.color3 {
-	background: #202A33;
-	color: #fff;	
-}	
-
 #mainPanel {
 	background: #fff; 	
 }	
@@ -116,7 +103,7 @@ License:
 	line-height: 1px;
 	font-size: 1px;
 	overflow: hidden;
-	background: #D5D7D9;		
+	background: #d1d1d1;		
 }	
 
 .columnHandle {
@@ -126,7 +113,7 @@ License:
 	float: left;
 	width: 4px;
 	overflow: hidden;
-	background: #D5D7D9;				
+	background: #d1d1d1;				
 }
 
 /* Components */

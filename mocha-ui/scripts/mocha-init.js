@@ -734,7 +734,8 @@ window.addEvent('domready', function(){
 		title: 'Introduction',
 		loadMethod: 'iframe',
 		contentURL: 'pages/youtube4.html',
-		column: 'mainColumn'
+		column: 'mainColumn',
+		panelBackground: '#000'
 	});			
 	
 	new MochaUI.Panel({

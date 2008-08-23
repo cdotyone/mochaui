@@ -208,7 +208,7 @@ MochaUI.Windows.windowOptions = {
 	contentBgColor:	   '#fff',
 	headerStartColor:  [250, 250, 250],
 	headerStopColor:   [229, 229, 229],
-	bodyBgColor:       [235, 235, 235],
+	bodyBgColor:       [229, 229, 229],
 	minimizeBgColor:   [255, 255, 255],
 	minimizeColor:     [0, 0, 0],
 	maximizeBgColor:   [255, 255, 255],

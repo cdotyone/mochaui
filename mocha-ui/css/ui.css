@@ -37,7 +37,7 @@ body {
 	position: relative;	
 	height: 40px;
 	overflow: hidden;
-	background: #f1f1f1 url(../images/bg-desktopTitlebar2.gif) repeat-x;
+	background: #d1d1d1 url(../images/bg-desktopTitlebar2.gif) repeat-x;
 	border-top: 1px solid #7C8791;
 	border-bottom: 1px solid #ccc;			
 }
@@ -209,20 +209,19 @@ body {
 /* Footer */
 #desktopFooterWrapper {
 	clear: both;
-	background: #888;
 	padding: 0;
 }
 
 #desktopFooter {
 	font-size: 11px;
-	height: 21px;
-	padding: 4px 10px 0 10px;
-	background: #7C8791;
-	color: #fff;
+	height: 24px;
+	padding: 6px 10px 0 10px;
+	background: #d1d1d1;
+	color: #69727A;
 }
 
 #desktopFooter a {
-	color: #fff;
+	color: #69727A;
 	font-weight: bold;	
 }
 
