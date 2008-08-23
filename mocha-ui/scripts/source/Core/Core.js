@@ -64,10 +64,16 @@ var MochaUI = new Hash({
 			var recipient = 'window';
 			var currentInstance = MochaUI.Windows.instances.get(element.id);
 			var canvasIconEl = currentInstance.canvasIconEl;
+			if (options.title) {
+				currentInstance.titleEl.set('html', options.title);
+			}
 		}
 		else {
 			var recipient = 'panel';
 			var currentInstance = MochaUI.Panels.instances.get(element.id);
+			if (options.title) {
+				currentInstance.titleEl.set('html', options.title);
+			}			
 		}
         
 		var contentEl = currentInstance.contentEl
@@ -77,6 +83,15 @@ var MochaUI = new Hash({
 		else {
 			var contentContainer = currentInstance.contentEl;
 		}
+		
+		if (options.padding != null) {
+			currentInstance.contentEl.setStyles({	
+				'padding-top': options.padding.top,
+				'padding-bottom': options.padding.bottom,
+				'padding-left': options.padding.left,
+				'padding-right': options.padding.right
+			});
+		}		
         
 		// Remove old content.
 		if (contentContainer == contentEl) {

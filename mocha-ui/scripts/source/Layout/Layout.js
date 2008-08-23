@@ -788,6 +788,12 @@ MochaUI.Column = new Class({
 			isCollapsed: false,
 			timestamp: $time()
 		});
+		
+		this.columnEl = new Element('div', {
+			'id': this.options.id,												   
+			'class': 'column'			
+		}).inject($(MochaUI.Desktop.pageWrapper));		
+		
 	}
 });	
 MochaUI.Column.implement(new Options, new Events);		

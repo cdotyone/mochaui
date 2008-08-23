@@ -731,7 +731,7 @@ window.addEvent('domready', function(){
 	// Add panels to main column	
 	new MochaUI.Panel({
 		id: 'mainPanel',
-		title: 'Introduction',
+		title: 'Zero7 - Crosses',
 		loadMethod: 'iframe',
 		contentURL: 'pages/youtube4.html',
 		column: 'mainColumn',

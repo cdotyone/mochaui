@@ -11,9 +11,11 @@
 
 	$('todoLink').addEvent('click', function(e){
 		MochaUI.updateContent({
-			'element':  $('mainPanel'),
+			'element': $('mainPanel'),
 			'loadMethod': 'xhr',
-			'url':       'pages/todo.html'
+			'url': 'pages/todo.html',
+			'title': 'Todo',
+			'padding': { top: 8, right: 8, bottom: 8, left: 8 }     
 		});
 		$('mainPanel').setStyle('background','#fff');
 	});
@@ -21,7 +23,9 @@
 	$('youtube4Link').addEvent('click', function(e){
 		MochaUI.updateContent({
 			'element':  $('mainPanel'),
-			'url':       'pages/youtube4.html'
+			'url':       'pages/youtube4.html',
+			'title': 'Zero7 - Crosses',
+			'padding': { top: 0, right: 0, bottom: 0, left: 0 }
 		});
 		$('mainPanel').setStyle('background','#000');		
 	});
