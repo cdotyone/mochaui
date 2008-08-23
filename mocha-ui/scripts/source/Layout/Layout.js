@@ -926,34 +926,39 @@ MochaUI.Panel = new Class({
 		}).inject(this.panelEl, 'before');
 		
 		this.panelHeaderToolboxEl = new Element('div', {
-			'id': this.options.id + '_headerToolbox',												   
+			'id': this.options.id + '_headerToolbox',										   
 			'class': 'panel-header-toolbox'
 		}).inject(this.panelHeaderEl);
-		
-		this.panelCollapseToggle = new Element('img', {
-			'id': this.options.id + '_minmize',												   
-			'class':  'icon16',
-			'src':    'images/collapse.gif',
-			'width':  16,
-			'height': 16,
-			'alt':    'Minimize Panel'
-		}).inject(this.panelHeaderToolboxEl);		
-		
-		this.panelCollapseToggle.addEvent('click', function(event){		
-			var panel = this.panelEl;
+
+		this.panelCollapseToggle = new Element('div', {
+			'id': this.options.id + '_minmize',
+			'class': 'panel-collapse icon16',
+			'styles': {
+				'width': 16,
+				'height': 16
+			},
+			'title': 'Minimize Panel',
+			'background': '#f00'
+		}).inject(this.panelHeaderToolboxEl);
+        
+		this.panelCollapseToggle.addEvent('click', function(event){
+ 			var panel = this.panelEl;
 			if (this.isCollapsed == false) {
 				panel.setStyle('height', 0);
-				this.isCollapsed = true;				
+				this.isCollapsed = true;
 				panelHeight();
-				this.panelCollapseToggle.src = 'images/expand.gif';
+				panel.removeClass('panel-collapsed');
+				panel.addClass('panel-expand');
 			}
 			else {
 				panel.setStyle('height', 300);
-				this.isCollapsed = false;				
+				this.isCollapsed = false;
 				panelHeight();
-				this.panelCollapseToggle.src = 'images/collapse.gif';				
+				panel.removeClass('panel-expand');
+				panel.addClass('panel-collapsed');
 			}
-		}.bind(this));							
+		}
+		.bind(this));							
 		
 		this.titleEl = new Element('h2', {
 			'id': this.options.id + '_title'

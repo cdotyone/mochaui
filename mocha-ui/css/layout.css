@@ -57,6 +57,14 @@ License:
 	text-align: right;
 }
 
+.panel-collapse {
+	background: url(../images/collapse.gif) no-repeat;
+}
+
+.panel-expand {
+	background: url(../images/expand.gif) no-repeat;
+}
+
 .icon16 {
 	margin: 5px 0 0 2px;
 	cursor: pointer; 

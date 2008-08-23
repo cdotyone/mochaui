@@ -215,7 +215,7 @@ MochaUI.Dock = new Class({
 				this.dockWrapper.setProperty('dockPosition','top');
 				ctx.clearRect(0, 0, 100, 100);
 				MochaUI.circle(ctx, 5, 4, 3, this.options.enabledButtonColor, 1.0);
-				MochaUI.circle(ctx, 5, 14, 3, this.options.disabledButtonColor, 1.0); // gray
+				MochaUI.circle(ctx, 5, 14, 3, this.options.disabledButtonColor, 1.0);
 				$('dockPlacement').setProperty('title', 'Position Dock Bottom');
 				$('dockAutoHide').setProperty('title', 'Auto Hide Disabled in Top Dock Position');
 				this.dockAutoHide = false;
