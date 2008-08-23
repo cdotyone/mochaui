@@ -34,11 +34,12 @@ License:
 .panel-header {
 	position: relative;	
 	background: #e9e9e9 url(../images/bg-desktopTitlebar.gif)  repeat-x;
-	height: 29px;
+	height: 30px;
 	overflow: hidden;	
 }
 
 .panel-header h2 {
+	display: inline-block;
 	font-size: 12px;
 	margin: 0;
 	padding: 5px 8px 0 8px;
@@ -47,13 +48,16 @@ License:
 	color: #69727A;	
 }
 
-.panel-header-buttons {
-	position: absolute;
-	top: 7px;
-	right: 5px;
-	width: 60px;
+.panel-header-toolbox {
+	float: right;
+	height: 26px;
+	margin: 2px 5px 0 0;
 	text-align: right;
 }
+
+.icon16 {
+	margin: 5px 0 0 2px; 
+}	
 
 .panel-corner-nw {
 	display: none;

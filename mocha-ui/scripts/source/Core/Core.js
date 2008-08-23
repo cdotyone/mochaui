@@ -48,10 +48,12 @@ var MochaUI = new Hash({
 
 		var options = {
 			'element':      null,
-			'childElement': null,			
+			'childElement': null,
+			'title':        null,			
 			'content':      null,
 			'url':          null,
-			'loadMethod':   null
+			'loadMethod':   null,
+			'padding':      null
 		};
 		$extend(options, updateOptions);
 		

@@ -754,9 +754,9 @@ MochaUI.Panel = new Class({
 		
 		// Style options:
 		height:           125,
-		addClass:         '',  // NOT YET IMPLEMENTED   
+		addClass:         '',   // NOT YET IMPLEMENTED   
 		scrollbars:       true, // NOT YET IMPLEMENTED
-		padding:   		  { top: 8, right: 8, bottom: 8, left: 8 },	 // NOT YET IMPLEMENTED
+		padding:   		  { top: 8, right: 8, bottom: 8, left: 8 },
 		
 		// Color options:		
 		panelBackground:   '#f1f1f1',			
@@ -773,6 +773,12 @@ MochaUI.Panel = new Class({
 	},	
 	initialize: function(options){
 		this.setOptions(options);
+		
+		$extend(this, {
+			isCollapsed: false,
+			timestamp: $time()
+		});		
+		
 		this.originalHeight = this.options.height; // NOT USED YET
 		
 		// Shorten object chain
@@ -830,17 +836,49 @@ MochaUI.Panel = new Class({
 			'padding-bottom': this.options.padding.bottom,
 			'padding-left': this.options.padding.left,
 			'padding-right': this.options.padding.right
-		});		
-		
+		});			
 		
 		this.panelHeaderEl = new Element('div', {
 			'id': this.options.id + '_header',												   
 			'class': 'panel-header'
 		}).inject(this.panelEl, 'before');
 		
+		this.panelHeaderToolboxEl = new Element('div', {
+			'id': this.options.id + '_headerToolbox',												   
+			'class': 'panel-header-toolbox'
+		}).inject(this.panelHeaderEl);
+		
+		this.panelCollapseToggle = new Element('img', {
+			'id': this.options.id + '_minmize',												   
+			'class':  'icon16',
+			'src':    'images/collapse.gif',
+			'width':  16,
+			'height': 16,
+			'alt':    'Minimize Panel'
+		}).inject(this.panelHeaderToolboxEl);		
+		
+		this.panelCollapseToggle.addEvent('click', function(event){		
+			var panel = this.panelEl;
+			if (this.isCollapsed == false) {
+				panel.setStyle('height', 0);
+				this.isCollapsed = true;				
+				panelHeight();
+				this.panelCollapseToggle.src = 'images/expand.gif';
+			}
+			else {
+				panel.setStyle('height', 300);
+				this.isCollapsed = false;				
+				panelHeight();
+				this.panelCollapseToggle.src = 'images/collapse.gif';				
+			}
+		}.bind(this));							
+		
+		this.titleEl = new Element('h2', {
+			'id': this.options.id + '_title'
+		}).inject(this.panelHeaderEl);		
 		
 		if (this.options.tabsURL == null) {
-			this.panelHeaderEl.set('html', '<h2>' + this.options.title + '</h2>');
+			this.titleEl.set('html', this.options.title);
 		}
 		else {
 			MochaUI.updateContent({
@@ -869,20 +907,7 @@ MochaUI.Panel = new Class({
 
 		// Todo: Make this so it only effects the column in question
 		// This should probably happen before updateContent
-		panelHeight();		
-		
-/*	$$('.panelMinimize').addEvent('click', function(event){		
-		el = event.target.getParent().getParent().getNext('.panel');
-		if (!el.getStyle('height') < 1) {
-			el.setStyle('height', 0);
-			panelHeight();
-		}
-		else {
-			el.setStyle('height', null);
-			panelHeight();
-		}
-	}); */		
-				
+		panelHeight();				
 					
 	}
 });
