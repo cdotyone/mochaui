@@ -471,7 +471,7 @@ MochaUI.Window = new Class({
 
 		// Add content to window.
 		MochaUI.updateContent({
-			'windowEl': this.windowEl,
+			'element': this.windowEl,
 			'content':  this.options.content,
 			'url':      this.options.contentURL
 		});	
@@ -479,11 +479,11 @@ MochaUI.Window = new Class({
 		// Add content to window toolbar.
 		if (this.options.toolbar == true){
 			MochaUI.updateContent({
-				'windowEl':   this.windowEl,
+				'element':   this.windowEl,
+				'childElement':    this.toolbarEl,				
 				'content':    this.options.toolbarContent,
-				'url':        this.options.toolbarURL,
-				'element':    this.toolbarEl,
-				'loadMethod': 'xhr'
+				'loadMethod': 'xhr',				
+				'url':        this.options.toolbarURL
 			});
 		}
 		

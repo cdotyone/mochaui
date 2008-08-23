@@ -834,10 +834,10 @@ MochaUI.Panel = new Class({
 		}
 		else {
 			MochaUI.updateContent({
-				'windowEl':   this.panelEl,
-				'url':        this.options.tabsURL,
-				'element':    this.panelHeaderEl,
-				'loadMethod': 'xhr'
+				'element':      this.panelEl,
+				'childElement': this.panelHeaderEl,
+				'loadMethod':   'xhr',								
+				'url':          this.options.tabsURL
 			});		
 		}
 		
@@ -852,7 +852,7 @@ MochaUI.Panel = new Class({
 			
 		// Add content to panel.
 		MochaUI.updateContent({
-			'windowEl': this.panelEl,
+			'element': this.panelEl,
 			'content':  this.options.content,
 			'url':      this.options.contentURL
 		});			

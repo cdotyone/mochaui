@@ -47,30 +47,30 @@ var MochaUI = new Hash({
 	updateContent: function(updateOptions){
 
 		var options = {
-			windowEl:   null,
-			element:    null,			
-			content:    null,
-			url:        null,
-			loadMethod: null
+			'element':      null,
+			'childElement': null,			
+			'content':      null,
+			'url':          null,
+			'loadMethod':   null
 		};
 		$extend(options, updateOptions);
 		
-		if (!options.windowEl) return;
-		var windowEl = options.windowEl;
+		if (!options.element) return;
+		var element = options.element;
         
-		if (MochaUI.Windows.instances.get(windowEl.id)) {
+		if (MochaUI.Windows.instances.get(element.id)) {
 			var recipient = 'window';
-			var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
+			var currentInstance = MochaUI.Windows.instances.get(element.id);
 			var canvasIconEl = currentInstance.canvasIconEl;
 		}
 		else {
 			var recipient = 'panel';
-			var currentInstance = MochaUI.Panels.instances.get(windowEl.id);
+			var currentInstance = MochaUI.Panels.instances.get(element.id);
 		}
         
 		var contentEl = currentInstance.contentEl
-		if (options.element != null) {
-			var contentContainer = options.element;
+		if (options.childElement != null) {
+			var contentContainer = options.childElement;
 		}
 		else {
 			var contentContainer = currentInstance.contentEl;
@@ -109,7 +109,7 @@ var MochaUI = new Hash({
 							if (recipient == 'window') {
 								currentInstance.hideLoadingIcon(canvasIconEl);
 							}	
-							currentInstance.fireEvent('onContentLoaded', windowEl);
+							currentInstance.fireEvent('onContentLoaded', element);
 						}
 					}.bind(this)
 				}).get();
@@ -137,7 +137,7 @@ var MochaUI = new Hash({
 					if (recipient == 'window') {
 						currentInstance.hideLoadingIcon.delay(150, currentInstance, canvasIconEl);
 					}
-					currentInstance.fireEvent('onContentLoaded', windowEl);
+					currentInstance.fireEvent('onContentLoaded', element);
 				}.bind(this));
 				if (recipient == 'window') {
 					currentInstance.showLoadingIcon(canvasIconEl);
@@ -152,7 +152,7 @@ var MochaUI = new Hash({
 				} else {
 					contentContainer.set('html', options.content);
 				}				
-				currentInstance.fireEvent('onContentLoaded', windowEl);
+				currentInstance.fireEvent('onContentLoaded', element);
 				break;
 		}
 
