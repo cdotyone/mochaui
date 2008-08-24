@@ -541,7 +541,7 @@ MochaUI.Desktop.implement(new Options, new Events);
 				// subtract the five and split the difference to the other panels.
 				//
 				// Once a panel reaches 0 or there abouts the ratio is broken for returning to later.
-				
+								
 				panels.each(function(panel){
 					var ratio = this.panelsHeight / panel.offsetHeight.toInt();
 					var newPanelHeight = panel.getStyle('height').toInt() + (remainingHeight / ratio);
@@ -559,9 +559,14 @@ MochaUI.Desktop.implement(new Options, new Events);
 	
 	function resizeChildren(element, newPanelHeight){
 		var instances = MochaUI.Panels.instances;
-		var contentEl = instances.get(element.id).contentEl;
-		contentEl.setStyle('height', newPanelHeight - contentEl.getStyle('padding-top').toInt() - contentEl.getStyle('padding-bottom').toInt());	
-		contentEl.getChildren('iframe').setStyle('height', newPanelHeight - contentEl.getStyle('padding-top').toInt() - contentEl.getStyle('padding-bottom').toInt());			
+		var currentInstance = instances.get(element.id);
+		var contentEl = currentInstance.contentEl;
+		
+		// The following line was causing an issue in IE6 and it probably isn't needed.
+		// contentEl.setStyle('height', newPanelHeight - contentEl.getStyle('padding-top').toInt() - contentEl.getStyle('padding-bottom').toInt());
+		if (currentInstance.iframeEl) {
+			currentInstance.iframeEl.setStyle('height', newPanelHeight - contentEl.getStyle('padding-top').toInt() - contentEl.getStyle('padding-bottom').toInt());
+		}
 	}
 	
 	
@@ -858,6 +863,7 @@ MochaUI.Panel = new Class({
 		
 		$extend(this, {
 			isCollapsed: false,
+			iframe: options.loadMethod == 'iframe' ? true : false,			
 			timestamp: $time()
 		});		
 		
