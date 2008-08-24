@@ -860,7 +860,7 @@ MochaUI.Panel = new Class({
 		// Style options:
 		height:           125,
 		addClass:         '',   // NOT YET IMPLEMENTED   
-		scrollbars:       true, // NOT YET IMPLEMENTED
+		scrollbars:       true,
 		padding:   		  { top: 8, right: 8, bottom: 8, left: 8 },
 		
 		// Color options:		
@@ -927,13 +927,15 @@ MochaUI.Panel = new Class({
 			'id': this.options.id + '_pad',												   
 			'class': 'pad'
 		}).inject(this.panelEl);
-		
+
+		// This is in order to use the same variable as the windows do in updateContent.
+		// May rethink this.		
 		this.contentWrapperEl = this.panelEl;
 		
 		
 		// Set scrollbars, always use 'hidden' for iframe windows
 		this.contentWrapperEl.setStyles({
-			'overflow': this.options.scrollbars && !this.options.iframe ? 'auto' : 'hidden'
+			'overflow': this.options.scrollbars && !this.iframeEl ? 'auto' : 'hidden'
 		});
 
 		this.contentEl.setStyles({

@@ -84,6 +84,11 @@ var MochaUI = new Hash({
 			var contentContainer = currentInstance.contentEl;
 		}
 		
+		// Set scrollbars, always use 'hidden' for iframe windows
+		currentInstance.contentWrapperEl.setStyles({
+			'overflow': currentInstance.options.scrollbars && (options.loadMethod != 'iframe') ? 'auto' : 'hidden'
+		});		
+		
 		if (options.padding != null) {
 			currentInstance.contentEl.setStyles({	
 				'padding-top': options.padding.top,

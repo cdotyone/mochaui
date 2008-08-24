@@ -412,7 +412,7 @@ MochaUI.Window = new Class({
 
 		// Set scrollbars, always use 'hidden' for iframe windows
 		this.contentWrapperEl.setStyles({
-			'overflow': this.options.scrollbars && !this.options.iframe ? 'auto' : 'hidden',
+			'overflow': this.options.scrollbars && !this.iframeEl ? 'auto' : 'hidden',
 			'background': this.options.contentBgColor
 		});
 
