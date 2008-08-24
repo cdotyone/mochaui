@@ -399,8 +399,6 @@ MochaUI.Window = new Class({
 		}		
 
 		if (this.options.loadMethod == 'iframe') {
-			// Iframes have their own scrollbars and padding.
-			this.options.scrollbars = false;
 			this.options.padding = { top: 0, right: 0, bottom: 0, left: 0 };
 		}
 		

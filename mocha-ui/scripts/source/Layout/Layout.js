@@ -494,9 +494,13 @@ MochaUI.Desktop.implement(new Options, new Events);
 	function panelHeight2(column){			
 			var columnHeight = column.offsetHeight.toInt();			
 			var heightNotSet = []; // Panels than do not have their height set
+			
 			var heightIsZero = []; // Panels whose height is zero. NOT USED YET
+						
 			var panels = []; // All the panels in the column
+			
 			var panelsFixed = []; // Panels with the fixed class. NOT USED YET
+			
 			this.panelsHeight = 0;			
 			this.height = 0;
 			
@@ -505,13 +509,19 @@ MochaUI.Desktop.implement(new Options, new Events);
 
 				if (el.hasClass('panel')){
 
-					panels.push(el);
+					var instances = MochaUI.Panels.instances;
+					var currentInstance = instances.get(el.id);
+					
+					if (currentInstance.isCollapsed != true){
+						panels.push(el);
+					}
+					
 					this.panelsHeight += el.offsetHeight.toInt();
 					if (el.style.height) {
 						this.height += el.getStyle('height').toInt();
 					}
-					// Add children without height set to an array
-					else {
+					// Add children without height set and who are not collapsed to an array
+					else if (currentInstance.isCollapsed != true) {
 						heightNotSet.push(el);
 					}	
 				}
