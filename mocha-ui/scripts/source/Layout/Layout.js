@@ -447,28 +447,6 @@ MochaUI.Desktop = new Class({
 });
 MochaUI.Desktop.implement(new Options, new Events);
 
-	// Remaining Height
-	function rHeight(){	
-		$$('.rHeight').each(function(el){
-			var currentHeight = el.offsetHeight.toInt();
-			currentHeight -= el.getStyle('border-top').toInt();		
-			currentHeight -= el.getStyle('border-bottom').toInt();						
-		
-			var parent = el.getParent();		
-			this.height = 0;
-		
-			// Get the total height of all the parent element's children
-			parent.getChildren().each(function(el){
-				this.height += el.offsetHeight.toInt();												
-			}.bind(this));
-		
-			// Add the remaining height to the current element
-			var remainingHeight = parent.offsetHeight.toInt() - this.height;			
-			el.setStyle('height', currentHeight + remainingHeight);
-
-		});
-	}
-	
 	// Panel Height
 	
 	/*
@@ -965,7 +943,7 @@ MochaUI.Panel = new Class({
 			'class': 'panel-header-toolbox'
 		}).inject(this.panelHeaderEl);
 
-		this.panelCollapseToggle = new Element('div', {
+		this.collapseToggleEl = new Element('div', {
 			'id': this.options.id + '_minmize',
 			'class': 'panel-collapse icon16',
 			'styles': {
@@ -976,7 +954,7 @@ MochaUI.Panel = new Class({
 			'background': '#f00'
 		}).inject(this.panelHeaderToolboxEl);
         
-		this.panelCollapseToggle.addEvent('click', function(event){
+		this.collapseToggleEl.addEvent('click', function(event){
  			var panel = this.panelEl;
 			
 			// Get siblings and make sure they are not all collapsed.
@@ -1000,15 +978,15 @@ MochaUI.Panel = new Class({
 				panel.setStyle('height', 0);
 				this.isCollapsed = true;
 				panelHeight();
-				panel.removeClass('panel-collapsed');
-				panel.addClass('panel-expand');
+				this.collapseToggleEl.removeClass('panel-collapsed');
+				this.collapseToggleEl.addClass('panel-expand');
 			}
 			else {
 				panel.setStyle('height', 300);
 				this.isCollapsed = false;
 				panelHeight();
-				panel.removeClass('panel-expand');
-				panel.addClass('panel-collapsed');
+				this.collapseToggleEl.removeClass('panel-expand');
+				this.collapseToggleEl.addClass('panel-collapsed');
 			}
 		}
 		.bind(this));							
