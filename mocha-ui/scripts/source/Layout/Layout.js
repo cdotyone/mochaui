@@ -978,7 +978,25 @@ MochaUI.Panel = new Class({
         
 		this.panelCollapseToggle.addEvent('click', function(event){
  			var panel = this.panelEl;
+			
+			// Get siblings and make sure they are not all collapsed.
+			var instances = MochaUI.Panels.instances;
+			var expandedSiblings = [];			
+			panel.getAllPrevious('.panel').each(function(sibling){
+				var currentInstance = instances.get(sibling.id);
+				if (currentInstance.isCollapsed == false){
+					expandedSiblings.push(sibling);
+				}					
+			});
+			panel.getAllNext('.panel').each(function(sibling){
+				var currentInstance = instances.get(sibling.id);
+				if (currentInstance.isCollapsed == false){
+					expandedSiblings.push(sibling);
+				}					
+			});			
+			
 			if (this.isCollapsed == false) {
+				if (expandedSiblings.length == 0) return; // Later this may collapse the column
 				panel.setStyle('height', 0);
 				this.isCollapsed = true;
 				panelHeight();

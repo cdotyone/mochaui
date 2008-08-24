@@ -29,3 +29,9 @@
 	<li>Consider adding a click event for focus to iframes whose source is on same domain. Add event to onComplete in Window.js.</li>
 	<li>Create Illustrator source file for graphic assets.</li>
 </ul>
+
+<p>Look for instances of the following that are in each loops. Make sure instances is defined before the each loop rather than in it.</p>
+<pre>
+	var instances = MochaUI.Panels.instances;
+	var currentInstance = instances.get(el.id);	
+</pre>	
