@@ -480,9 +480,18 @@ MochaUI.Desktop.implement(new Options, new Events);
 	
 	*/
 	
-	function panelHeight(){
-		$$('.column').each(function(column){
-			
+	function panelHeight(column){
+		if (column != null) {
+			this.panelHeight2(column);
+		}
+		else {
+			$$('.column').each(function(column){
+				panelHeight2(column);
+			}.bind(this));
+		}
+	}
+	
+	function panelHeight2(column){			
 			var columnHeight = column.offsetHeight.toInt();			
 			var heightNotSet = []; // Panels than do not have their height set
 			var heightIsZero = []; // Panels whose height is zero. NOT USED YET
@@ -556,8 +565,7 @@ MochaUI.Desktop.implement(new Options, new Events);
 					resizeChildren(panel, newPanelHeight);
 
 				});	
-			}			
-		});
+			}				
 	}
 	
 	function resizeChildren(element, newPanelHeight){
@@ -593,6 +601,8 @@ MochaUI.Desktop.implement(new Options, new Events);
 			el.setStyle('width', currentWidth + remainingWidth);			
 		});
 	}
+
+// REWRITE THESE SO THEY USE THE CLASS OPTIONS!!!
 	
 function addResizeRight(element, min, max){
 	if (!$(element)) return;
@@ -601,11 +611,7 @@ function addResizeRight(element, min, max){
 	handle.setStyle('cursor', 'e-resize');
 	var sibling = element.getNext('.column');	
 	if (!min) min = 50;
-	if (!max) {
-		// var sibling = $(element).getNext('.column');
-		// max = $(element).offsetWidth + sibling.offsetWidth;
-		max = 250;
-	}
+	if (!max) max = 250;
 	if (Browser.Engine.trident) {	
 		handle.addEvent('mousedown', function(e) {
 			handle.setCapture();
@@ -721,13 +727,18 @@ function addResizeBottom(element, min, max){
 
 function addResizeTop(element, min, max){
 	if (!$(element)) return;
-	var handle = $(element+'_handle');
+	var element = $(element);
+	
+	var instances = MochaUI.Panels.instances;
+	var currentInstance = instances.get(element.id);	
+	var handle = currentInstance.handleEl;
+	
 	handle.setStyle('cursor', 'n-resize');
-	var sibling = $(element).getPrevious('.panel');	
+	var sibling = element.getPrevious('.panel');	
 	if (!min) min = 0;
 	if (!max) {
 		max = function(){
-			return $(element).getStyle('height').toInt() + sibling.getStyle('height').toInt();
+			return element.getStyle('height').toInt() + sibling.getStyle('height').toInt();
 		}.bind(this)
 	}
 	if (Browser.Engine.trident) {	
@@ -738,31 +749,35 @@ function addResizeTop(element, min, max){
 			handle.releaseCapture();
 		}.bind(this));								  													   
 	}		
-	$(element).makeResizable({
+	element.makeResizable({
 		handle: handle,
 		modifiers: {x: false, y: 'height'},
 		limit: { y: [min, max] },
 		invert: true,		
 		onBeforeStart: function(){
-			this.originalHeight = $(element).getStyle('height').toInt();
+			this.originalHeight = element.getStyle('height').toInt();
 			this.siblingOriginalHeight = sibling.getStyle('height').toInt();
 		}.bind(this),
 		onStart: function(){
-			$(element).getElements('iframe').setStyle('visibility','hidden');
+			if (currentInstance.iframeEl) {
+				currentInstance.iframeEl.setStyle('visibility', 'hidden');
+			}
 			sibling.getElements('iframe').setStyle('visibility','hidden');
 		}.bind(this),							
 		onDrag: function(){
-			siblingHeight = siblingOriginalHeight + (this.originalHeight - $(element).getStyle('height').toInt());
+			siblingHeight = siblingOriginalHeight + (this.originalHeight - element.getStyle('height').toInt());
 			sibling.setStyle('height', siblingHeight);
-			resizeChildren($(element), $(element).getStyle('height').toInt());
+			resizeChildren(element, element.getStyle('height').toInt());
 			resizeChildren(sibling, siblingHeight);
 		}.bind(this),
 		onComplete: function(){
-			siblingHeight = siblingOriginalHeight + (this.originalHeight - $(element).getStyle('height').toInt());
+			siblingHeight = siblingOriginalHeight + (this.originalHeight - element.getStyle('height').toInt());
 			sibling.setStyle('height', siblingHeight);
-			resizeChildren($(element), $(element).getStyle('height').toInt());
+			resizeChildren(element, element.getStyle('height').toInt());
 			resizeChildren(sibling, siblingHeight);
-			$(element).getElements('iframe').setStyle('visibility','visible');	
+			if (currentInstance.iframeEl) {
+				currentInstance.iframeEl.setStyle('visibility', 'visible');
+			}	
 			sibling.getElements('iframe').setStyle('visibility','visible');			
 		}.bind(this)		
 	});
@@ -986,7 +1001,7 @@ MochaUI.Panel = new Class({
 		
 		// Only add handle if not only panel in column		
 		if (addHandle == true) {		
-			this.panelHandleEl = new Element('div', {
+			this.handleEl = new Element('div', {
 				'id': this.options.id + '_handle',
 				'class': 'horizontalHandle'
 			}).inject(this.panelHeaderEl, 'before');
@@ -1002,6 +1017,7 @@ MochaUI.Panel = new Class({
 
 		// Todo: Make this so it only effects the column in question
 		// This should probably happen before updateContent
+		// panelHeight(this.options.column);		
 		panelHeight();				
 					
 	}
