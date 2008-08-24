@@ -731,11 +731,11 @@ window.addEvent('domready', function(){
 	// Add panels to main column	
 	new MochaUI.Panel({
 		id: 'mainPanel',
-		title: 'Zero7 - Crosses',
-		loadMethod: 'iframe',
-		contentURL: 'pages/youtube4.html',
+		title: 'Todo',
+		loadMethod: 'xhr',
+		contentURL: 'pages/todo.html',
 		column: 'mainColumn',
-		panelBackground: '#000'
+		panelBackground: '#fff'
 	});			
 	
 	new MochaUI.Panel({

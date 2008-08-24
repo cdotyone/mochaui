@@ -22,8 +22,9 @@
 	
 	$('youtube4Link').addEvent('click', function(e){
 		MochaUI.updateContent({
-			'element':  $('mainPanel'),
-			'url':       'pages/youtube4.html',
+			'element': $('mainPanel'),
+			'loadMethod': 'iframe',			
+			'url': 'pages/youtube4.html',
 			'title': 'Zero7 - Crosses',
 			'padding': { top: 0, right: 0, bottom: 0, left: 0 }
 		});

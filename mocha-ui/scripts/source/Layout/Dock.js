@@ -325,7 +325,7 @@ MochaUI.Dock = new Class({
 
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
-		if ( currentInstance.iframe ) {
+		if ( currentInstance.iframeEl ) {
 			currentInstance.iframeEl.setStyle('visibility', 'hidden');
 		}
 		
@@ -370,7 +370,7 @@ MochaUI.Dock = new Class({
 		MochaUI.Desktop.setDesktopSize();
 
 		 // Part of Mac FF2 scrollbar fix
-		if (currentInstance.options.scrollbars == true && currentInstance.iframe == false){ 
+		if (currentInstance.options.scrollbars == true && !currentInstance.iframeEl){ 
 			currentInstance.contentWrapperEl.setStyle('overflow', 'auto');
 		}
 
@@ -385,7 +385,7 @@ MochaUI.Dock = new Class({
 		}		
 
 		// Show iframe
-		if ( currentInstance.iframe ) {
+		if ( currentInstance.iframeEl ) {
 			currentInstance.iframeEl.setStyle('visibility', 'visible');
 		}
 

@@ -248,7 +248,6 @@ MochaUI.Window = new Class({
 			headerFooterShadow: options.headerHeight + options.footerHeight + (options.shadowBlur * 2),
 			oldTop: 0,
 			oldLeft: 0,
-			iframe: options.loadMethod == 'iframe' ? true : false,
 			isMaximized: false,
 			isMinimized: false,
 			isCollapsed: false,
@@ -687,12 +686,12 @@ MochaUI.Window = new Class({
 				if (this.options.type != 'modal'){ 
 					MochaUI.focusWindow(windowEl);
 				}
-				if ( this.iframe )
+				if ( this.iframeEl )
 					this.iframeEl.setStyle('visibility', 'hidden');
 			}.bind(this),
 			onComplete: function() {
 				$('windowUnderlay').setStyle('visibility','hidden');
-				if ( this.iframe ){
+				if ( this.iframeEl ){
 					this.iframeEl.setStyle('visibility', 'visible');
 				}
 				// Store new position in options.
@@ -1226,7 +1225,7 @@ MochaUI.Window = new Class({
 		});
 
 		// Resize iframe when window is resized
-		if (this.iframe) {
+		if (this.iframeEl) {
 			this.iframeEl.setStyles({
 				'height': this.contentWrapperEl.offsetHeight
 			});

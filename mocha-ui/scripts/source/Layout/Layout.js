@@ -207,7 +207,7 @@ MochaUI.Desktop = new Class({
 		
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
-		if ( currentInstance.iframe ) {
+		if ( currentInstance.iframeEl ) {
 			currentInstance.iframeEl.setStyle('visibility', 'hidden');
 		}
 
@@ -231,7 +231,7 @@ MochaUI.Desktop = new Class({
 			});
 			currentInstance.drawWindow(windowEl);
 			// Show iframe
-			if ( currentInstance.iframe ) {
+			if ( currentInstance.iframeEl ) {
 				currentInstance.iframeEl.setStyle('visibility', 'visible');
 			}
 			currentInstance.fireEvent('onMaximize', windowEl);
@@ -249,7 +249,7 @@ MochaUI.Desktop = new Class({
 					$clear(currentInstance.maximizeAnimation);
 					currentInstance.drawWindow(windowEl);
 					// Show iframe
-					if ( currentInstance.iframe ) {
+					if ( currentInstance.iframeEl ) {
 						currentInstance.iframeEl.setStyle('visibility', 'visible');
 					}
 					currentInstance.fireEvent('onMaximize', windowEl);	
@@ -299,7 +299,7 @@ MochaUI.Desktop = new Class({
 		
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
-		if ( currentInstance.iframe ) {
+		if ( currentInstance.iframeEl ) {
 			currentInstance.iframeEl.setStyle('visibility', 'hidden');
 		}
 		
@@ -315,6 +315,9 @@ MochaUI.Desktop = new Class({
 				'top': currentInstance.oldTop,
 				'left': currentInstance.oldLeft
 			});
+			if ( currentInstance.iframeEl ) {
+				currentInstance.iframeEl.setStyle('visibility', 'visible');
+			}			
 			if (currentInstance.container != this.desktop){
 				$(options.container).grab(windowEl);
 				if (options.restrict){
@@ -332,7 +335,7 @@ MochaUI.Desktop = new Class({
 				'onComplete': function(el){
 					$clear(currentInstance.maximizeAnimation);
 					currentInstance.drawWindow(windowEl);
-					if ( currentInstance.iframe ) {
+					if ( currentInstance.iframeEl ) {
 						currentInstance.iframeEl.setStyle('visibility', 'visible');
 					}
 					if (options.container != this.desktop){
@@ -862,8 +865,7 @@ MochaUI.Panel = new Class({
 		this.setOptions(options);
 		
 		$extend(this, {
-			isCollapsed: false,
-			iframe: options.loadMethod == 'iframe' ? true : false,			
+			isCollapsed: false,			
 			timestamp: $time()
 		});		
 		

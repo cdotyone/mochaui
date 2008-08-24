@@ -181,7 +181,7 @@ var MochaUI = new Hash({
 		if (currentInstance.isCollapsed == false) {
 			currentInstance.isCollapsed = true;
 			handles.setStyle('display', 'none');
-			if ( currentInstance.iframe ) {
+			if ( currentInstance.iframeEl ) {
 				currentInstance.iframeEl.setStyle('visibility', 'hidden');
 			}			
 			currentInstance.contentBorderEl.setStyles({
@@ -217,7 +217,7 @@ var MochaUI = new Hash({
 					left: null
 				});				
 			}
-			if ( currentInstance.iframe ) {
+			if ( currentInstance.iframeEl ) {
 				currentInstance.iframeEl.setStyle('visibility', 'visible');
 			}
 			handles.setStyle('display', 'block');			
