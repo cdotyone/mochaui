@@ -764,7 +764,10 @@ window.addEvent('domready', function(){
 		contentURL: 'pages/tips.html',
 		column: 'sideColumn2',
 		height: 300
-	});		
+	});
+	
+	// Format everything before displaying the desktop
+	//MochaUI.Desktop.desktop.setStyle('visibility','visible');		
 		
 	MochaUI.Modal = new MochaUI.Modal();
 	initializeWindows();

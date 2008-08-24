@@ -460,7 +460,7 @@ MochaUI.Desktop.implement(new Options, new Events);
 	
 	function panelHeight(column){
 		if (column != null) {
-			this.panelHeight2(column);
+			this.panelHeight2($(column));
 		}
 		else {
 			$$('.column').each(function(column){
@@ -977,14 +977,14 @@ MochaUI.Panel = new Class({
 				if (expandedSiblings.length == 0) return; // Later this may collapse the column
 				panel.setStyle('height', 0);
 				this.isCollapsed = true;
-				panelHeight();
+				panelHeight(this.options.column);
 				this.collapseToggleEl.removeClass('panel-collapsed');
 				this.collapseToggleEl.addClass('panel-expand');
 			}
 			else {
 				panel.setStyle('height', 300);
 				this.isCollapsed = false;
-				panelHeight();
+				panelHeight(this.options.column);
 				this.collapseToggleEl.removeClass('panel-expand');
 				this.collapseToggleEl.addClass('panel-collapsed');
 			}
@@ -1023,10 +1023,8 @@ MochaUI.Panel = new Class({
 			'url':      this.options.contentURL
 		});			
 
-		// Todo: Make this so it only effects the column in question
-		// This should probably happen before updateContent
-		// panelHeight(this.options.column);		
-		panelHeight();				
+		// Todo: Make this so it only effects the column in question		
+		panelHeight(this.options.column);				
 					
 	}
 });
