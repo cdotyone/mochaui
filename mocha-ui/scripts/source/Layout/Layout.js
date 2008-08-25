@@ -1031,6 +1031,6 @@ MochaUI.Panel = new Class({
 MochaUI.Panel.implement(new Options, new Events);	
 
 function initLayout(){	
-	$$('.columnHandle').setStyle('visibility','visible');
-	$$('.column').setStyle('visibility','visible');
+	//$$('.columnHandle').setStyle('visibility','visible');
+	//$$('.column').setStyle('visibility','visible');
 }

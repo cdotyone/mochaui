@@ -765,12 +765,19 @@ window.addEvent('domready', function(){
 		column: 'sideColumn2',
 		height: 300
 	});
+
+	MochaUI.Modal = new MochaUI.Modal();
 	
 	// Format everything before displaying the desktop
-	//MochaUI.Desktop.desktop.setStyle('visibility','visible');		
-		
-	MochaUI.Modal = new MochaUI.Modal();
-	initializeWindows();
+	var splash = function(){
+		MochaUI.Desktop.desktop.setStyles({
+			'background': '#fff',
+			'visibility': 'visible'
+		});
+		initializeWindows();
+	}
+	splash.delay(1800, this);
+
 });	
 
 // This runs when a person leaves your page.

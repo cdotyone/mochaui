@@ -16,11 +16,11 @@ html, body {
 
 body {
 	margin: 0; /* Required */
-	background: #fff;
+	background: #6989b3 url(../images/splash.gif) center center no-repeat;
 }
 
 #desktop {
-/*	visibility: hidden; */
+	visibility: hidden;
 	position: relative;
 	top: 0;
 	left: 0;
