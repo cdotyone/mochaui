@@ -507,6 +507,9 @@ MochaUI.Desktop.implement(new Options, new Events);
 					// So don't check for getLast but instead for getAllNext with isCollapsed == false.
 					// In other words, resize panels below the collapsing panel unless there are none.
 					// If there are none then resize the panels above.
+					// If a panel is expanding, we should have the oppositie behavior. Resize panels above
+					// unless there are none.
+					// If there are none, then resize the panels below.					
 					if (currentInstance.isCollapsed != true && ( el.getAllNext('.panel').contains(collapsing) != true || areAnyNextSiblingsExpanded(el) != true ) ){
 						panelsToResize.push(el);
 					}
