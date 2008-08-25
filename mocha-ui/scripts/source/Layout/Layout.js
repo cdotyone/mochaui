@@ -474,8 +474,9 @@ MochaUI.Desktop.implement(new Options, new Events);
 			var heightNotSet = []; // Panels than do not have their height set
 			
 			var heightIsZero = []; // Panels whose height is zero. NOT USED YET
-						
-			var panels = []; // All the panels in the column whose height will be effected.
+			
+			var panels = column.getChildren('.panel'); // All the panels in a column.		
+			var panelsToResize = []; // All the panels in the column whose height will be effected.
 			
 			this.panelsHeight = 0;			
 			this.height = 0;
@@ -494,12 +495,14 @@ MochaUI.Desktop.implement(new Options, new Events);
 					
 					// Add panels who are not collapsed and who are not previous siblings
 					// of a newly collapsed panel.
-					if (currentInstance.isCollapsed != true && el.getAllNext('.panel').contains(collapsing) != true){
-						panels.push(el);
+					if (currentInstance.isCollapsed != true && ( el.getAllNext('.panel').contains(collapsing) != true || panels.getLast() == collapsing ) ){
+						panelsToResize.push(el);
 					}
 					
+					// if (panelsNotCollapsed.getLast() != collapsing)
+					
 					// Height of panels that can be resized
-					if (el.getAllNext('.panel').contains(collapsing) != true) {
+					if (el.getAllNext('.panel').contains(collapsing) != true || panels.getLast() == collapsing ) {
 						this.panelsHeight += el.offsetHeight.toInt();
 					}
 					
@@ -554,7 +557,7 @@ MochaUI.Desktop.implement(new Options, new Events);
 				//
 				// Once a panel reaches 0 or there abouts the ratio is broken for returning to later.
 								
-				panels.each(function(panel){
+				panelsToResize.each(function(panel){
 					var ratio = this.panelsHeight / panel.offsetHeight.toInt();
 					var newPanelHeight = panel.getStyle('height').toInt() + (remainingHeight / ratio);
 					if (newPanelHeight < 1) {
