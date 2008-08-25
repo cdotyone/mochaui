@@ -469,14 +469,12 @@ MochaUI.Desktop.implement(new Options, new Events);
 		}
 	}
 	
-	function panelHeight2(column, collapsing){	
+	function panelHeight2(column, changing){	
 	
-			var instances = MochaUI.Panels.instances;
+			var instances = MochaUI.Panels.instances;	
 			
 			var columnHeight = column.offsetHeight.toInt();			
 			var heightNotSet = []; // Panels than do not have their height set
-			
-			var heightIsZero = []; // Panels whose height is zero. NOT USED YET
 			
 			var panels = column.getChildren('.panel'); // All the panels in a column.		
 			var panelsToResize = []; // All the panels in the column whose height will be effected.
@@ -510,12 +508,12 @@ MochaUI.Desktop.implement(new Options, new Events);
 					// If a panel is expanding, we should have the oppositie behavior. Resize panels above
 					// unless there are none.
 					// If there are none, then resize the panels below.					
-					if (currentInstance.isCollapsed != true && ( el.getAllNext('.panel').contains(collapsing) != true || areAnyNextSiblingsExpanded(el) != true ) ){
+					if (currentInstance.isCollapsed != true && ( el.getAllNext('.panel').contains(changing) != true || areAnyNextSiblingsExpanded(el) != true ) ){
 						panelsToResize.push(el);
 					}
 					
 					// Height of panels that can be resized
-					if (el.getAllNext('.panel').contains(collapsing) != true || areAnyNextSiblingsExpanded(el) != true ) {
+					if (el.getAllNext('.panel').contains(changing) != true || areAnyNextSiblingsExpanded(el) != true ) {
 						this.panelsHeight += el.offsetHeight.toInt();
 					}
 					
@@ -1012,7 +1010,7 @@ MochaUI.Panel = new Class({
 			else {
 				panel.setStyle('height', 300);
 				this.isCollapsed = false;
-				panelHeight(this.options.column);
+				panelHeight(this.options.column, panel);
 				this.collapseToggleEl.removeClass('panel-expand');
 				this.collapseToggleEl.addClass('panel-collapsed');
 			}
