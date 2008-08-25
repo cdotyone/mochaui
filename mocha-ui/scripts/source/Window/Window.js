@@ -410,7 +410,7 @@ MochaUI.Window = new Class({
 
 		// Set scrollbars, always use 'hidden' for iframe windows
 		this.contentWrapperEl.setStyles({
-			'overflow': this.options.scrollbars && !this.iframeEl ? 'auto' : 'hidden',
+			'overflow': 'hidden',
 			'background': this.options.contentBgColor
 		});
 
@@ -476,11 +476,11 @@ MochaUI.Window = new Class({
 		// Add content to window toolbar.
 		if (this.options.toolbar == true){
 			MochaUI.updateContent({
-				'element':   this.windowEl,
-				'childElement':    this.toolbarEl,				
-				'content':    this.options.toolbarContent,
-				'loadMethod': 'xhr',				
-				'url':        this.options.toolbarURL
+				'element':       this.windowEl,
+				'childElement':  this.toolbarEl,				
+				'content':       this.options.toolbarContent,
+				'loadMethod':    'xhr',				
+				'url':           this.options.toolbarURL
 			});
 		}
 		

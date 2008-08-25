@@ -75,7 +75,7 @@ var MochaUI = new Hash({
 				currentInstance.titleEl.set('html', options.title);
 			}			
 		}
-        
+				
 		var contentEl = currentInstance.contentEl
 		if (options.childElement != null) {
 			var contentContainer = options.childElement;
@@ -84,10 +84,15 @@ var MochaUI = new Hash({
 			var contentContainer = currentInstance.contentEl;
 		}
 		
-		// Set scrollbars, always use 'hidden' for iframe windows
-		currentInstance.contentWrapperEl.setStyles({
-			'overflow': currentInstance.options.scrollbars && (options.loadMethod != 'iframe') ? 'auto' : 'hidden'
-		});		
+		var loadMethod = options.loadMethod != null ? options.loadMethod : currentInstance.options.loadMethod;		
+		
+		// Set scrollbars if loading content in main content container.
+		// Always use 'hidden' for iframe windows
+		if (contentContainer == currentInstance.contentEl) {
+			currentInstance.contentWrapperEl.setStyles({
+				'overflow': currentInstance.options.scrollbars == true && loadMethod != 'iframe' ? 'auto' : 'hidden'
+			});
+		}		
 		
 		if (options.padding != null) {
 			currentInstance.contentEl.setStyles({	
@@ -101,9 +106,7 @@ var MochaUI = new Hash({
 		// Remove old content.
 		if (contentContainer == contentEl) {
 			currentInstance.contentEl.empty();
-		}		
-				
-		var loadMethod = options.loadMethod ? options.loadMethod : currentInstance.options.loadMethod;
+		}
 
 		// Load new content.
 		switch(loadMethod) {

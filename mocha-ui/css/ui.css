@@ -16,7 +16,7 @@ html, body {
 
 body {
 	margin: 0; /* Required */
-	background: #6989b3 url(../images/splash.gif) center center no-repeat;
+	background: #fff; /* #6989b3 url(../images/splash.gif) center center no-repeat; */
 }
 
 #desktop {

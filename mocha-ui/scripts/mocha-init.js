@@ -95,8 +95,6 @@ initializeWindows = function(){
 			contentURL: 'pages/youtube.html',
 			width: 340,
 			height: 280,
-			scrollbars: false,
-			padding: { top: 0, right: 0, bottom: 0, left: 0 },
 			resizeLimit:  {'x': [330, 2500], 'y': [250, 2000]},
 			toolbar: true,
 			toolbarURL: 'pages/youtube-tabs.html'			
@@ -117,8 +115,6 @@ initializeWindows = function(){
 			contentURL: 'pages/slideshare.html',
 			width: 415,
 			height: 355,
-			scrollbars: false,
-			padding: { top: 0, right: 0, bottom: 0, left: 0 },
 			resizeLimit:  {'x': [330, 2500], 'y': [250, 2000]}
 		});
 	}	
@@ -144,7 +140,28 @@ initializeWindows = function(){
 		new Event(e).stop();
 			MochaUI.mootoolsWindow();
 		});
-	}	
+	}
+	
+	/*
+	MochaUI.tetrisWindow = function(){
+		new MochaUI.Window({
+			id: 'tetris',
+			title: 'JsTetris',
+			loadMethod: 'iframe',
+			contentURL: 'plugins/JsTetris/index.html',
+			width: 300,
+			height: 310,
+			resizable: false,
+			maximizable: false			
+		});
+	}
+	if ($('tetrisLinkCheck')) {
+		$('tetrisLinkCheck').addEvent('click', function(e){
+		new Event(e).stop();
+			MochaUI.tetrisWindow();
+		});
+	}
+	*/		
 	
 	MochaUI.parametricsWindow = function(){	
 		new MochaUI.Window({
@@ -731,9 +748,9 @@ window.addEvent('domready', function(){
 	// Add panels to main column	
 	new MochaUI.Panel({
 		id: 'mainPanel',
-		title: 'Todo',
+		title: 'Introduction',
 		loadMethod: 'xhr',
-		contentURL: 'pages/todo.html',
+		contentURL: 'pages/lipsum.html',
 		column: 'mainColumn',
 		panelBackground: '#fff'
 	});			
