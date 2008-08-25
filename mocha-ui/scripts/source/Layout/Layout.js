@@ -458,9 +458,9 @@ MochaUI.Desktop.implement(new Options, new Events);
 	
 	*/
 	
-	function panelHeight(column){
+	function panelHeight(column, collapsing){
 		if (column != null) {
-			this.panelHeight2($(column));
+			this.panelHeight2($(column), collapsing);
 		}
 		else {
 			$$('.column').each(function(column){
@@ -469,18 +469,20 @@ MochaUI.Desktop.implement(new Options, new Events);
 		}
 	}
 	
-	function panelHeight2(column){			
+	function panelHeight2(column, collapsing){			
 			var columnHeight = column.offsetHeight.toInt();			
 			var heightNotSet = []; // Panels than do not have their height set
 			
 			var heightIsZero = []; // Panels whose height is zero. NOT USED YET
 						
-			var panels = []; // All the panels in the column
-			
-			var panelsFixed = []; // Panels with the fixed class. NOT USED YET
+			var panels = []; // All the panels in the column whose height will be effected.
 			
 			this.panelsHeight = 0;			
 			this.height = 0;
+			
+			//if (collapsing) {
+			//	var previousSiblings = collapsing.getAllPrevious('.panel');
+			//}
 			
 			// Get the total height of all the column's children
 			column.getChildren().each(function(el){			
@@ -490,16 +492,25 @@ MochaUI.Desktop.implement(new Options, new Events);
 					var instances = MochaUI.Panels.instances;
 					var currentInstance = instances.get(el.id);
 					
-					if (currentInstance.isCollapsed != true){
+					// Add panels who are not collapsed and who are not previous siblings
+					// of a newly collapsed panel.
+					if (currentInstance.isCollapsed != true && el.getAllNext('.panel').contains(collapsing) != true){
 						panels.push(el);
 					}
 					
-					this.panelsHeight += el.offsetHeight.toInt();
+					// Height of panels that can be resized
+					if (el.getAllNext('.panel').contains(collapsing) != true) {
+						this.panelsHeight += el.offsetHeight.toInt();
+					}
+					
 					if (el.style.height) {
 						this.height += el.getStyle('height').toInt();
 					}
+					
 					// Add children without height set and who are not collapsed to an array
+					// THIS MAY NOT BE NEEDED				
 					else if (currentInstance.isCollapsed != true) {
+						alert('Test');
 						heightNotSet.push(el);
 					}	
 				}
@@ -528,6 +539,7 @@ MochaUI.Desktop.implement(new Options, new Events);
 			else {
 				this.height = 0;				
 				
+				// Get height of all the column's children
 				column.getChildren().each(function(el){
 					this.height += el.offsetHeight.toInt();												
 				}.bind(this));
@@ -977,7 +989,7 @@ MochaUI.Panel = new Class({
 				if (expandedSiblings.length == 0) return; // Later this may collapse the column
 				panel.setStyle('height', 0);
 				this.isCollapsed = true;
-				panelHeight(this.options.column);
+				panelHeight(this.options.column, panel);
 				this.collapseToggleEl.removeClass('panel-collapsed');
 				this.collapseToggleEl.addClass('panel-expand');
 			}
@@ -1022,8 +1034,7 @@ MochaUI.Panel = new Class({
 			'content':  this.options.content,
 			'url':      this.options.contentURL
 		});			
-
-		// Todo: Make this so it only effects the column in question		
+		
 		panelHeight(this.options.column);				
 					
 	}

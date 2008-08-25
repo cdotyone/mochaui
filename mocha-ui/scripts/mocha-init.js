@@ -769,14 +769,14 @@ window.addEvent('domready', function(){
 	MochaUI.Modal = new MochaUI.Modal();
 	
 	// Format everything before displaying the desktop
-	var splash = function(){
-		MochaUI.Desktop.desktop.setStyles({
-			'background': '#fff',
-			'visibility': 'visible'
-		});
+	//var splash = function(){
+	//	MochaUI.Desktop.desktop.setStyles({
+	//		'background': '#fff',
+	//		'visibility': 'visible'
+	//	});
 		initializeWindows();
-	}
-	splash.delay(1800, this);
+	//}
+	//splash.delay(1700, this);
 
 });	
 

@@ -20,7 +20,7 @@ body {
 }
 
 #desktop {
-	visibility: hidden;
+/*	visibility: hidden; */
 	position: relative;
 	top: 0;
 	left: 0;
@@ -59,7 +59,7 @@ body {
 	color: #69727A;
 }
 	
-#desktopTitlebar h1.tagline {
+#desktopTitlebar h2.tagline {
 	display: none;
 	font-size: 12px;
 	color: #69727A;
@@ -67,7 +67,7 @@ body {
 	padding: 5px 0 0 0;	
 }
 
-#desktopTitlebar h1.tagline .taglineEm {
+#desktopTitlebar h2.tagline .taglineEm {
 	color: #69727A;
 	font-weight: bold;	
 }	
