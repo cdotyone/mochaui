@@ -318,7 +318,7 @@ MochaUI.Desktop = new Class({
 			if ( currentInstance.iframeEl ) {
 				currentInstance.iframeEl.setStyle('visibility', 'visible');
 			}			
-			if (currentInstance.container != this.desktop){
+			if (options.container != this.desktop){
 				$(options.container).grab(windowEl);
 				if (options.restrict){
 					currentInstance.windowDrag.container = $(options.container);
