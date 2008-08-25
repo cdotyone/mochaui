@@ -469,7 +469,10 @@ MochaUI.Desktop.implement(new Options, new Events);
 		}
 	}
 	
-	function panelHeight2(column, collapsing){			
+	function panelHeight2(column, collapsing){	
+	
+			var instances = MochaUI.Panels.instances;
+			
 			var columnHeight = column.offsetHeight.toInt();			
 			var heightNotSet = []; // Panels than do not have their height set
 			
@@ -481,28 +484,35 @@ MochaUI.Desktop.implement(new Options, new Events);
 			this.panelsHeight = 0;			
 			this.height = 0;
 			
-			//if (collapsing) {
-			//	var previousSiblings = collapsing.getAllPrevious('.panel');
-			//}
-			
 			// Get the total height of all the column's children
 			column.getChildren().each(function(el){			
 
 				if (el.hasClass('panel')){
 
-					var instances = MochaUI.Panels.instances;
 					var currentInstance = instances.get(el.id);
 					
+					areAnyNextSiblingsExpanded = function(el){
+						var test;
+						el.getAllNext('.panel').each(function(sibling){
+							var siblingInstance = instances.get(sibling.id);
+							if (siblingInstance.isCollapsed == false) {
+								test = true;
+							}	
+						}.bind(this));
+						return test;
+					}
+					
 					// Add panels who are not collapsed and who are not previous siblings
-					// of a newly collapsed panel.
-					if (currentInstance.isCollapsed != true && ( el.getAllNext('.panel').contains(collapsing) != true || panels.getLast() == collapsing ) ){
+					// of a newly collapsed panel (unless there are no expanded panels after the newly collapsed panel).
+					// So don't check for getLast but instead for getAllNext with isCollapsed == false.
+					// In other words, resize panels below the collapsing panel unless there are none.
+					// If there are none then resize the panels above.
+					if (currentInstance.isCollapsed != true && ( el.getAllNext('.panel').contains(collapsing) != true || areAnyNextSiblingsExpanded(el) != true ) ){
 						panelsToResize.push(el);
 					}
 					
-					// if (panelsNotCollapsed.getLast() != collapsing)
-					
 					// Height of panels that can be resized
-					if (el.getAllNext('.panel').contains(collapsing) != true || panels.getLast() == collapsing ) {
+					if (el.getAllNext('.panel').contains(collapsing) != true || areAnyNextSiblingsExpanded(el) != true ) {
 						this.panelsHeight += el.offsetHeight.toInt();
 					}
 					
