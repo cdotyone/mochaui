@@ -642,8 +642,12 @@ MochaUI.Desktop.implement(new Options, new Events);
 			}.bind(this));
 		
 			// Add the remaining width to the current element
-			var remainingWidth = parent.offsetWidth.toInt() - this.width;		
-			el.setStyle('width', currentWidth + remainingWidth);			
+			var remainingWidth = parent.offsetWidth.toInt() - this.width;
+			var newWidth =	currentWidth + remainingWidth;	
+			el.setStyle('width', newWidth);
+			el.getChildren('.panel').each(function(panel){
+				panel.setStyle('width', newWidth - panel.getStyle('border-left').toInt() - panel.getStyle('border-right').toInt());
+			}.bind(this));				
 		});
 	}
 

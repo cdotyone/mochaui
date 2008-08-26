@@ -94,14 +94,17 @@ var MochaUI = new Hash({
 			});
 		}		
 		
+		var contentWrapperEl = currentInstance.contentWrapperEl;
+		
 		if (options.padding != null) {
 			currentInstance.contentEl.setStyles({	
 				'padding-top': options.padding.top,
 				'padding-bottom': options.padding.bottom,
 				'padding-left': options.padding.left,
-				'padding-right': options.padding.right
+				'padding-right': options.padding.right,
+				'width': contentWrapperEl.offsetWidth - contentWrapperEl.getStyle('border-left').toInt() - contentWrapperEl.getStyle('border-right').toInt()
 			});
-		}		
+		}				
         
 		// Remove old content.
 		if (contentContainer == contentEl) {
