@@ -97,18 +97,17 @@ var MochaUI = new Hash({
 		var contentWrapperEl = currentInstance.contentWrapperEl;
 		
 		if (options.padding != null) {
-			currentInstance.contentEl.setStyles({	
+			contentEl.setStyles({	
 				'padding-top': options.padding.top,
 				'padding-bottom': options.padding.bottom,
 				'padding-left': options.padding.left,
-				'padding-right': options.padding.right,
-				'width': contentWrapperEl.offsetWidth - contentWrapperEl.getStyle('border-left').toInt() - contentWrapperEl.getStyle('border-right').toInt()
+				'padding-right': options.padding.right
 			});
-		}				
+		}			
         
 		// Remove old content.
 		if (contentContainer == contentEl) {
-			currentInstance.contentEl.empty();
+			contentEl.empty();
 		}
 
 		// Load new content.
@@ -156,7 +155,8 @@ var MochaUI = new Hash({
 					'frameBorder':  0,
 					'scrolling':    'auto',
 					'styles': {
-						'height': currentInstance.contentWrapperEl.offsetHeight	
+						'height': contentWrapperEl.offsetHeight - contentWrapperEl.getStyle('border-top').toInt() - contentWrapperEl.getStyle('border-bottom').toInt(),
+						'width': currentInstance.panelEl ? contentWrapperEl.offsetWidth - contentWrapperEl.getStyle('border-left').toInt() - contentWrapperEl.getStyle('border-right').toInt() : '100%'	
 					}
 				}).injectInside(contentEl);
 				

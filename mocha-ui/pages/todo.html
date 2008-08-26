@@ -3,10 +3,7 @@
 <ul>
 	<li>Make sprites for dock tabs.</li>	
 	<li>If you have three columns, two with the width set, what happens if the viewport is smaller than their width? Right now this throws an error in IE6 since IE6 has no min-width.</li>
-	<li>Consider logic for minimizing panels (vertical).</li>
 	<li>Consider logic for minimizing columns (horizontal).</li>
-	<li>Try to get original height ratio of panels more accurate over the course of many broswer resizes. The innaccuracy only seems to be produced if the browser is resized too small for the column. Setting a min-height based on the number of panels in a column may solve it. Make sure the height of a panel cannot become less than zero.</li>															
-	<li>Add a "fixed" option, where the panel only resizes if the other panels reach 0 height.</li>
 	<li>Hide dock if there are no windows open.</li>
 </ul>
 
@@ -23,6 +20,7 @@
 <h3>Optional Todo:</h3>
 				
 <ul>
+	<li>Add a "fixed" option, where the panel only resizes if the other panels reach 0 height.</li>	
 	<li>Consider using onMousedown rather than onClick for focus.</li>
 	<li>Consider putting the panel footers inside their respective panels.</li>
 	<li>Add the ability to close/remove panels? This should remove the panel from the panel instances.</li>

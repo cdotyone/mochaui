@@ -473,21 +473,7 @@ MochaUI.Desktop.implement(new Options, new Events);
 	actions can be new, collapsing or expanding.
 	
 	*/
-	function panelHeight2(column, changing, action){
-
-			// Bug: collapse bottom, then middle. Expand bottom, then middle. Middle's old height is too much.
-			
-			
-			// AFTER EVERYTHING IS DONE YOU ARE GOING TO NEED TO RESIZE ALL EXPANDED PANELS ONE MORE TIME
-			// to make up for browser resizing, off ratios, and users trying to give panels
-			// too much height. Divide any difference equally among all expanded panels.
-			
-			// !!! Need to consider what to do if the user has resized the browser so that the panels
-			// will not fit even if their combined height is 0, i.e., the combined height of their headers
-			// is taller than the available space.
-			
-			// !!! If new panels' set height or expanding panel's old height is grater than the available space
-			// what to do?				
+	function panelHeight2(column, changing, action){						
 	
 			var instances = MochaUI.Panels.instances;		
 			
@@ -631,7 +617,7 @@ MochaUI.Desktop.implement(new Options, new Events);
 				});	
 			}
 			
-			// Make sure there is no remaining height is 0. If not add/subtract the
+			// Make sure the remaining height is 0. If not add/subtract the
 			// remaining height to the tallest panel. This makes up for browser resizing,
 			// off ratios, and users trying to give panels too much height.
 			
@@ -654,18 +640,24 @@ MochaUI.Desktop.implement(new Options, new Events);
 				if (tallestPanel.getStyle('height') < 1){
 					tallestPanel.setStyle('height', 0 );
 				}
-			}							
+			}			
+			
+			panelsExpanded.each(function(panel){
+				resizeChildren(panel);
+			});							
 	}
 	
-	function resizeChildren(element, newPanelHeight){
+	// May rename this resizeIframeEl()
+	function resizeChildren(panel){
 		var instances = MochaUI.Panels.instances;
-		var currentInstance = instances.get(element.id);
-		var contentEl = currentInstance.contentEl;
-		
-		// The following line was causing an issue in IE6 and it probably isn't needed.
-		// contentEl.setStyle('height', newPanelHeight - contentEl.getStyle('padding-top').toInt() - contentEl.getStyle('padding-bottom').toInt());
+		var currentInstance = instances.get(panel.id);
+		var contentWrapperEl = currentInstance.contentWrapperEl;
+				
 		if (currentInstance.iframeEl) {
-			currentInstance.iframeEl.setStyle('height', newPanelHeight - contentEl.getStyle('padding-top').toInt() - contentEl.getStyle('padding-bottom').toInt());
+			currentInstance.iframeEl.setStyles({
+				'height': contentWrapperEl.getStyle('height'),
+				'width': contentWrapperEl.offsetWidth - contentWrapperEl.getStyle('border-left').toInt() - contentWrapperEl.getStyle('border-right').toInt()
+			});
 		}
 	}
 	
@@ -691,6 +683,7 @@ MochaUI.Desktop.implement(new Options, new Events);
 			el.setStyle('width', newWidth);
 			el.getChildren('.panel').each(function(panel){
 				panel.setStyle('width', newWidth - panel.getStyle('border-left').toInt() - panel.getStyle('border-right').toInt());
+				resizeChildren(panel);
 			}.bind(this));				
 		});
 	}
