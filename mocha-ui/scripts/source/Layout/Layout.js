@@ -502,7 +502,7 @@ MochaUI.Desktop.implement(new Options, new Events);
 						return test;
 					}
 					
-					areAnyExpandedNextSiblingsExpanded = function(changing){
+					areAnyExpandedNextSiblingsExpanded = function(){
 						var test;
 						changing.getAllNext('.panel').each(function(sibling){
 							var siblingInstance = instances.get(sibling.id);
@@ -528,14 +528,18 @@ MochaUI.Desktop.implement(new Options, new Events);
 							this.panelsHeight += el.offsetHeight.toInt();
 						}
 					}
-					else { // Work okay unless panel expanding is last panel
-						//changing = null;
-						if (currentInstance.isCollapsed != true && (areAnyExpandedNextSiblingsExpanded(changing) != true)) {
+					// If expanding one of the panels...
+					else { 
+						   
+						// Expanding should remove height from the panel below it. If no panels below it then those above it.  
+						   
+						   
+						if (currentInstance.isCollapsed != true && (el.getAllNext('.panel').contains(changing) != true || areAnyExpandedNextSiblingsExpanded() != true ) ){ //unless there are no open panels after expanding
 							panelsToResize.push(el);
 						}
 						
 						// Height of panels that can be resized
-						if (currentInstance.isCollapsed != true && areAnyExpandedNextSiblingsExpanded(changing) != true) {
+						if (currentInstance.isCollapsed != true && (el.getAllNext('.panel').contains(changing) != true || areAnyExpandedNextSiblingsExpanded() != true) ){
 							this.panelsHeight += el.offsetHeight.toInt();
 						}				
 					}
