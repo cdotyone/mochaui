@@ -473,21 +473,44 @@ MochaUI.Desktop.implement(new Options, new Events);
 	actions can be new, collapsing or expanding.
 	
 	*/
-	function panelHeight2(column, changing, action){						
+	function panelHeight2(column, changing, action){									
 	
 			var instances = MochaUI.Panels.instances;		
 			
 			var columnHeight = column.offsetHeight.toInt();			
-			var heightNotSet = []; // Panels than do not have their height set
+			var heightNotSet = []; // Panels than do not have their height set. MAY NOT END UP USING THIS.
 			
 			var panels = column.getChildren('.panel'); // All the panels in the column.
 			var panelsExpanded = column.getChildren('.expanded'); // All the expanded panels in the column.		
-			var panelsToResize = []; // All the panels in the column whose height will be effected.
-			var tallestPanel; // The panel with the greatest height
+			var panelsToResize = [];    // All the panels in the column whose height will be effected.
+			var tallestPanel;           // The panel with the greatest height
 			var tallestPanelHeight = 0;
 			
-			this.panelsHeight = 0;			
-			this.height = 0;
+			this.panelsHeight = 0;		// Height of all the panels in the column	
+			this.height = 0;            // Height of all the elements in the column
+			
+			
+			// Handle logic
+			
+			// - Disable a handle if the panel above it is collapsed.
+			// - Change resizePartner
+			// - If all but one panel is collapsed all resize events should be detached.
+			// - If the panel below an expanded panel is collapsed, change the resizePartner
+			//   to the next expanded panel below. If none exists, detach the resize event.
+			
+			panels.each(function(panel){				
+				var currentInstance = instances.get(panel.id);
+				if (currentInstance.handleEl){
+					if (panel.getPrevious('.panel').hasClass('collapsed')){
+						currentInstance.resize.detach();
+						currentInstance.handleEl.setStyle('cursor', null); 
+					}
+					else {
+						currentInstance.resize.attach();
+						currentInstance.handleEl.setStyle('cursor', 'n-resize'); 
+					}
+				}
+			});			 
 			
 			// Get the total height of all the column's children
 			column.getChildren().each(function(el){			
@@ -635,7 +658,6 @@ MochaUI.Desktop.implement(new Options, new Events);
 			var remainingHeight = column.offsetHeight.toInt() - this.height;
 						
 			if ((remainingHeight > 0 || remainingHeight < 0) && tallestPanelHeight > 0) {
-				console.log('test');				
 				tallestPanel.setStyle('height', tallestPanel.getStyle('height').toInt() + remainingHeight );
 				if (tallestPanel.getStyle('height') < 1){
 					tallestPanel.setStyle('height', 0 );
@@ -824,11 +846,11 @@ function addResizeTop(element, min, max){
 	var handle = currentInstance.handleEl;
 	
 	handle.setStyle('cursor', 'n-resize');
-	var sibling = element.getPrevious('.panel');	
+	var partner = element.getPrevious('.panel');	
 	if (!min) min = 0;
 	if (!max) {
 		max = function(){
-			return element.getStyle('height').toInt() + sibling.getStyle('height').toInt();
+			return element.getStyle('height').toInt() + partner.getStyle('height').toInt();
 		}.bind(this)
 	}
 	if (Browser.Engine.trident) {	
@@ -839,36 +861,36 @@ function addResizeTop(element, min, max){
 			handle.releaseCapture();
 		}.bind(this));								  													   
 	}		
-	element.makeResizable({
+	currentInstance.resize = element.makeResizable({
 		handle: handle,
 		modifiers: {x: false, y: 'height'},
 		limit: { y: [min, max] },
 		invert: true,		
 		onBeforeStart: function(){
 			this.originalHeight = element.getStyle('height').toInt();
-			this.siblingOriginalHeight = sibling.getStyle('height').toInt();
+			this.partnerOriginalHeight = partner.getStyle('height').toInt();
 		}.bind(this),
 		onStart: function(){
 			if (currentInstance.iframeEl) {
 				currentInstance.iframeEl.setStyle('visibility', 'hidden');
 			}
-			sibling.getElements('iframe').setStyle('visibility','hidden');
+			partner.getElements('iframe').setStyle('visibility','hidden');
 		}.bind(this),							
 		onDrag: function(){
-			siblingHeight = siblingOriginalHeight + (this.originalHeight - element.getStyle('height').toInt());
-			sibling.setStyle('height', siblingHeight);
+			partnerHeight = partnerOriginalHeight + (this.originalHeight - element.getStyle('height').toInt());
+			partner.setStyle('height', partnerHeight);
 			resizeChildren(element, element.getStyle('height').toInt());
-			resizeChildren(sibling, siblingHeight);
+			resizeChildren(partner, partnerHeight);
 		}.bind(this),
 		onComplete: function(){
-			siblingHeight = siblingOriginalHeight + (this.originalHeight - element.getStyle('height').toInt());
-			sibling.setStyle('height', siblingHeight);
+			partnerHeight = partnerOriginalHeight + (this.originalHeight - element.getStyle('height').toInt());
+			partner.setStyle('height', partnerHeight);
 			resizeChildren(element, element.getStyle('height').toInt());
-			resizeChildren(sibling, siblingHeight);
+			resizeChildren(partner, partnerHeight);
 			if (currentInstance.iframeEl) {
 				currentInstance.iframeEl.setStyle('visibility', 'visible');
 			}	
-			sibling.getElements('iframe').setStyle('visibility','visible');			
+			partner.getElements('iframe').setStyle('visibility','visible');			
 		}.bind(this)		
 	});
 }
@@ -1122,6 +1144,7 @@ MochaUI.Panel = new Class({
 				'id': this.options.id + '_handle',
 				'class': 'horizontalHandle'
 			}).inject(this.panelHeaderEl, 'before');
+						
 			addResizeTop(this.options.id);
 		}
 			
@@ -1136,7 +1159,7 @@ MochaUI.Panel = new Class({
 					
 	}
 });
-MochaUI.Panel.implement(new Options, new Events);	
+MochaUI.Panel.implement(new Options, new Events);
 
 function initLayout(){	
 	//$$('.columnHandle').setStyle('visibility','visible');
