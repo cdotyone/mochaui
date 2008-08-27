@@ -92,7 +92,6 @@ body {
 /* Toolboxes */
 
 .toolbox {
-	display: none;	
 	float: right;
 	padding: 7px 10px 0 10px;
 	height: 23px;
