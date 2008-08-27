@@ -38,15 +38,15 @@ body {
 	position: relative;	
 	height: 40px;
 	overflow: hidden;
-	background: #d1d1d1 url(../images/bg-desktopTitlebar2.gif) repeat-x;
+	background: #516173;
 	border-top: 1px solid #7C8791;
-	border-bottom: 1px solid #ccc;			
+	border-bottom: 1px solid #fff;			
 }
 	
 #desktopTitlebar {
 	padding: 7px 8px 6px 125px;
 	height: 23px;
-	background: url(../images/logo2.gif) no-repeat;
+	background: url(../images/logo.gif) no-repeat;
 	background-position: center 0;	
 }	
 	
@@ -56,42 +56,43 @@ body {
 	padding: 5px 0 0 0;
 	font-size: 20px;
 	font-weight: bold;
-	color: #69727A;
+	color: #fff;
 }
 	
 #desktopTitlebar h2.tagline {
 	display: none;
 	font-size: 12px;
-	color: #69727A;
+	color: #fff;
 	font-weight: normal;
 	padding: 5px 0 0 0;	
 }
 
 #desktopTitlebar h2.tagline .taglineEm {
-	color: #69727A;
+	color: #fff;
 	font-weight: bold;	
 }	
 
 #topNav {
 	float: right;
-	color: #69727A;
+	color: #fff;
 	text-align: right;
 	padding: 5px 5px 0 0;
 }
 
 #topNav a {
-	color: #69727A;
+	color: #fff;
 	font-weight: bold;
 }
 
 #topNav a:hover {
-	color: #69727A;
+	color: #fff;
 	text-decoration: underline;
 }
 
 /* Toolboxes */
 
-.toolbox {	
+.toolbox {
+	display: none;	
 	float: right;
 	padding: 7px 10px 0 10px;
 	height: 23px;
@@ -123,7 +124,7 @@ body {
 	
 #desktopNavbar ul li a {
 	padding: 6px 10px 6px 10px;	
-	color: #69727A;
+	color: #585E66;
 	font-weight: normal;		
 }
 
@@ -164,7 +165,7 @@ body {
 	left: 6px;
 	width: 5px;
 	height: 5px;
-	background: #00CC33;
+	background: #516173;
 	overflow: hidden;
 	line-height: 1px;
 	font-size: 1px;
@@ -205,7 +206,7 @@ body {
 #pageWrapper {
 	position: relative;
 	overflow: hidden; /* This can be set to hidden or auto */
-	border-top: 3px solid #d1d1d1;
+	border-top: 1px solid #b9b9b9;
 }
 
 /* Footer */
@@ -221,12 +222,13 @@ body {
 	font-size: 11px;
 	height: 24px;
 	padding: 6px 10px 0 10px;
-	background: #d1d1d1;
-	color: #69727A;
+	background: #516173;
+	color: #fff;
+	border-top: 1px solid #fff;
 }
 
 #desktopFooter a {
-	color: #69727A;
+	color: #fff;
 	font-weight: bold;	
 }
 
@@ -601,13 +603,10 @@ iframe.zIndexFix {
 #dockWrapper {
 	display: none;
 	background: #f1f1f1;
-	width: 100%;
-	border-bottom: 0;
-	border-top: 3px solid #d1d1d1;		
+	width: 100%;		
 }
 
 #dockWrapper.top {
-	border-top: 0;	
 }
 
 #dock {
@@ -648,13 +647,13 @@ iframe.zIndexFix {
 	left: 0;
 	display: block;
 	font-weight: normal;
-	color: #69727A;	
+	color: #585E66;	
 	text-align: left;
-	padding: 3px 0 0 25px;
+	padding: 3px 0 0 10px;
 	width: 115px;
 	height: 19px;
 	overflow: hidden;
-	background: url(../images/icons/sheet.gif) 4px 4px no-repeat;		
+/*	background: url(../images/icons/sheet.gif) 4px 4px no-repeat; */		
 }			
 
 #dockCanvas {
@@ -760,6 +759,10 @@ iframe.zIndexFix {
 	list-style-type: none;
 	white-space: nowrap;	
 }
+
+.tree li a {
+	color: #404040;	
+}	
 
 .tree li img {
 	vertical-align: middle;

@@ -1118,6 +1118,11 @@ MochaUI.Panel = new Class({
 				'display': this.showHandle == true ? 'block' : 'none' 
 			}
 		}).inject(this.panelEl, 'after');
+		
+		this.handleIconEl = new Element('div', {
+			'id': this.options.id + '_handle_icon',
+			'class': 'handleIcon'
+		}).inject(this.handleEl);		
 								
 		addResizeBottom(this.options.id);
 		

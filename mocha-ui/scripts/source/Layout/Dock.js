@@ -59,7 +59,7 @@ MochaUI.Dock = new Class({
 		// Style options
 		dockTabColor:         [255, 255, 255],
 		trueButtonColor:      [70, 245, 70],     // Color for autohide on		
-		enabledButtonColor:   [9, 131, 209], 
+		enabledButtonColor:   [81, 97, 115], 
 		disabledButtonColor:  [170, 170, 170]		
 	},
 	initialize: function(options){
@@ -291,7 +291,7 @@ MochaUI.Dock = new Class({
 		}).set('html', titleText.substring(0,18) + (titleText.length > 18 ? '...' : '')).inject($(dockTab));
 
 		if (currentInstance.options.icon != false){
-			dockTabText.setStyle('background', 'url(' + currentInstance.options.icon + ') 4px 4px no-repeat'); 	
+			// dockTabText.setStyle('background', 'url(' + currentInstance.options.icon + ') 4px 4px no-repeat'); 	
 		}
 		
 		// Need to resize everything in case the dock wraps when a new tab is added

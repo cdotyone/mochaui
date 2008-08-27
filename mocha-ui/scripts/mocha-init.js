@@ -190,7 +190,7 @@ initializeWindows = function(){
 			width: 305,
 			height: 105,
 			x: 570,
-			y: 420,
+			y: 425,
 			padding: { top: 12, right: 12, bottom: 10, left: 12 },			
 			resizable: false,
 			maximizable: false,
@@ -553,7 +553,7 @@ initializeWindows = function(){
 			width: 305,
 			height: 175,
 			x: 570,
-			y: 145,
+			y: 150,
 			resizeLimit: {'x': [275, 2500], 'y': [125, 2000]},			
 			toolbar: true,
 			toolbarURL: 'pages/features-tabs.html'
