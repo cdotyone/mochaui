@@ -501,11 +501,14 @@ MochaUI.Desktop.implement(new Options, new Events);
 					currentInstance.handleEl.setStyles({
 						'display': 'block',
 						'cursor': 'n-resize'
-					}); 						
+					}).removeClass('detached'); 						
 				}
 				else {
 					currentInstance.resize.detach();
-					currentInstance.handleEl.setStyle('cursor', null);					
+					currentInstance.handleEl.setStyle('cursor', null).addClass('detached');					
+				}
+				if (panel.getNext('.panel') == null) {
+					currentInstance.handleEl.setStyle('display', 'none');
 				}
 			});			 
 			
@@ -717,13 +720,15 @@ function addResizeRight(element, min, max){
 	var sibling = element.getNext('.column');	
 	if (!min) min = 50;
 	if (!max) max = 250;
-	if (Browser.Engine.trident) {	
-		handle.addEvent('mousedown', function(e) {
-			handle.setCapture();
-		}.bind(this));
-		handle.addEvent('mouseup', function(e) {
-			handle.releaseCapture();
-		}.bind(this));								  													   
+	if (Browser.Engine.trident){	
+		handle.addEvents({
+			'mousedown': function(){
+				handle.setCapture();
+			},	
+			'mouseup': function(){
+				handle.releaseCapture();
+			}
+		});	
 	}		
 	element.makeResizable({
 		handle: handle,
@@ -766,13 +771,15 @@ function addResizeLeft(element, min, max){
 		// max = $(element).offsetWidth + sibling.offsetWidth;
 		max = 250;		
 	}
-	if (Browser.Engine.trident) {	
-		handle.addEvent('mousedown', function(e) {
-			handle.setCapture();
-		}.bind(this));
-		handle.addEvent('mouseup', function(e) {
-			handle.releaseCapture();
-		}.bind(this));								  													   
+	if (Browser.Engine.trident){	
+		handle.addEvents({
+			'mousedown': function(){
+				handle.setCapture();
+			},	
+			'mouseup': function(){
+				handle.releaseCapture();
+			}
+		});	
 	}		
 	element.makeResizable({
 		handle: handle,
@@ -814,13 +821,15 @@ function addResizeBottom(element){
 		return element.getStyle('height').toInt() + partner.getStyle('height').toInt();
 	}.bind(this)
 	
-	if (Browser.Engine.trident) {	
-		handle.addEvent('mousedown', function(e) {
-			handle.setCapture();
-		}.bind(this));
-		handle.addEvent('mouseup', function(e) {
-			handle.releaseCapture();
-		}.bind(this));								  													   
+	if (Browser.Engine.trident){	
+		handle.addEvents({
+			'mousedown': function(){
+				handle.setCapture();
+			},	
+			'mouseup': function(){
+				handle.releaseCapture();
+			}
+		});	
 	}		
 	currentInstance.resize = element.makeResizable({
 		handle: handle,
@@ -831,65 +840,6 @@ function addResizeBottom(element){
 			partner = currentInstance.partner;
 			this.originalHeight = element.getStyle('height').toInt();
 			this.partnerOriginalHeight = partner.getStyle('height').toInt();			
-		}.bind(this),
-		onStart: function(){
-			if (currentInstance.iframeEl) {
-				currentInstance.iframeEl.setStyle('visibility', 'hidden');
-			}
-			partner.getElements('iframe').setStyle('visibility','hidden');
-		}.bind(this),							
-		onDrag: function(){
-			partnerHeight = partnerOriginalHeight + (this.originalHeight - element.getStyle('height').toInt());
-			partner.setStyle('height', partnerHeight);
-			resizeChildren(element, element.getStyle('height').toInt());
-			resizeChildren(partner, partnerHeight);
-		}.bind(this),
-		onComplete: function(){
-			partnerHeight = partnerOriginalHeight + (this.originalHeight - element.getStyle('height').toInt());
-			partner.setStyle('height', partnerHeight);
-			resizeChildren(element, element.getStyle('height').toInt());
-			resizeChildren(partner, partnerHeight);
-			if (currentInstance.iframeEl) {
-				currentInstance.iframeEl.setStyle('visibility', 'visible');
-			}	
-			partner.getElements('iframe').setStyle('visibility','visible');			
-		}.bind(this)		
-	});
-}
-
-function addResizeTop(element, min, max){
-	if (!$(element)) return;
-	var element = $(element);
-	
-	var instances = MochaUI.Panels.instances;
-	var currentInstance = instances.get(element.id);	
-	var handle = currentInstance.handleEl;
-	
-	handle.setStyle('cursor', 'n-resize');
-	var partner = currentInstance.partner;	
-		
-	if (!min) min = 0;
-	if (!max) {
-		max = function(){
-			return element.getStyle('height').toInt() + partner.getStyle('height').toInt();
-		}.bind(this)
-	}
-	if (Browser.Engine.trident) {	
-		handle.addEvent('mousedown', function(e) {
-			handle.setCapture();
-		}.bind(this));
-		handle.addEvent('mouseup', function(e) {
-			handle.releaseCapture();
-		}.bind(this));								  													   
-	}		
-	currentInstance.resize = element.makeResizable({
-		handle: handle,
-		modifiers: {x: false, y: 'height'},
-		limit: { y: [min, max] },
-		invert: true,		
-		onBeforeStart: function(){
-			this.originalHeight = element.getStyle('height').toInt();
-			this.partnerOriginalHeight = partner.getStyle('height').toInt();
 		}.bind(this),
 		onStart: function(){
 			if (currentInstance.iframeEl) {
@@ -1161,17 +1111,16 @@ MochaUI.Panel = new Class({
 		}
 				
 				
-			this.handleEl = new Element('div', {
-				'id': this.options.id + '_handle',
-				'class': 'horizontalHandle',
-				'styles': {
-					'display': this.showHandle == true ? 'block' : 'none' 
-				}
-			}).inject(this.panelEl, 'after');
+		this.handleEl = new Element('div', {
+			'id': this.options.id + '_handle',
+			'class': 'horizontalHandle',
+			'styles': {
+				'display': this.showHandle == true ? 'block' : 'none' 
+			}
+		}).inject(this.panelEl, 'after');
+								
+		addResizeBottom(this.options.id);
 		
-		//if (this.showHandle == true) {				
-			addResizeBottom(this.options.id);
-		//}
 			
 		// Add content to panel.
 		MochaUI.updateContent({
