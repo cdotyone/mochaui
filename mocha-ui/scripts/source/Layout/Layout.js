@@ -490,17 +490,23 @@ MochaUI.Desktop.implement(new Options, new Events);
 			this.height = 0;            // Height of all the elements in the column
 			
 			
-			// Handle logic
+			// Handle logic	
+
+			// - When each panel is created it needs to partner up with the first expanded panel above it
+			// - Resize partners will need to change whenever panels are collapsed or expanded.
 			
+			// - Can you add the resize handle event to a handle if that handle's partner is null?
+			
+			// - If the panel below an expanded panel is collapsed, change the resizePartner			
+						
 			// - Disable a handle if the panel above it is collapsed.
 			// - Change resizePartner
 			// - If all but one panel is collapsed all resize events should be detached.
-			// - If the panel below an expanded panel is collapsed, change the resizePartner
 			//   to the next expanded panel below. If none exists, detach the resize event.
 			
 			panels.each(function(panel){				
 				var currentInstance = instances.get(panel.id);
-				if (currentInstance.handleEl){
+				if (currentInstance.showHandle == true){
 					if (panel.getPrevious('.panel').hasClass('collapsed')){
 						currentInstance.resize.detach();
 						currentInstance.handleEl.setStyle('cursor', null); 
@@ -800,16 +806,22 @@ function addResizeLeft(element, min, max){
 
 // May remove the ability to set min and max as an option
 
-// Todo: The bottom resize handle should always effect the next open panel below it.
 function addResizeBottom(element, min, max){
 	if (!$(element)) return;
-	var handle = $(element).getNext('.horizontalHandle');
+	var element = $(element);
+	
+	var instances = MochaUI.Panels.instances;
+	var currentInstance = instances.get(element.id);	
+	var handle = currentInstance.handleEl;
+	
 	handle.setStyle('cursor', 'n-resize');
+	currentInstance.partner = element.getNext('.panel');
+	var partner = currentInstance.partner;
+		
 	if (!min) min = 0;
 	if (!max) {
-		var sibling = $(element).getNext('.panel');
 		max = function(){
-			return $(element).getStyle('height').toInt() + sibling.getStyle('height').toInt();
+			return element.getStyle('height').toInt() + partner.getStyle('height').toInt();
 		}.bind(this)
 	}
 	if (Browser.Engine.trident) {	
@@ -820,21 +832,38 @@ function addResizeBottom(element, min, max){
 			handle.releaseCapture();
 		}.bind(this));								  													   
 	}		
-	$(element).makeResizable({
+	currentInstance.resize = element.makeResizable({
 		handle: handle,
 		modifiers: {x: false, y: 'height'},
 		limit: { y: [min, max] },
+		invert: false,		
 		onBeforeStart: function(){
-			this.originalHeight = $(element).getStyle('height').toInt();
-			this.siblingOriginalHeight = sibling.getStyle('height').toInt();
+			this.originalHeight = element.getStyle('height').toInt();
+			this.partnerOriginalHeight = partner.getStyle('height').toInt();
+		}.bind(this),
+		onStart: function(){
+			if (currentInstance.iframeEl) {
+				currentInstance.iframeEl.setStyle('visibility', 'hidden');
+			}
+			partner.getElements('iframe').setStyle('visibility','hidden');
 		}.bind(this),							
 		onDrag: function(){
-			sibling.setStyle('height', siblingOriginalHeight + (this.originalHeight - $(element).getStyle('height').toInt()));
+			partnerHeight = partnerOriginalHeight + (this.originalHeight - element.getStyle('height').toInt());
+			partner.setStyle('height', partnerHeight);
+			resizeChildren(element, element.getStyle('height').toInt());
+			resizeChildren(partner, partnerHeight);
 		}.bind(this),
 		onComplete: function(){
-			sibling.setStyle('height', siblingOriginalHeight + (this.originalHeight - $(element).getStyle('height').toInt()));
+			partnerHeight = partnerOriginalHeight + (this.originalHeight - element.getStyle('height').toInt());
+			partner.setStyle('height', partnerHeight);
+			resizeChildren(element, element.getStyle('height').toInt());
+			resizeChildren(partner, partnerHeight);
+			if (currentInstance.iframeEl) {
+				currentInstance.iframeEl.setStyle('visibility', 'visible');
+			}	
+			partner.getElements('iframe').setStyle('visibility','visible');			
 		}.bind(this)		
-	});	
+	});
 }
 
 function addResizeTop(element, min, max){
@@ -846,7 +875,9 @@ function addResizeTop(element, min, max){
 	var handle = currentInstance.handleEl;
 	
 	handle.setStyle('cursor', 'n-resize');
-	var partner = element.getPrevious('.panel');	
+	currentInstance.partner = element.getPrevious('.panel');
+	var partner = currentInstance.partner;	
+		
 	if (!min) min = 0;
 	if (!max) {
 		max = function(){
@@ -1022,9 +1053,9 @@ MochaUI.Panel = new Class({
 			this.options.padding = { top: 0, right: 0, bottom: 0, left: 0 };
 		}				
 
-		var addHandle = true;
+		this.showHandle = true;
 		if ($(this.options.column).getChildren().length == 0) {
-			addHandle = false;
+			this.showHandle = false;
 		}
 
 		this.panelEl = new Element('div', {
@@ -1139,12 +1170,16 @@ MochaUI.Panel = new Class({
 		}
 		
 		// Only add handle if not only panel in column		
-		if (addHandle == true) {		
+				
 			this.handleEl = new Element('div', {
 				'id': this.options.id + '_handle',
-				'class': 'horizontalHandle'
+				'class': 'horizontalHandle',
+				'styles': {
+					'display': this.showHandle == true ? 'block' : 'none' 
+				}
 			}).inject(this.panelHeaderEl, 'before');
-						
+		
+		if (this.showHandle == true) {				
 			addResizeTop(this.options.id);
 		}
 			
