@@ -487,34 +487,25 @@ MochaUI.Desktop.implement(new Options, new Events);
 			var tallestPanelHeight = 0;
 			
 			this.panelsHeight = 0;		// Height of all the panels in the column	
-			this.height = 0;            // Height of all the elements in the column
+			this.height = 0;            // Height of all the elements in the column			
 			
-			
-			// Handle logic	
-
-			// - When each panel is created it needs to partner up with the first expanded panel above it
-			// - Resize partners will need to change whenever panels are collapsed or expanded.
-			
-			// - Can you add the resize handle event to a handle if that handle's partner is null?
-			
-			// - If the panel below an expanded panel is collapsed, change the resizePartner			
-						
-			// - Disable a handle if the panel above it is collapsed.
-			// - Change resizePartner
-			// - If all but one panel is collapsed all resize events should be detached.
-			//   to the next expanded panel below. If none exists, detach the resize event.
+			// Handle logic:
+			// - Partner up expanded panels with first expanded panel below them.
+			// - Detach handle event if panel is collapsed.
 			
 			panels.each(function(panel){				
-				var currentInstance = instances.get(panel.id);
-				if (currentInstance.showHandle == true){
-					if (panel.getPrevious('.panel').hasClass('collapsed')){
-						currentInstance.resize.detach();
-						currentInstance.handleEl.setStyle('cursor', null); 
-					}
-					else {
-						currentInstance.resize.attach();
-						currentInstance.handleEl.setStyle('cursor', 'n-resize'); 
-					}
+				currentInstance = instances.get(panel.id);
+				if (panel.hasClass('expanded') && panel.getNext('.expanded')) {						
+					currentInstance.partner = panel.getNext('.expanded');
+					currentInstance.resize.attach();
+					currentInstance.handleEl.setStyles({
+						'display': 'block',
+						'cursor': 'n-resize'
+					}); 						
+				}
+				else {
+					currentInstance.resize.detach();
+					currentInstance.handleEl.setStyle('cursor', null);					
 				}
 			});			 
 			
@@ -806,7 +797,7 @@ function addResizeLeft(element, min, max){
 
 // May remove the ability to set min and max as an option
 
-function addResizeBottom(element, min, max){
+function addResizeBottom(element){
 	if (!$(element)) return;
 	var element = $(element);
 	
@@ -815,15 +806,14 @@ function addResizeBottom(element, min, max){
 	var handle = currentInstance.handleEl;
 	
 	handle.setStyle('cursor', 'n-resize');
-	currentInstance.partner = element.getNext('.panel');
-	var partner = currentInstance.partner;
+	
+	partner = currentInstance.partner;
 		
-	if (!min) min = 0;
-	if (!max) {
-		max = function(){
-			return element.getStyle('height').toInt() + partner.getStyle('height').toInt();
-		}.bind(this)
-	}
+	min = 0;
+	max = function(){
+		return element.getStyle('height').toInt() + partner.getStyle('height').toInt();
+	}.bind(this)
+	
 	if (Browser.Engine.trident) {	
 		handle.addEvent('mousedown', function(e) {
 			handle.setCapture();
@@ -838,8 +828,9 @@ function addResizeBottom(element, min, max){
 		limit: { y: [min, max] },
 		invert: false,		
 		onBeforeStart: function(){
+			partner = currentInstance.partner;
 			this.originalHeight = element.getStyle('height').toInt();
-			this.partnerOriginalHeight = partner.getStyle('height').toInt();
+			this.partnerOriginalHeight = partner.getStyle('height').toInt();			
 		}.bind(this),
 		onStart: function(){
 			if (currentInstance.iframeEl) {
@@ -875,7 +866,6 @@ function addResizeTop(element, min, max){
 	var handle = currentInstance.handleEl;
 	
 	handle.setStyle('cursor', 'n-resize');
-	currentInstance.partner = element.getPrevious('.panel');
 	var partner = currentInstance.partner;	
 		
 	if (!min) min = 0;
@@ -1025,7 +1015,8 @@ MochaUI.Panel = new Class({
 		$extend(this, {
 			isCollapsed: false,			
 			timestamp: $time(),
-			oldHeight: 0
+			oldHeight: 0,
+			partner: null
 		});		
 		
 		this.originalHeight = this.options.height; // NOT USED YET
@@ -1168,8 +1159,7 @@ MochaUI.Panel = new Class({
 				'url':          this.options.tabsURL
 			});		
 		}
-		
-		// Only add handle if not only panel in column		
+				
 				
 			this.handleEl = new Element('div', {
 				'id': this.options.id + '_handle',
@@ -1177,11 +1167,11 @@ MochaUI.Panel = new Class({
 				'styles': {
 					'display': this.showHandle == true ? 'block' : 'none' 
 				}
-			}).inject(this.panelHeaderEl, 'before');
+			}).inject(this.panelEl, 'after');
 		
-		if (this.showHandle == true) {				
-			addResizeTop(this.options.id);
-		}
+		//if (this.showHandle == true) {				
+			addResizeBottom(this.options.id);
+		//}
 			
 		// Add content to panel.
 		MochaUI.updateContent({
