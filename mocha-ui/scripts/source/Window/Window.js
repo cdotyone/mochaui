@@ -1057,17 +1057,12 @@ MochaUI.Window = new Class({
 		}
 
 		if (options.shape != 'gauge' && options.type != 'notification'){
-			cache.canvasIconEl = new Element('canvas', {
-				'id': id + '_canvasIcon',
-				'class': 'mochaLoadingIcon',
-				'width': 18,
-				'height': 18
+			cache.spinnerEl = new Element('div', {
+				'id': id + '_spinner',
+				'class': 'mochaSpinner',
+				'width': 16,
+				'height': 16
 			}).inject(this.windowEl, 'bottom');	
-		
-			if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas') {
-				G_vmlCanvasManager.initElement(cache.canvasIconEl);
-				cache.canvasIconEl = this.windowEl.getElement('.mochaLoadingIcon');
-			}
 		}
 		
 		if (this.options.shape == 'gauge'){
@@ -1265,7 +1260,7 @@ MochaUI.Window = new Class({
 	
 		// Make sure loading icon is placed correctly.
 		if (options.shape != 'gauge' && options.type != 'notification'){
-			this.canvasIconEl.setStyles({
+			this.spinnerEl.setStyles({
 				'left': shadowBlur - shadowOffset.x + 3,
 				'bottom': shadowBlur + shadowOffset.y +  4
 			});
@@ -1647,46 +1642,25 @@ MochaUI.Window = new Class({
 	},
 	/*
 	
-	Function: hideLoadingIcon
+	Function: hideSpinner
 		Hides the spinner.
 		
 	*/	
-	hideLoadingIcon: function(canvas) {
-		if (!MochaUI.options.useLoadingIcon || this.options.shape == 'gauge' || this.options.type == 'notification') return;		
-		$(canvas).setStyle('display', 'none');		
-		$clear(canvas.iconAnimation);
+	hideSpinner: function(spinner) {
+		if (!MochaUI.options.useSpinner || this.options.shape == 'gauge' || this.options.type == 'notification') return;		
+		$(spinner).setStyle('display', 'none');
 	},
 	/*
 	
-	Function: showLoadingIcon
+	Function: showSpinner
 		Shows the spinner.
 		
 	*/	
-	showLoadingIcon: function(canvas) {
-		if (!MochaUI.options.useLoadingIcon || this.options.shape == 'gauge' || this.options.type == 'notification') return;		
-		$(canvas).setStyles({
+	showSpinner: function(spinner) {
+		if (!MochaUI.options.useSpinner || this.options.shape == 'gauge' || this.options.type == 'notification') return;		
+		$(spinner).setStyles({
 			'display': 'block'
-		});		
-		var t = 1;	  	
-		var iconAnimation = function(canvas){ 
-			var ctx = $(canvas).getContext('2d');
-			ctx.clearRect(0, 0, 18, 18);
-			ctx.save();
-			ctx.translate(9, 9);
-			ctx.rotate(t*(Math.PI / 8));	
-			var color = 0;
-			for (var i=0; i < 8; i++){
-				color = Math.floor(255 / 8 * i);
-				ctx.fillStyle = "rgb(" + color + "," + color + "," + color + ")";
-				ctx.rotate(-Math.PI / 4);
-				ctx.beginPath();
-				ctx.arc(0, 7, 2, 0, Math.PI*2, true);
-				ctx.fill();
-			}
-			ctx.restore();
-			t++;
-		}.bind(this);
-		canvas.iconAnimation = iconAnimation.periodical(125, this, canvas);
+		});
 	},	
 	setMochaControlsWidth: function(){
 		this.mochaControlsWidth = 0;

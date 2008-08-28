@@ -438,10 +438,13 @@ body {
 .mochaCloseButton {		
 }
 
-.mochaLoadingIcon {
+.mochaSpinner{
 	position: absolute;
 	bottom: 7px;
-	left: 6px;	
+	left: 6px;
+	width: 16px;
+	height: 16px;
+	background: url(../images/spinner.gif) no-repeat;
 }
 
 .mochaIframe {

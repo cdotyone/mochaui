@@ -20,8 +20,8 @@ Note:
 
 var MochaUI = new Hash({
 	options: new Hash({
-		useEffects: false,    // Toggles the majority of window fade and move effects.
-		useLoadingIcon: true  // Toggles whether or not the ajax spinners are displayed in window footers.
+		useEffects: false,  // Toggles the majority of window fade and move effects.
+		useSpinner: true    // Toggles whether or not the ajax spinners are displayed in window footers.
 
 	}),
 	Panels: {	  
@@ -63,7 +63,7 @@ var MochaUI = new Hash({
 		if (MochaUI.Windows.instances.get(element.id)) {
 			var recipient = 'window';
 			var currentInstance = MochaUI.Windows.instances.get(element.id);
-			var canvasIconEl = currentInstance.canvasIconEl;
+			var spinnerEl = currentInstance.spinnerEl;
 			if (options.title) {
 				currentInstance.titleEl.set('html', options.title);
 			}
@@ -120,14 +120,14 @@ var MochaUI = new Hash({
 					evalResponse: currentInstance.options.evalResponse,
 					onRequest: function(){
 						if (recipient == 'window' && contentContainer == contentEl){
-							currentInstance.showLoadingIcon(canvasIconEl);
+							currentInstance.showSpinner(spinnerEl);
 						}
 					}.bind(this),
 					onFailure: function(){
 						if (contentContainer == contentEl){
 							contentContainer.set('html','<p><strong>Error Loading XMLHttpRequest</strong></p>');
 							if (recipient == 'window') {
-								currentInstance.hideLoadingIcon(canvasIconEl);
+								currentInstance.hideSpinner(spinnerEl);
 							}
 						}
 					}.bind(this),
@@ -135,7 +135,7 @@ var MochaUI = new Hash({
 					onSuccess: function(){
 						if (contentContainer == contentEl){
 							if (recipient == 'window') {
-								currentInstance.hideLoadingIcon(canvasIconEl);
+								currentInstance.hideSpinner(spinnerEl);
 							}	
 							currentInstance.fireEvent('onContentLoaded', element);
 						}	
@@ -165,12 +165,12 @@ var MochaUI = new Hash({
 				// Add onload event to iframe so we can stop the loading icon and run onContentLoaded()
 				currentInstance.iframeEl.addEvent('load', function(e) {
 					if (recipient == 'window') {
-						currentInstance.hideLoadingIcon.delay(150, currentInstance, canvasIconEl);
+						currentInstance.hideSpinner.delay(150, currentInstance, spinnerEl);
 					}
 					currentInstance.fireEvent('onContentLoaded', element);
 				}.bind(this));
 				if (recipient == 'window') {
-					currentInstance.showLoadingIcon(canvasIconEl);
+					currentInstance.showSpinner(spinnerEl);
 				}
 				break;
 			case 'html':

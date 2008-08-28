@@ -72,11 +72,11 @@ initializeWindows = function(){
 			url: url,
 			method: 'get',
 			onRequest: function(){
-				// add code to show loading icon
+				// add code to show spinner
 			}.bind(this),										  
 			onComplete: function(properties) {
 				MochaUI.newWindowsFromJSON(properties.windows);
-				// add code to hide loading icon
+				// add code to hide spinner
 			}
 		}).send();		
 	}	
