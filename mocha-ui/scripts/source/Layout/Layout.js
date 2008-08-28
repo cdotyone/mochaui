@@ -713,10 +713,13 @@ MochaUI.Desktop.implement(new Options, new Events);
 	
 function addResizeRight(element, min, max){
 	if (!$(element)) return;
-	element = $(element);	
+	element = $(element);
+	
+	var instances = MochaUI.Columns.instances;
+	var currentInstance = instances.get(element.id);	
+		
 	var handle = element.getNext('.columnHandle');
-	handle.setStyle('cursor', 'e-resize');
-	var partner = element.getNext('.column');	
+	handle.setStyle('cursor', 'e-resize');	
 	if (!min) min = 50;
 	if (!max) max = 250;
 	if (Browser.Engine.trident){	
@@ -753,14 +756,19 @@ function addResizeRight(element, min, max){
 		onComplete: function(){
 			rWidth();
 			element.getElements('iframe').setStyle('visibility','visible');
-			element.getNext('.column').getElements('iframe').setStyle('visibility','visible');			
+			element.getNext('.column').getElements('iframe').setStyle('visibility','visible');
+			currentInstance.fireEvent('onResize');						
 		}.bind(this)		
 	});	
 }
 
 function addResizeLeft(element, min, max){
 	if (!$(element)) return;
-	element = $(element);	
+	element = $(element);
+	
+	var instances = MochaUI.Columns.instances;
+	var currentInstance = instances.get(element.id);	
+		
 	var handle = element.getPrevious('.columnHandle');
 	handle.setStyle('cursor', 'e-resize');
 	var sibling = element.getPrevious('.column');	
@@ -795,7 +803,8 @@ function addResizeLeft(element, min, max){
 		onComplete: function(){
 			rWidth();
 			$(element).getElements('iframe').setStyle('visibility','visible');
-			sibling.getElements('iframe').setStyle('visibility','visible');			
+			sibling.getElements('iframe').setStyle('visibility','visible');
+			currentInstance.fireEvent('onResize');						
 		}.bind(this)		
 	});
 }
@@ -860,7 +869,8 @@ function addResizeBottom(element){
 			if (currentInstance.iframeEl) {
 				currentInstance.iframeEl.setStyle('visibility', 'visible');
 			}	
-			partner.getElements('iframe').setStyle('visibility','visible');			
+			partner.getElements('iframe').setStyle('visibility','visible');
+			currentInstance.fireEvent('onResize');			
 		}.bind(this)		
 	});
 }
@@ -884,22 +894,45 @@ MochaUI.Column = new Class({
 	
 	options: {
 		id:            null, // This must be set when creating the column.
-		placement:     null, // Can be right, main, or left.
+		placement:     null, // Can be 'right', 'main', or 'left'.
 		width:         null,
-		resizeLimit:   []
+		resizeLimit:   [],
+		
+		// Events
+		onResize:     $empty, 
+		onCollapse:   $empty, // NOT YET IMPLEMENTED
+		onExpand:     $empty  // NOT YET IMPLEMENTED
 
 	},	
 	initialize: function(options){
 		this.setOptions(options);
 		
-		$extend(this, {
+		$extend(this, {						
+			timestamp: $time(),
 			isCollapsed: false,
-			timestamp: $time()
+			oldWidth: 0
 		});
+		
+		// Shorten object chain
+		var instances = MochaUI.Columns.instances;
+		var instanceID = instances.get(this.options.id);
+	
+		// Check to see if there is already a class instance for this Column
+		if (instanceID){			
+			var currentInstance = instanceID;		
+		}
+		
+		// Check if column already exists
+		if ( this.columnEl ) {
+			return;
+		}
+		else {			
+			instances.set(this.options.id, this);
+		}		
 				
 		this.columnEl = new Element('div', {
 			'id': this.options.id,												   
-			'class': 'column',
+			'class': 'column expanded',
 			'styles': {
 				'width': this.options.width
 			}			
@@ -941,6 +974,30 @@ MochaUI.Column = new Class({
 				}).inject(this.handleEl);			
 				addResizeLeft(this.columnEl, this.options.resizeLimit[0], this.options.resizeLimit[1]);
 				break;
+		}
+		
+		if (this.handleEl != null) {
+			this.handleEl.addEvent('dblclick', function(event){
+				var column= this.columnEl;
+								
+				if (this.isCollapsed == false) {
+					this.oldWidth = column.getStyle('width').toInt();
+					//column.getChildren().setStyle('display','none');
+					column.setStyle('width', 0);
+					this.isCollapsed = true;
+					column.addClass('collapsed');
+					column.removeClass('expanded');
+					rWidth();
+				}
+				else {
+					column.setStyle('width', this.oldWidth);
+					//column.getChildren().setStyle('display','block');					
+					this.isCollapsed = false;
+					column.addClass('expanded');
+					column.removeClass('collapsed');
+					rWidth();
+				}
+			}.bind(this));
 		}
 		
 		rWidth();		
@@ -995,11 +1052,11 @@ MochaUI.Panel = new Class({
 		panelBackground:   '#f1f1f1',			
 		
 		// Events
-		onBeforeBuild:     $empty, // NOT YET IMPLEMENTED
+		onBeforeBuild:     $empty, 
 		onContentLoaded:   $empty,
-		onResize:          $empty, // NOT YET IMPLEMENTED
-		onMinimize:        $empty, // NOT YET IMPLEMENTED
-		onRestore:         $empty, // NOT YET IMPLEMENTED
+		onResize:          $empty, 
+		onCollapse:        $empty, // NOT YET IMPLEMENTED
+		onExpand:          $empty, // NOT YET IMPLEMENTED
 		onClose:           $empty, // NOT YET IMPLEMENTED
 		onCloseComplete:   $empty  // NOT YET IMPLEMENTED				
 		
@@ -1008,30 +1065,30 @@ MochaUI.Panel = new Class({
 		this.setOptions(options);
 		
 		$extend(this, {
-			isCollapsed: false,			
 			timestamp: $time(),
+			isCollapsed: false,			
 			oldHeight: 0,
 			partner: null
 		});		
-		
-		this.originalHeight = this.options.height; // NOT USED YET
-		
+				
 		// Shorten object chain
 		var instances = MochaUI.Panels.instances;
 		var instanceID = instances.get(this.options.id);
 	
-		// Here we check to see if there is already a class instance for this panel
+		// Check to see if there is already a class instance for this panel
 		if (instanceID){			
 			var currentInstance = instanceID;		
 		}
 		
-		// Check if window already exists and is not in progress of closing
+		// Check if panel already exists
 		if ( this.panelEl ) {
 			return;
 		}
 		else {			
 			instances.set(this.options.id, this);
 		}
+		
+		this.fireEvent('onBeforeBuild');		
 		
 		if (this.options.loadMethod == 'iframe') {
 			// Iframes have their own scrollbars and padding.
@@ -1121,8 +1178,8 @@ MochaUI.Panel = new Class({
 				if (this.oldHeight < 10) this.oldHeight = 20;
 				panel.setStyle('height', 0);
 				this.isCollapsed = true;
-				this.panelEl.addClass('collapsed');
-				this.panelEl.removeClass('expanded');			
+				panel.addClass('collapsed');
+				panel.removeClass('expanded');			
 				panelHeight(this.options.column, panel, 'collapsing');
 				this.collapseToggleEl.removeClass('panel-collapsed');
 				this.collapseToggleEl.addClass('panel-expand');
@@ -1130,8 +1187,8 @@ MochaUI.Panel = new Class({
 			else {
 				panel.setStyle('height', this.oldHeight);
 				this.isCollapsed = false;
-				this.panelEl.addClass('expanded');
-				this.panelEl.removeClass('collapsed');				
+				panel.addClass('expanded');
+				panel.removeClass('collapsed');				
 				panelHeight(this.options.column, panel, 'expanding');
 				this.collapseToggleEl.removeClass('panel-expand');
 				this.collapseToggleEl.addClass('panel-collapsed');

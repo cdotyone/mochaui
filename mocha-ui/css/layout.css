@@ -16,6 +16,7 @@ License:
 	height: 100%;
 	min-height: 100%;
 	overflow: hidden;
+	background: #f1f1f1;	
 }
 
 .panel {

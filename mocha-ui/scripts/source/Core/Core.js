@@ -24,6 +24,9 @@ var MochaUI = new Hash({
 		useSpinner: true    // Toggles whether or not the ajax spinners are displayed in window footers.
 
 	}),
+	Columns: {	  
+		instances:      new Hash()	
+	},	
 	Panels: {	  
 		instances:      new Hash()	
 	},		
