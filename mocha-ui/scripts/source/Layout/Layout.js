@@ -54,7 +54,7 @@ MochaUI.Desktop = new Class({
 		this.sidebarHandle          = $(this.options.sidebarHandle);		
 	
 		// This is run on dock initialize so no need to do it twice.
-		if (!MochaUI.Dock) {
+		if (!MochaUI.Dock.dockWrapper) {
 			this.setDesktopSize();
 		}
 		this.menuInitialize();		
@@ -136,7 +136,7 @@ MochaUI.Desktop = new Class({
 			if (pageWrapperHeight < 0) {
 				pageWrapperHeight = 0;
 			}
-			this.pageWrapper.setStyle('height', pageWrapperHeight + 'px');
+			this.pageWrapper.setStyle('height', pageWrapperHeight);
 		}
 
 		this.resizePanels();		
@@ -586,7 +586,6 @@ MochaUI.Desktop.implement(new Options, new Events);
 					// Add children without height set and who are not collapsed to an array
 					// THIS MAY NOT BE NEEDED				
 					else if (currentInstance.isCollapsed != true) {
-						alert('Test');
 						heightNotSet.push(el);
 					}	
 				}

@@ -7,46 +7,37 @@
 
 	<link rel="stylesheet" href="css/content.css" type="text/css" />
 	<link rel="stylesheet" href="css/ui.css" type="text/css" />
-	<script type="text/javascript" src="scripts/mootools-1.2-core.js"></script>
-	<script type="text/javascript" src="scripts/mootools-1.2-more.js"></script>
-	<!--[if IE]>
-		<script type="text/javascript" src="scripts/excanvas-compressed.js"></script>		
-	<![endif]-->	
-	<script type="text/javascript" src="scripts/source/Utilities/mocha.js.php"></script>
-	
-	<!-- <script type="text/javascript" src="scripts/mocha.js" charset="utf-8"></script> -->
-	
-	<script type="text/javascript">
-	
-	MochaUI.aboutWindow = function(){
-		new MochaUI.Window({
-			id: 'about',
-			title: 'Mocha UI Version 0.9',
-			loadMethod: 'xhr',
-			contentURL: 'pages/about.html',
-			type: 'modal',
-			width: 300,
-			height: 150
-		});
-	}	
-	
-	window.addEvent('domready', function(){
-		MochaUI.Desktop = new MochaUI.Desktop();
-		MochaUI.Dock = new MochaUI.Dock();		
-		MochaUI.Modal = new MochaUI.Modal();			
-		MochaUI.NewWindowsFromHTML = new MochaUI.NewWindowsFromHTML();		
-
-		$('aboutLink').addEvent('click', function(e){	
-			new Event(e).stop();
-			MochaUI.aboutWindow();
-		});		
-				
-	});	
-	</script>
-	
 	
 <style>	
 
+#desktopTitlebar {
+	padding: 7px 8px 6px 8px;
+	height: 23px;
+	background: transparent;
+}	
+	
+#desktopTitlebar h1.applicationTitle {
+	display: inline;	
+	margin: 0;
+	padding: 0 5px 0 0;
+	font-size: 20px;
+	line-height: 25px;
+	font-weight: bold;
+	color: #fff;
+}
+	
+#desktopTitlebar h2.tagline {
+	display: inline;	
+	font-size: 12px;
+	color: #fff;
+	font-weight: normal;
+	padding: 5px 0 0 0;	
+}
+
+#desktopTitlebar h2.tagline .taglineEm {
+	color: #fff;
+	font-weight: bold;	
+}
 	
 #pageWrapper {
 	overflow: auto;
@@ -78,7 +69,45 @@
 	border-bottom: 1px solid #999;
 }			
 			
-</style>				
+</style>	
+	
+	
+	<script type="text/javascript" src="scripts/mootools-1.2-core.js"></script>
+	<script type="text/javascript" src="scripts/mootools-1.2-more.js"></script>
+	<!--[if IE]>
+		<script type="text/javascript" src="scripts/excanvas-compressed.js"></script>		
+	<![endif]-->	
+	<script type="text/javascript" src="scripts/source/Utilities/mocha.js.php"></script>
+	
+	<!-- <script type="text/javascript" src="scripts/mocha.js" charset="utf-8"></script> -->
+
+	<script type="text/javascript">
+	
+	MochaUI.aboutWindow = function(){
+		new MochaUI.Window({
+			id: 'about',
+			title: 'Mocha UI Version 0.9',
+			loadMethod: 'xhr',
+			contentURL: 'pages/about.html',
+			type: 'modal',
+			width: 300,
+			height: 150
+		});
+	}	
+	
+	window.addEvent('domready', function(){
+		MochaUI.Desktop = new MochaUI.Desktop();
+		MochaUI.Dock = new MochaUI.Dock();		
+		MochaUI.Modal = new MochaUI.Modal();			
+		MochaUI.NewWindowsFromHTML = new MochaUI.NewWindowsFromHTML();		
+
+		$('aboutLink').addEvent('click', function(e){	
+			new Event(e).stop();
+			MochaUI.aboutWindow();
+		});		
+				
+	});	
+	</script>	
 
 </head>
 <body>
@@ -94,8 +123,8 @@
 					<li><a href="#">Sign Out</a></li>				
 				</ul>
 			</div>						
-			<h1 class="applicationTitle">Mocha UI</h1>
-			<h1 class="tagline">A Web Applications <span class="taglineEm">User Interface Library</span></h1>
+			<h1 class="applicationTitle">My Site</h1>
+			<h2 class="tagline">My Tagline</h2>			
 		</div>
 	</div>	
 </div>

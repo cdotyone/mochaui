@@ -72,6 +72,8 @@ MochaUI.Dock = new Class({
 		this.autoHideEvent = null;		
 		this.dockAutoHide  = false;  // True when dock autohide is set to on, false if set to off
 
+		if (!this.dockWrapper) return;
+
 		if (!this.options.useControls){
 			if($('dockPlacement')){
 				$('dockPlacement').setStyle('cursor', 'default');

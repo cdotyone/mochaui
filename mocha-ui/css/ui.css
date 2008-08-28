@@ -44,7 +44,7 @@ body {
 }
 	
 #desktopTitlebar {
-	padding: 7px 8px 6px 125px;
+	padding: 7px 8px 6px 8px;
 	height: 23px;
 	background: url(../images/logo.gif) no-repeat;
 	background-position: center 0;	
@@ -53,8 +53,9 @@ body {
 #desktopTitlebar h1.applicationTitle {
 	display: none;	
 	margin: 0;
-	padding: 5px 0 0 0;
+	padding: 0 5px 0 0;
 	font-size: 20px;
+	line-height: 25px;
 	font-weight: bold;
 	color: #fff;
 }
