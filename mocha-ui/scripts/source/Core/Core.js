@@ -131,14 +131,16 @@ var MochaUI = new Hash({
 							}
 						}
 					}.bind(this),
-					onSuccess: function() {
+					onException: function(){}.bind(this),					
+					onSuccess: function(){
 						if (contentContainer == contentEl){
 							if (recipient == 'window') {
 								currentInstance.hideLoadingIcon(canvasIconEl);
 							}	
 							currentInstance.fireEvent('onContentLoaded', element);
-						}
-					}.bind(this)
+						}	
+					}.bind(this),
+					onComplete: function(){}.bind(this)					
 				}).get();
 				break;
 			case 'iframe': // May be able to streamline this if the iframe already exists.

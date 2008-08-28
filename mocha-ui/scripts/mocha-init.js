@@ -695,11 +695,28 @@ window.addEvent('domready', function(){
 	MochaUI.Desktop = new MochaUI.Desktop();									 
 	MochaUI.Dock = new MochaUI.Dock();	
 
-	// Layout
-	initLayout();
-	addResizeRight('sideColumn1', 100, 300);
-	addResizeLeft('sideColumn2', 150, 300);
-
+	// Create Columns
+	new MochaUI.Column({
+		id: 'sideColumn1',
+		placement: 'left',
+		width: 200,
+		resizeLimit: [100, 300]
+	});
+	
+	new MochaUI.Column({
+		id: 'mainColumn',
+		placement: 'main',	
+		width: null,
+		resizeLimit: [100, 300]
+	});
+	
+	new MochaUI.Column({
+		id: 'sideColumn2',
+		placement: 'right',	
+		width: 220,		
+		resizeLimit: [150, 300]
+	});		
+	
 	// Add panels to first side column
 	new MochaUI.Panel({
 		id: 'files-panel',
