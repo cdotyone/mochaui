@@ -16,6 +16,9 @@ Contributors:
 Note:
 	This documentation is taken directly from the javascript source files. It is built using Natural Docs.
 	
+Todo:
+	Consider making title tooltips optional and using them more often.	
+	
 */
 
 var MochaUI = new Hash({

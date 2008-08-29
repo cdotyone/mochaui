@@ -3,23 +3,14 @@
 <ul>
 	<li>Make sprites for dock tabs.</li>	
 	<li>If you have three columns, two with the width set, what happens if the viewport is smaller than their width? Right now this throws an error in IE6 since IE6 has no min-width.</li>
-	<li>Consider logic for minimizing columns (horizontal).</li>
 	<li>Hide dock if there are no windows open.</li>
+	<li>Collapse the column when the user clicks on the collapse button of the last expanded panel in a column.</li>
 </ul>
-
-<h3>Panel Collapse/Expand Logic:</h3>
-				
-<ul>
-	<li>Disable collapse on panel if all other panels in column are already collapsed. Either that or collapse the column.</li>
-	<li>Don't add height to collapsed panels when recalculating. DONE.</li>
-	<li>Should remove resize handle from sibling below when collapsed. Also consider switching handle from top to bottom. Either way the logic inolves a sibling.</li>
-	<li>When a panel is collapsed the panels above it should not be resized unless it is the bottom panel that is being collapsed in which case only the next panel above it which is not collapsed should be resized.</li>	
-</ul>		
-		
-				
+	
 <h3>Optional Todo:</h3>
 				
 <ul>
+	<li>Consider making title tooltips optional and using them more often.</li>	
 	<li>Add a "fixed" option, where the panel only resizes if the other panels reach 0 height.</li>	
 	<li>Consider using onMousedown rather than onClick for focus.</li>
 	<li>Consider putting the panel footers inside their respective panels.</li>

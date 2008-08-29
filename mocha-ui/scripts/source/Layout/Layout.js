@@ -1039,7 +1039,7 @@ MochaUI.Panel = new Class({
 		this.panelHeaderEl = new Element('div', {
 			'id': this.options.id + '_header',												   
 			'class': 'panel-header'
-		}).inject(this.panelEl, 'before');
+		}).inject(this.panelEl, 'before');		
 		
 		this.panelHeaderToolboxEl = new Element('div', {
 			'id': this.options.id + '_headerToolbox',										   
@@ -1053,7 +1053,7 @@ MochaUI.Panel = new Class({
 				'width': 16,
 				'height': 16
 			},
-			'title': 'Minimize Panel',
+			'title': 'Collapse Panel',
 			'background': '#f00'
 		}).inject(this.panelHeaderToolboxEl);
         
@@ -1081,28 +1081,35 @@ MochaUI.Panel = new Class({
 				this.oldHeight = panel.getStyle('height').toInt();
 				if (this.oldHeight < 10) this.oldHeight = 20;
 				panel.setStyle('height', 0);
-				this.isCollapsed = true;
+				this.isCollapsed = true;				
 				panel.addClass('collapsed');
 				panel.removeClass('expanded');			
 				panelHeight(this.options.column, panel, 'collapsing');
 				this.collapseToggleEl.removeClass('panel-collapsed');
 				this.collapseToggleEl.addClass('panel-expand');
+				this.collapseToggleEl.setProperty('title','Expand Panel');				
 			}
 			else {
 				panel.setStyle('height', this.oldHeight);
 				this.isCollapsed = false;
 				panel.addClass('expanded');
 				panel.removeClass('collapsed');				
-				panelHeight(this.options.column, panel, 'expanding');
+				panelHeight(this.options.column, panel, 'expanding');				
 				this.collapseToggleEl.removeClass('panel-expand');
 				this.collapseToggleEl.addClass('panel-collapsed');
+				this.collapseToggleEl.setProperty('title','Collapse Panel');				
 			}
 		}
-		.bind(this));							
+		.bind(this));
+		
+		this.panelHeaderContentEl = new Element('div', {
+			'id': this.options.id + '_headerContent',												   
+			'class': 'panel-headerContent'
+		}).inject(this.panelHeaderEl);									
 		
 		this.titleEl = new Element('h2', {
 			'id': this.options.id + '_title'
-		}).inject(this.panelHeaderEl);		
+		}).inject(this.panelHeaderContentEl);		
 		
 		if (this.options.tabsURL == null) {
 			this.titleEl.set('html', this.options.title);
@@ -1110,12 +1117,11 @@ MochaUI.Panel = new Class({
 		else {
 			MochaUI.updateContent({
 				'element':      this.panelEl,
-				'childElement': this.panelHeaderEl,
+				'childElement': this.panelHeaderContentEl,
 				'loadMethod':   'xhr',								
 				'url':          this.options.tabsURL
 			});		
-		}
-				
+		}				
 				
 		this.handleEl = new Element('div', {
 			'id': this.options.id + '_handle',
