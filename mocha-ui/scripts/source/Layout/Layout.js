@@ -29,14 +29,7 @@ MochaUI.Desktop = new Class({
 		desktopNavBar:          'desktopNavbar',
 		pageWrapper:            'pageWrapper',
 		page:                   'page',
-		desktopFooter:          'desktopFooterWrapper',
-		sidebarWrapper:         'sideColumn1',		
-		sidebar:                'sidebar',
-		sidebarContentWrapper:  'sidebarContentWrapper',		
-		sidebarMinimize:        'sidebarControl',
-		sidebarHandle:          'sidebarHandle',
-		// Sidebar options:
-		sidebarLimitX:          [180, 280]        // Sidebar minimum and maximum widths when resizing.
+		desktopFooter:          'desktopFooterWrapper'
 	},	
 	initialize: function(options){
 		this.setOptions(options);
@@ -47,19 +40,12 @@ MochaUI.Desktop = new Class({
 		this.pageWrapper            = $(this.options.pageWrapper);
 		this.page                   = $(this.options.page);
 		this.desktopFooter          = $(this.options.desktopFooter);		
-		this.sidebarWrapper         = $(this.options.sidebarWrapper);		
-		this.sidebar                = $(this.options.sidebar);
-		this.sidebarContentWrapper  = $(this.options.sidebarContentWrapper);
-		this.sidebarMinimize        = $(this.options.sidebarMinimize);
-		this.sidebarHandle          = $(this.options.sidebarHandle);		
 	
 		// This is run on dock initialize so no need to do it twice.
 		if (!MochaUI.Dock.dockWrapper) {
 			this.setDesktopSize();
 		}
 		this.menuInitialize();		
-		
-		this.sidebarInitialize();		
 
 		// Resize desktop, page wrapper, modal overlay, and maximized windows when browser window is resized
 		window.addEvent('resize', function(){
@@ -356,93 +342,7 @@ MochaUI.Desktop = new Class({
 				}
 			});
 		}
-		currentInstance.maximizeButtonEl.setProperty('title', 'Maximize');		
-		
-	},
-	sidebarInitialize: function(){		
-		/*
-
-		this.sidebarIsMinimized = false;
-		this.sidebarMinimize.addEvent('click', function(event){
-			this.sidebarMinimizeToggle();
-		}.bind(this));
-		
-		*/
-		
-		// Add check mark to menu if link exists in menu
-		if ($('sidebarLinkCheck')){			
-			this.sidebarCheck = new Element('div', {
-				'class': 'check',
-				'id': 'sidebar_check'
-			}).injectInside($('sidebarLinkCheck'));
-		}		
-	},
-	/*
-	
-	Function: sidebarToggle
-		Toggles the display of the sidebar.
-	
-	Syntax:
-		(start code)
-		MochaUI.Desktop.sidebarToggle();
-		(end)	
-
-	*/		
-	sidebarToggle: function(){
-		// Hide sidebar.
-		if (this.sidebarWrapper.getStyle('display') == 'block'){
-			this.sidebarWrapper.setStyle('display', 'none');
-			this.sidebarCheck.setStyle('display', 'none');
-		}
-		// Show sidebar.
-		else {
-			// If the sidebar is minimized when toggling it's visibility on the sidebar will be restored.
-			if (this.sidebarIsMinimized){			
-				this.sidebarMinimizeToggle();			
-			}			
-			this.sidebarWrapper.setStyle('display', 'block');
-			this.sidebarCheck.setStyle('display', 'block');			
-		}
-		this.resizePanels();		
-	},
-	/*
-	
-	Function: sidebarMinimizeToggle
-		Minimize and restore the sidebar.
-	
-	Syntax:
-		(start code)
-		MochaUI.Desktop.sidebarMinimizeToggle();
-		(end)	
-
-	*/		
-	sidebarMinimizeToggle: function(){
-		// Expand sidebar.
-		var windows = $$('div.mocha');
-		if (!this.sidebarIsMinimized){				
-			this.sidebarResizable.detach();
-			this.sidebarHandle.setStyle('cursor', 'default');						
-			this.sidebar.setStyle('display', 'none');
-			if (!Browser.Platform.mac && Browser.Engine.gecko){
-				windows.setStyle('position', 'absolute');	
-			}			
-			this.sidebarIsMinimized = true;				
-		}
-		// Collapse sidebar
-		else {
-			this.sidebarResizable.attach();	
-			this.sidebarHandle.setStyles({
-				'cursor': Browser.Engine.presto ? 'e-resize' : 'col-resize'
-			});				
-			this.sidebar.setStyle('display', 'block');
-			if (!Browser.Platform.mac && Browser.Engine.gecko){
-				windows.setStyle('position', 'absolute');	
-			}			
-			this.sidebarIsMinimized = false;
-		}				
-	},
-	panelMinimizeToggle: function(el){
-		el.addClass('panel-closed');
+		currentInstance.maximizeButtonEl.setProperty('title', 'Maximize');	
 	}
 });
 MochaUI.Desktop.implement(new Options, new Events);
@@ -709,8 +609,6 @@ MochaUI.Desktop.implement(new Options, new Events);
 		});
 	}
 
-// REWRITE THESE SO THEY USE THE CLASS OPTIONS!!!
-	
 function addResizeRight(element, min, max){
 	if (!$(element)) return;
 	element = $(element);
@@ -732,7 +630,7 @@ function addResizeRight(element, min, max){
 			}
 		});	
 	}		
-	element.makeResizable({
+	currentInstance.resize = element.makeResizable({
 		handle: handle,
 		modifiers: {x: 'width', y: false},
 		limit: { x: [min, max] },
@@ -771,13 +669,9 @@ function addResizeLeft(element, min, max){
 		
 	var handle = element.getPrevious('.columnHandle');
 	handle.setStyle('cursor', 'e-resize');
-	var sibling = element.getPrevious('.column');	
+	var partner = element.getPrevious('.column');	
 	if (!min) min = 50;
-	if (!max) {
-		// var sibling = $(element).getPrevious('.column');
-		// max = $(element).offsetWidth + sibling.offsetWidth;
-		max = 250;		
-	}
+	if (!max) max = 250;
 	if (Browser.Engine.trident){	
 		handle.addEvents({
 			'mousedown': function(){
@@ -788,14 +682,14 @@ function addResizeLeft(element, min, max){
 			}
 		});	
 	}		
-	element.makeResizable({
+	currentInstance.resize = element.makeResizable({
 		handle: handle,
 		modifiers: {x: 'width' , y: false},
 		invert: true,
 		limit: { x: [min, max] },
 		onStart: function(){
 			$(element).getElements('iframe').setStyle('visibility','hidden');
-			sibling.getElements('iframe').setStyle('visibility','hidden');
+			partner.getElements('iframe').setStyle('visibility','hidden');
 		}.bind(this),									
 		onDrag: function(){	
 			rWidth();	
@@ -803,7 +697,7 @@ function addResizeLeft(element, min, max){
 		onComplete: function(){
 			rWidth();
 			$(element).getElements('iframe').setStyle('visibility','visible');
-			sibling.getElements('iframe').setStyle('visibility','visible');
+			partner.getElements('iframe').setStyle('visibility','visible');
 			currentInstance.fireEvent('onResize');						
 		}.bind(this)		
 	});
@@ -914,8 +808,9 @@ MochaUI.Column = new Class({
 		});
 		
 		// Shorten object chain
+		var options = this.options;
 		var instances = MochaUI.Columns.instances;
-		var instanceID = instances.get(this.options.id);
+		var instanceID = instances.get(options.id);
 	
 		// Check to see if there is already a class instance for this Column
 		if (instanceID){			
@@ -927,18 +822,18 @@ MochaUI.Column = new Class({
 			return;
 		}
 		else {			
-			instances.set(this.options.id, this);
+			instances.set(options.id, this);
 		}		
 				
 		this.columnEl = new Element('div', {
 			'id': this.options.id,												   
 			'class': 'column expanded',
 			'styles': {
-				'width': this.options.width
+				'width': options.width
 			}			
 		}).inject($(MochaUI.Desktop.pageWrapper));
 		
-		if (this.options.id == 'mainColumn') {
+		if (options.id == 'mainColumn') {
 			this.columnEl.addClass('rWidth');
 		}
 		
@@ -956,11 +851,11 @@ MochaUI.Column = new Class({
 				}).inject(this.columnEl, 'after');
 		
 				this.handleIconEl = new Element('div', {
-					'id': this.options.id + '_handle_icon',
+					'id': options.id + '_handle_icon',
 					'class': 'handleIcon'
 				}).inject(this.handleEl);
 			
-				addResizeRight(this.columnEl, this.options.resizeLimit[0], this.options.resizeLimit[1]);
+				addResizeRight(this.columnEl, options.resizeLimit[0], options.resizeLimit[1]);
 				break;
 			case 'right':
 				this.handleEl = new Element('div', {
@@ -969,10 +864,10 @@ MochaUI.Column = new Class({
 				}).inject(this.columnEl, 'before');
 		
 				this.handleIconEl = new Element('div', {
-					'id': this.options.id + '_handle_icon',
+					'id': options.id + '_handle_icon',
 					'class': 'handleIcon'
 				}).inject(this.handleEl);			
-				addResizeLeft(this.columnEl, this.options.resizeLimit[0], this.options.resizeLimit[1]);
+				addResizeLeft(this.columnEl, options.resizeLimit[0], options.resizeLimit[1]);
 				break;
 		}
 		
@@ -982,7 +877,10 @@ MochaUI.Column = new Class({
 								
 				if (this.isCollapsed == false) {
 					this.oldWidth = column.getStyle('width').toInt();
-					//column.getChildren().setStyle('display','none');
+					
+					this.resize.detach();
+					this.handleEl.setStyle('cursor', null).addClass('detached');					
+					
 					column.setStyle('width', 0);
 					this.isCollapsed = true;
 					column.addClass('collapsed');
@@ -990,11 +888,14 @@ MochaUI.Column = new Class({
 					rWidth();
 				}
 				else {
-					column.setStyle('width', this.oldWidth);
-					//column.getChildren().setStyle('display','block');					
+					column.setStyle('width', this.oldWidth);					
 					this.isCollapsed = false;
 					column.addClass('expanded');
 					column.removeClass('collapsed');
+					
+					this.resize.attach();
+					this.handleEl.setStyle('cursor', 'e-resize').addClass('attached');					
+					
 					rWidth();
 				}
 			}.bind(this));
