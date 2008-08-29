@@ -122,8 +122,11 @@ var MochaUI = new Hash({
 					evalScripts: currentInstance.options.evalScripts,
 					evalResponse: currentInstance.options.evalResponse,
 					onRequest: function(){
-						if (recipient == 'window' && contentContainer == contentEl){
+						if (recipient == 'window' && contentContainer == contentEl) {
 							currentInstance.showSpinner(spinnerEl);
+						}
+						else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) {
+							$('spinner').setStyle('visibility','visible');	
 						}
 					}.bind(this),
 					onFailure: function(){
@@ -132,6 +135,9 @@ var MochaUI = new Hash({
 							if (recipient == 'window') {
 								currentInstance.hideSpinner(spinnerEl);
 							}
+							else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) {
+								$('spinner').setStyle('visibility', 'hidden');	
+							}							
 						}
 					}.bind(this),
 					onException: function(){}.bind(this),					
@@ -139,7 +145,10 @@ var MochaUI = new Hash({
 						if (contentContainer == contentEl){
 							if (recipient == 'window') {
 								currentInstance.hideSpinner(spinnerEl);
-							}	
+							}
+							else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) {
+								$('spinner').setStyle('visibility', 'hidden');	
+							}								
 							currentInstance.fireEvent('onContentLoaded', element);
 						}	
 					}.bind(this),
@@ -168,13 +177,19 @@ var MochaUI = new Hash({
 				// Add onload event to iframe so we can stop the loading icon and run onContentLoaded()
 				currentInstance.iframeEl.addEvent('load', function(e) {
 					if (recipient == 'window') {
-						currentInstance.hideSpinner.delay(150, currentInstance, spinnerEl);
+						currentInstance.hideSpinner(spinnerEl);
 					}
+					else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) {
+						$('spinner').setStyle('visibility', 'hidden');	
+					}					
 					currentInstance.fireEvent('onContentLoaded', element);
 				}.bind(this));
 				if (recipient == 'window') {
 					currentInstance.showSpinner(spinnerEl);
 				}
+				else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) {
+					$('spinner').setStyle('visibility', 'visible');	
+				}				
 				break;
 			case 'html':
 			default:

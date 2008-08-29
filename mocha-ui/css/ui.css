@@ -97,7 +97,21 @@ body {
 	padding: 7px 10px 0 10px;
 	height: 23px;
 	overflow: hidden;		
-}				
+}
+
+#spinnerWrapper {
+	float: right;
+	width: 16px;
+	height: 16px;
+	background: url(../images/spinner-placeholder.gif) no-repeat;
+}
+
+#spinner {
+	visibility: hidden;
+	background: url(../images/spinner.gif) no-repeat;
+	width: 16px;
+	height: 16px;		
+}
 
 /* Navbar */
 

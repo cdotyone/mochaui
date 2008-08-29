@@ -882,7 +882,7 @@ MochaUI.Column = new Class({
 					this.oldWidth = column.getStyle('width').toInt();
 					
 					this.resize.detach();
-					this.handleEl.setStyle('cursor', null).addClass('detached');					
+					this.handleEl.setStyle('cursor', 'pointer').addClass('detached');					
 					
 					column.setStyle('width', 0);
 					this.isCollapsed = true;
