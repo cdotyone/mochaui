@@ -563,6 +563,10 @@ MochaUI.Desktop.implement(new Options, new Events);
 				}
 			}			
 			
+			$$('.columnHandle').each(function(handle){
+				handle.setStyle('height', handle.getParent().getStyle('height').toInt() - handle.getStyle('border-top').toInt() - handle.getStyle('border-bottom').toInt());
+			});
+			
 			panelsExpanded.each(function(panel){
 				resizeChildren(panel);
 			});							
@@ -585,24 +589,24 @@ MochaUI.Desktop.implement(new Options, new Events);
 	
 	// Remaining Width
 	function rWidth(){	
-		$$('.rWidth').each(function(el){
-			var currentWidth = el.offsetWidth.toInt();
-			currentWidth -= el.getStyle('border-left').toInt();		
-			currentWidth -= el.getStyle('border-right').toInt();						
+		$$('.rWidth').each(function(column){
+			var currentWidth = column.offsetWidth.toInt();
+			currentWidth -= column.getStyle('border-left').toInt();		
+			currentWidth -= column.getStyle('border-right').toInt();						
 		
-			var parent = el.getParent();		
+			var parent = column.getParent();		
 			this.width = 0;
 			
 			// Get the total width of all the parent element's children
-			parent.getChildren().each(function(el){
-				this.width += el.offsetWidth.toInt();														
+			parent.getChildren().each(function(column){
+				this.width += column.offsetWidth.toInt();														
 			}.bind(this));
 		
 			// Add the remaining width to the current element
 			var remainingWidth = parent.offsetWidth.toInt() - this.width;
 			var newWidth =	currentWidth + remainingWidth;	
-			el.setStyle('width', newWidth);
-			el.getChildren('.panel').each(function(panel){
+			column.setStyle('width', newWidth);
+			column.getChildren('.panel').each(function(panel){
 				panel.setStyle('width', newWidth - panel.getStyle('border-left').toInt() - panel.getStyle('border-right').toInt());
 				resizeChildren(panel);
 			}.bind(this));				
@@ -840,8 +844,7 @@ MochaUI.Column = new Class({
 		this.spacerEl = new Element('div', {
 			'id': this.options.id + '_spacer',
 			'class': 'horizontalHandle'
-		}).inject(this.columnEl);
-		
+		}).inject(this.columnEl);		
 
 		switch (this.options.placement) {
 			case 'left':

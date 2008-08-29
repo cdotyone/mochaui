@@ -116,15 +116,13 @@ License:
 }			
 
 .columnHandle {
-	height: 100%;
 	min-height: 10px;	
 	float: left;
 	width: 4px;
 	overflow: hidden;
 	background: #eee url(../images/handle-icon.gif) center center no-repeat;
-	border-right: 1px solid #b9b9b9;
-	border-left: 1px solid #b9b9b9;
-	border-bottom: 1px solid #b9b9b9;							
+	border: 1px solid #b9b9b9;
+	border-top: 0;							
 }
 
 /* Components */
