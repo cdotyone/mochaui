@@ -70,13 +70,9 @@ initializeWindows = function(){
 		var url = 'data/json-windows-data.js';
 		var request = new Request.JSON({
 			url: url,
-			method: 'get',
-			onRequest: function(){
-				// add code to show spinner
-			}.bind(this),										  
+			method: 'get',										  
 			onComplete: function(properties) {
 				MochaUI.newWindowsFromJSON(properties.windows);
-				// add code to hide spinner
 			}
 		}).send();		
 	}	

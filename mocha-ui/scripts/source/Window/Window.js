@@ -615,7 +615,7 @@ MochaUI.Window = new Class({
 		}
 
 		if (this.options.type == 'window'){		
-			windowEl.addEvent('click', function() {
+			windowEl.addEvent('mousedown', function() {
 				MochaUI.focusWindow(windowEl);
 			}.bind(this));
 		}
@@ -1647,8 +1647,7 @@ MochaUI.Window = new Class({
 		
 	*/	
 	hideSpinner: function(spinner) {
-		if (!MochaUI.options.useSpinner || this.options.shape == 'gauge' || this.options.type == 'notification') return;		
-		$(spinner).setStyle('display', 'none');
+		if ($(spinner))	$(spinner).setStyle('visibility', 'hidden');
 	},
 	/*
 	
@@ -1659,7 +1658,7 @@ MochaUI.Window = new Class({
 	showSpinner: function(spinner) {
 		if (!MochaUI.options.useSpinner || this.options.shape == 'gauge' || this.options.type == 'notification') return;		
 		$(spinner).setStyles({
-			'display': 'block'
+			'visibility': 'visible'
 		});
 	},	
 	setMochaControlsWidth: function(){

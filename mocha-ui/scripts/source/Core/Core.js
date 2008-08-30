@@ -138,7 +138,7 @@ var MochaUI = new Hash({
 							if (recipient == 'window') {
 								currentInstance.hideSpinner(spinnerEl);
 							}
-							else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) {
+							else if (recipient == 'panel' && $('spinner')) {
 								$('spinner').setStyle('visibility', 'hidden');	
 							}							
 						}
@@ -149,7 +149,7 @@ var MochaUI = new Hash({
 							if (recipient == 'window') {
 								currentInstance.hideSpinner(spinnerEl);
 							}
-							else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) {
+							else if (recipient == 'panel' && $('spinner')) {
 								$('spinner').setStyle('visibility', 'hidden');	
 							}								
 							currentInstance.fireEvent('onContentLoaded', element);
@@ -579,7 +579,7 @@ document.addEvent('keydown', function(event){
 });
 
 // Blur all windows if user clicks anywhere else on the page
-document.addEvent('click', function(event){
+document.addEvent('mousedown', function(event){
 	MochaUI.blurAll.delay(50);	
 });
 

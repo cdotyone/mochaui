@@ -27,7 +27,7 @@ body {
 	min-width: 750px; /* Helps keep header content from wrapping */		
 	height: 100%;
 	overflow: hidden;
-	cursor: default; /* Fix for issue in IE7. IE7 wants to use the I-bar text cursor */	
+	cursor: default; /* Fix for issue in IE7. IE7 wants to use the I-bar text cursor */
 }			  				
 
 #desktopHeader {
@@ -453,6 +453,7 @@ body {
 }
 
 .mochaSpinner{
+	visibility: hidden;	
 	position: absolute;
 	bottom: 7px;
 	left: 6px;
@@ -635,8 +636,11 @@ iframe.zIndexFix {
 	border: 1px solid #f1f1f1;
 	min-height: 28px;
 	height: auto;
-   _height: 28px; /* IE 6.0 hack, for not supporting min-height */
 }
+
+*html #dock {
+	height: 28px; /* Used for IE 6.0 since it does not support min-height */	
+}	
 
 .dockTab {
 	float: left;
