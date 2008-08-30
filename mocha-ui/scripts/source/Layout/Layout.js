@@ -522,24 +522,23 @@ MochaUI.Panel = new Class({
 		tabsURL:          null,				
 
 		footer:           false,
-		footerURL:        null,	
-		footerContent:    'Footer content',		
+		footerURL:        'pages/lipsum.html',
 		
 		// Style options:
 		height:           125,
 		addClass:         '',
 		scrollbars:       true,
 		padding:   		  { top: 8, right: 8, bottom: 8, left: 8 },
-		
+
 		// Color options:		
 		panelBackground:   '#fff',			
-		
+
 		// Events
-		onBeforeBuild:     $empty, 
+		onBeforeBuild:     $empty,
 		onContentLoaded:   $empty,
-		onResize:          $empty, 
-		onCollapse:        $empty, // NOT YET IMPLEMENTED
-		onExpand:          $empty  // NOT YET IMPLEMENTED				
+		onResize:          $empty,
+		onCollapse:        $empty,
+		onExpand:          $empty		
 				
 	},	
 	initialize: function(options){
@@ -608,6 +607,14 @@ MochaUI.Panel = new Class({
 				'id': this.options.id + '_panelFooter',
 				'class': 'panel-footer'
 			}).inject(this.footerWrapperEl);			
+
+
+			MochaUI.updateContent({
+				'element':       this.panelEl,
+				'childElement':  this.footerEl,
+				'loadMethod':    'xhr',				
+				'url':           this.options.footerURL
+			});
 			
 		}
 
@@ -687,7 +694,8 @@ MochaUI.Panel = new Class({
 				panelHeight(this.options.column, panel, 'collapsing');
 				this.collapseToggleEl.removeClass('panel-collapsed');
 				this.collapseToggleEl.addClass('panel-expand');
-				this.collapseToggleEl.setProperty('title','Expand Panel');				
+				this.collapseToggleEl.setProperty('title','Expand Panel');
+				this.fireEvent('onCollapse');				
 			}
 			else {
 				panel.setStyle('height', this.oldHeight);
@@ -697,7 +705,8 @@ MochaUI.Panel = new Class({
 				panelHeight(this.options.column, panel, 'expanding');				
 				this.collapseToggleEl.removeClass('panel-expand');
 				this.collapseToggleEl.addClass('panel-collapsed');
-				this.collapseToggleEl.setProperty('title','Collapse Panel');				
+				this.collapseToggleEl.setProperty('title','Collapse Panel');
+				this.fireEvent('onExpand');				
 			}
 		}
 		.bind(this));

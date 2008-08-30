@@ -729,7 +729,7 @@ window.addEvent('domready', function(){
 		//		}	
 		//	});
 		},
-		height: 290		
+		height: 300				
 	});		
 	
 	new MochaUI.Panel({
@@ -738,7 +738,8 @@ window.addEvent('domready', function(){
 		loadMethod: 'xhr',
 		contentURL: 'pages/lipsum.html',
 		column: 'sideColumn1',
-		height: 140		
+		height: 140,
+		footer: true		
 	});
 	
 	// Add panels to main column	
@@ -757,7 +758,7 @@ window.addEvent('domready', function(){
 		loadMethod: 'xhr',
 		contentURL: 'pages/lipsum.html',
 		column: 'mainColumn',
-		height: 200
+		height: 200		
 	});
 	
 	// Add panels to second side column

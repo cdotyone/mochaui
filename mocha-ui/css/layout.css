@@ -81,7 +81,7 @@ License:
 	left: 0;
 	bottom: 0;
 	width: 100%;	
-	background: #f1f1f1;
+	background: #f9f9f9;
 	height: 30px;
 	overflow: hidden;
 	border-top: 1px solid #b9b9b9;	
@@ -91,17 +91,12 @@ License:
 	padding: 5px 8px;	
 }	
 
-.row {
-	position: relative;
-	overflow: hidden;
-}
-
 .horizontalHandle {
 	height: 4px;
 	line-height: 1px;
 	font-size: 1px;
 	overflow: hidden;
-	background: #d1d1d1 url(../images/handle-icon-horizontal2.gif) repeat-x;		
+	background: #d1d1d1 url(../images/bg-handle-horizontal.gif) repeat-x;		
 }
 
 .horizontalHandle.detached .handleIcon {
