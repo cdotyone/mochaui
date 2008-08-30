@@ -645,7 +645,6 @@ MochaUI.Window = new Class({
 			}.bind(this));
 			// Keep titlebar text from being selected on double click in Opera.			
 			this.titleBarEl.addEvent('mousedown', function(e) {
-				e = new Event(e).stop();
 				if (Browser.Engine.trident) {
 					this.titleEl.setCapture();
 				}							  													   
@@ -680,7 +679,7 @@ MochaUI.Window = new Class({
 			limit: this.options.draggableLimit,
 			snap: this.options.draggableSnap,
 			onStart: function() {
-				$('windowUnderlay').setStyle('visibility','visible');
+				//$('windowUnderlay').setStyle('visibility','visible');
 				if (this.options.type != 'modal'){ 
 					MochaUI.focusWindow(windowEl);
 				}
@@ -688,7 +687,7 @@ MochaUI.Window = new Class({
 					this.iframeEl.setStyle('visibility', 'hidden');
 			}.bind(this),
 			onComplete: function() {
-				$('windowUnderlay').setStyle('visibility','hidden');
+				//$('windowUnderlay').setStyle('visibility','hidden');
 				if ( this.iframeEl ){
 					this.iframeEl.setStyle('visibility', 'visible');
 				}

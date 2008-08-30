@@ -738,15 +738,15 @@ window.addEvent('domready', function(){
 		id: 'stats-panel',
 		title: 'Stats',
 		loadMethod: 'xhr',
-		contentURL: 'pages/stats.html',
+		contentURL: 'pages/lipsum.html',
 		column: 'sideColumn1',
 		onContentLoaded: function(){			
-			document.addEvent('mousemove', function(event){
-				if ($('mochaStats')){
-					$('cursorX').set('html', event.client.x);
-					$('cursorY').set('html', event.client.y);
-				}	
-			});
+		//	document.addEvent('mousemove', function(event){
+		//		if ($('mochaStats')){
+		//			$('cursorX').set('html', event.client.x);
+		//			$('cursorY').set('html', event.client.y);
+		//		}	
+		//	});
 		}		
 	});		
 	
@@ -800,10 +800,10 @@ window.addEvent('domready', function(){
 	
 	// Format everything before displaying the desktop
 	//var splash = function(){
-	//	MochaUI.Desktop.desktop.setStyles({
-	//		'background': '#fff',
-	//		'visibility': 'visible'
-	//	});
+		MochaUI.Desktop.desktop.setStyles({
+			'background': '#fff',
+			'visibility': 'visible'
+		});
 		initializeWindows();
 	//}
 	//splash.delay(1700, this);

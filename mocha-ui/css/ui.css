@@ -20,7 +20,7 @@ body {
 }
 
 #desktop {
-/*	visibility: hidden; */
+	visibility: hidden; 
 	position: relative;
 	top: 0;
 	left: 0;
