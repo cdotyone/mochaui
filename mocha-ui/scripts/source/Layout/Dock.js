@@ -249,6 +249,7 @@ MochaUI.Dock = new Class({
 		}).inject($('dockClear'), 'before');
 		
 		dockTab.addEvent('mousedown', function(e){
+			new Event(e).stop();
 			this.timeDown = $time();			
 		});
 		
@@ -266,20 +267,20 @@ MochaUI.Dock = new Class({
 					}										
 					return;
 				}
-				// If window is minimized, restore window.								
+				// If window is minimized, restore window.							
 				if (currentInstance.isMinimized == true) {
 					MochaUI.Dock.restoreMinimized.delay(25, MochaUI.Dock, windowEl);
 				}
 				else{
-					// If window is maximized and focused, minimize window.
+					// If window is not minimized and is focused, minimize window.
 					if (currentInstance.windowEl.hasClass('isFocused')) {
 						MochaUI.Dock.minimizeWindow(windowEl)
 					}
-					// If window is maximized and not focused, focus window.	
+					// If window is not minimized and is not focused, focus window.	
 					else{
 						MochaUI.focusWindow(windowEl);
 					}
-					// if the window is maximized and outside the viewport, center it in the viewport.
+					// if the window is not minimized and is outside the viewport, center it in the viewport.
 					var coordinates = document.getCoordinates();
 					if (windowEl.getStyle('left').toInt() > coordinates.width || windowEl.getStyle('top').toInt() > coordinates.height){
 						MochaUI.centerWindow(windowEl);	
