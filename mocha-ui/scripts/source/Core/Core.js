@@ -503,8 +503,13 @@ var MochaUI = new Hash({
 		var options = currentInstance.options;
 		var dimensions = options.container.getCoordinates();
 		var windowPosTop = (dimensions.height * .5) - ((options.height + currentInstance.headerFooterShadow) * .5);
+		if (windowPosTop < 0) {
+			windowPosTop = 0;
+		}	
 		var windowPosLeft =	(dimensions.width * .5) - (options.width * .5);
-		
+		if (windowPosLeft < 0) {
+			windowPosLeft = 0;
+		}		
 		if (MochaUI.options.useEffects == true){
 			currentInstance.morph.start({
 				'top': windowPosTop,

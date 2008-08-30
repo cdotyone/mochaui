@@ -279,6 +279,11 @@ MochaUI.Dock = new Class({
 					else{
 						MochaUI.focusWindow(windowEl);
 					}
+					// if the window is maximized and outside the viewport, center it in the viewport.
+					var coordinates = document.getCoordinates();
+					if (windowEl.getStyle('left').toInt() > coordinates.width || windowEl.getStyle('top').toInt() > coordinates.height){
+						MochaUI.centerWindow(windowEl);	
+					}					
 				}					
 			}
 		});			
@@ -292,6 +297,8 @@ MochaUI.Dock = new Class({
 			'class': 'dockText'
 		}).set('html', titleText.substring(0,20) + (titleText.length > 20 ? '...' : '')).inject($(dockTab));
 
+		// If I implement this again, will need to also adjust the titleText truncate and the tab's
+		// left padding.
 		if (currentInstance.options.icon != false){
 			// dockTabText.setStyle('background', 'url(' + currentInstance.options.icon + ') 4px 4px no-repeat'); 	
 		}

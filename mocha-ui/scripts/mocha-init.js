@@ -490,10 +490,10 @@ initializeWindows = function(){
 						opacity: false,
 						alwaysHide: true,
 						onActive: function(toggler, element){
-								toggler.addClass('open');
+							toggler.addClass('open');
 						},
 						onBackground: function(toggler, element){
-								toggler.removeClass('open');
+							toggler.removeClass('open');
 						},							
 						onStart: function(toggler, element){
 							this.windowEl.accordianResize = function(){
@@ -672,7 +672,14 @@ window.addEvent('domready', function(){
 	MochaUI.Desktop = new MochaUI.Desktop();									 
 	MochaUI.Dock = new MochaUI.Dock();	
 
-	// Create Columns
+	/* Create Columns
+	 
+	If you are not using panels then these columns are not required.
+	If you do use panels, the main column is required. The side columns are optional.
+	Create your columns from left to right. Then create your panels from top to bottom,
+	left to right. New Panels are inserted at the bottom of their column.
+	
+	*/	 
 	new MochaUI.Column({
 		id: 'sideColumn1',
 		placement: 'left',
