@@ -1244,7 +1244,7 @@ MochaUI.Window = new Class({
 		this.canvasEl.height = height;
 		this.canvasEl.width = width;
 
-		// Part of the fix for IE6 select z-index bug and FF on Mac scrollbar z-index bug
+		// Part of the fix for IE6 select z-index bug
 		if (Browser.Engine.trident4){
 			this.zIndexFixEl.setStyles({
 				'width': width,
@@ -1322,7 +1322,7 @@ MochaUI.Window = new Class({
 		this.canvasEl.height = height;
 		this.canvasEl.width = width;
 
-		// Part of the fix for IE6 select z-index bug and FF on Mac scrollbar z-index bug
+		// Part of the fix for IE6 select z-index bug
 		if (Browser.Engine.trident4){
 			this.zIndexFixEl.setStyles({
 				'width': width,

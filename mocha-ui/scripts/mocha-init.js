@@ -121,23 +121,6 @@ initializeWindows = function(){
 		});
 	}	
 	
-	MochaUI.mootoolsWindow = function(){
-		new MochaUI.Window({
-			id: 'mootools',
-			title: 'Mootools in an Iframe',
-			loadMethod: 'iframe',
-			contentURL: 'http://mootools.net/',
-			width: 650,
-			height: 400			
-		});
-	}
-	if ($('mootoolsLinkCheck')) {
-		$('mootoolsLinkCheck').addEvent('click', function(e){
-		new Event(e).stop();
-			MochaUI.mootoolsWindow();
-		});
-	}
-	
 	/*
 	MochaUI.tetrisWindow = function(){
 		new MochaUI.Window({

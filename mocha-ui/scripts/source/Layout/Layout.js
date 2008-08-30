@@ -876,36 +876,39 @@ MochaUI.Column = new Class({
 		
 		if (this.handleEl != null) {
 			this.handleEl.addEvent('dblclick', function(event){
-				var column= this.columnEl;
-								
-				if (this.isCollapsed == false) {
-					this.oldWidth = column.getStyle('width').toInt();
-					
-					this.resize.detach();
-					this.handleEl.setStyle('cursor', 'pointer').addClass('detached');					
-					
-					column.setStyle('width', 0);
-					this.isCollapsed = true;
-					column.addClass('collapsed');
-					column.removeClass('expanded');
-					rWidth();
-				}
-				else {
-					column.setStyle('width', this.oldWidth);					
-					this.isCollapsed = false;
-					column.addClass('expanded');
-					column.removeClass('collapsed');
-					
-					this.resize.attach();
-					this.handleEl.setStyle('cursor', 'e-resize').addClass('attached');					
-					
-					rWidth();
-				}
+				this.columnToggle();				
 			}.bind(this));
 		}
 		
 		rWidth();		
 				
+	},
+	columnToggle: function(){
+		var column= this.columnEl;
+							
+		if (this.isCollapsed == false) {
+			this.oldWidth = column.getStyle('width').toInt();
+			
+			this.resize.detach();
+			this.handleEl.setStyle('cursor', 'pointer').addClass('detached');
+			
+			column.setStyle('width', 0);
+			this.isCollapsed = true;
+			column.addClass('collapsed');
+			column.removeClass('expanded');
+			rWidth();
+		}
+		else {
+			column.setStyle('width', this.oldWidth);
+			this.isCollapsed = false;
+			column.addClass('expanded');
+			column.removeClass('collapsed');
+			
+			this.resize.attach();
+			this.handleEl.setStyle('cursor', 'e-resize').addClass('attached');
+			
+			rWidth();
+		}		
 	}
 });	
 MochaUI.Column.implement(new Options, new Events);		
@@ -953,7 +956,7 @@ MochaUI.Panel = new Class({
 		padding:   		  { top: 8, right: 8, bottom: 8, left: 8 },
 		
 		// Color options:		
-		panelBackground:   '#f1f1f1',			
+		panelBackground:   '#f7f7f7',			
 		
 		// Events
 		onBeforeBuild:     $empty, 
@@ -1077,7 +1080,16 @@ MochaUI.Panel = new Class({
 			});			
 			
 			if (this.isCollapsed == false) {
-				if (expandedSiblings.length == 0) return; // Later this may collapse the column
+				var currentColumn = MochaUI.Columns.instances.get($(this.options.column).id);
+				
+				if (expandedSiblings.length == 0 && currentColumn.options.placement != 'main') {
+					var currentColumn = MochaUI.Columns.instances.get($(this.options.column).id);
+					currentColumn.columnToggle();
+					return;
+				}
+				else if (expandedSiblings.length == 0 && currentColumn.options.placement == 'main') {
+					return;	
+				}
 				this.oldHeight = panel.getStyle('height').toInt();
 				if (this.oldHeight < 10) this.oldHeight = 20;
 				panel.setStyle('height', 0);
