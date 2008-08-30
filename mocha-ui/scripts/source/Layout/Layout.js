@@ -1012,8 +1012,9 @@ MochaUI.Panel.implement(new Options, new Events);
 			this.width = 0;
 			
 			// Get the total width of all the parent element's children
-			parent.getChildren().each(function(column){
-				this.width += column.offsetWidth.toInt();														
+			parent.getChildren().each(function(el){
+				if (el.hasClass('mocha') != true)
+				this.width += el.offsetWidth.toInt();														
 			}.bind(this));
 		
 			// Add the remaining width to the current element

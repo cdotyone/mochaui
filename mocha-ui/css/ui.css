@@ -8,7 +8,10 @@ Copyright:
 License:
 	MIT-style license.
    
-*/   
+*/
+
+/* Layout
+---------------------------------------------------------------- */   
 
 html, body {
 	overflow: hidden;
@@ -94,7 +97,7 @@ body {
 
 .toolbox {
 	float: right;
-	padding: 7px 10px 0 10px;
+	padding: 7px 8px 0 10px;
 	height: 23px;
 	overflow: hidden;		
 }
@@ -248,17 +251,274 @@ body {
 
 #desktopFooter a:hover {
 	text-decoration: underline;
+}
+
+/* Dock/Taskbar */
+
+#dockWrapper {
+	display: none;
+	background: #f1f1f1;
+	width: 100%;		
+}
+
+#dockWrapper.top {
+}
+
+#dock {
+	position: relative;
+	padding: 2px 15px 0 5px;
+	bottom: 0;
+	left: 0;
+	background: #f1f1f1;
+	border: 1px solid #f1f1f1;
+	min-height: 28px;
+	height: auto;
+}
+
+*html #dock {
+	height: 28px; /* Used for IE 6.0 since it does not support min-height */	
+}	
+
+.dockTab {
+	float: left;
+	font-size: 11px;
+	position: relative;
+	width: 150px;
+	height: 26px;
+	margin: 0 3px 2px 0;
+	overflow: hidden;	
+	cursor: pointer;
+	background: url(../images/dock-tab.gif) no-repeat;
+}	
+
+.dockTab.activeDockTab {
+	background: url(../images/dock-tab-active.gif) no-repeat;
+}
+
+.dockTab.activeDockTab .dockText {
+	color: #fff;	
 }		
 
-/* Menus */
+.dockText {
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: block;
+	font-weight: normal;
+	color: #585E66;	
+	text-align: left;
+	padding: 3px 10px 3px 10px;
+	width: 130px;
+	height: 19px;
+	overflow: hidden;		
+}			
 
-.menu-right li {
-	list-style-type: none;
-	display: inline;	
-	margin: 0 0 0 15px;
+#dockCanvas {
+	position: absolute;
+	top: 5px;
+	right: 0;
+	z-index: 2;
+}
+
+#dockPlacement {
+	position: absolute;
+	top: 4px;
+	right: 5px;
+	width: 10px;
+	height: 9px;
+	opacity: 0;
+	filter: alpha(opacity=0);
+	-moz-opacity: 0;
+	background: #f00; /* for troubleshooting */
+	cursor: pointer;
+	z-index: 3; /* for IE */
+	text-align: right;		
+}
+
+#dockAutoHide {
+	position: absolute;
+	top: 14px;
+	right: 5px;
+	width: 10px;
+	height: 9px;
+	opacity: 0;
+	filter: alpha(opacity=0);
+	-moz-opacity: 0;
+	background: #f00; /* for troubleshooting */
+	cursor: pointer;
+	z-index: 3; /* for IE */		
+}
+
+/* Panel Layout
+---------------------------------------------------------------- */
+
+/* Columns */
+
+.column {
+	position: relative;	
+	float: left;
+	height: 100%;
+	min-height: 100%;
+	overflow: hidden;
+	background: #f1f1f1;	
+}
+
+/* Panels */
+
+.panel {
+	position: relative;	
+	overflow: auto;
+	border-bottom: 1px solid #b9b9b9;
+	border-top: 0; 	 
+}
+
+.pad {
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding: 8px;
+	overflow: hidden;
+}
+
+#mainPanel {
+	background: #fff; 	
 }	
-	
-/* Windows */
+
+.panel-header {
+	position: relative;	
+	background: #e9e9e9 url(../images/bg-desktopTitlebar.gif)  repeat-x;
+	height: 30px;
+	overflow: hidden;
+	border-bottom: 1px solid #d9d9d9;		
+}
+
+.panel-header h2 {
+	display: inline-block;
+	font-size: 12px;
+	margin: 0;
+	padding: 5px 8px 0 8px;
+	height: 22px;	
+	overflow: hidden;
+	color: #585E66;	
+}
+
+.panel-header-toolbox {
+	float: right;
+	height: 26px;
+	margin: 2px 5px 0 0;
+	text-align: right;
+}
+
+.panel-collapse {
+	background: url(../images/collapse.gif) no-repeat;
+}
+
+.panel-expand {
+	background: url(../images/expand.gif) no-repeat;
+}
+
+.icon16 {
+	margin: 5px 0 0 2px;
+	cursor: pointer; 
+}	
+
+.panel-footerWrapper {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;	
+	background: #f9f9f9;
+	height: 30px;
+	overflow: hidden;
+	border-top: 1px solid #b9b9b9;	
+}
+
+.panel-footer {
+	padding: 5px 8px;	
+}
+
+/* Handles */	
+
+.horizontalHandle {
+	height: 4px;
+	line-height: 1px;
+	font-size: 1px;
+	overflow: hidden;
+	background: #d1d1d1 url(../images/bg-handle-horizontal.gif) repeat-x;		
+}
+
+.horizontalHandle.detached .handleIcon {
+	background: transparent;	
+}
+
+.horizontalHandle .handleIcon {	
+	margin: 0 auto;
+	height: 4px;
+	line-height: 1px;
+	font-size: 1px;
+	overflow: hidden;	
+	background: url(../images/handle-icon-horizontal.gif) center center no-repeat;	
+}			
+
+.columnHandle {
+	min-height: 10px;	
+	float: left;
+	width: 4px;
+	overflow: hidden;
+	background: #eee url(../images/handle-icon.gif) center center no-repeat;
+	border: 1px solid #b9b9b9;
+	border-top: 0;							
+}
+
+/* Viewport overlays
+---------------------------------------------------------------- */
+
+#modalOverlay {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	background: #000;
+	opacity: 0;
+	filter: alpha(opacity=0);
+	-moz-opacity: 0;
+	z-index: 10000;
+}
+
+* html 	#modalOverlay {
+	position: absolute;
+}
+
+/* Fix for IE6 select z-index issue */
+#modalFix {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	opacity: 0;
+	filter: alpha(opacity=0);
+	-moz-opacity: 0;
+	z-index: 9999;
+}
+
+/* Underlay */
+
+#windowUnderlay { 
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	background: #fff;	
+}
+
+* html #windowUnderlay { 
+	position: absolute;
+}			
+
+/* Windows
+---------------------------------------------------------------- */
 	
 .mocha {
 	position: absolute;
@@ -313,6 +573,10 @@ body {
 	padding: 0 5px 2px 2px;
 	background: #e4e4e4 url(../images/tabs.gif) repeat-x;
 	background-position: left -60px;	
+}
+
+.panel-header .toolbarTabs {
+	margin-top: 2px;
 }
 
 .tab-menu {
@@ -465,7 +729,74 @@ body {
 .mochaIframe {
 	width: 100%;
 }  
+		
+/* Fix for IE6 select z-index issue */
+.zIndexFix {
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: -1;
+	filter: mask();
+	width: 100px;
+	height: 100px;
+	border: 1px solid transparent;
+}
 	
+/* Window Themes */
+
+.mocha.transparent .mochaTitlebar h3 {
+	color: #fff;
+	display: none;	
+}
+
+.mocha.notification .mochaTitlebar {
+	opacity: .0;
+	filter: alpha(opacity=0);
+	-moz-opacity: 0;
+}
+
+.mocha.notification .mochaContentBorder {
+	border-width: 0px;
+}
+
+.mocha.notification .mochaContentWrapper {
+	text-align: center;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+/* Compontents
+---------------------------------------------------------------- */
+
+/* Accordian */
+
+.accordianWrapper {
+	padding: 0;
+	background: #fff;	
+}
+
+.accordianToggler {
+	margin: 0;
+	padding: 6px 10px;
+	background: #fff url(../images/bg-desktopTitlebar.gif) repeat-x;
+	font-size: 12px;
+	cursor: pointer;
+	border-top: 1px solid #e3e3e3;	
+}
+
+.topToggler {
+	border-top: none;
+}
+
+.accordianToggler.open {
+	background: #fff url(../images/bg-desktopTitlebar.gif) repeat-x;	
+}
+
+.accordianContent {
+	padding: 10px 10px 5px 10px;
+}
+
 /* Sliders */
 
 .slider {
@@ -505,20 +836,67 @@ body {
 .update {
 	padding-bottom: 5px;	
 }	
-	
-.clear {
-	clear: both;
-	height: 0;
+
+/* Folder Tree */
+
+.tree {
+	font-size: 11px;
+	line-height: 15px;
+	margin: 0;
 }
 
-*html .clear {
-	height: 1%;
-	font-size: 1px;
-	line-height: 1px;
-	overflow: hidden;
-	visibility: hidden;
+.tree ul {
+	margin: 0;	
 }
-	
+
+.tree li {
+	list-style-type: none;
+	white-space: nowrap;	
+}
+
+.tree li a {
+	color: #404040;	
+}	
+
+.tree li img {
+	vertical-align: middle;
+	width: 18px;
+	height: 18px;
+	overflow: hidden;
+}
+
+.tree li span {
+	padding-left: 2px;
+}
+
+/* View Toggle */
+
+.viewToggle {
+	position: absolute;
+	top: 4px;
+	right: 5px;
+	width: 60px;
+	text-align: right;
+}
+
+.viewToggle img.viewToggleList, .viewToggle img.viewToggleGrid {
+	width: 28px;
+	height: 22px;	
+}	
+
+.viewToggle img.viewToggleList {
+	background: url(../images/view-toggle.gif) no-repeat;
+	background-position: 0 -66px;
+}
+
+.viewToggle img.viewToggleGrid {
+	background: url(../images/view-toggle.gif) no-repeat;
+	background-position: 0 0;
+}
+
+/* Miscellaneous
+---------------------------------------------------------------- */
+
 /* Window Builder Form Elements */
 	
 #desktop form {
@@ -560,240 +938,26 @@ body {
 #desktop form .number {
 	width: 40px;
 }
-	
-/* Modal Windows */
-#modalOverlay {
-	display: none;
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	background: #000;
-	opacity: 0;
-	filter: alpha(opacity=0);
-	-moz-opacity: 0;
-	z-index: 10000;
-}
 
-* html 	#modalOverlay {
-	position: absolute;
-}
+/* Menus */
 
-/* Fix for IE6 select z-index issue */
-#modalFix {
-	display: none;
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	opacity: 0;
-	filter: alpha(opacity=0);
-	-moz-opacity: 0;
-	z-index: 9999;
-}
-
-/* Overlay */
-
-#windowUnderlay { 
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	background: #fff;	
-}
-
-* html #windowUnderlay { 
-	position: absolute;
-}	
-
-/* Fix for IE6 select z-index issue */
-iframe.zIndexFix {
-	display: block;
-	position: absolute;
-	top: 0;
-	left: 0;
-	z-index: -1;
-	filter: mask();
-	width: 100px;
-	height: 100px;
-	border: 1px solid transparent;
-}
-	
-/* Window Minimize Dock */
-
-#dockWrapper {
-	display: none;
-	background: #f1f1f1;
-	width: 100%;		
-}
-
-#dockWrapper.top {
-}
-
-#dock {
-	position: relative;
-	padding: 2px 15px 0 5px;
-	bottom: 0;
-	left: 0;
-	background: #f1f1f1;
-	border: 1px solid #f1f1f1;
-	min-height: 28px;
-	height: auto;
-}
-
-*html #dock {
-	height: 28px; /* Used for IE 6.0 since it does not support min-height */	
-}	
-
-.dockTab {
-	float: left;
-	font-size: 11px;
-	position: relative;
-	width: 150px;
-	height: 26px;
-	margin: 0 3px 0px 0;
-	overflow: hidden;	
-	cursor: pointer;
-	background: url(../images/dock-tab.gif) no-repeat;
-}	
-
-.dockTab.activeDockTab {
-	background: url(../images/dock-tab-active.gif) no-repeat;
-}
-
-.dockTab.activeDockTab .dockText {
-	color: #fff;	
-}		
-
-.dockText {
-	position: absolute;
-	top: 0;
-	left: 0;
-	display: block;
-	font-weight: normal;
-	color: #585E66;	
-	text-align: left;
-	padding: 3px 10px 3px 10px;
-	width: 130px;
-	height: 19px;
-	overflow: hidden;		
-}			
-
-#dockCanvas {
-	position: absolute;
-	top: 5px;
-	right: 2px;
-	z-index: 2;
-}
-
-#dockPlacement {
-	position: absolute;
-	top: 4px;
-	right: 7px;
-	width: 10px;
-	height: 9px;
-	opacity: 0;
-	filter: alpha(opacity=0);
-	-moz-opacity: 0;
-	background: #f00; /* for troubleshooting */
-	cursor: pointer;
-	z-index: 3; /* for IE */
-	text-align: right;		
-}
-
-#dockAutoHide {
-	position: absolute;
-	top: 14px;
-	right: 7px;
-	width: 10px;
-	height: 9px;
-	opacity: 0;
-	filter: alpha(opacity=0);
-	-moz-opacity: 0;
-	background: #f00; /* for troubleshooting */
-	cursor: pointer;
-	z-index: 3; /* for IE */		
-}
-
-/* Accordian */
-
-.accordianWrapper {
-	padding: 0;
-	background: #fff;	
-}
-
-.accordianToggler {
-	margin: 0;
-	padding: 6px 10px;
-	background: #fff url(../images/bg-desktopTitlebar.gif) repeat-x;
-	font-size: 12px;
-	cursor: pointer;
-	border-top: 1px solid #e3e3e3;	
-}
-
-.topToggler {
-	border-top: none;
-}
-
-.accordianToggler.open {
-	background: #fff url(../images/bg-desktopTitlebar.gif) repeat-x;	
-}
-
-.accordianContent {
-	padding: 10px 10px 5px 10px;
-}
-
-/* Window Themes */
-
-.mocha.transparent .mochaTitlebar h3 {
-	color: #fff;
-	display: none;	
-}
-
-.mocha.notification .mochaTitlebar {
-	opacity: .0;
-	filter: alpha(opacity=0);
-	-moz-opacity: 0;
-}
-
-.mocha.notification .mochaContentBorder {
-	border-width: 0px;
-}
-
-.mocha.notification .mochaContentWrapper {
-	text-align: center;
-	font-size: 12px;
-	font-weight: bold;
-}
-
-/* Folder Tree */
-
-.tree {
-	font-size: 11px;
-	line-height: 15px;
-	margin: 0;
-}
-
-.tree ul {
-	margin: 0;	
-}
-
-.tree li {
+.menu-right li {
 	list-style-type: none;
-	white-space: nowrap;	
+	display: inline;	
+	margin: 0 0 0 15px;
 }
 
-.tree li a {
-	color: #404040;	
-}	
+/* Clears */
 
-.tree li img {
-	vertical-align: middle;
-	width: 18px;
-	height: 18px;
+.clear {
+	clear: both;
+	height: 0;
+}
+
+*html .clear {
+	height: 1%;
+	font-size: 1px;
+	line-height: 1px;
 	overflow: hidden;
-}
-
-.tree li span {
-	padding-left: 2px;
+	visibility: hidden;
 }	 
