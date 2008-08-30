@@ -347,6 +347,411 @@ MochaUI.Desktop = new Class({
 });
 MochaUI.Desktop.implement(new Options, new Events);
 
+/*
+
+Class: Column
+	Create a column.
+
+Syntax:
+(start code)
+	MochaUI.Panel();
+(end)
+		
+*/
+MochaUI.Column = new Class({
+							
+	Extends: MochaUI.Desktop,
+	
+	Implements: [Events, Options],
+	
+	options: {
+		id:            null, // This must be set when creating the column.
+		placement:     null, // Can be 'right', 'main', or 'left'.
+		width:         null,
+		resizeLimit:   [],
+		
+		// Events
+		onResize:     $empty, 
+		onCollapse:   $empty, // NOT YET IMPLEMENTED
+		onExpand:     $empty  // NOT YET IMPLEMENTED
+
+	},	
+	initialize: function(options){
+		this.setOptions(options);
+		
+		$extend(this, {						
+			timestamp: $time(),
+			isCollapsed: false,
+			oldWidth: 0
+		});
+		
+		// Shorten object chain
+		var options = this.options;
+		var instances = MochaUI.Columns.instances;
+		var instanceID = instances.get(options.id);
+	
+		// Check to see if there is already a class instance for this Column
+		if (instanceID){			
+			var currentInstance = instanceID;		
+		}
+		
+		// Check if column already exists
+		if ( this.columnEl ) {
+			return;
+		}
+		else {			
+			instances.set(options.id, this);
+		}		
+				
+		this.columnEl = new Element('div', {
+			'id': this.options.id,												   
+			'class': 'column expanded',
+			'styles': {
+				'width': options.width
+			}			
+		}).inject($(MochaUI.Desktop.pageWrapper));
+		
+		if (options.id == 'mainColumn') {
+			this.columnEl.addClass('rWidth');
+		}
+		
+		this.spacerEl = new Element('div', {
+			'id': this.options.id + '_spacer',
+			'class': 'horizontalHandle'
+		}).inject(this.columnEl);		
+
+		switch (this.options.placement) {
+			case 'left':
+				this.handleEl = new Element('div', {
+					'id': this.options.id + '_handle',
+					'class': 'columnHandle'
+				}).inject(this.columnEl, 'after');
+		
+				this.handleIconEl = new Element('div', {
+					'id': options.id + '_handle_icon',
+					'class': 'handleIcon'
+				}).inject(this.handleEl);
+			
+				addResizeRight(this.columnEl, options.resizeLimit[0], options.resizeLimit[1]);
+				break;
+			case 'right':
+				this.handleEl = new Element('div', {
+					'id': this.options.id + '_handle',
+					'class': 'columnHandle'
+				}).inject(this.columnEl, 'before');
+		
+				this.handleIconEl = new Element('div', {
+					'id': options.id + '_handle_icon',
+					'class': 'handleIcon'
+				}).inject(this.handleEl);			
+				addResizeLeft(this.columnEl, options.resizeLimit[0], options.resizeLimit[1]);
+				break;
+		}
+		
+		if (this.handleEl != null) {
+			this.handleEl.addEvent('dblclick', function(event){
+				this.columnToggle();				
+			}.bind(this));
+		}
+		
+		rWidth();		
+				
+	},
+	columnToggle: function(){
+		var column= this.columnEl;
+							
+		if (this.isCollapsed == false) {
+			this.oldWidth = column.getStyle('width').toInt();
+			
+			this.resize.detach();
+			this.handleEl.setStyle('cursor', 'pointer').addClass('detached');
+			
+			column.setStyle('width', 0);
+			this.isCollapsed = true;
+			column.addClass('collapsed');
+			column.removeClass('expanded');
+			rWidth();
+		}
+		else {
+			column.setStyle('width', this.oldWidth);
+			this.isCollapsed = false;
+			column.addClass('expanded');
+			column.removeClass('collapsed');
+			
+			this.resize.attach();
+			this.handleEl.setStyle('cursor', 'e-resize').addClass('attached');
+			
+			rWidth();
+		}		
+	}
+});	
+MochaUI.Column.implement(new Options, new Events);		
+
+/*
+
+Class: Panel
+	Create a panel.
+
+Syntax:
+(start code)
+	MochaUI.Panel();
+(end)
+		
+*/
+MochaUI.Panel = new Class({
+							
+	Extends: MochaUI.Desktop,
+	
+	Implements: [Events, Options],
+	
+	options: {
+		id:               null,        // This must be set when creating the panel
+		title:            'New Panel',
+		column:           null,        // Where to inject the panel. This must be set when creating the panel
+		loadMethod:       'html',
+		contentURL:       'pages/lipsum.html',	
+	
+		// xhr options
+		evalScripts:      true,
+		evalResponse:     false,
+	
+		// html options
+		content:          'Panel content',		
+		
+		// Tabs
+		tabsURL:          null,				
+
+		footer:           false,
+		footerURL:        null,	
+		footerContent:    'Footer content',		
+		
+		// Style options:
+		height:           125,
+		addClass:         '',
+		scrollbars:       true,
+		padding:   		  { top: 8, right: 8, bottom: 8, left: 8 },
+		
+		// Color options:		
+		panelBackground:   '#fff',			
+		
+		// Events
+		onBeforeBuild:     $empty, 
+		onContentLoaded:   $empty,
+		onResize:          $empty, 
+		onCollapse:        $empty, // NOT YET IMPLEMENTED
+		onExpand:          $empty  // NOT YET IMPLEMENTED				
+				
+	},	
+	initialize: function(options){
+		this.setOptions(options);
+		
+		$extend(this, {
+			timestamp: $time(),
+			isCollapsed: false,			
+			oldHeight: 0,
+			partner: null
+		});		
+				
+		// Shorten object chain
+		var instances = MochaUI.Panels.instances;
+		var instanceID = instances.get(this.options.id);
+	
+		// Check to see if there is already a class instance for this panel
+		if (instanceID){			
+			var currentInstance = instanceID;		
+		}
+		
+		// Check if panel already exists
+		if ( this.panelEl ) {
+			return;
+		}
+		else {			
+			instances.set(this.options.id, this);
+		}
+		
+		this.fireEvent('onBeforeBuild');		
+		
+		if (this.options.loadMethod == 'iframe') {
+			// Iframes have their own scrollbars and padding.
+			this.options.scrollbars = false;
+			this.options.padding = { top: 0, right: 0, bottom: 0, left: 0 };
+		}				
+
+		this.showHandle = true;
+		if ($(this.options.column).getChildren().length == 0) {
+			this.showHandle = false;
+		}
+
+		this.panelEl = new Element('div', {
+			'id': this.options.id,												   
+			'class': 'panel expanded',
+			'styles': {
+				'height': this.options.height,
+				'background': this.options.panelBackground
+			}			
+		}).inject($(this.options.column));
+		
+		this.panelEl.addClass(this.options.addClass);		
+		
+		this.contentEl = new Element('div', {
+			'id': this.options.id + '_pad',												   
+			'class': 'pad'
+		}).inject(this.panelEl);
+		
+		if (this.options.footer) {
+			this.footerWrapperEl = new Element('div', {
+				'id': this.options.id + '_panelFooterWrapper',
+				'class': 'panel-footerWrapper'
+			}).inject(this.panelEl);
+			
+			this.footerEl = new Element('div', {
+				'id': this.options.id + '_panelFooter',
+				'class': 'panel-footer'
+			}).inject(this.footerWrapperEl);			
+			
+		}
+
+		// This is in order to use the same variable as the windows do in updateContent.
+		// May rethink this.		
+		this.contentWrapperEl = this.panelEl;		
+		
+		// Set scrollbars, always use 'hidden' for iframe windows
+		this.contentWrapperEl.setStyles({
+			'overflow': this.options.scrollbars && !this.iframeEl ? 'auto' : 'hidden'
+		});
+
+		this.contentEl.setStyles({
+			'padding-top': this.options.padding.top,
+			'padding-bottom': this.options.padding.bottom,
+			'padding-left': this.options.padding.left,
+			'padding-right': this.options.padding.right
+		});			
+		
+		this.panelHeaderEl = new Element('div', {
+			'id': this.options.id + '_header',												   
+			'class': 'panel-header'
+		}).inject(this.panelEl, 'before');		
+		
+		this.panelHeaderToolboxEl = new Element('div', {
+			'id': this.options.id + '_headerToolbox',										   
+			'class': 'panel-header-toolbox'
+		}).inject(this.panelHeaderEl);
+
+		this.collapseToggleEl = new Element('div', {
+			'id': this.options.id + '_minmize',
+			'class': 'panel-collapse icon16',
+			'styles': {
+				'width': 16,
+				'height': 16
+			},
+			'title': 'Collapse Panel',
+			'background': '#f00'
+		}).inject(this.panelHeaderToolboxEl);
+        
+		this.collapseToggleEl.addEvent('click', function(event){
+ 			var panel = this.panelEl;
+			
+			// Get siblings and make sure they are not all collapsed.
+			var instances = MochaUI.Panels.instances;
+			var expandedSiblings = [];			
+			panel.getAllPrevious('.panel').each(function(sibling){
+				var currentInstance = instances.get(sibling.id);
+				if (currentInstance.isCollapsed == false){
+					expandedSiblings.push(sibling);
+				}					
+			});
+			panel.getAllNext('.panel').each(function(sibling){
+				var currentInstance = instances.get(sibling.id);
+				if (currentInstance.isCollapsed == false){
+					expandedSiblings.push(sibling);
+				}					
+			});			
+			
+			if (this.isCollapsed == false) {
+				var currentColumn = MochaUI.Columns.instances.get($(this.options.column).id);
+				
+				if (expandedSiblings.length == 0 && currentColumn.options.placement != 'main') {
+					var currentColumn = MochaUI.Columns.instances.get($(this.options.column).id);
+					currentColumn.columnToggle();
+					return;
+				}
+				else if (expandedSiblings.length == 0 && currentColumn.options.placement == 'main') {
+					return;	
+				}
+				this.oldHeight = panel.getStyle('height').toInt();
+				if (this.oldHeight < 10) this.oldHeight = 20;
+				panel.setStyle('height', 0);
+				this.isCollapsed = true;				
+				panel.addClass('collapsed');
+				panel.removeClass('expanded');			
+				panelHeight(this.options.column, panel, 'collapsing');
+				this.collapseToggleEl.removeClass('panel-collapsed');
+				this.collapseToggleEl.addClass('panel-expand');
+				this.collapseToggleEl.setProperty('title','Expand Panel');				
+			}
+			else {
+				panel.setStyle('height', this.oldHeight);
+				this.isCollapsed = false;
+				panel.addClass('expanded');
+				panel.removeClass('collapsed');				
+				panelHeight(this.options.column, panel, 'expanding');				
+				this.collapseToggleEl.removeClass('panel-expand');
+				this.collapseToggleEl.addClass('panel-collapsed');
+				this.collapseToggleEl.setProperty('title','Collapse Panel');				
+			}
+		}
+		.bind(this));
+		
+		this.panelHeaderContentEl = new Element('div', {
+			'id': this.options.id + '_headerContent',												   
+			'class': 'panel-headerContent'
+		}).inject(this.panelHeaderEl);									
+		
+		this.titleEl = new Element('h2', {
+			'id': this.options.id + '_title'
+		}).inject(this.panelHeaderContentEl);		
+		
+		if (this.options.tabsURL == null) {
+			this.titleEl.set('html', this.options.title);
+		}
+		else {
+			MochaUI.updateContent({
+				'element':      this.panelEl,
+				'childElement': this.panelHeaderContentEl,
+				'loadMethod':   'xhr',								
+				'url':          this.options.tabsURL
+			});		
+		}				
+				
+		this.handleEl = new Element('div', {
+			'id': this.options.id + '_handle',
+			'class': 'horizontalHandle',
+			'styles': {
+				'display': this.showHandle == true ? 'block' : 'none' 
+			}
+		}).inject(this.panelEl, 'after');
+		
+		this.handleIconEl = new Element('div', {
+			'id': this.options.id + '_handle_icon',
+			'class': 'handleIcon'
+		}).inject(this.handleEl);		
+								
+		addResizeBottom(this.options.id);
+		
+			
+		// Add content to panel.
+		MochaUI.updateContent({
+			'element': this.panelEl,
+			'content':  this.options.content,
+			'url':      this.options.contentURL
+		});			
+		
+		panelHeight(this.options.column, this.panelEl, 'new');				
+					
+	}
+});
+MochaUI.Panel.implement(new Options, new Events);
+
 	// Panel Height
 	
 	/*
@@ -772,394 +1177,3 @@ function addResizeBottom(element){
 		}.bind(this)		
 	});
 }
-
-/*
-
-Class: Column
-	Create a column.
-
-Syntax:
-(start code)
-	MochaUI.Panel();
-(end)
-		
-*/
-MochaUI.Column = new Class({
-							
-	Extends: MochaUI.Desktop,
-	
-	Implements: [Events, Options],
-	
-	options: {
-		id:            null, // This must be set when creating the column.
-		placement:     null, // Can be 'right', 'main', or 'left'.
-		width:         null,
-		resizeLimit:   [],
-		
-		// Events
-		onResize:     $empty, 
-		onCollapse:   $empty, // NOT YET IMPLEMENTED
-		onExpand:     $empty  // NOT YET IMPLEMENTED
-
-	},	
-	initialize: function(options){
-		this.setOptions(options);
-		
-		$extend(this, {						
-			timestamp: $time(),
-			isCollapsed: false,
-			oldWidth: 0
-		});
-		
-		// Shorten object chain
-		var options = this.options;
-		var instances = MochaUI.Columns.instances;
-		var instanceID = instances.get(options.id);
-	
-		// Check to see if there is already a class instance for this Column
-		if (instanceID){			
-			var currentInstance = instanceID;		
-		}
-		
-		// Check if column already exists
-		if ( this.columnEl ) {
-			return;
-		}
-		else {			
-			instances.set(options.id, this);
-		}		
-				
-		this.columnEl = new Element('div', {
-			'id': this.options.id,												   
-			'class': 'column expanded',
-			'styles': {
-				'width': options.width
-			}			
-		}).inject($(MochaUI.Desktop.pageWrapper));
-		
-		if (options.id == 'mainColumn') {
-			this.columnEl.addClass('rWidth');
-		}
-		
-		this.spacerEl = new Element('div', {
-			'id': this.options.id + '_spacer',
-			'class': 'horizontalHandle'
-		}).inject(this.columnEl);		
-
-		switch (this.options.placement) {
-			case 'left':
-				this.handleEl = new Element('div', {
-					'id': this.options.id + '_handle',
-					'class': 'columnHandle'
-				}).inject(this.columnEl, 'after');
-		
-				this.handleIconEl = new Element('div', {
-					'id': options.id + '_handle_icon',
-					'class': 'handleIcon'
-				}).inject(this.handleEl);
-			
-				addResizeRight(this.columnEl, options.resizeLimit[0], options.resizeLimit[1]);
-				break;
-			case 'right':
-				this.handleEl = new Element('div', {
-					'id': this.options.id + '_handle',
-					'class': 'columnHandle'
-				}).inject(this.columnEl, 'before');
-		
-				this.handleIconEl = new Element('div', {
-					'id': options.id + '_handle_icon',
-					'class': 'handleIcon'
-				}).inject(this.handleEl);			
-				addResizeLeft(this.columnEl, options.resizeLimit[0], options.resizeLimit[1]);
-				break;
-		}
-		
-		if (this.handleEl != null) {
-			this.handleEl.addEvent('dblclick', function(event){
-				this.columnToggle();				
-			}.bind(this));
-		}
-		
-		rWidth();		
-				
-	},
-	columnToggle: function(){
-		var column= this.columnEl;
-							
-		if (this.isCollapsed == false) {
-			this.oldWidth = column.getStyle('width').toInt();
-			
-			this.resize.detach();
-			this.handleEl.setStyle('cursor', 'pointer').addClass('detached');
-			
-			column.setStyle('width', 0);
-			this.isCollapsed = true;
-			column.addClass('collapsed');
-			column.removeClass('expanded');
-			rWidth();
-		}
-		else {
-			column.setStyle('width', this.oldWidth);
-			this.isCollapsed = false;
-			column.addClass('expanded');
-			column.removeClass('collapsed');
-			
-			this.resize.attach();
-			this.handleEl.setStyle('cursor', 'e-resize').addClass('attached');
-			
-			rWidth();
-		}		
-	}
-});	
-MochaUI.Column.implement(new Options, new Events);		
-
-/*
-
-Class: Panel
-	Create a panel.
-
-Syntax:
-(start code)
-	MochaUI.Panel();
-(end)
-		
-*/
-MochaUI.Panel = new Class({
-							
-	Extends: MochaUI.Desktop,
-	
-	Implements: [Events, Options],
-	
-	options: {
-		id:               null,        // This must be set when creating the panel
-		title:            'New Panel',
-		column:           null,        // Where to inject the panel. This must be set when creating the panel
-		loadMethod:       'html',
-		contentURL:       'pages/lipsum.html',	
-	
-		// xhr options
-		evalScripts:      true,
-		evalResponse:     false,
-	
-		// html options
-		content:          'Panel content',		
-		
-		// Tabs
-		tabsURL:          null,				
-
-		footer:           false,
-		
-		// Style options:
-		height:           125,
-		addClass:         '',   // NOT YET IMPLEMENTED   
-		scrollbars:       true,
-		padding:   		  { top: 8, right: 8, bottom: 8, left: 8 },
-		
-		// Color options:		
-		panelBackground:   '#f7f7f7',			
-		
-		// Events
-		onBeforeBuild:     $empty, 
-		onContentLoaded:   $empty,
-		onResize:          $empty, 
-		onCollapse:        $empty, // NOT YET IMPLEMENTED
-		onExpand:          $empty, // NOT YET IMPLEMENTED
-		onClose:           $empty, // NOT YET IMPLEMENTED
-		onCloseComplete:   $empty  // NOT YET IMPLEMENTED				
-		
-	},	
-	initialize: function(options){
-		this.setOptions(options);
-		
-		$extend(this, {
-			timestamp: $time(),
-			isCollapsed: false,			
-			oldHeight: 0,
-			partner: null
-		});		
-				
-		// Shorten object chain
-		var instances = MochaUI.Panels.instances;
-		var instanceID = instances.get(this.options.id);
-	
-		// Check to see if there is already a class instance for this panel
-		if (instanceID){			
-			var currentInstance = instanceID;		
-		}
-		
-		// Check if panel already exists
-		if ( this.panelEl ) {
-			return;
-		}
-		else {			
-			instances.set(this.options.id, this);
-		}
-		
-		this.fireEvent('onBeforeBuild');		
-		
-		if (this.options.loadMethod == 'iframe') {
-			// Iframes have their own scrollbars and padding.
-			this.options.scrollbars = false;
-			this.options.padding = { top: 0, right: 0, bottom: 0, left: 0 };
-		}				
-
-		this.showHandle = true;
-		if ($(this.options.column).getChildren().length == 0) {
-			this.showHandle = false;
-		}
-
-		this.panelEl = new Element('div', {
-			'id': this.options.id,												   
-			'class': 'panel expanded',
-			'styles': {
-				'height': this.options.height,
-				'background': this.options.panelBackground
-			}			
-		}).inject($(this.options.column));
-		
-		this.contentEl = new Element('div', {
-			'id': this.options.id + '_pad',												   
-			'class': 'pad'
-		}).inject(this.panelEl);
-
-		// This is in order to use the same variable as the windows do in updateContent.
-		// May rethink this.		
-		this.contentWrapperEl = this.panelEl;
-		
-		
-		// Set scrollbars, always use 'hidden' for iframe windows
-		this.contentWrapperEl.setStyles({
-			'overflow': this.options.scrollbars && !this.iframeEl ? 'auto' : 'hidden'
-		});
-
-		this.contentEl.setStyles({
-			'padding-top': this.options.padding.top,
-			'padding-bottom': this.options.padding.bottom,
-			'padding-left': this.options.padding.left,
-			'padding-right': this.options.padding.right
-		});			
-		
-		this.panelHeaderEl = new Element('div', {
-			'id': this.options.id + '_header',												   
-			'class': 'panel-header'
-		}).inject(this.panelEl, 'before');		
-		
-		this.panelHeaderToolboxEl = new Element('div', {
-			'id': this.options.id + '_headerToolbox',										   
-			'class': 'panel-header-toolbox'
-		}).inject(this.panelHeaderEl);
-
-		this.collapseToggleEl = new Element('div', {
-			'id': this.options.id + '_minmize',
-			'class': 'panel-collapse icon16',
-			'styles': {
-				'width': 16,
-				'height': 16
-			},
-			'title': 'Collapse Panel',
-			'background': '#f00'
-		}).inject(this.panelHeaderToolboxEl);
-        
-		this.collapseToggleEl.addEvent('click', function(event){
- 			var panel = this.panelEl;
-			
-			// Get siblings and make sure they are not all collapsed.
-			var instances = MochaUI.Panels.instances;
-			var expandedSiblings = [];			
-			panel.getAllPrevious('.panel').each(function(sibling){
-				var currentInstance = instances.get(sibling.id);
-				if (currentInstance.isCollapsed == false){
-					expandedSiblings.push(sibling);
-				}					
-			});
-			panel.getAllNext('.panel').each(function(sibling){
-				var currentInstance = instances.get(sibling.id);
-				if (currentInstance.isCollapsed == false){
-					expandedSiblings.push(sibling);
-				}					
-			});			
-			
-			if (this.isCollapsed == false) {
-				var currentColumn = MochaUI.Columns.instances.get($(this.options.column).id);
-				
-				if (expandedSiblings.length == 0 && currentColumn.options.placement != 'main') {
-					var currentColumn = MochaUI.Columns.instances.get($(this.options.column).id);
-					currentColumn.columnToggle();
-					return;
-				}
-				else if (expandedSiblings.length == 0 && currentColumn.options.placement == 'main') {
-					return;	
-				}
-				this.oldHeight = panel.getStyle('height').toInt();
-				if (this.oldHeight < 10) this.oldHeight = 20;
-				panel.setStyle('height', 0);
-				this.isCollapsed = true;				
-				panel.addClass('collapsed');
-				panel.removeClass('expanded');			
-				panelHeight(this.options.column, panel, 'collapsing');
-				this.collapseToggleEl.removeClass('panel-collapsed');
-				this.collapseToggleEl.addClass('panel-expand');
-				this.collapseToggleEl.setProperty('title','Expand Panel');				
-			}
-			else {
-				panel.setStyle('height', this.oldHeight);
-				this.isCollapsed = false;
-				panel.addClass('expanded');
-				panel.removeClass('collapsed');				
-				panelHeight(this.options.column, panel, 'expanding');				
-				this.collapseToggleEl.removeClass('panel-expand');
-				this.collapseToggleEl.addClass('panel-collapsed');
-				this.collapseToggleEl.setProperty('title','Collapse Panel');				
-			}
-		}
-		.bind(this));
-		
-		this.panelHeaderContentEl = new Element('div', {
-			'id': this.options.id + '_headerContent',												   
-			'class': 'panel-headerContent'
-		}).inject(this.panelHeaderEl);									
-		
-		this.titleEl = new Element('h2', {
-			'id': this.options.id + '_title'
-		}).inject(this.panelHeaderContentEl);		
-		
-		if (this.options.tabsURL == null) {
-			this.titleEl.set('html', this.options.title);
-		}
-		else {
-			MochaUI.updateContent({
-				'element':      this.panelEl,
-				'childElement': this.panelHeaderContentEl,
-				'loadMethod':   'xhr',								
-				'url':          this.options.tabsURL
-			});		
-		}				
-				
-		this.handleEl = new Element('div', {
-			'id': this.options.id + '_handle',
-			'class': 'horizontalHandle',
-			'styles': {
-				'display': this.showHandle == true ? 'block' : 'none' 
-			}
-		}).inject(this.panelEl, 'after');
-		
-		this.handleIconEl = new Element('div', {
-			'id': this.options.id + '_handle_icon',
-			'class': 'handleIcon'
-		}).inject(this.handleEl);		
-								
-		addResizeBottom(this.options.id);
-		
-			
-		// Add content to panel.
-		MochaUI.updateContent({
-			'element': this.panelEl,
-			'content':  this.options.content,
-			'url':      this.options.contentURL
-		});			
-		
-		panelHeight(this.options.column, this.panelEl, 'new');				
-					
-	}
-});
-MochaUI.Panel.implement(new Options, new Events);

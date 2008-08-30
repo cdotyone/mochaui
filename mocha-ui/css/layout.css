@@ -81,7 +81,10 @@ License:
 	left: 0;
 	bottom: 0;
 	width: 100%;	
-	background: #fafafa;
+	background: #f1f1f1;
+	height: 30px;
+	overflow: hidden;
+	border-top: 1px solid #b9b9b9;	
 }
 
 .panel-footer {

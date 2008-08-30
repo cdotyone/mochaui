@@ -670,11 +670,10 @@ iframe.zIndexFix {
 	font-weight: normal;
 	color: #585E66;	
 	text-align: left;
-	padding: 3px 0 0 10px;
-	width: 115px;
+	padding: 3px 10px 3px 10px;
+	width: 130px;
 	height: 19px;
-	overflow: hidden;
-/*	background: url(../images/icons/sheet.gif) 4px 4px no-repeat; */		
+	overflow: hidden;		
 }			
 
 #dockCanvas {

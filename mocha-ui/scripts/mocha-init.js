@@ -145,8 +145,7 @@ initializeWindows = function(){
 	MochaUI.parametricsWindow = function(){	
 		new MochaUI.Window({
 			id: 'parametrics',
-			title: 'Window Parametrics',
-			icon: 'images/icons/generic.gif',							
+			title: 'Window Parametrics',							
 			loadMethod: 'xhr',
 			contentURL: 'plugins/parametrics/',
 			onContentLoaded: function(){				
@@ -415,7 +414,8 @@ initializeWindows = function(){
 	MochaUI.builderWindow = function(){	
 		new MochaUI.Window({
 			id: 'builder',
-			title: 'Window Builder',
+			title: 'Window Builder',			
+			icon: 'images/icons/page.gif',			
 			loadMethod: 'xhr',
 			contentURL: 'plugins/windowform/',
 			onContentLoaded: function(){
@@ -433,7 +433,7 @@ initializeWindows = function(){
 						}.bind(this)							
 					}).send();					
 				}
-			},
+			},			
 			width: 370,
 			height: 400,
 			x: 20,
@@ -471,8 +471,7 @@ initializeWindows = function(){
 		var id = 'overview';
 		new MochaUI.Window({
 			id: id,
-			title: 'Overview',			
-			icon: 'images/icons/page.gif',
+			title: 'Overview',
 			loadMethod: 'xhr',
 			contentURL: 'pages/overview.html',
 			width: 300,
@@ -522,8 +521,7 @@ initializeWindows = function(){
 	MochaUI.featuresWindow = function(){		
 		new MochaUI.Window({
 			id: 'features',
-			title: 'Features',
-			icon: 'images/icons/sheet.gif',			
+			title: 'Features',			
 			loadMethod: 'xhr',
 			contentURL: 'pages/features.html',
 			//onContentLoaded: function(){
@@ -730,7 +728,8 @@ window.addEvent('domready', function(){
 		//			$('cursorY').set('html', event.client.y);
 		//		}	
 		//	});
-		}		
+		},
+		height: 290		
 	});		
 	
 	new MochaUI.Panel({
@@ -738,7 +737,8 @@ window.addEvent('domready', function(){
 		title: 'This is a Test',
 		loadMethod: 'xhr',
 		contentURL: 'pages/lipsum.html',
-		column: 'sideColumn1'
+		column: 'sideColumn1',
+		height: 140		
 	});
 	
 	// Add panels to main column	
@@ -776,7 +776,8 @@ window.addEvent('domready', function(){
 		loadMethod: 'xhr',
 		contentURL: 'pages/tips.html',
 		column: 'sideColumn2',
-		height: 300
+		height: 300,
+		footer: true
 	});
 
 	MochaUI.Modal = new MochaUI.Modal();

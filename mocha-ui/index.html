@@ -16,11 +16,17 @@
 	
 	<script type="text/javascript" src="scripts/mootools-1.2-core.js"></script>
 	<script type="text/javascript" src="scripts/mootools-1.2-more.js"></script>	
-	
-	<!-- mocha-javascript.php is for development. It is not recommended for live use -->	 
-	<script type="text/javascript" src="scripts/source/Utilities/mocha.js.php"></script>	
 
-	<!-- <script type="text/javascript" src="scripts/mocha.js"></script> --> 			
+	<script type="text/javascript" src="scripts/source/Utilities/mocha.js.php"></script>	
+	<!--
+		mocha.js.php is for development. It is not recommended for production.
+		For production it is recommended that you used a compressed version of either
+		the output from mocha.js.php or mocha.js. You could also list the
+		necessary source files individually here in the header though that will
+		create a lot more http requests than a single concatenated file.
+		
+		<script type="text/javascript" src="scripts/mocha.js"></script>		
+	-->	 			
 	<script type="text/javascript" src="scripts/mocha-init.js"></script>	 				
 
 </head>
@@ -115,7 +121,8 @@
 </div>
 
 <div id="pageWrapper">
-	<!-- The columns, the panels, and the panel content is defined in mocha-init.js -->
+	
+	<!-- The columns, panels, and the panel content are loaded from mocha-init.js -->
 
 <!--
 
