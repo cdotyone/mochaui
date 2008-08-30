@@ -357,7 +357,11 @@ MochaUI.Window = new Class({
 			}			
 			// Else focus
 			else {
-				setTimeout(MochaUI.focusWindow.pass(this.windowEl, this),10);	
+				var coordinates = document.getCoordinates();
+				if (this.windowEl.getStyle('left').toInt() > coordinates.width || this.windowEl.getStyle('top').toInt() > coordinates.height){
+					MochaUI.centerWindow(this.windowEl);	
+				}
+				setTimeout(MochaUI.focusWindow.pass(this.windowEl, this),10);					
 			}
 			return;
 		}
