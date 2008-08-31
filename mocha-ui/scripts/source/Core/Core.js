@@ -443,12 +443,13 @@ var MochaUI = new Hash({
 		return this.windowWithHighestZindex;
 	},
 	blurAll: function(){
-		//alert(MochaUI.focusingWindow);
 		if (MochaUI.focusingWindow == 'false') {
 			$$('.mocha').each(function(windowEl){
 				var instances =  MochaUI.Windows.instances;
 				var currentInstance = instances.get(windowEl.id);
-				windowEl.removeClass('isFocused');				
+				if (currentInstance.options.type != 'modal'){					
+					windowEl.removeClass('isFocused');
+				}				
 			});
 			$$('div.dockTab').removeClass('activeDockTab');
 		}
