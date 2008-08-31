@@ -366,7 +366,6 @@ var MochaUI = new Hash({
 			if (id.getStyle('visibility') == 'visible'){
 				if (instance.iframe){
 					instance.iframeEl.setStyle('visibility', 'hidden');
-
 				}
 				if (instance.toolbarEl){
 					instance.toolbarWrapperEl.setStyle('visibility', 'hidden');		

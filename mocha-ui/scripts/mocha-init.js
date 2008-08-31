@@ -147,7 +147,7 @@ initializeWindows = function(){
 			id: 'parametrics',
 			title: 'Window Parametrics',							
 			loadMethod: 'xhr',
-			contentURL: 'plugins/parametrics/',
+			contentURL: 'plugins/parametrics/index.html',
 			onContentLoaded: function(){				
 				if ( !MochaUI.parametricsScript == true ){
 					new Request({
@@ -472,7 +472,7 @@ initializeWindows = function(){
 			title: 'Google Gears',
 			loadMethod: 'xhr',
 			contentURL: 'plugins/gears/index.html',
-			width: 400,
+			width: 550,
 			height: 320,
 			onContentLoaded: function(windowEl){
 				init();

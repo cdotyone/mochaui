@@ -15,17 +15,21 @@
         "entries": [
 		    { "url": "."}, 
         <?php
-          $last = end($urls);
-          foreach($urls as $url) {
-          	  // If $url is a directory, skip it
-              if (!is_dir($url)) {
-              // substr removes extra ./ at the beginning of the urls.	
+          
+		  $p = array(); 
+          foreach($urls as $url) {              	
+			  if (eregi("html$|css$|js$|gif$|png$|jpg$", $url) && !is_dir($url)) {
+			  	array_push($p, $url);  
+				}
+			}	
+		  $last = end($p);
+		  foreach($p as $url) {				
 			  ?>			  
             { "url": "<?php echo substr($url, 2); ?>"}<?php 
                 if($url != $last) {
                     echo ',';
 			    }
-              }
+              
               echo "\n";                
           }
             ?>
