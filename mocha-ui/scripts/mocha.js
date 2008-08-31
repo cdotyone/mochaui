@@ -1283,7 +1283,7 @@ MochaUI.Window = new Class({
 			limit: this.options.draggableLimit,
 			snap: this.options.draggableSnap,
 			onStart: function() {
-				//$('windowUnderlay').setStyle('visibility','visible');
+				$('windowUnderlay').setStyle('visibility','visible');
 				if (this.options.type != 'modal'){ 
 					MochaUI.focusWindow(windowEl);
 				}
@@ -1291,7 +1291,7 @@ MochaUI.Window = new Class({
 					this.iframeEl.setStyle('visibility', 'hidden');
 			}.bind(this),
 			onComplete: function() {
-				//$('windowUnderlay').setStyle('visibility','hidden');
+				$('windowUnderlay').setStyle('visibility','hidden');
 				if ( this.iframeEl ){
 					this.iframeEl.setStyle('visibility', 'visible');
 				}
@@ -2728,6 +2728,7 @@ MochaUI.Desktop = new Class({
 	initialize: function(options){
 		this.setOptions(options);
 		this.desktop                = $(this.options.desktop);
+
 		this.desktopHeader          = $(this.options.desktopHeader);
 		this.desktopFooter          = $(this.options.desktopFooter);				
 		this.desktopNavBar          = $(this.options.desktopNavBar);

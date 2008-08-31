@@ -683,15 +683,17 @@ MochaUI.Window = new Class({
 			limit: this.options.draggableLimit,
 			snap: this.options.draggableSnap,
 			onStart: function() {
-				//$('windowUnderlay').setStyle('visibility','visible');
 				if (this.options.type != 'modal'){ 
 					MochaUI.focusWindow(windowEl);
-				}
+					$('windowUnderlay').setStyle('visibility','visible');
+				}								
 				if ( this.iframeEl )
 					this.iframeEl.setStyle('visibility', 'hidden');
 			}.bind(this),
 			onComplete: function() {
-				//$('windowUnderlay').setStyle('visibility','hidden');
+				if (this.options.type != 'modal') {
+					$('windowUnderlay').setStyle('visibility', 'hidden');
+				}
 				if ( this.iframeEl ){
 					this.iframeEl.setStyle('visibility', 'visible');
 				}
