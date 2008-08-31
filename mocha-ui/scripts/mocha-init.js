@@ -464,7 +464,28 @@ initializeWindows = function(){
 			new Event(e).stop();
 			MochaUI.loadWorkspace();
 		});
+	}
+	
+	MochaUI.gearsWindow = function(){ 
+		new MochaUI.Window({
+			id: 'gears',
+			title: 'Google Gears',
+			loadMethod: 'xhr',
+			contentURL: 'plugins/gears/index.html',
+			width: 400,
+			height: 320,
+			onContentLoaded: function(windowEl){
+				init();
+			}
+		});
 	}	
+	if ($('gearsLinkCheck')){ 
+		$('gearsLinkCheck').addEvent('click', function(e){	
+			new Event(e).stop();
+			MochaUI.gearsWindow();
+		});
+	}
+	
 	
 	// Help
 	MochaUI.overviewWindow = function(){

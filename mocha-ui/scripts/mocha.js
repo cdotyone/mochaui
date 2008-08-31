@@ -16,20 +16,29 @@ Contributors:
 Note:
 	This documentation is taken directly from the javascript source files. It is built using Natural Docs.
 	
+Todo:
+	Consider making title tooltips optional and using them more often.	
+	
 */
 
 var MochaUI = new Hash({
 	options: new Hash({
-		useEffects: true,     // Toggles the majority of window fade and move effects.
-		useLoadingIcon: true  // Toggles whether or not the ajax spinners are displayed in window footers.
+		useEffects: false,  // Toggles the majority of window fade and move effects.
+		useSpinner: true    // Toggles whether or not the ajax spinners are displayed in window footers.
 
-	}),	
+	}),
+	Columns: {	  
+		instances:      new Hash()	
+	},	
+	Panels: {	  
+		instances:      new Hash()	
+	},		
 	Windows: {	  
 		instances:      new Hash(),
 		indexLevel:     100,          // Used for z-Index
 		windowIDCount:  0,	          // Used for windows without an ID defined by the user
 		windowsVisible: true          // Ctrl-Alt-Q to toggle window visibility		
-	},
+	},	
 	ieSupport:  'excanvas',   // Makes it easier to switch between Excanvas and Moocanvas for testing
 	focusingWindow: 'false',
 	/*
@@ -41,93 +50,160 @@ var MochaUI = new Hash({
 		windowEl, content, url
 		
 	*/	
-	updateContent: function(windowEl, content, url, element, loadMethod){
+	updateContent: function(updateOptions){
+
+		var options = {
+			'element':      null,
+			'childElement': null,
+			'title':        null,			
+			'content':      null,
+			'url':          null,
+			'loadMethod':   null,
+			'padding':      null
+		};
+		$extend(options, updateOptions);
 		
-		if (!windowEl) return;		
-		
-		//alert('test');
-		
-		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
-		var contentEl = currentInstance.contentEl;
-		var options = currentInstance.options;
-		if (element != null){
-			var contentContainer = element; 
+		if (!options.element) return;
+		var element = options.element;
+        
+		if (MochaUI.Windows.instances.get(element.id)) {
+			var recipient = 'window';
+			var currentInstance = MochaUI.Windows.instances.get(element.id);
+			var spinnerEl = currentInstance.spinnerEl;
+			if (options.title) {
+				currentInstance.titleEl.set('html', options.title);
+			}
+		}
+		else {
+			var recipient = 'panel';
+			var currentInstance = MochaUI.Panels.instances.get(element.id);
+			if (options.title) {
+				currentInstance.titleEl.set('html', options.title);
+			}			
+		}
+				
+		var contentEl = currentInstance.contentEl
+		if (options.childElement != null) {
+			var contentContainer = options.childElement;
 		}
 		else {
 			var contentContainer = currentInstance.contentEl;
 		}
-		var canvasIconEl = currentInstance.canvasIconEl;
 		
-		// Remove old content.
-		if (contentContainer == contentEl){
-			currentInstance.contentEl.empty();
+		var loadMethod = options.loadMethod != null ? options.loadMethod : currentInstance.options.loadMethod;		
+		
+		// Set scrollbars if loading content in main content container.
+		// Always use 'hidden' for iframe windows
+		if (contentContainer == currentInstance.contentEl) {
+			currentInstance.contentWrapperEl.setStyles({
+				'overflow': currentInstance.options.scrollbars == true && loadMethod != 'iframe' ? 'auto' : 'hidden'
+			});
 		}		
 		
-		//alert(loadMethod);
-		var loadMethod = loadMethod ? loadMethod : currentInstance.options.loadMethod;
+		var contentWrapperEl = currentInstance.contentWrapperEl;
+		
+		if (options.padding != null) {
+			contentEl.setStyles({	
+				'padding-top': options.padding.top,
+				'padding-bottom': options.padding.bottom,
+				'padding-left': options.padding.left,
+				'padding-right': options.padding.right
+			});
+		}			
+        
+		// Remove old content.
+		if (contentContainer == contentEl) {
+			contentEl.empty();
+		}
 
 		// Load new content.
 		switch(loadMethod) {
 			case 'xhr':
 				new Request.HTML({
-					url: url,
+					url: options.url,
 					update: contentContainer,
-					evalScripts: options.evalScripts,
-					evalResponse: options.evalResponse,
+					evalScripts: currentInstance.options.evalScripts,
+					evalResponse: currentInstance.options.evalResponse,
 					onRequest: function(){
-						if (contentContainer == contentEl){
-							currentInstance.showLoadingIcon(canvasIconEl);
+						if (recipient == 'window' && contentContainer == contentEl) {
+							currentInstance.showSpinner(spinnerEl);
+						}
+						else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) {
+							$('spinner').setStyle('visibility','visible');	
 						}
 					}.bind(this),
 					onFailure: function(){
 						if (contentContainer == contentEl){
 							contentContainer.set('html','<p><strong>Error Loading XMLHttpRequest</strong></p>');
-							currentInstance.hideLoadingIcon(canvasIconEl);
+							if (recipient == 'window') {
+								currentInstance.hideSpinner(spinnerEl);
+							}
+							else if (recipient == 'panel' && $('spinner')) {
+								$('spinner').setStyle('visibility', 'hidden');	
+							}							
 						}
 					}.bind(this),
-					onSuccess: function() {
+					onException: function(){}.bind(this),					
+					onSuccess: function(){
 						if (contentContainer == contentEl){
-							currentInstance.hideLoadingIcon(canvasIconEl);
-							currentInstance.fireEvent('onContentLoaded', windowEl);
-						}
-					}.bind(this)
+							if (recipient == 'window') {
+								currentInstance.hideSpinner(spinnerEl);
+							}
+							else if (recipient == 'panel' && $('spinner')) {
+								$('spinner').setStyle('visibility', 'hidden');	
+							}								
+							currentInstance.fireEvent('onContentLoaded', element);
+						}	
+					}.bind(this),
+					onComplete: function(){}.bind(this)					
 				}).get();
 				break;
 			case 'iframe': // May be able to streamline this if the iframe already exists.
-				if ( options.contentURL == '' || contentContainer != contentEl) {
+				if ( currentInstance.options.contentURL == '' || contentContainer != contentEl) {
 					break;
 				}
 				currentInstance.iframeEl = new Element('iframe', {
 					'id': currentInstance.options.id + '_iframe',
 					'name':  currentInstance.options.id + '_iframe',
 					'class': 'mochaIframe',
-					'src': url,
+					'src': options.url,
 					'marginwidth':  0,
 					'marginheight': 0,
 					'frameBorder':  0,
 					'scrolling':    'auto',
 					'styles': {
-						'height': currentInstance.contentWrapperEl.offsetHeight	
+						'height': contentWrapperEl.offsetHeight - contentWrapperEl.getStyle('border-top').toInt() - contentWrapperEl.getStyle('border-bottom').toInt(),
+						'width': currentInstance.panelEl ? contentWrapperEl.offsetWidth - contentWrapperEl.getStyle('border-left').toInt() - contentWrapperEl.getStyle('border-right').toInt() : '100%'	
 					}
 				}).injectInside(contentEl);
 				
 				// Add onload event to iframe so we can stop the loading icon and run onContentLoaded()
 				currentInstance.iframeEl.addEvent('load', function(e) {
-					currentInstance.hideLoadingIcon.delay(150, currentInstance, canvasIconEl);
-					currentInstance.fireEvent('onContentLoaded', windowEl);
+					if (recipient == 'window') {
+						currentInstance.hideSpinner(spinnerEl);
+					}
+					else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) {
+						$('spinner').setStyle('visibility', 'hidden');	
+					}					
+					currentInstance.fireEvent('onContentLoaded', element);
 				}.bind(this));
-				currentInstance.showLoadingIcon(canvasIconEl);
+				if (recipient == 'window') {
+					currentInstance.showSpinner(spinnerEl);
+				}
+				else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) {
+					$('spinner').setStyle('visibility', 'visible');	
+				}				
 				break;
 			case 'html':
 			default:
 				// Need to test injecting elements as content.
 				var elementTypes = new Array('element', 'textnode', 'whitespace', 'collection');
-				if (elementTypes.contains($type(content))) {
-					content.inject(contentContainer);
+				if (elementTypes.contains($type(options.content))) {
+					options.content.inject(contentContainer);
 				} else {
-					contentContainer.set('html', content);
+					contentContainer.set('html', options.content);
 				}				
-				currentInstance.fireEvent('onContentLoaded', windowEl);
+				currentInstance.fireEvent('onContentLoaded', element);
 				break;
 		}
 
@@ -139,7 +215,7 @@ var MochaUI = new Hash({
 		if (currentInstance.isCollapsed == false) {
 			currentInstance.isCollapsed = true;
 			handles.setStyle('display', 'none');
-			if ( currentInstance.iframe ) {
+			if ( currentInstance.iframeEl ) {
 				currentInstance.iframeEl.setStyle('visibility', 'hidden');
 			}			
 			currentInstance.contentBorderEl.setStyles({
@@ -175,7 +251,7 @@ var MochaUI = new Hash({
 					left: null
 				});				
 			}
-			if ( currentInstance.iframe ) {
+			if ( currentInstance.iframeEl ) {
 				currentInstance.iframeEl.setStyle('visibility', 'visible');
 			}
 			handles.setStyle('display', 'block');			
@@ -208,15 +284,17 @@ var MochaUI = new Hash({
 			
 		currentInstance.isClosing = true;
 		currentInstance.fireEvent('onClose', windowEl);
+		if (currentInstance.check) currentInstance.check.destroy();			
+
+		if (currentInstance.options.type == 'modal' && Browser.Engine.trident4){
+				$('modalFix').setStyle('display', 'none');
+		}
 
 		if (MochaUI.options.useEffects == false){
 			if (currentInstance.options.type == 'modal'){
 				$('modalOverlay').setStyle('opacity', 0);
-				if (Browser.Engine.trident4) {
-					$('modalFix').setStyle('display', 'block');
-				}
 			}		
-			this.closingJobs(windowEl);
+			MochaUI.closingJobs(windowEl);
 			return true;	
 		}
 		else {
@@ -225,7 +303,7 @@ var MochaUI = new Hash({
 			if (currentInstance.options.type == 'modal'){
 				MochaUI.Modal.modalOverlayCloseMorph.start({
 					'opacity': 0
-				});				
+				});								
 			}
 			var closeMorph = new Fx.Morph(windowEl, {
 				duration: 180,
@@ -237,9 +315,8 @@ var MochaUI = new Hash({
 			closeMorph.start({
 				'opacity': .4
 			});
-		}
-		
-		if (currentInstance.check) currentInstance.check.destroy();		
+		}		
+	
 	},
 	closingJobs: function(windowEl){
 
@@ -289,6 +366,7 @@ var MochaUI = new Hash({
 			if (id.getStyle('visibility') == 'visible'){
 				if (instance.iframe){
 					instance.iframeEl.setStyle('visibility', 'hidden');
+
 				}
 				if (instance.toolbarEl){
 					instance.toolbarWrapperEl.setStyle('visibility', 'hidden');		
@@ -326,8 +404,11 @@ var MochaUI = new Hash({
 		var instances =  MochaUI.Windows.instances;		
 		var currentInstance = instances.get(windowEl.id);			
 
-		MochaUI.Windows.indexLevel++;
+		MochaUI.Windows.indexLevel += 2;
 		windowEl.setStyle('zIndex', MochaUI.Windows.indexLevel);
+
+		// Used when dragging and resizing windows
+		$('windowUnderlay').setStyle('zIndex', MochaUI.Windows.indexLevel - 1).inject($(windowEl),'after');		
 
 		// Fire onBlur for the window that lost focus.
 		instances.each(function(instance){
@@ -363,12 +444,13 @@ var MochaUI = new Hash({
 		return this.windowWithHighestZindex;
 	},
 	blurAll: function(){
-		//alert(MochaUI.focusingWindow);
 		if (MochaUI.focusingWindow == 'false') {
 			$$('.mocha').each(function(windowEl){
 				var instances =  MochaUI.Windows.instances;
 				var currentInstance = instances.get(windowEl.id);
-				windowEl.removeClass('isFocused');				
+				if (currentInstance.options.type != 'modal'){					
+					windowEl.removeClass('isFocused');
+				}				
 			});
 			$$('div.dockTab').removeClass('activeDockTab');
 		}
@@ -423,8 +505,13 @@ var MochaUI = new Hash({
 		var options = currentInstance.options;
 		var dimensions = options.container.getCoordinates();
 		var windowPosTop = (dimensions.height * .5) - ((options.height + currentInstance.headerFooterShadow) * .5);
+		if (windowPosTop < 0) {
+			windowPosTop = 0;
+		}	
 		var windowPosLeft =	(dimensions.width * .5) - (options.width * .5);
-		
+		if (windowPosLeft < 0) {
+			windowPosLeft = 0;
+		}		
 		if (MochaUI.options.useEffects == true){
 			currentInstance.morph.start({
 				'top': windowPosTop,
@@ -468,7 +555,27 @@ var MochaUI = new Hash({
 		$$('div.mocha').each(function(el){
 			el.destroy();
 		}.bind(this));		
-	}	
+	},
+	/*
+	
+	The underlay is inserted directly under windows when they are being dragged or resized
+	so that the cursor is not captured by iframes or other plugins (such as Flash)
+	underneath the window.
+	
+	*/
+	underlayInitialize: function(){
+		var windowUnderlay = new Element('div', {
+			'id': 'windowUnderlay',
+			'styles': {
+				'height': parent.getCoordinates().height,
+				'opacity': .01,
+				'visibility': 'hidden'
+			}
+		}).inject(document.body);
+	},
+	setUnderlaySize: function(){
+		$('windowUnderlay').setStyle('height', parent.getCoordinates().height);
+	}		
 });
 
 // Toggle window visibility with Ctrl-Alt-Q
@@ -479,9 +586,19 @@ document.addEvent('keydown', function(event){
 });
 
 // Blur all windows if user clicks anywhere else on the page
-document.addEvent('click', function(event){
+document.addEvent('mousedown', function(event){
 	MochaUI.blurAll.delay(50);	
 });
+
+document.addEvent('domready', function(){
+	MochaUI.underlayInitialize();
+});	
+	
+window.addEvent('resize', function(){
+		MochaUI.setUnderlaySize();
+});
+
+
 /*
 
 Script: Window.js
@@ -688,7 +805,7 @@ MochaUI.Windows.windowOptions = {
 	// Color options:		
 	headerHeight:      25,
 	footerHeight:      25,
-	cornerRadius:      10,
+	cornerRadius:      8,
 	contentBgColor:	   '#fff',
 	headerStartColor:  [250, 250, 250],
 	headerStopColor:   [229, 229, 229],
@@ -732,7 +849,6 @@ MochaUI.Window = new Class({
 			headerFooterShadow: options.headerHeight + options.footerHeight + (options.shadowBlur * 2),
 			oldTop: 0,
 			oldLeft: 0,
-			iframe: options.loadMethod == 'iframe' ? true : false,
 			isMaximized: false,
 			isMinimized: false,
 			isCollapsed: false,
@@ -782,7 +898,7 @@ MochaUI.Window = new Class({
 		}
 		
 		// Minimizable, dock is required and window cannot be modal
-		if (MochaUI.Dock){
+		if (MochaUI.Dock && $(MochaUI.options.dock)){
 			if (MochaUI.Dock.dock && options.type != 'modal'){
 				options.minimizable = options.minimizable;
 			}
@@ -842,7 +958,11 @@ MochaUI.Window = new Class({
 			}			
 			// Else focus
 			else {
-				setTimeout(MochaUI.focusWindow.pass(this.windowEl, this),10);	
+				var coordinates = document.getCoordinates();
+				if (this.windowEl.getStyle('left').toInt() > coordinates.width || this.windowEl.getStyle('top').toInt() > coordinates.height){
+					MochaUI.centerWindow(this.windowEl);	
+				}
+				setTimeout(MochaUI.focusWindow.pass(this.windowEl, this),10);					
 			}
 			return;
 		}
@@ -863,7 +983,7 @@ MochaUI.Window = new Class({
 				'height':  this.options.height,
 				'display': 'block',
 				'opacity': 0,
-				'zIndex': MochaUI.Windows.indexLevel
+				'zIndex': MochaUI.Windows.indexLevel += 2
 			}
 		});		
 
@@ -873,14 +993,17 @@ MochaUI.Window = new Class({
 		if ( Browser.Engine.trident && this.options.shape == 'gauge') {
 			this.windowEl.setStyle('background', 'url(../images/spacer.gif)');
 		}		
-
-		if ((this.options.type == 'modal' && !Browser.Engine.gecko && !Browser.Engine.trident) || (Browser.Platform.mac && Browser.Engine.gecko)){
-			this.windowEl.setStyle('position', 'fixed');	
-		}
+		
+		if ((this.options.type == 'modal' && Browser.Platform.mac && Browser.Engine.gecko)){
+			if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent)) {
+				var ffversion = new Number(RegExp.$1);
+				if (ffversion < 3) {				
+					this.windowEl.setStyle('position', 'fixed');
+				}					
+			}				
+		}		
 
 		if (this.options.loadMethod == 'iframe') {
-			// Iframes have their own scrollbars and padding.
-			this.options.scrollbars = false;
 			this.options.padding = { top: 0, right: 0, bottom: 0, left: 0 };
 		}
 		
@@ -892,7 +1015,7 @@ MochaUI.Window = new Class({
 
 		// Set scrollbars, always use 'hidden' for iframe windows
 		this.contentWrapperEl.setStyles({
-			'overflow': this.options.scrollbars && !this.options.iframe ? 'auto' : 'hidden',
+			'overflow': 'hidden',
 			'background': this.options.contentBgColor
 		});
 
@@ -949,11 +1072,21 @@ MochaUI.Window = new Class({
 		}		
 
 		// Add content to window.
-		MochaUI.updateContent(this.windowEl, this.options.content, this.options.contentURL);	
+		MochaUI.updateContent({
+			'element': this.windowEl,
+			'content':  this.options.content,
+			'url':      this.options.contentURL
+		});	
 		
 		// Add content to window toolbar.
 		if (this.options.toolbar == true){
-			MochaUI.updateContent(this.windowEl, this.options.toolbarContent, this.options.toolbarURL, this.toolbarEl, 'xhr');
+			MochaUI.updateContent({
+				'element':       this.windowEl,
+				'childElement':  this.toolbarEl,				
+				'content':       this.options.toolbarContent,
+				'loadMethod':    'xhr',				
+				'url':           this.options.toolbarURL
+			});
 		}
 		
 		this.drawWindow(this.windowEl);			
@@ -1063,7 +1196,7 @@ MochaUI.Window = new Class({
 			this.check = new Element('div', {
 				'class': 'check',
 				'id': this.options.id + '_check'
-			}).injectInside(this.windowEl.id + 'LinkCheck');
+			}).inject(this.windowEl.id + 'LinkCheck');
 		}
 		
 		if (this.options.closeAfter != false){			
@@ -1087,7 +1220,7 @@ MochaUI.Window = new Class({
 		}
 
 		if (this.options.type == 'window'){		
-			windowEl.addEvent('click', function() {
+			windowEl.addEvent('mousedown', function() {
 				MochaUI.focusWindow(windowEl);
 			}.bind(this));
 		}
@@ -1113,12 +1246,19 @@ MochaUI.Window = new Class({
 		if (this.options.collapsible == true){
 			// Keep titlebar text from being selected on double click in Safari.
 			this.titleEl.addEvent('selectstart', function(e) {
-				e = new Event(e).stop();							  													   
+				e = new Event(e).stop();											  													   
 			}.bind(this));
 			// Keep titlebar text from being selected on double click in Opera.			
 			this.titleBarEl.addEvent('mousedown', function(e) {
-				e = new Event(e).stop();							  													   
-			}.bind(this));		
+				if (Browser.Engine.trident) {
+					this.titleEl.setCapture();
+				}							  													   
+			}.bind(this));
+			this.titleBarEl.addEvent('mouseup', function(e) {
+				if (Browser.Engine.trident) {
+					this.titleEl.releaseCapture();
+				}								  													   
+			}.bind(this));					
 			this.titleBarEl.addEvent('dblclick', function(e) {
 				e = new Event(e).stop();
 				MochaUI.collapseToggle(this.windowEl);
@@ -1144,14 +1284,16 @@ MochaUI.Window = new Class({
 			limit: this.options.draggableLimit,
 			snap: this.options.draggableSnap,
 			onStart: function() {
+				//$('windowUnderlay').setStyle('visibility','visible');
 				if (this.options.type != 'modal'){ 
 					MochaUI.focusWindow(windowEl);
 				}
-				if ( this.iframe )
+				if ( this.iframeEl )
 					this.iframeEl.setStyle('visibility', 'hidden');
 			}.bind(this),
 			onComplete: function() {
-				if ( this.iframe ){
+				//$('windowUnderlay').setStyle('visibility','hidden');
+				if ( this.iframeEl ){
 					this.iframeEl.setStyle('visibility', 'visible');
 				}
 				// Store new position in options.
@@ -1170,7 +1312,7 @@ MochaUI.Window = new Class({
 	*/
 	attachResizable: function(windowEl){
 		if (!this.options.resizable) return;	
-		this.windowEl.makeResizable({
+		this.resizable1 = this.windowEl.makeResizable({
 			handle: [this.n, this.ne, this.nw],
 			limit: {
 				y: [
@@ -1182,11 +1324,9 @@ MochaUI.Window = new Class({
 					}.bind(this)
 				]
 			},	
-			modifiers: {x: false, y: 'top'},
-			onBeforeStart: function(){
-				this.resizeOnBeforeStart();
-			}.bind(this),		
+			modifiers: {x: false, y: 'top'},		
 			onStart: function(){
+				this.resizeOnStart();
 				this.coords = this.contentWrapperEl.getCoordinates();			
 				this.y2 = this.coords.top.toInt() + this.contentWrapperEl.offsetHeight;
 			}.bind(this),
@@ -1201,14 +1341,14 @@ MochaUI.Window = new Class({
 			}.bind(this)		
 		});
 	
-		this.contentWrapperEl.makeResizable({
+		this.resizable2 = this.contentWrapperEl.makeResizable({
 			handle: [this.e, this.ne],
 			limit: {
 				x: [this.options.resizeLimit.x[0] - (this.options.shadowBlur * 2), this.options.resizeLimit.x[1] - (this.options.shadowBlur * 2) ]		
 			},	
 			modifiers: {x: 'width', y: false},
-			onBeforeStart: function(){
-				this.resizeOnBeforeStart();
+			onStart: function(){
+				this.resizeOnStart();
 			}.bind(this),		
 			onDrag: function(){
 				this.drawWindow(windowEl);
@@ -1219,7 +1359,7 @@ MochaUI.Window = new Class({
 			}.bind(this)	
 		});	
 	
-		this.contentWrapperEl.makeResizable({
+		this.resizable3 = this.contentWrapperEl.makeResizable({
 			container: this.options.restrict == true ? $(this.options.container) : false,											
 			handle: this.se,
 			limit: {
@@ -1227,8 +1367,8 @@ MochaUI.Window = new Class({
 				y: [this.options.resizeLimit.y[0] - this.headerFooterShadow, this.options.resizeLimit.y[1] - this.headerFooterShadow]					
 			},	
 			modifiers: {x: 'width', y: 'height'},
-			onBeforeStart: function(){
-				this.resizeOnBeforeStart();
+			onStart: function(){
+				this.resizeOnStart();
 			}.bind(this),		
 			onDrag: function(){
 				this.drawWindow(windowEl);	
@@ -1239,14 +1379,14 @@ MochaUI.Window = new Class({
 			}.bind(this)	
 		});		
 		
-		this.contentWrapperEl.makeResizable({
+		this.resizable4 = this.contentWrapperEl.makeResizable({
 			handle: [this.s, this.sw],
 			limit: {
 				y: [this.options.resizeLimit.y[0] - this.headerFooterShadow, this.options.resizeLimit.y[1] - this.headerFooterShadow]	
 			},	
 			modifiers: {x: false, y: 'height'},
-			onBeforeStart: function(){
-				this.resizeOnBeforeStart();
+			onStart: function(){
+				this.resizeOnStart();
 			}.bind(this),		
 			onDrag: function(){
 				this.drawWindow(windowEl);			
@@ -1257,7 +1397,7 @@ MochaUI.Window = new Class({
 			}.bind(this)	
 		});
 		
-		this.windowEl.makeResizable({
+		this.resizable5 = this.windowEl.makeResizable({
 			handle: [this.w, this.sw, this.nw],
 			limit: {
 				x: [
@@ -1269,11 +1409,9 @@ MochaUI.Window = new Class({
 					}.bind(this)
 				]
 			},	
-			modifiers: {x: 'left', y: false},
-			onBeforeStart: function(){
-				this.resizeOnBeforeStart();
-			}.bind(this),		
+			modifiers: {x: 'left', y: false},	
 			onStart: function(){
+				this.resizeOnStart();
 				this.coords = this.contentWrapperEl.getCoordinates();			
 				this.x2 = this.coords.left.toInt() + this.contentWrapperEl.offsetWidth;
 			}.bind(this),
@@ -1289,14 +1427,16 @@ MochaUI.Window = new Class({
 		});
 	
 	},
-	resizeOnBeforeStart: function(){
+	resizeOnStart: function(){
+		$('windowUnderlay').setStyle('visibility','visible');
 		if (this.iframeEl){
-			this.iframeEl.setStyle('visibility', 'hidden');
+			this.iframeEl.setStyle('visibility', 'hidden');			
 		}	
 	},	
 	resizeOnComplete: function(){
+		$('windowUnderlay').setStyle('visibility','hidden');
 		if (this.iframeEl){
-			this.iframeEl.setStyle('visibility', 'visible');
+			this.iframeEl.setStyle('visibility', 'visible');			
 		}
 		this.fireEvent('onResize', this.windowEl);	
 	},
@@ -1350,7 +1490,23 @@ MochaUI.Window = new Class({
 			'top': top,			 
 			'left': left
 		});			
-	},	
+	},
+	detachResizable: function(){
+			this.resizable1.detach();
+			this.resizable2.detach();
+			this.resizable3.detach();
+			this.resizable4.detach();
+			this.resizable5.detach();
+			this.windowEl.getElements('.handle').setStyle('display', 'none');	
+	},
+	reattachResizable: function(){
+			this.resizable1.attach();
+			this.resizable2.attach();
+			this.resizable3.attach();
+			this.resizable4.attach();
+			this.resizable5.attach();
+			this.windowEl.getElements('.handle').setStyle('display', 'block');	
+	},		
 	/*
 	
 	Internal Function: insertWindowElements
@@ -1385,7 +1541,7 @@ MochaUI.Window = new Class({
 		}).inject(this.windowEl);
 
 		cache.titleBarEl = new Element('div', {
-			'id': id + '_titleBar',									   
+			'id': id + '_titleBar',												   
 			'class': 'mochaTitlebar',
 			'styles': {
 				'cursor': options.draggable ? 'move' : 'default'
@@ -1505,17 +1661,12 @@ MochaUI.Window = new Class({
 		}
 
 		if (options.shape != 'gauge' && options.type != 'notification'){
-			cache.canvasIconEl = new Element('canvas', {
-				'id': id + '_canvasIcon',
-				'class': 'mochaLoadingIcon',
-				'width': 18,
-				'height': 18
+			cache.spinnerEl = new Element('div', {
+				'id': id + '_spinner',
+				'class': 'mochaSpinner',
+				'width': 16,
+				'height': 16
 			}).inject(this.windowEl, 'bottom');	
-		
-			if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas') {
-				G_vmlCanvasManager.initElement(cache.canvasIconEl);
-				cache.canvasIconEl = this.windowEl.getElement('.mochaLoadingIcon');
-			}
 		}
 		
 		if (this.options.shape == 'gauge'){
@@ -1538,7 +1689,12 @@ MochaUI.Window = new Class({
 
 		// For Mac Firefox 2 to help reduce scrollbar bugs in that browser
 		if (Browser.Platform.mac && Browser.Engine.gecko) {
-			cache.overlayEl.setStyle('overflow', 'auto');
+			if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent)) {
+				var ffversion = new Number(RegExp.$1);
+				if (ffversion < 3) {				
+					cache.overlayEl.setStyle('overflow', 'auto');
+				}					
+			}
 		}
 
 		if (options.resizable){			
@@ -1666,7 +1822,7 @@ MochaUI.Window = new Class({
 		});
 
 		// Resize iframe when window is resized
-		if (this.iframe) {
+		if (this.iframeEl) {
 			this.iframeEl.setStyles({
 				'height': this.contentWrapperEl.offsetHeight
 			});
@@ -1693,7 +1849,7 @@ MochaUI.Window = new Class({
 		this.canvasEl.height = height;
 		this.canvasEl.width = width;
 
-		// Part of the fix for IE6 select z-index bug and FF on Mac scrollbar z-index bug
+		// Part of the fix for IE6 select z-index bug
 		if (Browser.Engine.trident4){
 			this.zIndexFixEl.setStyles({
 				'width': width,
@@ -1708,7 +1864,7 @@ MochaUI.Window = new Class({
 	
 		// Make sure loading icon is placed correctly.
 		if (options.shape != 'gauge' && options.type != 'notification'){
-			this.canvasIconEl.setStyles({
+			this.spinnerEl.setStyles({
 				'left': shadowBlur - shadowOffset.x + 3,
 				'bottom': shadowBlur + shadowOffset.y +  4
 			});
@@ -1771,7 +1927,7 @@ MochaUI.Window = new Class({
 		this.canvasEl.height = height;
 		this.canvasEl.width = width;
 
-		// Part of the fix for IE6 select z-index bug and FF on Mac scrollbar z-index bug
+		// Part of the fix for IE6 select z-index bug
 		if (Browser.Engine.trident4){
 			this.zIndexFixEl.setStyles({
 				'width': width,
@@ -1954,7 +2110,7 @@ MochaUI.Window = new Class({
 					(height  + options.headerHeight) * .5 + shadowOffset.x,
 					(width *.5) - (x * 2) - shadowOffset.x,
 					[0, 0, 0],
-					x == shadowBlur ? .7 : .08 + (x * .04)
+					x == shadowBlur ? .75 : .075 + (x * .04)
 				);
 			}
 		}
@@ -2090,46 +2246,24 @@ MochaUI.Window = new Class({
 	},
 	/*
 	
-	Function: hideLoadingIcon
+	Function: hideSpinner
 		Hides the spinner.
 		
 	*/	
-	hideLoadingIcon: function(canvas) {
-		if (!MochaUI.options.useLoadingIcon || this.options.shape == 'gauge' || this.options.type == 'notification') return;		
-		$(canvas).setStyle('display', 'none');		
-		$clear(canvas.iconAnimation);
+	hideSpinner: function(spinner) {
+		if ($(spinner))	$(spinner).setStyle('visibility', 'hidden');
 	},
 	/*
 	
-	Function: showLoadingIcon
+	Function: showSpinner
 		Shows the spinner.
 		
 	*/	
-	showLoadingIcon: function(canvas) {
-		if (!MochaUI.options.useLoadingIcon || this.options.shape == 'gauge' || this.options.type == 'notification') return;		
-		$(canvas).setStyles({
-			'display': 'block'
-		});		
-		var t = 1;	  	
-		var iconAnimation = function(canvas){ 
-			var ctx = $(canvas).getContext('2d');
-			ctx.clearRect(0, 0, 18, 18);
-			ctx.save();
-			ctx.translate(9, 9);
-			ctx.rotate(t*(Math.PI / 8));	
-			var color = 0;
-			for (var i=0; i < 8; i++){
-				color = Math.floor(255 / 8 * i);
-				ctx.fillStyle = "rgb(" + color + "," + color + "," + color + ")";
-				ctx.rotate(-Math.PI / 4);
-				ctx.beginPath();
-				ctx.arc(0, 7, 2, 0, Math.PI*2, true);
-				ctx.fill();
-			}
-			ctx.restore();
-			t++;
-		}.bind(this);
-		canvas.iconAnimation = iconAnimation.periodical(125, this, canvas);
+	showSpinner: function(spinner) {
+		if (!MochaUI.options.useSpinner || this.options.shape == 'gauge' || this.options.type == 'notification') return;		
+		$(spinner).setStyles({
+			'visibility': 'visible'
+		});
 	},	
 	setMochaControlsWidth: function(){
 		this.mochaControlsWidth = 0;
@@ -2177,7 +2311,6 @@ MochaUI.Modal = new Class({
 	
 	initialize: function(options){
 		this.modalInitialize();
-		this.installed = true;
 		
 		window.addEvent('resize', function(){
 			this.setModalSize();
@@ -2188,10 +2321,10 @@ MochaUI.Modal = new Class({
 		var modalOverlay = new Element('div', {
 			'id': 'modalOverlay',
 			'styles': {
-				'height': document.getCoordinates().height
+				'height': document.getCoordinates().height,
+				'opacity': .4
 			}
-		});
-		modalOverlay.inject(document.body);
+		}).inject(document.body);
 		
 		if (Browser.Engine.trident4){
 			var modalFix = new Element('iframe', {
@@ -2206,7 +2339,6 @@ MochaUI.Modal = new Class({
 			}).inject(document.body);
 		}		
 
-		modalOverlay.setStyle('opacity', .4);
 		this.modalOverlayOpenMorph = new Fx.Morph($('modalOverlay'), {
 				'duration': 200
 				});
@@ -2351,23 +2483,45 @@ Syntax:
 */
 
 MochaUI.options.extend({
-	desktopTopOffset:  30,    // Use a negative number if neccessary to place first window where you want it
-	desktopLeftOffset: 20,
-	mochaTopOffset:    50,    // Initial vertical spacing of each window
-	mochaLeftOffset:   40     // Initial horizontal spacing of each window	
+	viewportTopOffset:  30,    // Use a negative number if neccessary to place first window where you want it
+	viewportLeftOffset: 20,
+	windowTopOffset:    50,    // Initial vertical spacing of each window
+	windowLeftOffset:   40     // Initial horizontal spacing of each window	
 });
 
 MochaUI.extend({   
 	arrangeCascade: function(){
-		var x = this.options.desktopLeftOffset;
-		var y = this.options.desktopTopOffset;
+		// See how much space we have to work with
+		var coordinates = document.getCoordinates();
+		
+		var openWindows = 0;
+		MochaUI.Windows.instances.each(function(instance){
+			if (!instance.isMinimized) openWindows ++; 
+		});
+		
+		if ((this.options.windowTopOffset * (openWindows + 1)) >= (coordinates.height - this.options.viewportTopOffset)) {
+			var topOffset = (coordinates.height - this.options.viewportTopOffset) / (openWindows + 1);
+		}
+		else {
+			var topOffset = this.options.windowTopOffset;
+		}
+		
+		if ((this.options.windowLeftOffset * (openWindows + 1)) >= (coordinates.width - this.options.viewportLeftOffset - 20)) {
+			var leftOffset = (coordinates.width - this.options.viewportLeftOffset - 20) / (openWindows + 1);
+		}
+		else {
+			var leftOffset = this.options.windowLeftOffset;
+		}		
+		
+		var x = this.options.viewportLeftOffset;
+		var y = this.options.viewportTopOffset;
 		$$('div.mocha').each(function(windowEl){
 			var currentWindowClass = MochaUI.Windows.instances.get(windowEl.id);
 			if (!currentWindowClass.isMinimized && !currentWindowClass.isMaximized){
 				id = windowEl.id;
 				MochaUI.focusWindow(windowEl);
-				x += this.options.mochaLeftOffset;
-				y += this.options.mochaTopOffset;
+				x += leftOffset;
+				y += topOffset;
 
 				if (MochaUI.options.useEffects == false){
 					windowEl.setStyles({
@@ -2429,8 +2583,8 @@ MochaUI.extend({
 		
 		var coordinates = document.getCoordinates();
 	
-		var col_width = ((coordinates.width - this.options.desktopLeftOffset) / cols);
-		var col_height = ((coordinates.height - this.options.desktopTopOffset) / rows);
+		var col_width = ((coordinates.width - this.options.viewportLeftOffset) / cols);
+		var col_height = ((coordinates.height - this.options.viewportTopOffset) / rows);
 		
 		var row = 0;
 		var col = 0;
@@ -2448,6 +2602,9 @@ MochaUI.extend({
 				var padding_left = content_coords.left - window_coords.left;
 				var padding_right = window_coords.width - content_coords.width - padding_left;
 				
+				/*
+				 
+				// This resizes the windows
 				if (instance.options.shape != 'gauge' && instance.options.resizable == true){
 					var width = (col_width - 3 - padding_left - padding_right);
 					var height = (col_height - 3 - padding_top - padding_bottom);
@@ -2459,7 +2616,7 @@ MochaUI.extend({
 						content.setStyle('height', height);
 					}
 				
-				}
+				}*/
 				
 				var left = (x + (col * col_width));
 				var top = (y + (row * col_height));
@@ -2538,8 +2695,8 @@ Arguments:
 
 /*
 
-Script: Desktop.js
-	Creates a desktop. Enables window maximize. 
+Script: Layout.js
+	Create web application layouts. Enables window maximize. 
 	
 Copyright:
 	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.		
@@ -2550,9 +2707,6 @@ License:
 Requires:
 	Core.js, Window.js
 	
-Options:
-	sidebarLimitX - Sidebar minimum and maximum widths when resizing.
-
 */
 
 MochaUI.Desktop = new Class({
@@ -2566,38 +2720,27 @@ MochaUI.Desktop = new Class({
 		// If you change the IDs of the Mocha Desktop containers in your HTML, you need to change them here as well.
 		desktop:                'desktop',
 		desktopHeader:          'desktopHeader',
+		desktopFooter:          'desktopFooter',		
 		desktopNavBar:          'desktopNavbar',
 		pageWrapper:            'pageWrapper',
 		page:                   'page',
-		desktopFooter:          'desktopFooterWrapper',
-		sidebarWrapper:         'sidebarWrapper',		
-		sidebar:                'sidebar',
-		sidebarContentWrapper:  'sidebarContentWrapper',		
-		sidebarMinimize:        'sidebarControl',
-		sidebarHandle:          'sidebarHandle',
-		// Sidebar options:
-		sidebarLimitX:          [180, 280]        // Sidebar minimum and maximum widths when resizing.
+		desktopFooter:          'desktopFooterWrapper'
 	},	
 	initialize: function(options){
 		this.setOptions(options);
 		this.desktop                = $(this.options.desktop);
-		this.desktopHeader          = $(this.options.desktopHeader);		
+		this.desktopHeader          = $(this.options.desktopHeader);
+		this.desktopFooter          = $(this.options.desktopFooter);				
 		this.desktopNavBar          = $(this.options.desktopNavBar);
 		this.pageWrapper            = $(this.options.pageWrapper);
 		this.page                   = $(this.options.page);
 		this.desktopFooter          = $(this.options.desktopFooter);		
-		this.sidebarWrapper         = $(this.options.sidebarWrapper);		
-		this.sidebar                = $(this.options.sidebar);
-		this.sidebarContentWrapper  = $(this.options.sidebarContentWrapper);
-		this.sidebarMinimize        = $(this.options.sidebarMinimize);
-		this.sidebarHandle          = $(this.options.sidebarHandle);		
 	
-		this.setDesktopSize();
-		this.menuInitialize();
-		
-		if(this.sidebar){
-			this.sidebarInitialize();
+		// This is run on dock initialize so no need to do it twice.
+		if (!MochaUI.Dock.dockWrapper) {
+			this.setDesktopSize();
 		}
+		this.menuInitialize();		
 
 		// Resize desktop, page wrapper, modal overlay, and maximized windows when browser window is resized
 		window.addEvent('resize', function(){
@@ -2647,7 +2790,7 @@ MochaUI.Desktop = new Class({
 
 				}
 			}.bind(this));
-		}.bind(this), 100);
+		}.bind(this), 100);		
 	},
 	setDesktopSize: function(){
 		var windowDimensions = window.getCoordinates();
@@ -2661,23 +2804,33 @@ MochaUI.Desktop = new Class({
 		}
 
 		// Set pageWrapper height so the dock doesn't cover the pageWrapper scrollbars.
-		if (this.pageWrapper && this.desktopHeader) {
-					
-			var dockOffset = MochaUI.dockVisible ? dockWrapper.offsetHeight : 0;			
-			var pageWrapperHeight = windowDimensions.height - this.desktopHeader.offsetHeight - this.desktopFooter.offsetHeight - dockOffset;
-			
-			if ( pageWrapperHeight < 0 ) {
+		if (this.pageWrapper) {
+		
+			var dockOffset = MochaUI.dockVisible ? dockWrapper.offsetHeight : 0;
+			var pageWrapperHeight = windowDimensions.height;
+			pageWrapperHeight -= this.pageWrapper.getStyle('border-top').toInt();
+			pageWrapperHeight -= this.pageWrapper.getStyle('border-bottom').toInt();
+			if (this.desktopHeader){ pageWrapperHeight -= this.desktopHeader.offsetHeight; }
+			if (this.desktopFooter){ pageWrapperHeight -= this.desktopFooter.offsetHeight; }
+			pageWrapperHeight -= dockOffset;
+									
+			if (pageWrapperHeight < 0) {
 				pageWrapperHeight = 0;
 			}
-			this.pageWrapper.setStyle('height', pageWrapperHeight + 'px');
+			this.pageWrapper.setStyle('height', pageWrapperHeight);
 		}
-		
-		if (this.sidebar){
-			var sidebarBorderOffset = Browser.Engine.trident4 ? 3 : 2;  
-			this.sidebarContentWrapper.setStyle('height', pageWrapperHeight - sidebarBorderOffset + 'px');
-			this.sidebarMinimize.setStyle('top', ((pageWrapperHeight * .5) - (this.sidebarMinimize.offsetHeight * .5))  + 'px');
-			this.sidebarHandle.setStyle('height', pageWrapperHeight - sidebarBorderOffset + 'px');			
+
+		this.resizePanels();		
+	},
+
+	resizePanels: function(){
+		if (Browser.Engine.trident4) {
+			$$('.pad').setStyle('display', 'none');
+			$$('.rHeight').setStyle('height', 1);
 		}
+		panelHeight();
+		rWidth();
+		if (Browser.Engine.trident4) $$('.pad').setStyle('display', 'block');		
 	},
 	/*
 	
@@ -2693,6 +2846,7 @@ MochaUI.Desktop = new Class({
 	maximizeWindow: function(windowEl) {
 
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
+		var options = currentInstance.options;
 		var windowDrag = currentInstance.windowDrag;
 
 		// If window no longer exists or is maximized, stop
@@ -2707,12 +2861,15 @@ MochaUI.Desktop = new Class({
 		// If window is restricted to a container, it should not be draggable when maximized.
 		if (currentInstance.options.restrict){
 			windowDrag.detach();
+			if (options.resizable) {
+				currentInstance.detachResizable();
+			}
 			currentInstance.titleBarEl.setStyle('cursor', 'default');
 		}	
 		
 		// If the window has a container that is not the desktop
 		// temporarily move the window to the desktop while it is minimized.
-		if (currentInstance.options.container != this.desktop){
+		if (options.container != this.desktop){
 			this.desktop.grab(windowEl);
 			if (this.options.restrict){
 			windowDrag.container = this.desktop;
@@ -2731,7 +2888,7 @@ MochaUI.Desktop = new Class({
 		
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
-		if ( currentInstance.iframe ) {
+		if ( currentInstance.iframeEl ) {
 			currentInstance.iframeEl.setStyle('visibility', 'hidden');
 		}
 
@@ -2739,6 +2896,10 @@ MochaUI.Desktop = new Class({
 		var options = currentInstance.options;
 		var shadowBlur = options.shadowBlur;
 		var shadowOffset = options.shadowOffset;
+		var newHeight = windowDimensions.height - options.headerHeight - options.footerHeight;
+		newHeight -= currentInstance.contentBorderEl.getStyle('border-top').toInt();
+		newHeight -= currentInstance.contentBorderEl.getStyle('border-bottom').toInt();
+		newHeight -= (  currentInstance.toolbarWrapperEl ? currentInstance.toolbarWrapperEl.getStyle('height').toInt() + currentInstance.toolbarWrapperEl.getStyle('border-top').toInt() : 0);
 
 		if (MochaUI.options.useEffects == false){
 			windowEl.setStyles({
@@ -2746,18 +2907,18 @@ MochaUI.Desktop = new Class({
 				'left': shadowOffset.x - shadowBlur
 			});
 			currentInstance.contentWrapperEl.setStyles({
-				'height': windowDimensions.height - options.headerHeight - options.footerHeight,
+				'height': newHeight,
 				'width':  windowDimensions.width
 			});
 			currentInstance.drawWindow(windowEl);
 			// Show iframe
-			if ( currentInstance.iframe ) {
+			if ( currentInstance.iframeEl ) {
 				currentInstance.iframeEl.setStyle('visibility', 'visible');
 			}
 			currentInstance.fireEvent('onMaximize', windowEl);
 		}
 		else {
-			
+						
 			// Todo: Initialize the variables for these morphs once in an initialize function and reuse them
 			
 			var maximizeMorph = new Fx.Elements([contentWrapperEl, windowEl], { 
@@ -2769,14 +2930,14 @@ MochaUI.Desktop = new Class({
 					$clear(currentInstance.maximizeAnimation);
 					currentInstance.drawWindow(windowEl);
 					// Show iframe
-					if ( currentInstance.iframe ) {
+					if ( currentInstance.iframeEl ) {
 						currentInstance.iframeEl.setStyle('visibility', 'visible');
 					}
 					currentInstance.fireEvent('onMaximize', windowEl);	
 				}.bind(this)
 			});
 			maximizeMorph.start({
-				'0': {	'height': function(){ return windowDimensions.height - options.headerHeight - options.footerHeight - currentInstance.contentBorderEl.getStyle('border-top').toInt() - currentInstance.contentBorderEl.getStyle('border-bottom').toInt() - (  currentInstance.toolbarWrapperEl ? currentInstance.toolbarWrapperEl.getStyle('height').toInt() + currentInstance.toolbarWrapperEl.getStyle('border-top').toInt() : 0)},
+				'0': {	'height': newHeight,
 						'width':  windowDimensions.width
 				},
 				'1': {	'top': shadowOffset.y - shadowBlur,
@@ -2811,12 +2972,15 @@ MochaUI.Desktop = new Class({
 		
 		if (options.restrict){
 			currentInstance.windowDrag.attach();
+			if (options.resizable) {
+				currentInstance.reattachResizable();
+			}			
 			currentInstance.titleBarEl.setStyle('cursor', 'move');
 		}		
 		
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
-		if ( currentInstance.iframe ) {
+		if ( currentInstance.iframeEl ) {
 			currentInstance.iframeEl.setStyle('visibility', 'hidden');
 		}
 		
@@ -2832,7 +2996,10 @@ MochaUI.Desktop = new Class({
 				'top': currentInstance.oldTop,
 				'left': currentInstance.oldLeft
 			});
-			if (currentInstance.container != this.desktop){
+			if ( currentInstance.iframeEl ) {
+				currentInstance.iframeEl.setStyle('visibility', 'visible');
+			}			
+			if (options.container != this.desktop){
 				$(options.container).grab(windowEl);
 				if (options.restrict){
 					currentInstance.windowDrag.container = $(options.container);
@@ -2849,7 +3016,7 @@ MochaUI.Desktop = new Class({
 				'onComplete': function(el){
 					$clear(currentInstance.maximizeAnimation);
 					currentInstance.drawWindow(windowEl);
-					if ( currentInstance.iframe ) {
+					if ( currentInstance.iframeEl ) {
 						currentInstance.iframeEl.setStyle('visibility', 'visible');
 					}
 					if (options.container != this.desktop){
@@ -2870,133 +3037,851 @@ MochaUI.Desktop = new Class({
 				}
 			});
 		}
-		currentInstance.maximizeButtonEl.setProperty('title', 'Maximize');		
-		
-	},
-	sidebarInitialize: function(){
-		this.sidebarResizable = this.sidebar.makeResizable({
-			handle: this.sidebarHandle ? this.sidebarHandle : false,
-			modifiers: {
-				x: 'width',
-				y: false				
-			},
-			limit: {
-				x: this.options.sidebarLimitX
-			},
-			onBeforeStart: function(){
- 				// Using postion fixed fixes a minor display glitch while resizing the sidebar in Firefox PC
-				// Mac Firefox needs position fixed all the time though it does not render as well as absolute
-				if (!Browser.Platform.mac && Browser.Engine.gecko){
-					$$('div.mocha').setStyle('position', 'fixed');	
-				}
-			},
-			onComplete: function(){
-				if (!Browser.Platform.mac && Browser.Engine.gecko){
-					$$('div.mocha').setStyle('position', 'absolute');	
-				}
-			}			
-		});
-		
-		// Part of IE6 3px jox bug fix
-		if (Browser.Engine.trident4){
-			this.page.set('margin-left', -3);
-		}		
-			
-		this.sidebarWrapper.setStyle('display', 'block');
-
-		this.sidebarIsMinimized = false;
-		this.sidebarMinimize.addEvent('click', function(event){
-			this.sidebarMinimizeToggle();
-		}.bind(this));
-		
-		// Add check mark to menu if link exists in menu
-		if ($('sidebarLinkCheck')){			
-			this.sidebarCheck = new Element('div', {
-				'class': 'check',
-				'id': 'sidebar_check'
-			}).injectInside($('sidebarLinkCheck'));
-		}		
-	},
-	/*
-	
-	Function: sidebarToggle
-		Toggles the display of the sidebar.
-	
-	Syntax:
-		(start code)
-		MochaUI.Desktop.sidebarToggle();
-		(end)	
-
-	*/		
-	sidebarToggle: function(){
-		// Hide sidebar.
-		if (this.sidebarWrapper.getStyle('display') == 'block'){
-			this.sidebarWrapper.setStyle('display', 'none');
-			this.sidebarCheck.setStyle('display', 'none');
-			// Part of IE6 3px jox bug fix			
-			if (Browser.Engine.trident4){
-				this.page.set('margin-left', 0);
-			}
-		}
-		// Show sidebar.
-		else {
-			// If the sidebar is minimized when toggling it's visibility on the sidebar will be restored.
-			if (this.sidebarIsMinimized){			
-				this.sidebarMinimizeToggle();			
-			}			
-			this.sidebarWrapper.setStyle('display', 'block');
-			this.sidebarCheck.setStyle('display', 'block');
-			// Part of IE6 3px jox bug fix
-			if (Browser.Engine.trident4){
-				this.page.set('margin-left', -3);
-			}			
-		}
-	},
-	/*
-	
-	Function: sidebarMinimizeToggle
-		Minimize and restore the sidebar.
-	
-	Syntax:
-		(start code)
-		MochaUI.Desktop.sidebarMinimizeToggle();
-		(end)	
-
-	*/		
-	sidebarMinimizeToggle: function(){
-		// Expand sidebar.
-		var windows = $$('div.mocha');
-		if (!this.sidebarIsMinimized){				
-			this.sidebarResizable.detach();
-			this.sidebarHandle.setStyle('cursor', 'default');						
-			this.sidebar.setStyle('display', 'none');
-			// Part of IE6 3px jox bug fix			
-			if (Browser.Engine.trident4){
-				this.sidebarMinimize.setStyle('margin-right', 0);
-			}
-			if (!Browser.Platform.mac && Browser.Engine.gecko){
-				windows.setStyle('position', 'absolute');	
-			}			
-			this.sidebarIsMinimized = true;				
-		}
-		// Collapse sidebar
-		else {
-			this.sidebarResizable.attach();	
-			this.sidebarHandle.setStyles({
-				'cursor': Browser.Engine.presto ? 'e-resize' : 'col-resize'
-			});				
-			this.sidebar.setStyle('display', 'block');				
-			if (Browser.Engine.trident4){
-				this.sidebarMinimize.setStyle('margin-right', 1);
-			}
-			if (!Browser.Platform.mac && Browser.Engine.gecko){
-				windows.setStyle('position', 'absolute');	
-			}			
-			this.sidebarIsMinimized = false;
-		}				
+		currentInstance.maximizeButtonEl.setProperty('title', 'Maximize');	
 	}
 });
 MochaUI.Desktop.implement(new Options, new Events);
+
+/*
+
+Class: Column
+	Create a column.
+
+Syntax:
+(start code)
+	MochaUI.Panel();
+(end)
+		
+*/
+MochaUI.Column = new Class({
+							
+	Extends: MochaUI.Desktop,
+	
+	Implements: [Events, Options],
+	
+	options: {
+		id:            null, // This must be set when creating the column.
+		placement:     null, // Can be 'right', 'main', or 'left'.
+		width:         null,
+		resizeLimit:   [],
+		
+		// Events
+		onResize:     $empty, 
+		onCollapse:   $empty, // NOT YET IMPLEMENTED
+		onExpand:     $empty  // NOT YET IMPLEMENTED
+
+	},	
+	initialize: function(options){
+		this.setOptions(options);
+		
+		$extend(this, {						
+			timestamp: $time(),
+			isCollapsed: false,
+			oldWidth: 0
+		});
+		
+		// Shorten object chain
+		var options = this.options;
+		var instances = MochaUI.Columns.instances;
+		var instanceID = instances.get(options.id);
+	
+		// Check to see if there is already a class instance for this Column
+		if (instanceID){			
+			var currentInstance = instanceID;		
+		}
+		
+		// Check if column already exists
+		if ( this.columnEl ) {
+			return;
+		}
+		else {			
+			instances.set(options.id, this);
+		}		
+				
+		this.columnEl = new Element('div', {
+			'id': this.options.id,												   
+			'class': 'column expanded',
+			'styles': {
+				'width': options.width
+			}			
+		}).inject($(MochaUI.Desktop.pageWrapper));
+		
+		if (options.id == 'mainColumn') {
+			this.columnEl.addClass('rWidth');
+		}
+		
+		this.spacerEl = new Element('div', {
+			'id': this.options.id + '_spacer',
+			'class': 'horizontalHandle'
+		}).inject(this.columnEl);		
+
+		switch (this.options.placement) {
+			case 'left':
+				this.handleEl = new Element('div', {
+					'id': this.options.id + '_handle',
+					'class': 'columnHandle'
+				}).inject(this.columnEl, 'after');
+		
+				this.handleIconEl = new Element('div', {
+					'id': options.id + '_handle_icon',
+					'class': 'handleIcon'
+				}).inject(this.handleEl);
+			
+				addResizeRight(this.columnEl, options.resizeLimit[0], options.resizeLimit[1]);
+				break;
+			case 'right':
+				this.handleEl = new Element('div', {
+					'id': this.options.id + '_handle',
+					'class': 'columnHandle'
+				}).inject(this.columnEl, 'before');
+		
+				this.handleIconEl = new Element('div', {
+					'id': options.id + '_handle_icon',
+					'class': 'handleIcon'
+				}).inject(this.handleEl);			
+				addResizeLeft(this.columnEl, options.resizeLimit[0], options.resizeLimit[1]);
+				break;
+		}
+		
+		if (this.handleEl != null) {
+			this.handleEl.addEvent('dblclick', function(event){
+				this.columnToggle();				
+			}.bind(this));
+		}
+		
+		rWidth();		
+				
+	},
+	columnToggle: function(){
+		var column= this.columnEl;
+							
+		if (this.isCollapsed == false) {
+			this.oldWidth = column.getStyle('width').toInt();
+			
+			this.resize.detach();
+			this.handleEl.setStyle('cursor', 'pointer').addClass('detached');
+			
+			column.setStyle('width', 0);
+			this.isCollapsed = true;
+			column.addClass('collapsed');
+			column.removeClass('expanded');
+			rWidth();
+		}
+		else {
+			column.setStyle('width', this.oldWidth);
+			this.isCollapsed = false;
+			column.addClass('expanded');
+			column.removeClass('collapsed');
+			
+			this.resize.attach();
+			this.handleEl.setStyle('cursor', 'e-resize').addClass('attached');
+			
+			rWidth();
+		}		
+	}
+});	
+MochaUI.Column.implement(new Options, new Events);		
+
+/*
+
+Class: Panel
+	Create a panel.
+
+Syntax:
+(start code)
+	MochaUI.Panel();
+(end)
+		
+*/
+MochaUI.Panel = new Class({
+							
+	Extends: MochaUI.Desktop,
+	
+	Implements: [Events, Options],
+	
+	options: {
+		id:               null,        // This must be set when creating the panel
+		title:            'New Panel',
+		column:           null,        // Where to inject the panel. This must be set when creating the panel
+		loadMethod:       'html',
+		contentURL:       'pages/lipsum.html',	
+	
+		// xhr options
+		evalScripts:      true,
+		evalResponse:     false,
+	
+		// html options
+		content:          'Panel content',		
+		
+		// Tabs
+		tabsURL:          null,				
+
+		footer:           false,
+		footerURL:        'pages/lipsum.html',
+		
+		// Style options:
+		height:           125,
+		addClass:         '',
+		scrollbars:       true,
+		padding:   		  { top: 8, right: 8, bottom: 8, left: 8 },
+
+		// Color options:		
+		panelBackground:   '#fff',			
+
+		// Events
+		onBeforeBuild:     $empty,
+		onContentLoaded:   $empty,
+		onResize:          $empty,
+		onCollapse:        $empty,
+		onExpand:          $empty		
+				
+	},	
+	initialize: function(options){
+		this.setOptions(options);
+		
+		$extend(this, {
+			timestamp: $time(),
+			isCollapsed: false,			
+			oldHeight: 0,
+			partner: null
+		});		
+				
+		// Shorten object chain
+		var instances = MochaUI.Panels.instances;
+		var instanceID = instances.get(this.options.id);
+	
+		// Check to see if there is already a class instance for this panel
+		if (instanceID){			
+			var currentInstance = instanceID;		
+		}
+		
+		// Check if panel already exists
+		if ( this.panelEl ) {
+			return;
+		}
+		else {			
+			instances.set(this.options.id, this);
+		}
+		
+		this.fireEvent('onBeforeBuild');		
+		
+		if (this.options.loadMethod == 'iframe') {
+			// Iframes have their own scrollbars and padding.
+			this.options.scrollbars = false;
+			this.options.padding = { top: 0, right: 0, bottom: 0, left: 0 };
+		}				
+
+		this.showHandle = true;
+		if ($(this.options.column).getChildren().length == 0) {
+			this.showHandle = false;
+		}
+
+		this.panelEl = new Element('div', {
+			'id': this.options.id,												   
+			'class': 'panel expanded',
+			'styles': {
+				'height': this.options.height,
+				'background': this.options.panelBackground
+			}			
+		}).inject($(this.options.column));
+		
+		this.panelEl.addClass(this.options.addClass);		
+		
+		this.contentEl = new Element('div', {
+			'id': this.options.id + '_pad',												   
+			'class': 'pad'
+		}).inject(this.panelEl);
+		
+		if (this.options.footer) {
+			this.footerWrapperEl = new Element('div', {
+				'id': this.options.id + '_panelFooterWrapper',
+				'class': 'panel-footerWrapper'
+			}).inject(this.panelEl);
+			
+			this.footerEl = new Element('div', {
+				'id': this.options.id + '_panelFooter',
+				'class': 'panel-footer'
+			}).inject(this.footerWrapperEl);			
+
+
+			MochaUI.updateContent({
+				'element':       this.panelEl,
+				'childElement':  this.footerEl,
+				'loadMethod':    'xhr',				
+				'url':           this.options.footerURL
+			});
+			
+		}
+
+		// This is in order to use the same variable as the windows do in updateContent.
+		// May rethink this.		
+		this.contentWrapperEl = this.panelEl;		
+		
+		// Set scrollbars, always use 'hidden' for iframe windows
+		this.contentWrapperEl.setStyles({
+			'overflow': this.options.scrollbars && !this.iframeEl ? 'auto' : 'hidden'
+		});
+
+		this.contentEl.setStyles({
+			'padding-top': this.options.padding.top,
+			'padding-bottom': this.options.padding.bottom,
+			'padding-left': this.options.padding.left,
+			'padding-right': this.options.padding.right
+		});			
+		
+		this.panelHeaderEl = new Element('div', {
+			'id': this.options.id + '_header',												   
+			'class': 'panel-header'
+		}).inject(this.panelEl, 'before');		
+		
+		this.panelHeaderToolboxEl = new Element('div', {
+			'id': this.options.id + '_headerToolbox',										   
+			'class': 'panel-header-toolbox'
+		}).inject(this.panelHeaderEl);
+
+		this.collapseToggleEl = new Element('div', {
+			'id': this.options.id + '_minmize',
+			'class': 'panel-collapse icon16',
+			'styles': {
+				'width': 16,
+				'height': 16
+			},
+			'title': 'Collapse Panel',
+			'background': '#f00'
+		}).inject(this.panelHeaderToolboxEl);
+        
+		this.collapseToggleEl.addEvent('click', function(event){
+ 			var panel = this.panelEl;
+			
+			// Get siblings and make sure they are not all collapsed.
+			var instances = MochaUI.Panels.instances;
+			var expandedSiblings = [];			
+			panel.getAllPrevious('.panel').each(function(sibling){
+				var currentInstance = instances.get(sibling.id);
+				if (currentInstance.isCollapsed == false){
+					expandedSiblings.push(sibling);
+				}					
+			});
+			panel.getAllNext('.panel').each(function(sibling){
+				var currentInstance = instances.get(sibling.id);
+				if (currentInstance.isCollapsed == false){
+					expandedSiblings.push(sibling);
+				}					
+			});			
+			
+			if (this.isCollapsed == false) {
+				var currentColumn = MochaUI.Columns.instances.get($(this.options.column).id);
+				
+				if (expandedSiblings.length == 0 && currentColumn.options.placement != 'main') {
+					var currentColumn = MochaUI.Columns.instances.get($(this.options.column).id);
+					currentColumn.columnToggle();
+					return;
+				}
+				else if (expandedSiblings.length == 0 && currentColumn.options.placement == 'main') {
+					return;	
+				}
+				this.oldHeight = panel.getStyle('height').toInt();
+				if (this.oldHeight < 10) this.oldHeight = 20;
+				panel.setStyle('height', 0);
+				this.isCollapsed = true;				
+				panel.addClass('collapsed');
+				panel.removeClass('expanded');			
+				panelHeight(this.options.column, panel, 'collapsing');
+				this.collapseToggleEl.removeClass('panel-collapsed');
+				this.collapseToggleEl.addClass('panel-expand');
+				this.collapseToggleEl.setProperty('title','Expand Panel');
+				this.fireEvent('onCollapse');				
+			}
+			else {
+				panel.setStyle('height', this.oldHeight);
+				this.isCollapsed = false;
+				panel.addClass('expanded');
+				panel.removeClass('collapsed');				
+				panelHeight(this.options.column, panel, 'expanding');				
+				this.collapseToggleEl.removeClass('panel-expand');
+				this.collapseToggleEl.addClass('panel-collapsed');
+				this.collapseToggleEl.setProperty('title','Collapse Panel');
+				this.fireEvent('onExpand');				
+			}
+		}
+		.bind(this));
+		
+		this.panelHeaderContentEl = new Element('div', {
+			'id': this.options.id + '_headerContent',												   
+			'class': 'panel-headerContent'
+		}).inject(this.panelHeaderEl);									
+		
+		this.titleEl = new Element('h2', {
+			'id': this.options.id + '_title'
+		}).inject(this.panelHeaderContentEl);		
+		
+		if (this.options.tabsURL == null) {
+			this.titleEl.set('html', this.options.title);
+		}
+		else {
+			MochaUI.updateContent({
+				'element':      this.panelEl,
+				'childElement': this.panelHeaderContentEl,
+				'loadMethod':   'xhr',								
+				'url':          this.options.tabsURL
+			});		
+		}				
+				
+		this.handleEl = new Element('div', {
+			'id': this.options.id + '_handle',
+			'class': 'horizontalHandle',
+			'styles': {
+				'display': this.showHandle == true ? 'block' : 'none' 
+			}
+		}).inject(this.panelEl, 'after');
+		
+		this.handleIconEl = new Element('div', {
+			'id': this.options.id + '_handle_icon',
+			'class': 'handleIcon'
+		}).inject(this.handleEl);		
+								
+		addResizeBottom(this.options.id);
+		
+			
+		// Add content to panel.
+		MochaUI.updateContent({
+			'element': this.panelEl,
+			'content':  this.options.content,
+			'url':      this.options.contentURL
+		});			
+		
+		panelHeight(this.options.column, this.panelEl, 'new');				
+					
+	}
+});
+MochaUI.Panel.implement(new Options, new Events);
+
+	// Panel Height
+	
+	/*
+	For each column, find the column height. Get the available space.
+	Add available space to any panel that does not have its height set.
+	If there is more than one, divide the available space among them.
+	If all panels have their height set, divide the available space among
+	the open panels equally.
+	
+	*/
+	
+	function panelHeight(column, changing, action){
+		if (column != null) {
+			this.panelHeight2($(column), changing, action);
+		}
+		else {
+			$$('.column').each(function(column){
+				panelHeight2(column);
+			}.bind(this));
+		}
+	}
+	/*
+	
+	actions can be new, collapsing or expanding.
+	
+	*/
+	function panelHeight2(column, changing, action){									
+	
+			var instances = MochaUI.Panels.instances;		
+			
+			var columnHeight = column.offsetHeight.toInt();			
+			var heightNotSet = []; // Panels than do not have their height set. MAY NOT END UP USING THIS.
+			
+			var panels = column.getChildren('.panel'); // All the panels in the column.
+			var panelsExpanded = column.getChildren('.expanded'); // All the expanded panels in the column.		
+			var panelsToResize = [];    // All the panels in the column whose height will be effected.
+			var tallestPanel;           // The panel with the greatest height
+			var tallestPanelHeight = 0;
+			
+			this.panelsHeight = 0;		// Height of all the panels in the column	
+			this.height = 0;            // Height of all the elements in the column			
+			
+			// Handle logic:
+			// - Partner up expanded panels with first expanded panel below them.
+			// - Detach handle event if panel is collapsed.
+			
+			panels.each(function(panel){				
+				currentInstance = instances.get(panel.id);
+				if (panel.hasClass('expanded') && panel.getNext('.expanded')) {						
+					currentInstance.partner = panel.getNext('.expanded');
+					currentInstance.resize.attach();
+					currentInstance.handleEl.setStyles({
+						'display': 'block',
+						'cursor': 'n-resize'
+					}).removeClass('detached'); 						
+				}
+				else {
+					currentInstance.resize.detach();
+					currentInstance.handleEl.setStyle('cursor', null).addClass('detached');					
+				}
+				if (panel.getNext('.panel') == null) {
+					currentInstance.handleEl.setStyle('display', 'none');
+				}
+			});			 
+			
+			// Get the total height of all the column's children
+			column.getChildren().each(function(el){			
+
+				if (el.hasClass('panel')){
+
+					var currentInstance = instances.get(el.id);
+					
+					areAnyNextSiblingsExpanded = function(el){
+						var test;
+						el.getAllNext('.panel').each(function(sibling){
+							var siblingInstance = instances.get(sibling.id);
+							if (siblingInstance.isCollapsed == false) {
+								test = true;
+							}	
+						}.bind(this));
+						return test;
+					}
+										
+					areAnyExpandedNextSiblingsExpanded = function(){
+						var test;
+						changing.getAllNext('.panel').each(function(sibling){
+							var siblingInstance = instances.get(sibling.id);
+							if (siblingInstance.isCollapsed == false) {
+								test = true;
+							}	
+						}.bind(this));
+						return test;
+					}
+					
+					// Resize panels that are not collapsed or "new"
+					if (action == 'new' ) {
+						if (currentInstance.isCollapsed != true && el != changing) {
+							panelsToResize.push(el);
+						}
+						
+						// Height of panels that can be resized
+						if (currentInstance.isCollapsed != true && el != changing) {
+							this.panelsHeight += el.offsetHeight.toInt();
+						}
+					}
+					// Resize panels that are not collapsed. If a panel is collapsing
+					// resize any expanded panels below. If there are no expanded panels
+					// below it, resize the expanded panels above it.
+					else if (action == null || action == 'collapsing' ) {
+						if (currentInstance.isCollapsed != true && (el.getAllNext('.panel').contains(changing) != true || areAnyNextSiblingsExpanded(el) != true)) {
+							panelsToResize.push(el);
+						}
+						
+						// Height of panels that can be resized
+						if (currentInstance.isCollapsed != true && (el.getAllNext('.panel').contains(changing) != true || areAnyNextSiblingsExpanded(el) != true)) {
+							this.panelsHeight += el.offsetHeight.toInt();
+						}
+					}
+					// Resize panels that are not collapsed and are not expanding.
+					// Resize any expanded panels below the expanding panel. If there are no expanded panels
+					// below it, resize the first expanded panel above it.					
+					else if (action == 'expanding') {
+						   
+						if (currentInstance.isCollapsed != true && (el.getAllNext('.panel').contains(changing) != true || (areAnyExpandedNextSiblingsExpanded() != true && el.getNext('.expanded') == changing)) && el != changing) {
+							panelsToResize.push(el);
+						}						
+						// Height of panels that can be resized
+						if (currentInstance.isCollapsed != true && (el.getAllNext('.panel').contains(changing) != true || (areAnyExpandedNextSiblingsExpanded() != true && el.getNext('.expanded') == changing)) && el != changing) {
+							this.panelsHeight += el.offsetHeight.toInt();
+						}				
+					}
+					
+					if (el.style.height) {
+						this.height += el.getStyle('height').toInt();
+					}
+					
+					// Add children without height set and who are not collapsed to an array
+					// THIS MAY NOT BE NEEDED				
+					else if (currentInstance.isCollapsed != true) {
+						heightNotSet.push(el);
+					}	
+				}
+				else {
+					this.height += el.offsetHeight.toInt();	
+				}											
+			}.bind(this));
+		
+			// Get the remaining height
+			var remainingHeight = column.offsetHeight.toInt() - this.height;		
+			
+			// If any of the panels do not have their height set, i.e., on startup or a panel
+			// was dynamically added ...				
+			if (heightNotSet.length != 0) {				
+				var heightToAdd = remainingHeight / heightNotSet.length;
+				heightNotSet.each(function(panel){
+					panel.setStyle('height', heightToAdd);
+					var instances = MochaUI.Panels.instances;
+					var contentEl = instances.get(panel.id).contentEl;
+					contentEl.setStyle('height', newPanelHeight - contentEl.getStyle('padding-top').toInt() - contentEl.getStyle('padding-bottom').toInt());	
+					contentEl.getChildren('iframe').setStyle('height', newPanelHeight - contentEl.getStyle('padding-top').toInt() - contentEl.getStyle('padding-bottom').toInt());						
+				});
+			}
+			
+			// If all the panels have their height set ...
+			else {
+				this.height = 0;				
+				
+				// Get height of all the column's children
+				column.getChildren().each(function(el){
+					this.height += el.offsetHeight.toInt();												
+				}.bind(this));
+				
+				var remainingHeight = column.offsetHeight.toInt() - this.height;				
+				
+				// Todo: Need to check each panel. If it's height is less than zero we shouldn't
+				// try to subtract more height from it. Instead the height should be subtracted
+				// from panels with height greater than 0. This gets more complicated if the
+				// panel has a height of 5 and we want to subtract 10px from it. We need to
+				// subtract the five and split the difference to the other panels.
+				//
+				// Once a panel reaches 0 or there abouts the ratio is broken for returning to later.
+								
+				panelsToResize.each(function(panel){
+					var ratio = this.panelsHeight / panel.offsetHeight.toInt();
+					var newPanelHeight = panel.getStyle('height').toInt() + (remainingHeight / ratio);
+					if (newPanelHeight < 1) {
+						newPanelHeight = 0;
+					}
+					panel.setStyle('height', newPanelHeight);
+				});	
+			}
+			
+			// Make sure the remaining height is 0. If not add/subtract the
+			// remaining height to the tallest panel. This makes up for browser resizing,
+			// off ratios, and users trying to give panels too much height.
+			
+			// Get height of all the column's children
+			this.height = 0;
+			column.getChildren().each(function(el){
+				this.height += el.offsetHeight.toInt();				
+				if (el.hasClass('panel') && el.getStyle('height').toInt() > tallestPanelHeight) {
+					tallestPanel = el;
+					tallestPanelHeight = el.getStyle('height').toInt();
+					
+				}												
+			}.bind(this));
+				
+			var remainingHeight = column.offsetHeight.toInt() - this.height;
+						
+			if ((remainingHeight > 0 || remainingHeight < 0) && tallestPanelHeight > 0) {
+				tallestPanel.setStyle('height', tallestPanel.getStyle('height').toInt() + remainingHeight );
+				if (tallestPanel.getStyle('height') < 1){
+					tallestPanel.setStyle('height', 0 );
+				}
+			}			
+			
+			$$('.columnHandle').each(function(handle){
+				handle.setStyle('height', handle.getParent().getStyle('height').toInt() - handle.getStyle('border-top').toInt() - handle.getStyle('border-bottom').toInt());
+			});
+			
+			panelsExpanded.each(function(panel){
+				resizeChildren(panel);
+			});							
+	}
+	
+	// May rename this resizeIframeEl()
+	function resizeChildren(panel){
+		var instances = MochaUI.Panels.instances;
+		var currentInstance = instances.get(panel.id);
+		var contentWrapperEl = currentInstance.contentWrapperEl;
+				
+		if (currentInstance.iframeEl) {
+			currentInstance.iframeEl.setStyles({
+				'height': contentWrapperEl.getStyle('height'),
+				'width': contentWrapperEl.offsetWidth - contentWrapperEl.getStyle('border-left').toInt() - contentWrapperEl.getStyle('border-right').toInt()
+			});
+		}
+	}
+	
+	
+	// Remaining Width
+	function rWidth(){	
+		$$('.rWidth').each(function(column){
+			var currentWidth = column.offsetWidth.toInt();
+			currentWidth -= column.getStyle('border-left').toInt();		
+			currentWidth -= column.getStyle('border-right').toInt();						
+		
+			var parent = column.getParent();		
+			this.width = 0;
+			
+			// Get the total width of all the parent element's children
+			parent.getChildren().each(function(el){
+				if (el.hasClass('mocha') != true)
+				this.width += el.offsetWidth.toInt();														
+			}.bind(this));
+		
+			// Add the remaining width to the current element
+			var remainingWidth = parent.offsetWidth.toInt() - this.width;
+			var newWidth =	currentWidth + remainingWidth;	
+			column.setStyle('width', newWidth);
+			column.getChildren('.panel').each(function(panel){
+				panel.setStyle('width', newWidth - panel.getStyle('border-left').toInt() - panel.getStyle('border-right').toInt());
+				resizeChildren(panel);
+			}.bind(this));				
+		});
+	}
+
+function addResizeRight(element, min, max){
+	if (!$(element)) return;
+	element = $(element);
+	
+	var instances = MochaUI.Columns.instances;
+	var currentInstance = instances.get(element.id);	
+		
+	var handle = element.getNext('.columnHandle');
+	handle.setStyle('cursor', 'e-resize');	
+	if (!min) min = 50;
+	if (!max) max = 250;
+	if (Browser.Engine.trident){	
+		handle.addEvents({
+			'mousedown': function(){
+				handle.setCapture();
+			},	
+			'mouseup': function(){
+				handle.releaseCapture();
+			}
+		});	
+	}		
+	currentInstance.resize = element.makeResizable({
+		handle: handle,
+		modifiers: {x: 'width', y: false},
+		limit: { x: [min, max] },
+		onStart: function(){
+			element.getElements('iframe').setStyle('visibility','hidden');
+			element.getNext('.column').getElements('iframe').setStyle('visibility','hidden');
+		}.bind(this),							
+		onDrag: function(){
+			rWidth();
+			if (Browser.Engine.trident4) {
+				element.getChildren().each(function(el){
+					var width = $(element).getStyle('width').toInt();
+					width -= el.getStyle('border-right').toInt();
+					width -= el.getStyle('border-left').toInt();
+					width -= el.getStyle('padding-right').toInt();
+					width -= el.getStyle('padding-left').toInt();
+					el.setStyle('width', width);
+				}.bind(this));
+			}						
+		}.bind(this),
+		onComplete: function(){
+			rWidth();
+			element.getElements('iframe').setStyle('visibility','visible');
+			element.getNext('.column').getElements('iframe').setStyle('visibility','visible');
+			currentInstance.fireEvent('onResize');						
+		}.bind(this)		
+	});	
+}
+
+function addResizeLeft(element, min, max){
+	if (!$(element)) return;
+	element = $(element);
+	
+	var instances = MochaUI.Columns.instances;
+	var currentInstance = instances.get(element.id);	
+		
+	var handle = element.getPrevious('.columnHandle');
+	handle.setStyle('cursor', 'e-resize');
+	var partner = element.getPrevious('.column');	
+	if (!min) min = 50;
+	if (!max) max = 250;
+	if (Browser.Engine.trident){	
+		handle.addEvents({
+			'mousedown': function(){
+				handle.setCapture();
+			},	
+			'mouseup': function(){
+				handle.releaseCapture();
+			}
+		});	
+	}		
+	currentInstance.resize = element.makeResizable({
+		handle: handle,
+		modifiers: {x: 'width' , y: false},
+		invert: true,
+		limit: { x: [min, max] },
+		onStart: function(){
+			$(element).getElements('iframe').setStyle('visibility','hidden');
+			partner.getElements('iframe').setStyle('visibility','hidden');
+		}.bind(this),									
+		onDrag: function(){	
+			rWidth();	
+		}.bind(this),
+		onComplete: function(){
+			rWidth();
+			$(element).getElements('iframe').setStyle('visibility','visible');
+			partner.getElements('iframe').setStyle('visibility','visible');
+			currentInstance.fireEvent('onResize');						
+		}.bind(this)		
+	});
+}
+
+
+// May remove the ability to set min and max as an option
+
+function addResizeBottom(element){
+	if (!$(element)) return;
+	var element = $(element);
+	
+	var instances = MochaUI.Panels.instances;
+	var currentInstance = instances.get(element.id);	
+	var handle = currentInstance.handleEl;
+	
+	handle.setStyle('cursor', 'n-resize');
+	
+	partner = currentInstance.partner;
+		
+	min = 0;
+	max = function(){
+		return element.getStyle('height').toInt() + partner.getStyle('height').toInt();
+	}.bind(this)
+	
+	if (Browser.Engine.trident){	
+		handle.addEvents({
+			'mousedown': function(){
+				handle.setCapture();
+			},	
+			'mouseup': function(){
+				handle.releaseCapture();
+			}
+		});	
+	}		
+	currentInstance.resize = element.makeResizable({
+		handle: handle,
+		modifiers: {x: false, y: 'height'},
+		limit: { y: [min, max] },
+		invert: false,		
+		onBeforeStart: function(){
+			partner = currentInstance.partner;
+			this.originalHeight = element.getStyle('height').toInt();
+			this.partnerOriginalHeight = partner.getStyle('height').toInt();			
+		}.bind(this),
+		onStart: function(){
+			if (currentInstance.iframeEl) {
+				currentInstance.iframeEl.setStyle('visibility', 'hidden');
+			}
+			partner.getElements('iframe').setStyle('visibility','hidden');
+		}.bind(this),							
+		onDrag: function(){
+			partnerHeight = partnerOriginalHeight + (this.originalHeight - element.getStyle('height').toInt());
+			partner.setStyle('height', partnerHeight);
+			resizeChildren(element, element.getStyle('height').toInt());
+			resizeChildren(partner, partnerHeight);
+		}.bind(this),
+		onComplete: function(){
+			partnerHeight = partnerOriginalHeight + (this.originalHeight - element.getStyle('height').toInt());
+			partner.setStyle('height', partnerHeight);
+			resizeChildren(element, element.getStyle('height').toInt());
+			resizeChildren(partner, partnerHeight);
+			if (currentInstance.iframeEl) {
+				currentInstance.iframeEl.setStyle('visibility', 'visible');
+			}	
+			partner.getElements('iframe').setStyle('visibility','visible');
+			currentInstance.fireEvent('onResize');			
+		}.bind(this)		
+	});
+}
 /*
 
 Script: Dock.js
@@ -3009,7 +3894,7 @@ License:
 	MIT-style license.
 
 Requires:
-	Core.js, Window.js, Desktop.js	
+	Core.js, Window.js, Layout.js	
 
 Todo:
 	- Make it so the dock requires no initial html markup.
@@ -3023,7 +3908,12 @@ MochaUI.options.extend({
 		dock:        'dock'
 });
 
-MochaUI.dockVisible = true;
+// Used by Desktop.js before MochaUI.Dock is initialized.
+window.addEvent('domready', function(){	
+	if ($('dockWrapper')) {
+		MochaUI.dockVisible = true;
+	}
+});
 
 MochaUI.extend({
 	/*
@@ -3049,13 +3939,12 @@ MochaUI.Dock = new Class({
 	
 	options: {
 		useControls:          true,      // Toggles autohide and dock placement controls.
-		useCanvasTabs:        false,     // Toggle use of canvas tab graphics. NOT YET IMPLEMENTED
 		dockPosition:         'top',     // Position the dock starts in, top or bottom.
 		// Style options
 		dockTabColor:         [255, 255, 255],
 		trueButtonColor:      [70, 245, 70],     // Color for autohide on		
-		enabledButtonColor:   [255, 70, 70], 
-		disabledButtonColor:  [150, 150, 150]		
+		enabledButtonColor:   [81, 97, 115], 
+		disabledButtonColor:  [170, 170, 170]		
 	},
 	initialize: function(options){
 		// Stops if MochaUI.Desktop is not implemented
@@ -3066,6 +3955,8 @@ MochaUI.Dock = new Class({
 		this.dock          = $(MochaUI.options.dock);
 		this.autoHideEvent = null;		
 		this.dockAutoHide  = false;  // True when dock autohide is set to on, false if set to off
+
+		if (!this.dockWrapper) return;
 
 		if (!this.options.useControls){
 			if($('dockPlacement')){
@@ -3145,24 +4036,31 @@ MochaUI.Dock = new Class({
 			if (this.dockAutoHide){
 				$('dockAutoHide').setProperty('title', 'Turn Auto Hide Off');
 				//ctx.clearRect(0, 11, 100, 100);				
-				MochaUI.circle(ctx, 5 , 14, 3, this.options.trueButtonColor, 1.0); // green
+				MochaUI.circle(ctx, 5 , 14, 3, this.options.trueButtonColor, 1.0);
 				
 				// Define event
 				this.autoHideEvent = function(event) {
 					if (!this.dockAutoHide)
 						return;
-					if (event.client.y > (document.getCoordinates().height - 25)){
+					if (!MochaUI.Desktop.footer && event.client.y > (document.getCoordinates().height - 25)){
 						if (!MochaUI.dockVisible){
 							this.dockWrapper.setStyle('display', 'block');
 							MochaUI.dockVisible = true;
 							MochaUI.Desktop.setDesktopSize();
 						}
-					} else {
-						if (MochaUI.dockVisible){
-							this.dockWrapper.setStyle('display', 'none');
-							MochaUI.dockVisible = false;
+					}
+					else if (MochaUI.Desktop.desktopFooter && event.client.y > (document.getCoordinates().height - 25 - MochaUI.Desktop.desktopFooter.offsetHeight)){
+						if (!MochaUI.dockVisible){
+							this.dockWrapper.setStyle('display', 'block');
+							MochaUI.dockVisible = true;
 							MochaUI.Desktop.setDesktopSize();
 						}
+					}					
+					else if (MochaUI.dockVisible){
+						this.dockWrapper.setStyle('display', 'none');
+						MochaUI.dockVisible = false;
+						MochaUI.Desktop.setDesktopSize();
+						
 					}
 				}.bind(this);
 				
@@ -3172,7 +4070,7 @@ MochaUI.Dock = new Class({
 			} else {
 				$('dockAutoHide').setProperty('title', 'Turn Auto Hide On');
 				//ctx.clearRect(0, 11, 100, 100);
-				MochaUI.circle(ctx, 5 , 14, 3, this.options.enabledButtonColor, 1.0); // red
+				MochaUI.circle(ctx, 5 , 14, 3, this.options.enabledButtonColor, 1.0);
 				// Remove event
 				document.removeEvent('mousemove', this.autoHideEvent);
 			}
@@ -3182,8 +4080,8 @@ MochaUI.Dock = new Class({
 		// Draw dock controls
 		var ctx = $('dockCanvas').getContext('2d');
 		ctx.clearRect(0, 0, 100, 100);
-		MochaUI.circle(ctx, 5 , 4, 3, this.options.enabledButtonColor, 1.0);  // red
-		MochaUI.circle(ctx, 5 , 14, 3, this.options.enabledButtonColor, 1.0); // red
+		MochaUI.circle(ctx, 5 , 4, 3, this.options.enabledButtonColor, 1.0); 
+		MochaUI.circle(ctx, 5 , 14, 3, this.options.enabledButtonColor, 1.0);
 		
 		if (this.options.dockPosition == 'top'){
 			this.moveDock();	
@@ -3202,8 +4100,8 @@ MochaUI.Dock = new Class({
 				MochaUI.Desktop.setDesktopSize();
 				this.dockWrapper.setProperty('dockPosition','top');
 				ctx.clearRect(0, 0, 100, 100);
-				MochaUI.circle(ctx, 5, 4, 3, this.options.trueButtonColor, 1.0); // green
-				MochaUI.circle(ctx, 5, 14, 3, this.options.disabledButtonColor, 1.0); // gray
+				MochaUI.circle(ctx, 5, 4, 3, this.options.enabledButtonColor, 1.0);
+				MochaUI.circle(ctx, 5, 14, 3, this.options.disabledButtonColor, 1.0);
 				$('dockPlacement').setProperty('title', 'Position Dock Bottom');
 				$('dockAutoHide').setProperty('title', 'Auto Hide Disabled in Top Dock Position');
 				this.dockAutoHide = false;
@@ -3212,14 +4110,14 @@ MochaUI.Dock = new Class({
 			else {
 				this.dockWrapper.setStyles({
 					'position':      'absolute',
-					'bottom':        0
+					'bottom':        MochaUI.Desktop.desktopFooter ? MochaUI.Desktop.desktopFooter.offsetHeight : 0
 				});
 				this.dockWrapper.removeClass('top');				
 				MochaUI.Desktop.setDesktopSize();
 				this.dockWrapper.setProperty('dockPosition', 'bottom');
 				ctx.clearRect(0, 0, 100, 100);
-				MochaUI.circle(ctx, 5, 4, 3, this.options.enabledButtonColor, 1.0); // red
-				MochaUI.circle(ctx, 5 , 14, 3, this.options.enabledButtonColor, 1.0); // red 
+				MochaUI.circle(ctx, 5, 4, 3, this.options.enabledButtonColor, 1.0);
+				MochaUI.circle(ctx, 5 , 14, 3, this.options.enabledButtonColor, 1.0);
 				$('dockPlacement').setProperty('title', 'Position Dock Top');
 				$('dockAutoHide').setProperty('title', 'Turn Auto Hide On');
 			}		
@@ -3235,64 +4133,66 @@ MochaUI.Dock = new Class({
 		}).inject($('dockClear'), 'before');
 		
 		dockTab.addEvent('mousedown', function(e){
+			new Event(e).stop();
 			this.timeDown = $time();			
 		});
 		
 		dockTab.addEvent('mouseup', function(e){
 			this.timeUp = $time();
 			if ((this.timeUp - this.timeDown) < 275){
-				// If window is minimized, restore window.
+				// If the visibility of the windows on the page are toggled off, toggle visibility on.
+				if (MochaUI.Windows.windowsVisible == false) {
+					MochaUI.toggleWindowVisibility();
+					if (currentInstance.isMinimized == true) {
+						MochaUI.Dock.restoreMinimized.delay(25, MochaUI.Dock, windowEl);
+					}
+					else {
+						MochaUI.focusWindow(windowEl);
+					}										
+					return;
+				}
+				// If window is minimized, restore window.							
 				if (currentInstance.isMinimized == true) {
 					MochaUI.Dock.restoreMinimized.delay(25, MochaUI.Dock, windowEl);
 				}
 				else{
-					// If window is maximized and focused, minimize window.
+					// If window is not minimized and is focused, minimize window.
 					if (currentInstance.windowEl.hasClass('isFocused')) {
 						MochaUI.Dock.minimizeWindow(windowEl)
 					}
-					// If window is maximized and not focused, focus window.	
+					// If window is not minimized and is not focused, focus window.	
 					else{
 						MochaUI.focusWindow(windowEl);
 					}
+					// if the window is not minimized and is outside the viewport, center it in the viewport.
+					var coordinates = document.getCoordinates();
+					if (windowEl.getStyle('left').toInt() > coordinates.width || windowEl.getStyle('top').toInt() > coordinates.height){
+						MochaUI.centerWindow(windowEl);	
+					}					
 				}					
 			}
 		});			
 
 		this.dockSortables.addItems(dockTab);
-
-		//Insert canvas
-		if (this.options.useControls){
-			if (this.options.useCanvasTabs){	
-				var dockTabCanvas = new Element('canvas', {
-					'id': currentInstance.options.id + '_dockTabCanvas',
-					'class': 'dockCanvas', 
-					'width': 120,
-					'height': 20			
-				}).inject(dockTab);	
-				
-				// Dynamically initialize canvas using excanvas. This is only required by IE
-				if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas') {
-					G_vmlCanvasManager.initElement(dockTabCanvas);
-				}
-
-				var ctx = $(currentInstance.options.id + '_dockTabCanvas').getContext('2d');
-				MochaUI.roundedRect(ctx, 0, 0, 120, 20, 5, this.options.dockTabColor, 1);
-			}
-		}
-		
+	
 		var titleText = currentInstance.titleEl.innerHTML;		
 		
 		var dockTabText = new Element('div', {
 			'id': currentInstance.options.id + '_dockTabText',
 			'class': 'dockText'
-		}).set('html', titleText.substring(0,18) + (titleText.length > 18 ? '...' : '')).inject($(dockTab));
+		}).set('html', titleText.substring(0,20) + (titleText.length > 20 ? '...' : '')).inject($(dockTab));
+
+		// If I implement this again, will need to also adjust the titleText truncate and the tab's
+		// left padding.
+		if (currentInstance.options.icon != false){
+			// dockTabText.setStyle('background', 'url(' + currentInstance.options.icon + ') 4px 4px no-repeat'); 	
+		}
 		
 		// Need to resize everything in case the dock wraps when a new tab is added
 		MochaUI.Desktop.setDesktopSize();
 			
 	},
 	makeActiveTab: function(){
-
 
 		// getWindowWith HighestZindex is used in case the currently focused window
 		// is closed.		
@@ -3313,13 +4213,13 @@ MochaUI.Dock = new Class({
 	},	
 	minimizeWindow: function(windowEl){		
 		if (windowEl != $(windowEl)) return;
-			
+		
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);		
 		currentInstance.isMinimized = true;		
 
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
-		if ( currentInstance.iframe ) {
+		if ( currentInstance.iframeEl ) {
 			currentInstance.iframeEl.setStyle('visibility', 'hidden');
 		}
 		
@@ -3332,12 +4232,16 @@ MochaUI.Dock = new Class({
 
 		 // Fixes a scrollbar issue in Mac FF2
 		if (Browser.Platform.mac && Browser.Engine.gecko){
-			currentInstance.contentWrapperEl.setStyle('overflow', 'hidden');
+			if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent)) {
+				var ffversion = new Number(RegExp.$1);
+				if (ffversion < 3) {					
+					currentInstance.contentWrapperEl.setStyle('overflow', 'hidden');
+				}					
+			}
 		}
 	
 		MochaUI.Desktop.setDesktopSize();
-		
-		// Fixes a scrollbar issue in Mac FF2.
+
 		// Have to use timeout because window gets focused when you click on the minimize button 	
 		setTimeout(function(){		
 			windowEl.setStyle('zIndex', 1);
@@ -3360,7 +4264,7 @@ MochaUI.Dock = new Class({
 		MochaUI.Desktop.setDesktopSize();
 
 		 // Part of Mac FF2 scrollbar fix
-		if (currentInstance.options.scrollbars == true && currentInstance.iframe == false){ 
+		if (currentInstance.options.scrollbars == true && !currentInstance.iframeEl){ 
 			currentInstance.contentWrapperEl.setStyle('overflow', 'auto');
 		}
 
@@ -3375,7 +4279,7 @@ MochaUI.Dock = new Class({
 		}		
 
 		// Show iframe
-		if ( currentInstance.iframe ) {
+		if ( currentInstance.iframeEl ) {
 			currentInstance.iframeEl.setStyle('visibility', 'visible');
 		}
 
@@ -3441,7 +4345,7 @@ MochaUI.extend({
 			closeAfter: '1400',
 			width: 200,
 			height: 40,
-			y: 15,
+			y: 53,
 			padding:  { top: 10, right: 12, bottom: 10, left: 12 },
 			shadowBlur: 5,
 			bodyBgColor: [255, 255, 255]	
