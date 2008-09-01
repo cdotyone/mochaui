@@ -437,7 +437,7 @@ initializeWindows = function(){
 			width: 370,
 			height: 400,
 			x: 20,
-			y: 80,
+			y: 90,
 			maximizable: false
 		});
 	}
@@ -473,7 +473,7 @@ initializeWindows = function(){
 			loadMethod: 'xhr',
 			contentURL: 'plugins/gears/index.html',
 			width: 550,
-			height: 320,
+			height: 350,
 			onContentLoaded: function(windowEl){
 				init();
 			}
@@ -608,7 +608,7 @@ initializeWindows = function(){
 				width: 300,
 				height: 275,
 				x: 20,
-				y: 80 
+				y: 90 
 			});
 	}
 	if ($('resourcesLinkCheck')){
@@ -627,7 +627,7 @@ initializeWindows = function(){
 				width: 320,
 				height: 320,
 				x: 20,
-				y: 80 
+				y: 90 
 			});
 	}
 	if ($('helpLinkCheck')){
@@ -646,7 +646,7 @@ initializeWindows = function(){
 			width: 320,
 			height: 320,
 			x: 20,
-			y: 80 
+			y: 90 
 		});
 	}
 	if ($('contributeLinkCheck')){

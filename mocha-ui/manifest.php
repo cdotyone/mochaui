@@ -1,37 +1,34 @@
 <?php
-// Grab a full file listing from the current and sub directories
-
-// pull a full file listing - requires the Unix 'find' and 'sort commands. 'find' will retrieve a
-// list of all files from the current directory, 'sort' will sort the listing, and 'explode' will split
-// all files into an array passed into $filelist.
+// This script will grab all the selected file types from the same directory this file is in and all
+// it's sub-directories and echo the list formatted as a JSON manifest for Google Gears.
 
 
-      $urls = explode("\n",`find .|sort`);
-      $version = 'mochaui-2';
-      ?>
-      {
-        "betaManifestVersion": 1,
-        "version": "<?php echo $version; ?>",
-        "entries": [
-		    { "url": "."}, 
-        <?php
-          
-		  $p = array(); 
-          foreach($urls as $url) {              	
-			  if (eregi("html$|css$|js$|gif$|png$|jpg$", $url) && !is_dir($url)) {
-			  	array_push($p, $url);  
+$urls = explode("\n",`find .|sort`);
+$fileurls = array(); 
+$version = 'my_version_string';
+?>
+	{
+	"betaManifestVersion": 1,
+	"version": "<?php echo $version; ?>",
+	"entries": [
+		{ "url": "."}, 
+		<?php          
+
+			foreach($urls as $url) {              	
+				if (eregi("html$|css$|js$|gif$|png$|jpg$", $url) && !is_dir($url)) {					
+					array_push($fileurls, substr($url, 2));  
 				}
 			}	
-		  $last = end($p);
-		  foreach($p as $url) {				
-			  ?>			  
-            { "url": "<?php echo substr($url, 2); ?>"}<?php 
-                if($url != $last) {
-                    echo ',';
-			    }
+			$last = end($fileurls);
+			foreach($fileurls as $fileurl) {				
+			?>			  
+			{ "url": "<?php echo $fileurl; ?>"}<?php 
+				if($fileurl != $last) {
+					 echo ',';
+			}
               
-              echo "\n";                
-          }
-            ?>
-          ]
-      }
+				 echo "\n";                
+			}
+			?>
+		]
+	}

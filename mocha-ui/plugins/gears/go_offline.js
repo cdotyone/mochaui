@@ -48,7 +48,9 @@ function init() {
   } else {
     localServer = google.gears.factory.create("beta.localserver");
     store = localServer.createManagedStore(STORE_NAME);
-    textOut("Gears is installed.");
+	var versioncaptured;
+	store.currentVersion ? versioncaptured = store.currentVersion : versioncaptured = 'None';	
+    textOut("<strong>Gears installed: </strong> true<br /><strong>Version of application stored locally: </strong>" + versioncaptured);	
   }
 }
 

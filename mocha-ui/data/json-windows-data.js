@@ -10,7 +10,7 @@
 		"headerStartColor": [230, 160, 160],
 		"headerStoptColor": [237, 237, 237],
 		"x": 50,
-		"y": 70
+		"y": 90
 	},
 	{
 		"id": "json02",
@@ -22,7 +22,7 @@
 		"headerStartColor": [230, 190, 160],
 		"headerStoptColor": [237, 237, 237],	
 		"x": 110,
-		"y": 145
+		"y": 165
 	},
 	{
 		"id": "json03",
@@ -34,7 +34,7 @@
 		"headerStartColor": [160, 160, 230],
 		"headerStoptColor": [237, 237, 237],		
 		"x": 170,
-		"y": 220
+		"y": 240
 	}
 	
 ]}
