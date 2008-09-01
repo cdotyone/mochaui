@@ -392,11 +392,15 @@ body {
 	border-bottom: 1px solid #d9d9d9;		
 }
 
+.panel-headerContent {
+	padding-top: 2px;
+}	
+
 .panel-header h2 {
 	display: inline-block;
 	font-size: 12px;
 	margin: 0;
-	padding: 5px 8px 0 8px;
+	padding: 3px 8px 0 8px;
 	height: 22px;	
 	overflow: hidden;
 	color: #585E66;	
@@ -405,7 +409,7 @@ body {
 .panel-header-toolbox {
 	float: right;
 	height: 26px;
-	margin: 2px 5px 0 0;
+	margin: 1px 5px 0 0;
 	text-align: right;
 }
 
@@ -572,12 +576,13 @@ body {
 .toolbarTabs {	
 	padding: 0 5px 2px 2px;
 	background: #e4e4e4 url(../images/tabs.gif) repeat-x;
-	background-position: left -60px;	
+	background-position: left -60px;
 }
 
+/*
 .panel-header .toolbarTabs {
-	margin-top: 2px;
-}
+	margin-top: 2px;	
+}*/
 
 .tab-menu {
 	padding-top: 1px;
@@ -744,6 +749,15 @@ body {
 }
 	
 /* Window Themes */
+
+.mocha.no-canvas {
+	background: #f1f1f1;
+	border: 2px solid #555;	
+}
+
+.mocha.no-canvas .mochaTitlebar {
+	background: #f1f1f1;	
+}	
 
 .mocha.transparent .mochaTitlebar h3 {
 	color: #fff;

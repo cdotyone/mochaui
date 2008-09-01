@@ -199,6 +199,7 @@ MochaUI.Windows.windowOptions = {
 	shadowBlur:        5,
 	shadowOffset:      {'x': 0, 'y': 1},       // Should be positive and not be greater than the ShadowBlur.
 	controlsOffset:    {'right': 6, 'top': 6}, // Change this if you want to reposition the window controls.
+	useCanvas:         true,                   // Set this to false if you don't want a canvas body.
 	useCanvasControls: true,                   // Set this to false if you wish to use images for the buttons.
 	
 	// Color options:		
@@ -239,8 +240,7 @@ MochaUI.Window = new Class({
 		// Shorten object chain
 		var options = this.options;
 
-		$extend(this, {		
-			accordianTimer: '', // Used with accordian - should go somewhere else maybe?
+		$extend(this, {	
 			mochaControlsWidth: 0,
 			minimizebuttonX:  0,  // Minimize button horizontal position
 			maximizebuttonX: 0,  // Maximize button horizontal position
@@ -1193,7 +1193,7 @@ MochaUI.Window = new Class({
 
 	*/	
 	drawWindow: function(windowEl, shadows) {
-		
+				
 		if (this.isCollapsed){
 			this.drawWindowCollapsed(windowEl, shadows);
 			return;
@@ -1203,20 +1203,6 @@ MochaUI.Window = new Class({
 		var shadowBlur = options.shadowBlur;
 		var shadowBlur2x = shadowBlur * 2;
 		var shadowOffset = this.options.shadowOffset;		
-
-		/*
-		var borderHeight = 0;
-		var styleDimensions = this.contentBorderEl.getStyles('margin-top', 'margin-bottom', 'border-top', 'border-bottom');		
-		for(var style in styleDimensions){
-			borderHeight += styleDimensions[style].toInt();
-		}
-		
-		var borderWidth = 0;
-		var styleDimensions = this.contentBorderEl.getStyles('margin-left', 'margin-right', 'border-left', 'border-right');		
-		for(var style in styleDimensions){
-			borderWidth += styleDimensions[style].toInt();
-		}
-		*/
 
 		this.overlayEl.setStyles({
 			'width': this.contentWrapperEl.offsetWidth
@@ -1271,39 +1257,43 @@ MochaUI.Window = new Class({
 			});
 		}
 		
-		// Draw Window
-		var ctx = this.canvasEl.getContext('2d');
-		ctx.clearRect(0, 0, width, height);	
+		if (this.options.useCanvas != false) {
+		
+			// Draw Window
+			var ctx = this.canvasEl.getContext('2d');
+			ctx.clearRect(0, 0, width, height);
+			
+			switch (options.shape) {
+				case 'box':
+					this.drawBox(ctx, width, height, shadowBlur, shadowOffset, shadows);
+					break;
+				case 'gauge':
+					this.drawGauge(ctx, width, height, shadowBlur, shadowOffset, shadows);
+					break;
+			}
 
-		switch(options.shape) {
-			case 'box':
-				this.drawBox(ctx, width, height, shadowBlur, shadowOffset, shadows);
-				break;
-			case 'gauge':
-				this.drawGauge(ctx, width, height, shadowBlur, shadowOffset, shadows);
-				break;				
-		}		
+
+			if (options.resizable){ 
+				MochaUI.triangle(
+					ctx,
+					width - (shadowBlur + shadowOffset.x + 17),
+					height - (shadowBlur + shadowOffset.y + 18),
+					11,
+					11,
+					options.resizableColor,
+					1.0
+				);
+			}		
+
+			// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
+			if (Browser.Engine.trident){
+				MochaUI.triangle(ctx, 0, 0, 10, 10, options.resizableColor, 0);
+			}
+		}
 		
 		if (options.type != 'notification' && options.useCanvasControls == true){
 			this.drawControls(width, height, shadows);
-		}
-
-		if (options.resizable){ 
-			MochaUI.triangle(
-				ctx,
-				width - (shadowBlur + shadowOffset.x + 17),
-				height - (shadowBlur + shadowOffset.y + 18),
-				11,
-				11,
-				options.resizableColor,
-				1.0
-			);
-		}
-
-		// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
-		if (Browser.Engine.trident){
-			MochaUI.triangle(ctx, 0, 0, 10, 10, options.resizableColor, 0);
-		}		
+		}				
 
 	},
 	drawWindowCollapsed: function(windowEl, shadows) {
@@ -1345,17 +1335,19 @@ MochaUI.Window = new Class({
 		});
 	
 		// Draw Window
-		var ctx = this.canvasEl.getContext('2d');
-		ctx.clearRect(0, 0, width, height);
-		
-		this.drawBoxCollapsed(ctx, width, height, shadowBlur, shadowOffset, shadows);		
-		if (options.useCanvasControls == true){
-			this.drawControls(width, height, shadows);
-		}
-
-		// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
-		if ( Browser.Engine.trident ){
-			MochaUI.triangle(ctx, 0, 0, 10, 10, options.resizableColor, 0);
+		if (this.options.useCanvas != false) {
+			var ctx = this.canvasEl.getContext('2d');
+			ctx.clearRect(0, 0, width, height);
+			
+			this.drawBoxCollapsed(ctx, width, height, shadowBlur, shadowOffset, shadows);
+			if (options.useCanvasControls == true) {
+				this.drawControls(width, height, shadows);
+			}
+			
+			// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
+			if (Browser.Engine.trident) {
+				MochaUI.triangle(ctx, 0, 0, 10, 10, options.resizableColor, 0);
+			}
 		}		
 
 	},	

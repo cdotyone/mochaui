@@ -42,7 +42,7 @@ window.addEvent('load', function(){
   
 });
 
-function init() {
+function initGears() {
   if (!window.google || !google.gears) {
     textOut("NOTE:  You must install Gears first.");
   } else {
@@ -50,7 +50,8 @@ function init() {
     store = localServer.createManagedStore(STORE_NAME);
 	var versioncaptured;
 	store.currentVersion ? versioncaptured = store.currentVersion : versioncaptured = 'None';	
-    textOut("<strong>Gears installed: </strong> true<br /><strong>Version of application stored locally: </strong>" + versioncaptured);	
+    textOut("<strong>Gears installed: </strong> true<br /><strong>Version of application stored locally: </strong>" + versioncaptured);
+	//console.log(store.lastUpdateCheckTime);	
   }
 }
 

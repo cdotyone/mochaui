@@ -465,7 +465,8 @@ initializeWindows = function(){
 			MochaUI.loadWorkspace();
 		});
 	}
-	
+
+/*	
 	MochaUI.gearsWindow = function(){ 
 		new MochaUI.Window({
 			id: 'gears',
@@ -475,7 +476,7 @@ initializeWindows = function(){
 			width: 550,
 			height: 350,
 			onContentLoaded: function(windowEl){
-				init();
+				initGears();
 			}
 		});
 	}	
@@ -485,7 +486,7 @@ initializeWindows = function(){
 			MochaUI.gearsWindow();
 		});
 	}
-	
+*/	
 	
 	// Help
 	MochaUI.overviewWindow = function(){
@@ -545,9 +546,6 @@ initializeWindows = function(){
 			title: 'Features',			
 			loadMethod: 'xhr',
 			contentURL: 'pages/features.html',
-			//onContentLoaded: function(){
-				//MochaUI.initializeTabs('featuresTabs');
-			//},
 			width: 305,
 			height: 175,
 			x: 570,
@@ -562,7 +560,28 @@ initializeWindows = function(){
 			new Event(e).stop();
 			MochaUI.featuresWindow();
 		});
-	}	
+	}
+	
+	MochaUI.noCanvasWindow = function(){		
+		new MochaUI.Window({
+			id: 'nocanvas',
+			title: 'No Canvas',			
+			loadMethod: 'xhr',
+			contentURL: 'pages/lipsum.html',
+			addClass: 'no-canvas',
+			width: 305,
+			height: 175,
+			shadowBlur: 0,			
+			resizeLimit: {'x': [275, 2500], 'y': [125, 2000]},
+			useCanvas: false
+		});	
+	}
+	if ($('noCanvasLinkCheck')){
+		$('noCanvasLinkCheck').addEvent('click', function(e){	
+			new Event(e).stop();
+			MochaUI.noCanvasWindow();
+		});
+	}		
 	
 	MochaUI.faqWindow = function(){
 			new MochaUI.Window({
