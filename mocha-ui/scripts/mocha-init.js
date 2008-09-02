@@ -786,7 +786,8 @@ window.addEvent('domready', function(){
 		contentURL: 'pages/lipsum.html',
 		column: 'sideColumn1',
 		height: 140,
-		footer: true		
+		footer: true,
+		footerURL: 'pages/toolbox-demo.html'		
 	});
 	
 	// Add panels to main column	
@@ -825,7 +826,8 @@ window.addEvent('domready', function(){
 		contentURL: 'pages/tips.html',
 		column: 'sideColumn2',
 		height: 300,
-		footer: true
+		footer: true,
+		footerURL: 'pages/toolbox-demo.html'		
 	});
 
 	MochaUI.Modal = new MochaUI.Modal();

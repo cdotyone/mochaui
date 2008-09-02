@@ -99,16 +99,19 @@ body {
 	float: right;
 	padding: 7px 8px 0 10px;
 	height: 23px;
-	overflow: hidden;	
+	overflow: hidden;		
 }
 
 .toolbox.divider {
 	background: url(../images/toolbox-divider.gif) left center no-repeat;
-	padding: 7px 8px 0 12px;			
+	padding: 7px 3px 0 12px;			
 }	
 
 .toolbox img {
 	cursor: pointer;
+	margin-right: 5px;
+	padding: 0;
+	float: left;
 }
 
 .toolbox img.disabled {
@@ -116,10 +119,10 @@ body {
 }	
 
 #spinnerWrapper {
-	float: right;
 	width: 16px;
 	height: 16px;
 	background: url(../images/spinner-placeholder.gif) no-repeat;
+	margin-right: 5px;
 }
 
 #spinner {
@@ -451,8 +454,12 @@ li.divider {
 }
 
 .panel-footer {
-	padding: 5px 8px;	
+	padding: 1px 0 0 8px;	
 }
+
+.panel-footerContent {
+	margin-top: 5px;
+}	
 
 /* Handles */	
 
