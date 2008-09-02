@@ -325,7 +325,8 @@ var MochaUI = new Hash({
 		var currentInstance = instances.get(windowEl.id);
 		currentInstance.fireEvent('onCloseComplete');
 		
-		if (this.options.type != 'modal' && this.options.type != 'notification') {
+		if (currentInstance.options.type != 'notification') {
+			alert('test');
 			var newFocus = this.getWindowWithHighestZindex();
 			this.focusWindow(newFocus);
 		}
@@ -523,6 +524,21 @@ var MochaUI = new Hash({
 				'left': windowPosLeft
 			});
 		}
+	},
+	notification: function(message){
+			new MochaUI.Window({
+				loadMethod: 'html',
+				closeAfter: 1500,
+				type: 'notification',
+				addClass: 'notification',
+				content: message,
+				width: 220,
+				height: 40,
+				y: 53,
+				padding:  { top: 10, right: 12, bottom: 10, left: 12 },
+				shadowBlur: 5,
+				bodyBgColor: [255, 255, 255]	
+			});
 	},
 	/*
 	

@@ -350,12 +350,24 @@ MochaUI.Desktop.implement(new Options, new Events);
 /*
 
 Class: Column
-	Create a column.
+	Create a column. Columns should be created from left to right.
 
 Syntax:
 (start code)
 	MochaUI.Panel();
 (end)
+
+Arguments:
+	options
+
+Options:
+	id - The ID of the column. This must be set when creating the column.	
+	placement - Can be 'right', 'main', or 'left'. There must be at least one column with the 'main' option.
+	width - 'main' column is fluid and should not be given a width.
+	resizeLimit - resizelimit of a 'right' or 'left' column.
+	onResize - (function) Fired when the column is resized.
+	onCollapse - (function) Fired when the column is collapsed.
+	onExpand - (function) Fired when the column is expanded.	
 		
 */
 MochaUI.Column = new Class({
@@ -365,15 +377,15 @@ MochaUI.Column = new Class({
 	Implements: [Events, Options],
 	
 	options: {
-		id:            null, // This must be set when creating the column.
-		placement:     null, // Can be 'right', 'main', or 'left'.
+		id:            null, 
+		placement:     null, 
 		width:         null,
 		resizeLimit:   [],
 		
 		// Events
 		onResize:     $empty, 
-		onCollapse:   $empty, // NOT YET IMPLEMENTED
-		onExpand:     $empty  // NOT YET IMPLEMENTED
+		onCollapse:   $empty,
+		onExpand:     $empty
 
 	},	
 	initialize: function(options){
@@ -459,7 +471,8 @@ MochaUI.Column = new Class({
 	},
 	columnToggle: function(){
 		var column= this.columnEl;
-							
+		
+		// Collapse					
 		if (this.isCollapsed == false) {
 			this.oldWidth = column.getStyle('width').toInt();
 			
@@ -471,7 +484,9 @@ MochaUI.Column = new Class({
 			column.addClass('collapsed');
 			column.removeClass('expanded');
 			rWidth();
+			this.fireEvent('onCollapse');			
 		}
+		// Expand
 		else {
 			column.setStyle('width', this.oldWidth);
 			this.isCollapsed = false;
@@ -482,6 +497,7 @@ MochaUI.Column = new Class({
 			this.handleEl.setStyle('cursor', 'e-resize').addClass('attached');
 			
 			rWidth();
+			this.fireEvent('onExpand');
 		}		
 	}
 });	
@@ -490,12 +506,19 @@ MochaUI.Column.implement(new Options, new Events);
 /*
 
 Class: Panel
-	Create a panel.
+	Create a panel. Panels go one on top of another in columns. Create your columns first and then add your panels. Panels should be created from top to bottom, left to right.
 
 Syntax:
 (start code)
 	MochaUI.Panel();
 (end)
+
+Arguments:
+	options
+
+Options:
+	id - The ID of the panel. This must be set when creating the panel.
+	column - Where to inject the panel. This must be set when creating the panel	
 		
 */
 MochaUI.Panel = new Class({
@@ -505,9 +528,9 @@ MochaUI.Panel = new Class({
 	Implements: [Events, Options],
 	
 	options: {
-		id:               null,        // This must be set when creating the panel
+		id:               null,
 		title:            'New Panel',
-		column:           null,        // Where to inject the panel. This must be set when creating the panel
+		column:           null,
 		loadMethod:       'html',
 		contentURL:       'pages/lipsum.html',	
 	

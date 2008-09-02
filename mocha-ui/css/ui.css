@@ -99,8 +99,21 @@ body {
 	float: right;
 	padding: 7px 8px 0 10px;
 	height: 23px;
-	overflow: hidden;		
+	overflow: hidden;	
 }
+
+.toolbox.divider {
+	background: url(../images/toolbox-divider.gif) left center no-repeat;
+	padding: 7px 8px 0 12px;			
+}	
+
+.toolbox img {
+	cursor: pointer;
+}
+
+.toolbox img.disabled {
+	cursor: default;
+}	
 
 #spinnerWrapper {
 	float: right;
@@ -214,7 +227,7 @@ body {
     position: static;
 }
 
-.divider {
+li.divider {
 	margin-top: 2px;
 	padding-top: 3px;	
 	border-top: 1px solid #ddd;

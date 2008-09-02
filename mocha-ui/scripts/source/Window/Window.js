@@ -29,9 +29,11 @@ Arguments:
 Options:
 	id - The ID of the window. If not defined, it will be set to 'win' + windowIDCount.	
 	title - The title of the window.
+	icon - Place an icon in the window's titlebar. This is either set to false or to the url of the icon. It is set up for icons that are 16 x 16px.	
 	type - ('window', 'modal' or 'notification') Defaults to 'window'.	
 	loadMethod - ('html', 'xhr', or 'iframe') Defaults to 'html'.
 	contentURL - Used if loadMethod is set to 'xhr' or 'iframe'.
+	closeAfter - Either false or time in milliseconds. Closes the window after a certain period of time in milliseconds. This is particularly useful for notifications.	
 	evalScripts - (boolean) An xhr loadMethod option. Defaults to true.    
 	evalResponse - (boolean) An xhr loadMethod option. Defaults to false.
 	content - (string or element) An html loadMethod option.
@@ -60,7 +62,11 @@ Options:
 	y - (number)    
 	scrollbars - (boolean)
 	padding - (object)
-	shadowBlur -(number) Width of shadows.		
+	shadowBlur - (number) Width of shadows.
+	shadowOffset - Should be positive and not be greater than the ShadowBlur.
+	controlsOffset - Change this if you want to reposition the window controls.
+	useCanvas - (boolean) Set this to false if you don't want a canvas body.
+	useCanvasControls - (boolean) Set this to false if you wish to use images for the buttons.			
 	headerHeight - (number) Height of window titlebar.
 	footerHeight - (number) Height of window footer.
 	cornerRadius - (number)
@@ -151,7 +157,7 @@ MochaUI.Windows.windowOptions = {
 	loadMethod:        'html',
 	contentURL:        'pages/lipsum.html',
 	
-	closeAfter:        false, // Close the window after a certain period of time in milliseconds. This is particularly useful for notifications.
+	closeAfter:        false,
 		
 	// xhr options
 	evalScripts:       true,
@@ -191,16 +197,16 @@ MochaUI.Windows.windowOptions = {
 	// Style options:
 	addClass:          '',
 	width:             300,
-	height:            125, 
+	height:            125,
 	x:                 null,
-	y:                 null,    
+	y:                 null,
 	scrollbars:        true,
 	padding:   		   { top: 10, right: 12, bottom: 10, left: 12 },
 	shadowBlur:        5,
-	shadowOffset:      {'x': 0, 'y': 1},       // Should be positive and not be greater than the ShadowBlur.
-	controlsOffset:    {'right': 6, 'top': 6}, // Change this if you want to reposition the window controls.
-	useCanvas:         true,                   // Set this to false if you don't want a canvas body.
-	useCanvasControls: true,                   // Set this to false if you wish to use images for the buttons.
+	shadowOffset:      {'x': 0, 'y': 1},
+	controlsOffset:    {'right': 6, 'top': 6},
+	useCanvas:         true,
+	useCanvasControls: true,
 	
 	// Color options:		
 	headerHeight:      25,
