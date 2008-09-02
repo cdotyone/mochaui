@@ -66,12 +66,15 @@ MochaUI.extend({
 		}		
 	},
 	loadWorkspace2: function(workspaceWindows){		
-		workspaceWindows.each(function(instance) {		
-			eval('MochaUI.' + instance.id + 'Window();');
-			$(instance.id).setStyles({
-				top: instance.top,
-				left: instance.left
-			});
+		workspaceWindows.each(function(instance) {
+			windowFunction = eval('MochaUI.' + instance.id + 'Window');
+			if (windowFunction) {
+				eval('MochaUI.' + instance.id + 'Window();');
+				$(instance.id).setStyles({
+					top: instance.top,
+					left: instance.left
+				});
+			}
 		}.bind(this));
 		this.loadingWorkspace = false;
 	},

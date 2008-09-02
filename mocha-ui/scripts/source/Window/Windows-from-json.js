@@ -28,6 +28,10 @@ Example:
 	}
 	(end)
 	
+Note: 
+	Windows created from JSON are not compatible with the current cookie based version
+	of Save and Load Workspace.  	
+	
 See Also:
 	<Window>	
 
