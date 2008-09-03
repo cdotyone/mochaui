@@ -461,9 +461,9 @@ MochaUI.Column = new Class({
 		}
 		
 		if (this.handleEl != null) {
-			this.handleEl.addEvent('dblclick', function(event){
+			this.handleEl.addEvent('dblclick', function(){
 				this.columnToggle();				
-			}.bind(this));
+			}.bind(this));	
 		}
 		
 		rWidth();		
@@ -476,13 +476,18 @@ MochaUI.Column = new Class({
 		if (this.isCollapsed == false) {
 			this.oldWidth = column.getStyle('width').toInt();
 			
-			this.resize.detach();
+			this.resize.detach();			
+			this.handleEl.removeEvents('dblclick');
+			this.handleEl.addEvent('click', function(){
+				this.columnToggle();				
+			}.bind(this));
 			this.handleEl.setStyle('cursor', 'pointer').addClass('detached');
 			
 			column.setStyle('width', 0);
 			this.isCollapsed = true;
 			column.addClass('collapsed');
 			column.removeClass('expanded');
+						
 			rWidth();
 			this.fireEvent('onCollapse');			
 		}
@@ -492,7 +497,11 @@ MochaUI.Column = new Class({
 			this.isCollapsed = false;
 			column.addClass('expanded');
 			column.removeClass('collapsed');
-			
+
+			this.handleEl.removeEvents('click');
+			this.handleEl.addEvent('dblclick', function(){
+				this.columnToggle();				
+			}.bind(this));			
 			this.resize.attach();
 			this.handleEl.setStyle('cursor', 'e-resize').addClass('attached');
 			
