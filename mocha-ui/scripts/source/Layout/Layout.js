@@ -1033,32 +1033,33 @@ MochaUI.Panel.implement(new Options, new Events);
 	}
 	
 	
-	// Remaining Width
-	function rWidth(){	
-		$$('.rWidth').each(function(column){
-			var currentWidth = column.offsetWidth.toInt();
-			currentWidth -= column.getStyle('border-left').toInt();		
-			currentWidth -= column.getStyle('border-right').toInt();						
-		
-			var parent = column.getParent();		
-			this.width = 0;
+// Remaining Width
+function rWidth(){	
+	$$('.rWidth').each(function(column){
+		var currentWidth = column.offsetWidth.toInt();
+		currentWidth -= column.getStyle('border-left').toInt();		
+		currentWidth -= column.getStyle('border-right').toInt();						
+	
+		var parent = column.getParent();		
+		this.width = 0;
 			
-			// Get the total width of all the parent element's children
-			parent.getChildren().each(function(el){
-				if (el.hasClass('mocha') != true)
-				this.width += el.offsetWidth.toInt();														
-			}.bind(this));
+		// Get the total width of all the parent element's children
+		parent.getChildren().each(function(el){
+			if (el.hasClass('mocha') != true)
+			this.width += el.offsetWidth.toInt();														
+		}.bind(this));
 		
-			// Add the remaining width to the current element
-			var remainingWidth = parent.offsetWidth.toInt() - this.width;
-			var newWidth =	currentWidth + remainingWidth;	
-			column.setStyle('width', newWidth);
-			column.getChildren('.panel').each(function(panel){
-				panel.setStyle('width', newWidth - panel.getStyle('border-left').toInt() - panel.getStyle('border-right').toInt());
-				resizeChildren(panel);
-			}.bind(this));				
-		});
-	}
+		// Add the remaining width to the current element
+		var remainingWidth = parent.offsetWidth.toInt() - this.width;
+		var newWidth =	currentWidth + remainingWidth;
+		if (newWidth < 1) newWidth = 0;	
+		column.setStyle('width', newWidth);	
+		column.getChildren('.panel').each(function(panel){
+			panel.setStyle('width', newWidth - panel.getStyle('border-left').toInt() - panel.getStyle('border-right').toInt());
+			resizeChildren(panel);
+		}.bind(this));				
+	});
+}
 
 function addResizeRight(element, min, max){
 	if (!$(element)) return;
