@@ -326,7 +326,6 @@ var MochaUI = new Hash({
 		currentInstance.fireEvent('onCloseComplete');
 		
 		if (currentInstance.options.type != 'notification') {
-			alert('test');
 			var newFocus = this.getWindowWithHighestZindex();
 			this.focusWindow(newFocus);
 		}
