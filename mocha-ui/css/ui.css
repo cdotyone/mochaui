@@ -304,11 +304,11 @@ li.divider {
 	margin: 0 3px 2px 0;
 	overflow: hidden;	
 	cursor: pointer;
-	background: url(../images/dock-tab.gif) no-repeat;
+	background: url(../images/dock-tabs.gif) left top no-repeat;
 }	
 
 .dockTab.activeDockTab {
-	background: url(../images/dock-tab-active.gif) no-repeat;
+	background-position: left -26px;
 }
 
 .dockTab.activeDockTab .dockText {

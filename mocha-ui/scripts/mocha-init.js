@@ -121,27 +121,6 @@ initializeWindows = function(){
 		});
 	}	
 	
-	/*
-	MochaUI.tetrisWindow = function(){
-		new MochaUI.Window({
-			id: 'tetris',
-			title: 'JsTetris',
-			loadMethod: 'iframe',
-			contentURL: 'plugins/JsTetris/index.html',
-			width: 300,
-			height: 310,
-			resizable: false,
-			maximizable: false			
-		});
-	}
-	if ($('tetrisLinkCheck')) {
-		$('tetrisLinkCheck').addEvent('click', function(e){
-		new Event(e).stop();
-			MochaUI.tetrisWindow();
-		});
-	}
-	*/		
-	
 	MochaUI.parametricsWindow = function(){	
 		new MochaUI.Window({
 			id: 'parametrics',
@@ -466,28 +445,6 @@ initializeWindows = function(){
 		});
 	}
 
-/*	
-	MochaUI.gearsWindow = function(){ 
-		new MochaUI.Window({
-			id: 'gears',
-			title: 'Google Gears',
-			loadMethod: 'xhr',
-			contentURL: 'plugins/gears/index.html',
-			width: 550,
-			height: 350,
-			onContentLoaded: function(windowEl){
-				initGears();
-			}
-		});
-	}	
-	if ($('gearsLinkCheck')){ 
-		$('gearsLinkCheck').addEvent('click', function(e){	
-			new Event(e).stop();
-			MochaUI.gearsWindow();
-		});
-	}
-*/	
-	
 	// Help
 	MochaUI.overviewWindow = function(){
 		var id = 'overview';
@@ -768,14 +725,6 @@ window.addEvent('domready', function(){
 		loadMethod: 'xhr',
 		contentURL: 'pages/lipsum.html',
 		column: 'sideColumn1',
-		onContentLoaded: function(){			
-		//	document.addEvent('mousemove', function(event){
-		//		if ($('mochaStats')){
-		//			$('cursorX').set('html', event.client.x);
-		//			$('cursorY').set('html', event.client.y);
-		//		}	
-		//	});
-		},
 		height: 300				
 	});		
 	
@@ -832,15 +781,11 @@ window.addEvent('domready', function(){
 
 	MochaUI.Modal = new MochaUI.Modal();
 	
-	// Format everything before displaying the desktop
-	//var splash = function(){
-		MochaUI.Desktop.desktop.setStyles({
-			'background': '#fff',
-			'visibility': 'visible'
-		});
-		initializeWindows();
-	//}
-	//splash.delay(1700, this);
+	MochaUI.Desktop.desktop.setStyles({
+		'background': '#fff',
+		'visibility': 'visible'
+	});
+	initializeWindows();
 
 });	
 
