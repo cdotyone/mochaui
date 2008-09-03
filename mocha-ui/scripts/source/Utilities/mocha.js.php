@@ -37,7 +37,11 @@ $files = array(
 );
 
 // Get the path to your web directory
-$docRoot = substr($_SERVER['SCRIPT_FILENAME'],0,strpos($_SERVER['SCRIPT_FILENAME'],'Utilities'));
+$docRoot = dirname(__FILE__);
+while (preg_match('/\\\\/',$docRoot)) {$docRoot = preg_replace('/\\\\/','/',$docRoot);}
+while (preg_match('/\/\//',$docRoot)) {$docRoot = preg_replace('/\/\//','/',$docRoot);}
+$docRoot = preg_replace('/\/$/','',$docRoot);
+$docRoot = preg_replace('/\/Utilities$/','',$docRoot);
 
 // Merge code
 $code = '';
