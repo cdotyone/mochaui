@@ -183,10 +183,13 @@ var MochaUI = new Hash({
 					}
 				}).injectInside(contentEl);
 				
-				// Add onload event to iframe so we can stop the loading icon and run onContentLoaded()
+				// Add onload event to iframe so we can hide the spinner and run onContentLoaded()
 				currentInstance.iframeEl.addEvent('load', function(e) {
 					if (recipient == 'window') {
 						currentInstance.hideSpinner(spinnerEl);
+						frames[currentInstance.iframeEl.id].document.body.addEvent('mousedown', function() {
+							MochaUI.focusWindow(currentInstance.windowEl);
+						}.bind(this));						
 					}
 					else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) {
 						$('spinner').setStyle('visibility', 'hidden');	
