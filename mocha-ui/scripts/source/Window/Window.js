@@ -55,7 +55,7 @@ Options:
 	draggableSnap - (boolean) The distance to drag before the Window starts to respond to the drag. Defaults to false.
 	resizable - (boolean) Defaults to false for modals, notifications and gauges; otherwise true.
 	resizeLimit - (object) Minimum and maximum width and height of window when resized.
-	addClass - (string) Add a class to your window to give you more control over styling.	
+	addClass - (string) Add a class to the window for more control over styling.	
 	width - (number) Width of content area.	
 	height - (number) Height of content area.
 	x - (number) If x and y are left undefined the window is centered on the page.

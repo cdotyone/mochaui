@@ -527,7 +527,25 @@ Arguments:
 
 Options:
 	id - The ID of the panel. This must be set when creating the panel.
-	column - Where to inject the panel. This must be set when creating the panel	
+	column - Where to inject the panel. This must be set when creating the panel.
+	loadMethod - ('html', 'xhr', or 'iframe')
+	contentURL - Used if loadMethod is set to 'xhr' or 'iframe'.
+	evalScripts - (boolean) An xhr loadMethod option. Defaults to true.    
+	evalResponse - (boolean) An xhr loadMethod option. Defaults to false. 
+	content - (string or element) An html loadMethod option.
+	tabsURL - (url)	
+	footer - (boolean)
+	footerURL - (url)
+	height - (number) Height of content area.
+	addClass - (string) Add a class to the panel.
+	scrollbars - (boolean)
+	padding - (object)
+	panelBackground - CSS background property for the panel.
+	onBeforeBuild - (function) Fired before the panel is created. 
+	onContentLoaded - (function) Fired after the panel's conten is loaded. 
+	onResize - (function) Fired when the panel is resized.
+	onCollapse - (function) Fired when the panel is collapsed.
+	onExpand - (function) Fired when the panel is expanded. 
 		
 */
 MochaUI.Panel = new Class({
@@ -793,17 +811,7 @@ MochaUI.Panel = new Class({
 });
 MochaUI.Panel.implement(new Options, new Events);
 
-	// Panel Height
-	
-	/*
-	For each column, find the column height. Get the available space.
-	Add available space to any panel that does not have its height set.
-	If there is more than one, divide the available space among them.
-	If all panels have their height set, divide the available space among
-	the open panels equally.
-	
-	*/
-	
+	// Panel Height	
 	function panelHeight(column, changing, action){
 		if (column != null) {
 			this.panelHeight2($(column), changing, action);
@@ -823,22 +831,18 @@ MochaUI.Panel.implement(new Options, new Events);
 	
 			var instances = MochaUI.Panels.instances;		
 			
-			var columnHeight = column.offsetHeight.toInt();			
-			var heightNotSet = []; // Panels than do not have their height set. MAY NOT END UP USING THIS.
+			var columnHeight = column.offsetHeight.toInt();
 			
-			var panels = column.getChildren('.panel'); // All the panels in the column.
+			var panels = column.getChildren('.panel');            // All the panels in the column.
 			var panelsExpanded = column.getChildren('.expanded'); // All the expanded panels in the column.		
 			var panelsToResize = [];    // All the panels in the column whose height will be effected.
 			var tallestPanel;           // The panel with the greatest height
 			var tallestPanelHeight = 0;
 			
 			this.panelsHeight = 0;		// Height of all the panels in the column	
-			this.height = 0;            // Height of all the elements in the column			
+			this.height = 0;            // Height of all the elements in the column	
 			
-			// Handle logic:
-			// - Partner up expanded panels with first expanded panel below them.
-			// - Detach handle event if panel is collapsed.
-			
+			// Set panel resize partners
 			panels.each(function(panel){				
 				currentInstance = instances.get(panel.id);
 				if (panel.hasClass('expanded') && panel.getNext('.expanded')) {						
@@ -862,9 +866,9 @@ MochaUI.Panel.implement(new Options, new Events);
 			column.getChildren().each(function(el){			
 
 				if (el.hasClass('panel')){
-
 					var currentInstance = instances.get(el.id);
 					
+					// Are any next siblings Expanded?					
 					areAnyNextSiblingsExpanded = function(el){
 						var test;
 						el.getAllNext('.panel').each(function(sibling){
@@ -875,8 +879,9 @@ MochaUI.Panel.implement(new Options, new Events);
 						}.bind(this));
 						return test;
 					}
-										
-					areAnyExpandedNextSiblingsExpanded = function(){
+					
+					// If a next sibling is expanding, are any of the nexts siblings of the expanding sibling Expanded?					
+					areAnyExpandingNextSiblingsExpanded = function(){
 						var test;
 						changing.getAllNext('.panel').each(function(sibling){
 							var siblingInstance = instances.get(sibling.id);
@@ -916,23 +921,17 @@ MochaUI.Panel.implement(new Options, new Events);
 					// below it, resize the first expanded panel above it.					
 					else if (action == 'expanding') {
 						   
-						if (currentInstance.isCollapsed != true && (el.getAllNext('.panel').contains(changing) != true || (areAnyExpandedNextSiblingsExpanded() != true && el.getNext('.expanded') == changing)) && el != changing) {
+						if (currentInstance.isCollapsed != true && (el.getAllNext('.panel').contains(changing) != true || (areAnyExpandingNextSiblingsExpanded() != true && el.getNext('.expanded') == changing)) && el != changing) {
 							panelsToResize.push(el);
 						}						
 						// Height of panels that can be resized
-						if (currentInstance.isCollapsed != true && (el.getAllNext('.panel').contains(changing) != true || (areAnyExpandedNextSiblingsExpanded() != true && el.getNext('.expanded') == changing)) && el != changing) {
+						if (currentInstance.isCollapsed != true && (el.getAllNext('.panel').contains(changing) != true || (areAnyExpandingNextSiblingsExpanded() != true && el.getNext('.expanded') == changing)) && el != changing) {
 							this.panelsHeight += el.offsetHeight.toInt();
 						}				
 					}
 					
 					if (el.style.height) {
 						this.height += el.getStyle('height').toInt();
-					}
-					
-					// Add children without height set and who are not collapsed to an array
-					// THIS MAY NOT BE NEEDED				
-					else if (currentInstance.isCollapsed != true) {
-						heightNotSet.push(el);
 					}	
 				}
 				else {
@@ -941,50 +940,26 @@ MochaUI.Panel.implement(new Options, new Events);
 			}.bind(this));
 		
 			// Get the remaining height
-			var remainingHeight = column.offsetHeight.toInt() - this.height;		
+			var remainingHeight = column.offsetHeight.toInt() - this.height;
 			
-			// If any of the panels do not have their height set, i.e., on startup or a panel
-			// was dynamically added ...				
-			if (heightNotSet.length != 0) {				
-				var heightToAdd = remainingHeight / heightNotSet.length;
-				heightNotSet.each(function(panel){
-					panel.setStyle('height', heightToAdd);
-					var instances = MochaUI.Panels.instances;
-					var contentEl = instances.get(panel.id).contentEl;
-					contentEl.setStyle('height', newPanelHeight - contentEl.getStyle('padding-top').toInt() - contentEl.getStyle('padding-bottom').toInt());	
-					contentEl.getChildren('iframe').setStyle('height', newPanelHeight - contentEl.getStyle('padding-top').toInt() - contentEl.getStyle('padding-bottom').toInt());						
-				});
-			}
-			
-			// If all the panels have their height set ...
-			else {
-				this.height = 0;				
+			this.height = 0;				
 				
-				// Get height of all the column's children
-				column.getChildren().each(function(el){
-					this.height += el.offsetHeight.toInt();												
-				}.bind(this));
+			// Get height of all the column's children
+			column.getChildren().each(function(el){
+				this.height += el.offsetHeight.toInt();												
+			}.bind(this));
 				
-				var remainingHeight = column.offsetHeight.toInt() - this.height;				
-				
-				// Todo: Need to check each panel. If it's height is less than zero we shouldn't
-				// try to subtract more height from it. Instead the height should be subtracted
-				// from panels with height greater than 0. This gets more complicated if the
-				// panel has a height of 5 and we want to subtract 10px from it. We need to
-				// subtract the five and split the difference to the other panels.
-				//
-				// Once a panel reaches 0 or there abouts the ratio is broken for returning to later.
+			var remainingHeight = column.offsetHeight.toInt() - this.height;			
 								
-				panelsToResize.each(function(panel){
-					var ratio = this.panelsHeight / panel.offsetHeight.toInt();
-					var newPanelHeight = panel.getStyle('height').toInt() + (remainingHeight / ratio);
-					if (newPanelHeight < 1) {
-						newPanelHeight = 0;
-					}
-					panel.setStyle('height', newPanelHeight);
-				});	
-			}
-			
+			panelsToResize.each(function(panel){
+				var ratio = this.panelsHeight / panel.offsetHeight.toInt();
+				var newPanelHeight = panel.getStyle('height').toInt() + (remainingHeight / ratio);
+				if (newPanelHeight < 1) {
+					newPanelHeight = 0;
+				}
+				panel.setStyle('height', newPanelHeight);
+			});	
+						
 			// Make sure the remaining height is 0. If not add/subtract the
 			// remaining height to the tallest panel. This makes up for browser resizing,
 			// off ratios, and users trying to give panels too much height.
@@ -1154,9 +1129,6 @@ function addResizeLeft(element, min, max){
 		}.bind(this)		
 	});
 }
-
-
-// May remove the ability to set min and max as an option
 
 function addResizeBottom(element){
 	if (!$(element)) return;
