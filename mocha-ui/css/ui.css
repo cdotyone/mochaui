@@ -97,14 +97,14 @@ body {
 
 .toolbox {
 	float: right;
-	padding: 7px 8px 0 10px;
+	padding: 6px 8px 0 10px;
 	height: 23px;
 	overflow: hidden;		
 }
 
 div.toolbox.divider { /* Have to specify div here for IE6's sake */
 	background: url(../images/toolbox-divider.gif) left center no-repeat;
-	padding: 7px 3px 0 12px;			
+	padding: 6px 3px 0 12px;			
 }	
 
 .toolbox img {
@@ -588,9 +588,14 @@ li.divider {
 	width: 100%; /* For IE */
 	position: relative;
 	height: 29px;
-	background: #fff;	
+	background: #f1f1f1;	
 	overflow: hidden;
 	border-top: 1px solid #d9d9d9;
+}
+
+div.mochaToolbarWrapper.bottom {
+	border: 0;
+	border-bottom: 1px solid #d9d9d9;
 }
 
 .mochaToolbar {

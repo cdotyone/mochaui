@@ -93,7 +93,8 @@ initializeWindows = function(){
 			height: 280,
 			resizeLimit:  {'x': [330, 2500], 'y': [250, 2000]},
 			toolbar: true,
-			toolbarURL: 'pages/youtube-tabs.html'			
+			toolbarURL: 'pages/youtube-tabs.html',
+			contentBgColor: '#000'						
 		});
 	}	
 	if ($('youtubeLinkCheck')) {
@@ -111,7 +112,8 @@ initializeWindows = function(){
 			contentURL: 'pages/slideshare.html',
 			width: 415,
 			height: 355,
-			resizeLimit:  {'x': [330, 2500], 'y': [250, 2000]}
+			resizeLimit:  {'x': [330, 2500], 'y': [250, 2000]},
+			contentBgColor: '#000'			
 		});
 	}	
 	if ($('slideshareLinkCheck')) {

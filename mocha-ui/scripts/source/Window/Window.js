@@ -173,6 +173,13 @@ MochaUI.Windows.windowOptions = {
 	toolbarURL:        'pages/lipsum.html',	
 	toolbarContent:    '',
 	
+	// Toolbar
+	toolbar2:           false, 
+	toolbar2Position:   'bottom',
+	toolbar2Height:     29,
+	toolbar2URL:        'pages/lipsum.html',	
+	toolbar2Content:    '',	
+	
 	// Container options
 	container:         null,
 	restrict:          true,
@@ -493,6 +500,17 @@ MochaUI.Window = new Class({
 				'url':           this.options.toolbarURL
 			});
 		}
+		
+		// Add content to window toolbar.
+		if (this.options.toolbar2 == true){
+			MochaUI.updateContent({
+				'element':       this.windowEl,
+				'childElement':  this.toolbar2El,				
+				'content':       this.options.toolbar2Content,
+				'loadMethod':    'xhr',				
+				'url':           this.options.toolbar2URL
+			});
+		}		
 		
 		this.drawWindow(this.windowEl);			
 		
@@ -978,12 +996,33 @@ MochaUI.Window = new Class({
 				'class': 'mochaToolbarWrapper'
 			}).inject(cache.contentBorderEl, options.toolbarPosition == 'bottom' ? 'after' : 'before');
 			
+			if (options.toolbarPosition == 'bottom') {
+				cache.toolbarWrapperEl.addClass('bottom');
+			}
+						
 			cache.toolbarEl = new Element('div', {
 				'id': id + '_toolbar',											
 				'class': 'mochaToolbar'
 			}).inject(cache.toolbarWrapperEl);
 			
 		}
+		
+		if (options.toolbar2){
+			cache.toolbar2WrapperEl = new Element('div', {
+				'id': id + '_toolbar2Wrapper',											
+				'class': 'mochaToolbarWrapper'
+			}).inject(cache.contentBorderEl, options.toolbar2Position == 'bottom' ? 'after' : 'before');
+			
+			if (options.toolbar2Position == 'bottom') {
+				cache.toolbar2WrapperEl.addClass('bottom');
+			}			
+			
+			cache.toolbar2El = new Element('div', {
+				'id': id + '_toolbar2',											
+				'class': 'mochaToolbar'
+			}).inject(cache.toolbar2WrapperEl);
+			
+		}		
 
 		cache.contentWrapperEl = new Element('div', {
 			'id': id + '_contentWrapper',
@@ -1223,9 +1262,10 @@ MochaUI.Window = new Class({
 		
 		var borderHeight = this.contentBorderEl.getStyle('border-top').toInt() + this.contentBorderEl.getStyle('border-bottom').toInt();
 		var toolbarHeight = this.toolbarWrapperEl ? this.toolbarWrapperEl.getStyle('height').toInt() + this.toolbarWrapperEl.getStyle('border-top').toInt() : 0;
+		var toolbar2Height = this.toolbar2WrapperEl ? this.toolbar2WrapperEl.getStyle('height').toInt() + this.toolbar2WrapperEl.getStyle('border-top').toInt() : 0;
 		
 		this.headerFooterShadow = options.headerHeight + options.footerHeight + shadowBlur2x;
-		var height = this.contentWrapperEl.getStyle('height').toInt() + this.headerFooterShadow + toolbarHeight + borderHeight;
+		var height = this.contentWrapperEl.getStyle('height').toInt() + this.headerFooterShadow + toolbarHeight + toolbar2Height + borderHeight;
 		var width = this.contentWrapperEl.getStyle('width').toInt() + shadowBlur2x;
 		this.windowEl.setStyles({
 			'height': height,

@@ -187,9 +187,11 @@ var MochaUI = new Hash({
 				currentInstance.iframeEl.addEvent('load', function(e) {
 					if (recipient == 'window') {
 						currentInstance.hideSpinner(spinnerEl);
-						frames[currentInstance.iframeEl.id].document.body.addEvent('mousedown', function() {
-							MochaUI.focusWindow(currentInstance.windowEl);
-						}.bind(this));						
+						if (!Browser.Engine.trident) {
+							frames[currentInstance.iframeEl.id].document.body.addEvent('mousedown', function(){
+								MochaUI.focusWindow(currentInstance.windowEl);
+							}.bind(this));
+						}						
 					}
 					else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) {
 						$('spinner').setStyle('visibility', 'hidden');	
