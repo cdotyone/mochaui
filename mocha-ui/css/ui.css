@@ -412,6 +412,11 @@ li.divider {
 	padding-top: 2px;
 }	
 
+.panel-headerContent.tabs {
+	background: url(../images/tabs.gif) repeat-x;
+	background-position: left -68px;	
+}
+
 .panel-header h2 {
 	display: inline-block;
 	font-size: 12px;
@@ -755,8 +760,9 @@ li.divider {
 
 .toolbarTabs {	
 	padding: 0 5px 2px 2px;
-	background: #e4e4e4 url(../images/tabs.gif) repeat-x;
-	background-position: left -60px;
+	background: url(../images/tabs.gif) repeat-x;
+	background-position: left -70px;
+	overflow: visible;
 }
 
 .tab-menu {	
@@ -774,7 +780,7 @@ li.divider {
 	margin:	0 0 5px 0;
 	cursor: pointer;	
 	background: url(../images/tabs.gif) repeat-x;
-	background-position: left -30px;	
+	background-position: left -35px;	
 }
 
 .tab-menu li.selected {
@@ -790,7 +796,7 @@ li.divider {
 	font-weight: normal;
 	color: #141414;
 	background: url(../images/tabs.gif) repeat-x;
-	background-position: right -30px;	
+	background-position: right -35px;	
 }
 
 .tab-menu li.selected a {

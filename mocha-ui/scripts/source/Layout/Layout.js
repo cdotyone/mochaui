@@ -753,14 +753,15 @@ MochaUI.Panel = new Class({
 		
 		if (this.options.tabsURL == null) {
 			this.titleEl.set('html', this.options.title);
-		}
+		}		
 		else {
+			this.panelHeaderContentEl.addClass('tabs')	;
 			MochaUI.updateContent({
 				'element':      this.panelEl,
 				'childElement': this.panelHeaderContentEl,
 				'loadMethod':   'xhr',								
 				'url':          this.options.tabsURL
-			});		
+			});				
 		}				
 				
 		this.handleEl = new Element('div', {

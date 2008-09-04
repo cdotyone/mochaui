@@ -750,7 +750,7 @@ window.addEvent('domready', function(){
 	});			
 	
 	new MochaUI.Panel({
-		id: 'panel7',
+		id: 'panel1',
 		title: 'Panel',
 		loadMethod: 'xhr',
 		contentURL: 'pages/lipsum.html',
