@@ -47,7 +47,13 @@ var MochaUI = new Hash({
 		Replace the content of a window.
 		
 	Arguments:
-		windowEl, content, url
+		element -
+		childElement -
+		title -
+		content -
+		url -
+		loadMethod -
+		padding -
 		
 	*/	
 	updateContent: function(updateOptions){
@@ -207,6 +213,34 @@ var MochaUI = new Hash({
 				break;
 		}
 
+	},
+	/*
+	
+	Function: reloadIframe
+		Reload an iframe. Fixes an issue in Firefox when trying to use location.reload on an iframe that has been destroyed and recreated.
+		
+	Arguments:
+		iframe - This should be both the name and the id of the iframe.
+		
+	Syntax:
+		(start code)
+		MochaUI.reloadIframe(element);
+		(end)
+		
+	Example:
+		To reload an iframe from within another iframe:
+		(start code)
+		parent.MochaUI.reloadIframe('myIframeName');
+		(end)			
+		
+	*/		
+	reloadIframe: function(iframe){			
+		if (Browser.Engine.gecko) {
+			$(iframe).src = $(iframe).src;
+		}
+		else {
+			top.frames[iframe].location.reload(true);
+		}
 	},
 	collapseToggle: function(windowEl){
 		var instances = MochaUI.Windows.instances;
