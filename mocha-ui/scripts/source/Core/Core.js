@@ -187,7 +187,7 @@ var MochaUI = new Hash({
 				currentInstance.iframeEl.addEvent('load', function(e) {
 					if (recipient == 'window') {
 						currentInstance.hideSpinner(spinnerEl);
-						if (!Browser.Engine.trident) {
+						if (!Browser.Engine.trident && !Browser.Engine.gecko) {
 							frames[currentInstance.iframeEl.id].document.body.addEvent('mousedown', function(){
 								MochaUI.focusWindow(currentInstance.windowEl);
 							}.bind(this));

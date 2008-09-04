@@ -821,7 +821,7 @@ div.mochaToolbarWrapper.bottom {
 .accordianToggler {
 	margin: 0;
 	padding: 6px 10px;
-	background: #fff url(../images/bg-panel-header.gif) repeat-x;
+	background: #f1f1f1 url(../images/bg-panel-header.gif) repeat-x;
 	font-size: 12px;
 	cursor: pointer;
 	border-top: 1px solid #e3e3e3;	
