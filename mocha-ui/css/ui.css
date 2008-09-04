@@ -102,7 +102,7 @@ body {
 	overflow: hidden;		
 }
 
-.toolbox.divider {
+div.toolbox.divider { /* Have to specify div here for IE6's sake */
 	background: url(../images/toolbox-divider.gif) left center no-repeat;
 	padding: 7px 3px 0 12px;			
 }	
@@ -402,7 +402,7 @@ li.divider {
 
 .panel-header {
 	position: relative;	
-	background: #e9e9e9 url(../images/bg-panel-header.gif)  repeat-x;
+	background: #f1f1f1 url(../images/bg-panel-header.gif)  repeat-x;
 	height: 30px;
 	overflow: hidden;
 	border-bottom: 1px solid #d9d9d9;		
@@ -593,53 +593,6 @@ li.divider {
 	border-top: 1px solid #fff;
 }
 
-.toolbarTabs {	
-	padding: 0 5px 2px 2px;
-	background: #e4e4e4 url(../images/tabs.gif) repeat-x;
-	background-position: left -60px;
-}
-
-.tab-menu {
-	padding-top: 1px;
-	list-style:	none;
-	margin: 0;
-	padding: 0;
-	line-height: 16px;
-	font-size: 11px;	
-}
-
-.tab-menu li {
-	display: block;
-	float: left;
-	margin:	0 0 5px 0;
-	cursor: pointer;	
-	background: url(../images/tabs.gif) repeat-x;
-	background-position: left -30px;	
-}
-
-.tab-menu li.selected {
-	background: url(../images/tabs.gif) repeat-x;
-	background-position: left 0;	
-}
-
-.tab-menu li a {
-	display: block;
-	margin-left: 8px;
-	padding: 6px 16px 5px 10px;
-	text-align: center;
-	font-weight: normal;
-	color: #141414;
-	background: url(../images/tabs.gif) repeat-x;
-	background-position: right -30px;	
-}
-
-.tab-menu li.selected a {
-	color: #141414;
-	font-weight: bold;	
-	background: url(../images/tabs.gif) repeat-x;
-	background-position: right 0;	
-}	
-
 .mochaContentBorder {
 	border-top: 1px solid #dadada;	
 	border-bottom: 1px solid #dadada;
@@ -797,6 +750,55 @@ li.divider {
 
 /* Compontents
 ---------------------------------------------------------------- */
+
+/* Toolbar Tabs */
+
+.toolbarTabs {	
+	padding: 0 5px 2px 2px;
+	background: #e4e4e4 url(../images/tabs.gif) repeat-x;
+	background-position: left -60px;
+}
+
+.tab-menu {	
+	padding-top: 1px;
+	list-style:	none;
+	margin: 0;
+	padding: 0;
+	line-height: 16px;
+	font-size: 11px;	
+}
+
+.tab-menu li {
+	display: block;
+	float: left;
+	margin:	0 0 5px 0;
+	cursor: pointer;	
+	background: url(../images/tabs.gif) repeat-x;
+	background-position: left -30px;	
+}
+
+.tab-menu li.selected {
+	background: url(../images/tabs.gif) repeat-x;
+	background-position: left 0;	
+}
+
+.tab-menu li a {
+	display: block;
+	margin-left: 8px;
+	padding: 6px 16px 5px 10px;
+	text-align: center;
+	font-weight: normal;
+	color: #141414;
+	background: url(../images/tabs.gif) repeat-x;
+	background-position: right -30px;	
+}
+
+.tab-menu li.selected a {
+	color: #141414;
+	font-weight: bold;	
+	background: url(../images/tabs.gif) repeat-x;
+	background-position: right 0;	
+}
 
 /* Accordian */
 

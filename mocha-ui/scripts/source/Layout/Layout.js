@@ -683,8 +683,7 @@ MochaUI.Panel = new Class({
 				'width': 16,
 				'height': 16
 			},
-			'title': 'Collapse Panel',
-			'background': '#f00'
+			'title': 'Collapse Panel'
 		}).inject(this.panelHeaderToolboxEl);
         
 		this.collapseToggleEl.addEvent('click', function(event){
