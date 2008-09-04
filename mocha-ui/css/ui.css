@@ -402,7 +402,7 @@ li.divider {
 
 .panel-header {
 	position: relative;	
-	background: #e9e9e9 url(../images/bg-desktopTitlebar.gif)  repeat-x;
+	background: #e9e9e9 url(../images/bg-panel-header.gif)  repeat-x;
 	height: 30px;
 	overflow: hidden;
 	border-bottom: 1px solid #d9d9d9;		
@@ -430,11 +430,11 @@ li.divider {
 }
 
 .panel-collapse {
-	background: url(../images/collapse.gif) no-repeat;
+	background: url(../images/collapse-expand.gif) left top no-repeat;
 }
 
 .panel-expand {
-	background: url(../images/expand.gif) no-repeat;
+	background: url(../images/collapse-expand.gif) left -16px no-repeat;
 }
 
 .icon16 {
@@ -813,7 +813,7 @@ li.divider {
 .accordianToggler {
 	margin: 0;
 	padding: 6px 10px;
-	background: #fff url(../images/bg-desktopTitlebar.gif) repeat-x;
+	background: #fff url(../images/bg-panel-header.gif) repeat-x;
 	font-size: 12px;
 	cursor: pointer;
 	border-top: 1px solid #e3e3e3;	
@@ -824,7 +824,7 @@ li.divider {
 }
 
 .accordianToggler.open {
-	background: #fff url(../images/bg-desktopTitlebar.gif) repeat-x;	
+	background: #fff url(../images/bg-panel-header.gif) repeat-x;	
 }
 
 .accordianContent {
