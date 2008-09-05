@@ -59,7 +59,7 @@ MochaUI.Dock = new Class({
 		// Style options
 		dockTabColor:         [255, 255, 255],
 		trueButtonColor:      [70, 245, 70],     // Color for autohide on		
-		enabledButtonColor:   [81, 97, 115], 
+		enabledButtonColor:   [204, 170, 102], 
 		disabledButtonColor:  [170, 170, 170]		
 	},
 	initialize: function(options){

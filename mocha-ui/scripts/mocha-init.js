@@ -146,10 +146,10 @@ initializeWindows = function(){
 					MochaUI.addShadowSlider.delay(10); // Delay is for IE6
 				}			
 			},
-			width: 305,
-			height: 105,
-			x: 570,
-			y: 425,
+			width: 300,
+			height: 110,
+			x: 75,
+			y: 220,
 			padding: { top: 12, right: 12, bottom: 10, left: 12 },			
 			resizable: false,
 			maximizable: false,
@@ -662,7 +662,7 @@ initializeWindows = function(){
 	// Build windows onDomReady
 	// MochaUI.overviewWindow(); 
 	MochaUI.parametricsWindow();
-	MochaUI.featuresWindow();
+	// MochaUI.featuresWindow();
 	
 }
 
@@ -722,8 +722,8 @@ window.addEvent('domready', function(){
 	});
 	
 	new MochaUI.Panel({
-		id: 'stats-panel',
-		title: 'Stats',
+		id: 'panel2',
+		title: 'Panel',
 		loadMethod: 'xhr',
 		contentURL: 'pages/lipsum.html',
 		column: 'sideColumn1',
@@ -731,8 +731,8 @@ window.addEvent('domready', function(){
 	});		
 	
 	new MochaUI.Panel({
-		id: 'test-panel',
-		title: 'This is a Test',
+		id: 'panel3',
+		title: 'Panel',
 		loadMethod: 'xhr',
 		contentURL: 'pages/lipsum.html',
 		column: 'sideColumn1',
@@ -744,9 +744,9 @@ window.addEvent('domready', function(){
 	// Add panels to main column	
 	new MochaUI.Panel({
 		id: 'mainPanel',
-		title: 'Introduction',
-		loadMethod: 'xhr',
-		contentURL: 'pages/lipsum.html',
+		title: 'Zero7 - Crosses',
+		loadMethod: 'iframe',
+		contentURL: 'pages/youtube4.html',
 		column: 'mainColumn',
 		panelBackground: '#fff'
 	});			

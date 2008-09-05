@@ -25,8 +25,6 @@ body {
 #desktop {
 	visibility: hidden; 
 	position: relative;
-	top: 0;
-	left: 0;
 	min-width: 750px; /* Helps keep header content from wrapping */		
 	height: 100%;
 	overflow: hidden;
@@ -41,16 +39,16 @@ body {
 	position: relative;	
 	height: 40px;
 	overflow: hidden;
-	background: #516173;
-	border-top: 1px solid #7C8791;
+	background: #222;
+	border-top: 1px solid #222;
 	border-bottom: 1px solid #fff;			
 }
 	
 #desktopTitlebar {
 	padding: 7px 8px 6px 8px;
-	height: 23px;
+	height: 27px;
 	background: url(../images/logo.gif) no-repeat;
-	background-position: center 0;	
+	background-position: left 0;	
 }	
 	
 #desktopTitlebar h1.applicationTitle {
@@ -64,11 +62,11 @@ body {
 }
 	
 #desktopTitlebar h2.tagline {
-	display: none;
 	font-size: 12px;
 	color: #fff;
 	font-weight: normal;
-	padding: 5px 0 0 0;	
+	padding: 5px 0 0 0;
+	text-align: center;	
 }
 
 #desktopTitlebar h2.tagline .taglineEm {
@@ -77,19 +75,20 @@ body {
 }	
 
 #topNav {
-	float: right;
-	color: #fff;
+	position: absolute;
+	right: 8px;
+	top: 7px;
+	color: #A3A3A3;
 	text-align: right;
-	padding: 5px 5px 0 0;
+	padding: 5px 0 0 0;
 }
 
 #topNav a {
-	color: #fff;
-	font-weight: bold;
+	color: #ca6;
+	font-weight: normal;
 }
 
 #topNav a:hover {
-	color: #fff;
 	text-decoration: underline;
 }
 
@@ -157,7 +156,7 @@ div.toolbox.divider { /* Have to specify div here for IE6's sake */
 	
 #desktopNavbar ul li a {
 	padding: 6px 10px 6px 10px;	
-	color: #585E66;
+	color: #333;
 	font-weight: normal;		
 }
 
@@ -194,7 +193,7 @@ div.toolbox.divider { /* Have to specify div here for IE6's sake */
 
 #desktopNavbar li ul li .check {
 	position: absolute;
-	top: 7px;
+	top: 8px;
 	left: 6px;
 	width: 5px;
 	height: 5px;
@@ -213,9 +212,13 @@ div.toolbox.divider { /* Have to specify div here for IE6's sake */
 }
 
 #desktopNavbar li ul li a:hover {
-	background: #6C91B7;
+	background: #CF2640;
 	color: #fff;
 }
+
+#desktopNavbar li ul li a:hover .check {
+	background: #fff;	
+}	
 
 #desktopNavbar li:hover ul,
 #desktopNavbar li.ieHover ul,
@@ -255,14 +258,14 @@ li.divider {
 	font-size: 11px;
 	height: 24px;
 	padding: 6px 10px 0 10px;
-	background: #516173;
-	color: #fff;
+	background: #222;
+	color: #A3A3A3;
 	border-top: 1px solid #fff;
 }
 
 #desktopFooter a {
-	color: #fff;
-	font-weight: bold;	
+	color: #ca6;
+	font-weight: normal;	
 }
 
 #desktopFooter a:hover {
@@ -297,8 +300,8 @@ li.divider {
 
 .dockTab {
 	float: left;
+	position: relative;	
 	font-size: 11px;
-	position: relative;
 	width: 150px;
 	height: 26px;
 	margin: 0 3px 2px 0;
@@ -311,23 +314,23 @@ li.divider {
 	background-position: left -26px;
 }
 
-.dockTab.activeDockTab .dockText {
-	color: #fff;	
-}		
-
 .dockText {
 	position: absolute;
 	top: 0;
 	left: 0;
 	display: block;
 	font-weight: normal;
-	color: #585E66;	
+	color: #fff;	
 	text-align: left;
 	padding: 3px 10px 3px 10px;
 	width: 130px;
 	height: 19px;
 	overflow: hidden;		
 }			
+
+.dockTab.activeDockTab .dockText {
+	color: #fff;	
+}
 
 #dockCanvas {
 	position: absolute;
@@ -424,7 +427,7 @@ li.divider {
 	padding: 3px 8px 0 8px;
 	height: 22px;	
 	overflow: hidden;
-	color: #585E66;	
+	color: #333;	
 }
 
 .panel-header-toolbox {
@@ -850,29 +853,43 @@ div.mochaToolbarWrapper.bottom {
 	margin-bottom: 15px;	
 }
 
-.sliderarea {
+.sliderWrapper {
 	position: relative;
-	height: 6px;
-	width: 200px;
 	font-size: 1px;
 	line-height: 1px;
-	background: #dfdfdf;
+	height: 10px;
+	width: 222px;			
+}	
+
+.sliderarea {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 8px;
+	width: 220px;
+	font-size: 1px;
+	line-height: 1px;
+	background: url(../images/slider-area.gif) repeat-x;
+	border: 1px solid #999;
+	border-bottom: 1px solid #ccc;
+	border-left: 1px solid #ccc;		
 	margin: 0;
 	padding: 0;
+	overflow: hidden;
 }
  
 .sliderknob {
 	position: absolute;
-	top: 0px;
-	height: 6px;
-	width: 13px;
+	top: 0;
+	left: 0;
+	height: 10px;
+	width: 20px;
 	font-size: 1px;
 	line-height: 1px;	
-	background: #888;
-	border-right: 1px solid #eee;
-	border-left: 1px solid #eee;	
+	background: url(../images/knob.gif) no-repeat;	
 	cursor: pointer;
 	overflow: hidden;
+	z-index: 2;
 }
 	
 .update {
@@ -897,7 +914,7 @@ div.mochaToolbarWrapper.bottom {
 }
 
 .tree li a {
-	color: #404040;	
+	color: #333;	
 }	
 
 .tree li img {
