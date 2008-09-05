@@ -212,7 +212,7 @@ div.toolbox.divider { /* Have to specify div here for IE6's sake */
 }
 
 #desktopNavbar li ul li a:hover {
-	background: #CF2640;
+	background: #CF2727;
 	color: #fff;
 }
 
@@ -252,6 +252,7 @@ li.divider {
 	bottom: 0;
 	width: 100%;
 	height: 30px;
+	overflow: hidden;
 }
 
 #desktopFooter {
@@ -376,8 +377,6 @@ li.divider {
 .column {
 	position: relative;	
 	float: left;
-	height: 100%;
-	min-height: 100%;
 	overflow: hidden;
 	background: #f1f1f1;	
 }
@@ -870,7 +869,7 @@ div.mochaToolbarWrapper.bottom {
 	font-size: 1px;
 	line-height: 1px;
 	background: url(../images/slider-area.gif) repeat-x;
-	border: 1px solid #999;
+	border: 1px solid #a3a3a3;
 	border-bottom: 1px solid #ccc;
 	border-left: 1px solid #ccc;		
 	margin: 0;

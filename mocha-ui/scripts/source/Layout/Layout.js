@@ -419,11 +419,15 @@ MochaUI.Column = new Class({
 			'id': this.options.id,												   
 			'class': 'column expanded',
 			'styles': {
-				'width': options.width
+				'width': options.placement == 'main' ? null : options.width 
 			}			
 		}).inject($(MochaUI.Desktop.pageWrapper));
 		
-		if (options.id == 'mainColumn') {
+		var parent = this.columnEl.getParent();
+		var columnHeight = parent.getStyle('height').toInt();
+		this.columnEl.setStyle('height', columnHeight);		
+		
+		if (options.placement == 'main') {
 			this.columnEl.addClass('rWidth');
 		}
 		
@@ -829,9 +833,14 @@ MochaUI.Panel.implement(new Options, new Events);
 	*/
 	function panelHeight2(column, changing, action){									
 	
-			var instances = MochaUI.Panels.instances;		
+			var instances = MochaUI.Panels.instances;
 			
-			var columnHeight = column.offsetHeight.toInt();
+			var parent = column.getParent();
+			var columnHeight = parent.getStyle('height').toInt();
+			if (Browser.Engine.trident4) {
+				columnHeight -= 1;
+			}
+			column.setStyle('height', columnHeight);								
 			
 			var panels = column.getChildren('.panel');            // All the panels in the column.
 			var panelsExpanded = column.getChildren('.expanded'); // All the expanded panels in the column.		
@@ -982,10 +991,14 @@ MochaUI.Panel.implement(new Options, new Events);
 				if (tallestPanel.getStyle('height') < 1){
 					tallestPanel.setStyle('height', 0 );
 				}
-			}			
+			}							
 			
 			$$('.columnHandle').each(function(handle){
-				handle.setStyle('height', handle.getParent().getStyle('height').toInt() - handle.getStyle('border-top').toInt() - handle.getStyle('border-bottom').toInt());
+				var handleHeight = parent.getStyle('height').toInt() - handle.getStyle('border-top').toInt() - handle.getStyle('border-bottom').toInt();
+				if (Browser.Engine.trident4) {
+					handleHeight -= 1;
+				}
+				handle.setStyle('height', handleHeight);
 			});
 			
 			panelsExpanded.each(function(panel){
