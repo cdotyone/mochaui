@@ -435,7 +435,8 @@ var MochaUI = new Hash({
 		}		
 		windowClicked.delay(170, this);
 
-		// Only focus when needed				
+		// Only focus when needed
+		if ($$('.mocha').length == 0) return;							
 		if (windowEl != $(windowEl) || windowEl.hasClass('isFocused')) return;		
 
 		var instances =  MochaUI.Windows.instances;		
