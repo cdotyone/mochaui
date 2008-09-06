@@ -258,10 +258,9 @@ li.divider {
 #desktopFooter {
 	font-size: 11px;
 	height: 24px;
-	padding: 6px 10px 0 10px;
+	padding: 6px 8px 0 8px;
 	background: #222;
 	color: #A3A3A3;
-	border-top: 1px solid #fff;
 }
 
 #desktopFooter a {
@@ -323,7 +322,7 @@ li.divider {
 	font-weight: normal;
 	color: #fff;	
 	text-align: left;
-	padding: 3px 10px 3px 10px;
+	padding: 4px 10px 2px 10px;
 	width: 130px;
 	height: 19px;
 	overflow: hidden;		
@@ -856,7 +855,7 @@ div.mochaToolbarWrapper.bottom {
 	position: relative;
 	font-size: 1px;
 	line-height: 1px;
-	height: 10px;
+	height: 9px;
 	width: 222px;			
 }	
 
@@ -864,7 +863,7 @@ div.mochaToolbarWrapper.bottom {
 	position: absolute;
 	top: 0;
 	left: 0;
-	height: 8px;
+	height: 7px;
 	width: 220px;
 	font-size: 1px;
 	line-height: 1px;
@@ -881,8 +880,8 @@ div.mochaToolbarWrapper.bottom {
 	position: absolute;
 	top: 0;
 	left: 0;
-	height: 10px;
-	width: 20px;
+	height: 9px;
+	width: 19px;
 	font-size: 1px;
 	line-height: 1px;	
 	background: url(../images/knob.gif) no-repeat;	
