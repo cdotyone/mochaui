@@ -353,7 +353,28 @@ initializeWindows = function(){
 			new Event(e).stop();
 			MochaUI.accordiantestWindow();
 		});
-	}	
+	}
+	
+	MochaUI.noCanvasWindow = function(){		
+		new MochaUI.Window({
+			id: 'nocanvas',
+			title: 'No Canvas',			
+			loadMethod: 'xhr',
+			contentURL: 'pages/lipsum.html',
+			addClass: 'no-canvas',
+			width: 305,
+			height: 175,
+			shadowBlur: 0,			
+			resizeLimit: {'x': [275, 2500], 'y': [125, 2000]},
+			useCanvas: false
+		});	
+	}
+	if ($('noCanvasLinkCheck')){
+		$('noCanvasLinkCheck').addEvent('click', function(e){	
+			new Event(e).stop();
+			MochaUI.noCanvasWindow();
+		});
+	}		
 
 	// View
 	if ($('sidebarLinkCheck')){
@@ -519,28 +540,7 @@ initializeWindows = function(){
 			MochaUI.featuresWindow();
 		});
 	}
-	
-	MochaUI.noCanvasWindow = function(){		
-		new MochaUI.Window({
-			id: 'nocanvas',
-			title: 'No Canvas',			
-			loadMethod: 'xhr',
-			contentURL: 'pages/lipsum.html',
-			addClass: 'no-canvas',
-			width: 305,
-			height: 175,
-			shadowBlur: 0,			
-			resizeLimit: {'x': [275, 2500], 'y': [125, 2000]},
-			useCanvas: false
-		});	
-	}
-	if ($('noCanvasLinkCheck')){
-		$('noCanvasLinkCheck').addEvent('click', function(e){	
-			new Event(e).stop();
-			MochaUI.noCanvasWindow();
-		});
-	}		
-	
+		
 	MochaUI.faqWindow = function(){
 			new MochaUI.Window({
 				id: 'faq',
@@ -636,12 +636,22 @@ initializeWindows = function(){
 	MochaUI.aboutWindow = function(){
 		new MochaUI.Window({
 			id: 'about',
-			title: 'Mocha UI Version 0.9',
+			title: 'MochaUI',
 			loadMethod: 'xhr',
 			contentURL: 'pages/about.html',
 			type: 'modal',
-			width: 300,
-			height: 150
+			addClass: 'modal-plain',
+			width: 350,
+			height: 195,
+			useCanvas: false,
+			footerHeight: 0,
+			headerHeight: 0,
+			shadowBlur: 0,
+			shadowOffset: {'x': 0, 'y': 0},	
+			contentBgColor: '#e3e3e3 url(images/logo2.gif) left 5px no-repeat',
+			padding: { top: 45, right: 12, bottom: 10, left: 12 },
+			scrollbars:  false,
+			useSpinner: false						
 		});
 	}
 	if ($('aboutLinkCheck')){

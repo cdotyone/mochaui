@@ -214,6 +214,7 @@ MochaUI.Windows.windowOptions = {
 	controlsOffset:    {'right': 6, 'top': 6},
 	useCanvas:         true,
 	useCanvasControls: true,
+	useSpinner:        true,    // Toggles whether or not the ajax spinners are displayed in window footers.	
 	
 	// Color options:		
 	headerHeight:      25,
@@ -557,7 +558,7 @@ MochaUI.Window = new Class({
 				this.drawWindow(this.windowEl, false);
 			}
 			this.opacityMorph = new Fx.Morph(this.windowEl, {
-				'duration': 500,
+				'duration': 350,
 				onComplete: function(){
 					if (Browser.Engine.trident){
 						this.drawWindow(this.windowEl);
@@ -572,7 +573,7 @@ MochaUI.Window = new Class({
 			}
 			$('modalOverlay').setStyle('display', 'block');			
 			if (MochaUI.options.useEffects == false){			
-				$('modalOverlay').setStyle('opacity', .55);
+				$('modalOverlay').setStyle('opacity', .6);
 				this.windowEl.setStyles({
 					'zIndex': 11000,
 					'opacity': 1
@@ -581,7 +582,7 @@ MochaUI.Window = new Class({
 			else {
 				MochaUI.Modal.modalOverlayCloseMorph.cancel();
 				MochaUI.Modal.modalOverlayOpenMorph.start({
-					'opacity': .55
+					'opacity': .6
 				});
 				this.windowEl.setStyles({
 					'zIndex': 11000
@@ -1042,16 +1043,18 @@ MochaUI.Window = new Class({
 			'class': 'mochaContent'
 		}).inject(cache.contentWrapperEl);
 
-		cache.canvasEl = new Element('canvas', {
-			'id': id + '_canvas',
-			'class': 'mochaCanvas',
-			'width': 1,
-			'height': 1
-		}).inject(this.windowEl);
-		
-		if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas') {
-			G_vmlCanvasManager.initElement(cache.canvasEl);
-			cache.canvasEl = this.windowEl.getElement('.mochaCanvas');			
+		if (this.options.useCanvas == true) {
+			cache.canvasEl = new Element('canvas', {
+				'id': id + '_canvas',
+				'class': 'mochaCanvas',
+				'width': 1,
+				'height': 1
+			}).inject(this.windowEl);
+			
+			if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas') {
+				G_vmlCanvasManager.initElement(cache.canvasEl);
+				cache.canvasEl = this.windowEl.getElement('.mochaCanvas');
+			}
 		}
 		
 		cache.controlsEl = new Element('div', {
@@ -1106,7 +1109,7 @@ MochaUI.Window = new Class({
 			}			
 		}
 
-		if (options.shape != 'gauge' && options.type != 'notification'){
+		if (options.useSpinner == true && options.shape != 'gauge' && options.type != 'notification'){
 			cache.spinnerEl = new Element('div', {
 				'id': id + '_spinner',
 				'class': 'mochaSpinner',
@@ -1279,8 +1282,10 @@ MochaUI.Window = new Class({
 		});		
 
 		// Opera requires the canvas height and width be set this way when resizing:
-		this.canvasEl.height = height;
-		this.canvasEl.width = width;
+		if (this.options.useCanvas == true) {
+			this.canvasEl.height = height;
+			this.canvasEl.width = width;
+		}
 
 		// Part of the fix for IE6 select z-index bug
 		if (Browser.Engine.trident4){
@@ -1296,7 +1301,7 @@ MochaUI.Window = new Class({
 		});
 	
 		// Make sure loading icon is placed correctly.
-		if (options.shape != 'gauge' && options.type != 'notification'){
+		if (options.useSpinner == true && options.shape != 'gauge' && options.type != 'notification'){
 			this.spinnerEl.setStyles({
 				'left': shadowBlur - shadowOffset.x + 3,
 				'bottom': shadowBlur + shadowOffset.y +  4
@@ -1574,7 +1579,7 @@ MochaUI.Window = new Class({
 		ctx.lineCap = 'round';		
 		ctx.moveTo(13, 13);
 		ctx.lineTo(width - (shadowBlur*2) - 13, 13);
-		ctx.strokeStyle = 'rgba(0, 0, 0, .25)';
+		ctx.strokeStyle = 'rgba(0, 0, 0, .65)';
 		ctx.stroke();
 	},
 	bodyRoundedRect: function(ctx, x, y, width, height, radius, rgb){
@@ -1699,7 +1704,7 @@ MochaUI.Window = new Class({
 		
 	*/	
 	showSpinner: function(spinner) {
-		if (!MochaUI.options.useSpinner || this.options.shape == 'gauge' || this.options.type == 'notification') return;		
+		if (!this.options.useSpinner || this.options.shape == 'gauge' || this.options.type == 'notification') return;		
 		$(spinner).setStyles({
 			'visibility': 'visible'
 		});

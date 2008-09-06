@@ -36,7 +36,7 @@ MochaUI.Modal = new Class({
 			'id': 'modalOverlay',
 			'styles': {
 				'height': document.getCoordinates().height,
-				'opacity': .4
+				'opacity': .6
 			}
 		}).inject(document.body);
 		
@@ -54,10 +54,10 @@ MochaUI.Modal = new Class({
 		}		
 
 		this.modalOverlayOpenMorph = new Fx.Morph($('modalOverlay'), {
-				'duration': 200
+				'duration': 150
 				});
 		this.modalOverlayCloseMorph = new Fx.Morph($('modalOverlay'), {
-			'duration': 200,
+			'duration': 150,
 			onComplete: function(){
 				$('modalOverlay').setStyle('display', 'none');
 				if (Browser.Engine.trident4){

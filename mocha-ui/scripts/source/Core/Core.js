@@ -23,9 +23,7 @@ Todo:
 
 var MochaUI = new Hash({
 	options: new Hash({
-		useEffects: false,  // Toggles the majority of window fade and move effects.
-		useSpinner: true    // Toggles whether or not the ajax spinners are displayed in window footers.
-
+		useEffects: true  // Toggles the majority of window fade and move effects.
 	}),
 	Columns: {	  
 		instances:      new Hash()	
@@ -345,7 +343,7 @@ var MochaUI = new Hash({
 				});								
 			}
 			var closeMorph = new Fx.Morph(windowEl, {
-				duration: 180,
+				duration: 120,
 				onComplete: function(){					
 					MochaUI.closingJobs(windowEl);
 					return true;					

@@ -736,7 +736,15 @@ div.mochaToolbarWrapper.bottom {
 
 .mocha.no-canvas .mochaTitlebar {
 	background: #f1f1f1;	
-}	
+}
+
+.mocha.modal-plain {
+	border: 8px solid #fff;		
+}
+
+.mocha.modal-plain .mochaContentBorder {
+	border-width: 0px;
+}
 
 .mocha.transparent .mochaTitlebar h3 {
 	color: #fff;
