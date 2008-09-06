@@ -8,6 +8,15 @@
 
 <link rel="stylesheet" href="css/content.css" type="text/css" />
 <link rel="stylesheet" href="css/ui.css" type="text/css" />
+
+<style>	
+
+#pageWrapper {
+	background: #7c9dbf;
+	border: 0;	
+}	
+			
+</style>
 	
 <!--[if IE]>
 	<script type="text/javascript" src="scripts/excanvas-compressed.js"></script>		
@@ -29,7 +38,7 @@
 
 <script type="text/javascript" src="scripts/source/Utilities/mocha.js.php"></script>	
 
-<script type="text/javascript" src="scripts/mocha-init.js"></script>
+<script type="text/javascript" src="scripts/demo-virtual-desktop-init.js"></script>
 
 <!--
 <script type="text/javascript" src="plugins/gears/gears_init.js"></script>
@@ -76,11 +85,10 @@
 				</li>					
 				<li class="divider"><a class="returnFalse arrow-right" href="">Starters</a>
 					<ul>
-						<li><a target="_blank" href="demo-virtual-desktop.html">Virtual Desktop</a></li>						
-						<li><a target="_blank" href="demo-fixed-width.html">Fixed Width</a></li>						
-						<li><a target="_blank" href="demo-no-toolbars.html">No Toolbars</a></li>
-						<li><a target="_blank" href="demo-no-desktop.html">No Desktop</a></li>			
-						<li><a target="_blank" href="demo-modal-only.html">Modal Only</a></li>					
+						<li><a target="_blank" href="fixed-width.html">Fixed Width</a></li>						
+						<li><a target="_blank" href="no-toolbars.html">No Toolbars</a></li>
+						<li><a target="_blank" href="no-desktop.html">No Desktop</a></li>			
+						<li><a target="_blank" href="modal-only.html">Modal Only</a></li>					
 					</ul>
 				</li>
 			</ul>
@@ -115,9 +123,6 @@
 		</li>
 	</ul>	
 <div class="toolbox divider">
-	<div id="spinnerWrapper"><div id="spinner"></div></div>		
-</div>
-<div class="toolbox divider">
 	<img src="images/icons/page.gif" onclick="MochaUI.notification('Do Something');" width="16" height="16" alt="" />
 	<img src="images/icons/page_green.gif" onclick="MochaUI.notification('Do Something');" width="16" height="16" alt="" />
 	<img src="images/icons/page_red.gif" onclick="MochaUI.notification('Do Something');" width="16" height="16" alt="" />
@@ -135,7 +140,9 @@
 	</div>
 </div>
 
-<div id="pageWrapper"></div>
+<div id="pageWrapper">
+	<div id="page"></div>	
+</div>
 
 <div id="desktopFooterWrapper">
 	<div id="desktopFooter">

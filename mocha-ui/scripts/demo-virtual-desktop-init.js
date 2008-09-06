@@ -669,124 +669,14 @@ initializeWindows = function(){
 // Initialize MochaUI when the DOM is ready
 window.addEvent('domready', function(){									 
 	MochaUI.Desktop = new MochaUI.Desktop();									 
-	MochaUI.Dock = new MochaUI.Dock();	
-
-	/* Create Columns
-	 
-	If you are not using panels then these columns are not required.
-	If you do use panels, the main column is required. The side columns are optional.
-	Create your columns from left to right. Then create your panels from top to bottom,
-	left to right. New Panels are inserted at the bottom of their column.
-	
-	*/	 
-	new MochaUI.Column({
-		id: 'sideColumn1',
-		placement: 'left',
-		width: 200,
-		resizeLimit: [100, 300]
-	});
-	
-	new MochaUI.Column({
-		id: 'mainColumn',
-		placement: 'main',	
-		width: null,
-		resizeLimit: [100, 300]
-	});
-	
-	new MochaUI.Column({
-		id: 'sideColumn2',
-		placement: 'right',	
-		width: 220,		
-		resizeLimit: [195, 300]
-	});		
-	
-	// Add panels to first side column
-	new MochaUI.Panel({
-		id: 'files-panel',
-		title: 'File View',
-		loadMethod: 'xhr',
-		contentURL: 'pages/file-view.html',
-		column: 'sideColumn1',
-		onContentLoaded: function(){			
-			if ( !MochaUI.treeScript == true ){
-				new Request({
-					url: 'plugins/tree/scripts/tree.js',
-					method: 'get',
-					onSuccess: function() {
-						buildTree('tree1');							
-						MochaUI.treeScript = true;							
-					}.bind(this)							
-				}).send();					
-			}
-		}
-	});
-	
-	new MochaUI.Panel({
-		id: 'panel2',
-		title: 'Panel',
-		loadMethod: 'xhr',
-		contentURL: 'pages/lipsum.html',
-		column: 'sideColumn1',
-		height: 300				
-	});		
-	
-	new MochaUI.Panel({
-		id: 'panel3',
-		title: 'Panel',
-		loadMethod: 'xhr',
-		contentURL: 'pages/lipsum.html',
-		column: 'sideColumn1',
-		height: 140,
-		footer: true,
-		footerURL: 'pages/toolbox-demo.html'		
-	});
-	
-	// Add panels to main column	
-	new MochaUI.Panel({
-		id: 'mainPanel',
-		title: 'Main Panel',
-		loadMethod: 'xhr',
-		contentURL: 'pages/lipsum.html',
-		column: 'mainColumn',
-		panelBackground: '#fff'
-	});			
-	
-	new MochaUI.Panel({
-		id: 'panel1',
-		title: 'Panel',
-		loadMethod: 'xhr',
-		contentURL: 'pages/lipsum.html',
-		column: 'mainColumn',
-		height: 200		
-	});
-	
-	// Add panels to second side column
-	
-	new MochaUI.Panel({
-		id: 'help-panel',
-		loadMethod: 'xhr',
-		contentURL: 'pages/introduction.html',
-		column: 'sideColumn2',
-		tabsURL: 'pages/panel-tabs.html'
-	});	
-	
-	new MochaUI.Panel({
-		id: 'tips-panel',
-		title: 'Tips',
-		loadMethod: 'xhr',
-		contentURL: 'pages/tips.html',
-		column: 'sideColumn2',
-		height: 300,
-		footer: true,
-		footerURL: 'pages/toolbox-demo.html'		
-	});
-
+	MochaUI.Dock = new MochaUI.Dock();
 	MochaUI.Modal = new MochaUI.Modal();
 	
 	MochaUI.Desktop.desktop.setStyles({
 		'background': '#fff',
 		'visibility': 'visible'
 	});
+	
 	initializeWindows();
 
 });	
