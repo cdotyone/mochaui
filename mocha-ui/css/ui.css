@@ -76,11 +76,11 @@ body {
 
 #topNav {
 	position: absolute;
-	right: 8px;
-	top: 7px;
+	right: 0;
+	top: 0;
 	color: #A3A3A3;
 	text-align: right;
-	padding: 5px 0 0 0;
+	padding: 12px 8px 0 0;
 }
 
 #topNav a {
@@ -161,7 +161,7 @@ div.toolbox.divider { /* Have to specify div here for IE6's sake */
 }
 
 #desktopNavbar ul li a:hover {
-	color: #0983d1;
+	color: #c00;
 }
 
 #desktopNavbar ul li a.arrow-right, #desktopNavbar ul li a:hover.arrow-right {
