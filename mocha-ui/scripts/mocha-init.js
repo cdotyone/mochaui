@@ -149,7 +149,7 @@ initializeWindows = function(){
 			width: 305,
 			height: 110,
 			x: 570,
-			y: 425,
+			y: 160,
 			padding: { top: 12, right: 12, bottom: 10, left: 12 },			
 			resizable: false,
 			maximizable: false,
@@ -417,9 +417,8 @@ initializeWindows = function(){
 			},			
 			width: 370,
 			height: 400,
-			x: 20,
-			y: 90,
-			maximizable: false
+			maximizable: false,
+			resizable: false
 		});
 	}
 	if ($('builderLinkCheck')){
@@ -661,7 +660,7 @@ initializeWindows = function(){
 	
 	// Build windows onDomReady
 	// MochaUI.overviewWindow(); 
-	MochaUI.featuresWindow();
+	// MochaUI.featuresWindow();
 	MochaUI.parametricsWindow();	
 	
 }
@@ -697,7 +696,7 @@ window.addEvent('domready', function(){
 		id: 'sideColumn2',
 		placement: 'right',	
 		width: 220,		
-		resizeLimit: [150, 300]
+		resizeLimit: [195, 300]
 	});		
 	
 	// Add panels to first side column
@@ -744,7 +743,7 @@ window.addEvent('domready', function(){
 	// Add panels to main column	
 	new MochaUI.Panel({
 		id: 'mainPanel',
-		title: 'Introduction',
+		title: 'Main Panel',
 		loadMethod: 'xhr',
 		contentURL: 'pages/lipsum.html',
 		column: 'mainColumn',
@@ -765,7 +764,7 @@ window.addEvent('domready', function(){
 	new MochaUI.Panel({
 		id: 'help-panel',
 		loadMethod: 'xhr',
-		contentURL: 'pages/notice.html',
+		contentURL: 'pages/introduction.html',
 		column: 'sideColumn2',
 		tabsURL: 'pages/panel-tabs.html'
 	});	

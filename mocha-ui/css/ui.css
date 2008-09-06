@@ -161,13 +161,13 @@ div.toolbox.divider { /* Have to specify div here for IE6's sake */
 }
 
 #desktopNavbar ul li a:hover {
-	color: #c00;
+	color: #0983d1;
 }
 
 #desktopNavbar ul li a.arrow-right, #desktopNavbar ul li a:hover.arrow-right {
 	background-image: url(../images/arrow-right.gif);
 	background-repeat: no-repeat;
-	background-position: right 6px;	
+	background-position: right 7px;	
 } 
 	
 #desktopNavbar li ul {
@@ -197,7 +197,7 @@ div.toolbox.divider { /* Have to specify div here for IE6's sake */
 	left: 6px;
 	width: 5px;
 	height: 5px;
-	background: #516173;
+	background: #555;
 	overflow: hidden;
 	line-height: 1px;
 	font-size: 1px;
@@ -212,7 +212,7 @@ div.toolbox.divider { /* Have to specify div here for IE6's sake */
 }
 
 #desktopNavbar li ul li a:hover {
-	background: #CF2727;
+	background: #6CA1D9;
 	color: #fff;
 }
 
@@ -431,7 +431,7 @@ li.divider {
 .panel-header-toolbox {
 	float: right;
 	height: 26px;
-	margin: 1px 5px 0 0;
+	margin: 1px 5px 5px 0;
 	text-align: right;
 }
 

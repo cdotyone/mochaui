@@ -1,7 +1,7 @@
 <div class="toolbarTabs">
 	<ul id="panelTabs" class="tab-menu">
-		<li id="panelTabs1Link" class="selected"><a>Notice</a></li>
-		<li id="panelTabs2Link"><a>Help</a></li>
+		<li id="panelTabs1Link" class="selected"><a>Overview</a></li>
+		<li id="panelTabs2Link"><a>Download</a></li>
 	</ul>
 	<div class="clear"></div>
 </div>
@@ -13,14 +13,14 @@
 	$('panelTabs1Link').addEvent('click', function(e){
 		MochaUI.updateContent({
 			'element':  $('help-panel'),
-			'url':       'pages/notice.html'
+			'url':       'pages/introduction.html'
 		});
 	});
 	
 	$('panelTabs2Link').addEvent('click', function(e){
 		MochaUI.updateContent({
 			'element':  $('help-panel'),
-			'url':       'pages/lipsum.html'
+			'url':       'pages/download.html'
 		});
 	});
 	
