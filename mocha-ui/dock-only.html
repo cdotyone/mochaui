@@ -21,14 +21,17 @@
 	MochaUI.aboutWindow = function(){
 		new MochaUI.Window({
 			id: 'about',
-			title: 'Mocha UI Version 0.9',
+			title: 'MochaUI',
 			loadMethod: 'xhr',
 			contentURL: 'pages/about.html',
-			type: 'modal',
-			width: 300,
-			height: 150
+			type: 'modal2',
+			width: 350,
+			height: 195,
+			contentBgColor: '#e5e5e5 url(images/logo2.gif) left 3px no-repeat',
+			padding: { top: 43, right: 12, bottom: 10, left: 12 },
+			scrollbars:  false					
 		});
-	}	
+	}}	
 	
 	window.addEvent('domready', function(){
 		MochaUI.Desktop = new MochaUI.Desktop();
@@ -49,10 +52,14 @@
 	
 <style>	
 
+#desktop {
+	visibility: visible;
+}	 
 	
 #pageWrapper {
 	overflow: auto;
-	background: #7c9dbf;	
+	background: #7c9dbf;
+	border: 0;	
 }	
 	
 #page {

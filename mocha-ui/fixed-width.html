@@ -10,6 +10,14 @@
 	
 <style>	
 
+#desktop {
+	visibility: visible;
+}
+
+#desktopTitlebarWrapper {
+	border: 0;
+}	
+
 #desktopTitlebar {
 	padding: 7px 8px 6px 8px;
 	height: 23px;
@@ -41,7 +49,8 @@
 	
 #pageWrapper {
 	overflow: auto;
-	background: #7c9dbf;	
+	background: #7c9dbf;
+	border: 0;	
 }	
 	
 #page {
@@ -60,13 +69,13 @@
 }
 
 #dockWrapper {
-	border-top: 1px solid #999;
+	border-top: 1px solid #222;
 	border-bottom: 0;	
 }
 
 #dockWrapper.top {
 	border-top: 0;
-	border-bottom: 1px solid #999;
+	border-bottom: 1px solid #222;
 }			
 			
 </style>	
@@ -86,12 +95,15 @@
 	MochaUI.aboutWindow = function(){
 		new MochaUI.Window({
 			id: 'about',
-			title: 'Mocha UI Version 0.9',
+			title: 'MochaUI',
 			loadMethod: 'xhr',
 			contentURL: 'pages/about.html',
-			type: 'modal',
-			width: 300,
-			height: 150
+			type: 'modal2',
+			width: 350,
+			height: 195,
+			contentBgColor: '#e5e5e5 url(images/logo2.gif) left 3px no-repeat',
+			padding: { top: 43, right: 12, bottom: 10, left: 12 },
+			scrollbars:  false					
 		});
 	}	
 	

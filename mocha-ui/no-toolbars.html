@@ -21,12 +21,15 @@
 	MochaUI.aboutWindow = function(){
 		new MochaUI.Window({
 			id: 'about',
-			title: 'Mocha UI Version 0.9',
+			title: 'MochaUI',
 			loadMethod: 'xhr',
 			contentURL: 'pages/about.html',
-			type: 'modal',
-			width: 300,
-			height: 150
+			type: 'modal2',
+			width: 350,
+			height: 195,
+			contentBgColor: '#e5e5e5 url(images/logo2.gif) left 3px no-repeat',
+			padding: { top: 43, right: 12, bottom: 10, left: 12 },
+			scrollbars:  false					
 		});
 	}	
 	
@@ -44,7 +47,11 @@
 	</script>
 	
 	
-<style>	
+<style>
+	
+#desktop {
+	visibility: visible;
+}		
 	
 #pageWrapper {
 	overflow: auto;	
@@ -63,6 +70,11 @@
 
 #content {
 	padding: 10px;
+}
+
+#footer {
+	background: #f0f0f0;
+	padding: 10px 20px;	
 }		
 			
 </style>				
@@ -126,6 +138,10 @@
 			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
 			
 		</div><!-- content end -->
+		
+		<div id="footer">
+			Footer text
+		</div>		
 
 	<!-- PAGE CONTENT ENDS HERE -->
 	</div><!-- page end -->

@@ -285,11 +285,12 @@ li.divider {
 
 #dock {
 	position: relative;
-	padding: 2px 15px 0 5px;
+	padding: 2px 16px 0 6px;
 	bottom: 0;
 	left: 0;
 	background: #f1f1f1;
-	border: 1px solid #f1f1f1;
+	border-top: 1px solid #f1f1f1;
+	border-bottom: 1px solid #f1f1f1;	
 	min-height: 28px;
 	height: auto;
 }
