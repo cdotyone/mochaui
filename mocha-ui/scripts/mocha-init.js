@@ -420,8 +420,7 @@ initializeWindows = function(){
 			icon: 'images/icons/page.gif',			
 			loadMethod: 'xhr',
 			contentURL: 'plugins/windowform/',
-			onContentLoaded: function(){
-				$('newWindowHeaderTitle').focus();			
+			onContentLoaded: function(){			
 				if ( !MochaUI.windowformScript == true ){
 					new Request({
 						url: 'plugins/windowform/scripts/Window-from-form.js',
@@ -437,9 +436,10 @@ initializeWindows = function(){
 				}
 			},			
 			width: 370,
-			height: 400,
+			height: 410,
 			maximizable: false,
-			resizable: false
+			resizable: false,
+			scrollbars: false
 		});
 	}
 	if ($('builderLinkCheck')){
@@ -639,23 +639,16 @@ initializeWindows = function(){
 			title: 'MochaUI',
 			loadMethod: 'xhr',
 			contentURL: 'pages/about.html',
-			type: 'modal',
-			addClass: 'modal-plain',
+			type: 'modal2',
 			width: 350,
 			height: 195,
-			useCanvas: false,
-			footerHeight: 0,
-			headerHeight: 0,
-			shadowBlur: 0,
-			shadowOffset: {'x': 0, 'y': 0},	
-			contentBgColor: '#e3e3e3 url(images/logo2.gif) left 5px no-repeat',
-			padding: { top: 45, right: 12, bottom: 10, left: 12 },
-			scrollbars:  false,
-			useSpinner: false						
+			contentBgColor: '#e5e5e5 url(images/logo2.gif) left 3px no-repeat',
+			padding: { top: 43, right: 12, bottom: 10, left: 12 },
+			scrollbars:  false					
 		});
 	}
-	if ($('aboutLinkCheck')){
-		$('aboutLinkCheck').addEvent('click', function(e){	
+	if ($('aboutLink')){
+		$('aboutLink').addEvent('click', function(e){	
 			new Event(e).stop();
 			MochaUI.aboutWindow();
 		});

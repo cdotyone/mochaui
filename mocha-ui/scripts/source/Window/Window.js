@@ -30,7 +30,7 @@ Options:
 	id - The ID of the window. If not defined, it will be set to 'win' + windowIDCount.	
 	title - The title of the window.
 	icon - Place an icon in the window's titlebar. This is either set to false or to the url of the icon. It is set up for icons that are 16 x 16px.	
-	type - ('window', 'modal' or 'notification') Defaults to 'window'.	
+	type - ('window', 'modal', 'modal2', or 'notification') Defaults to 'window'.	
 	loadMethod - ('html', 'xhr', or 'iframe') Defaults to 'html'.
 	contentURL - Used if loadMethod is set to 'xhr' or 'iframe'.
 	closeAfter - Either false or time in milliseconds. Closes the window after a certain period of time in milliseconds. This is particularly useful for notifications.	
@@ -241,7 +241,6 @@ MochaUI.Windows.windowOptions = {
 	onMinimize:        $empty,
 	onMaximize:        $empty,
 	onRestore:         $empty,
-	onMove:            $empty, // NOT YET IMPLEMENTED
 	onClose:           $empty,
 	onCloseComplete:   $empty
 };
@@ -269,7 +268,7 @@ MochaUI.Window = new Class({
 		});
 		
 		// May be better to use if type != window
-		if (options.type == 'modal' || options.type == 'notification'){
+		if (options.type != 'window'){
 			options.container = document.body;
 			options.minimizable = false;			 
 		}		
@@ -279,7 +278,7 @@ MochaUI.Window = new Class({
 
 		// Set this.options.resizable to default if it was not defined
 		if (options.resizable == null){
-			if (options.type == 'modal' || options.shape == 'gauge' || options.type == 'notification'){
+			if (options.type != 'window' || options.shape == 'gauge'){
 				options.resizable = false;
 			}
 			else {
@@ -289,7 +288,7 @@ MochaUI.Window = new Class({
 		
 		// Set this.options.draggable if it was not defined
 		if (options.draggable == null){
-			if (options.type == 'modal' || options.type == 'notification'){
+			if (options.type != 'window'){
 				options.draggable = false;
 			}
 			else {
@@ -312,7 +311,7 @@ MochaUI.Window = new Class({
 		
 		// Minimizable, dock is required and window cannot be modal
 		if (MochaUI.Dock && $(MochaUI.options.dock)){
-			if (MochaUI.Dock.dock && options.type != 'modal'){
+			if (MochaUI.Dock.dock && options.type != 'modal' && options.type != 'modal2'){
 				options.minimizable = options.minimizable;
 			}
 		}
@@ -321,7 +320,16 @@ MochaUI.Window = new Class({
 		}
 
 		// Maximizable, desktop is required
-		options.maximizable = MochaUI.Desktop.desktop && options.maximizable && options.type != 'modal';
+		options.maximizable = MochaUI.Desktop.desktop && options.maximizable && options.type != 'modal' && options.type != 'modal2';
+
+		if (this.options.type == 'modal2') {
+			this.options.shadowBlur = 0;
+			this.options.shadowOffset = {'x': 0, 'y': 0};
+			this.options.useSpinner = false;
+			this.options.useCanvas = false;
+			this.options.footerHeight = 0;
+			this.options.headerHeight = 0;						
+		}
 		
 		// If window has no ID, give it one.
 		if (options.id == null){
@@ -402,12 +410,16 @@ MochaUI.Window = new Class({
 
 		this.windowEl.addClass(this.options.addClass);
 		
+		if (this.options.type == 'modal2') {
+			this.windowEl.addClass('modal2');
+		}
+		
 		// Fix a mouseover issue with gauges in IE7
 		if ( Browser.Engine.trident && this.options.shape == 'gauge') {
 			this.windowEl.setStyle('background', 'url(../images/spacer.gif)');
 		}		
 		
-		if ((this.options.type == 'modal' && Browser.Platform.mac && Browser.Engine.gecko)){
+		if ((this.options.type == 'modal' || this.options.type == 'modal2' ) && Browser.Platform.mac && Browser.Engine.gecko){
 			if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent)) {
 				var ffversion = new Number(RegExp.$1);
 				if (ffversion < 3) {				
@@ -567,7 +579,8 @@ MochaUI.Window = new Class({
 			});
 		}
 
-		if (this.options.type == 'modal') {
+		if (this.options.type == 'modal' || this.options.type == 'modal2') {
+			MochaUI.currentModal = this.windowEl;
 			if (Browser.Engine.trident4){
 				$('modalFix').setStyle('display', 'block');	
 			}
@@ -708,7 +721,7 @@ MochaUI.Window = new Class({
 			limit: this.options.draggableLimit,
 			snap: this.options.draggableSnap,
 			onStart: function() {
-				if (this.options.type != 'modal'){ 
+				if (this.options.type != 'modal' && this.options.type != 'modal2'){ 
 					MochaUI.focusWindow(windowEl);
 					$('windowUnderlay').setStyle('visibility','visible');
 				}								
@@ -716,7 +729,7 @@ MochaUI.Window = new Class({
 					this.iframeEl.setStyle('visibility', 'hidden');
 			}.bind(this),
 			onComplete: function() {
-				if (this.options.type != 'modal') {
+				if (this.options.type != 'modal' && this.options.type != 'modal2') {
 					$('windowUnderlay').setStyle('visibility', 'hidden');
 				}
 				if ( this.iframeEl ){

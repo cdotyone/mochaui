@@ -323,12 +323,12 @@ var MochaUI = new Hash({
 		currentInstance.fireEvent('onClose', windowEl);
 		if (currentInstance.check) currentInstance.check.destroy();			
 
-		if (currentInstance.options.type == 'modal' && Browser.Engine.trident4){
+		if ((currentInstance.options.type == 'modal' || currentInstance.options.type == 'modal2') && Browser.Engine.trident4){
 				$('modalFix').setStyle('display', 'none');
 		}
 
 		if (MochaUI.options.useEffects == false){
-			if (currentInstance.options.type == 'modal'){
+			if (currentInstance.options.type == 'modal' || currentInstance.options.type == 'modal2'){
 				$('modalOverlay').setStyle('opacity', 0);
 			}		
 			MochaUI.closingJobs(windowEl);
@@ -337,7 +337,7 @@ var MochaUI = new Hash({
 		else {
 			// Redraws IE windows without shadows since IE messes up canvas alpha when you change element opacity
 			if (Browser.Engine.trident) currentInstance.drawWindow(windowEl, false);
-			if (currentInstance.options.type == 'modal'){
+			if (currentInstance.options.type == 'modal' || currentInstance.options.type == 'modal2'){
 				MochaUI.Modal.modalOverlayCloseMorph.start({
 					'opacity': 0
 				});								
@@ -399,7 +399,7 @@ var MochaUI = new Hash({
 	*/	
 	toggleWindowVisibility: function(){		
 		MochaUI.Windows.instances.each(function(instance){
-			if (instance.options.type == 'modal' || instance.isMinimized == true) return;									
+			if (instance.options.type == 'modal' || instance.options.type == 'modal2' || instance.isMinimized == true) return;									
 			var id = $(instance.options.id);									
 			if (id.getStyle('visibility') == 'visible'){
 				if (instance.iframe){
@@ -485,7 +485,7 @@ var MochaUI = new Hash({
 			$$('.mocha').each(function(windowEl){
 				var instances =  MochaUI.Windows.instances;
 				var currentInstance = instances.get(windowEl.id);
-				if (currentInstance.options.type != 'modal'){					
+				if (currentInstance.options.type != 'modal' && currentInstance.options.type != 'modal2'){					
 					windowEl.removeClass('isFocused');
 				}				
 			});

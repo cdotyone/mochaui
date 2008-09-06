@@ -84,7 +84,7 @@ body {
 }
 
 #topNav a {
-	color: #ca6;
+	color: #CC945C;
 	font-weight: normal;
 }
 
@@ -264,7 +264,7 @@ li.divider {
 }
 
 #desktopFooter a {
-	color: #ca6;
+	color: #cc945c;
 	font-weight: normal;	
 }
 
@@ -726,6 +726,16 @@ div.mochaToolbarWrapper.bottom {
 	height: 100px;
 	border: 1px solid transparent;
 }
+
+/* Modals */
+
+.modal2 {
+	border: 8px solid #fff;		
+}
+
+.modal2 .mochaContentBorder {
+	border-width: 0px;
+}
 	
 /* Window Themes */
 
@@ -736,14 +746,6 @@ div.mochaToolbarWrapper.bottom {
 
 .mocha.no-canvas .mochaTitlebar {
 	background: #f1f1f1;	
-}
-
-.mocha.modal-plain {
-	border: 8px solid #fff;		
-}
-
-.mocha.modal-plain .mochaContentBorder {
-	border-width: 0px;
 }
 
 .mocha.transparent .mochaTitlebar h3 {
