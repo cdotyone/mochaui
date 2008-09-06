@@ -84,7 +84,7 @@ body {
 }
 
 #topNav a {
-	color: #CC945C;
+	color: #8DABD9;
 	font-weight: normal;
 }
 
@@ -212,7 +212,7 @@ div.toolbox.divider { /* Have to specify div here for IE6's sake */
 }
 
 #desktopNavbar li ul li a:hover {
-	background: #6CA1D9;
+	background: #6C98D9;
 	color: #fff;
 }
 
@@ -264,7 +264,7 @@ li.divider {
 }
 
 #desktopFooter a {
-	color: #cc945c;
+	color: #8DABD9;
 	font-weight: normal;	
 }
 
