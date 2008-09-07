@@ -184,12 +184,7 @@ var MochaUI = new Hash({
 				// Add onload event to iframe so we can hide the spinner and run onContentLoaded()
 				currentInstance.iframeEl.addEvent('load', function(e) {
 					if (recipient == 'window') {
-						currentInstance.hideSpinner(spinnerEl);
-						if (!Browser.Engine.trident && !Browser.Engine.gecko) {
-							frames[currentInstance.iframeEl.id].document.body.addEvent('mousedown', function(){
-								MochaUI.focusWindow(currentInstance.windowEl);
-							}.bind(this));
-						}						
+						currentInstance.hideSpinner(spinnerEl);						
 					}
 					else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) {
 						$('spinner').setStyle('visibility', 'hidden');	
@@ -248,7 +243,8 @@ var MochaUI = new Hash({
 	collapseToggle: function(windowEl){
 		var instances = MochaUI.Windows.instances;
 		var currentInstance = instances.get(windowEl.id);
-		var handles = currentInstance.windowEl.getElements('.handle');		
+		var handles = currentInstance.windowEl.getElements('.handle');
+		if (currentInstance.isMaximized == true) return;		
 		if (currentInstance.isCollapsed == false) {
 			currentInstance.isCollapsed = true;
 			handles.setStyle('display', 'none');
@@ -1587,7 +1583,6 @@ MochaUI.Window = new Class({
 		this.n.setStyles({
 			'top': top,	
 			'left': left + 10,				
-
 			'width': width - 20
 		});
 		this.e.setStyles({
@@ -2880,8 +2875,7 @@ MochaUI.Desktop = new Class({
 	initialize: function(options){
 		this.setOptions(options);
 		this.desktop         = $(this.options.desktop);
-		this.desktopHeader   = $(this.options.desktopHeader);
-		this.desktopFooter   = $(this.options.desktopFooter);				
+		this.desktopHeader   = $(this.options.desktopHeader);				
 		this.desktopNavBar   = $(this.options.desktopNavBar);
 		this.pageWrapper     = $(this.options.pageWrapper);
 		this.page            = $(this.options.page);
@@ -2977,7 +2971,7 @@ MochaUI.Desktop = new Class({
 			this.pageWrapper.setStyle('height', pageWrapperHeight);
 		}
 
-		if ($$('.columns').length > 0) { // Conditional is a fix for a bug in IE6 in the no toolbars demo.
+		if (MochaUI.Columns.instances.getKeys().length > 0) { // Conditional is a fix for a bug in IE6 in the no toolbars demo.
 			this.resizePanels();
 		}		
 	},
@@ -2987,7 +2981,7 @@ MochaUI.Desktop = new Class({
 			$$('.pad').setStyle('display', 'none');
 			$$('.rHeight').setStyle('height', 1);
 		}
-		panelHeight();
+		MochaUI.panelHeight();
 		rWidth();
 		if (Browser.Engine.trident4) $$('.pad').setStyle('display', 'block');		
 	},
@@ -3061,6 +3055,7 @@ MochaUI.Desktop = new Class({
 		newHeight -= (  currentInstance.toolbarWrapperEl ? currentInstance.toolbarWrapperEl.getStyle('height').toInt() + currentInstance.toolbarWrapperEl.getStyle('border-top').toInt() : 0);
 
 		if (MochaUI.options.useEffects == false){
+
 			windowEl.setStyles({
 				'top': shadowOffset.y - shadowBlur,
 				'left': shadowOffset.x - shadowBlur
@@ -3598,7 +3593,7 @@ MochaUI.Panel = new Class({
 				this.isCollapsed = true;				
 				panel.addClass('collapsed');
 				panel.removeClass('expanded');			
-				panelHeight(this.options.column, panel, 'collapsing');
+				MochaUI.panelHeight(this.options.column, panel, 'collapsing');
 				this.collapseToggleEl.removeClass('panel-collapsed');
 				this.collapseToggleEl.addClass('panel-expand');
 				this.collapseToggleEl.setProperty('title','Expand Panel');
@@ -3609,7 +3604,7 @@ MochaUI.Panel = new Class({
 				this.isCollapsed = false;
 				panel.addClass('expanded');
 				panel.removeClass('collapsed');				
-				panelHeight(this.options.column, panel, 'expanding');				
+				MochaUI.panelHeight(this.options.column, panel, 'expanding');				
 				this.collapseToggleEl.removeClass('panel-expand');
 				this.collapseToggleEl.addClass('panel-collapsed');
 				this.collapseToggleEl.setProperty('title','Collapse Panel');
@@ -3663,29 +3658,31 @@ MochaUI.Panel = new Class({
 			'url':      this.options.contentURL
 		});			
 		
-		panelHeight(this.options.column, this.panelEl, 'new');				
+		MochaUI.panelHeight(this.options.column, this.panelEl, 'new');				
 					
 	}
 });
 MochaUI.Panel.implement(new Options, new Events);
 
+
+MochaUI.extend({
 	// Panel Height	
-	function panelHeight(column, changing, action){
+	panelHeight: function(column, changing, action){
 		if (column != null) {
-			this.panelHeight2($(column), changing, action);
+			MochaUI.panelHeight2($(column), changing, action);
 		}
 		else {
 			$$('.column').each(function(column){
-				panelHeight2(column);
+				MochaUI.panelHeight2(column);
 			}.bind(this));
 		}
-	}
+	},	
 	/*
 	
 	actions can be new, collapsing or expanding.
 	
 	*/
-	function panelHeight2(column, changing, action){									
+	panelHeight2: function(column, changing, action){									
 	
 			var instances = MochaUI.Panels.instances;
 			
@@ -3723,7 +3720,7 @@ MochaUI.Panel.implement(new Options, new Events);
 				if (panel.getNext('.panel') == null){
 					currentInstance.handleEl.setStyle('display', 'none');
 				}
-			});			 
+			}.bind(this));			 
 			
 			// Get the total height of all the column's children
 			column.getChildren().each(function(el){			
@@ -3741,7 +3738,7 @@ MochaUI.Panel.implement(new Options, new Events);
 							}	
 						}.bind(this));
 						return test;
-					};
+					}.bind(this);
 					
 					// If a next sibling is expanding, are any of the nexts siblings of the expanding sibling Expanded?					
 					areAnyExpandingNextSiblingsExpanded = function(){
@@ -3753,7 +3750,7 @@ MochaUI.Panel.implement(new Options, new Events);
 							}	
 						}.bind(this));
 						return test;
-					};
+					}.bind(this);
 					
 					// Resize panels that are not collapsed or "new"
 					if (action == 'new' ) {
@@ -3821,7 +3818,7 @@ MochaUI.Panel.implement(new Options, new Events);
 					newPanelHeight = 0;
 				}
 				panel.setStyle('height', newPanelHeight);
-			});	
+			}.bind(this));	
 						
 			// Make sure the remaining height is 0. If not add/subtract the
 			// remaining height to the tallest panel. This makes up for browser resizing,
@@ -3856,8 +3853,9 @@ MochaUI.Panel.implement(new Options, new Events);
 			
 			panelsExpanded.each(function(panel){
 				resizeChildren(panel);
-			});							
+			}.bind(this));							
 	}
+});	
 	
 	// May rename this resizeIframeEl()
 	function resizeChildren(panel){
@@ -4216,14 +4214,22 @@ MochaUI.Dock = new Class({
 				this.autoHideEvent = function(event) {
 					if (!this.dockAutoHide)
 						return;
-					if (!MochaUI.Desktop.footer && event.client.y > (document.getCoordinates().height - 25)){
+					if (!MochaUI.Desktop.desktopFooter) {
+						var dockHotspotHeight = this.dockWrapper.offsetHeight;
+						if (dockHotspotHeight < 25) dockHotspotHeight = 25;
+					}
+					else if (MochaUI.Desktop.desktopFooter) {
+						var dockHotspotHeight = this.dockWrapper.offsetHeight + MochaUI.Desktop.desktopFooter.offsetHeight;
+						if (dockHotspotHeight < 25) dockHotspotHeight = 25;						
+					}						
+					if (!MochaUI.Desktop.desktopFooter && event.client.y > (document.getCoordinates().height - dockHotspotHeight)){
 						if (!MochaUI.dockVisible){
 							this.dockWrapper.setStyle('display', 'block');
 							MochaUI.dockVisible = true;
 							MochaUI.Desktop.setDesktopSize();
 						}
 					}
-					else if (MochaUI.Desktop.desktopFooter && event.client.y > (document.getCoordinates().height - 25 - MochaUI.Desktop.desktopFooter.offsetHeight)){
+					else if (MochaUI.Desktop.desktopFooter && event.client.y > (document.getCoordinates().height - dockHotspotHeight)){
 						if (!MochaUI.dockVisible){
 							this.dockWrapper.setStyle('display', 'block');
 							MochaUI.dockVisible = true;

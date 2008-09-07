@@ -42,13 +42,7 @@ MochaUI.Desktop = new Class({
 	
 		// This is run on dock initialize so no need to do it twice.
 		if (!MochaUI.Dock.dockWrapper){
-			if (!Browser.Engine.trident4) {
 				this.setDesktopSize();
-			}
-			else {
-				// Fix for a bug in IE6 no toolbars demo.				
-				this.setDesktopSize.delay(10);
-			}
 		}
 		this.menuInitialize();		
 
@@ -131,16 +125,15 @@ MochaUI.Desktop = new Class({
 		}
 
 		if (MochaUI.Columns.instances.getKeys().length > 0) { // Conditional is a fix for a bug in IE6 in the no toolbars demo.
-			this.resizePanels();
+			MochaUI.Desktop.resizePanels();
 		}		
 	},
-
 	resizePanels: function(){
 		if (Browser.Engine.trident4) {
 			$$('.pad').setStyle('display', 'none');
 			$$('.rHeight').setStyle('height', 1);
 		}
-		panelHeight();
+		MochaUI.panelHeight();
 		rWidth();
 		if (Browser.Engine.trident4) $$('.pad').setStyle('display', 'block');		
 	},
@@ -751,7 +744,7 @@ MochaUI.Panel = new Class({
 				this.isCollapsed = true;				
 				panel.addClass('collapsed');
 				panel.removeClass('expanded');			
-				panelHeight(this.options.column, panel, 'collapsing');
+				MochaUI.panelHeight(this.options.column, panel, 'collapsing');
 				this.collapseToggleEl.removeClass('panel-collapsed');
 				this.collapseToggleEl.addClass('panel-expand');
 				this.collapseToggleEl.setProperty('title','Expand Panel');
@@ -762,7 +755,7 @@ MochaUI.Panel = new Class({
 				this.isCollapsed = false;
 				panel.addClass('expanded');
 				panel.removeClass('collapsed');				
-				panelHeight(this.options.column, panel, 'expanding');				
+				MochaUI.panelHeight(this.options.column, panel, 'expanding');				
 				this.collapseToggleEl.removeClass('panel-expand');
 				this.collapseToggleEl.addClass('panel-collapsed');
 				this.collapseToggleEl.setProperty('title','Collapse Panel');
@@ -816,29 +809,31 @@ MochaUI.Panel = new Class({
 			'url':      this.options.contentURL
 		});			
 		
-		panelHeight(this.options.column, this.panelEl, 'new');				
+		MochaUI.panelHeight(this.options.column, this.panelEl, 'new');				
 					
 	}
 });
 MochaUI.Panel.implement(new Options, new Events);
 
+
+MochaUI.extend({
 	// Panel Height	
-	function panelHeight(column, changing, action){
+	panelHeight: function(column, changing, action){
 		if (column != null) {
-			this.panelHeight2($(column), changing, action);
+			MochaUI.panelHeight2($(column), changing, action);
 		}
 		else {
 			$$('.column').each(function(column){
-				panelHeight2(column);
+				MochaUI.panelHeight2(column);
 			}.bind(this));
 		}
-	}
+	},	
 	/*
 	
 	actions can be new, collapsing or expanding.
 	
 	*/
-	function panelHeight2(column, changing, action){									
+	panelHeight2: function(column, changing, action){									
 	
 			var instances = MochaUI.Panels.instances;
 			
@@ -876,7 +871,7 @@ MochaUI.Panel.implement(new Options, new Events);
 				if (panel.getNext('.panel') == null){
 					currentInstance.handleEl.setStyle('display', 'none');
 				}
-			});			 
+			}.bind(this));			 
 			
 			// Get the total height of all the column's children
 			column.getChildren().each(function(el){			
@@ -894,7 +889,7 @@ MochaUI.Panel.implement(new Options, new Events);
 							}	
 						}.bind(this));
 						return test;
-					};
+					}.bind(this);
 					
 					// If a next sibling is expanding, are any of the nexts siblings of the expanding sibling Expanded?					
 					areAnyExpandingNextSiblingsExpanded = function(){
@@ -906,7 +901,7 @@ MochaUI.Panel.implement(new Options, new Events);
 							}	
 						}.bind(this));
 						return test;
-					};
+					}.bind(this);
 					
 					// Resize panels that are not collapsed or "new"
 					if (action == 'new' ) {
@@ -974,7 +969,7 @@ MochaUI.Panel.implement(new Options, new Events);
 					newPanelHeight = 0;
 				}
 				panel.setStyle('height', newPanelHeight);
-			});	
+			}.bind(this));	
 						
 			// Make sure the remaining height is 0. If not add/subtract the
 			// remaining height to the tallest panel. This makes up for browser resizing,
@@ -1009,8 +1004,9 @@ MochaUI.Panel.implement(new Options, new Events);
 			
 			panelsExpanded.each(function(panel){
 				resizeChildren(panel);
-			});							
+			}.bind(this));							
 	}
+});	
 	
 	// May rename this resizeIframeEl()
 	function resizeChildren(panel){
