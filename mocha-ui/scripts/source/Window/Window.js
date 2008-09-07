@@ -640,7 +640,7 @@ MochaUI.Window = new Class({
 			MochaUI.closeWindow.delay(this.options.closeAfter, this, this.windowEl);	
 		}
 
-		if (MochaUI.Dock && $(MochaUI.options.dock) && this.options.type == 'window' ) {
+		if (MochaUI.Dock && $(MochaUI.options.dock) && this.options.type == 'window' ){
 			MochaUI.Dock.createDockTab(this.windowEl);
 		}
 
@@ -996,7 +996,7 @@ MochaUI.Window = new Class({
 			cache.titleBarEl.setStyles({
 				'padding-left': 15,
 				'background': 'url(' + options.icon + ') 5px 5px no-repeat'
-			}) 	
+			}); 	
 		}
 		
 		cache.contentBorderEl = new Element('div', {
@@ -1012,13 +1012,11 @@ MochaUI.Window = new Class({
 			
 			if (options.toolbarPosition == 'bottom') {
 				cache.toolbarWrapperEl.addClass('bottom');
-			}
-						
+			}						
 			cache.toolbarEl = new Element('div', {
 				'id': id + '_toolbar',											
 				'class': 'mochaToolbar'
-			}).inject(cache.toolbarWrapperEl);
-			
+			}).inject(cache.toolbarWrapperEl);			
 		}
 		
 		if (options.toolbar2){
@@ -1030,12 +1028,10 @@ MochaUI.Window = new Class({
 			if (options.toolbar2Position == 'bottom') {
 				cache.toolbar2WrapperEl.addClass('bottom');
 			}			
-			
 			cache.toolbar2El = new Element('div', {
 				'id': id + '_toolbar2',											
 				'class': 'mochaToolbar'
-			}).inject(cache.toolbar2WrapperEl);
-			
+			}).inject(cache.toolbar2WrapperEl);			
 		}		
 
 		cache.contentWrapperEl = new Element('div', {

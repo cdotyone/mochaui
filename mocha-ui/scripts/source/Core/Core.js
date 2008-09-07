@@ -86,7 +86,7 @@ var MochaUI = new Hash({
 			}			
 		}
 				
-		var contentEl = currentInstance.contentEl
+		var contentEl = currentInstance.contentEl;
 		if (options.childElement != null) {
 			var contentContainer = options.childElement;
 		}
@@ -150,10 +150,10 @@ var MochaUI = new Hash({
 					onException: function(){}.bind(this),					
 					onSuccess: function(){
 						if (contentContainer == contentEl){
-							if (recipient == 'window') {
+							if (recipient == 'window'){
 								currentInstance.hideSpinner(spinnerEl);
 							}
-							else if (recipient == 'panel' && $('spinner')) {
+							else if (recipient == 'panel' && $('spinner')){
 								$('spinner').setStyle('visibility', 'hidden');	
 							}								
 							currentInstance.fireEvent('onContentLoaded', element);
@@ -363,7 +363,7 @@ var MochaUI = new Hash({
 		windowEl.destroy();
 		currentInstance.fireEvent('onCloseComplete');
 		
-		if (currentInstance.options.type != 'notification') {
+		if (currentInstance.options.type != 'notification'){
 			var newFocus = this.getWindowWithHighestZindex();
 			this.focusWindow(newFocus);
 		}
@@ -432,7 +432,7 @@ var MochaUI = new Hash({
 		MochaUI.focusingWindow = 'true';
 		var windowClicked = function(){
 			MochaUI.focusingWindow = 'false';
-		}		
+		};		
 		windowClicked.delay(170, this);
 
 		// Only focus when needed
@@ -646,22 +646,19 @@ note:
 
 */
 			
-function fixPNG(myImage) 
-{
-    if (Browser.Engine.trident4 && document.body.filters) 
-    {
-       var imgID = (myImage.id) ? "id='" + myImage.id + "' " : ""
-	   var imgClass = (myImage.className) ? "class='" + myImage.className + "' " : ""
-	   var imgTitle = (myImage.title) ? 
-		             "title='" + myImage.title  + "' " : "title='" + myImage.alt + "' "
-	   var imgStyle = "display:inline-block;" + myImage.style.cssText
+function fixPNG(myImage){
+    if (Browser.Engine.trident4 && document.body.filters){
+       var imgID = (myImage.id) ? "id='" + myImage.id + "' " : "";
+	   var imgClass = (myImage.className) ? "class='" + myImage.className + "' " : "";
+	   var imgTitle = (myImage.title) ? "title='" + myImage.title  + "' " : "title='" + myImage.alt + "' ";
+	   var imgStyle = "display:inline-block;" + myImage.style.cssText;
 	   var strNewHTML = "<span " + imgID + imgClass + imgTitle
                   + " style=\"" + "width:" + myImage.width 
                   + "px; height:" + myImage.height 
                   + "px;" + imgStyle + ";"
                   + "filter:progid:DXImageTransform.Microsoft.AlphaImageLoader"
-                  + "(src=\'" + myImage.src + "\', sizingMethod='scale');\"></span>"
-	   myImage.outerHTML = strNewHTML	  
+                  + "(src=\'" + myImage.src + "\', sizingMethod='scale');\"></span>";
+	   myImage.outerHTML = strNewHTML;	  
     }
 }
 

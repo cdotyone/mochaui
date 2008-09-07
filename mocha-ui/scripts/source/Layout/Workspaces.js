@@ -66,9 +66,9 @@ MochaUI.extend({
 		}		
 	},
 	loadWorkspace2: function(workspaceWindows){		
-		workspaceWindows.each(function(instance) {
+		workspaceWindows.each(function(instance){
 			windowFunction = eval('MochaUI.' + instance.id + 'Window');
-			if (windowFunction) {
+			if (windowFunction){
 				eval('MochaUI.' + instance.id + 'Window();');
 				$(instance.id).setStyles({
 					top: instance.top,

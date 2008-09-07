@@ -10,10 +10,7 @@ License:
 	MIT-style license.
 
 Requires:
-	Core.js, Window.js
-
-To do:
-	- Move to Window
+	Core.js, Window.js (for tabbed windows) or Layout.js (for tabbed panels)
 
 */
 

@@ -23,26 +23,26 @@ MochaUI.Desktop = new Class({
 	options: {         		
 		// Naming options:
 		// If you change the IDs of the Mocha Desktop containers in your HTML, you need to change them here as well.
-		desktop:                'desktop',
-		desktopHeader:          'desktopHeader',
-		desktopFooter:          'desktopFooter',		
-		desktopNavBar:          'desktopNavbar',
-		pageWrapper:            'pageWrapper',
-		page:                   'page',
-		desktopFooter:          'desktopFooterWrapper'
+		desktop:             'desktop',
+		desktopHeader:       'desktopHeader',
+		desktopFooter:       'desktopFooter',		
+		desktopNavBar:       'desktopNavbar',
+		pageWrapper:         'pageWrapper',
+		page:                'page',
+		desktopFooter:       'desktopFooterWrapper'
 	},	
 	initialize: function(options){
 		this.setOptions(options);
-		this.desktop                = $(this.options.desktop);
-		this.desktopHeader          = $(this.options.desktopHeader);
-		this.desktopFooter          = $(this.options.desktopFooter);				
-		this.desktopNavBar          = $(this.options.desktopNavBar);
-		this.pageWrapper            = $(this.options.pageWrapper);
-		this.page                   = $(this.options.page);
-		this.desktopFooter          = $(this.options.desktopFooter);		
+		this.desktop         = $(this.options.desktop);
+		this.desktopHeader   = $(this.options.desktopHeader);
+		this.desktopFooter   = $(this.options.desktopFooter);				
+		this.desktopNavBar   = $(this.options.desktopNavBar);
+		this.pageWrapper     = $(this.options.pageWrapper);
+		this.page            = $(this.options.page);
+		this.desktopFooter   = $(this.options.desktopFooter);		
 	
 		// This is run on dock initialize so no need to do it twice.
-		if (!MochaUI.Dock.dockWrapper) {
+		if (!MochaUI.Dock.dockWrapper){
 			this.setDesktopSize();
 		}
 		this.menuInitialize();		
@@ -464,7 +464,7 @@ MochaUI.Column = new Class({
 				break;
 		}
 		
-		if (this.handleEl != null) {
+		if (this.handleEl != null){
 			this.handleEl.addEvent('dblclick', function(){
 				this.columnToggle();				
 			}.bind(this));	
@@ -477,7 +477,7 @@ MochaUI.Column = new Class({
 		var column= this.columnEl;
 		
 		// Collapse					
-		if (this.isCollapsed == false) {
+		if (this.isCollapsed == false){
 			this.oldWidth = column.getStyle('width').toInt();
 			
 			this.resize.detach();			
@@ -854,7 +854,7 @@ MochaUI.Panel.implement(new Options, new Events);
 			// Set panel resize partners
 			panels.each(function(panel){				
 				currentInstance = instances.get(panel.id);
-				if (panel.hasClass('expanded') && panel.getNext('.expanded')) {						
+				if (panel.hasClass('expanded') && panel.getNext('.expanded')){						
 					currentInstance.partner = panel.getNext('.expanded');
 					currentInstance.resize.attach();
 					currentInstance.handleEl.setStyles({
@@ -866,7 +866,7 @@ MochaUI.Panel.implement(new Options, new Events);
 					currentInstance.resize.detach();
 					currentInstance.handleEl.setStyle('cursor', null).addClass('detached');					
 				}
-				if (panel.getNext('.panel') == null) {
+				if (panel.getNext('.panel') == null){
 					currentInstance.handleEl.setStyle('display', 'none');
 				}
 			});			 
@@ -887,19 +887,19 @@ MochaUI.Panel.implement(new Options, new Events);
 							}	
 						}.bind(this));
 						return test;
-					}
+					};
 					
 					// If a next sibling is expanding, are any of the nexts siblings of the expanding sibling Expanded?					
 					areAnyExpandingNextSiblingsExpanded = function(){
 						var test;
 						changing.getAllNext('.panel').each(function(sibling){
 							var siblingInstance = instances.get(sibling.id);
-							if (siblingInstance.isCollapsed == false) {
+							if (siblingInstance.isCollapsed == false){
 								test = true;
 							}	
 						}.bind(this));
 						return test;
-					}
+					};
 					
 					// Resize panels that are not collapsed or "new"
 					if (action == 'new' ) {
@@ -915,13 +915,13 @@ MochaUI.Panel.implement(new Options, new Events);
 					// Resize panels that are not collapsed. If a panel is collapsing
 					// resize any expanded panels below. If there are no expanded panels
 					// below it, resize the expanded panels above it.
-					else if (action == null || action == 'collapsing' ) {
-						if (currentInstance.isCollapsed != true && (el.getAllNext('.panel').contains(changing) != true || areAnyNextSiblingsExpanded(el) != true)) {
+					else if (action == null || action == 'collapsing' ){
+						if (currentInstance.isCollapsed != true && (el.getAllNext('.panel').contains(changing) != true || areAnyNextSiblingsExpanded(el) != true)){
 							panelsToResize.push(el);
 						}
 						
 						// Height of panels that can be resized
-						if (currentInstance.isCollapsed != true && (el.getAllNext('.panel').contains(changing) != true || areAnyNextSiblingsExpanded(el) != true)) {
+						if (currentInstance.isCollapsed != true && (el.getAllNext('.panel').contains(changing) != true || areAnyNextSiblingsExpanded(el) != true)){
 							this.panelsHeight += el.offsetHeight.toInt();
 						}
 					}
@@ -930,11 +930,11 @@ MochaUI.Panel.implement(new Options, new Events);
 					// below it, resize the first expanded panel above it.					
 					else if (action == 'expanding') {
 						   
-						if (currentInstance.isCollapsed != true && (el.getAllNext('.panel').contains(changing) != true || (areAnyExpandingNextSiblingsExpanded() != true && el.getNext('.expanded') == changing)) && el != changing) {
+						if (currentInstance.isCollapsed != true && (el.getAllNext('.panel').contains(changing) != true || (areAnyExpandingNextSiblingsExpanded() != true && el.getNext('.expanded') == changing)) && el != changing){
 							panelsToResize.push(el);
 						}						
 						// Height of panels that can be resized
-						if (currentInstance.isCollapsed != true && (el.getAllNext('.panel').contains(changing) != true || (areAnyExpandingNextSiblingsExpanded() != true && el.getNext('.expanded') == changing)) && el != changing) {
+						if (currentInstance.isCollapsed != true && (el.getAllNext('.panel').contains(changing) != true || (areAnyExpandingNextSiblingsExpanded() != true && el.getNext('.expanded') == changing)) && el != changing){
 							this.panelsHeight += el.offsetHeight.toInt();
 						}				
 					}
@@ -977,16 +977,15 @@ MochaUI.Panel.implement(new Options, new Events);
 			this.height = 0;
 			column.getChildren().each(function(el){
 				this.height += el.offsetHeight.toInt();				
-				if (el.hasClass('panel') && el.getStyle('height').toInt() > tallestPanelHeight) {
+				if (el.hasClass('panel') && el.getStyle('height').toInt() > tallestPanelHeight){
 					tallestPanel = el;
-					tallestPanelHeight = el.getStyle('height').toInt();
-					
+					tallestPanelHeight = el.getStyle('height').toInt();					
 				}												
 			}.bind(this));
 				
 			var remainingHeight = column.offsetHeight.toInt() - this.height;
 						
-			if ((remainingHeight > 0 || remainingHeight < 0) && tallestPanelHeight > 0) {
+			if ((remainingHeight > 0 || remainingHeight < 0) && tallestPanelHeight > 0){
 				tallestPanel.setStyle('height', tallestPanel.getStyle('height').toInt() + remainingHeight );
 				if (tallestPanel.getStyle('height') < 1){
 					tallestPanel.setStyle('height', 0 );
@@ -995,7 +994,7 @@ MochaUI.Panel.implement(new Options, new Events);
 			
 			$$('.columnHandle').each(function(handle){
 				var handleHeight = parent.getStyle('height').toInt() - handle.getStyle('border-top').toInt() - handle.getStyle('border-bottom').toInt();
-				if (Browser.Engine.trident4) {
+				if (Browser.Engine.trident4){
 					handleHeight -= 1;
 				}
 				handle.setStyle('height', handleHeight);
@@ -1012,7 +1011,7 @@ MochaUI.Panel.implement(new Options, new Events);
 		var currentInstance = instances.get(panel.id);
 		var contentWrapperEl = currentInstance.contentWrapperEl;
 				
-		if (currentInstance.iframeEl) {
+		if (currentInstance.iframeEl){
 			currentInstance.iframeEl.setStyles({
 				'height': contentWrapperEl.getStyle('height'),
 				'width': contentWrapperEl.offsetWidth - contentWrapperEl.getStyle('border-left').toInt() - contentWrapperEl.getStyle('border-right').toInt()
@@ -1033,8 +1032,9 @@ function rWidth(){
 			
 		// Get the total width of all the parent element's children
 		parent.getChildren().each(function(el){
-			if (el.hasClass('mocha') != true)
-			this.width += el.offsetWidth.toInt();														
+			if (el.hasClass('mocha') != true) {
+				this.width += el.offsetWidth.toInt();
+			}														
 		}.bind(this));
 		
 		// Add the remaining width to the current element
@@ -1080,7 +1080,7 @@ function addResizeRight(element, min, max){
 		}.bind(this),							
 		onDrag: function(){
 			rWidth();
-			if (Browser.Engine.trident4) {
+			if (Browser.Engine.trident4){
 				element.getChildren().each(function(el){
 					var width = $(element).getStyle('width').toInt();
 					width -= el.getStyle('border-right').toInt();
@@ -1149,16 +1149,13 @@ function addResizeBottom(element){
 	
 	var instances = MochaUI.Panels.instances;
 	var currentInstance = instances.get(element.id);	
-	var handle = currentInstance.handleEl;
-	
-	handle.setStyle('cursor', 'n-resize');
-	
-	partner = currentInstance.partner;
-		
+	var handle = currentInstance.handleEl;	
+	handle.setStyle('cursor', 'n-resize');	
+	partner = currentInstance.partner;		
 	min = 0;
 	max = function(){
 		return element.getStyle('height').toInt() + partner.getStyle('height').toInt();
-	}.bind(this)
+	}.bind(this);
 	
 	if (Browser.Engine.trident){	
 		handle.addEvents({
