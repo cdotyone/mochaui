@@ -312,7 +312,7 @@ initializeWindows = function(){
 			id: id,
 			title: 'Accordian',
 			loadMethod: 'xhr',
-			contentURL: 'pages/overview.html',
+			contentURL: 'pages/accordian-demo.html',
 			width: 300,
 			height: 200,
 			scrollbars: false,
@@ -467,58 +467,7 @@ initializeWindows = function(){
 		});
 	}
 
-	// Help
-	MochaUI.overviewWindow = function(){
-		var id = 'overview';
-		new MochaUI.Window({
-			id: id,
-			title: 'Overview',
-			loadMethod: 'xhr',
-			contentURL: 'pages/overview.html',
-			width: 300,
-			height: 200,
-			x: 250,
-			y: 145,
-			scrollbars: false,
-			resizable: false,
-			maximizable: false,				
-			padding: { top: 0, right: 0, bottom: 0, left: 0 },			
-			onContentLoaded: function(windowEl){
-				this.windowEl = windowEl;
-				var accordianDelay = function(){					
-					new Accordion('#' + id + ' h3.accordianToggler', "#" + id + ' div.accordianElement', {
-					//	start: 'all-closed',															   
-						opacity: false,
-						alwaysHide: true,
-						onActive: function(toggler, element){
-							toggler.addClass('open');
-						},
-						onBackground: function(toggler, element){
-							toggler.removeClass('open');
-						},							
-						onStart: function(toggler, element){
-							this.windowEl.accordianResize = function(){
-								MochaUI.dynamicResize($(id));
-							}
-							this.windowEl.accordianTimer = this.windowEl.accordianResize.periodical(10);								
-						}.bind(this),												
-						onComplete: function(){	
-							this.windowEl.accordianTimer = $clear(this.windowEl.accordianTimer);
-							MochaUI.dynamicResize($(id)) // once more for good measure
-						}.bind(this)									   
-					}, $(id));
-				}.bind(this)
-				accordianDelay.delay(10, this); // Delay is a fix for IE
-			}				
-		});
-	}	
-	if ($('overviewLinkCheck')){ 
-		$('overviewLinkCheck').addEvent('click', function(e){	
-			new Event(e).stop();
-			MochaUI.overviewWindow();
-		});
-	}
-	
+	// Help	
 	MochaUI.featuresWindow = function(){		
 		new MochaUI.Window({
 			id: 'features',
