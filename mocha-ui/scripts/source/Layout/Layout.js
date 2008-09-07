@@ -131,7 +131,7 @@ MochaUI.Desktop = new Class({
 			this.pageWrapper.setStyle('height', pageWrapperHeight);
 		}
 
-		if ($$('.columns').length > 0) { // Conditional is a fix for a bug in IE6 in the no toolbars demo.
+		if (MochaUI.Columns.instances.getKeys().length > 0) { // Conditional is a fix for a bug in IE6 in the no toolbars demo.
 			this.resizePanels();
 		}		
 	},

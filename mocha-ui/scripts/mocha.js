@@ -1233,7 +1233,6 @@ MochaUI.Window = new Class({
 		}
 		else {
 			var dimensions = $(this.options.container).getSize();			
-
 		}
 
 		if (!this.options.y) {
@@ -1588,6 +1587,7 @@ MochaUI.Window = new Class({
 		this.n.setStyles({
 			'top': top,	
 			'left': left + 10,				
+
 			'width': width - 20
 		});
 		this.e.setStyles({
@@ -2455,6 +2455,7 @@ MochaUI.Modal = new Class({
 	Implements: [Events, Options],
 	
 	initialize: function(options){
+
 		this.modalInitialize();
 		
 		window.addEvent('resize', function(){
@@ -2888,7 +2889,13 @@ MochaUI.Desktop = new Class({
 	
 		// This is run on dock initialize so no need to do it twice.
 		if (!MochaUI.Dock.dockWrapper){
-			this.setDesktopSize();
+			if (!Browser.Engine.trident4) {
+				this.setDesktopSize();
+			}
+			else {
+				// Fix for a bug in IE6 no toolbars demo.				
+				this.setDesktopSize.delay(10);
+			}
 		}
 		this.menuInitialize();		
 
@@ -2970,7 +2977,9 @@ MochaUI.Desktop = new Class({
 			this.pageWrapper.setStyle('height', pageWrapperHeight);
 		}
 
-		this.resizePanels();		
+		if ($$('.columns').length > 0) { // Conditional is a fix for a bug in IE6 in the no toolbars demo.
+			this.resizePanels();
+		}		
 	},
 
 	resizePanels: function(){
@@ -3990,7 +3999,6 @@ function addResizeLeft(element, min, max){
 
 function addResizeBottom(element){
 	if (!$(element)) return;
-
 	var element = $(element);
 	
 	var instances = MochaUI.Panels.instances;
@@ -4419,7 +4427,6 @@ MochaUI.Dock = new Class({
 
 		currentInstance.fireEvent('onMinimize', windowEl);		
 	},
-
 	restoreMinimized: function(windowEl) {
 
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
