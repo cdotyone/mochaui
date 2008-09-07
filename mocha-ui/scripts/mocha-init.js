@@ -744,7 +744,7 @@ window.addEvent('domready', function(){
 	// Add panels to main column	
 	new MochaUI.Panel({
 		id: 'mainPanel',
-		title: 'Main Panel',
+		title: 'Lorem Ipsum',
 		loadMethod: 'xhr',
 		contentURL: 'pages/lipsum.html',
 		column: 'mainColumn',
