@@ -1,6 +1,6 @@
 {"windows":[
-			
-	{	
+
+	{
 		"id": "json01",
 		"title":"Window Created with Json Data",
 		"content":"First window",
@@ -16,7 +16,7 @@
 		"title":"Another Window Created with Json",
 		"content":"Second window",
 		"maximizable": false,
-		"resizable": false,		
+		"resizable": false,
 		"headerStartColor": [230, 190, 160],
 		"headerStoptColor": [237, 237, 237],	
 		"x": 110,
@@ -27,11 +27,11 @@
 		"title":"And Another ...",
 		"content":"Third",
 		"maximizable": false,
-		"resizable": false,		
+		"resizable": false,
 		"headerStartColor": [160, 160, 230],
-		"headerStoptColor": [237, 237, 237],		
+		"headerStoptColor": [237, 237, 237],
 		"x": 170,
 		"y": 265
 	}
-	
+
 ]}
