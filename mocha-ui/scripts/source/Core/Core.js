@@ -248,7 +248,8 @@ var MochaUI = new Hash({
 	collapseToggle: function(windowEl){
 		var instances = MochaUI.Windows.instances;
 		var currentInstance = instances.get(windowEl.id);
-		var handles = currentInstance.windowEl.getElements('.handle');		
+		var handles = currentInstance.windowEl.getElements('.handle');
+		if (currentInstance.isMaximized == true) return;		
 		if (currentInstance.isCollapsed == false) {
 			currentInstance.isCollapsed = true;
 			handles.setStyle('display', 'none');
