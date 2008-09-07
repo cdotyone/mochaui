@@ -28,7 +28,7 @@ body {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
 	line-height: 18px;
-	color: #333;	
+	color: #3f3f3f;	
 }
 
 /* Typography */
@@ -58,7 +58,7 @@ h4 {
 }
 	
 a {
-	color: #0983d1;
+	color: #098ED1;
 	text-decoration: none;
 	cursor: pointer;
 }
@@ -81,7 +81,7 @@ p {
 ul {
 	list-style: outside;
 	margin: 0 0 9px 16px;
-	list-style-type: square;
+	list-style-type: disc;
 }
 
 dt {

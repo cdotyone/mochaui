@@ -545,7 +545,7 @@ MochaUI.Window = new Class({
 		}
 
 		if (!this.options.y) {
-			var y = (dimensions.y * .5) - ((this.options.height + this.headerFooterShadow) * .5);
+			var y = (dimensions.y * .5) - ((this.options.height + this.headerFooterShadow + this.windowEl.getStyle('border-top').toInt() + this.windowEl.getStyle('border-bottom').toInt()) * .5);
 		}
 		else {
 			var y = this.options.y - this.options.shadowBlur;

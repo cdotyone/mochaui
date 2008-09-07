@@ -48,7 +48,7 @@ MochaUI.Desktop = new Class({
 		this.menuInitialize();		
 
 		// Resize desktop, page wrapper, modal overlay, and maximized windows when browser window is resized
-		window.addEvent('resize', function(){
+		window.addEvent('resize', function(e){
 			this.onBrowserResize();
 		}.bind(this));		
 	},
@@ -585,7 +585,7 @@ MochaUI.Panel = new Class({
 		padding:   		  { top: 8, right: 8, bottom: 8, left: 8 },
 
 		// Color options:		
-		panelBackground:   '#fff',			
+		panelBackground:   '#f8f8f8',			
 
 		// Events
 		onBeforeBuild:     $empty,

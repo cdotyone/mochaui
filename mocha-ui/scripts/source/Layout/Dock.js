@@ -59,7 +59,7 @@ MochaUI.Dock = new Class({
 		// Style options
 		dockTabColor:         [255, 255, 255],
 		trueButtonColor:      [70, 245, 70],     // Color for autohide on		
-		enabledButtonColor:   [108, 152, 217], 
+		enabledButtonColor:   [125, 208, 250], 
 		disabledButtonColor:  [170, 170, 170]		
 	},
 	initialize: function(options){
@@ -87,10 +87,10 @@ MochaUI.Dock = new Class({
 			'display':  'block',
 			'position': 'absolute',
 			'top':      null,
-			'bottom':   0,
+			'bottom':   MochaUI.Desktop.desktopFooter ? MochaUI.Desktop.desktopFooter.offsetHeight : 0,
 			'left':     0
-		});	
-
+		});
+		
 		if (this.options.useControls){
 			this.initializeDockControls();
 		}
@@ -273,7 +273,7 @@ MochaUI.Dock = new Class({
 				}
 				else{
 					// If window is not minimized and is focused, minimize window.
-					if (currentInstance.windowEl.hasClass('isFocused')) {
+					if (currentInstance.windowEl.hasClass('isFocused') && currentInstance.minimizable == true) {
 						MochaUI.Dock.minimizeWindow(windowEl)
 					}
 					// If window is not minimized and is not focused, focus window.	

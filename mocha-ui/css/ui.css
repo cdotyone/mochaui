@@ -37,16 +37,14 @@ body {
 
 #desktopTitlebarWrapper {
 	position: relative;	
-	height: 40px;
+	height: 45px;
 	overflow: hidden;
-	background: #222;
-	border-top: 1px solid #222;
-	border-bottom: 1px solid #fff;			
+	background: #333 url(../images/bg-header.gif) repeat-x;			
 }
 	
 #desktopTitlebar {
 	padding: 7px 8px 6px 8px;
-	height: 27px;
+	height: 32px;
 	background: url(../images/logo.gif) no-repeat;
 	background-position: left 0;	
 }	
@@ -63,8 +61,8 @@ body {
 	
 #desktopTitlebar h2.tagline {
 	font-size: 12px;
-	color: #fff;
-	font-weight: normal;
+	color: #b2b2b2;
+	font-weight: bold;
 	padding: 5px 0 0 0;
 	text-align: center;	
 }
@@ -75,16 +73,18 @@ body {
 }	
 
 #topNav {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
 	position: absolute;
 	right: 0;
 	top: 0;
-	color: #A3A3A3;
+	color: #b2b2b2;
 	text-align: right;
-	padding: 12px 8px 0 0;
+	padding: 13px 10px 0 0;
 }
 
 #topNav a {
-	color: #98B2D9;
+	color: #7DD0FA;
 	font-weight: normal;
 }
 
@@ -96,7 +96,7 @@ body {
 
 .toolbox {
 	float: right;
-	padding: 6px 8px 0 10px;
+	padding: 6px 3px 0 5px;
 	height: 23px;
 	overflow: hidden;		
 }
@@ -134,7 +134,7 @@ div.toolbox.divider { /* Have to specify div here for IE6's sake */
 /* Navbar */
 
 #desktopNavbar {
-	background: #f1f1f1;
+	background: #4C4C4C;
 	height: 30px;
 	margin: 0 0px;	
 }
@@ -156,12 +156,12 @@ div.toolbox.divider { /* Have to specify div here for IE6's sake */
 	
 #desktopNavbar ul li a {
 	padding: 6px 10px 6px 10px;	
-	color: #333;
+	color: #b2b2b2;
 	font-weight: normal;		
 }
 
 #desktopNavbar ul li a:hover {
-	color: #0983d1;
+	color: #fff;
 }
 
 #desktopNavbar ul li a.arrow-right, #desktopNavbar ul li a:hover.arrow-right {
@@ -172,10 +172,10 @@ div.toolbox.divider { /* Have to specify div here for IE6's sake */
 	
 #desktopNavbar li ul {
 	padding: 2px;
-	border: 1px solid #333;
-	background: #fff;
+	border: 1px solid #3f3f3f;
+	background: #fff url(../images/bg-dropdown.gif) repeat-y;
 	position: absolute;
-	width: 158px;
+	width: 164px;
 	left: -999em;
 	z-index: 8000;
 }
@@ -188,7 +188,7 @@ div.toolbox.divider { /* Have to specify div here for IE6's sake */
 }
 
 #desktopNavbar li ul ul { /* third-and-above-level lists */
-	margin: -22px 0 0 158px;
+	margin: -22px 0 0 164px;
 } 
 
 #desktopNavbar li ul li .check {
@@ -205,9 +205,9 @@ div.toolbox.divider { /* Have to specify div here for IE6's sake */
 
 #desktopNavbar li ul li a {
 	position: relative;
-	padding: 1px 9px 1px 19px;
+	padding: 1px 9px 1px 25px;
 	width: 130px;
-	color: #333;
+	color: #3f3f3f;
 	font-weight: normal;
 }
 
@@ -236,13 +236,13 @@ div.toolbox.divider { /* Have to specify div here for IE6's sake */
 li.divider {
 	margin-top: 2px;
 	padding-top: 3px;	
-	border-top: 1px solid #ddd;
+	border-top: 1px solid #aaa;
 }	
 
 #pageWrapper {
 	position: relative;
 	overflow: hidden; /* This can be set to hidden or auto */
-	border-top: 1px solid #b9b9b9;
+	border-top: 1px solid #222;
 }
 
 /* Footer */
@@ -253,18 +253,20 @@ li.divider {
 	width: 100%;
 	height: 30px;
 	overflow: hidden;
+	border-top: 1px solid #222;
 }
 
 #desktopFooter {
-	font-size: 11px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
 	height: 24px;
 	padding: 6px 8px 0 8px;
-	background: #222;
-	color: #A3A3A3;
+	background: #333;
+	color: #b2b2b2;
 }
 
 #desktopFooter a {
-	color: #98B2D9;
+	color: #7DD0FA;
 	font-weight: normal;	
 }
 
@@ -276,27 +278,26 @@ li.divider {
 
 #dockWrapper {
 	display: none;
-	background: #f1f1f1;
-	width: 100%;		
+	width: 100%;
+	border-top: 1px solid #222;		
 }
 
 #dockWrapper.top {
+	border: 0;
 }
 
 #dock {
 	position: relative;
-	padding: 2px 16px 0 6px;
+	padding: 3px 16px 0 6px;
 	bottom: 0;
 	left: 0;
-	background: #f1f1f1;
-	border-top: 1px solid #f1f1f1;
-	border-bottom: 1px solid #f1f1f1;	
-	min-height: 28px;
+	background: #4c4c4c;	
+	min-height: 27px;
 	height: auto;
 }
 
 *html #dock {
-	height: 28px; /* Used for IE 6.0 since it does not support min-height */	
+	height: 30px; /* Used for IE 6.0 since it does not support min-height */	
 }	
 
 .dockTab {
@@ -304,15 +305,16 @@ li.divider {
 	position: relative;	
 	font-size: 11px;
 	width: 150px;
-	height: 26px;
+	height: 24px;
 	margin: 0 3px 2px 0;
 	overflow: hidden;	
 	cursor: pointer;
-	background: url(../images/dock-tabs.gif) left top no-repeat;
+	background: #666; /*url(../images/dock-tabs.gif) left top no-repeat; */
 }	
 
 .dockTab.activeDockTab {
-	background-position: left -26px;
+	background: #8c8c8c;	
+/*	background-position: left -26px; */
 }
 
 .dockText {
@@ -321,13 +323,17 @@ li.divider {
 	left: 0;
 	display: block;
 	font-weight: normal;
-	color: #fff;	
+	color: #bbb;	
 	text-align: left;
 	padding: 4px 10px 2px 10px;
 	width: 130px;
 	height: 19px;
 	overflow: hidden;		
-}			
+}
+
+.dockText:hover {
+	color: #fff;	
+}				
 
 .dockTab.activeDockTab .dockText {
 	color: #fff;	
@@ -336,14 +342,14 @@ li.divider {
 #dockCanvas {
 	position: absolute;
 	top: 5px;
-	right: 0;
+	right: 3px;
 	z-index: 2;
 }
 
 #dockPlacement {
 	position: absolute;
 	top: 4px;
-	right: 5px;
+	right: 8px;
 	width: 10px;
 	height: 9px;
 	opacity: 0;
@@ -358,7 +364,7 @@ li.divider {
 #dockAutoHide {
 	position: absolute;
 	top: 14px;
-	right: 5px;
+	right: 8px;
 	width: 10px;
 	height: 9px;
 	opacity: 0;
@@ -404,10 +410,10 @@ li.divider {
 
 .panel-header {
 	position: relative;	
-	background: #f1f1f1 url(../images/bg-panel-header.gif)  repeat-x;
+	background: #f1f1f1 url(../images/bg-panel-header.gif) repeat-x;
 	height: 30px;
 	overflow: hidden;
-	border-bottom: 1px solid #d9d9d9;		
+	border-bottom: 1px solid #d3d3d3;		
 }
 
 .panel-headerContent {
@@ -426,13 +432,13 @@ li.divider {
 	padding: 3px 8px 0 8px;
 	height: 22px;	
 	overflow: hidden;
-	color: #333;	
+	color: #3f3f3f;	
 }
 
 .panel-header-toolbox {
 	float: right;
 	height: 26px;
-	margin: 1px 5px 5px 0;
+	margin: 2px 5px 5px 0;
 	text-align: right;
 }
 
@@ -496,8 +502,8 @@ li.divider {
 	float: left;
 	width: 4px;
 	overflow: hidden;
-	background: #eee url(../images/handle-icon.gif) center center no-repeat;
-	border: 1px solid #b9b9b9;
+	background: #bbb url(../images/handle-icon.gif) center center no-repeat;
+	border: 1px solid #9a9a9a;
 	border-top: 0;							
 }
 
@@ -923,7 +929,7 @@ div.mochaToolbarWrapper.bottom {
 }
 
 .tree li a {
-	color: #333;	
+	color: #3f3f3f;	
 }	
 
 .tree li img {

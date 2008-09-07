@@ -776,7 +776,7 @@ window.addEvent('domready', function(){
 		loadMethod: 'xhr',
 		contentURL: 'pages/tips.html',
 		column: 'sideColumn2',
-		height: 300,
+		height: 140,
 		footer: true,
 		footerURL: 'pages/toolbox-demo.html'		
 	});
