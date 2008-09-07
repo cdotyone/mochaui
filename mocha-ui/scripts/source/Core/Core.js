@@ -631,6 +631,42 @@ var MochaUI = new Hash({
 	}		
 });
 
+/* 
+
+function: fixPNG
+	Bob Osola's PngFix for IE6.
+
+example:
+	(begin code)
+	<img src="xyz.png" alt="foo" width="10" height="20" onload="fixPNG(this)">
+	(end)
+
+note:
+	You must have the image height and width attributes specified in the markup.
+
+*/
+			
+function fixPNG(myImage) 
+{
+    if (Browser.Engine.trident4 && document.body.filters) 
+    {
+       var imgID = (myImage.id) ? "id='" + myImage.id + "' " : ""
+	   var imgClass = (myImage.className) ? "class='" + myImage.className + "' " : ""
+	   var imgTitle = (myImage.title) ? 
+		             "title='" + myImage.title  + "' " : "title='" + myImage.alt + "' "
+	   var imgStyle = "display:inline-block;" + myImage.style.cssText
+	   var strNewHTML = "<span " + imgID + imgClass + imgTitle
+                  + " style=\"" + "width:" + myImage.width 
+                  + "px; height:" + myImage.height 
+                  + "px;" + imgStyle + ";"
+                  + "filter:progid:DXImageTransform.Microsoft.AlphaImageLoader"
+                  + "(src=\'" + myImage.src + "\', sizingMethod='scale');\"></span>"
+	   myImage.outerHTML = strNewHTML	  
+    }
+}
+
+
+
 // Toggle window visibility with Ctrl-Alt-Q
 document.addEvent('keydown', function(event){							 
 	if (event.key == 'q' && event.control && event.alt) {

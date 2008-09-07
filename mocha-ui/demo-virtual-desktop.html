@@ -11,10 +11,17 @@
 
 <style>	
 
+/* This CSS should be place in a style sheet. It is only here in order to not conflict with the other demos. */
+
 #pageWrapper {
-	background: #7c9dbf;
+	background: #5b93cc;
+}
+
+.desktopIcon {
+	margin: 15px 0 0 15px;
+	cursor: pointer;	
 }	
-			
+
 </style>
 	
 <!--[if IE]>
@@ -135,7 +142,13 @@
 </div>
 
 <div id="pageWrapper">
-	<div id="page"></div>	
+	<div id="page">
+		<img class="desktopIcon" src="images/icons/48x48/globe.png" alt="Camera" width="48" height="48" onclick="MochaUI.notification('Do Something');" onload="fixPNG(this)" /><br />		
+		<img class="desktopIcon" src="images/icons/48x48/speaker.png" alt="Camera" width="48" height="48" onclick="MochaUI.notification('Do Something');" onload="fixPNG(this)" /><br />
+		<img class="desktopIcon" src="images/icons/48x48/view.png" alt="Camera" width="48" height="48" onclick="MochaUI.notification('Do Something');" onload="fixPNG(this)" /><br />
+		<img class="desktopIcon" src="images/icons/48x48/headset.png" alt="Camera" width="48" height="48" onclick="MochaUI.notification('Do Something');" onload="fixPNG(this)" /><br />
+		<img class="desktopIcon" src="images/icons/48x48/camera.png" alt="Camera" width="48" height="48" onclick="MochaUI.notification('Do Something');" onload="fixPNG(this)" /><br />
+	</div>	
 </div>
 
 <div id="desktopFooterWrapper">
