@@ -42,7 +42,7 @@ MochaUI.Desktop = new Class({
 	
 		// This is run on dock initialize so no need to do it twice.
 		if (!MochaUI.Dock.dockWrapper){
-				this.setDesktopSize();
+			this.setDesktopSize();
 		}
 		this.menuInitialize();		
 
@@ -134,7 +134,7 @@ MochaUI.Desktop = new Class({
 			$$('.rHeight').setStyle('height', 1);
 		}
 		MochaUI.panelHeight();
-		rWidth();
+		MochaUI.rWidth();
 		if (Browser.Engine.trident4) $$('.pad').setStyle('display', 'block');		
 	},
 	/*
@@ -470,7 +470,7 @@ MochaUI.Column = new Class({
 			}.bind(this));	
 		}
 		
-		rWidth();		
+		MochaUI.rWidth();		
 				
 	},
 	columnToggle: function(){
@@ -492,7 +492,7 @@ MochaUI.Column = new Class({
 			column.addClass('collapsed');
 			column.removeClass('expanded');
 						
-			rWidth();
+			MochaUI.rWidth();
 			this.fireEvent('onCollapse');			
 		}
 		// Expand
@@ -509,7 +509,7 @@ MochaUI.Column = new Class({
 			this.resize.attach();
 			this.handleEl.setStyle('cursor', 'e-resize').addClass('attached');
 			
-			rWidth();
+			MochaUI.rWidth();
 			this.fireEvent('onExpand');
 		}		
 	}
@@ -1003,13 +1003,11 @@ MochaUI.extend({
 			});
 			
 			panelsExpanded.each(function(panel){
-				resizeChildren(panel);
+				MochaUI.resizeChildren(panel);
 			}.bind(this));							
-	}
-});	
-	
+	},	
 	// May rename this resizeIframeEl()
-	function resizeChildren(panel){
+	resizeChildren: function(panel){
 		var instances = MochaUI.Panels.instances;
 		var currentInstance = instances.get(panel.id);
 		var contentWrapperEl = currentInstance.contentWrapperEl;
@@ -1020,37 +1018,37 @@ MochaUI.extend({
 				'width': contentWrapperEl.offsetWidth - contentWrapperEl.getStyle('border-left').toInt() - contentWrapperEl.getStyle('border-right').toInt()
 			});
 		}
-	}
+	},
+	// Remaining Width
+	rWidth: function(){	
+		$$('.rWidth').each(function(column){
+			var currentWidth = column.offsetWidth.toInt();
+			currentWidth -= column.getStyle('border-left').toInt();		
+			currentWidth -= column.getStyle('border-right').toInt();						
 	
-	
-// Remaining Width
-function rWidth(){	
-	$$('.rWidth').each(function(column){
-		var currentWidth = column.offsetWidth.toInt();
-		currentWidth -= column.getStyle('border-left').toInt();		
-		currentWidth -= column.getStyle('border-right').toInt();						
-	
-		var parent = column.getParent();		
-		this.width = 0;
+			var parent = column.getParent();		
+			this.width = 0;
 			
-		// Get the total width of all the parent element's children
-		parent.getChildren().each(function(el){
-			if (el.hasClass('mocha') != true) {
-				this.width += el.offsetWidth.toInt();
-			}														
-		}.bind(this));
+			// Get the total width of all the parent element's children
+			parent.getChildren().each(function(el){
+				if (el.hasClass('mocha') != true) {
+					this.width += el.offsetWidth.toInt();
+				}														
+			}.bind(this));
 		
-		// Add the remaining width to the current element
-		var remainingWidth = parent.offsetWidth.toInt() - this.width;
-		var newWidth =	currentWidth + remainingWidth;
-		if (newWidth < 1) newWidth = 0;	
-		column.setStyle('width', newWidth);	
-		column.getChildren('.panel').each(function(panel){
-			panel.setStyle('width', newWidth - panel.getStyle('border-left').toInt() - panel.getStyle('border-right').toInt());
-			resizeChildren(panel);
-		}.bind(this));				
-	});
-}
+			// Add the remaining width to the current element
+			var remainingWidth = parent.offsetWidth.toInt() - this.width;
+			var newWidth =	currentWidth + remainingWidth;
+			if (newWidth < 1) newWidth = 0;	
+			column.setStyle('width', newWidth);	
+			column.getChildren('.panel').each(function(panel){
+				panel.setStyle('width', newWidth - panel.getStyle('border-left').toInt() - panel.getStyle('border-right').toInt());
+				MochaUI.resizeChildren(panel);
+			}.bind(this));				
+		});
+	}
+
+});
 
 function addResizeRight(element, min, max){
 	if (!$(element)) return;
@@ -1082,7 +1080,7 @@ function addResizeRight(element, min, max){
 			element.getNext('.column').getElements('iframe').setStyle('visibility','hidden');
 		}.bind(this),							
 		onDrag: function(){
-			rWidth();
+			MochaUI.rWidth();
 			if (Browser.Engine.trident4){
 				element.getChildren().each(function(el){
 					var width = $(element).getStyle('width').toInt();
@@ -1095,7 +1093,7 @@ function addResizeRight(element, min, max){
 			}						
 		}.bind(this),
 		onComplete: function(){
-			rWidth();
+			MochaUI.rWidth();
 			element.getElements('iframe').setStyle('visibility','visible');
 			element.getNext('.column').getElements('iframe').setStyle('visibility','visible');
 			currentInstance.fireEvent('onResize');						
@@ -1135,10 +1133,10 @@ function addResizeLeft(element, min, max){
 			partner.getElements('iframe').setStyle('visibility','hidden');
 		}.bind(this),									
 		onDrag: function(){	
-			rWidth();	
+			MochaUI.rWidth();	
 		}.bind(this),
 		onComplete: function(){
-			rWidth();
+			MochaUI.rWidth();
 			$(element).getElements('iframe').setStyle('visibility','visible');
 			partner.getElements('iframe').setStyle('visibility','visible');
 			currentInstance.fireEvent('onResize');						
@@ -1189,14 +1187,14 @@ function addResizeBottom(element){
 		onDrag: function(){
 			partnerHeight = partnerOriginalHeight + (this.originalHeight - element.getStyle('height').toInt());
 			partner.setStyle('height', partnerHeight);
-			resizeChildren(element, element.getStyle('height').toInt());
-			resizeChildren(partner, partnerHeight);
+			MochaUI.resizeChildren(element, element.getStyle('height').toInt());
+			MochaUI.resizeChildren(partner, partnerHeight);
 		}.bind(this),
 		onComplete: function(){
 			partnerHeight = partnerOriginalHeight + (this.originalHeight - element.getStyle('height').toInt());
 			partner.setStyle('height', partnerHeight);
-			resizeChildren(element, element.getStyle('height').toInt());
-			resizeChildren(partner, partnerHeight);
+			MochaUI.resizeChildren(element, element.getStyle('height').toInt());
+			MochaUI.resizeChildren(partner, partnerHeight);
 			if (currentInstance.iframeEl) {
 				currentInstance.iframeEl.setStyle('visibility', 'visible');
 			}	
