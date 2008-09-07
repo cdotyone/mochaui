@@ -229,36 +229,30 @@ initializeWindows = function(){
 			id: 'windowevents',
 			title: 'Window Events',
 			loadMethod: 'xhr',
-			contentURL: 'pages/events.html',
-			onBeforeBuild: function(){
-				alert('This window is about to be built.');
-			},			
+			contentURL: 'pages/events.html',		
 			onContentLoaded: function(windowEl){
-				alert(windowEl.id + '\'s content was loaded.');
+				MochaUI.notification('Window content was loaded.');
 			},			
-			onClose: function(){
-				alert('The window is closing.');
-			},
 			onCloseComplete: function(){
-				alert('The window is closed.');
+				MochaUI.notification('The window is closed.');
 			},			
 			onMinimize: function(windowEl){
-				alert(windowEl.id + ' was minimized.');
+				MochaUI.notification('Window was minimized.');
 			},
 			onMaximize: function(windowEl){
-				alert(windowEl.id + ' was maximized.');
+				MochaUI.notification('Window was maximized.');
 			},
 			onRestore: function(windowEl){
-				alert(windowEl.id + ' was restored.');
+				MochaUI.notification('Window was restored.');
 			},			
 			onResize: function(windowEl){
-				alert(windowEl.id + ' was resized.');
+				MochaUI.notification('Window was resized.');
 			},
 			onFocus: function(windowEl){
-				alert(windowEl.id + ' was focused.');
+				MochaUI.notification('Window was focused.');
 			},
 			onBlur: function(windowEl){
-				alert(windowEl.id + ' lost focus.');
+				MochaUI.notification('Window lost focus.');
 			},			
 			width: 340,
 			height: 250
@@ -473,7 +467,7 @@ initializeWindows = function(){
 			id: 'features',
 			title: 'Features',			
 			loadMethod: 'xhr',
-			contentURL: 'pages/features.html',
+			contentURL: 'pages/features-layout.html',
 			width: 305,
 			height: 175,
 			resizeLimit: {'x': [275, 2500], 'y': [125, 2000]},			
@@ -609,8 +603,6 @@ initializeWindows = function(){
 	});
 	
 	// Build windows onDomReady
-	// MochaUI.overviewWindow(); 
-	// MochaUI.featuresWindow();
 	MochaUI.parametricsWindow();	
 	
 }
@@ -714,7 +706,7 @@ window.addEvent('domready', function(){
 	new MochaUI.Panel({
 		id: 'help-panel',
 		loadMethod: 'xhr',
-		contentURL: 'pages/introduction.html',
+		contentURL: 'pages/overview.html',
 		column: 'sideColumn2',
 		tabsURL: 'pages/panel-tabs.html'
 	});	
