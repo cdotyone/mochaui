@@ -89,7 +89,7 @@ body {
 }
 
 #topNav a:hover {
-	text-decoration: underline;
+	text-decoration: none;
 }
 
 /* Toolboxes */
@@ -104,11 +104,16 @@ body {
 div.toolbox.divider { /* Have to specify div here for IE6's sake */
 	background: url(../images/toolbox-divider.gif) left center no-repeat;
 	padding: 6px 3px 0 12px;			
+}
+
+div.toolbox.divider2 { /* Have to specify div here for IE6's sake */
+	background: url(../images/toolbox-divider2.gif) left center no-repeat;
+	padding: 6px 4px 0 12px;			
 }	
 
 .toolbox img {
 	cursor: pointer;
-	margin-right: 5px;
+	margin-right: 6px;
 	padding: 0;
 	float: left;
 }
@@ -271,7 +276,7 @@ li.divider {
 }
 
 #desktopFooter a:hover {
-	text-decoration: underline;
+	text-decoration: none;
 }
 
 /* Dock/Taskbar */
@@ -309,12 +314,11 @@ li.divider {
 	margin: 0 3px 2px 0;
 	overflow: hidden;	
 	cursor: pointer;
-	background: #666; /*url(../images/dock-tabs.gif) left top no-repeat; */
+	background: url(../images/dock-tabs.gif) left top no-repeat;
 }	
 
-.dockTab.activeDockTab {
-	background: #8c8c8c;	
-/*	background-position: left -26px; */
+.dockTab.activeDockTab {	
+	background-position: left -24px;
 }
 
 .dockText {
