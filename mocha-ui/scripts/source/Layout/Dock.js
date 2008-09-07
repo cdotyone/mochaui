@@ -158,14 +158,22 @@ MochaUI.Dock = new Class({
 				this.autoHideEvent = function(event) {
 					if (!this.dockAutoHide)
 						return;
-					if (!MochaUI.Desktop.footer && event.client.y > (document.getCoordinates().height - 25)){
+					if (!MochaUI.Desktop.desktopFooter) {
+						var dockHotspotHeight = this.dockWrapper.offsetHeight;
+						if (dockHotspotHeight < 25) dockHotspotHeight = 25;
+					}
+					else if (MochaUI.Desktop.desktopFooter) {
+						var dockHotspotHeight = this.dockWrapper.offsetHeight + MochaUI.Desktop.desktopFooter.offsetHeight;
+						if (dockHotspotHeight < 25) dockHotspotHeight = 25;						
+					}						
+					if (!MochaUI.Desktop.desktopFooter && event.client.y > (document.getCoordinates().height - dockHotspotHeight)){
 						if (!MochaUI.dockVisible){
 							this.dockWrapper.setStyle('display', 'block');
 							MochaUI.dockVisible = true;
 							MochaUI.Desktop.setDesktopSize();
 						}
 					}
-					else if (MochaUI.Desktop.desktopFooter && event.client.y > (document.getCoordinates().height - 25 - MochaUI.Desktop.desktopFooter.offsetHeight)){
+					else if (MochaUI.Desktop.desktopFooter && event.client.y > (document.getCoordinates().height - dockHotspotHeight)){
 						if (!MochaUI.dockVisible){
 							this.dockWrapper.setStyle('display', 'block');
 							MochaUI.dockVisible = true;

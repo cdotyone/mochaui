@@ -34,8 +34,7 @@ MochaUI.Desktop = new Class({
 	initialize: function(options){
 		this.setOptions(options);
 		this.desktop         = $(this.options.desktop);
-		this.desktopHeader   = $(this.options.desktopHeader);
-		this.desktopFooter   = $(this.options.desktopFooter);				
+		this.desktopHeader   = $(this.options.desktopHeader);				
 		this.desktopNavBar   = $(this.options.desktopNavBar);
 		this.pageWrapper     = $(this.options.pageWrapper);
 		this.page            = $(this.options.page);
