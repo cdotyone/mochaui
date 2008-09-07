@@ -35,13 +35,13 @@ MochaUI.extend({
 	/*
 
 	Function: minimizeAll
-		Minimize all windows.
+		Minimize all windows that are minimizable.
 
 	*/	
 	minimizeAll: function() {		
 		$$('div.mocha').each(function(windowEl){
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);									  
-			if (!currentInstance.isMinimized){
+			if (!currentInstance.isMinimized && currentInstance.options.minimizable == true){
 				MochaUI.Dock.minimizeWindow(windowEl);
 			}			
 		}.bind(this));		
@@ -320,8 +320,10 @@ MochaUI.Dock = new Class({
 			
 			currentInstance.windowEl.addClass('isFocused');			
 
-			currentButton = $(currentInstance.options.id + '_dockTab');			
-			currentButton.addClass('activeDockTab');
+			var currentButton = $(currentInstance.options.id + '_dockTab');	
+			if (currentButton != null) {
+				currentButton.addClass('activeDockTab');
+			}
 		}
 		else {
 			currentInstance.windowEl.removeClass('isFocused');

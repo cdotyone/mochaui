@@ -99,6 +99,7 @@ MochaUI.extend({
 				type: 'notification',
 				addClass: 'notification',
 				content: 'You have no saved workspace.',
+				closeAfter: '1400',				
 				width: 220,
 				height: 40,
 				y: 25,

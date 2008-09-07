@@ -374,8 +374,10 @@ var MochaUI = new Hash({
 		}
 		
 		if (MochaUI.Dock && $(MochaUI.options.dock) && currentInstance.options.type == 'window') {
-			currentButton = $(currentInstance.options.id + '_dockTab');
-			MochaUI.Dock.dockSortables.removeItems(currentButton).destroy();
+			var currentButton = $(currentInstance.options.id + '_dockTab');
+			if (currentButton != null) {
+				MochaUI.Dock.dockSortables.removeItems(currentButton).destroy();
+			}
 			// Need to resize everything in case the dock becomes smaller when a tab is removed
 			MochaUI.Desktop.setDesktopSize();
 		}
