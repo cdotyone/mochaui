@@ -148,8 +148,8 @@ initializeWindows = function(){
 			},
 			width: 305,
 			height: 110,
-			x: 570,
-			y: 160,
+			x: 230,
+			y: 180,
 			padding: { top: 12, right: 12, bottom: 10, left: 12 },			
 			resizable: false,
 			maximizable: false,
@@ -211,7 +211,7 @@ initializeWindows = function(){
 			width: 160,
 			height: 160,
 			x: 570,
-			y: 75,
+			y: 152,
 			padding: { top: 0, right: 0, bottom: 0, left: 0 },
 			bodyBgColor: [250,250,250]
 		});	
@@ -660,9 +660,8 @@ initializeWindows = function(){
 	});
 	
 	// Build windows onDomReady
-	// MochaUI.overviewWindow(); 
-	// MochaUI.featuresWindow();
-	MochaUI.parametricsWindow();	
+	MochaUI.parametricsWindow();
+	MochaUI.clockWindow();		
 	
 }
 

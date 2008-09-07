@@ -42,16 +42,16 @@ var MochaUI = new Hash({
 	/*
 	
 	Function: updateContent
-		Replace the content of a window.
+		Replace the content of a window or panel.
 		
 	Arguments:
-		element -
-		childElement -
-		title -
-		content -
-		url -
-		loadMethod -
-		padding -
+		element - The parent window or panel.
+		childElement - The child element of the window or panel recieving the content.
+		title - (string) Change this if you want to change the title of the window or panel.
+		content - (string or element) An html loadMethod option.
+		loadMethod - ('html', 'xhr', or 'iframe') Defaults to 'html'.		
+		url - Used if loadMethod is set to 'xhr' or 'iframe'.
+		padding - (object)
 		
 	*/	
 	updateContent: function(updateOptions){
@@ -61,8 +61,8 @@ var MochaUI = new Hash({
 			'childElement': null,
 			'title':        null,			
 			'content':      null,
+			'loadMethod':   null,			
 			'url':          null,
-			'loadMethod':   null,
 			'padding':      null
 		};
 		$extend(options, updateOptions);
