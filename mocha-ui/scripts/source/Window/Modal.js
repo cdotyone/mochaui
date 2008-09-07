@@ -24,6 +24,7 @@ MochaUI.Modal = new Class({
 	Implements: [Events, Options],
 	
 	initialize: function(options){
+
 		this.modalInitialize();
 		
 		window.addEvent('resize', function(){

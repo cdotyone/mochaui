@@ -437,12 +437,14 @@ var MochaUI = new Hash({
 		};		
 		windowClicked.delay(170, this);
 
-		var instances =  MochaUI.Windows.instances;		
-		var currentInstance = instances.get(windowEl.id);			
-
 		// Only focus when needed
 		if ($$('.mocha').length == 0) return;							
-		if (windowEl != $(windowEl) || windowEl.hasClass('isFocused') || currentInstance.options.type == 'notification') return;	
+		if (windowEl != $(windowEl) || windowEl.hasClass('isFocused')) return;	
+
+		var instances =  MochaUI.Windows.instances;		
+		var currentInstance = instances.get(windowEl.id);
+	
+		if (currentInstance.options.type == 'notification') return;			
 
 		MochaUI.Windows.indexLevel += 2;
 		windowEl.setStyle('zIndex', MochaUI.Windows.indexLevel);

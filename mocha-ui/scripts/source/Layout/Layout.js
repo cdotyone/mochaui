@@ -43,7 +43,13 @@ MochaUI.Desktop = new Class({
 	
 		// This is run on dock initialize so no need to do it twice.
 		if (!MochaUI.Dock.dockWrapper){
-			this.setDesktopSize();
+			if (!Browser.Engine.trident4) {
+				this.setDesktopSize();
+			}
+			else {
+				// Fix for a bug in IE6 no toolbars demo.				
+				this.setDesktopSize.delay(10);
+			}
 		}
 		this.menuInitialize();		
 
@@ -125,7 +131,9 @@ MochaUI.Desktop = new Class({
 			this.pageWrapper.setStyle('height', pageWrapperHeight);
 		}
 
-		this.resizePanels();		
+		if ($$('.columns').length > 0) { // Conditional is a fix for a bug in IE6 in the no toolbars demo.
+			this.resizePanels();
+		}		
 	},
 
 	resizePanels: function(){
