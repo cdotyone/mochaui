@@ -273,7 +273,7 @@ MochaUI.Dock = new Class({
 				}
 				else{
 					// If window is not minimized and is focused, minimize window.
-					if (currentInstance.windowEl.hasClass('isFocused') && currentInstance.minimizable == true) {
+					if (currentInstance.windowEl.hasClass('isFocused') && currentInstance.options.minimizable == true) {
 						MochaUI.Dock.minimizeWindow(windowEl)
 					}
 					// If window is not minimized and is not focused, focus window.	
