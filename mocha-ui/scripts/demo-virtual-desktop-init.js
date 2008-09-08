@@ -608,7 +608,7 @@ initializeWindows = function(){
 		MochaUI.clockWindow();
 	}
 	else {
-		MochaUI.clockWindow.delay(100);	
+		MochaUI.clockWindow.delay(500);	
 	}
 	
 }
