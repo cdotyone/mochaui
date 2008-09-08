@@ -723,14 +723,14 @@ MochaUI.Window = new Class({
 			onStart: function() {
 				if (this.options.type != 'modal' && this.options.type != 'modal2'){ 
 					MochaUI.focusWindow(windowEl);
-					$('windowUnderlay').setStyle('visibility','visible');
+					$('windowUnderlay').setStyle('display','block');
 				}
 				if ( this.iframeEl )
 					this.iframeEl.setStyle('visibility', 'hidden');
 			}.bind(this),
 			onComplete: function() {
 				if (this.options.type != 'modal' && this.options.type != 'modal2') {
-					$('windowUnderlay').setStyle('visibility', 'hidden');
+					$('windowUnderlay').setStyle('display', 'none');
 				}
 				if ( this.iframeEl ){
 					this.iframeEl.setStyle('visibility', 'visible');
@@ -867,13 +867,13 @@ MochaUI.Window = new Class({
 
 	},
 	resizeOnStart: function(){
-		$('windowUnderlay').setStyle('visibility','visible');
+		$('windowUnderlay').setStyle('display','block');
 		if (this.iframeEl){
 			this.iframeEl.setStyle('visibility', 'hidden');
 		}	
 	},	
 	resizeOnComplete: function(){
-		$('windowUnderlay').setStyle('visibility','hidden');
+		$('windowUnderlay').setStyle('display','none');
 		if (this.iframeEl){
 			this.iframeEl.setStyle('visibility', 'visible');
 		}

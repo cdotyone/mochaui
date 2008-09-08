@@ -622,7 +622,7 @@ var MochaUI = new Hash({
 			'styles': {
 				'height': parent.getCoordinates().height,
 				'opacity': .01,
-				'visibility': 'hidden'
+				'display': 'none'
 			}
 		}).inject(document.body);
 	},

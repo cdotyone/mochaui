@@ -2,7 +2,7 @@
 
 Script: Windows-from-html.js
 	Create windows from html markup in page.
-	
+
 Copyright:
 	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
 
@@ -11,7 +11,7 @@ License:
 
 Requires:
 	Core.js, Window.js
-	
+
 Example:
 	HTML markup.
 	(start code)
