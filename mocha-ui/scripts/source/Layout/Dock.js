@@ -2,7 +2,7 @@
 
 Script: Dock.js
 	Implements the dock/taskbar. Enables window minimize.
-	
+
 Copyright:
 	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
 
@@ -17,7 +17,7 @@ Todo:
 
 */
 
-MochaUI.options.extend({			   
+MochaUI.options.extend({
 		// Naming options:
 		// If you change the IDs of the Mocha Desktop containers in your HTML, you need to change them here as well.
 		dockWrapper: 'dockWrapper',
@@ -38,36 +38,36 @@ MochaUI.extend({
 		Minimize all windows that are minimizable.
 
 	*/	
-	minimizeAll: function() {		
+	minimizeAll: function() {
 		$$('div.mocha').each(function(windowEl){
-		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);									  
+		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
 			if (!currentInstance.isMinimized && currentInstance.options.minimizable == true){
 				MochaUI.Dock.minimizeWindow(windowEl);
-			}			
-		}.bind(this));		
+			}
+		}.bind(this));
 	}
-});	
+});
 
 MochaUI.Dock = new Class({
 	Extends: MochaUI.Window,
-	
+
 	Implements: [Events, Options],
-	
+
 	options: {
 		useControls:          true,      // Toggles autohide and dock placement controls.
 		dockPosition:         'top',     // Position the dock starts in, top or bottom.
 		// Style options
 		dockTabColor:         [255, 255, 255],
-		trueButtonColor:      [70, 245, 70],     // Color for autohide on		
+		trueButtonColor:      [70, 245, 70],     // Color for autohide on
 		enabledButtonColor:   [125, 208, 250], 
-		disabledButtonColor:  [170, 170, 170]		
+		disabledButtonColor:  [170, 170, 170]
 	},
 	initialize: function(options){
 		// Stops if MochaUI.Desktop is not implemented
 		if (!MochaUI.Desktop) return;
 		this.setOptions(options);
 		
-		this.dockWrapper   = $(MochaUI.options.dockWrapper);		
+		this.dockWrapper   = $(MochaUI.options.dockWrapper);
 		this.dock          = $(MochaUI.options.dock);
 		this.autoHideEvent = null;		
 		this.dockAutoHide  = false;  // True when dock autohide is set to on, false if set to off
@@ -96,19 +96,19 @@ MochaUI.Dock = new Class({
 		}
 
 		// Add check mark to menu if link exists in menu
-		if ($('dockLinkCheck')){			
+		if ($('dockLinkCheck')){
 			this.sidebarCheck = new Element('div', {
 				'class': 'check',
 				'id': 'dock_check'
 			}).inject($('dockLinkCheck'));
 		}
-		
+
 		this.dockSortables = new Sortables('#dockSort', {
 			opacity: Browser.Engine.trident ? 1 : .5,
-    		constrain: true,
-    		clone: false,
-    		revert: false			
-		});		
+			constrain: true,
+			clone: false,
+			revert: false
+		});
 
 		MochaUI.Desktop.setDesktopSize();
 	},
@@ -121,7 +121,7 @@ MochaUI.Dock = new Class({
 				'width':  '15',
 				'height': '18'
 			}).inject(this.dock);
-		
+
 			// Dynamically initialize canvas using excanvas. This is only required by IE
 			if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas'){
 				G_vmlCanvasManager.initElement(canvas);
@@ -146,14 +146,14 @@ MochaUI.Dock = new Class({
 		dockAutoHide.addEvent('click', function(event){
 			if ( this.dockWrapper.getProperty('dockPosition') == 'top' )
 				return false;
-			
+
 			var ctx = $('dockCanvas').getContext('2d');
 			this.dockAutoHide = !this.dockAutoHide;	// Toggle
 			if (this.dockAutoHide){
 				$('dockAutoHide').setProperty('title', 'Turn Auto Hide Off');
-				//ctx.clearRect(0, 11, 100, 100);				
+				//ctx.clearRect(0, 11, 100, 100);
 				MochaUI.circle(ctx, 5 , 14, 3, this.options.trueButtonColor, 1.0);
-				
+
 				// Define event
 				this.autoHideEvent = function(event) {
 					if (!this.dockAutoHide)
@@ -164,7 +164,7 @@ MochaUI.Dock = new Class({
 					}
 					else if (MochaUI.Desktop.desktopFooter) {
 						var dockHotspotHeight = this.dockWrapper.offsetHeight + MochaUI.Desktop.desktopFooter.offsetHeight;
-						if (dockHotspotHeight < 25) dockHotspotHeight = 25;						
+						if (dockHotspotHeight < 25) dockHotspotHeight = 25;
 					}						
 					if (!MochaUI.Desktop.desktopFooter && event.client.y > (document.getCoordinates().height - dockHotspotHeight)){
 						if (!MochaUI.dockVisible){
@@ -179,7 +179,7 @@ MochaUI.Dock = new Class({
 							MochaUI.dockVisible = true;
 							MochaUI.Desktop.setDesktopSize();
 						}
-					}					
+					}
 					else if (MochaUI.dockVisible){
 						this.dockWrapper.setStyle('display', 'none');
 						MochaUI.dockVisible = false;
@@ -187,10 +187,10 @@ MochaUI.Dock = new Class({
 						
 					}
 				}.bind(this);
-				
+
 				// Add event
-				document.addEvent('mousemove', this.autoHideEvent);				
-				
+				document.addEvent('mousemove', this.autoHideEvent);
+
 			} else {
 				$('dockAutoHide').setProperty('title', 'Turn Auto Hide On');
 				//ctx.clearRect(0, 11, 100, 100);
@@ -198,19 +198,19 @@ MochaUI.Dock = new Class({
 				// Remove event
 				document.removeEvent('mousemove', this.autoHideEvent);
 			}
-			
+
 		}.bind(this));
-		
+
 		// Draw dock controls
 		var ctx = $('dockCanvas').getContext('2d');
 		ctx.clearRect(0, 0, 100, 100);
-		MochaUI.circle(ctx, 5 , 4, 3, this.options.enabledButtonColor, 1.0); 
+		MochaUI.circle(ctx, 5 , 4, 3, this.options.enabledButtonColor, 1.0);
 		MochaUI.circle(ctx, 5 , 14, 3, this.options.enabledButtonColor, 1.0);
 		
 		if (this.options.dockPosition == 'top'){
-			this.moveDock();	
-		}		
-		
+			this.moveDock();
+		}
+
 	},
 	moveDock: function(){
 			var ctx = $('dockCanvas').getContext('2d');
@@ -236,7 +236,7 @@ MochaUI.Dock = new Class({
 					'position':      'absolute',
 					'bottom':        MochaUI.Desktop.desktopFooter ? MochaUI.Desktop.desktopFooter.offsetHeight : 0
 				});
-				this.dockWrapper.removeClass('top');				
+				this.dockWrapper.removeClass('top');
 				MochaUI.Desktop.setDesktopSize();
 				this.dockWrapper.setProperty('dockPosition', 'bottom');
 				ctx.clearRect(0, 0, 100, 100);
@@ -244,7 +244,7 @@ MochaUI.Dock = new Class({
 				MochaUI.circle(ctx, 5 , 14, 3, this.options.enabledButtonColor, 1.0);
 				$('dockPlacement').setProperty('title', 'Position Dock Top');
 				$('dockAutoHide').setProperty('title', 'Turn Auto Hide On');
-			}		
+			}
 	},
 	createDockTab: function(windowEl){
 
@@ -258,7 +258,7 @@ MochaUI.Dock = new Class({
 		
 		dockTab.addEvent('mousedown', function(e){
 			new Event(e).stop();
-			this.timeDown = $time();			
+			this.timeDown = $time();
 		});
 		
 		dockTab.addEvent('mouseup', function(e){
@@ -272,16 +272,16 @@ MochaUI.Dock = new Class({
 					}
 					else {
 						MochaUI.focusWindow(windowEl);
-					}										
+					}
 					return;
 				}
-				// If window is minimized, restore window.							
+				// If window is minimized, restore window.
 				if (currentInstance.isMinimized == true) {
 					MochaUI.Dock.restoreMinimized.delay(25, MochaUI.Dock, windowEl);
 				}
 				else{
 					// If window is not minimized and is focused, minimize window.
-					if (currentInstance.windowEl.hasClass('isFocused') && currentInstance.options.minimizable == true) {
+					if (currentInstance.windowEl.hasClass('isFocused') && currentInstance.options.minimizable == true){
 						MochaUI.Dock.minimizeWindow(windowEl)
 					}
 					// If window is not minimized and is not focused, focus window.	
@@ -292,15 +292,15 @@ MochaUI.Dock = new Class({
 					var coordinates = document.getCoordinates();
 					if (windowEl.getStyle('left').toInt() > coordinates.width || windowEl.getStyle('top').toInt() > coordinates.height){
 						MochaUI.centerWindow(windowEl);	
-					}					
-				}					
+					}
+				}
 			}
-		});			
+		});
 
 		this.dockSortables.addItems(dockTab);
-	
-		var titleText = currentInstance.titleEl.innerHTML;		
-		
+
+		var titleText = currentInstance.titleEl.innerHTML;
+
 		var dockTabText = new Element('div', {
 			'id': currentInstance.options.id + '_dockTabText',
 			'class': 'dockText'
@@ -309,12 +309,12 @@ MochaUI.Dock = new Class({
 		// If I implement this again, will need to also adjust the titleText truncate and the tab's
 		// left padding.
 		if (currentInstance.options.icon != false){
-			// dockTabText.setStyle('background', 'url(' + currentInstance.options.icon + ') 4px 4px no-repeat'); 	
+			// dockTabText.setStyle('background', 'url(' + currentInstance.options.icon + ') 4px 4px no-repeat');
 		}
 		
 		// Need to resize everything in case the dock wraps when a new tab is added
 		MochaUI.Desktop.setDesktopSize();
-			
+
 	},
 	makeActiveTab: function(){
 
@@ -323,12 +323,12 @@ MochaUI.Dock = new Class({
 		var windowEl = MochaUI.getWindowWithHighestZindex();
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
 		
-		$$('div.dockTab').removeClass('activeDockTab');		
+		$$('div.dockTab').removeClass('activeDockTab');
 		if (currentInstance.isMinimized != true) {
 			
-			currentInstance.windowEl.addClass('isFocused');			
+			currentInstance.windowEl.addClass('isFocused');
 
-			var currentButton = $(currentInstance.options.id + '_dockTab');	
+			var currentButton = $(currentInstance.options.id + '_dockTab');
 			if (currentButton != null) {
 				currentButton.addClass('activeDockTab');
 			}
@@ -337,18 +337,18 @@ MochaUI.Dock = new Class({
 			currentInstance.windowEl.removeClass('isFocused');
 		}	
 	},	
-	minimizeWindow: function(windowEl){		
+	minimizeWindow: function(windowEl){
 		if (windowEl != $(windowEl)) return;
 		
-		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);		
-		currentInstance.isMinimized = true;		
+		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
+		currentInstance.isMinimized = true;
 
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
 		if ( currentInstance.iframeEl ) {
 			currentInstance.iframeEl.setStyle('visibility', 'hidden');
 		}
-		
+
 		// Hide window and add to dock	
 		currentInstance.contentBorderEl.setStyle('visibility', 'hidden');
 		if(currentInstance.toolbarWrapperEl){		
@@ -360,22 +360,22 @@ MochaUI.Dock = new Class({
 		if (Browser.Platform.mac && Browser.Engine.gecko){
 			if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent)) {
 				var ffversion = new Number(RegExp.$1);
-				if (ffversion < 3) {					
+				if (ffversion < 3) {
 					currentInstance.contentWrapperEl.setStyle('overflow', 'hidden');
-				}					
+				}
 			}
 		}
 	
 		MochaUI.Desktop.setDesktopSize();
 
-		// Have to use timeout because window gets focused when you click on the minimize button 	
-		setTimeout(function(){		
+		// Have to use timeout because window gets focused when you click on the minimize button
+		setTimeout(function(){
 			windowEl.setStyle('zIndex', 1);
-			windowEl.removeClass('isFocused');		
+			windowEl.removeClass('isFocused');
 			this.makeActiveTab();	
 		}.bind(this),100);	
 
-		currentInstance.fireEvent('onMinimize', windowEl);		
+		currentInstance.fireEvent('onMinimize', windowEl);
 	},
 	restoreMinimized: function(windowEl) {
 
@@ -395,14 +395,14 @@ MochaUI.Dock = new Class({
 		}
 
 		if (currentInstance.isCollapsed) {
-			MochaUI.collapseToggle(windowEl);					
+			MochaUI.collapseToggle(windowEl);
 		}
 
 		windowEl.setStyle('visibility', 'visible');
 		currentInstance.contentBorderEl.setStyle('visibility', 'visible');
-		if(currentInstance.toolbarWrapperEl){		
+		if(currentInstance.toolbarWrapperEl){
 			currentInstance.toolbarWrapperEl.setStyle('visibility', 'visible');
-		}		
+		}
 
 		// Show iframe
 		if ( currentInstance.iframeEl ) {
@@ -412,7 +412,7 @@ MochaUI.Dock = new Class({
 		currentInstance.isMinimized = false;
 		MochaUI.focusWindow(windowEl);
 		currentInstance.fireEvent('onRestore', windowEl);
-		
-	}	
+
+	}
 });
 MochaUI.Dock.implement(new Options, new Events);

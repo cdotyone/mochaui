@@ -25,13 +25,13 @@ Example:
 $files = array(
 	'Core/Core.js',
 	'Window/Window.js',
-	'Window/Modal.js',		
-	'Window/Windows-from-html.js',		
+	'Window/Modal.js',
+	'Window/Windows-from-html.js',
 	'Window/Windows-from-json.js',
 	'Window/Arrange-cascade.js',
-	'Window/Arrange-tile.js',	
-	'Window/Tabs.js',			
-	'Layout/Layout.js',	
+	'Window/Arrange-tile.js',
+	'Window/Tabs.js',
+	'Layout/Layout.js',
 	'Layout/Dock.js',
 	'Layout/Workspaces.js'
 );
@@ -55,8 +55,8 @@ $filename = "mocha.js";
 header("Cache-Control: must-revalidate");
 header("Content-Type: text/javascript");
 header('Content-Length: '.strlen($code));
-header("Content-Disposition: inline; filename=$filename");	
-   
+header("Content-Disposition: inline; filename=$filename");
+
 // Output merged code
 echo $code;
 

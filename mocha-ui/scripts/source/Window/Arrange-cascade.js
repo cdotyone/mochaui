@@ -2,7 +2,7 @@
 
 Script: Arrange-cascade.js
 	Cascade windows.
-	
+
 Copyright:
 	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
 
@@ -11,7 +11,7 @@ License:
 
 Requires:
 	Core.js, Window.js
-	
+
 Syntax:
 	(start code)
 	MochaUI.arrangeCascade();
@@ -48,8 +48,8 @@ MochaUI.extend({
 		}
 		else {
 			var leftOffset = this.options.windowLeftOffset;
-		}		
-		
+		}
+
 		var x = this.options.viewportLeftOffset;
 		var y = this.options.viewportTopOffset;
 		$$('div.mocha').each(function(windowEl){

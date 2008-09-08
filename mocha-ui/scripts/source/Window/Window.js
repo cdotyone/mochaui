@@ -2,9 +2,9 @@
 
 Script: Window.js
 	Build windows.
-	
+
 Copyright:
-	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
+	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.
 
 License:
 	MIT-style license.	
@@ -13,7 +13,7 @@ Requires:
 	Core.js
 
 */
-   
+
 /*
 Class: Window
 	Creates a single MochaUI window.
@@ -27,13 +27,13 @@ Arguments:
 	options
 
 Options:
-	id - The ID of the window. If not defined, it will be set to 'win' + windowIDCount.	
+	id - The ID of the window. If not defined, it will be set to 'win' + windowIDCount.
 	title - The title of the window.
-	icon - Place an icon in the window's titlebar. This is either set to false or to the url of the icon. It is set up for icons that are 16 x 16px.	
-	type - ('window', 'modal', 'modal2', or 'notification') Defaults to 'window'.	
+	icon - Place an icon in the window's titlebar. This is either set to false or to the url of the icon. It is set up for icons that are 16 x 16px.
+	type - ('window', 'modal', 'modal2', or 'notification') Defaults to 'window'.
 	loadMethod - ('html', 'xhr', or 'iframe') Defaults to 'html'.
 	contentURL - Used if loadMethod is set to 'xhr' or 'iframe'.
-	closeAfter - Either false or time in milliseconds. Closes the window after a certain period of time in milliseconds. This is particularly useful for notifications.	
+	closeAfter - Either false or time in milliseconds. Closes the window after a certain period of time in milliseconds. This is particularly useful for notifications.
 	evalScripts - (boolean) An xhr loadMethod option. Defaults to true.    
 	evalResponse - (boolean) An xhr loadMethod option. Defaults to false.
 	content - (string or element) An html loadMethod option.

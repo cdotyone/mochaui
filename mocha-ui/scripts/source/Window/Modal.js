@@ -2,7 +2,7 @@
 
 Script: Modal.js
 	Create modal dialog windows.
-	
+
 Copyright:
 	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
 
@@ -11,18 +11,18 @@ License:
 
 Requires:
 	Core.js, Window.js
-	
+
 See Also:
 	<Window>	
 	
 */
 
 MochaUI.Modal = new Class({
-						  
+
 	Extends: MochaUI.Window,
-	
+
 	Implements: [Events, Options],
-	
+
 	initialize: function(options){
 
 		this.modalInitialize();
@@ -47,16 +47,16 @@ MochaUI.Modal = new Class({
 		
 		if (Browser.Engine.trident4){
 			var modalFix = new Element('iframe', {
-				'id': 'modalFix',							 
+				'id': 'modalFix',
 				'scrolling': 'no',
 				'marginWidth': 0,
 				'marginHeight': 0,
 				'src': '',
 				'styles': {
 					'height': document.getCoordinates().height
-				}				
+				}
 			}).inject(document.body);
-		}		
+		}
 
 		this.modalOverlayOpenMorph = new Fx.Morph($('modalOverlay'), {
 				'duration': 150
@@ -67,14 +67,14 @@ MochaUI.Modal = new Class({
 				$('modalOverlay').setStyle('display', 'none');
 				if (Browser.Engine.trident4){
 					$('modalFix').setStyle('display', 'none');
-				}				
+				}
 			}.bind(this)
 		});
 	},
 	setModalSize: function(){
 		$('modalOverlay').setStyle('height', document.getCoordinates().height);
 		if (Browser.Engine.trident4){
-			$('modalFix').setStyle('height', document.getCoordinates().height);			
+			$('modalFix').setStyle('height', document.getCoordinates().height);
 		}
 	}
 });
