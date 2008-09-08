@@ -132,10 +132,10 @@ CoolClock.prototype = {
 
 		this.canvas = document.getElementById(canvasId);
 		
-		if ( Browser.Engine.trident ) {			
-			G_vmlCanvasManager.initElement(this.canvas);			
+		if ( Browser.Engine.trident ) {
+			G_vmlCanvasManager.initElement(this.canvas);
 		}
-		
+
 		this.canvas = document.getElementById(canvasId);	
 
 		this.canvas.setAttribute("width",this.displayRadius*2);
@@ -199,11 +199,11 @@ CoolClock.prototype = {
   			fill();
 		}
 	},
-	
+
 	bgGradient: function(){
 		var lingrad = this.ctx.createLinearGradient(0, 0, 0, 200);
 		lingrad.addColorStop(0, 'rgba(190, 190, 190, 1)');
-		lingrad.addColorStop(1, 'rgba(230, 230, 230, 1)');		
+		lingrad.addColorStop(1, 'rgba(230, 230, 230, 1)');
 		with (this.ctx) {
 			fillStyle = lingrad;			
 			beginPath();			
@@ -212,20 +212,20 @@ CoolClock.prototype = {
 			fill();
 		}
 	},
-	
-	center: function(){		
+
+	center: function(){
 		with (this.ctx) {
 			beginPath();
-			fillStyle = "#fff";				
-			arc(100, 100, 7, 0, 2 * Math.PI, false);			
+			fillStyle = "#fff";
+			arc(100, 100, 7, 0, 2 * Math.PI, false);
 			fill();
 			strokeStyle = "#ce1717";
 			lineWidth = 2;
-			arc(100, 100, 7, 0, 2 * Math.PI, false);			
+			arc(100, 100, 7, 0, 2 * Math.PI, false);
 			stroke();
 			
 		}
-	},	
+	},
 
 	radialLineAtAngle: function(angleFraction,skin) {
 		with (this.ctx) {
@@ -255,12 +255,12 @@ CoolClock.prototype = {
 		var skin = CoolClock.config.skins[this.skinId];
 		this.ctx.clearRect(0,0,this.renderRadius*2,this.renderRadius*2);
 
-		this.bgGradient();		
+		this.bgGradient();
 		//this.fullCircle(skin.outerBorder);
 
 		for (var i=0;i<60;i++)
 			this.radialLineAtAngle(i/60,skin[ i%5 ? "smallIndicator" : "largeIndicator"]);
-				
+
 		this.radialLineAtAngle((hour+min/60)/12,skin.hourHand);
 		this.radialLineAtAngle((min+sec/60)/60,skin.minuteHand);
 		if (this.showSecondHand) {
@@ -269,7 +269,7 @@ CoolClock.prototype = {
 				// decoration doesn't render right in IE so lets turn it off
 				this.radialLineAtAngle(sec/60,skin.secondDecoration);
 		}
-		this.center();		
+		this.center();
 		this.reflection();
 	},
 
@@ -295,11 +295,11 @@ CoolClock.prototype = {
 			var minutes = now.getMinutes();
 			var seconds = now.getSeconds();
 			var time;
-			this.refreshTime(hours, minutes, seconds);			
+			this.refreshTime(hours, minutes, seconds);
 			this.render(hours,minutes,seconds);
 		}
 	},
-	
+
 	refreshTime: function(hours, minutes, seconds){
 		var now = new Date();		
 		var time;

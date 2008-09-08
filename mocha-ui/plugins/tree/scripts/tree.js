@@ -2,13 +2,13 @@
 
 Script: Tree.js
 	Create folder trees.
-	
+
 Copyright:
 	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
 
 License:
 	MIT-style license.	
-	
+
 */
 
 function buildTree(treeID){
@@ -20,7 +20,7 @@ function buildTree(treeID){
 			'width': 18,
 			'height': 18
 		}).inject(folder, 'top');
-		
+
 		// Determine which open and close graphic each folder gets
 		
 		if (folder.hasClass('root')) {
@@ -67,9 +67,9 @@ function buildTree(treeID){
 			});
 			folder.removeClass('f-open');
 		}
-		
+
 		// Add connecting branches to each file node
-		
+
 		folderContents.each(function(element){
 			var docs = element.getChildren('li.doc');
 			docs.each(function(el){
@@ -112,7 +112,7 @@ function buildTree(treeID){
 			}
 		});
 	});
-	
+
 	$$('#'+treeID+' li.doc').each(function(el){
 		new Element('img', {
 			'src': 'images/icons/tree/_doc.gif',
