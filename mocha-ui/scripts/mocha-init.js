@@ -211,7 +211,7 @@ initializeWindows = function(){
 			width: 160,
 			height: 160,
 			x: 570,
-			y: 75,
+			y: 140,
 			padding: { top: 0, right: 0, bottom: 0, left: 0 },
 			bodyBgColor: [250,250,250]
 		});	

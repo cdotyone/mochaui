@@ -627,8 +627,14 @@ window.addEvent('domready', function(){
 	});
 	
 	initializeWindows();
-
 });
+
+// This is just for the demo. Running it onload gives pngFix time to replace the pngs in IE6.
+window.addEvent('load', function(){
+	$$('.desktopIcon').addEvent('click', function(){
+		MochaUI.notification('Do Something');
+	});
+});	
 
 // This runs when a person leaves your page.
 window.addEvent('unload', function(){

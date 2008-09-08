@@ -658,7 +658,7 @@ function fixPNG(myImage){
 			+ "px;" + imgStyle + ";"
 			+ "filter:progid:DXImageTransform.Microsoft.AlphaImageLoader"
 			+ "(src=\'" + myImage.src + "\', sizingMethod='scale');\"></span>";
-		myImage.outerHTML = strNewHTML;
+		myImage.outerHTML = strNewHTML;		
 	}
 }
 
