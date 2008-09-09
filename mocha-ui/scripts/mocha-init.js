@@ -429,11 +429,12 @@ initializeWindows = function(){
 					}).send();
 				}
 			},
-			width: 370,
-			height: 410,
+			width: 375,
+			height: 420,
 			maximizable: false,
 			resizable: false,
-			scrollbars: false
+			scrollbars: false,
+			contentBgColor: '#f5f5f5'
 		});
 	}
 	if ($('builderLinkCheck')){
