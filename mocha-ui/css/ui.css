@@ -356,9 +356,10 @@ li.divider {
 	right: 8px;
 	width: 10px;
 	height: 9px;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; 	/* IE8 */
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0); /* IE6 and 7*/
+	-moz-opacity: 0;	
 	opacity: 0;
-	filter: alpha(opacity=0);
-	-moz-opacity: 0;
 	background: #f00; /* for troubleshooting */
 	cursor: pointer;
 	z-index: 3; /* for IE */
@@ -366,14 +367,16 @@ li.divider {
 }
 
 #dockAutoHide {
+	display: none;	
 	position: absolute;
 	top: 14px;
 	right: 8px;
 	width: 10px;
 	height: 9px;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */		
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0); /* IE6 and 7*/
+	-moz-opacity: 0;	
 	opacity: 0;
-	filter: alpha(opacity=0);
-	-moz-opacity: 0;
 	background: #f00; /* for troubleshooting */
 	cursor: pointer;
 	z-index: 3; /* for IE */
@@ -521,8 +524,9 @@ li.divider {
 	left: 0;
 	width: 100%;
 	background: #000;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */		
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0); /* IE6 and 7*/	
 	opacity: 0;
-	filter: alpha(opacity=0);
 	-moz-opacity: 0;
 	z-index: 10000;
 }
@@ -538,8 +542,9 @@ li.divider {
 	top: 0;
 	left: 0;
 	width: 100%;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */		
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0); /* IE6 and 7*/	
 	opacity: 0;
-	filter: alpha(opacity=0);
 	-moz-opacity: 0;
 	z-index: 9999;
 }
@@ -635,8 +640,9 @@ div.mochaToolbarWrapper.bottom {
 	width: 3px;
 	height: 3px;
 	z-index: 2;
-	opacity: .0;
-	filter: alpha(opacity=0);
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */		
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0); /* IE6 and 7*/
+	opacity: .0;	
 	-moz-opacity: .0;
 	overflow: hidden;
 	font-size: 1px; /* For IE6 */
@@ -765,8 +771,9 @@ div.mochaToolbarWrapper.bottom {
 }
 
 .mocha.notification .mochaTitlebar {
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */		
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0); /* IE6 and 7*/	
 	opacity: .0;
-	filter: alpha(opacity=0);
 	-moz-opacity: 0;
 }
 
@@ -818,7 +825,7 @@ div.mochaToolbarWrapper.bottom {
 .tab-menu li a {
 	display: block;
 	margin-left: 8px;
-	padding: 6px 16px 5px 10px;
+	padding: 6px 15px 5px 9px;
 	text-align: center;
 	font-weight: normal;
 	color: #141414;
