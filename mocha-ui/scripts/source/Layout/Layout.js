@@ -227,7 +227,8 @@ MochaUI.Desktop = new Class({
 			// Todo: Initialize the variables for these morphs once in an initialize function and reuse them
 
 			var maximizeMorph = new Fx.Elements([contentWrapperEl, windowEl], { 
-				duration: 70,
+				duration: 100,
+				transition: Fx.Transitions.Sine.easeInOut,
 				onStart: function(windowEl){
 					currentInstance.maximizeAnimation = currentInstance.drawWindow.periodical(20, currentInstance, windowEl);
 				}.bind(this),
@@ -314,7 +315,8 @@ MochaUI.Desktop = new Class({
 		}
 		else {
 			var restoreMorph = new Fx.Elements([contentWrapperEl, windowEl], { 
-				'duration':   150,
+				'duration':   200,
+				transition: Fx.Transitions.Sine.easeInOut,
 				'onStart': function(windowEl){
 					currentInstance.maximizeAnimation = currentInstance.drawWindow.periodical(20, currentInstance, windowEl);
 				}.bind(this),
@@ -600,7 +602,7 @@ MochaUI.Panel = new Class({
 
 		$extend(this, {
 			timestamp: $time(),
-			isCollapsed: false,
+			isCollapsed: false, // This is probably redundant since we can check for the class
 			oldHeight: 0,
 			partner: null
 		});
@@ -699,7 +701,7 @@ MochaUI.Panel = new Class({
 		}).inject(this.panelHeaderEl);
 
 		this.collapseToggleEl = new Element('div', {
-			'id': this.options.id + '_minmize',
+			'id': this.options.id + '_minmize', // !!! Type. Rename this collapseToggle
 			'class': 'panel-collapse icon16',
 			'styles': {
 				'width': 16,

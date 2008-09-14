@@ -542,11 +542,12 @@ var MochaUI = new Hash({
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
 		var options = currentInstance.options;
 		var dimensions = options.container.getCoordinates();
-		var windowPosTop = (dimensions.height * .5) - ((options.height + currentInstance.headerFooterShadow) * .5);
+				
+		var windowPosTop = window.getScroll().y + (window.getSize().y * .5) - (windowEl.offsetHeight * .5);
 		if (windowPosTop < 0) {
 			windowPosTop = 0;
 		}
-		var windowPosLeft =	(dimensions.width * .5) - (options.width * .5);
+		var windowPosLeft =	(dimensions.width * .5) - (windowEl.offsetWidth * .5);
 		if (windowPosLeft < 0) {
 			windowPosLeft = 0;
 		}

@@ -536,7 +536,7 @@ MochaUI.Window = new Class({
 			this.adjustHandles();
 		}
 
-		// Move window into position. If position not specified by user then center the window on the page.
+		// Position window. If position not specified by user then center the window on the page.
 		if (this.options.container == document.body || this.options.container == MochaUI.Desktop.desktop){
 			var dimensions = window.getSize();
 		}
@@ -545,14 +545,19 @@ MochaUI.Window = new Class({
 		}
 
 		if (!this.options.y) {
-			var y = (dimensions.y * .5) - ((this.options.height + this.headerFooterShadow + this.windowEl.getStyle('border-top').toInt() + this.windowEl.getStyle('border-bottom').toInt()) * .5);
+			if (MochaUI.Desktop.desktop) {
+				var y = (dimensions.y * .5) - (this.windowEl.offsetHeight * .5);			
+			}
+			else {
+				var y = window.getScroll().y + (window.getSize().y * .5) - (this.windowEl.offsetHeight * .5);
+			}
 		}
 		else {
 			var y = this.options.y - this.options.shadowBlur;
 		}
 
 		if (!this.options.x) {
-			var x =	(dimensions.x * .5) - (this.options.width * .5);
+			var x =	(dimensions.x * .5) - (this.windowEl.offsetWidth * .5);
 		}
 		else {
 			var x = this.options.x - this.options.shadowBlur;
@@ -571,6 +576,7 @@ MochaUI.Window = new Class({
 			}
 			this.opacityMorph = new Fx.Morph(this.windowEl, {
 				'duration': 350,
+				transition: Fx.Transitions.Sine.easeInOut,
 				onComplete: function(){
 					if (Browser.Engine.trident){
 						this.drawWindow(this.windowEl);
@@ -1470,6 +1476,10 @@ MochaUI.Window = new Class({
 				1.0
 			);
 		}
+					// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
+			if (Browser.Engine.trident){
+				MochaUI.circle(ctx2, 0, 0, 3, this.options.resizableColor, 0);
+			}
 		
 	},
 	drawBox: function(ctx, width, height, shadowBlur, shadowOffset, shadows){
