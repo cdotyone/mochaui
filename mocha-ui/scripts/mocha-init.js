@@ -609,7 +609,7 @@ initializeWindows = function(){
 }
 
 // Initialize MochaUI when the DOM is ready
-window.addEvent('load', function(){
+window.addEvent('load', function(){ //using load instead of domready for IE8
 	MochaUI.Desktop = new MochaUI.Desktop();
 	MochaUI.Dock = new MochaUI.Dock();
 

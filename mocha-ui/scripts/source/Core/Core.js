@@ -47,6 +47,8 @@ var MochaUI = new Hash({
 	Arguments:
 		element - The parent window or panel.
 		childElement - The child element of the window or panel recieving the content.
+		method - ('get', or 'post') The way data is transmitted. Defaults to 'get'.
+		data - (hash) Data to be transmitted
 		title - (string) Change this if you want to change the title of the window or panel.
 		content - (string or element) An html loadMethod option.
 		loadMethod - ('html', 'xhr', or 'iframe') Defaults to 'html'.
@@ -59,6 +61,8 @@ var MochaUI = new Hash({
 		var options = {
 			'element':      null,
 			'childElement': null,
+			'method':	    null,
+			'data':		    null,
 			'title':        null,
 			'content':      null,
 			'loadMethod':   null,
@@ -95,6 +99,7 @@ var MochaUI = new Hash({
 		}
 		
 		var loadMethod = options.loadMethod != null ? options.loadMethod : currentInstance.options.loadMethod;
+		var method = options.method != null ? options.method : "get";
 		
 		// Set scrollbars if loading content in main content container.
 		// Always use 'hidden' for iframe windows
@@ -123,9 +128,12 @@ var MochaUI = new Hash({
 		// Load new content.
 		switch(loadMethod){
 			case 'xhr':
+				var data = options.data != null ? new Hash(options.data).toQueryString() : "";
 				new Request.HTML({
 					url: options.url,
 					update: contentContainer,
+					method: method,
+					data: data, 
 					evalScripts: currentInstance.options.evalScripts,
 					evalResponse: currentInstance.options.evalResponse,
 					onRequest: function(){
@@ -160,7 +168,7 @@ var MochaUI = new Hash({
 						}
 					}.bind(this),
 					onComplete: function(){}.bind(this)
-				}).get();
+				}).send();
 				break;
 			case 'iframe': // May be able to streamline this if the iframe already exists.
 				if ( currentInstance.options.contentURL == '' || contentContainer != contentEl) {

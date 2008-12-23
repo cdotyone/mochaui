@@ -23,7 +23,7 @@ Todo:
 
 var MochaUI = new Hash({
 	options: new Hash({
-		useEffects: true  // Toggles the majority of window fade and move effects.
+		useEffects: false  // Toggles the majority of window fade and move effects.
 	}),
 	Columns: {
 		instances:      new Hash()
@@ -47,6 +47,8 @@ var MochaUI = new Hash({
 	Arguments:
 		element - The parent window or panel.
 		childElement - The child element of the window or panel recieving the content.
+		method - ('get', or 'post') The way data is transmitted. Defaults to 'get'.
+		data - (hash) Data to be transmitted
 		title - (string) Change this if you want to change the title of the window or panel.
 		content - (string or element) An html loadMethod option.
 		loadMethod - ('html', 'xhr', or 'iframe') Defaults to 'html'.
@@ -59,6 +61,8 @@ var MochaUI = new Hash({
 		var options = {
 			'element':      null,
 			'childElement': null,
+			'method':	    null,
+			'data':		    null,
 			'title':        null,
 			'content':      null,
 			'loadMethod':   null,
@@ -95,6 +99,7 @@ var MochaUI = new Hash({
 		}
 		
 		var loadMethod = options.loadMethod != null ? options.loadMethod : currentInstance.options.loadMethod;
+		var method = options.method != null ? options.method : "get";
 		
 		// Set scrollbars if loading content in main content container.
 		// Always use 'hidden' for iframe windows
@@ -123,9 +128,12 @@ var MochaUI = new Hash({
 		// Load new content.
 		switch(loadMethod){
 			case 'xhr':
+				var data = options.data != null ? new Hash(options.data).toQueryString() : "";
 				new Request.HTML({
 					url: options.url,
 					update: contentContainer,
+					method: method,
+					data: data, 
 					evalScripts: currentInstance.options.evalScripts,
 					evalResponse: currentInstance.options.evalResponse,
 					onRequest: function(){
@@ -160,7 +168,7 @@ var MochaUI = new Hash({
 						}
 					}.bind(this),
 					onComplete: function(){}.bind(this)
-				}).get();
+				}).send();
 				break;
 			case 'iframe': // May be able to streamline this if the iframe already exists.
 				if ( currentInstance.options.contentURL == '' || contentContainer != contentEl) {
@@ -407,7 +415,6 @@ var MochaUI = new Hash({
 					instance.toolbarWrapperEl.setStyle('visibility', 'hidden');
 				}
 				instance.contentBorderEl.setStyle('visibility', 'hidden');
-
 				id.setStyle('visibility', 'hidden');
 				MochaUI.Windows.windowsVisible = false;
 			}
@@ -543,11 +550,12 @@ var MochaUI = new Hash({
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
 		var options = currentInstance.options;
 		var dimensions = options.container.getCoordinates();
-		var windowPosTop = (dimensions.height * .5) - ((options.height + currentInstance.headerFooterShadow) * .5);
+				
+		var windowPosTop = window.getScroll().y + (window.getSize().y * .5) - (windowEl.offsetHeight * .5);
 		if (windowPosTop < 0) {
 			windowPosTop = 0;
 		}
-		var windowPosLeft =	(dimensions.width * .5) - (options.width * .5);
+		var windowPosLeft =	(dimensions.width * .5) - (windowEl.offsetWidth * .5);
 		if (windowPosLeft < 0) {
 			windowPosLeft = 0;
 		}
@@ -839,7 +847,9 @@ MochaUI.Windows.windowOptions = {
 	type:              'window',
 
 	loadMethod:        'html',
+	method:	           'get',
 	contentURL:        'pages/lipsum.html',
+	data:              null,
 
 	closeAfter:        false,
 
@@ -855,6 +865,7 @@ MochaUI.Windows.windowOptions = {
 	toolbarPosition:   'top',
 	toolbarHeight:     29,
 	toolbarURL:        'pages/lipsum.html',
+	toolbarData:	   null,
 	toolbarContent:    '',
 
 	// Toolbar
@@ -862,6 +873,7 @@ MochaUI.Windows.windowOptions = {
 	toolbar2Position:   'bottom',
 	toolbar2Height:     29,
 	toolbar2URL:        'pages/lipsum.html',
+	toolbar2Data:	    null,
 	toolbar2Content:    '',	
 
 	// Container options
@@ -957,7 +969,7 @@ MochaUI.Window = new Class({
 			options.minimizable = false;
 		}
 		if (!options.container){
-			options.container = MochaUI.Desktop.desktop ? MochaUI.Desktop.desktop : document.body;
+			options.container = MochaUI.Desktop && MochaUI.Desktop.desktop ? MochaUI.Desktop.desktop : document.body;
 		}
 
 		// Set this.options.resizable to default if it was not defined
@@ -1004,7 +1016,7 @@ MochaUI.Window = new Class({
 		}
 
 		// Maximizable, desktop is required
-		options.maximizable = MochaUI.Desktop.desktop && options.maximizable && options.type != 'modal' && options.type != 'modal2';
+		options.maximizable = MochaUI.Desktop && MochaUI.Desktop.desktop && options.maximizable && options.type != 'modal' && options.type != 'modal2';
 
 		if (this.options.type == 'modal2') {
 			this.options.shadowBlur = 0;
@@ -1184,7 +1196,9 @@ MochaUI.Window = new Class({
 		MochaUI.updateContent({
 			'element': this.windowEl,
 			'content':  this.options.content,
-			'url':      this.options.contentURL
+			'method': this.options.method,
+			'url':      this.options.contentURL,
+			'data': this.options.data
 		});	
 		
 		// Add content to window toolbar.
@@ -1194,7 +1208,9 @@ MochaUI.Window = new Class({
 				'childElement':  this.toolbarEl,
 				'content':       this.options.toolbarContent,
 				'loadMethod':    'xhr',
-				'url':           this.options.toolbarURL
+				'method':	 this.options.method,
+				'url':           this.options.toolbarURL,
+				'data':		 this.options.toolbarData
 			});
 		}
 
@@ -1205,7 +1221,9 @@ MochaUI.Window = new Class({
 				'childElement':  this.toolbar2El,
 				'content':       this.options.toolbar2Content,
 				'loadMethod':    'xhr',
-				'url':           this.options.toolbar2URL
+				'method':	 this.options.method,
+				'url':           this.options.toolbar2URL,
+				'data':		 this.options.toolbar2Data
 			});
 		}
 		
@@ -1220,7 +1238,7 @@ MochaUI.Window = new Class({
 			this.adjustHandles();
 		}
 
-		// Move window into position. If position not specified by user then center the window on the page.
+		// Position window. If position not specified by user then center the window on the page.
 		if (this.options.container == document.body || this.options.container == MochaUI.Desktop.desktop){
 			var dimensions = window.getSize();
 		}
@@ -1229,14 +1247,19 @@ MochaUI.Window = new Class({
 		}
 
 		if (!this.options.y) {
-			var y = (dimensions.y * .5) - ((this.options.height + this.headerFooterShadow + this.windowEl.getStyle('border-top').toInt() + this.windowEl.getStyle('border-bottom').toInt()) * .5);
+			if (MochaUI.Desktop.desktop) {
+				var y = (dimensions.y * .5) - (this.windowEl.offsetHeight * .5);			
+			}
+			else {
+				var y = window.getScroll().y + (window.getSize().y * .5) - (this.windowEl.offsetHeight * .5);
+			}
 		}
 		else {
 			var y = this.options.y - this.options.shadowBlur;
 		}
 
 		if (!this.options.x) {
-			var x =	(dimensions.x * .5) - (this.options.width * .5);
+			var x =	(dimensions.x * .5) - (this.windowEl.offsetWidth * .5);
 		}
 		else {
 			var x = this.options.x - this.options.shadowBlur;
@@ -1255,6 +1278,7 @@ MochaUI.Window = new Class({
 			}
 			this.opacityMorph = new Fx.Morph(this.windowEl, {
 				'duration': 350,
+				transition: Fx.Transitions.Sine.easeInOut,
 				onComplete: function(){
 					if (Browser.Engine.trident){
 						this.drawWindow(this.windowEl);
@@ -1736,19 +1760,33 @@ MochaUI.Window = new Class({
 			'class': 'mochaContent'
 		}).inject(cache.contentWrapperEl);
 
-		if (this.options.useCanvas == true) {
+		if (this.options.useCanvas == true && Browser.Engine.trident != true) {
 			cache.canvasEl = new Element('canvas', {
 				'id': id + '_canvas',
 				'class': 'mochaCanvas',
-				'width': 1,
-				'height': 1
+				'width': 10,
+				'height': 10
+			}).inject(this.windowEl);
+		}
+		
+		if (this.options.useCanvas == true && Browser.Engine.trident) {
+			cache.canvasEl = new Element('canvas', {
+				'id': id + '_canvas',
+				'class': 'mochaCanvas',
+				'width': 50000, // IE8 excanvas requires these large numbers
+				'height': 20000,
+				'styles': {
+					'position': 'absolute',
+					'top': 0,
+					'left': 0
+				}
 			}).inject(this.windowEl);
 
-			if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas'){
+			if (MochaUI.ieSupport == 'excanvas'){
 				G_vmlCanvasManager.initElement(cache.canvasEl);
 				cache.canvasEl = this.windowEl.getElement('.mochaCanvas');
 			}
-		}
+		}		
 
 		cache.controlsEl = new Element('div', {
 			'id': id + '_controls',
@@ -1974,8 +2012,11 @@ MochaUI.Window = new Class({
 			'left': shadowBlur - shadowOffset.x
 		});		
 
-		// Opera requires the canvas height and width be set this way when resizing:
 		if (this.options.useCanvas == true) {
+			if (Browser.Engine.trident) {
+				this.canvasEl.height = 20000;
+				this.canvasEl.width = 50000;
+			}
 			this.canvasEl.height = height;
 			this.canvasEl.width = width;
 		}
@@ -2058,7 +2099,6 @@ MochaUI.Window = new Class({
 			'left': shadowBlur - shadowOffset.x
 		});		
 
-		// Opera height and width must be set like this, when resizing:
 		this.canvasEl.height = height;
 		this.canvasEl.width = width;
 
@@ -2154,6 +2194,10 @@ MochaUI.Window = new Class({
 				1.0
 			);
 		}
+					// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
+			if (Browser.Engine.trident){
+				MochaUI.circle(ctx2, 0, 0, 3, this.options.resizableColor, 0);
+			}
 		
 	},
 	drawBox: function(ctx, width, height, shadowBlur, shadowOffset, shadows){
@@ -2304,14 +2348,6 @@ MochaUI.Window = new Class({
 		ctx.lineTo(x + radius, y);
 		ctx.quadraticCurveTo(x, y, x, y + radius);
 		ctx.fill();
-		/*
-		ctx.beginPath();
-		ctx.strokeStyle = '#000';
-		ctx.lineWidth = 1;
-		ctx.moveTo(x, y + height + .5);
-		ctx.lineTo(x + width, y + height + .5);
-		ctx.stroke();
-		*/
 
 	},
 	topRoundedRect2: function(ctx, x, y, width, height, radius, headerStartColor, headerStopColor){
@@ -3065,7 +3101,8 @@ MochaUI.Desktop = new Class({
 			// Todo: Initialize the variables for these morphs once in an initialize function and reuse them
 
 			var maximizeMorph = new Fx.Elements([contentWrapperEl, windowEl], { 
-				duration: 70,
+				duration: 100,
+				transition: Fx.Transitions.Sine.easeInOut,
 				onStart: function(windowEl){
 					currentInstance.maximizeAnimation = currentInstance.drawWindow.periodical(20, currentInstance, windowEl);
 				}.bind(this),
@@ -3152,7 +3189,8 @@ MochaUI.Desktop = new Class({
 		}
 		else {
 			var restoreMorph = new Fx.Elements([contentWrapperEl, windowEl], { 
-				'duration':   150,
+				'duration':   200,
+				transition: Fx.Transitions.Sine.easeInOut,
 				'onStart': function(windowEl){
 					currentInstance.maximizeAnimation = currentInstance.drawWindow.periodical(20, currentInstance, windowEl);
 				}.bind(this),
@@ -3438,7 +3476,7 @@ MochaUI.Panel = new Class({
 
 		$extend(this, {
 			timestamp: $time(),
-			isCollapsed: false,
+			isCollapsed: false, // This is probably redundant since we can check for the class
 			oldHeight: 0,
 			partner: null
 		});
@@ -3537,7 +3575,7 @@ MochaUI.Panel = new Class({
 		}).inject(this.panelHeaderEl);
 
 		this.collapseToggleEl = new Element('div', {
-			'id': this.options.id + '_minmize',
+			'id': this.options.id + '_minmize', // !!! Type. Rename this collapseToggle
 			'class': 'panel-collapse icon16',
 			'styles': {
 				'width': 16,
