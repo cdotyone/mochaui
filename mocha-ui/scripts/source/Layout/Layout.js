@@ -536,12 +536,16 @@ Options:
 	column - Where to inject the panel. This must be set when creating the panel.
 	loadMethod - ('html', 'xhr', or 'iframe')
 	contentURL - Used if loadMethod is set to 'xhr' or 'iframe'.
+	method - ('get', or 'post') The method used to get the data. Defaults to 'get'.
+	data - (hash) Data to send with the URL. Defaults to null.
 	evalScripts - (boolean) An xhr loadMethod option. Defaults to true.
 	evalResponse - (boolean) An xhr loadMethod option. Defaults to false.
 	content - (string or element) An html loadMethod option.
 	tabsURL - (url)	
+	tabsData - (hash) Data to send with the URL. Defaults to null.
 	footer - (boolean)
 	footerURL - (url)
+	footerData - (hash) Data to send with the URL. Defaults to null.
 	height - (number) Height of content area.
 	addClass - (string) Add a class to the panel.
 	scrollbars - (boolean)
@@ -568,6 +572,8 @@ MochaUI.Panel = new Class({
 		contentURL:       'pages/lipsum.html',
 	
 		// xhr options
+		method:		  'get',
+		data:		  null,
 		evalScripts:      true,
 		evalResponse:     false,
 	
@@ -576,9 +582,11 @@ MochaUI.Panel = new Class({
 		
 		// Tabs
 		tabsURL:          null,
+		tabsData:	  null,
 
 		footer:           false,
 		footerURL:        'pages/lipsum.html',
+		footerData:	  null,
 		
 		// Style options:
 		height:           125,
@@ -669,6 +677,7 @@ MochaUI.Panel = new Class({
 				'element':       this.panelEl,
 				'childElement':  this.footerEl,
 				'loadMethod':    'xhr',
+				'data':		 this.options.footerData,
 				'url':           this.options.footerURL
 			});
 			
@@ -784,7 +793,8 @@ MochaUI.Panel = new Class({
 				'element':      this.panelEl,
 				'childElement': this.panelHeaderContentEl,
 				'loadMethod':   'xhr',
-				'url':          this.options.tabsURL
+				'url':          this.options.tabsURL,
+				'data':		this.options.tabsData
 			});
 		}
 
@@ -807,6 +817,8 @@ MochaUI.Panel = new Class({
 		MochaUI.updateContent({
 			'element': this.panelEl,
 			'content':  this.options.content,
+			'method':	this.options.method,
+			'data':		this.options.data,
 			'url':      this.options.contentURL
 		});
 
