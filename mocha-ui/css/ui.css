@@ -347,7 +347,7 @@ li.divider {
 	position: absolute;
 	top: 5px;
 	right: 3px;
-	z-index: 2;
+	z-index: 2;	
 }
 
 #dockPlacement {
@@ -355,31 +355,23 @@ li.divider {
 	top: 4px;
 	right: 8px;
 	width: 10px;
-	height: 9px;
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; 	/* IE8 */
-	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0); /* IE6 and 7*/
-	-moz-opacity: 0;	
+	height: 9px;	
 	opacity: 0;
-	background: #f00; /* for troubleshooting */
 	cursor: pointer;
 	z-index: 3; /* for IE */
-	text-align: right;
+	text-align: right;	
 }
 
 #dockAutoHide {
-	display: none;	
 	position: absolute;
 	top: 14px;
 	right: 8px;
 	width: 10px;
-	height: 9px;
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */		
-	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0); /* IE6 and 7*/
-	-moz-opacity: 0;	
+	height: 9px;	
 	opacity: 0;
-	background: #f00; /* for troubleshooting */
 	cursor: pointer;
 	z-index: 3; /* for IE */
+	text-align: right;	
 }
 
 /* Panel Layout

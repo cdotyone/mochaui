@@ -609,7 +609,7 @@ initializeWindows = function(){
 }
 
 // Initialize MochaUI when the DOM is ready
-window.addEvent('domready', function(){
+window.addEvent('load', function(){
 	MochaUI.Desktop = new MochaUI.Desktop();
 	MochaUI.Dock = new MochaUI.Dock();
 

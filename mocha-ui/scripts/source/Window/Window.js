@@ -273,7 +273,7 @@ MochaUI.Window = new Class({
 			options.minimizable = false;
 		}
 		if (!options.container){
-			options.container = MochaUI.Desktop.desktop ? MochaUI.Desktop.desktop : document.body;
+			options.container = MochaUI.Desktop && MochaUI.Desktop.desktop ? MochaUI.Desktop.desktop : document.body;
 		}
 
 		// Set this.options.resizable to default if it was not defined
@@ -320,7 +320,7 @@ MochaUI.Window = new Class({
 		}
 
 		// Maximizable, desktop is required
-		options.maximizable = MochaUI.Desktop.desktop && options.maximizable && options.type != 'modal' && options.type != 'modal2';
+		options.maximizable = MochaUI.Desktop && MochaUI.Desktop.desktop && options.maximizable && options.type != 'modal' && options.type != 'modal2';
 
 		if (this.options.type == 'modal2') {
 			this.options.shadowBlur = 0;
@@ -1058,19 +1058,33 @@ MochaUI.Window = new Class({
 			'class': 'mochaContent'
 		}).inject(cache.contentWrapperEl);
 
-		if (this.options.useCanvas == true) {
+		if (this.options.useCanvas == true && Browser.Engine.trident != true) {
 			cache.canvasEl = new Element('canvas', {
 				'id': id + '_canvas',
 				'class': 'mochaCanvas',
-				'width': 1,
-				'height': 1
+				'width': 10,
+				'height': 10
+			}).inject(this.windowEl);
+		}
+		
+		if (this.options.useCanvas == true && Browser.Engine.trident) {
+			cache.canvasEl = new Element('canvas', {
+				'id': id + '_canvas',
+				'class': 'mochaCanvas',
+				'width': 50000, // IE8 excanvas requires these large numbers
+				'height': 20000,
+				'styles': {
+					'position': 'absolute',
+					'top': 0,
+					'left': 0
+				}
 			}).inject(this.windowEl);
 
-			if (Browser.Engine.trident && MochaUI.ieSupport == 'excanvas'){
+			if (MochaUI.ieSupport == 'excanvas'){
 				G_vmlCanvasManager.initElement(cache.canvasEl);
 				cache.canvasEl = this.windowEl.getElement('.mochaCanvas');
 			}
-		}
+		}		
 
 		cache.controlsEl = new Element('div', {
 			'id': id + '_controls',
@@ -1296,8 +1310,11 @@ MochaUI.Window = new Class({
 			'left': shadowBlur - shadowOffset.x
 		});		
 
-		// Opera requires the canvas height and width be set this way when resizing:
 		if (this.options.useCanvas == true) {
+			if (Browser.Engine.trident) {
+				this.canvasEl.height = 20000;
+				this.canvasEl.width = 50000;
+			}
 			this.canvasEl.height = height;
 			this.canvasEl.width = width;
 		}
@@ -1380,7 +1397,6 @@ MochaUI.Window = new Class({
 			'left': shadowBlur - shadowOffset.x
 		});		
 
-		// Opera height and width must be set like this, when resizing:
 		this.canvasEl.height = height;
 		this.canvasEl.width = width;
 
@@ -1630,14 +1646,6 @@ MochaUI.Window = new Class({
 		ctx.lineTo(x + radius, y);
 		ctx.quadraticCurveTo(x, y, x, y + radius);
 		ctx.fill();
-		/*
-		ctx.beginPath();
-		ctx.strokeStyle = '#000';
-		ctx.lineWidth = 1;
-		ctx.moveTo(x, y + height + .5);
-		ctx.lineTo(x + width, y + height + .5);
-		ctx.stroke();
-		*/
 
 	},
 	topRoundedRect2: function(ctx, x, y, width, height, radius, headerStartColor, headerStopColor){
