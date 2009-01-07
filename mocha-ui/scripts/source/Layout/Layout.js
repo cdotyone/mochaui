@@ -551,6 +551,7 @@ Options:
 	scrollbars - (boolean)
 	padding - (object)
 	panelBackground - CSS background property for the panel.
+	collapsible - (boolean)
 	onBeforeBuild - (function) Fired before the panel is created.
 	onContentLoaded - (function) Fired after the panel's conten is loaded.
 	onResize - (function) Fired when the panel is resized.
@@ -572,8 +573,8 @@ MochaUI.Panel = new Class({
 		contentURL:       'pages/lipsum.html',
 	
 		// xhr options
-		method:		  'get',
-		data:		  null,
+		method:           'get',
+		data:             null,
 		evalScripts:      true,
 		evalResponse:     false,
 	
@@ -582,11 +583,11 @@ MochaUI.Panel = new Class({
 		
 		// Tabs
 		tabsURL:          null,
-		tabsData:	  null,
+		tabsData:         null,
 
 		footer:           false,
 		footerURL:        'pages/lipsum.html',
-		footerData:	  null,
+		footerData:       null,
 		
 		// Style options:
 		height:           125,
@@ -596,6 +597,9 @@ MochaUI.Panel = new Class({
 
 		// Color options:		
 		panelBackground:   '#f8f8f8',
+		
+		// Other:
+		collapsible:	  true,
 
 		// Events
 		onBeforeBuild:     $empty,
@@ -709,8 +713,64 @@ MochaUI.Panel = new Class({
 			'class': 'panel-header-toolbox'
 		}).inject(this.panelHeaderEl);
 
+
+		if (this.options.collapsible) {
+			this.collapseToggleInit();
+		}
+		
+		this.panelHeaderContentEl = new Element('div', {
+			'id': this.options.id + '_headerContent',
+			'class': 'panel-headerContent'
+		}).inject(this.panelHeaderEl);
+
+		this.titleEl = new Element('h2', {
+			'id': this.options.id + '_title'
+		}).inject(this.panelHeaderContentEl);
+
+		if (this.options.tabsURL == null){
+			this.titleEl.set('html', this.options.title);
+		}		
+		else {
+			this.panelHeaderContentEl.addClass('tabs');
+			MochaUI.updateContent({
+				'element':      this.panelEl,
+				'childElement': this.panelHeaderContentEl,
+				'loadMethod':   'xhr',
+				'url':          this.options.tabsURL,
+				'data':		this.options.tabsData
+			});
+		}
+
+		this.handleEl = new Element('div', {
+			'id': this.options.id + '_handle',
+			'class': 'horizontalHandle',
+			'styles': {
+				'display': this.showHandle == true ? 'block' : 'none'
+			}
+		}).inject(this.panelEl, 'after');
+		
+		this.handleIconEl = new Element('div', {
+			'id': this.options.id + '_handle_icon',
+			'class': 'handleIcon'
+		}).inject(this.handleEl);
+
+		addResizeBottom(this.options.id);
+
+		// Add content to panel.
+		MochaUI.updateContent({
+			'element': this.panelEl,
+			'content':  this.options.content,
+			'method':	this.options.method,
+			'data':		this.options.data,
+			'url':      this.options.contentURL
+		});
+
+		MochaUI.panelHeight(this.options.column, this.panelEl, 'new');
+
+	},
+	collapseToggleInit: function(options){
 		this.collapseToggleEl = new Element('div', {
-			'id': this.options.id + '_minmize', // !!! Type. Rename this collapseToggle
+			'id': this.options.id + '_collapseToggle',
 			'class': 'panel-collapse icon16',
 			'styles': {
 				'width': 16,
@@ -773,58 +833,8 @@ MochaUI.Panel = new Class({
 				this.fireEvent('onExpand');
 			}
 		}
-		.bind(this));
-		
-		this.panelHeaderContentEl = new Element('div', {
-			'id': this.options.id + '_headerContent',
-			'class': 'panel-headerContent'
-		}).inject(this.panelHeaderEl);
-
-		this.titleEl = new Element('h2', {
-			'id': this.options.id + '_title'
-		}).inject(this.panelHeaderContentEl);
-
-		if (this.options.tabsURL == null){
-			this.titleEl.set('html', this.options.title);
-		}		
-		else {
-			this.panelHeaderContentEl.addClass('tabs');
-			MochaUI.updateContent({
-				'element':      this.panelEl,
-				'childElement': this.panelHeaderContentEl,
-				'loadMethod':   'xhr',
-				'url':          this.options.tabsURL,
-				'data':		this.options.tabsData
-			});
-		}
-
-		this.handleEl = new Element('div', {
-			'id': this.options.id + '_handle',
-			'class': 'horizontalHandle',
-			'styles': {
-				'display': this.showHandle == true ? 'block' : 'none'
-			}
-		}).inject(this.panelEl, 'after');
-		
-		this.handleIconEl = new Element('div', {
-			'id': this.options.id + '_handle_icon',
-			'class': 'handleIcon'
-		}).inject(this.handleEl);
-
-		addResizeBottom(this.options.id);
-
-		// Add content to panel.
-		MochaUI.updateContent({
-			'element': this.panelEl,
-			'content':  this.options.content,
-			'method':	this.options.method,
-			'data':		this.options.data,
-			'url':      this.options.contentURL
-		});
-
-		MochaUI.panelHeight(this.options.column, this.panelEl, 'new');
-
-	}
+		.bind(this));	
+	}	
 });
 MochaUI.Panel.implement(new Options, new Events);
 
