@@ -448,7 +448,10 @@ var MochaUI = new Hash({
 		var instances =  MochaUI.Windows.instances;
 		var currentInstance = instances.get(windowEl.id);
 	
-		if (currentInstance.options.type == 'notification') return;
+		if (currentInstance.options.type == 'notification'){
+			this.windowEl.setStyle('zIndex',11001);
+			return;
+		};
 
 		MochaUI.Windows.indexLevel += 2;
 		windowEl.setStyle('zIndex', MochaUI.Windows.indexLevel);
@@ -683,7 +686,7 @@ document.addEvent('mousedown', function(event){
 	MochaUI.blurAll.delay(50);
 });
 
-document.addEvent('domready', function(){
+window.addEvent('domready', function(){
 	MochaUI.underlayInitialize();
 });
 
@@ -1247,7 +1250,7 @@ MochaUI.Window = new Class({
 		}
 
 		if (!this.options.y) {
-			if (MochaUI.Desktop.desktop) {
+			if (MochaUI.Desktop && MochaUI.Desktop.desktop) {
 				var y = (dimensions.y * .5) - (this.windowEl.offsetHeight * .5);			
 			}
 			else {

@@ -555,7 +555,7 @@ MochaUI.Window = new Class({
 		}
 
 		if (!this.options.y) {
-			if (MochaUI.Desktop.desktop) {
+			if (MochaUI.Desktop && MochaUI.Desktop.desktop) {
 				var y = (dimensions.y * .5) - (this.windowEl.offsetHeight * .5);			
 			}
 			else {
