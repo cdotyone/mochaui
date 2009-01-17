@@ -1023,7 +1023,8 @@ MochaUI.Window = new Class({
 		if (options.toolbar){
 			cache.toolbarWrapperEl = new Element('div', {
 				'id': id + '_toolbarWrapper',
-				'class': 'mochaToolbarWrapper'
+				'class': 'mochaToolbarWrapper',
+				'styles': { 'height': options.toolbarHeight }
 			}).inject(cache.contentBorderEl, options.toolbarPosition == 'bottom' ? 'after' : 'before');
 
 			if (options.toolbarPosition == 'bottom') {
@@ -1031,14 +1032,16 @@ MochaUI.Window = new Class({
 			}
 			cache.toolbarEl = new Element('div', {
 				'id': id + '_toolbar',
-				'class': 'mochaToolbar'
+				'class': 'mochaToolbar',
+				'styles': { 'height': options.toolbarHeight }
 			}).inject(cache.toolbarWrapperEl);
 		}
 
 		if (options.toolbar2){
 			cache.toolbar2WrapperEl = new Element('div', {
 				'id': id + '_toolbar2Wrapper',
-				'class': 'mochaToolbarWrapper'
+				'class': 'mochaToolbarWrapper',
+				'styles': { 'height': options.toolbarHeight }
 			}).inject(cache.contentBorderEl, options.toolbar2Position == 'bottom' ? 'after' : 'before');
 
 			if (options.toolbar2Position == 'bottom') {
@@ -1046,7 +1049,8 @@ MochaUI.Window = new Class({
 			}
 			cache.toolbar2El = new Element('div', {
 				'id': id + '_toolbar2',
-				'class': 'mochaToolbar'
+				'class': 'mochaToolbar',
+				'styles': { 'height': options.toolbarHeight }
 			}).inject(cache.toolbar2WrapperEl);
 		}
 
@@ -1732,6 +1736,7 @@ MochaUI.Window = new Class({
 		
 	*/	
 	hideSpinner: function(spinner) {
+		if (!this.options.useSpinner || this.options.shape == 'gauge' || this.options.type == 'notification') return;
 		if ($(spinner))	$(spinner).setStyle('visibility', 'hidden');
 	},
 	/*
@@ -1745,6 +1750,52 @@ MochaUI.Window = new Class({
 		$(spinner).setStyles({
 			'visibility': 'visible'
 		});
+	},
+	/* 
+
+	Function: close
+		Closes the window. This is an alternative to using MochaUI.Core.closeWindow().
+		
+	 */
+	close: function( ) {
+		if ( !this.isClosing )
+			MochaUI.closeWindow( $(this.options.id) );
+		return this;
+	},
+	/*
+
+	Function: minimize
+		Minimizes the window.
+
+	 */
+	minimize: function( ) {
+		MochaUI.Dock.minimizeWindow( $(this.options.id) )
+		return this;
+	},
+	/*
+
+	Function: maximize
+		Maximizes the window.
+
+	 */
+	maximize: function( ) {
+		if ( this.isMinimized )
+			MochaUI.Dock.restoreMinimized( $(this.options.id) );
+		MochaUI.Desktop.maximizeWindow( $(this.options.id) );
+		return this;
+	},
+	/*
+
+	Function: restore
+		Restores a minimized/maximized window to its original size.
+
+	 */
+	restore: function( ) {
+		if ( this.isMinimized )
+			MochaUI.Dock.restoreMinimized( $(this.options.id) );
+		else if ( this.isMaximized )
+			MochaUI.Desktop.restoreWindow( $(this.options.id) );
+		return this;
 	},
 	setMochaControlsWidth: function(){
 		this.mochaControlsWidth = 0;
