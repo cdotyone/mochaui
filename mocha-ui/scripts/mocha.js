@@ -4431,7 +4431,6 @@ MochaUI.Dock = new Class({
 					}
 					return;
 				}
-
 				// If window is minimized, restore window.
 				if (currentInstance.isMinimized == true) {
 					MochaUI.Dock.restoreMinimized.delay(25, MochaUI.Dock, windowEl);

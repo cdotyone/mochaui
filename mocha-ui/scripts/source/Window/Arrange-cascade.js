@@ -33,7 +33,7 @@ MochaUI.extend({
 		
 		var openWindows = 0;
 		MochaUI.Windows.instances.each(function(instance){
-			if (!instance.isMinimized) openWindows ++; 
+			if (!instance.isMinimized && instance.options.draggable) openWindows ++; 
 		});
 		
 		if ((this.options.windowTopOffset * (openWindows + 1)) >= (coordinates.height - this.options.viewportTopOffset)) {
@@ -54,7 +54,7 @@ MochaUI.extend({
 		var y = this.options.viewportTopOffset;
 		$$('div.mocha').each(function(windowEl){
 			var currentWindowClass = MochaUI.Windows.instances.get(windowEl.id);
-			if (!currentWindowClass.isMinimized && !currentWindowClass.isMaximized){
+			if (!currentWindowClass.isMinimized && !currentWindowClass.isMaximized && currentWindowClass.options.draggable){
 				id = windowEl.id;
 				MochaUI.focusWindow(windowEl);
 				x += leftOffset;

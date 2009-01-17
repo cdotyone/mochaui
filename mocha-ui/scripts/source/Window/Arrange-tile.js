@@ -46,7 +46,7 @@ MochaUI.extend({
 		var col = 0;
 		
 		instances.each(function(instance){
-			if (!instance.isMinimized && !instance.isMaximized){
+			if (!instance.isMinimized && !instance.isMaximized && instance.options.draggable ){
 				
 				var content = instance.contentWrapperEl;
 				var content_coords = content.getCoordinates();
