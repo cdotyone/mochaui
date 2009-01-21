@@ -42,6 +42,11 @@ Options:
 	toolbarHeight - (number)
 	toolbarURL - (url) Defaults to 'pages/lipsum.html'.
 	toolbarContent - (string)
+	toolbar2 - (boolean) Create window toolbar. Defaults to false. This can be used for tabs, media controls, and so forth.
+	toolbar2Position - ('top' or 'bottom') Defaults to top.
+	toolbar2Height - (number)
+	toolbar2URL - (url) Defaults to 'pages/lipsum.html'.
+	toolbar2Content - (string)	
 	container - (element ID) Element the window is injected in. The container defaults to 'desktop'. If no desktop then to document.body. Use 'pageWrapper' if you don't want the windows to overlap the toolbars.
 	restrict - (boolean) Restrict window to container when dragging.
 	shape - ('box' or 'gauge') Shape of window. Defaults to 'box'.
@@ -502,11 +507,11 @@ MochaUI.Window = new Class({
 
 		// Add content to window.
 		MochaUI.updateContent({
-			'element': this.windowEl,
+			'element':  this.windowEl,
 			'content':  this.options.content,
-			'method': this.options.method,
+			'method':   this.options.method,
 			'url':      this.options.contentURL,
-			'data': this.options.data
+			'data':     this.options.data
 		});	
 		
 		// Add content to window toolbar.
@@ -516,9 +521,9 @@ MochaUI.Window = new Class({
 				'childElement':  this.toolbarEl,
 				'content':       this.options.toolbarContent,
 				'loadMethod':    'xhr',
-				'method':	 this.options.method,
+				'method':        this.options.method,
 				'url':           this.options.toolbarURL,
-				'data':		 this.options.toolbarData
+				'data':	         this.options.toolbarData
 			});
 		}
 
@@ -529,9 +534,9 @@ MochaUI.Window = new Class({
 				'childElement':  this.toolbar2El,
 				'content':       this.options.toolbar2Content,
 				'loadMethod':    'xhr',
-				'method':	 this.options.method,
+				'method':        this.options.method,
 				'url':           this.options.toolbar2URL,
-				'data':		 this.options.toolbar2Data
+				'data':	         this.options.toolbar2Data
 			});
 		}
 		
@@ -1041,7 +1046,7 @@ MochaUI.Window = new Class({
 			cache.toolbar2WrapperEl = new Element('div', {
 				'id': id + '_toolbar2Wrapper',
 				'class': 'mochaToolbarWrapper',
-				'styles': { 'height': options.toolbarHeight }
+				'styles': { 'height': options.toolbar2Height }
 			}).inject(cache.contentBorderEl, options.toolbar2Position == 'bottom' ? 'after' : 'before');
 
 			if (options.toolbar2Position == 'bottom') {
@@ -1050,7 +1055,7 @@ MochaUI.Window = new Class({
 			cache.toolbar2El = new Element('div', {
 				'id': id + '_toolbar2',
 				'class': 'mochaToolbar',
-				'styles': { 'height': options.toolbarHeight }
+				'styles': { 'height': options.toolbar2Height }
 			}).inject(cache.toolbar2WrapperEl);
 		}
 
