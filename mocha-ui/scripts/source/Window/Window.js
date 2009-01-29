@@ -706,7 +706,7 @@ MochaUI.Window = new Class({
 			this.titleEl.addEvent('selectstart', function(e) {
 				e = new Event(e).stop();
 			}.bind(this));
-			// Keep titlebar text from being selected on double click in Opera.
+			
 			this.titleBarEl.addEvent('mousedown', function(e) {
 				if (Browser.Engine.trident) {
 					this.titleEl.setCapture();

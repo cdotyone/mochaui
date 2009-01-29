@@ -356,7 +356,7 @@ Class: Column
 
 Syntax:
 (start code)
-	MochaUI.Panel();
+	MochaUI.Column();
 (end)
 
 Arguments:
