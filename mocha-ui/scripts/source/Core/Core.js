@@ -330,12 +330,12 @@ var MochaUI = new Hash({
 		if ((currentInstance.options.type == 'modal' || currentInstance.options.type == 'modal2') && Browser.Engine.trident4){
 				$('modalFix').setStyle('display', 'none');
 		}
-
-		if (MochaUI.options.useEffects == false){
+		
+		if (MochaUI.options.useEffects == false){			
 			if (currentInstance.options.type == 'modal' || currentInstance.options.type == 'modal2'){
 				$('modalOverlay').setStyle('opacity', 0);
-			}
-			MochaUI.closingJobs(windowEl);
+			}			
+			MochaUI.closingJobs(windowEl);			
 			return true;	
 		}
 		else {
@@ -362,10 +362,17 @@ var MochaUI = new Hash({
 	closingJobs: function(windowEl){
 
 		var instances = MochaUI.Windows.instances;
-		var currentInstance = instances.get(windowEl.id);
+		var currentInstance = instances.get(windowEl.id);		
 		windowEl.setStyle('visibility', 'hidden');
-		windowEl.destroy();
+		// Destroy throws an error in IE8
+		if (Browser.Engine.trident) {
+			windowEl.dispose();
+		}
+		else {
+			windowEl.destroy();
+		}
 		currentInstance.fireEvent('onCloseComplete');
+		
 		
 		if (currentInstance.options.type != 'notification'){
 			var newFocus = this.getWindowWithHighestZindex();
@@ -449,7 +456,7 @@ var MochaUI = new Hash({
 		var currentInstance = instances.get(windowEl.id);
 	
 		if (currentInstance.options.type == 'notification'){
-			this.windowEl.setStyle('zIndex',11001);
+			windowEl.setStyle('zIndex',11001);
 			return;
 		};
 
