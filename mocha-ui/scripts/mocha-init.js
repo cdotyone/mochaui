@@ -194,15 +194,15 @@ initializeWindows = function(){
 				else {
 					if (Browser.Engine.trident) {
 						myClockInit = function(){
-							CoolClock.findAndCreateClocks();
+							new CoolClock();
 						};
 						window.addEvent('domready', function(){
-							myClockInit.delay(10); // Delay is for IE
+							myClockInit.delay(50); // Delay is for IE
 						});
 						MochaUI.clockScript = true;
 					}
 					else {
-						CoolClock.findAndCreateClocks();
+						new CoolClock();
 					}
 				}
 			},

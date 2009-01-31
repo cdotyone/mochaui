@@ -178,15 +178,15 @@ initializeWindows = function(){
 						onSuccess: function() {
 							if (Browser.Engine.trident) {	
 								myClockInit = function(){
-									CoolClock.findAndCreateClocks();
+									new CoolClock();
 								};
 								window.addEvent('domready', function(){
-									myClockInit.delay(10); // Delay is for IE
+									myClockInit.delay(50); // Delay is for IE
 								});
 								MochaUI.clockScript = true;
 							}
 							else {
-								CoolClock.findAndCreateClocks();
+								new CoolClock();
 							}
 						}.bind(this)
 					}).send();
@@ -194,15 +194,15 @@ initializeWindows = function(){
 				else {
 					if (Browser.Engine.trident) {
 						myClockInit = function(){
-							CoolClock.findAndCreateClocks();
+							new CoolClock();
 						};
 						window.addEvent('domready', function(){
-							myClockInit.delay(10); // Delay is for IE
+							myClockInit.delay(50); // Delay is for IE
 						});
 						MochaUI.clockScript = true;
 					}
 					else {
-						CoolClock.findAndCreateClocks();
+						new CoolClock();
 					}
 				}
 			},
@@ -614,7 +614,7 @@ initializeWindows = function(){
 }
 
 // Initialize MochaUI when the DOM is ready
-window.addEvent('domready', function(){
+window.addEvent('load', function(){
 	MochaUI.Desktop = new MochaUI.Desktop();
 	MochaUI.Dock = new MochaUI.Dock({
 		dockPosition: 'bottom'
@@ -638,5 +638,7 @@ window.addEvent('load', function(){
 
 // This runs when a person leaves your page.
 window.addEvent('unload', function(){
-	if (MochaUI) MochaUI.garbageCleanUp();
+	if (MochaUI && Browser.Engine.trident != true) {
+		MochaUI.garbageCleanUp();
+	}	
 });
