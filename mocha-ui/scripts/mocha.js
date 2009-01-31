@@ -47,12 +47,13 @@ var MochaUI = new Hash({
 	Arguments:
 		element - The parent window or panel.
 		childElement - The child element of the window or panel recieving the content.
-		method - ('get', or 'post') The way data is transmitted. Defaults to 'get'.
+		method - ('get', or 'post') The way data is transmitted.
 		data - (hash) Data to be transmitted
 		title - (string) Change this if you want to change the title of the window or panel.
 		content - (string or element) An html loadMethod option.
-		loadMethod - ('html', 'xhr', or 'iframe') Defaults to 'html'.
+		loadMethod - ('html', 'xhr', or 'iframe')
 		url - Used if loadMethod is set to 'xhr' or 'iframe'.
+		scrollbars - (boolean)		
 		padding - (object)
 
 	*/	
@@ -67,6 +68,7 @@ var MochaUI = new Hash({
 			'content':      null,
 			'loadMethod':   null,
 			'url':          null,
+			'scrollbars':   true,			
 			'padding':      null
 		};
 		$extend(options, updateOptions);
@@ -100,14 +102,14 @@ var MochaUI = new Hash({
 		
 		var loadMethod = options.loadMethod != null ? options.loadMethod : currentInstance.options.loadMethod;
 		var method = options.method != null ? options.method : "get";
-		
+				
 		// Set scrollbars if loading content in main content container.
 		// Always use 'hidden' for iframe windows
 		if (contentContainer == currentInstance.contentEl) {
 			currentInstance.contentWrapperEl.setStyles({
-				'overflow': currentInstance.options.scrollbars == true && loadMethod != 'iframe' ? 'auto' : 'hidden'
+				'overflow': options.scrollbars == true && loadMethod != 'iframe' ? 'auto' : 'hidden'
 			});
-		}
+		}		
 
 		var contentWrapperEl = currentInstance.contentWrapperEl;
 		
@@ -1546,7 +1548,6 @@ MochaUI.Window = new Class({
 			limit: {
 				y: [this.options.resizeLimit.y[0] - this.headerFooterShadow, this.options.resizeLimit.y[1] - this.headerFooterShadow]
 			},
-
 			modifiers: {x: false, y: 'height'},
 			onStart: function(){
 				this.resizeOnStart();
@@ -3530,6 +3531,8 @@ MochaUI.Panel = new Class({
 		tabsURL:          null,
 		tabsData:         null,
 
+		header:           true, /* NOT IMPLEMENTED YET */
+
 		footer:           false,
 		footerURL:        'pages/lipsum.html',
 		footerData:       null,
@@ -4658,7 +4661,6 @@ MochaUI.extend({
 			this.myChain.callChain();
 		}		
 	},
-
 	loadWorkspace2: function(workspaceWindows){		
 		workspaceWindows.each(function(instance){
 			windowFunction = eval('MochaUI.' + instance.id + 'Window');

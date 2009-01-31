@@ -585,6 +585,8 @@ MochaUI.Panel = new Class({
 		tabsURL:          null,
 		tabsData:         null,
 
+		header:           true, /* NOT IMPLEMENTED YET */
+
 		footer:           false,
 		footerURL:        'pages/lipsum.html',
 		footerData:       null,

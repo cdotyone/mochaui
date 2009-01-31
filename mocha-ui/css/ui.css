@@ -25,7 +25,7 @@ body {
 #desktop {
 	visibility: hidden; 
 	position: relative;
-	min-width: 750px; /* Helps keep header content from wrapping */
+	min-width: 400px; /* Helps keep header content from wrapping */
 	height: 100%;
 	overflow: hidden;
 	cursor: default; /* Fix for issue in IE7. IE7 wants to use the I-bar text cursor */

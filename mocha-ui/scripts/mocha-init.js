@@ -290,7 +290,7 @@ initializeWindows = function(){
 			id: 'iframetest',
 			title: 'Iframe Tests',
 			loadMethod: 'iframe',
-			contentURL: 'pages/iframetest.html'
+			contentURL: 'iframetest.html'
 		});
 	}
 	if ($('iframetestLinkCheck')) {
@@ -299,6 +299,24 @@ initializeWindows = function(){
 			MochaUI.iframetestWindow();
 		});
 	}
+	
+	MochaUI.paneledWindow = function(){
+		new MochaUI.Window({
+			id: 'paneledWindow',
+			title: 'Paneled Window',
+			loadMethod: 'iframe',
+			contentURL: 'paneled-window.html',
+			width: 600,
+			height: 400,
+			resizeLimit: {'x': [450, 2500], 'y': [300, 2000]},			
+		});
+	}
+	if ($('paneledWindowLinkCheck')) {
+		$('paneledWindowLinkCheck').addEvent('click', function(e){
+		new Event(e).stop();
+			MochaUI.paneledWindow();
+		});
+	}	
 
 	MochaUI.accordiantestWindow = function(){
 		var id = 'accordiantest';
