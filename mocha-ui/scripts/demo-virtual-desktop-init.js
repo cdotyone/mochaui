@@ -123,46 +123,6 @@ initializeWindows = function(){
 		});
 	}	
 
-	MochaUI.parametricsWindow = function(){	
-		new MochaUI.Window({
-			id: 'parametrics',
-			title: 'Window Parametrics',
-			loadMethod: 'xhr',
-			contentURL: 'plugins/parametrics/index.html',
-			onContentLoaded: function(){
-				if ( !MochaUI.parametricsScript == true ){
-					new Request({
-						url: 'plugins/parametrics/scripts/parametrics.js',
-						method: 'get',
-						onSuccess: function() {
-							MochaUI.addRadiusSlider.delay(10); // Delay is for IE6
-							MochaUI.addShadowSlider.delay(10); // Delay is for IE6
-							MochaUI.parametricsScript = true;
-						}.bind(this)
-					}).send();
-				}
-				else {
-					MochaUI.addRadiusSlider.delay(10); // Delay is for IE6
-					MochaUI.addShadowSlider.delay(10); // Delay is for IE6
-				}
-			},
-			width: 305,
-			height: 110,
-			x: 230,
-			y: 180,
-			padding: { top: 12, right: 12, bottom: 10, left: 12 },
-			resizable: false,
-			maximizable: false,
-			contentBgColor: '#fff'
-		});
-	}
-	if ($('parametricsLinkCheck')){
-		$('parametricsLinkCheck').addEvent('click', function(e){
-			new Event(e).stop();
-			MochaUI.parametricsWindow();
-		});
-	}
-
 	MochaUI.clockWindow = function(){	
 		new MochaUI.Window({
 			id: 'clock',
@@ -222,6 +182,64 @@ initializeWindows = function(){
 			MochaUI.clockWindow();
 		});
 	}
+	
+	MochaUI.parametricsWindow = function(){	
+		new MochaUI.Window({
+			id: 'parametrics',
+			title: 'Window Parametrics',
+			loadMethod: 'xhr',
+			contentURL: 'plugins/parametrics/index.html',
+			onContentLoaded: function(){
+				if ( !MochaUI.parametricsScript == true ){
+					new Request({
+						url: 'plugins/parametrics/scripts/parametrics.js',
+						method: 'get',
+						onSuccess: function() {
+							MochaUI.addRadiusSlider.delay(10); // Delay is for IE6
+							MochaUI.addShadowSlider.delay(10); // Delay is for IE6
+							MochaUI.parametricsScript = true;
+						}.bind(this)
+					}).send();
+				}
+				else {
+					MochaUI.addRadiusSlider.delay(10); // Delay is for IE6
+					MochaUI.addShadowSlider.delay(10); // Delay is for IE6
+				}
+			},
+			width: 305,
+			height: 110,
+			x: 230,
+			y: 180,
+			padding: { top: 12, right: 12, bottom: 10, left: 12 },
+			resizable: false,
+			maximizable: false,
+			contentBgColor: '#fff'
+		});
+	}
+	if ($('parametricsLinkCheck')){
+		$('parametricsLinkCheck').addEvent('click', function(e){
+			new Event(e).stop();
+			MochaUI.parametricsWindow();
+		});
+	}	
+	
+	MochaUI.splitWindow = function(){
+		new MochaUI.Window({
+			id: 'splitWindow',
+			title: 'Split Window',
+			loadMethod: 'iframe',
+			contentURL: 'split-window.html',
+			width: 600,
+			height: 350,
+			resizeLimit: {'x': [450, 2500], 'y': [300, 2000]},			
+		});
+	}
+	if ($('splitWindowLinkCheck')) {
+		$('splitWindowLinkCheck').addEvent('click', function(e){
+		new Event(e).stop();
+			MochaUI.splitWindow();
+		});
+	}	
 
 	// Examples > Tests
 	MochaUI.eventsWindow = function(){	
