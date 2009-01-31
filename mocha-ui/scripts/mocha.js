@@ -4,7 +4,7 @@ Script: Core.js
 	MochaUI - A Web Applications User Interface Framework.
 
 Copyright:
-	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.
+	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.
 
 License:
 	MIT-style license.
@@ -330,12 +330,12 @@ var MochaUI = new Hash({
 		if ((currentInstance.options.type == 'modal' || currentInstance.options.type == 'modal2') && Browser.Engine.trident4){
 				$('modalFix').setStyle('display', 'none');
 		}
-
-		if (MochaUI.options.useEffects == false){
+		
+		if (MochaUI.options.useEffects == false){			
 			if (currentInstance.options.type == 'modal' || currentInstance.options.type == 'modal2'){
 				$('modalOverlay').setStyle('opacity', 0);
-			}
-			MochaUI.closingJobs(windowEl);
+			}			
+			MochaUI.closingJobs(windowEl);			
 			return true;	
 		}
 		else {
@@ -362,10 +362,17 @@ var MochaUI = new Hash({
 	closingJobs: function(windowEl){
 
 		var instances = MochaUI.Windows.instances;
-		var currentInstance = instances.get(windowEl.id);
+		var currentInstance = instances.get(windowEl.id);		
 		windowEl.setStyle('visibility', 'hidden');
-		windowEl.destroy();
+		// Destroy throws an error in IE8
+		if (Browser.Engine.trident) {
+			windowEl.dispose();
+		}
+		else {
+			windowEl.destroy();
+		}
 		currentInstance.fireEvent('onCloseComplete');
+		
 		
 		if (currentInstance.options.type != 'notification'){
 			var newFocus = this.getWindowWithHighestZindex();
@@ -449,7 +456,7 @@ var MochaUI = new Hash({
 		var currentInstance = instances.get(windowEl.id);
 	
 		if (currentInstance.options.type == 'notification'){
-			this.windowEl.setStyle('zIndex',11001);
+			windowEl.setStyle('zIndex',11001);
 			return;
 		};
 
@@ -699,7 +706,7 @@ Script: Window.js
 	Build windows.
 
 Copyright:
-	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.
+	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.
 
 License:
 	MIT-style license.	
@@ -1401,7 +1408,7 @@ MochaUI.Window = new Class({
 			this.titleEl.addEvent('selectstart', function(e) {
 				e = new Event(e).stop();
 			}.bind(this));
-			// Keep titlebar text from being selected on double click in Opera.
+			
 			this.titleBarEl.addEvent('mousedown', function(e) {
 				if (Browser.Engine.trident) {
 					this.titleEl.setCapture();
@@ -1508,7 +1515,6 @@ MochaUI.Window = new Class({
 			onDrag: function(){
 				this.drawWindow(windowEl);
 				this.adjustHandles();
-
 			}.bind(this),
 			onComplete: function(){
 				this.resizeOnComplete();
@@ -1540,6 +1546,7 @@ MochaUI.Window = new Class({
 			limit: {
 				y: [this.options.resizeLimit.y[0] - this.headerFooterShadow, this.options.resizeLimit.y[1] - this.headerFooterShadow]
 			},
+
 			modifiers: {x: false, y: 'height'},
 			onStart: function(){
 				this.resizeOnStart();
@@ -2523,7 +2530,7 @@ Script: Modal.js
 	Create modal dialog windows.
 
 Copyright:
-	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
+	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.	
 
 License:
 	MIT-style license.	
@@ -2604,7 +2611,7 @@ Script: Windows-from-html.js
 	Create windows from html markup in page.
 
 Copyright:
-	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
+	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.	
 
 License:
 	MIT-style license.	
@@ -2663,7 +2670,7 @@ Script: Windows-from-json.js
 	Create one or more windows from JSON data. You can define all the same properties as you can for new MochaUI.Window(). Undefined properties are set to their defaults.
 
 Copyright:
-	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
+	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.	
 
 License:
 	MIT-style license.	
@@ -2709,7 +2716,7 @@ Script: Arrange-cascade.js
 	Cascade windows.
 
 Copyright:
-	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
+	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.	
 
 License:
 	MIT-style license.	
@@ -2738,7 +2745,7 @@ MochaUI.extend({
 		
 		var openWindows = 0;
 		MochaUI.Windows.instances.each(function(instance){
-			if (!instance.isMinimized) openWindows ++; 
+			if (!instance.isMinimized && instance.options.draggable) openWindows ++; 
 		});
 		
 		if ((this.options.windowTopOffset * (openWindows + 1)) >= (coordinates.height - this.options.viewportTopOffset)) {
@@ -2759,7 +2766,7 @@ MochaUI.extend({
 		var y = this.options.viewportTopOffset;
 		$$('div.mocha').each(function(windowEl){
 			var currentWindowClass = MochaUI.Windows.instances.get(windowEl.id);
-			if (!currentWindowClass.isMinimized && !currentWindowClass.isMaximized){
+			if (!currentWindowClass.isMinimized && !currentWindowClass.isMaximized && currentWindowClass.options.draggable){
 				id = windowEl.id;
 				MochaUI.focusWindow(windowEl);
 				x += leftOffset;
@@ -2788,6 +2795,9 @@ MochaUI.extend({
 
 Script: Arrange-tile.js
 	Cascade windows.
+	
+Copyright:
+	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.	
 
 Authors:
 	Harry Roberts and Greg Houston
@@ -2832,7 +2842,7 @@ MochaUI.extend({
 		var col = 0;
 		
 		instances.each(function(instance){
-			if (!instance.isMinimized && !instance.isMaximized){
+			if (!instance.isMinimized && !instance.isMaximized && instance.options.draggable ){
 				
 				var content = instance.contentWrapperEl;
 				var content_coords = content.getCoordinates();
@@ -2879,13 +2889,14 @@ MochaUI.extend({
 			}
 		}.bind(this));
 	}
-});/*
+});
+/*
 
 Script: Tabs.js
 	Functionality for window tabs.
 
 Copyright:
-	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
+	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.	
 
 License:
 	MIT-style license.
@@ -2938,7 +2949,7 @@ Script: Layout.js
 	Create web application layouts. Enables window maximize.
 	
 Copyright:
-	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.
+	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.
 
 License:
 	MIT-style license.	
@@ -3163,7 +3174,6 @@ MochaUI.Desktop = new Class({
 			var maximizeMorph = new Fx.Elements([contentWrapperEl, windowEl], { 
 				duration: 100,
 				transition: Fx.Transitions.Sine.easeInOut,
-
 				onStart: function(windowEl){
 					currentInstance.maximizeAnimation = currentInstance.drawWindow.periodical(20, currentInstance, windowEl);
 				}.bind(this),
@@ -3291,7 +3301,7 @@ Class: Column
 
 Syntax:
 (start code)
-	MochaUI.Panel();
+	MochaUI.Column();
 (end)
 
 Arguments:
@@ -3444,7 +3454,7 @@ MochaUI.Column = new Class({
 				this.columnToggle();
 			}.bind(this));
 			this.resize.attach();
-			this.handleEl.setStyle('cursor', 'e-resize').addClass('attached');
+			this.handleEl.setStyle('cursor', Browser.Engine.webkit ? 'col-resize' : 'e-resize').addClass('attached');
 
 			MochaUI.rWidth();
 			this.fireEvent('onExpand');
@@ -3819,7 +3829,7 @@ MochaUI.extend({
 					currentInstance.resize.attach();
 					currentInstance.handleEl.setStyles({
 						'display': 'block',
-						'cursor': 'n-resize'
+						'cursor': Browser.Engine.webkit ? 'row-resize' : 'n-resize'
 					}).removeClass('detached');
 				}
 				else {
@@ -4016,7 +4026,7 @@ function addResizeRight(element, min, max){
 	var currentInstance = instances.get(element.id);
 
 	var handle = element.getNext('.columnHandle');
-	handle.setStyle('cursor', 'e-resize');	
+	handle.setStyle('cursor', Browser.Engine.webkit ? 'col-resize' : 'e-resize');	
 	if (!min) min = 50;
 	if (!max) max = 250;
 	if (Browser.Engine.trident){
@@ -4067,7 +4077,7 @@ function addResizeLeft(element, min, max){
 	var currentInstance = instances.get(element.id);
 
 	var handle = element.getPrevious('.columnHandle');
-	handle.setStyle('cursor', 'e-resize');
+	handle.setStyle('cursor', Browser.Engine.webkit ? 'col-resize' : 'e-resize');
 	var partner = element.getPrevious('.column');
 	if (!min) min = 50;
 	if (!max) max = 250;
@@ -4109,7 +4119,7 @@ function addResizeBottom(element){
 	var instances = MochaUI.Panels.instances;
 	var currentInstance = instances.get(element.id);
 	var handle = currentInstance.handleEl;
-	handle.setStyle('cursor', 'n-resize');
+	handle.setStyle('cursor', Browser.Engine.webkit ? 'row-resize' : 'n-resize');
 	partner = currentInstance.partner;
 	min = 0;
 	max = function(){
@@ -4167,7 +4177,7 @@ Script: Dock.js
 	Implements the dock/taskbar. Enables window minimize.
 
 Copyright:
-	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
+	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.	
 
 License:
 	MIT-style license.
@@ -4404,7 +4414,6 @@ MochaUI.Dock = new Class({
 				this.dockWrapper.setProperty('dockPosition', 'bottom');
 				ctx.clearRect(0, 0, 100, 100);
 				MochaUI.circle(ctx, 5, 4, 3, this.options.enabledButtonColor, 1.0);
-
 				MochaUI.circle(ctx, 5 , 14, 3, this.options.enabledButtonColor, 1.0);
 				$('dockPlacement').setProperty('title', 'Position Dock Top');
 				$('dockAutoHide').setProperty('title', 'Turn Auto Hide On');
@@ -4586,7 +4595,7 @@ Script: Workspaces.js
 	Save and load workspaces. The Workspaces emulate Adobe Illustrator functionality remembering what windows are open and where they are positioned. There will be two versions, a limited version that saves state to a cookie, and a fully functional version that saves state to a database.
 
 Copyright:
-	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.
+	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.
 
 License:
 	MIT-style license.
@@ -4622,7 +4631,9 @@ MochaUI.extend({
 			this.cookie.set(instance.options.id, {
 				'id': instance.options.id,
 				'top': instance.options.y,
-				'left': instance.options.x
+				'left': instance.options.x,
+				'width': instance.contentWrapperEl.getStyle('width').toInt(),
+				'height': instance.contentWrapperEl.getStyle('height').toInt()
 			});
 		}.bind(this));
 		this.cookie.save();
@@ -4647,15 +4658,23 @@ MochaUI.extend({
 			this.myChain.callChain();
 		}		
 	},
+
 	loadWorkspace2: function(workspaceWindows){		
 		workspaceWindows.each(function(instance){
 			windowFunction = eval('MochaUI.' + instance.id + 'Window');
 			if (windowFunction){
-				eval('MochaUI.' + instance.id + 'Window();');
+				eval('MochaUI.' + instance.id + 'Window({width:'+ instance.width +',height:' + instance.height + '});');
 				$(instance.id).setStyles({
-					top: instance.top,
-					left: instance.left
+					'top': instance.top,
+					'left': instance.left
 				});
+				var currentInstance = MochaUI.Windows.instances.get(instance.id);				
+				var contentWrapperEl = currentInstance.contentWrapperEl;
+				contentWrapperEl.setStyles({
+					'width': instance.width,
+					'height': instance.height
+				});
+				currentInstance.drawWindow(currentInstance.windowEl);
 			}
 		}.bind(this));
 		this.loadingWorkspace = false;
