@@ -2,6 +2,9 @@
 
 Script: Arrange-tile.js
 	Cascade windows.
+	
+Copyright:
+	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.	
 
 Authors:
 	Harry Roberts and Greg Houston

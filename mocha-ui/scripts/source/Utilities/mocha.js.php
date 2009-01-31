@@ -6,7 +6,7 @@ Script: mocha.js.php
 	Dynamically concatenate source javascript files during development.
 	
 Copyright:
-	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.		
+	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.		
 	
 Note:
 	This is not recommended for live sites since it does not cache, compress or gzip the outputted file. 	 

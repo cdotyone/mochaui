@@ -35,16 +35,6 @@ window.CoolClock = function(canvasId,displayRadius,skinId,showSecondHand,gmtOffs
 	return this.init(canvasId,displayRadius,skinId,showSecondHand,gmtOffset);
 }
 
-CoolClock.findAndCreateClocks = function() {
-	var canvases = document.getElementsByTagName("canvas");
-	for (var i=0;i<canvases.length;i++) {
-		var fields = canvases[i].className.split(" ")[0].split(":");
-		if (fields[0] == "CoolClock") {
-			new CoolClock(canvases[i].id,fields[2],fields[1],fields[3]!="noSeconds",fields[4]);
-		}
-	}
-}
-
 CoolClock.config = {
 	clockTracker: {},
 	tickDelay: 1000,
@@ -123,26 +113,34 @@ CoolClock.config = {
 };
 
 CoolClock.prototype = {
-	init: function(canvasId,displayRadius,skinId,showSecondHand,gmtOffset) {
+	init: function() {
+		var gmtOffset;
+		canvasId = 'myClock';
 		this.canvasId = canvasId;
-		this.displayRadius = displayRadius || CoolClock.config.defaultRadius;
-		this.skinId = skinId || CoolClock.config.defaultSkin;
-		this.showSecondHand = typeof showSecondHand == "boolean" ? showSecondHand : true;
-		this.tickDelay = CoolClock.config[ this.showSecondHand ? "tickDelay" : "longTickDelay"];
-
-		this.canvas = document.getElementById(canvasId);
+		this.displayRadius = 75;
+		this.skinId = 'mochaUI2';
+		this.showSecondHand = true;
+		this.tickDelay = 'tickDelay';
 		
-		if ( Browser.Engine.trident ) {
-			G_vmlCanvasManager.initElement(this.canvas);
+		this.canvas = new Element('canvas', {
+			'id': this.canvasId,
+			'width': this.displayRadius*2,
+			'height': this.displayRadius*2,
+			'styles': {
+				'width': this.displayRadius*2,
+				'height': this.displayRadius*2
+			}
+		}).inject($('clocker'));
+		
+		if (MochaUI.ieSupport == 'excanvas' && Browser.Engine.trident ) {			
+			G_vmlCanvasManager.initElement(this.canvas);			
 		}
 
-		this.canvas = document.getElementById(canvasId);	
+		//this.canvas.setAttribute("width",this.displayRadius*2);
+		//this.canvas.setAttribute("height",this.displayRadius*2);
 
-		this.canvas.setAttribute("width",this.displayRadius*2);
-		this.canvas.setAttribute("height",this.displayRadius*2);
-
-		this.canvas.style.width = this.displayRadius*2 + "px";
-		this.canvas.style.height = this.displayRadius*2 + "px";
+		//this.canvas.style.width = this.displayRadius*2 + "px";
+		//this.canvas.style.height = this.displayRadius*2 + "px";
 
 		this.renderRadius = CoolClock.config.renderRadius; 
 

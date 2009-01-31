@@ -4,7 +4,7 @@ Script: Core.js
 	MochaUI - A Web Applications User Interface Framework.
 
 Copyright:
-	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.
+	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.
 
 License:
 	MIT-style license.
