@@ -307,7 +307,7 @@ initializeWindows = function(){
 			loadMethod: 'iframe',
 			contentURL: 'paneled-window.html',
 			width: 600,
-			height: 400,
+			height: 350,
 			resizeLimit: {'x': [450, 2500], 'y': [300, 2000]},			
 		});
 	}

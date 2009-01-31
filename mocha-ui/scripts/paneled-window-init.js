@@ -64,8 +64,8 @@ window.addEvent('load', function(){ //using load instead of domready for IE8
 	new MochaUI.Column({
 		id: 'sideColumn1',
 		placement: 'left',
-		width: 200,
-		resizeLimit: [100, 300]
+		width: 190,
+		resizeLimit: [100, 220]
 	});
 
 	new MochaUI.Column({
@@ -93,7 +93,8 @@ window.addEvent('load', function(){ //using load instead of domready for IE8
 					}.bind(this)
 				}).send();
 			}
-		}
+		},
+		header: false
 	});
 
 	// Add panels to main column	
@@ -105,7 +106,8 @@ window.addEvent('load', function(){ //using load instead of domready for IE8
 		column: 'mainColumn',
 		panelBackground: '#fff',
 		padding: { top: 0, right: 0, bottom: 0, left: 0 },
-		collapsible: false			
+		collapsible: false,
+		header: false	
 	});
 	
 	MochaUI.Desktop.desktop.setStyles({

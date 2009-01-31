@@ -3489,7 +3489,8 @@ Options:
 	content - (string or element) An html loadMethod option.
 	tabsURL - (url)	
 	tabsData - (hash) Data to send with the URL. Defaults to null.
-	footer - (boolean)
+	header - (boolean) Display the panel header or not
+	footer - (boolean) Add a panel footer or not
 	footerURL - (url)
 	footerData - (hash) Data to send with the URL. Defaults to null.
 	height - (number) Height of content area.
@@ -3531,7 +3532,7 @@ MochaUI.Panel = new Class({
 		tabsURL:          null,
 		tabsData:         null,
 
-		header:           true, /* NOT IMPLEMENTED YET */
+		header:           true,
 
 		footer:           false,
 		footerURL:        'pages/lipsum.html',
@@ -3653,7 +3654,10 @@ MochaUI.Panel = new Class({
 		
 		this.panelHeaderEl = new Element('div', {
 			'id': this.options.id + '_header',
-			'class': 'panel-header'
+			'class': 'panel-header',
+			'styles': {
+				'display': this.options.header ? 'block' : 'none'
+			}
 		}).inject(this.panelEl, 'before');
 		
 		this.panelHeaderToolboxEl = new Element('div', {
