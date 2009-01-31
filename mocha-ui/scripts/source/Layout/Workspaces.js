@@ -40,7 +40,9 @@ MochaUI.extend({
 			this.cookie.set(instance.options.id, {
 				'id': instance.options.id,
 				'top': instance.options.y,
-				'left': instance.options.x
+				'left': instance.options.x,
+				'width': instance.contentWrapperEl.getStyle('width').toInt(),
+				'height': instance.contentWrapperEl.getStyle('height').toInt()
 			});
 		}.bind(this));
 		this.cookie.save();
@@ -69,11 +71,18 @@ MochaUI.extend({
 		workspaceWindows.each(function(instance){
 			windowFunction = eval('MochaUI.' + instance.id + 'Window');
 			if (windowFunction){
-				eval('MochaUI.' + instance.id + 'Window();');
+				eval('MochaUI.' + instance.id + 'Window({width:'+ instance.width +',height:' + instance.height + '});');
 				$(instance.id).setStyles({
-					top: instance.top,
-					left: instance.left
+					'top': instance.top,
+					'left': instance.left
 				});
+				var currentInstance = MochaUI.Windows.instances.get(instance.id);				
+				var contentWrapperEl = currentInstance.contentWrapperEl;
+				contentWrapperEl.setStyles({
+					'width': instance.width,
+					'height': instance.height
+				});
+				currentInstance.drawWindow(currentInstance.windowEl);
 			}
 		}.bind(this));
 		this.loadingWorkspace = false;
