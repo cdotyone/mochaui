@@ -68,7 +68,7 @@ var MochaUI = new Hash({
 			'content':      null,
 			'loadMethod':   null,
 			'url':          null,
-			'scrollbars':   true,			
+			'scrollbars':   null,			
 			'padding':      null
 		};
 		$extend(options, updateOptions);
@@ -101,13 +101,14 @@ var MochaUI = new Hash({
 		}
 		
 		var loadMethod = options.loadMethod != null ? options.loadMethod : currentInstance.options.loadMethod;
-		var method = options.method != null ? options.method : "get";
+		var method = options.method != null ? options.method : "get";			
 				
 		// Set scrollbars if loading content in main content container.
 		// Always use 'hidden' for iframe windows
+		var scrollbars = options.scrollbars != null ? options.scrollbars : currentInstance.options.scrollbars;	
 		if (contentContainer == currentInstance.contentEl) {
 			currentInstance.contentWrapperEl.setStyles({
-				'overflow': options.scrollbars == true && loadMethod != 'iframe' ? 'auto' : 'hidden'
+				'overflow': scrollbars != false && loadMethod != 'iframe' ? 'auto' : 'hidden'
 			});
 		}		
 

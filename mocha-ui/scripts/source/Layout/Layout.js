@@ -642,8 +642,7 @@ MochaUI.Panel = new Class({
 		this.fireEvent('onBeforeBuild');
 		
 		if (this.options.loadMethod == 'iframe') {
-			// Iframes have their own scrollbars and padding.
-			this.options.scrollbars = false;
+			// Iframes have their own padding.
 			this.options.padding = { top: 0, right: 0, bottom: 0, left: 0 };
 		}
 

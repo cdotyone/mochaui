@@ -68,7 +68,7 @@ var MochaUI = new Hash({
 			'content':      null,
 			'loadMethod':   null,
 			'url':          null,
-			'scrollbars':   true,			
+			'scrollbars':   null,			
 			'padding':      null
 		};
 		$extend(options, updateOptions);
@@ -101,13 +101,14 @@ var MochaUI = new Hash({
 		}
 		
 		var loadMethod = options.loadMethod != null ? options.loadMethod : currentInstance.options.loadMethod;
-		var method = options.method != null ? options.method : "get";
+		var method = options.method != null ? options.method : "get";			
 				
 		// Set scrollbars if loading content in main content container.
 		// Always use 'hidden' for iframe windows
+		var scrollbars = options.scrollbars != null ? options.scrollbars : currentInstance.options.scrollbars;	
 		if (contentContainer == currentInstance.contentEl) {
 			currentInstance.contentWrapperEl.setStyles({
-				'overflow': options.scrollbars == true && loadMethod != 'iframe' ? 'auto' : 'hidden'
+				'overflow': scrollbars != false && loadMethod != 'iframe' ? 'auto' : 'hidden'
 			});
 		}		
 
@@ -919,6 +920,7 @@ MochaUI.Windows.windowOptions = {
 	width:             300,
 	height:            125,
 	x:                 null,
+
 	y:                 null,
 	scrollbars:        true,
 	padding:   		   { top: 10, right: 12, bottom: 10, left: 12 },
@@ -3588,8 +3590,7 @@ MochaUI.Panel = new Class({
 		this.fireEvent('onBeforeBuild');
 		
 		if (this.options.loadMethod == 'iframe') {
-			// Iframes have their own scrollbars and padding.
-			this.options.scrollbars = false;
+			// Iframes have their own padding.
 			this.options.padding = { top: 0, right: 0, bottom: 0, left: 0 };
 		}
 
