@@ -231,7 +231,7 @@ initializeWindows = function(){
 			contentURL: 'split-window.html',
 			width: 600,
 			height: 350,
-			resizeLimit: {'x': [450, 2500], 'y': [300, 2000]},			
+			resizeLimit: {'x': [450, 2500], 'y': [300, 2000]}			
 		});
 	}
 	if ($('splitWindowLinkCheck')) {
