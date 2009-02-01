@@ -693,11 +693,6 @@ MochaUI.Panel = new Class({
 		// May rethink this.
 		this.contentWrapperEl = this.panelEl;
 		
-		// Set scrollbars, always use 'hidden' for iframe windows
-		this.contentWrapperEl.setStyles({
-			'overflow': this.options.scrollbars && !this.iframeEl ? 'auto' : 'hidden'
-		});
-
 		this.contentEl.setStyles({
 			'padding-top': this.options.padding.top,
 			'padding-bottom': this.options.padding.bottom,

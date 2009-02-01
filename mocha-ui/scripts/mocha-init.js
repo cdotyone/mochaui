@@ -231,7 +231,7 @@ initializeWindows = function(){
 			contentURL: 'split-window.html',
 			width: 600,
 			height: 350,
-			resizeLimit: {'x': [450, 2500], 'y': [300, 2000]},			
+			resizeLimit: {'x': [450, 2500], 'y': [300, 2000]}			
 		});
 	}
 	if ($('splitWindowLinkCheck')) {
@@ -604,7 +604,7 @@ initializeWindows = function(){
 			height: 195,
 			contentBgColor: '#e5e5e5 url(images/logo2.gif) left 3px no-repeat',
 			padding: { top: 43, right: 12, bottom: 10, left: 12 },
-			scrollbars:  false
+			scrollbars: false
 		});
 	}
 	if ($('aboutLink')){
