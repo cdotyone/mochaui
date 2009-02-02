@@ -658,7 +658,7 @@ div.mochaToolbarWrapper.bottom {
 	left: 0;
 	background: transparent;
 	z-index: -1;
-	display: none;
+	visibility: hidden;
 	overflow: hidden;
 }
 

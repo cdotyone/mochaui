@@ -463,22 +463,22 @@ MochaUI.Window = new Class({
 
 		if (this.options.shape == 'gauge'){
 			if (this.options.useCanvasControls){
-				this.canvasControlsEl.setStyle('display', 'none');
+				this.canvasControlsEl.setStyle('visibility', 'hidden');
 			}
 			else {
-				this.controlsEl.setStyle('display', 'none');
+				this.controlsEl.setStyle('visibility', 'hidden');
 			}
 			this.windowEl.addEvent('mouseover', function(){
 				this.mouseover = true;
 				var showControls = function(){
 					if (this.mouseover != false){
 						if (this.options.useCanvasControls){
-							this.canvasControlsEl.setStyle('display', 'block');
+							this.canvasControlsEl.setStyle('visibility', 'visible');
 						}
 						else {
-							this.controlsEl.setStyle('display', 'block');
+							this.controlsEl.setStyle('visibility', 'visible');
 						}
-						this.canvasHeaderEl.setStyle('display', 'block');
+						this.canvasHeaderEl.setStyle('visibility', 'visible');
 						this.titleEl.setStyle('display', 'block');
 					}
 				};
@@ -488,12 +488,12 @@ MochaUI.Window = new Class({
 			this.windowEl.addEvent('mouseleave', function(){
 				this.mouseover = false;
 				if (this.options.useCanvasControls){
-					this.canvasControlsEl.setStyle('display', 'none');
+					this.canvasControlsEl.setStyle('visibility', 'hidden');
 				}
 				else {
-					this.controlsEl.setStyle('display', 'none');
+					this.controlsEl.setStyle('visibility', 'hidden');
 				}
-				this.canvasHeaderEl.setStyle('display', 'none');
+				this.canvasHeaderEl.setStyle('visibility', 'hidden');
 				this.titleEl.setStyle('display', 'none');
 			}.bind(this));
 		}

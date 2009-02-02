@@ -1173,22 +1173,22 @@ MochaUI.Window = new Class({
 
 		if (this.options.shape == 'gauge'){
 			if (this.options.useCanvasControls){
-				this.canvasControlsEl.setStyle('display', 'none');
+				this.canvasControlsEl.setStyle('visibility', 'hidden');
 			}
 			else {
-				this.controlsEl.setStyle('display', 'none');
+				this.controlsEl.setStyle('visibility', 'hidden');
 			}
 			this.windowEl.addEvent('mouseover', function(){
 				this.mouseover = true;
 				var showControls = function(){
 					if (this.mouseover != false){
 						if (this.options.useCanvasControls){
-							this.canvasControlsEl.setStyle('display', 'block');
+							this.canvasControlsEl.setStyle('visibility', 'visible');
 						}
 						else {
-							this.controlsEl.setStyle('display', 'block');
+							this.controlsEl.setStyle('visibility', 'visible');
 						}
-						this.canvasHeaderEl.setStyle('display', 'block');
+						this.canvasHeaderEl.setStyle('visibility', 'visible');
 						this.titleEl.setStyle('display', 'block');
 					}
 				};
@@ -1198,12 +1198,12 @@ MochaUI.Window = new Class({
 			this.windowEl.addEvent('mouseleave', function(){
 				this.mouseover = false;
 				if (this.options.useCanvasControls){
-					this.canvasControlsEl.setStyle('display', 'none');
+					this.canvasControlsEl.setStyle('visibility', 'hidden');
 				}
 				else {
-					this.controlsEl.setStyle('display', 'none');
+					this.controlsEl.setStyle('visibility', 'hidden');
 				}
-				this.canvasHeaderEl.setStyle('display', 'none');
+				this.canvasHeaderEl.setStyle('visibility', 'hidden');
 				this.titleEl.setStyle('display', 'none');
 			}.bind(this));
 		}
@@ -1322,7 +1322,6 @@ MochaUI.Window = new Class({
 					'zIndex': 11000,
 					'opacity': 1
 				});
-
 			}
 			else {
 				MochaUI.Modal.modalOverlayCloseMorph.cancel();
@@ -4059,7 +4058,6 @@ function addResizeRight(element, min, max){
 			MochaUI.rWidth();
 			if (Browser.Engine.trident4){
 				element.getChildren().each(function(el){
-
 					var width = $(element).getStyle('width').toInt();
 					width -= el.getStyle('border-right').toInt();
 					width -= el.getStyle('border-left').toInt();
