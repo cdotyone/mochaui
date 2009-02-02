@@ -701,7 +701,12 @@ window.addEvent('domready', function(){
 });
 
 window.addEvent('resize', function(){
+	if ($('windowUnderlay')) {
 		MochaUI.setUnderlaySize();
+	}
+	else {
+		MochaUI.underlayInitialize();
+	}
 });
 /*
 
@@ -920,7 +925,6 @@ MochaUI.Windows.windowOptions = {
 	width:             300,
 	height:            125,
 	x:                 null,
-
 	y:                 null,
 	scrollbars:        true,
 	padding:   		   { top: 10, right: 12, bottom: 10, left: 12 },
@@ -1188,7 +1192,7 @@ MochaUI.Window = new Class({
 						this.titleEl.setStyle('display', 'block');
 					}
 				};
-				showControls.delay(150, this);
+				showControls.delay(0, this);
 
 			}.bind(this));
 			this.windowEl.addEvent('mouseleave', function(){
@@ -1318,6 +1322,7 @@ MochaUI.Window = new Class({
 					'zIndex': 11000,
 					'opacity': 1
 				});
+
 			}
 			else {
 				MochaUI.Modal.modalOverlayCloseMorph.cancel();
@@ -3063,7 +3068,6 @@ MochaUI.Desktop = new Class({
 			pageWrapperHeight -= this.pageWrapper.getStyle('border-top').toInt();
 			pageWrapperHeight -= this.pageWrapper.getStyle('border-bottom').toInt();
 			if (this.desktopHeader){ pageWrapperHeight -= this.desktopHeader.offsetHeight; }
-
 			if (this.desktopFooter){ pageWrapperHeight -= this.desktopFooter.offsetHeight; }
 			pageWrapperHeight -= dockOffset;
 
@@ -4055,6 +4059,7 @@ function addResizeRight(element, min, max){
 			MochaUI.rWidth();
 			if (Browser.Engine.trident4){
 				element.getChildren().each(function(el){
+
 					var width = $(element).getStyle('width').toInt();
 					width -= el.getStyle('border-right').toInt();
 					width -= el.getStyle('border-left').toInt();

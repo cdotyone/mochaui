@@ -120,7 +120,7 @@ CoolClock.prototype = {
 		this.displayRadius = 75;
 		this.skinId = 'mochaUI2';
 		this.showSecondHand = true;
-		this.tickDelay = 'tickDelay';
+		this.tickDelay = 1000;
 		
 		this.canvas = new Element('canvas', {
 			'id': this.canvasId,
@@ -263,9 +263,7 @@ CoolClock.prototype = {
 		this.radialLineAtAngle((min+sec/60)/60,skin.minuteHand);
 		if (this.showSecondHand) {
 			this.radialLineAtAngle(sec/60,skin.secondHand);
-			if (!document.all)
-				// decoration doesn't render right in IE so lets turn it off
-				this.radialLineAtAngle(sec/60,skin.secondDecoration);
+			this.radialLineAtAngle(sec/60,skin.secondDecoration);
 		}
 		this.center();
 		this.reflection();

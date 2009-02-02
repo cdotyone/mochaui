@@ -701,5 +701,10 @@ window.addEvent('domready', function(){
 });
 
 window.addEvent('resize', function(){
+	if ($('windowUnderlay')) {
 		MochaUI.setUnderlaySize();
+	}
+	else {
+		MochaUI.underlayInitialize();
+	}
 });

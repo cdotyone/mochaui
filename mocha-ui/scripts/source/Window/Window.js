@@ -482,7 +482,7 @@ MochaUI.Window = new Class({
 						this.titleEl.setStyle('display', 'block');
 					}
 				};
-				showControls.delay(150, this);
+				showControls.delay(0, this);
 
 			}.bind(this));
 			this.windowEl.addEvent('mouseleave', function(){
