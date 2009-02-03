@@ -921,13 +921,9 @@ MochaUI.Window = new Class({
 				// The following hack is to get IE8 Standards Mode to properly resize an iframe
 				// when only the vertical dimension is changed.
 				this.iframeEl.setStyle('width', '99%');
-				this.iframeEl.setStyles({
-					'height': this.contentWrapperEl.offsetHeight
-				});
+				this.iframeEl.setStyle('height', this.contentWrapperEl.offsetHeight);
 				this.iframeEl.setStyle('width', '100%');
-				this.iframeEl.setStyles({
-					'height': this.contentWrapperEl.offsetHeight
-				});;					
+				this.iframeEl.setStyle('height', this.contentWrapperEl.offsetHeight);					
 			}
 		}
 		this.fireEvent('onResize', this.windowEl);
@@ -1338,9 +1334,7 @@ MochaUI.Window = new Class({
 
 		// Resize iframe when window is resized
 		if (this.iframeEl) {
-			this.iframeEl.setStyles({
-				'height': this.contentWrapperEl.offsetHeight
-			});
+			this.iframeEl.setStyle('height', this.contentWrapperEl.offsetHeight);
 		}
 
 		var borderHeight = this.contentBorderEl.getStyle('border-top').toInt() + this.contentBorderEl.getStyle('border-bottom').toInt();

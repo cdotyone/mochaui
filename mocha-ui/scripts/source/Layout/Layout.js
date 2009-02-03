@@ -1228,7 +1228,12 @@ function addResizeBottom(element){
 		}.bind(this),
 		onStart: function(){
 			if (currentInstance.iframeEl) {
-				currentInstance.iframeEl.setStyle('visibility', 'hidden');
+				if (!Browser.Engine.trident) {
+					currentInstance.iframeEl.setStyle('visibility', 'hidden');
+				}
+				else {
+					currentInstance.iframeEl.setStyle('display', 'none');
+				}
 			}
 			partner.getElements('iframe').setStyle('visibility','hidden');
 		}.bind(this),
@@ -1244,7 +1249,18 @@ function addResizeBottom(element){
 			MochaUI.resizeChildren(element, element.getStyle('height').toInt());
 			MochaUI.resizeChildren(partner, partnerHeight);
 			if (currentInstance.iframeEl) {
-				currentInstance.iframeEl.setStyle('visibility', 'visible');
+				if (!Browser.Engine.trident) {
+					currentInstance.iframeEl.setStyle('visibility', 'visible');
+				}
+				else {
+					currentInstance.iframeEl.setStyle('display', 'block');
+					// The following hack is to get IE8 Standards Mode to properly resize an iframe
+					// when only the vertical dimension is changed.
+					var width = currentInstance.iframeEl.getStyle('width').toInt();
+					currentInstance.iframeEl.setStyle('width', width - 1);
+					MochaUI.rWidth();
+					currentInstance.iframeEl.setStyle('width', width);				
+				}
 			}
 			partner.getElements('iframe').setStyle('visibility','visible');
 			currentInstance.fireEvent('onResize');
