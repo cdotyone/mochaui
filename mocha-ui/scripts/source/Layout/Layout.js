@@ -194,7 +194,12 @@ MochaUI.Desktop = new Class({
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
 		if ( currentInstance.iframeEl ) {
-			currentInstance.iframeEl.setStyle('visibility', 'hidden');
+			if (!Browser.Engine.trident) {
+				currentInstance.iframeEl.setStyle('visibility', 'hidden');
+			}
+			else {
+				currentInstance.iframeEl.setStyle('display', 'none');
+			}
 		}
 
 		var windowDimensions = document.getCoordinates();
@@ -218,7 +223,12 @@ MochaUI.Desktop = new Class({
 			currentInstance.drawWindow(windowEl);
 			// Show iframe
 			if ( currentInstance.iframeEl ) {
-				currentInstance.iframeEl.setStyle('visibility', 'visible');
+				if (!Browser.Engine.trident) {
+					currentInstance.iframeEl.setStyle('visibility', 'visible');
+				}
+				else {
+					currentInstance.iframeEl.setStyle('display', 'block');
+				}
 			}
 			currentInstance.fireEvent('onMaximize', windowEl);
 		}
@@ -287,7 +297,12 @@ MochaUI.Desktop = new Class({
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
 		if ( currentInstance.iframeEl ) {
-			currentInstance.iframeEl.setStyle('visibility', 'hidden');
+			if (!Browser.Engine.trident) {
+				currentInstance.iframeEl.setStyle('visibility', 'hidden');
+			}
+			else {
+				currentInstance.iframeEl.setStyle('display', 'none');
+			}
 		}
 		
 		var contentWrapperEl = currentInstance.contentWrapperEl;
@@ -303,7 +318,12 @@ MochaUI.Desktop = new Class({
 				'left': currentInstance.oldLeft
 			});
 			if ( currentInstance.iframeEl ) {
-				currentInstance.iframeEl.setStyle('visibility', 'visible');
+				if (!Browser.Engine.trident) {
+					currentInstance.iframeEl.setStyle('visibility', 'visible');
+				}
+				else {
+					currentInstance.iframeEl.setStyle('display', 'block');
+				}
 			}			
 			if (options.container != this.desktop){
 				$(options.container).grab(windowEl);
@@ -324,7 +344,12 @@ MochaUI.Desktop = new Class({
 					$clear(currentInstance.maximizeAnimation);
 					currentInstance.drawWindow(windowEl);
 					if (currentInstance.iframeEl){
-						currentInstance.iframeEl.setStyle('visibility', 'visible');
+						if (!Browser.Engine.trident) {
+							currentInstance.iframeEl.setStyle('visibility', 'visible');
+						}
+						else {
+							currentInstance.iframeEl.setStyle('display', 'block');
+						}
 					}
 					if (options.container != this.desktop){
 						$(options.container).grab(windowEl);

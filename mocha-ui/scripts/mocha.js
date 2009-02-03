@@ -181,16 +181,6 @@ var MochaUI = new Hash({
 					'name':  currentInstance.options.id + '_iframe',
 					'class': 'mochaIframe',
 					'src': options.url,
-					'onresize': function(){
-						if (parent.frames[currentInstance.options.id + '_iframe'] && Browser.Engine.trident) {
-							currentIframe = parent.frames[currentInstance.options.id + '_iframe'];
-							if (currentIframe.MochaUI) {
-								if (currentIframe.MochaUI.Desktop) {
-									currentIframe.MochaUI.Desktop.onBrowserResize();
-								}	
-							}							
-						}						
-					},
 					'marginwidth':  0,
 					'marginheight': 0,
 					'frameBorder':  0,
@@ -1612,13 +1602,23 @@ MochaUI.Window = new Class({
 	resizeOnStart: function(){
 		$('windowUnderlay').setStyle('display','block');
 		if (this.iframeEl){
-			this.iframeEl.setStyle('visibility', 'hidden');
+			if (!Browser.Engine.trident) {
+				this.iframeEl.setStyle('visibility', 'hidden');
+			}
+			else {
+				this.iframeEl.setStyle('display', 'none');
+			}
 		}	
 	},	
 	resizeOnComplete: function(){
 		$('windowUnderlay').setStyle('display','none');
 		if (this.iframeEl){
-			this.iframeEl.setStyle('visibility', 'visible');
+			if (!Browser.Engine.trident) {
+				this.iframeEl.setStyle('visibility', 'visible');
+			}
+			else {
+				this.iframeEl.setStyle('display', 'block');
+			}
 		}
 		this.fireEvent('onResize', this.windowEl);
 	},
@@ -3158,7 +3158,12 @@ MochaUI.Desktop = new Class({
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
 		if ( currentInstance.iframeEl ) {
-			currentInstance.iframeEl.setStyle('visibility', 'hidden');
+			if (!Browser.Engine.trident) {
+				currentInstance.iframeEl.setStyle('visibility', 'hidden');
+			}
+			else {
+				currentInstance.iframeEl.setStyle('display', 'none');
+			}
 		}
 
 		var windowDimensions = document.getCoordinates();
@@ -3182,7 +3187,12 @@ MochaUI.Desktop = new Class({
 			currentInstance.drawWindow(windowEl);
 			// Show iframe
 			if ( currentInstance.iframeEl ) {
-				currentInstance.iframeEl.setStyle('visibility', 'visible');
+				if (!Browser.Engine.trident) {
+					currentInstance.iframeEl.setStyle('visibility', 'visible');
+				}
+				else {
+					currentInstance.iframeEl.setStyle('display', 'block');
+				}
 			}
 			currentInstance.fireEvent('onMaximize', windowEl);
 		}
@@ -3251,7 +3261,12 @@ MochaUI.Desktop = new Class({
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
 		if ( currentInstance.iframeEl ) {
-			currentInstance.iframeEl.setStyle('visibility', 'hidden');
+			if (!Browser.Engine.trident) {
+				currentInstance.iframeEl.setStyle('visibility', 'hidden');
+			}
+			else {
+				currentInstance.iframeEl.setStyle('display', 'none');
+			}
 		}
 		
 		var contentWrapperEl = currentInstance.contentWrapperEl;
@@ -3267,7 +3282,12 @@ MochaUI.Desktop = new Class({
 				'left': currentInstance.oldLeft
 			});
 			if ( currentInstance.iframeEl ) {
-				currentInstance.iframeEl.setStyle('visibility', 'visible');
+				if (!Browser.Engine.trident) {
+					currentInstance.iframeEl.setStyle('visibility', 'visible');
+				}
+				else {
+					currentInstance.iframeEl.setStyle('display', 'block');
+				}
 			}			
 			if (options.container != this.desktop){
 				$(options.container).grab(windowEl);
@@ -3288,7 +3308,12 @@ MochaUI.Desktop = new Class({
 					$clear(currentInstance.maximizeAnimation);
 					currentInstance.drawWindow(windowEl);
 					if (currentInstance.iframeEl){
-						currentInstance.iframeEl.setStyle('visibility', 'visible');
+						if (!Browser.Engine.trident) {
+							currentInstance.iframeEl.setStyle('visibility', 'visible');
+						}
+						else {
+							currentInstance.iframeEl.setStyle('display', 'block');
+						}
 					}
 					if (options.container != this.desktop){
 						$(options.container).grab(windowEl);
@@ -3513,7 +3538,6 @@ Options:
 	footerData - (hash) Data to send with the URL. Defaults to null.
 	height - (number) Height of content area.
 	addClass - (string) Add a class to the panel.
-
 	scrollbars - (boolean)
 	padding - (object)
 	panelBackground - CSS background property for the panel.
@@ -4071,6 +4095,7 @@ function addResizeRight(element, min, max){
 			MochaUI.rWidth();
 			if (Browser.Engine.trident4){
 				element.getChildren().each(function(el){
+
 					var width = $(element).getStyle('width').toInt();
 					width -= el.getStyle('border-right').toInt();
 					width -= el.getStyle('border-left').toInt();
@@ -4465,6 +4490,7 @@ MochaUI.Dock = new Class({
 					}
 					else {
 						MochaUI.focusWindow(windowEl);
+
 					}
 					return;
 				}

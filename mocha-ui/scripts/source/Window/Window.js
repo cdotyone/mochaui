@@ -902,13 +902,23 @@ MochaUI.Window = new Class({
 	resizeOnStart: function(){
 		$('windowUnderlay').setStyle('display','block');
 		if (this.iframeEl){
-			this.iframeEl.setStyle('visibility', 'hidden');
+			if (!Browser.Engine.trident) {
+				this.iframeEl.setStyle('visibility', 'hidden');
+			}
+			else {
+				this.iframeEl.setStyle('display', 'none');
+			}
 		}	
 	},	
 	resizeOnComplete: function(){
 		$('windowUnderlay').setStyle('display','none');
 		if (this.iframeEl){
-			this.iframeEl.setStyle('visibility', 'visible');
+			if (!Browser.Engine.trident) {
+				this.iframeEl.setStyle('visibility', 'visible');
+			}
+			else {
+				this.iframeEl.setStyle('display', 'block');
+			}
 		}
 		this.fireEvent('onResize', this.windowEl);
 	},
