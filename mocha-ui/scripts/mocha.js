@@ -182,6 +182,16 @@ var MochaUI = new Hash({
 					'name':  currentInstance.options.id + '_iframe',
 					'class': 'mochaIframe',
 					'src': options.url,
+					'onresize': function(){
+						if (parent.frames[currentInstance.options.id + '_iframe'] && Browser.Engine.trident) {
+							currentIframe = parent.frames[currentInstance.options.id + '_iframe'];
+							if (currentIframe.MochaUI) {
+								if (currentIframe.MochaUI.Desktop) {
+									currentIframe.MochaUI.Desktop.onBrowserResize();
+								}	
+							}							
+						}						
+					},
 					'marginwidth':  0,
 					'marginheight': 0,
 					'frameBorder':  0,
@@ -1308,6 +1318,7 @@ MochaUI.Window = new Class({
 					}
 				}.bind(this)
 			});
+
 		}
 
 		if (this.options.type == 'modal' || this.options.type == 'modal2') {
@@ -3569,6 +3580,7 @@ MochaUI.Panel = new Class({
 
 		$extend(this, {
 			timestamp: $time(),
+
 			isCollapsed: false, // This is probably redundant since we can check for the class
 			oldHeight: 0,
 			partner: null

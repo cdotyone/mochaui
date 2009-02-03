@@ -182,6 +182,16 @@ var MochaUI = new Hash({
 					'name':  currentInstance.options.id + '_iframe',
 					'class': 'mochaIframe',
 					'src': options.url,
+					'onresize': function(){
+						if (parent.frames[currentInstance.options.id + '_iframe'] && Browser.Engine.trident) {
+							currentIframe = parent.frames[currentInstance.options.id + '_iframe'];
+							if (currentIframe.MochaUI) {
+								if (currentIframe.MochaUI.Desktop) {
+									currentIframe.MochaUI.Desktop.onBrowserResize();
+								}	
+							}							
+						}						
+					},
 					'marginwidth':  0,
 					'marginheight': 0,
 					'frameBorder':  0,

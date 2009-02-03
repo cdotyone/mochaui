@@ -308,7 +308,7 @@ initializeWindows = function(){
 			id: 'iframetest',
 			title: 'Iframe Tests',
 			loadMethod: 'iframe',
-			contentURL: 'iframetest.html'
+			contentURL: 'pages/iframetest.html'
 		});
 	}
 	if ($('iframetestLinkCheck')) {
