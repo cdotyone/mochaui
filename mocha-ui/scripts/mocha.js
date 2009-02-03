@@ -1472,6 +1472,7 @@ MochaUI.Window = new Class({
 				this.saveValues();
 			}.bind(this)
 		});
+
 	},
 	/*
 
@@ -1618,6 +1619,16 @@ MochaUI.Window = new Class({
 			}
 			else {
 				this.iframeEl.setStyle('display', 'block');
+				// The following hack is to get IE8 Standards Mode to properly resize an iframe
+				// when only the vertical dimension is changed.
+				this.iframeEl.setStyle('width', '99%');
+				this.iframeEl.setStyles({
+					'height': this.contentWrapperEl.offsetHeight
+				});
+				this.iframeEl.setStyle('width', '100%');
+				this.iframeEl.setStyles({
+					'height': this.contentWrapperEl.offsetHeight
+				});;					
 			}
 		}
 		this.fireEvent('onResize', this.windowEl);
@@ -3891,6 +3902,7 @@ MochaUI.extend({
 				if (el.hasClass('panel')){
 					var currentInstance = instances.get(el.id);
 
+
 					// Are any next siblings Expanded?
 					areAnyNextSiblingsExpanded = function(el){
 						var test;
@@ -4095,7 +4107,6 @@ function addResizeRight(element, min, max){
 			MochaUI.rWidth();
 			if (Browser.Engine.trident4){
 				element.getChildren().each(function(el){
-
 					var width = $(element).getStyle('width').toInt();
 					width -= el.getStyle('border-right').toInt();
 					width -= el.getStyle('border-left').toInt();
@@ -4490,7 +4501,6 @@ MochaUI.Dock = new Class({
 					}
 					else {
 						MochaUI.focusWindow(windowEl);
-
 					}
 					return;
 				}
