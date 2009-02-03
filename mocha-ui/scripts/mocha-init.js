@@ -103,25 +103,6 @@ initializeWindows = function(){
 			MochaUI.youtubeWindow();
 		});
 	}
-
-	MochaUI.slideshareWindow = function(){
-		new MochaUI.Window({
-			id: 'slideshare',
-			title: 'Slideshare in Iframe',
-			loadMethod: 'iframe',
-			contentURL: 'pages/slideshare.html',
-			width: 415,
-			height: 355,
-			resizeLimit:  {'x': [330, 2500], 'y': [250, 2000]},
-			contentBgColor: '#000'
-		});
-	}
-	if ($('slideshareLinkCheck')) {
-		$('slideshareLinkCheck').addEvent('click', function(e){
-		new Event(e).stop();
-			MochaUI.slideshareWindow();
-		});
-	}
 	
 	MochaUI.clockWindow = function(){
 		new MochaUI.Window({
