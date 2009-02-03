@@ -38,7 +38,6 @@ var MochaUI = new Hash({
 		windowsVisible: true          // Ctrl-Alt-Q to toggle window visibility
 	},	
 	ieSupport:  'excanvas',   // Makes it easier to switch between Excanvas and Moocanvas for testing
-	focusingWindow: 'false',
 	/*
 	
 	Function: updateContent
@@ -454,13 +453,6 @@ var MochaUI = new Hash({
 	},
 	focusWindow: function(windowEl, fireEvent){
 
-		// This is used with blurAll
-		MochaUI.focusingWindow = 'true';
-		var windowClicked = function(){
-			MochaUI.focusingWindow = 'false';
-		};		
-		windowClicked.delay(170, this);
-
 		// Only focus when needed
 		if ($$('.mocha').length == 0) return;
 		if (windowEl != $(windowEl) || windowEl.hasClass('isFocused')) return;
@@ -512,17 +504,15 @@ var MochaUI = new Hash({
 		}.bind(this));
 		return this.windowWithHighestZindex;
 	},
-	blurAll: function(){
-		if (MochaUI.focusingWindow == 'false') {
-			$$('.mocha').each(function(windowEl){
-				var instances =  MochaUI.Windows.instances;
-				var currentInstance = instances.get(windowEl.id);
-				if (currentInstance.options.type != 'modal' && currentInstance.options.type != 'modal2'){
-					windowEl.removeClass('isFocused');
-				}
-			});
-			$$('div.dockTab').removeClass('activeDockTab');
-		}
+	blurAll: function(){		
+		$$('.mocha').each(function(windowEl){
+			var instances =  MochaUI.Windows.instances;
+			var currentInstance = instances.get(windowEl.id);
+			if (currentInstance.options.type != 'modal' && currentInstance.options.type != 'modal2'){
+				windowEl.removeClass('isFocused');
+			}
+		});
+		$$('div.dockTab').removeClass('activeDockTab');	
 	},
 	roundedRect: function(ctx, x, y, width, height, radius, rgb, a){
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
@@ -703,7 +693,7 @@ document.addEvent('keydown', function(event){
 
 // Blur all windows if user clicks anywhere else on the page
 document.addEvent('mousedown', function(event){
-	MochaUI.blurAll.delay(50);
+	MochaUI.blurAll();
 });
 
 window.addEvent('domready', function(){
@@ -1318,7 +1308,6 @@ MochaUI.Window = new Class({
 					}
 				}.bind(this)
 			});
-
 		}
 
 		if (this.options.type == 'modal' || this.options.type == 'modal2') {
@@ -1399,7 +1388,8 @@ MochaUI.Window = new Class({
 		}
 
 		if (this.options.type == 'window'){
-			windowEl.addEvent('mousedown', function() {
+			windowEl.addEvent('mousedown', function(e) {
+				new Event(e).stop();
 				MochaUI.focusWindow(windowEl);
 			}.bind(this));
 		}
@@ -3580,7 +3570,6 @@ MochaUI.Panel = new Class({
 
 		$extend(this, {
 			timestamp: $time(),
-
 			isCollapsed: false, // This is probably redundant since we can check for the class
 			oldHeight: 0,
 			partner: null

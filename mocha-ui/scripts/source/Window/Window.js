@@ -678,7 +678,8 @@ MochaUI.Window = new Class({
 		}
 
 		if (this.options.type == 'window'){
-			windowEl.addEvent('mousedown', function() {
+			windowEl.addEvent('mousedown', function(e) {
+				new Event(e).stop();
 				MochaUI.focusWindow(windowEl);
 			}.bind(this));
 		}
