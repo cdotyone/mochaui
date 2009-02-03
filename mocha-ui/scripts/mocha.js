@@ -1457,15 +1457,26 @@ MochaUI.Window = new Class({
 					MochaUI.focusWindow(windowEl);
 					$('windowUnderlay').setStyle('display','block');
 				}
-				if ( this.iframeEl )
-					this.iframeEl.setStyle('visibility', 'hidden');
+				if (this.iframeEl) {
+					if (!Browser.Engine.trident) {
+						this.iframeEl.setStyle('visibility', 'hidden');
+					}
+					else {
+						this.iframeEl.setStyle('display', 'none');
+					}
+				}	
 			}.bind(this),
 			onComplete: function() {
 				if (this.options.type != 'modal' && this.options.type != 'modal2') {
 					$('windowUnderlay').setStyle('display', 'none');
 				}
 				if ( this.iframeEl ){
-					this.iframeEl.setStyle('visibility', 'visible');
+					if (!Browser.Engine.trident) {
+						this.iframeEl.setStyle('visibility', 'visible');
+					}
+					else {
+						this.iframeEl.setStyle('display', 'block');
+					}
 				}
 				// Store new position in options.
 				this.saveValues();
@@ -3502,6 +3513,7 @@ Options:
 	footerData - (hash) Data to send with the URL. Defaults to null.
 	height - (number) Height of content area.
 	addClass - (string) Add a class to the panel.
+
 	scrollbars - (boolean)
 	padding - (object)
 	panelBackground - CSS background property for the panel.
@@ -4527,13 +4539,19 @@ MochaUI.Dock = new Class({
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
 		if ( currentInstance.iframeEl ) {
-			currentInstance.iframeEl.setStyle('visibility', 'hidden');
+			// Some elements are still visible in IE8 in the iframe when the iframe's visibility is set to hidden.
+			if (!Browser.Engine.trident) {
+				currentInstance.iframeEl.setStyle('visibility', 'hidden');
+			}
+			else {
+				currentInstance.iframeEl.setStyle('display', 'none');
+			}
 		}
 
 		// Hide window and add to dock	
 		currentInstance.contentBorderEl.setStyle('visibility', 'hidden');
 		if(currentInstance.toolbarWrapperEl){		
-			currentInstance.toolbarWrapperEl.setStyle('visibility', 'hidden');
+			currentInstance.toolbarWrapperEl.setStyle('display', 'none');
 		}
 		windowEl.setStyle('visibility', 'hidden');
 
@@ -4582,12 +4600,17 @@ MochaUI.Dock = new Class({
 		windowEl.setStyle('visibility', 'visible');
 		currentInstance.contentBorderEl.setStyle('visibility', 'visible');
 		if(currentInstance.toolbarWrapperEl){
-			currentInstance.toolbarWrapperEl.setStyle('visibility', 'visible');
+			currentInstance.toolbarWrapperEl.setStyle('display', 'block');
 		}
 
 		// Show iframe
 		if ( currentInstance.iframeEl ) {
-			currentInstance.iframeEl.setStyle('visibility', 'visible');
+			if (!Browser.Engine.trident) {
+				currentInstance.iframeEl.setStyle('visibility', 'visible');
+			}
+			else {
+				currentInstance.iframeEl.setStyle('display', 'block');
+			}
 		}
 
 		currentInstance.isMinimized = false;
