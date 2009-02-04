@@ -302,6 +302,51 @@ var MochaUI = new Hash({
 	},
 	/*
 
+	Function: closePanel
+		Destroys/removes a panel.
+
+	Syntax:
+	(start code)
+		MochaUI.closePanel();
+	(end)
+
+	Arguments: 
+		windowEl - the ID of the panel to be closed
+
+	Returns:
+		true - the panel was closed
+		false - the panel was not closed
+
+	*/	
+	closePanel: function(panelEl){ /* Not implemented fully yet */
+		var instances = MochaUI.Panels.instances;
+		var currentInstance = instances.get(panelEl.id);
+		if (panelEl != $(panelEl) || currentInstance.isClosing) return;
+			
+		currentInstance.isClosing = true;		
+		
+		if (Browser.Engine.trident) {
+			currentInstance.panelHeaderEl.dispose();
+			panelEl.dispose();
+			if (currentInstance.handleEl) {
+				currentInstance.handleEl.dispose();
+			}			
+		}
+		else {
+			currentInstance.panelHeaderEl.destroy();
+			panelEl.destroy();
+			if (currentInstance.handleEl) {
+				currentInstance.handleEl.destroy();
+			}			
+		}
+		if (MochaUI.Desktop) {
+			MochaUI.Desktop.resizePanels();
+		}	
+		instances.erase(currentInstance.options.id);
+		return true;		
+	},	
+	/*
+
 	Function: closeWindow
 		Closes a window.
 
@@ -330,7 +375,7 @@ var MochaUI = new Hash({
 		if (currentInstance.check) currentInstance.check.destroy();
 
 		if ((currentInstance.options.type == 'modal' || currentInstance.options.type == 'modal2') && Browser.Engine.trident4){
-				$('modalFix').setStyle('display', 'none');
+			$('modalFix').setStyle('display', 'none');
 		}
 		
 		if (MochaUI.options.useEffects == false){			
