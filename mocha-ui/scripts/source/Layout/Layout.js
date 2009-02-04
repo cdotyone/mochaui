@@ -1060,12 +1060,23 @@ MochaUI.extend({
 		var currentInstance = instances.get(panel.id);
 		var contentWrapperEl = currentInstance.contentWrapperEl;
 
-		if (currentInstance.iframeEl){
+		if (currentInstance.iframeEl) {
 			currentInstance.iframeEl.setStyles({
 				'height': contentWrapperEl.getStyle('height'),
 				'width': contentWrapperEl.offsetWidth - contentWrapperEl.getStyle('border-left').toInt() - contentWrapperEl.getStyle('border-right').toInt()
 			});
-		}
+			
+			/*
+			if (Browser.Engine.trident) {			
+				The following hack is to get IE8 Standards Mode to properly resize an iframe
+				when only the vertical dimension is changed.
+				var width = currentInstance.iframeEl.getStyle('width').toInt();
+				currentInstance.iframeEl.setStyle('width', width - 1);
+				currentInstance.iframeEl.setStyle('width', width);
+			}
+			*/
+		}				
+		
 	},
 	// Remaining Width
 	rWidth: function(){	
@@ -1230,12 +1241,14 @@ function addResizeBottom(element){
 			if (currentInstance.iframeEl) {
 				if (!Browser.Engine.trident) {
 					currentInstance.iframeEl.setStyle('visibility', 'hidden');
+					partner.getElements('iframe').setStyle('visibility','hidden');
 				}
 				else {
 					currentInstance.iframeEl.setStyle('display', 'none');
+					partner.getElements('iframe').setStyle('display','none');
 				}
 			}
-			partner.getElements('iframe').setStyle('visibility','hidden');
+			
 		}.bind(this),
 		onDrag: function(){
 			partnerHeight = partnerOriginalHeight + (this.originalHeight - element.getStyle('height').toInt());
@@ -1251,18 +1264,19 @@ function addResizeBottom(element){
 			if (currentInstance.iframeEl) {
 				if (!Browser.Engine.trident) {
 					currentInstance.iframeEl.setStyle('visibility', 'visible');
+					partner.getElements('iframe').setStyle('visibility','visible');
 				}
 				else {
 					currentInstance.iframeEl.setStyle('display', 'block');
+					partner.getElements('iframe').setStyle('display','block');
 					// The following hack is to get IE8 Standards Mode to properly resize an iframe
 					// when only the vertical dimension is changed.
 					var width = currentInstance.iframeEl.getStyle('width').toInt();
 					currentInstance.iframeEl.setStyle('width', width - 1);
 					MochaUI.rWidth();
-					currentInstance.iframeEl.setStyle('width', width);				
+					currentInstance.iframeEl.setStyle('width', width);									
 				}
-			}
-			partner.getElements('iframe').setStyle('visibility','visible');
+			}			
 			currentInstance.fireEvent('onResize');
 		}.bind(this)
 	});
