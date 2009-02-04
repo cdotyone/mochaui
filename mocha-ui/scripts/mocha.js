@@ -1619,7 +1619,7 @@ MochaUI.Window = new Class({
 			}
 			else {
 				this.iframeEl.setStyle('display', 'block');
-				// The following hack is to get IE8 Standards Mode to properly resize an iframe
+				// The following hack is to get IE8 RC1 IE8 Standards Mode to properly resize an iframe
 				// when only the vertical dimension is changed.
 				this.iframeEl.setStyle('width', '99%');
 				this.iframeEl.setStyle('height', this.contentWrapperEl.offsetHeight);
@@ -2658,6 +2658,7 @@ See Also:
 */
 
 MochaUI.extend({
+
 	NewWindowsFromHTML: function(){
 		$$('div.mocha').each(function(el) {
 			// Get the window title and destroy that element, so it does not end up in window content
@@ -3903,6 +3904,7 @@ MochaUI.extend({
 							var siblingInstance = instances.get(sibling.id);
 							if (siblingInstance.isCollapsed == false){
 								test = true;
+
 							}
 						}.bind(this));
 						return test;
@@ -4030,10 +4032,23 @@ MochaUI.extend({
 		var contentWrapperEl = currentInstance.contentWrapperEl;
 
 		if (currentInstance.iframeEl) {
-			currentInstance.iframeEl.setStyles({
-				'height': contentWrapperEl.getStyle('height'),
-				'width': contentWrapperEl.offsetWidth - contentWrapperEl.getStyle('border-left').toInt() - contentWrapperEl.getStyle('border-right').toInt()
-			});
+			if (!Browser.Engine.trident) {
+				currentInstance.iframeEl.setStyles({
+					'height': contentWrapperEl.getStyle('height'),
+					'width': contentWrapperEl.offsetWidth - contentWrapperEl.getStyle('border-left').toInt() - contentWrapperEl.getStyle('border-right').toInt()
+				});
+			}
+			else {
+				// The following hack is to get IE8 RC1 IE8 Standards Mode to properly resize an iframe
+				// when only the vertical dimension is changed.
+				currentInstance.iframeEl.setStyles({
+					'height': contentWrapperEl.getStyle('height'),
+					'width': contentWrapperEl.offsetWidth - contentWrapperEl.getStyle('border-left').toInt() - contentWrapperEl.getStyle('border-right').toInt() - 1
+				});
+				currentInstance.iframeEl.setStyles({
+					'width': contentWrapperEl.offsetWidth - contentWrapperEl.getStyle('border-left').toInt() - contentWrapperEl.getStyle('border-right').toInt()
+				});			
+			}			
 		}				
 		
 	},
@@ -4733,6 +4748,7 @@ MochaUI.extend({
 		});
 		
 	},
+
 	windowUnload: function(){
 		if ($$('div.mocha').length == 0 && this.myChain){
 			this.myChain.callChain();

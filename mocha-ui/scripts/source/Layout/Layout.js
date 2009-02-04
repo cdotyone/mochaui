@@ -1061,10 +1061,23 @@ MochaUI.extend({
 		var contentWrapperEl = currentInstance.contentWrapperEl;
 
 		if (currentInstance.iframeEl) {
-			currentInstance.iframeEl.setStyles({
-				'height': contentWrapperEl.getStyle('height'),
-				'width': contentWrapperEl.offsetWidth - contentWrapperEl.getStyle('border-left').toInt() - contentWrapperEl.getStyle('border-right').toInt()
-			});
+			if (!Browser.Engine.trident) {
+				currentInstance.iframeEl.setStyles({
+					'height': contentWrapperEl.getStyle('height'),
+					'width': contentWrapperEl.offsetWidth - contentWrapperEl.getStyle('border-left').toInt() - contentWrapperEl.getStyle('border-right').toInt()
+				});
+			}
+			else {
+				// The following hack is to get IE8 RC1 IE8 Standards Mode to properly resize an iframe
+				// when only the vertical dimension is changed.
+				currentInstance.iframeEl.setStyles({
+					'height': contentWrapperEl.getStyle('height'),
+					'width': contentWrapperEl.offsetWidth - contentWrapperEl.getStyle('border-left').toInt() - contentWrapperEl.getStyle('border-right').toInt() - 1
+				});
+				currentInstance.iframeEl.setStyles({
+					'width': contentWrapperEl.offsetWidth - contentWrapperEl.getStyle('border-left').toInt() - contentWrapperEl.getStyle('border-right').toInt()
+				});			
+			}			
 		}				
 		
 	},
