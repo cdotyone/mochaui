@@ -4034,16 +4034,6 @@ MochaUI.extend({
 				'height': contentWrapperEl.getStyle('height'),
 				'width': contentWrapperEl.offsetWidth - contentWrapperEl.getStyle('border-left').toInt() - contentWrapperEl.getStyle('border-right').toInt()
 			});
-			
-			/*
-			if (Browser.Engine.trident) {			
-				The following hack is to get IE8 Standards Mode to properly resize an iframe
-				when only the vertical dimension is changed.
-				var width = currentInstance.iframeEl.getStyle('width').toInt();
-				currentInstance.iframeEl.setStyle('width', width - 1);
-				currentInstance.iframeEl.setStyle('width', width);
-			}
-			*/
 		}				
 		
 	},
