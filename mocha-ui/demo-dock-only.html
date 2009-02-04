@@ -2,56 +2,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=8" />
 
 	<title>Mootools MochaUI - Fixed Width with Dock</title>
 
 	<link rel="stylesheet" href="css/content.css" type="text/css" />
 	<link rel="stylesheet" href="css/ui.css" type="text/css" />
-	<script type="text/javascript" src="scripts/mootools-1.2-core.js"></script>
-	<script type="text/javascript" src="scripts/mootools-1.2-more.js"></script>
-	<!--[if IE]>
-		<script type="text/javascript" src="scripts/excanvas_r43.js"></script>
-	<![endif]-->	
-	<script type="text/javascript" src="scripts/source/Utilities/mocha.js.php"></script>
 
-	<!-- <script type="text/javascript" src="scripts/mocha.js" charset="utf-8"></script> -->
-
-	<script type="text/javascript">
+<style>
 	
-	MochaUI.aboutWindow = function(){
-		new MochaUI.Window({
-			id: 'about',
-			title: 'MochaUI',
-			loadMethod: 'xhr',
-			contentURL: 'pages/about.html',
-			type: 'modal2',
-			width: 350,
-			height: 195,
-			contentBgColor: '#e5e5e5 url(images/logo2.gif) left 3px no-repeat',
-			padding: { top: 43, right: 12, bottom: 10, left: 12 },
-			scrollbars:  false
-		});
-	}	
-
-	window.addEvent('load', function(){
-		MochaUI.Desktop = new MochaUI.Desktop();
-		MochaUI.Dock = new MochaUI.Dock({
-			dockPosition: 'bottom'
-		});
-		MochaUI.Modal = new MochaUI.Modal();
-		MochaUI.NewWindowsFromHTML = new MochaUI.NewWindowsFromHTML();
-
-		$('aboutLink').addEvent('click', function(e){
-			new Event(e).stop();
-			MochaUI.aboutWindow();
-		});
-
-	});
-	</script>
-
-
-<style>	
-
 #desktop {
 	visibility: visible;
 }
@@ -97,7 +56,49 @@
 	border-bottom: 1px solid #999;
 }
 
-</style>
+</style>	
+	
+	<script type="text/javascript" src="scripts/mootools-1.2-core.js"></script>
+	<script type="text/javascript" src="scripts/mootools-1.2-more.js"></script>
+	<!--[if IE]>
+		<script type="text/javascript" src="scripts/excanvas_r43.js"></script>
+	<![endif]-->	
+	<script type="text/javascript" src="scripts/source/Utilities/mocha.js.php"></script>
+
+	<!-- <script type="text/javascript" src="scripts/mocha.js" charset="utf-8"></script> -->
+
+	<script type="text/javascript">
+	
+	MochaUI.aboutWindow = function(){
+		new MochaUI.Window({
+			id: 'about',
+			title: 'MochaUI',
+			loadMethod: 'xhr',
+			contentURL: 'pages/about.html',
+			type: 'modal2',
+			width: 350,
+			height: 195,
+			contentBgColor: '#e5e5e5 url(images/logo2.gif) left 3px no-repeat',
+			padding: { top: 43, right: 12, bottom: 10, left: 12 },
+			scrollbars: false
+		});
+	}	
+
+	window.addEvent('load', function(){
+		MochaUI.Desktop = new MochaUI.Desktop();
+		MochaUI.Dock = new MochaUI.Dock({
+			dockPosition: 'bottom'
+		});
+		MochaUI.Modal = new MochaUI.Modal();
+		MochaUI.NewWindowsFromHTML = new MochaUI.NewWindowsFromHTML();
+
+		$('aboutLink').addEvent('click', function(e){
+			new Event(e).stop();
+			MochaUI.aboutWindow();
+		});
+
+	});
+	</script>
 
 </head>
 <body>

@@ -3079,7 +3079,6 @@ MochaUI.Desktop = new Class({
 
 		// Set pageWrapper height so the dock doesn't cover the pageWrapper scrollbars.
 		if (this.pageWrapper) {
-
 			var dockOffset = MochaUI.dockVisible ? dockWrapper.offsetHeight : 0;
 			var pageWrapperHeight = windowDimensions.height;
 			pageWrapperHeight -= this.pageWrapper.getStyle('border-top').toInt();
@@ -3904,7 +3903,6 @@ MochaUI.extend({
 							var siblingInstance = instances.get(sibling.id);
 							if (siblingInstance.isCollapsed == false){
 								test = true;
-
 							}
 						}.bind(this));
 						return test;
@@ -4102,6 +4100,7 @@ function addResizeRight(element, min, max){
 			'mouseup': function(){
 				handle.releaseCapture();
 			}
+
 		});
 	}
 	currentInstance.resize = element.makeResizable({
@@ -4281,13 +4280,6 @@ MochaUI.options.extend({
 		dock:        'dock'
 });
 
-// Used by Desktop.js before MochaUI.Dock is initialized.
-window.addEvent('domready', function(){	
-	if ($('dockWrapper')) {
-		MochaUI.dockVisible = true;
-	}
-});
-
 MochaUI.extend({
 	/*
 
@@ -4324,6 +4316,7 @@ MochaUI.Dock = new Class({
 		if (!MochaUI.Desktop) return;
 		this.setOptions(options);
 		
+		MochaUI.dockVisible = true;
 		this.dockWrapper   = $(MochaUI.options.dockWrapper);
 		this.dock          = $(MochaUI.options.dock);
 		this.autoHideEvent = null;		
@@ -4748,7 +4741,6 @@ MochaUI.extend({
 		});
 		
 	},
-
 	windowUnload: function(){
 		if ($$('div.mocha').length == 0 && this.myChain){
 			this.myChain.callChain();

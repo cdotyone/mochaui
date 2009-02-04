@@ -24,13 +24,6 @@ MochaUI.options.extend({
 		dock:        'dock'
 });
 
-// Used by Desktop.js before MochaUI.Dock is initialized.
-window.addEvent('domready', function(){	
-	if ($('dockWrapper')) {
-		MochaUI.dockVisible = true;
-	}
-});
-
 MochaUI.extend({
 	/*
 
@@ -67,6 +60,7 @@ MochaUI.Dock = new Class({
 		if (!MochaUI.Desktop) return;
 		this.setOptions(options);
 		
+		MochaUI.dockVisible = true;
 		this.dockWrapper   = $(MochaUI.options.dockWrapper);
 		this.dock          = $(MochaUI.options.dock);
 		this.autoHideEvent = null;		
