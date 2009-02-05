@@ -53,7 +53,8 @@ Options:
 	collapsible - (boolean) Defaults to true.
 	minimizable - (boolean) Requires MochaUI.Desktop and MochaUI.Dock. Defaults to true if dependenices are met. 
 	maximizable - (boolean) Requires MochaUI.Desktop. Defaults to true if dependenices are met.
-	closable - (boolean) Defaults to true. 
+	closable - (boolean) Defaults to true.
+	modalOverlayClose - (boolean) Whether or not you can close a modal by clicking on the modal overlay. Defaults to true.
 	draggable - (boolean) Defaults to false for modals; otherwise true.
 	draggableGrid - (false or number) Distance in pixels for snap-to-grid dragging. Defaults to false. 
 	draggableLimit - (false or number) An object with x and y properties used to limit the movement of the Window. Defaults to false.
@@ -199,6 +200,9 @@ MochaUI.Windows.windowOptions = {
 	minimizable:       true,
 	maximizable:       true,
 	closable:          true,
+
+	// Modal Options	
+	modalOverlayClose: true,
 
 	// Draggable
 	draggable:         null,

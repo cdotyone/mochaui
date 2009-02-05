@@ -41,9 +41,11 @@ MochaUI.Modal = new Class({
 			}
 		}).inject(document.body);
 		
-		modalOverlay.addEvent('click', function(e){
-			MochaUI.closeWindow(MochaUI.currentModal);
-		});
+		if (this.options.modalOverlayClose) {
+			modalOverlay.addEvent('click', function(e){
+				MochaUI.closeWindow(MochaUI.currentModal);
+			});
+		}
 		
 		if (Browser.Engine.trident4){
 			var modalFix = new Element('iframe', {
