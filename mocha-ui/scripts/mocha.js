@@ -1386,7 +1386,9 @@ MochaUI.Window = new Class({
 
 		if (this.options.type == 'window'){
 			windowEl.addEvent('mousedown', function(e) {
-				new Event(e).stop();
+				if (Browser.Engine.trident) {
+					new Event(e).stop();
+				}
 				MochaUI.focusWindow(windowEl);
 				if (windowEl.getStyle('top').toInt() < -this.options.shadowBlur) {
 					windowEl.setStyle('top', -this.options.shadowBlur);
@@ -3679,6 +3681,7 @@ MochaUI.Panel = new Class({
 			
 			this.footerEl = new Element('div', {
 				'id': this.options.id + '_panelFooter',
+
 				'class': 'panel-footer'
 			}).inject(this.footerWrapperEl);
 
@@ -4911,6 +4914,7 @@ MochaUI.extend({
 				function(){
 					$$('div.mocha').each(function(el) {
 						this.closeWindow(el);
+
 					}.bind(this));
 				}.bind(this),
 				function(){
