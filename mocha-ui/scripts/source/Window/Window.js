@@ -684,6 +684,9 @@ MochaUI.Window = new Class({
 			windowEl.addEvent('mousedown', function(e) {
 				new Event(e).stop();
 				MochaUI.focusWindow(windowEl);
+				if (windowEl.getStyle('top').toInt() < -this.options.shadowBlur) {
+					windowEl.setStyle('top', -this.options.shadowBlur);
+				}	
 			}.bind(this));
 		}
 

@@ -1205,7 +1205,6 @@ MochaUI.Window = new Class({
 			this.setMochaControlsWidth();
 		}		
 
-
 		// Add content to window.
 		MochaUI.updateContent({
 			'element':  this.windowEl,
@@ -1385,6 +1384,9 @@ MochaUI.Window = new Class({
 			windowEl.addEvent('mousedown', function(e) {
 				new Event(e).stop();
 				MochaUI.focusWindow(windowEl);
+				if (windowEl.getStyle('top').toInt() < -this.options.shadowBlur) {
+					windowEl.setStyle('top', -this.options.shadowBlur);
+				}	
 			}.bind(this));
 		}
 
@@ -4197,7 +4199,6 @@ function addResizeBottom(element){
 				handle.setCapture();
 			},	
 			'mouseup': function(){
-
 				handle.releaseCapture();
 			}
 		});
