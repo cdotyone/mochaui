@@ -555,12 +555,12 @@ var MochaUI = new Hash({
 		var dimensions = options.container.getCoordinates();
 				
 		var windowPosTop = window.getScroll().y + (window.getSize().y * .5) - (windowEl.offsetHeight * .5);
-		if (windowPosTop < 0) {
-			windowPosTop = 0;
+		if (windowPosTop < -currentInstance.options.shadowBlur) {
+			windowPosTop = -currentInstance.options.shadowBlur;
 		}
 		var windowPosLeft =	(dimensions.width * .5) - (windowEl.offsetWidth * .5);
-		if (windowPosLeft < 0) {
-			windowPosLeft = 0;
+		if (windowPosLeft < -currentInstance.options.shadowBlur) {
+			windowPosLeft = -currentInstance.options.shadowBlur;
 		}
 		if (MochaUI.options.useEffects == true){
 			currentInstance.morph.start({

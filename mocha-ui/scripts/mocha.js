@@ -555,12 +555,12 @@ var MochaUI = new Hash({
 		var dimensions = options.container.getCoordinates();
 				
 		var windowPosTop = window.getScroll().y + (window.getSize().y * .5) - (windowEl.offsetHeight * .5);
-		if (windowPosTop < 0) {
-			windowPosTop = 0;
+		if (windowPosTop < -currentInstance.options.shadowBlur) {
+			windowPosTop = -currentInstance.options.shadowBlur;
 		}
 		var windowPosLeft =	(dimensions.width * .5) - (windowEl.offsetWidth * .5);
-		if (windowPosLeft < 0) {
-			windowPosLeft = 0;
+		if (windowPosLeft < -currentInstance.options.shadowBlur) {
+			windowPosLeft = -currentInstance.options.shadowBlur;
 		}
 		if (MochaUI.options.useEffects == true){
 			currentInstance.morph.start({
@@ -705,7 +705,6 @@ Script: Window.js
 
 Copyright:
 	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.
-
 
 License:
 	MIT-style license.	
@@ -1206,6 +1205,7 @@ MochaUI.Window = new Class({
 			this.setMochaControlsWidth();
 		}		
 
+
 		// Add content to window.
 		MochaUI.updateContent({
 			'element':  this.windowEl,
@@ -1262,10 +1262,12 @@ MochaUI.Window = new Class({
 
 		if (!this.options.y) {
 			if (MochaUI.Desktop && MochaUI.Desktop.desktop) {
-				var y = (dimensions.y * .5) - (this.windowEl.offsetHeight * .5);			
+				var y = (dimensions.y * .5) - (this.windowEl.offsetHeight * .5);
+				if (y < -this.options.shadowBlur) y = -this.options.shadowBlur;			
 			}
 			else {
 				var y = window.getScroll().y + (window.getSize().y * .5) - (this.windowEl.offsetHeight * .5);
+				if (y < -this.options.shadowBlur) y = -this.options.shadowBlur;
 			}
 		}
 		else {
@@ -1274,6 +1276,7 @@ MochaUI.Window = new Class({
 
 		if (!this.options.x) {
 			var x =	(dimensions.x * .5) - (this.windowEl.offsetWidth * .5);
+			if (x < -this.options.shadowBlur) x = -this.options.shadowBlur;
 		}
 		else {
 			var x = this.options.x - this.options.shadowBlur;
@@ -1473,7 +1476,6 @@ MochaUI.Window = new Class({
 				this.saveValues();
 			}.bind(this)
 		});
-
 	},
 	/*
 
@@ -2659,7 +2661,6 @@ See Also:
 */
 
 MochaUI.extend({
-
 	NewWindowsFromHTML: function(){
 		$$('div.mocha').each(function(el) {
 			// Get the window title and destroy that element, so it does not end up in window content
@@ -4196,6 +4197,7 @@ function addResizeBottom(element){
 				handle.setCapture();
 			},	
 			'mouseup': function(){
+
 				handle.releaseCapture();
 			}
 		});
@@ -4274,7 +4276,7 @@ MochaUI.extend({
 		false - the column was not closed
 
 	*/	
-	closeColumn: function(columnEl){ /* Not implemented fully yet */
+	closeColumn: function(columnEl){
 		var instances = MochaUI.Columns.instances;
 		var currentInstance = instances.get(columnEl.id);
 		if (columnEl != $(columnEl) || currentInstance.isClosing) return;
@@ -4444,7 +4446,6 @@ MochaUI.Dock = new Class({
 
 		// Add check mark to menu if link exists in menu
 		if ($('dockLinkCheck')){
-
 			this.sidebarCheck = new Element('div', {
 				'class': 'check',
 				'id': 'dock_check'

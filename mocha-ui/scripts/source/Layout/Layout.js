@@ -1303,7 +1303,7 @@ MochaUI.extend({
 		false - the column was not closed
 
 	*/	
-	closeColumn: function(columnEl){ /* Not implemented fully yet */
+	closeColumn: function(columnEl){
 		var instances = MochaUI.Columns.instances;
 		var currentInstance = instances.get(columnEl.id);
 		if (columnEl != $(columnEl) || currentInstance.isClosing) return;

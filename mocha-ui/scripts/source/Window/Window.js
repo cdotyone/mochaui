@@ -561,10 +561,12 @@ MochaUI.Window = new Class({
 
 		if (!this.options.y) {
 			if (MochaUI.Desktop && MochaUI.Desktop.desktop) {
-				var y = (dimensions.y * .5) - (this.windowEl.offsetHeight * .5);			
+				var y = (dimensions.y * .5) - (this.windowEl.offsetHeight * .5);
+				if (y < -this.options.shadowBlur) y = -this.options.shadowBlur;			
 			}
 			else {
 				var y = window.getScroll().y + (window.getSize().y * .5) - (this.windowEl.offsetHeight * .5);
+				if (y < -this.options.shadowBlur) y = -this.options.shadowBlur;
 			}
 		}
 		else {
@@ -573,6 +575,7 @@ MochaUI.Window = new Class({
 
 		if (!this.options.x) {
 			var x =	(dimensions.x * .5) - (this.windowEl.offsetWidth * .5);
+			if (x < -this.options.shadowBlur) x = -this.options.shadowBlur;
 		}
 		else {
 			var x = this.options.x - this.options.shadowBlur;
