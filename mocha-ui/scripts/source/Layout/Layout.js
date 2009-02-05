@@ -1283,3 +1283,100 @@ function addResizeBottom(element){
 		}.bind(this)
 	});
 }
+
+MochaUI.extend({
+	/*
+
+	Function: closeColumn
+		Destroys/removes a column.
+
+	Syntax:
+	(start code)
+		MochaUI.closeColumn();
+	(end)
+
+	Arguments: 
+		columnEl - the ID of the column to be closed
+
+	Returns:
+		true - the column was closed
+		false - the column was not closed
+
+	*/	
+	closeColumn: function(columnEl){ /* Not implemented fully yet */
+		var instances = MochaUI.Columns.instances;
+		var currentInstance = instances.get(columnEl.id);
+		if (columnEl != $(columnEl) || currentInstance.isClosing) return;
+			
+		currentInstance.isClosing = true;
+		
+		// Destroy all the panels in the column.
+		var panels = columnEl.getChildren('.panel');		
+		panels.each(function(panel){
+			MochaUI.closePanel($(panel.id));
+		}.bind(this));				
+		
+		if (Browser.Engine.trident) {
+			columnEl.dispose();
+			if (currentInstance.handleEl != null) {
+				currentInstance.handleEl.dispose();
+			}			
+		}
+		else {
+			columnEl.destroy();
+			if (currentInstance.handleEl != null) {
+				currentInstance.handleEl.destroy();
+			}			
+		}
+		if (MochaUI.Desktop) {
+			MochaUI.Desktop.resizePanels();
+		}	
+		instances.erase(currentInstance.options.id);
+		return true;		
+	},
+	/*
+
+	Function: closePanel
+		Destroys/removes a panel.
+
+	Syntax:
+	(start code)
+		MochaUI.closePanel();
+	(end)
+
+	Arguments: 
+		panelEl - the ID of the panel to be closed
+
+	Returns:
+		true - the panel was closed
+		false - the panel was not closed
+
+	*/	
+	closePanel: function(panelEl){
+		var instances = MochaUI.Panels.instances;
+		var currentInstance = instances.get(panelEl.id);
+		if (panelEl != $(panelEl) || currentInstance.isClosing) return;
+			
+		currentInstance.isClosing = true;		
+		
+		if (Browser.Engine.trident) {
+			currentInstance.panelHeaderEl.dispose();
+			panelEl.dispose();
+			if (currentInstance.handleEl != null) {
+				currentInstance.handleEl.dispose();
+			}			
+		}
+		else {
+			currentInstance.panelHeaderEl.destroy();
+			panelEl.destroy();
+			if (currentInstance.handleEl != null) {
+				currentInstance.handleEl.destroy();
+			}			
+		}
+		if (MochaUI.Desktop) {
+			MochaUI.Desktop.resizePanels();
+		}	
+		instances.erase(currentInstance.options.id);
+		return true;		
+	}
+});
