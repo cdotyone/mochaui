@@ -219,6 +219,12 @@ var MochaUI = new Hash({
 				} else {
 					contentContainer.set('html', options.content);
 				}
+				if (recipient == 'window'){
+					currentInstance.hideSpinner(spinnerEl);
+				}
+				else if (recipient == 'panel' && $('spinner')){
+					$('spinner').setStyle('visibility', 'hidden');
+				}				
 				currentInstance.fireEvent('onContentLoaded', element);
 				break;
 		}

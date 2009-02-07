@@ -398,11 +398,7 @@ li.divider {
 }
 
 .pad {
-	position: absolute;
-	top: 0;
-	left: 0;
 	padding: 8px;
-	overflow: hidden;
 }
 
 #mainPanel {
@@ -1013,9 +1009,16 @@ div.mochaToolbarWrapper.bottom {
 	font-weight: bold;
 }
 
+#desktop .label {
+	font-weight: bold;	
+}
+	
+#desktop .formRow {
+	margin: 0 0 8px 0;
+}	
+
 #desktop .formField {
 	float: right;
-	margin: 0 0 8px 0;
 	padding: 0 0 0 0;
 	width: 230px;
 }

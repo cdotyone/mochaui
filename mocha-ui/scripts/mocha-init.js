@@ -664,9 +664,9 @@ window.addEvent('load', function(){ //using load instead of domready for IE8
 
 	new MochaUI.Panel({
 		id: 'panel2',
-		title: 'Panel',
+		title: 'Ajax Form',
 		loadMethod: 'xhr',
-		contentURL: 'pages/lipsum.html',
+		contentURL: 'pages/form.html',
 		column: 'sideColumn1',
 		height: 300
 	});
