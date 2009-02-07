@@ -38,6 +38,8 @@ var MochaUI = new Hash({
 		windowsVisible: true          // Ctrl-Alt-Q to toggle window visibility
 	},	
 	ieSupport:  'excanvas',   // Makes it easier to switch between Excanvas and Moocanvas for testing
+	focusingWindow: 'false',
+
 	/*
 	
 	Function: updateContent
@@ -443,6 +445,13 @@ var MochaUI = new Hash({
 	},
 	focusWindow: function(windowEl, fireEvent){
 
+		// This is used with blurAll
+		MochaUI.focusingWindow = 'true';
+		var windowClicked = function(){
+			MochaUI.focusingWindow = 'false';
+		};
+		windowClicked.delay(170, this);
+		
 		// Only focus when needed
 		if ($$('.mocha').length == 0) return;
 		if (windowEl != $(windowEl) || windowEl.hasClass('isFocused')) return;
@@ -472,7 +481,7 @@ var MochaUI = new Hash({
 		if (MochaUI.Dock && $(MochaUI.options.dock) && currentInstance.options.type == 'window') {
 			MochaUI.Dock.makeActiveTab();
 		}
-		currentInstance.windowEl.addClass('isFocused');
+		windowEl.addClass('isFocused');
 
 		if (fireEvent != false){
 			currentInstance.fireEvent('onFocus', windowEl);
@@ -495,15 +504,15 @@ var MochaUI = new Hash({
 		return this.windowWithHighestZindex;
 	},
 	blurAll: function(){		
-		$$('.mocha').each(function(windowEl){
-			var instances =  MochaUI.Windows.instances;
-			var currentInstance = instances.get(windowEl.id);
-			if (currentInstance.options.type != 'modal' && currentInstance.options.type != 'modal2'){
-				windowEl.removeClass('isFocused');
-			}
-		});
-		$$('div.dockTab').removeClass('activeDockTab');	
-	},
+		if (MochaUI.focusingWindow == 'false') {
+			$$('.mocha').each(function(windowEl){
+				var instances =  MochaUI.Windows.instances;
+				var currentInstance = instances.get(windowEl.id);
+				if (currentInstance.options.type != 'modal' && currentInstance.options.type != 'modal2'){
+					windowEl.removeClass('isFocused');
+				}
+			});
+			$$('div.dockTab').removeClass('activeDockTab');		}	},
 	roundedRect: function(ctx, x, y, width, height, radius, rgb, a){
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
 		ctx.beginPath();
@@ -683,7 +692,7 @@ document.addEvent('keydown', function(event){
 
 // Blur all windows if user clicks anywhere else on the page
 document.addEvent('mousedown', function(event){
-	MochaUI.blurAll();
+	MochaUI.blurAll.delay(50);
 });
 
 window.addEvent('domready', function(){
@@ -3681,7 +3690,6 @@ MochaUI.Panel = new Class({
 			
 			this.footerEl = new Element('div', {
 				'id': this.options.id + '_panelFooter',
-
 				'class': 'panel-footer'
 			}).inject(this.footerWrapperEl);
 
@@ -4914,7 +4922,6 @@ MochaUI.extend({
 				function(){
 					$$('div.mocha').each(function(el) {
 						this.closeWindow(el);
-
 					}.bind(this));
 				}.bind(this),
 				function(){
