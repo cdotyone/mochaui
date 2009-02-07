@@ -97,6 +97,26 @@ dd {
 textarea, input {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;		
+}
+
+.input {
+	padding: 2px 0 2px 3px;
+	border: 1px solid #ABC7D6;	
+}	
+
+.button {
+	font-size: 12px;
+	color: #fff;
+	margin: 0;
+	padding: 2px 5px;
+	border: 1px solid #487db3;
+	background: #69aed1;
+	cursor: pointer;
+	vertical-align: bottom;		
+}
+
+.button:hover {
+	background: #569cbf;	
 }	
 
 /* Code */
@@ -117,7 +137,7 @@ pre {
 /* Dividers */
 
 hr {
-	background-color: #ddd;
+	background-color: #d3d3d3;
 	color: #ccc;
 	height: 1px;
 	border: 0px;

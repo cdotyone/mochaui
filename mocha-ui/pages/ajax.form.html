@@ -1,0 +1,62 @@
+<script type="text/javascript">
+
+window.addEvent('domready', function() {
+	$('myForm').addEvent('submit', function(e) {
+		//Prevents the default submit event from loading a new page.
+		e.stop();
+
+		$('spinner').setStyle('visibility','visible');
+		if ($('postContent')) {
+			$('postContent').setStyle('opacity', 0);
+		}
+		else {
+			$('mainPanel_pad').empty();
+		}
+					
+		//Set the options of the form's Request handler. 
+		//("this" refers to the $('myForm') element).		
+		this.set('send', {
+			onComplete: function(response) { 
+	 			MochaUI.updateContent({
+					'element': $('mainPanel'),
+					'loadMethod': 'html',
+					'content': response,
+					'title': 'Ajax Response',
+					'padding': { top: 8, right: 8, bottom: 8, left: 8 }
+				});
+				$('mainPanel').setStyle('background','#fff');			
+			},
+			onSuccess: function(){
+				$('postContent').setStyle('opacity', 0);
+				new Fx.Morph($('postContent'), {duration: 500} ).start({
+					'opacity': 1
+				});
+			}
+		});
+		//Send the form.
+		this.send();
+	});
+});
+	
+</script>	
+
+<form id="myForm" action="scripts/ajax.form.php" method="post">
+	<div id="form_box">
+		<div class="formRow">
+			<div class="label">First Name:</div>
+			<input type="text" name="first_name" class="input" style="width:150px;" value="John" />
+		</div>
+		<div class="formRow">
+			<div class="label">Last Name:</div>
+			<input type="text" name="last_name" class="input" style="width:150px;" value="Hancock" />
+		</div>
+		<div class="buttonRow">
+			<input type="submit" name="button" id="submitter" class="button" value="Submit" />
+		</div>
+	</div>
+</form>
+
+<hr />
+	
+<p>Publish server response to another panel.</p>	
+	

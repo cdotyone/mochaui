@@ -666,7 +666,7 @@ window.addEvent('load', function(){ //using load instead of domready for IE8
 		id: 'panel2',
 		title: 'Ajax Form',
 		loadMethod: 'xhr',
-		contentURL: 'pages/form.html',
+		contentURL: 'pages/ajax.form.html',
 		column: 'sideColumn1',
 		height: 300
 	});
@@ -677,7 +677,7 @@ window.addEvent('load', function(){ //using load instead of domready for IE8
 		loadMethod: 'xhr',
 		contentURL: 'pages/lipsum.html',
 		column: 'sideColumn1',
-		height: 140,
+		height: 130,
 		footer: true,
 		footerURL: 'pages/toolbox-demo.html'
 	});
