@@ -397,7 +397,9 @@ MochaUI.Window = new Class({
 					MochaUI.centerWindow(this.windowEl);	
 				}
 				setTimeout(MochaUI.focusWindow.pass(this.windowEl, this),10);
-				this.windowEl.shake();
+				if (MochaUI.options.useEffects == true) {
+					this.windowEl.shake();
+				}	
 			}
 			return;
 		}

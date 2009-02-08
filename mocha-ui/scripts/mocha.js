@@ -619,7 +619,30 @@ var MochaUI = new Hash({
 		contentWrapperEl.setStyle('height', contentEl.offsetHeight);
 		contentWrapperEl.setStyle('width', contentEl.offsetWidth);			
 		currentInstance.drawWindow(windowEl);
-	},	
+	},
+	/*
+	  	
+	Function: toggleEffects
+		Turn effects on and off
+
+	*/
+	toggleEffects: function(link){
+		if (MochaUI.options.useEffects == false) {
+			MochaUI.options.useEffects = true;
+			if (link){
+				this.toggleEffectsLink = new Element('div', {
+					'class': 'check',
+					'id': 'toggleEffects_check'
+				}).inject(link);
+			}			
+		}
+		else {
+			MochaUI.options.useEffects = false;
+			if (this.toggleEffectsLink) {
+				this.toggleEffectsLink.destroy();
+			}		
+		}
+	},		
 	/*
 
 	Function: garbageCleanUp
@@ -1177,7 +1200,9 @@ MochaUI.Window = new Class({
 					MochaUI.centerWindow(this.windowEl);	
 				}
 				setTimeout(MochaUI.focusWindow.pass(this.windowEl, this),10);
-				this.windowEl.shake();
+				if (MochaUI.options.useEffects == true) {
+					this.windowEl.shake();
+				}	
 			}
 			return;
 		}

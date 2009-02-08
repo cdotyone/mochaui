@@ -459,6 +459,13 @@ initializeWindows = function(){
 			MochaUI.loadWorkspace();
 		});
 	}
+	
+	if ($('toggleEffectsLinkCheck')){
+		$('toggleEffectsLinkCheck').addEvent('click', function(e){
+			new Event(e).stop();
+			MochaUI.toggleEffects($('toggleEffectsLinkCheck'));			
+		});
+	}	
 
 	// Help	
 	MochaUI.featuresWindow = function(){
@@ -478,98 +485,6 @@ initializeWindows = function(){
 		$('featuresLinkCheck').addEvent('click', function(e){
 			new Event(e).stop();
 			MochaUI.featuresWindow();
-		});
-	}
-
-	MochaUI.faqWindow = function(){
-			new MochaUI.Window({
-				id: 'faq',
-				title: 'FAQ',
-				loadMethod: 'xhr',
-				contentURL: 'pages/faq.html',
-				width: 750,
-				height: 350
-			});
-	}
-	if ($('faqLinkCheck')){
-		$('faqLinkCheck').addEvent('click', function(e){	
-			new Event(e).stop();
-			MochaUI.faqWindow();
-		});
-	}	
-
-	MochaUI.docsWindow = function(){
-			new MochaUI.Window({
-				id: 'docs',
-				title: 'Documentation',
-				loadMethod: 'xhr',
-				contentURL: 'pages/docs.html',
-				width: 750,
-				height: 350,
-				padding: [10,10,10,10,10]
-			});
-	}
-	if ($('docsLinkCheck')){
-		$('docsLinkCheck').addEvent('click', function(e){
-			new Event(e).stop();
-			MochaUI.docsWindow();
-		});
-	}	
-
-	MochaUI.resourcesWindow = function(){
-			new MochaUI.Window({
-				id: 'resources',
-				title: 'Resources',
-				loadMethod: 'xhr',
-				contentURL: 'pages/resources.html',
-				width: 300,
-				height: 275,
-				x: 20,
-				y: 90 
-			});
-	}
-	if ($('resourcesLinkCheck')){
-		$('resourcesLinkCheck').addEvent('click', function(e){
-			new Event(e).stop();
-			MochaUI.resourcesWindow();
-		});
-	}
-
-	MochaUI.helpWindow = function(){
-			new MochaUI.Window({
-				id: 'help',
-				title: 'Support',
-				loadMethod: 'xhr',
-				contentURL: 'pages/support.html',
-				width: 320,
-				height: 320,
-				x: 20,
-				y: 90 
-			});
-	}
-	if ($('helpLinkCheck')){
-		$('helpLinkCheck').addEvent('click', function(e){
-			new Event(e).stop();
-			MochaUI.helpWindow();
-		});
-	}	
-
-	MochaUI.contributeWindow = function(){
-		new MochaUI.Window({
-			id: 'contribute',
-			title: 'Contribute',
-			loadMethod: 'xhr',
-			contentURL: 'pages/contribute.html',
-			width: 320,
-			height: 320,
-			x: 20,
-			y: 90 
-		});
-	}
-	if ($('contributeLinkCheck')){
-		$('contributeLinkCheck').addEvent('click', function(e){
-			new Event(e).stop();
-			MochaUI.contributeWindow();
 		});
 	}
 
