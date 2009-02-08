@@ -28,7 +28,7 @@ body {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
 	line-height: 18px;
-	color: #3f3f3f;	
+	color: #333;	
 }
 
 /* Typography */
@@ -101,9 +101,42 @@ textarea, input {
 
 .input {
 	padding: 2px 0 2px 3px;
-	border: 1px solid #ABC7D6;	
+	border: 1px solid #848484;	
 }	
 
+.button, .button2 {
+	font-size: 12px;
+	font-weight: bold;
+	margin: 0;
+	padding: 3px 6px;
+	border: 1px solid #606060;
+	background: #a3c5ef url(../images/bg-buttons.gif) repeat-x;
+	cursor: pointer;
+	vertical-align: bottom;		
+}
+
+* html .button {
+	padding: 3px 1px;	
+}
+
+* html .button2 {
+	padding: 3px 1px;	
+}	 
+
+.button2 {
+	background-position: 0 -60px;
+}	
+		
+.button:hover {
+	background-position: 0 -30px;	
+}
+
+.button2:hover {
+	background-position: 0 -90px;
+}
+
+/*
+  
 .button {
 	font-size: 12px;
 	color: #fff;
@@ -117,12 +150,15 @@ textarea, input {
 
 .button:hover {
 	background: #569cbf;	
-}	
+} 
+  
+  
+ */	
 
 /* Code */
 
 pre {
-	background-color: #f6f6f6;
+	background-color: #ececea;
 	color: #060;
 	display: block;
 	font-family: 'Courier New', Courier, monospace;

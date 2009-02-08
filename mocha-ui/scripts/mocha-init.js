@@ -433,7 +433,7 @@ initializeWindows = function(){
 			maximizable: false,
 			resizable: false,
 			scrollbars: false,
-			contentBgColor: '#f5f5f5'
+			contentBgColor: '#f5f5f7'
 		});
 	}
 	if ($('builderLinkCheck')){
@@ -592,7 +592,7 @@ window.addEvent('load', function(){ //using load instead of domready for IE8
 		loadMethod: 'xhr',
 		contentURL: 'pages/lipsum.html',
 		column: 'sideColumn1',
-		height: 130,
+		height: 125,
 		footer: true,
 		footerURL: 'pages/toolbox-demo.html'
 	});
