@@ -80,14 +80,25 @@ MochaUI.extend({
 				var left = (x + (col * col_width));
 				var top = (y + (row * col_height));
 
-				instance.windowEl.setStyles({
-					'left': left,
-					'top': top
-				});
-
 				instance.drawWindow(instance.windowEl);
-
+				
 				MochaUI.focusWindow(instance.windowEl);
+				
+				if (MochaUI.options.useEffects == false){
+					instance.windowEl.setStyles({
+						'top': top,
+						'left': left
+					});
+				}
+				else {
+					var tileMorph = new Fx.Morph(instance.windowEl, {
+						'duration': 550
+					});
+					tileMorph.start({
+						'top': top,
+						'left': left
+					});
+				}				
 
 				if (++col === cols) {
 					row++;
