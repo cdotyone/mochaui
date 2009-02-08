@@ -25,7 +25,7 @@ Syntax:
 MochaUI.extend({
 	arrangeTile: function(){
 		var x = 10;
-		var y = 10;
+		var y = 80;
 	
 		var instances =  MochaUI.Windows.instances;
 
