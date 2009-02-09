@@ -96,12 +96,17 @@ body {
 
 /* Toolboxes */
 
-.toolbox, .panel-header-toolbox {
+.toolbox {
 	float: right;
 	margin-top: 3px;
 	padding: 0 5px;
 	height: 24px;
 	overflow: hidden;
+	text-align: right;
+}
+
+.panel-header-toolbox {
+	float: right;
 	text-align: right;
 }
 
@@ -455,7 +460,6 @@ li.divider {
 	overflow: hidden;
 	color: #333;
 }
-
 
 .panel-collapse {
 	background: url(../images/collapse-expand.gif) left top no-repeat;

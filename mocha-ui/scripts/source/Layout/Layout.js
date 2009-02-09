@@ -611,6 +611,9 @@ MochaUI.Panel = new Class({
 		tabsData:         null,
 
 		header:           true,
+		
+		headerToolbox:    false,
+		headerToolboxURL: 'pages/lipsum.html',
 
 		footer:           false,
 		footerURL:        'pages/lipsum.html',
@@ -702,12 +705,11 @@ MochaUI.Panel = new Class({
 				'class': 'panel-footer'
 			}).inject(this.footerWrapperEl);
 
-
 			MochaUI.updateContent({
 				'element':       this.panelEl,
 				'childElement':  this.footerEl,
 				'loadMethod':    'xhr',
-				'data':		 this.options.footerData,
+				'data':	         this.options.footerData,
 				'url':           this.options.footerURL
 			});
 			
@@ -732,16 +734,24 @@ MochaUI.Panel = new Class({
 			}
 		}).inject(this.panelEl, 'before');
 		
-		this.panelHeaderToolboxEl = new Element('div', {
-			'id': this.options.id + '_headerToolbox',
-			'class': 'panel-header-toolbox'
-		}).inject(this.panelHeaderEl);
-
-
 		if (this.options.collapsible) {
 			this.collapseToggleInit();
 		}
-		
+
+		if (this.options.headerToolbox) {
+			this.panelHeaderToolboxEl = new Element('div', {
+				'id': this.options.id + '_headerToolbox',
+				'class': 'panel-header-toolbox'
+			}).inject(this.panelHeaderEl);
+			
+			MochaUI.updateContent({
+				'element':       this.panelEl,
+				'childElement':  this.panelHeaderToolboxEl,
+				'loadMethod':    'xhr',
+				'url':           this.options.headerToolboxURL
+			});			
+		}
+	
 		this.panelHeaderContentEl = new Element('div', {
 			'id': this.options.id + '_headerContent',
 			'class': 'panel-headerContent'
@@ -782,7 +792,7 @@ MochaUI.Panel = new Class({
 
 		// Add content to panel.
 		MochaUI.updateContent({
-			'element': this.panelEl,
+			'element':  this.panelEl,
 			'content':  this.options.content,
 			'method':	this.options.method,
 			'data':		this.options.data,
@@ -793,6 +803,16 @@ MochaUI.Panel = new Class({
 
 	},
 	collapseToggleInit: function(options){
+
+		this.panelHeaderCollapseBoxEl = new Element('div', {
+			'id': this.options.id + '_headerCollapseBox',
+			'class': 'toolbox'
+		}).inject(this.panelHeaderEl);
+
+		if (this.options.headerToolbox) {
+			this.panelHeaderCollapseBoxEl.addClass('divider');
+		}
+
 		this.collapseToggleEl = new Element('div', {
 			'id': this.options.id + '_collapseToggle',
 			'class': 'panel-collapse icon16',
@@ -801,7 +821,7 @@ MochaUI.Panel = new Class({
 				'height': 16
 			},
 			'title': 'Collapse Panel'
-		}).inject(this.panelHeaderToolboxEl);
+		}).inject(this.panelHeaderCollapseBoxEl);
 
 		this.collapseToggleEl.addEvent('click', function(event){
 			var panel = this.panelEl;

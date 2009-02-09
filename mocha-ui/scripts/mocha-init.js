@@ -631,7 +631,7 @@ window.addEvent('load', function(){ //using load instead of domready for IE8
 		loadMethod: 'xhr',
 		contentURL: 'pages/lipsum.html',
 		column: 'sideColumn1',
-		height: 125,
+		height: 120,
 		footer: true,
 		footerURL: 'pages/toolbox-demo.html'
 	});
@@ -652,7 +652,9 @@ window.addEvent('load', function(){ //using load instead of domready for IE8
 		loadMethod: 'xhr',
 		contentURL: 'pages/lipsum.html',
 		column: 'mainColumn',
-		height: 200
+		height: 200,
+		headerToolbox: true,
+		headerToolboxURL: 'pages/toolbox-demo2.html'		
 	});
 
 	// Add panels to second side column
