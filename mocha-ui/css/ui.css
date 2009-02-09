@@ -112,7 +112,7 @@ body {
 
 div.toolbox.divider { /* Have to specify div here for IE6's sake */
 	background: url(../images/toolbox-divider.gif) repeat-y;
-	padding-left: 6px;
+	padding-left: 8px;
 }
 
 div.toolbox.divider2 { /* Have to specify div here for IE6's sake */
@@ -144,11 +144,11 @@ div.toolbox.divider2 { /* Have to specify div here for IE6's sake */
 }
 
 .iconWrapper:hover {
-	border: 1px solid #777;
+	border: 1px solid #c0c0c0;
 }
 
-.panel-footer .iconWrapper:hover {
-    border: 1px solid #ccc;
+#desktopNavbar .iconWrapper:hover {
+    border: 1px solid #777;
 }
 
 #spinnerWrapper {

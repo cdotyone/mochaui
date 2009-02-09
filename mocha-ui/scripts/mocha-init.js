@@ -520,45 +520,6 @@ initializeWindows = function(){
 	// Build windows onDomReady
 	MochaUI.parametricsWindow();
 	
-	if ($('demoSearch')) {
-		$('demoSearch').addEvent('submit', function(e){
-			e.stop();
-			$('spinner').setStyle('visibility', 'visible');
-			if ($('postContent')) {
-				$('postContent').setStyle('opacity', 0);
-			}
-			else {
-				$('mainPanel_pad').empty();
-			}
-			this.set('send', {
-				onComplete: function(response){
-					MochaUI.updateContent({
-						'element': $('mainPanel'),
-						'loadMethod': 'html',
-						'content': response,
-						'title': 'Ajax Response',
-						'padding': {
-							top: 8,
-							right: 8,
-							bottom: 8,
-							left: 8
-						}
-					});
-					$('mainPanel').setStyle('background', '#fff');
-				},
-				onSuccess: function(){
-					$('postContent').setStyle('opacity', 0);
-					new Fx.Morph($('postContent'), {
-						duration: 500
-					}).start({
-						'opacity': 1
-					});
-				}
-			});
-			this.send();
-		});
-	}	
-	
 }
 
 // Initialize MochaUI when the DOM is ready
@@ -643,7 +604,9 @@ window.addEvent('load', function(){ //using load instead of domready for IE8
 		loadMethod: 'xhr',
 		contentURL: 'pages/lipsum.html',
 		column: 'mainColumn',
-		panelBackground: '#fff'
+		panelBackground: '#fff',
+		headerToolbox: true,
+		headerToolboxURL: 'pages/toolbox-demo3.html'		
 	});
 
 	new MochaUI.Panel({
