@@ -102,21 +102,41 @@ textarea, input {
 .input {
 	padding: 2px 0 2px 3px;
 	border: 1px solid #848484;	
-}	
+}
+
+.searchField {
+	width: 150px;
+	overflow: hidden;
+	line-height: 15px; 
+	margin: 0;
+	padding: 4px 0 3px 5px;
+	border: 1px solid #606060;	
+	border-right: 0;
+	vertical-align: middle;		
+}
+
+* html .toolbox .searchField, * html .toolbox .button, * html .toolbox .button2 { /* IE6 Hack */
+	margin-top: -1px;		
+}
+
+*:first-child+html .toolbox .searchField, *:first-child+html .toolbox .button, *:first-child+html .toolbox .button2 { /* IE7 Hack */
+	margin-top: -1px;		
+}
 
 .button, .button2 {
-	font-size: 12px;
-	font-weight: bold;
+	height: 24px;
 	margin: 0;
 	padding: 3px 6px;
-	border: 1px solid #606060;
 	background: #a3c5ef url(../images/bg-buttons.gif) repeat-x;
+	font-size: 12px;
+	font-weight: bold;
 	cursor: pointer;
-	vertical-align: bottom;		
+	vertical-align: middle;
+	border: 1px solid #606060;	
 }
 
 * html .button {
-	padding: 3px 1px;	
+	padding: 3px 1px;		
 }
 
 * html .button2 {
@@ -134,26 +154,6 @@ textarea, input {
 .button2:hover {
 	background-position: 0 -90px;
 }
-
-/*
-  
-.button {
-	font-size: 12px;
-	color: #fff;
-	margin: 0;
-	padding: 2px 5px;
-	border: 1px solid #487db3;
-	background: #69aed1;
-	cursor: pointer;
-	vertical-align: bottom;		
-}
-
-.button:hover {
-	background: #569cbf;	
-} 
-  
-  
- */	
 
 /* Code */
 
@@ -177,4 +177,10 @@ hr {
 	color: #ccc;
 	height: 1px;
 	border: 0px;
+}
+
+/* Misc */
+
+.nobr {
+	white-space: nowrap;
 }

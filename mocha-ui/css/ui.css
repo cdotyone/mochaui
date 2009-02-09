@@ -62,8 +62,8 @@ body {
 }
 
 #desktopTitlebar h2.tagline {
-	font-size: 12px;	
-	color: #b2b2b2;
+	font-size: 12px;    
+	color: #b2b2b2;    
 	font-weight: bold;
 	padding: 6px 0 0 0;
 	text-align: center;
@@ -96,39 +96,61 @@ body {
 
 /* Toolboxes */
 
-.toolbox {
+.toolbox, .panel-header-toolbox {
 	float: right;
-	padding: 6px 3px 0 5px;
-	height: 23px;
+	margin-top: 3px;
+	padding: 0 5px;
+	height: 24px;
 	overflow: hidden;
+	text-align: right;
 }
 
 div.toolbox.divider { /* Have to specify div here for IE6's sake */
-	background: url(../images/toolbox-divider.gif) left center no-repeat;
-	padding: 6px 3px 0 12px;
+	background: url(../images/toolbox-divider.gif) repeat-y;
+	padding-left: 6px;
 }
 
 div.toolbox.divider2 { /* Have to specify div here for IE6's sake */
-	background: url(../images/toolbox-divider2.gif) left center no-repeat;
-	padding: 6px 4px 0 12px;
-}
-
-.toolbox img {
-	cursor: pointer;
-	margin-right: 6px;
-	padding: 0;
-	float: left;
+	background: url(../images/toolbox-divider2.gif) repeat-y;
+	padding-left: 7px;
 }
 
 .toolbox img.disabled {
 	cursor: default;
 }
 
+.iconWrapper {
+	display: inline-block;
+	height: 22px;
+	min-width: 22px;
+	overflow: hidden;
+	border: 1px solid transparent;
+}
+
+* html .iconWrapper {
+	padding: 1px;
+	border: 0;
+}
+
+.iconWrapper img {
+	cursor: pointer;
+	margin: 0;
+	padding: 3px;
+}
+
+.iconWrapper:hover {
+	border: 1px solid #777;
+}
+
+.panel-footer .iconWrapper:hover {
+    border: 1px solid #ccc;
+}
+
 #spinnerWrapper {
-	width: 16px;
-	height: 16px;
-	background: url(../images/spinner-placeholder.gif) no-repeat;
-	margin-right: 5px;
+    width: 16px;
+    height: 16px;
+    background: url(../images/spinner-placeholder.gif) no-repeat;
+    margin: 4px 5px 0 5px;
 }
 
 #spinner {
@@ -136,14 +158,15 @@ div.toolbox.divider2 { /* Have to specify div here for IE6's sake */
 	background: url(../images/spinner.gif) no-repeat;
 	width: 16px;
 	height: 16px;
-}
+}	
 
 /* Navbar */
 
 #desktopNavbar {
 	background: #4C4C4C;
 	height: 30px;
-	margin: 0 0px;	
+	margin: 0 0px;
+	overflow: hidden;	
 }
 
 #desktopNavbar ul {	
@@ -253,6 +276,7 @@ li.divider {
 }
 
 /* Footer */
+
 #desktopFooterWrapper {
 	position: absolute;
 	left: 0;
@@ -432,12 +456,6 @@ li.divider {
 	color: #333;
 }
 
-.panel-header-toolbox {
-	float: right;
-	height: 26px;
-	margin: 2px 5px 5px 0;
-	text-align: right;
-}
 
 .panel-collapse {
 	background: url(../images/collapse-expand.gif) left top no-repeat;
@@ -448,7 +466,7 @@ li.divider {
 }
 
 .icon16 {
-	margin: 5px 0 0 2px;
+	margin: 4px 0 0 2px;
 	cursor: pointer;
 }
 
@@ -948,31 +966,6 @@ div.mochaToolbarWrapper.bottom {
 	padding-left: 2px;
 }
 
-/* View Toggle */
-
-.viewToggle {
-	position: absolute;
-	top: 4px;
-	right: 5px;
-	width: 60px;
-	text-align: right;
-}
-
-.viewToggle img.viewToggleList, .viewToggle img.viewToggleGrid {
-	width: 28px;
-	height: 22px;
-}	
-
-.viewToggle img.viewToggleList {
-	background: url(../images/view-toggle.gif) no-repeat;
-	background-position: 0 -66px;
-}
-
-.viewToggle img.viewToggleGrid {
-	background: url(../images/view-toggle.gif) no-repeat;
-	background-position: 0 0;
-}
-
 /* Miscellaneous
 ---------------------------------------------------------------- */
 
@@ -1059,7 +1052,7 @@ div.mochaToolbarWrapper.bottom {
 	height: 0;
 }
 
-*html .clear {
+* html .clear {
 	font-size: 1px;
 	line-height: 1px;
 	overflow: hidden;
