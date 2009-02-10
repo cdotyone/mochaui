@@ -171,7 +171,7 @@ div.toolbox.divider2 { /* Have to specify div here for IE6's sake */
 	background: #4C4C4C;
 	height: 30px;
 	margin: 0 0px;
-	overflow: hidden;	
+	overflow: hidden; /* Remove this line if you want the menu to be backward compatible with Firefox 2 */	
 }
 
 #desktopNavbar ul {	
