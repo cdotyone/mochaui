@@ -1473,9 +1473,6 @@ MochaUI.Window = new Class({
 			'left': shadowBlur - shadowOffset.x
 		});		
 
-		this.canvasEl.height = height;
-		this.canvasEl.width = width;
-
 		// Part of the fix for IE6 select z-index bug
 		if (Browser.Engine.trident4){
 			this.zIndexFixEl.setStyles({
@@ -1494,6 +1491,9 @@ MochaUI.Window = new Class({
 	
 		// Draw Window
 		if (this.options.useCanvas != false) {
+			this.canvasEl.height = height;
+			this.canvasEl.width = width;
+
 			var ctx = this.canvasEl.getContext('2d');
 			ctx.clearRect(0, 0, width, height);
 			
