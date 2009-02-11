@@ -125,8 +125,12 @@ var MochaUI = new Hash({
 		}
 
 		// Remove old content.
-		if (contentContainer == contentEl){
+		if (contentContainer == contentEl) {
 			contentEl.empty();
+			contentEl.setStyle('display', 'block');			
+			// Panels are not loaded into the padding div, so we remove them separately.
+			contentEl.getAllNext('.column').destroy();
+			contentEl.getAllNext('.columnHandle').destroy();
 		}
 
 		// Load new content.

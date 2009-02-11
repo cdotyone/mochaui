@@ -1,11 +1,16 @@
 <ul id="tree1" class="tree">
-	<li class="folder f-open root"><span class="treeSectionTitle">Examples</span>
+	<li class="folder f-open root"><span class="treeSectionTitle">Panel Examples</span>
 		<ul>
-			<li id="todoLink" class="doc"><span><a>Lorem Ipsum</a></span></li>
-			<li id="youtube4Link" class="doc"><span><a>Zero7 - Crosses</a></span></li>
-			<li id="licenseLink" class="doc"><span><a>License</a></span></li>
+			<li id="todoLink" class="doc"><span><a>XHR: Lorem Ipsum</a></span></li>
+			<li id="youtube4Link" class="doc"><span><a>Iframe: YouTube</a></span></li>
+			<li id="splitPanelLink" class="doc"><span><a>Split Panel</a></span></li>
 		</ul>
 	</li>
+	<li class="folder f-open"><span class="treeSectionTitle">Window Examples</span>
+		<ul>
+			<li id="splitWindowLink" class="doc"><span><a>Split Window</a></span></li>
+		</ul>
+	</li>			
 </ul>
 
 <script type="text/javascript">
@@ -26,21 +31,26 @@
 			'element': $('mainPanel'),
 			'loadMethod': 'iframe',
 			'url': 'pages/youtube4.html',
-			'title': 'Zero7 - Crosses',
+			'title': 'Iframe: YouTube',
 			'padding': { top: 0, right: 0, bottom: 0, left: 0 }
 		});
 		$('mainPanel').setStyle('background','#000');
 	});
 	
-	$('licenseLink').addEvent('click', function(e){
+	$('splitPanelLink').addEvent('click', function(e){
 		MochaUI.updateContent({
 			'element': $('mainPanel'),
-			'loadMethod': 'xhr',
-			'url': 'license.html',
-			'title': 'License',
-			'padding': { top: 8, right: 8, bottom: 8, left: 8 }
+			'loadMethod': 'html',
+			'content': '',
+			'title': 'Split Panel',
+			'padding': { top: 0, right: 0, bottom: 0, left: 0 }
 		});
-		$('mainPanel').setStyle('background','#fff');
-	});	
+		$('mainPanel').setStyle('background','#000');
+		MochaUI.splitPanelPanel();		
+	});
+	
+	$('splitWindowLink').addEvent('click', function(e){
+		MochaUI.splitWindow();
+	});				
 
 </script>

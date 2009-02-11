@@ -820,8 +820,7 @@ MochaUI.Window = new Class({
 			onDrag: function(){
 				this.coords = this.contentWrapperEl.getCoordinates();
 				this.contentWrapperEl.setStyle('height', this.y2 - this.coords.top.toInt());
-				this.drawWindow(windowEl);
-				this.adjustHandles();
+				this.resizeOnDrag();
 			}.bind(this),
 			onComplete: function(){
 				this.resizeOnComplete();
@@ -838,8 +837,7 @@ MochaUI.Window = new Class({
 				this.resizeOnStart();
 			}.bind(this),
 			onDrag: function(){
-				this.drawWindow(windowEl);
-				this.adjustHandles();
+				this.resizeOnDrag();
 			}.bind(this),
 			onComplete: function(){
 				this.resizeOnComplete();
@@ -858,8 +856,7 @@ MochaUI.Window = new Class({
 				this.resizeOnStart();
 			}.bind(this),
 			onDrag: function(){
-				this.drawWindow(windowEl);	
-				this.adjustHandles();
+				this.resizeOnDrag();
 			}.bind(this),
 			onComplete: function(){
 				this.resizeOnComplete();
@@ -876,8 +873,7 @@ MochaUI.Window = new Class({
 				this.resizeOnStart();
 			}.bind(this),
 			onDrag: function(){
-				this.drawWindow(windowEl);
-				this.adjustHandles();
+				this.resizeOnDrag();
 			}.bind(this),
 			onComplete: function(){
 				this.resizeOnComplete();
@@ -905,8 +901,7 @@ MochaUI.Window = new Class({
 			onDrag: function(){
 				this.coords = this.contentWrapperEl.getCoordinates();
 				this.contentWrapperEl.setStyle('width', this.x2 - this.coords.left.toInt());
-				this.drawWindow(windowEl);
-				this.adjustHandles();
+				this.resizeOnDrag();
 			}.bind(this),
 			onComplete: function(){
 				this.resizeOnComplete();
@@ -924,7 +919,11 @@ MochaUI.Window = new Class({
 				this.iframeEl.setStyle('display', 'none');
 			}
 		}	
-	},	
+	},
+	resizeOnDrag: function(){
+		this.drawWindow();
+		this.adjustHandles();					
+	},		
 	resizeOnComplete: function(){
 		$('windowUnderlay').setStyle('display','none');
 		if (this.iframeEl){
@@ -941,6 +940,15 @@ MochaUI.Window = new Class({
 				this.iframeEl.setStyle('height', this.contentWrapperEl.offsetHeight);					
 			}
 		}
+		
+		// Resize panels if there are any
+		if (this.contentWrapperEl.getChildren('.column') != null) {
+			MochaUI.rWidth(this.contentWrapperEl);
+			this.contentWrapperEl.getChildren('.column').each(function(column){
+				MochaUI.panelHeight(column);
+			});
+		}
+				
 		this.fireEvent('onResize', this.windowEl);
 	},
 	adjustHandles: function(){
@@ -1437,6 +1445,14 @@ MochaUI.Window = new Class({
 		if (options.type != 'notification' && options.useCanvasControls == true){
 			this.drawControls(width, height, shadows);
 		}
+		
+		// Resize panels if there are any
+		if (this.contentWrapperEl.getChildren('.column') != null) {
+			MochaUI.rWidth(this.contentWrapperEl);
+			this.contentWrapperEl.getChildren('.column').each(function(column){
+				MochaUI.panelHeight(column);
+			});
+		}		
 
 	},
 	drawWindowCollapsed: function(windowEl, shadows) {

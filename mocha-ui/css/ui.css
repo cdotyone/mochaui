@@ -106,8 +106,6 @@ body {
 }
 
 .panel-header-toolbox {
-	float: right;
-	text-align: right;
 }
 
 div.toolbox.divider { /* Have to specify div here for IE6's sake */
@@ -423,12 +421,16 @@ li.divider {
 	position: relative;	
 	overflow: auto;
 	border-bottom: 1px solid #b9b9b9;
-	border-top: 0;
 }
 
 .pad {
+	position: absolute; /* This should be removed once I figure out a solution for IE7's panel collapsing issue */
 	padding: 8px;
 }
+
+*html .pad {
+	position: absolute;	/* Fix for panels within panels rendering bug in IE6 */
+}	
 
 #mainPanel {
 	background: #fff; 	
@@ -939,7 +941,7 @@ div.mochaToolbarWrapper.bottom {
 .tree {
 	font-size: 11px;
 	line-height: 15px;
-	margin: 0;
+	margin: 0 0 10px 0;
 }
 
 .tree ul {

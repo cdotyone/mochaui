@@ -208,11 +208,49 @@ initializeWindows = function(){
 		new MochaUI.Window({
 			id: 'splitWindow',
 			title: 'Split Window',
-			loadMethod: 'iframe',
-			contentURL: 'split-window.html',
+			loadMethod: 'xhr', // May create a 'panel' method in the future
 			width: 600,
 			height: 350,
-			resizeLimit: {'x': [450, 2500], 'y': [300, 2000]}			
+			resizeLimit: {'x': [450, 2500], 'y': [300, 2000]},
+			scrollbars: false, // Could make this automatic if a 'panel' method were created
+			onContentLoaded: function(){	
+		
+				new MochaUI.Column({
+					container: 'splitWindow_contentWrapper',
+					id: 'splitWindow_sideColumn',
+					placement: 'left',
+					width: 170,
+					resizeLimit: [100, 300]
+				});
+			
+				new MochaUI.Column({
+					container: 'splitWindow_contentWrapper',
+					id: 'splitWindow_mainColumn',
+					placement: 'main',
+					width: null,
+					resizeLimit: [100, 300]
+				});
+			
+				new MochaUI.Panel({
+					header: false,
+					id: 'splitWindow_panel1',
+					title: 'Ajax Form',
+					loadMethod: 'xhr',
+					contentURL: 'license.html',
+					column: 'splitWindow_mainColumn',
+					panelBackground: '#fff'
+				});
+			
+				new MochaUI.Panel({
+					header: false,
+					id: 'splitWindow_panel2',
+					title: 'Ajax Form',
+					loadMethod: 'xhr',
+					contentURL: 'pages/lipsum.html',
+					column: 'splitWindow_sideColumn'
+				});
+
+			}			
 		});
 	}
 	if ($('splitWindowLinkCheck')) {
@@ -220,7 +258,8 @@ initializeWindows = function(){
 		new Event(e).stop();
 			MochaUI.splitWindow();
 		});
-	}		
+	}	
+			
 
 	// Examples > Tests
 	MochaUI.eventsWindow = function(){
@@ -522,40 +561,36 @@ initializeWindows = function(){
 	
 }
 
-// Initialize MochaUI when the DOM is ready
-window.addEvent('load', function(){ //using load instead of domready for IE8
-	MochaUI.Desktop = new MochaUI.Desktop();
-	MochaUI.Dock = new MochaUI.Dock();
+initializeColumns = function(){
 
 	/* Create Columns
 	 
-	If you are not using panels then these columns are not required.
-	If you do use panels, the main column is required. The side columns are optional.
-	Create your columns from left to right. Then create your panels from top to bottom,
-	left to right. New Panels are inserted at the bottom of their column.
-
-	*/	 
+	 If you are not using panels then these columns are not required.
+	 If you do use panels, the main column is required. The side columns are optional.
+	 Create your columns from left to right. Then create your panels from top to bottom,
+	 left to right. New Panels are inserted at the bottom of their column.
+	 */
 	new MochaUI.Column({
 		id: 'sideColumn1',
 		placement: 'left',
 		width: 200,
 		resizeLimit: [100, 300]
 	});
-
+	
 	new MochaUI.Column({
 		id: 'mainColumn',
-		placement: 'main',	
+		placement: 'main',
 		width: null,
 		resizeLimit: [100, 300]
 	});
-
+	
 	new MochaUI.Column({
 		id: 'sideColumn2',
-		placement: 'right',	
-		width: 220,		
+		placement: 'right',
+		width: 220,
 		resizeLimit: [195, 300]
 	});
-
+	
 	// Add panels to first side column
 	new MochaUI.Panel({
 		id: 'files-panel',
@@ -564,11 +599,11 @@ window.addEvent('load', function(){ //using load instead of domready for IE8
 		contentURL: 'pages/file-view.html',
 		column: 'sideColumn1',
 		onContentLoaded: function(){
-			if ( !MochaUI.treeScript == true ){
+			if (!MochaUI.treeScript == true) {
 				new Request({
 					url: 'plugins/tree/scripts/tree.js',
 					method: 'get',
-					onSuccess: function() {
+					onSuccess: function(){
 						buildTree('tree1');
 						MochaUI.treeScript = true;
 					}.bind(this)
@@ -576,27 +611,16 @@ window.addEvent('load', function(){ //using load instead of domready for IE8
 			}
 		}
 	});
-
+	
 	new MochaUI.Panel({
 		id: 'panel2',
 		title: 'Ajax Form',
 		loadMethod: 'xhr',
 		contentURL: 'pages/ajax.form.html',
 		column: 'sideColumn1',
-		height: 300
+		height: 250
 	});
-
-	new MochaUI.Panel({
-		id: 'panel3',
-		title: 'Panel',
-		loadMethod: 'xhr',
-		contentURL: 'pages/lipsum.html',
-		column: 'sideColumn1',
-		height: 120,
-		footer: true,
-		footerURL: 'pages/toolbox-demo.html'
-	});
-
+	
 	// Add panels to main column	
 	new MochaUI.Panel({
 		id: 'mainPanel',
@@ -606,9 +630,9 @@ window.addEvent('load', function(){ //using load instead of domready for IE8
 		column: 'mainColumn',
 		panelBackground: '#fff',
 		headerToolbox: true,
-		headerToolboxURL: 'pages/toolbox-demo3.html'		
+		headerToolboxURL: 'pages/toolbox-demo3.html'
 	});
-
+	
 	new MochaUI.Panel({
 		id: 'panel1',
 		title: 'Panel',
@@ -617,9 +641,9 @@ window.addEvent('load', function(){ //using load instead of domready for IE8
 		column: 'mainColumn',
 		height: 200,
 		headerToolbox: true,
-		headerToolboxURL: 'pages/toolbox-demo2.html'		
+		headerToolboxURL: 'pages/toolbox-demo2.html'
 	});
-
+	
 	// Add panels to second side column
 	
 	new MochaUI.Panel({
@@ -631,6 +655,15 @@ window.addEvent('load', function(){ //using load instead of domready for IE8
 	});
 
 	new MochaUI.Panel({
+		id: 'panel3',
+		title: 'Panel',
+		loadMethod: 'xhr',
+		contentURL: 'pages/lipsum.html',
+		column: 'sideColumn2',
+		height: 120
+	});	
+	
+	new MochaUI.Panel({
 		id: 'tips-panel',
 		title: 'Tips',
 		loadMethod: 'xhr',
@@ -640,6 +673,55 @@ window.addEvent('load', function(){ //using load instead of domready for IE8
 		footer: true,
 		footerURL: 'pages/toolbox-demo.html'
 	});
+	
+	MochaUI.splitPanelPanel = function(){
+		if ($('mainPanel')) {				
+			
+			new MochaUI.Column({
+				container: 'mainPanel',
+				id: 'sideColumn3',
+				placement: 'left',
+				width: 200,
+				resizeLimit: [100, 300]
+			});
+			
+			new MochaUI.Column({
+				container: 'mainPanel',
+				id: 'mainColumn2',
+				placement: 'main',
+				width: null,
+				resizeLimit: [100, 300]
+			});
+			
+			new MochaUI.Panel({
+				header: false,
+				id: 'panelx',
+				title: 'Ajax Form',
+				loadMethod: 'xhr',
+				contentURL: 'pages/lipsum.html',
+				column: 'mainColumn2'
+			});
+			
+			new MochaUI.Panel({
+				header: false,
+				id: 'panely',
+				title: 'Ajax Form',
+				loadMethod: 'xhr',
+				contentURL: 'pages/lipsum.html',
+				column: 'sideColumn3',
+				panelBackground: '#e5f1f7'
+			});
+		}
+	}
+	
+}	
+
+// Initialize MochaUI when the DOM is ready
+window.addEvent('load', function(){ //using load instead of domready for IE8
+	MochaUI.Desktop = new MochaUI.Desktop();
+	MochaUI.Dock = new MochaUI.Dock();	
+
+	initializeColumns();
 
 	MochaUI.Modal = new MochaUI.Modal();
 	

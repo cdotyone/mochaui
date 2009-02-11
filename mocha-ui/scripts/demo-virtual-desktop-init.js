@@ -202,25 +202,7 @@ initializeWindows = function(){
 			new Event(e).stop();
 			MochaUI.parametricsWindow();
 		});
-	}	
-	
-	MochaUI.splitWindow = function(){
-		new MochaUI.Window({
-			id: 'splitWindow',
-			title: 'Split Window',
-			loadMethod: 'iframe',
-			contentURL: 'split-window.html',
-			width: 600,
-			height: 350,
-			resizeLimit: {'x': [450, 2500], 'y': [300, 2000]}			
-		});
-	}
-	if ($('splitWindowLinkCheck')) {
-		$('splitWindowLinkCheck').addEvent('click', function(e){
-		new Event(e).stop();
-			MochaUI.splitWindow();
-		});
-	}	
+	}		
 
 	// Examples > Tests
 	MochaUI.eventsWindow = function(){	

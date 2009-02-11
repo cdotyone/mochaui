@@ -125,8 +125,12 @@ var MochaUI = new Hash({
 		}
 
 		// Remove old content.
-		if (contentContainer == contentEl){
+		if (contentContainer == contentEl) {
 			contentEl.empty();
+			contentEl.setStyle('display', 'block');			
+			// Panels are not loaded into the padding div, so we remove them separately.
+			contentEl.getAllNext('.column').destroy();
+			contentEl.getAllNext('.columnHandle').destroy();
 		}
 
 		// Load new content.
@@ -1623,8 +1627,7 @@ MochaUI.Window = new Class({
 			onDrag: function(){
 				this.coords = this.contentWrapperEl.getCoordinates();
 				this.contentWrapperEl.setStyle('height', this.y2 - this.coords.top.toInt());
-				this.drawWindow(windowEl);
-				this.adjustHandles();
+				this.resizeOnDrag();
 			}.bind(this),
 			onComplete: function(){
 				this.resizeOnComplete();
@@ -1641,8 +1644,7 @@ MochaUI.Window = new Class({
 				this.resizeOnStart();
 			}.bind(this),
 			onDrag: function(){
-				this.drawWindow(windowEl);
-				this.adjustHandles();
+				this.resizeOnDrag();
 			}.bind(this),
 			onComplete: function(){
 				this.resizeOnComplete();
@@ -1661,8 +1663,7 @@ MochaUI.Window = new Class({
 				this.resizeOnStart();
 			}.bind(this),
 			onDrag: function(){
-				this.drawWindow(windowEl);	
-				this.adjustHandles();
+				this.resizeOnDrag();
 			}.bind(this),
 			onComplete: function(){
 				this.resizeOnComplete();
@@ -1679,8 +1680,7 @@ MochaUI.Window = new Class({
 				this.resizeOnStart();
 			}.bind(this),
 			onDrag: function(){
-				this.drawWindow(windowEl);
-				this.adjustHandles();
+				this.resizeOnDrag();
 			}.bind(this),
 			onComplete: function(){
 				this.resizeOnComplete();
@@ -1708,8 +1708,7 @@ MochaUI.Window = new Class({
 			onDrag: function(){
 				this.coords = this.contentWrapperEl.getCoordinates();
 				this.contentWrapperEl.setStyle('width', this.x2 - this.coords.left.toInt());
-				this.drawWindow(windowEl);
-				this.adjustHandles();
+				this.resizeOnDrag();
 			}.bind(this),
 			onComplete: function(){
 				this.resizeOnComplete();
@@ -1727,7 +1726,11 @@ MochaUI.Window = new Class({
 				this.iframeEl.setStyle('display', 'none');
 			}
 		}	
-	},	
+	},
+	resizeOnDrag: function(){
+		this.drawWindow();
+		this.adjustHandles();					
+	},		
 	resizeOnComplete: function(){
 		$('windowUnderlay').setStyle('display','none');
 		if (this.iframeEl){
@@ -1744,6 +1747,15 @@ MochaUI.Window = new Class({
 				this.iframeEl.setStyle('height', this.contentWrapperEl.offsetHeight);					
 			}
 		}
+		
+		// Resize panels if there are any
+		if (this.contentWrapperEl.getChildren('.column') != null) {
+			MochaUI.rWidth(this.contentWrapperEl);
+			this.contentWrapperEl.getChildren('.column').each(function(column){
+				MochaUI.panelHeight(column);
+			});
+		}
+				
 		this.fireEvent('onResize', this.windowEl);
 	},
 	adjustHandles: function(){
@@ -2240,6 +2252,14 @@ MochaUI.Window = new Class({
 		if (options.type != 'notification' && options.useCanvasControls == true){
 			this.drawControls(width, height, shadows);
 		}
+		
+		// Resize panels if there are any
+		if (this.contentWrapperEl.getChildren('.column') != null) {
+			MochaUI.rWidth(this.contentWrapperEl);
+			this.contentWrapperEl.getChildren('.column').each(function(column){
+				MochaUI.panelHeight(column);
+			});
+		}		
 
 	},
 	drawWindowCollapsed: function(windowEl, shadows) {
@@ -3486,7 +3506,8 @@ Arguments:
 	options
 
 Options:
-	id - The ID of the column. This must be set when creating the column.	
+	id - The ID of the column. This must be set when creating the column.
+	container - Defaults to MochaUI.Desktop.pageWrapper. 	
 	placement - Can be 'right', 'main', or 'left'. There must be at least one column with the 'main' option.
 	width - 'main' column is fluid and should not be given a width.
 	resizeLimit - resizelimit of a 'right' or 'left' column.
@@ -3502,7 +3523,8 @@ MochaUI.Column = new Class({
 	Implements: [Events, Options],
 
 	options: {
-		id:            null, 
+		id:            null,
+		container:     null,
 		placement:     null, 
 		width:         null,
 		resizeLimit:   [],
@@ -3527,6 +3549,13 @@ MochaUI.Column = new Class({
 		var instances = MochaUI.Columns.instances;
 		var instanceID = instances.get(options.id);
 
+		if (options.container == null) {
+			options.container = MochaUI.Desktop.pageWrapper
+		}
+		else {
+			$(options.container).setStyle('overflow', 'hidden');
+		}
+
 		// Check to see if there is already a class instance for this Column
 		if (instanceID){
 			var currentInstance = instanceID;
@@ -3539,6 +3568,16 @@ MochaUI.Column = new Class({
 		else {			
 			instances.set(options.id, this);
 		}		
+		
+		// If loading columns into a panel, hide the regular content container.
+		if ($(options.container).getElement('.pad') != null) {
+			$(options.container).getElement('.pad').setStyle('display', 'none');
+		}
+		
+		// If loading columns into a window, hide the regular content container.
+		if ($(options.container).getElement('.mochaContent') != null) {
+			$(options.container).getElement('.mochaContent').setStyle('display', 'none');
+		}		
 				
 		this.columnEl = new Element('div', {
 			'id': this.options.id,
@@ -3546,7 +3585,7 @@ MochaUI.Column = new Class({
 			'styles': {
 				'width': options.placement == 'main' ? null : options.width
 			}
-		}).inject($(MochaUI.Desktop.pageWrapper));
+		}).inject($(options.container));
 
 		var parent = this.columnEl.getParent();
 		var columnHeight = parent.getStyle('height').toInt();
@@ -3599,7 +3638,7 @@ MochaUI.Column = new Class({
 
 	},
 	columnToggle: function(){
-		var column= this.columnEl;
+		var column = this.columnEl;
 		
 		// Collapse
 		if (this.isCollapsed == false){
@@ -3616,8 +3655,7 @@ MochaUI.Column = new Class({
 			this.isCollapsed = true;
 			column.addClass('collapsed');
 			column.removeClass('expanded');
-
-			MochaUI.rWidth();
+			MochaUI.rWidth();		
 			this.fireEvent('onCollapse');
 		}
 		// Expand
@@ -3791,7 +3829,7 @@ MochaUI.Panel = new Class({
 		this.contentEl = new Element('div', {
 			'id': this.options.id + '_pad',
 			'class': 'pad'
-		}).inject(this.panelEl);
+		}).inject(this.panelEl);		
 
 		if (this.options.footer){
 			this.footerWrapperEl = new Element('div', {
@@ -3870,7 +3908,7 @@ MochaUI.Panel = new Class({
 				'childElement': this.panelHeaderContentEl,
 				'loadMethod':   'xhr',
 				'url':          this.options.tabsURL,
-				'data':		this.options.tabsData
+				'data':		    this.options.tabsData
 			});
 		}
 
@@ -3954,22 +3992,30 @@ MochaUI.Panel = new Class({
 				}
 				this.oldHeight = panel.getStyle('height').toInt();
 				if (this.oldHeight < 10) this.oldHeight = 20;
-				panel.setStyle('height', 0);
+				panel.setStyles({
+					'position': 'absolute', // This is so IE6 and IE7 will collapse the panel all the way
+					'height': 0
+				});								
 				this.isCollapsed = true;
 				panel.addClass('collapsed');
 				panel.removeClass('expanded');
 				MochaUI.panelHeight(this.options.column, panel, 'collapsing');
+				MochaUI.panelHeight(); // Run this a second time for panels within panels
 				this.collapseToggleEl.removeClass('panel-collapsed');
 				this.collapseToggleEl.addClass('panel-expand');
 				this.collapseToggleEl.setProperty('title','Expand Panel');
 				this.fireEvent('onCollapse');
 			}
 			else {
-				panel.setStyle('height', this.oldHeight);
+				panel.setStyles({
+					'position': 'relative',
+					'height': this.oldHeight
+				});
 				this.isCollapsed = false;
 				panel.addClass('expanded');
 				panel.removeClass('collapsed');
 				MochaUI.panelHeight(this.options.column, panel, 'expanding');
+				MochaUI.panelHeight(); // Run this a second time for panels within panels
 				this.collapseToggleEl.removeClass('panel-expand');
 				this.collapseToggleEl.addClass('panel-collapsed');
 				this.collapseToggleEl.setProperty('title','Collapse Panel');
@@ -4160,7 +4206,9 @@ MochaUI.extend({
 				}
 			}
 
-			$$('.columnHandle').each(function(handle){
+			parent.getChildren('.columnHandle').each(function(handle){
+				var parent = handle.getParent();
+				if (parent.getStyle('height').toInt() < 1) return; // Keeps IE7 and 8 from throwing an error when collapsing a panel within a panel
 				var handleHeight = parent.getStyle('height').toInt() - handle.getStyle('border-top').toInt() - handle.getStyle('border-bottom').toInt();
 				if (Browser.Engine.trident4){
 					handleHeight -= 1;
@@ -4200,8 +4248,11 @@ MochaUI.extend({
 		
 	},
 	// Remaining Width
-	rWidth: function(){	
-		$$('.rWidth').each(function(column){
+	rWidth: function(container){
+		if (container == null) {
+			var container = MochaUI.Desktop.desktop;
+		}	
+		container.getElements('.rWidth').each(function(column){
 			var currentWidth = column.offsetWidth.toInt();
 			currentWidth -= column.getStyle('border-left').toInt();
 			currentWidth -= column.getStyle('border-right').toInt();
@@ -4260,7 +4311,9 @@ function addResizeRight(element, min, max){
 			element.getNext('.column').getElements('iframe').setStyle('visibility','hidden');
 		}.bind(this),
 		onDrag: function(){
+			element.getNext('.column').setStyle('overflow','visible'); // Fix for a rendering bug in FF
 			MochaUI.rWidth();
+			element.getNext('.column').setStyle('overflow','hidden'); // Fix for a rendering bug in FF
 			if (Browser.Engine.trident4){
 				element.getChildren().each(function(el){
 					var width = $(element).getStyle('width').toInt();
@@ -4376,12 +4429,24 @@ function addResizeBottom(element){
 			partner.setStyle('height', partnerHeight);
 			MochaUI.resizeChildren(element, element.getStyle('height').toInt());
 			MochaUI.resizeChildren(partner, partnerHeight);
+			element.getChildren('.column').each( function(column){
+				MochaUI.panelHeight(column);
+			});
+			partner.getChildren('.column').each( function(column){
+				MochaUI.panelHeight(column);
+			});						
 		}.bind(this),
 		onComplete: function(){
 			partnerHeight = partnerOriginalHeight + (this.originalHeight - element.getStyle('height').toInt());
 			partner.setStyle('height', partnerHeight);
 			MochaUI.resizeChildren(element, element.getStyle('height').toInt());
 			MochaUI.resizeChildren(partner, partnerHeight);
+			element.getChildren('.column').each( function(column){
+				MochaUI.panelHeight(column);
+			});
+			partner.getChildren('.column').each( function(column){
+				MochaUI.panelHeight(column);
+			});			
 			if (currentInstance.iframeEl) {
 				if (!Browser.Engine.trident) {
 					currentInstance.iframeEl.setStyle('visibility', 'visible');
