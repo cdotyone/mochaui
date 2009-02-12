@@ -417,7 +417,8 @@ li.divider {
 
 /* Panels */
 
-.panel {	
+.panel {
+	position: relative;		
 	overflow: auto;
 	border-bottom: 1px solid #b9b9b9;
 }
@@ -425,10 +426,6 @@ li.divider {
 .bottomPanel {
 	background: #f00;
 	border-bottom: 0;	
-}
-
-.collapsed {
-	position: relative;	
 }	
 
 .pad {
