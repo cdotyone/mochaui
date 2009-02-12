@@ -932,7 +932,7 @@ MochaUI.extend({
 			
 			var parent = column.getParent();
 			var columnHeight = parent.getStyle('height').toInt();
-			if (Browser.Engine.trident4){
+			if (Browser.Engine.trident4 && parent == MochaUI.Desktop.pageWrapper){
 				columnHeight -= 1;
 			}
 			column.setStyle('height', columnHeight);
@@ -1091,7 +1091,7 @@ MochaUI.extend({
 				var parent = handle.getParent();
 				if (parent.getStyle('height').toInt() < 1) return; // Keeps IE7 and 8 from throwing an error when collapsing a panel within a panel
 				var handleHeight = parent.getStyle('height').toInt() - handle.getStyle('border-top').toInt() - handle.getStyle('border-bottom').toInt();
-				if (Browser.Engine.trident4){
+				if (Browser.Engine.trident4 && parent == MochaUI.Desktop.pageWrapper){
 					handleHeight -= 1;
 				}
 				handle.setStyle('height', handleHeight);
