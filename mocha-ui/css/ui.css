@@ -417,20 +417,18 @@ li.divider {
 
 /* Panels */
 
-.panel {
-	position: relative;	
+.panel {	
 	overflow: auto;
 	border-bottom: 1px solid #b9b9b9;
 }
 
+.collapsed {
+	position: relative;	
+}	
+
 .pad {
-	position: absolute; /* This should be removed once I figure out a solution for IE7's panel collapsing issue */
 	padding: 8px;
 }
-
-*html .pad {
-	position: absolute;	/* Fix for panels within panels rendering bug in IE6 */
-}	
 
 #mainPanel {
 	background: #fff; 	
