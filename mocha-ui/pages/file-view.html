@@ -25,8 +25,7 @@
 	$('splitPanelLink').addEvent('click', function(e){
 		MochaUI.updateContent({
 			'element': $('mainPanel'),
-			'loadMethod': 'html',
-			'content': '',
+			'loadMethod': 'html',  // May create a 'panel' method in the future
 			'title': 'Split Panel',
 			'padding': { top: 0, right: 0, bottom: 0, left: 0 }
 		});

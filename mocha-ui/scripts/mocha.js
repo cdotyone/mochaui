@@ -23,7 +23,7 @@ Todo:
 
 var MochaUI = new Hash({
 	options: new Hash({
-		useEffects: true  // Toggles the majority of window fade and move effects.
+		useEffects: false  // Toggles the majority of window fade and move effects.
 	}),
 	Columns: {
 		instances:      new Hash(),
@@ -2265,7 +2265,7 @@ MochaUI.Window = new Class({
 		}
 		
 		// Resize panels if there are any
-		if (this.contentWrapperEl.getChildren('.column') != null) {
+		if (MochaUI.Desktop && this.contentWrapperEl.getChildren('.column').length != 0) {
 			MochaUI.rWidth(this.contentWrapperEl);
 			this.contentWrapperEl.getChildren('.column').each(function(column){
 				MochaUI.panelHeight(column);

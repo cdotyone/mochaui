@@ -208,7 +208,7 @@ initializeWindows = function(){
 		new MochaUI.Window({
 			id: 'splitWindow',
 			title: 'Split Window',
-			loadMethod: 'xhr', // May create a 'panel' method in the future
+			loadMethod: 'html', // May create a 'panel' method in the future
 			width: 600,
 			height: 350,
 			resizeLimit: {'x': [450, 2500], 'y': [300, 2000]},
