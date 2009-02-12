@@ -427,6 +427,10 @@ li.divider {
 	border-bottom: 0;	
 }
 
+.panelFirefoxFix {
+	overflow: visible;	
+}	
+
 .collapsed {
 	position: relative;	
 }	

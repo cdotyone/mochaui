@@ -919,8 +919,20 @@ MochaUI.Window = new Class({
 		}	
 	},
 	resizeOnDrag: function(){
+		// Fix for a rendering glitch in FF when resizing a window with panels in it
+		if (Browser.Engine.gecko) {
+			this.windowEl.getElements('.panel').each(function(panel){
+				panel.store('oldOverflow', panel.getStyle('overflow'));
+				panel.setStyle('overflow', 'visible');
+			});
+		}	
 		this.drawWindow();
-		this.adjustHandles();					
+		this.adjustHandles();
+		if (Browser.Engine.gecko) {
+			this.windowEl.getElements('.panel').each(function(panel){
+				panel.setStyle('overflow', panel.retrieve('oldOverflow')); // Fix for a rendering bug in FF
+			});
+		}			
 	},		
 	resizeOnComplete: function(){
 		$('windowUnderlay').setStyle('display','none');
