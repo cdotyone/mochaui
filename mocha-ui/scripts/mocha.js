@@ -26,15 +26,17 @@ var MochaUI = new Hash({
 		useEffects: false  // Toggles the majority of window fade and move effects.
 	}),
 	Columns: {
-		instances:      new Hash()
+		instances:      new Hash(),
+		columnIDCount:  0             // Used for columns without an ID defined by the user		
 	},
 	Panels: {
-		instances:      new Hash()
+		instances:      new Hash(),
+		panelIDCount:  0              // Used for panels without an ID defined by the user		
 	},		
 	Windows: {	  
 		instances:      new Hash(),
 		indexLevel:     100,          // Used for z-Index
-		windowIDCount:  0,	          // Used for windows without an ID defined by the user
+		windowIDCount:  0,            // Used for windows without an ID defined by the user
 		windowsVisible: true          // Ctrl-Alt-Q to toggle window visibility
 	},	
 	ieSupport:  'excanvas',   // Makes it easier to switch between Excanvas and Moocanvas for testing
@@ -1150,12 +1152,12 @@ MochaUI.Window = new Class({
 			this.options.footerHeight = 0;
 			this.options.headerHeight = 0;
 		}
-
+		
 		// If window has no ID, give it one.
 		if (options.id == null){
 			options.id = 'win' + (++MochaUI.Windows.windowIDCount);
 		}
-		this.windowEl = $(options.id);
+		this.windowEl = $(options.id);	
 		
 		this.newWindow();
 		
@@ -1274,7 +1276,6 @@ MochaUI.Window = new Class({
 			'padding-right': this.options.padding.right
 		});
 
-
 		if (this.options.shape == 'gauge'){
 			if (this.options.useCanvasControls){
 				this.canvasControlsEl.setStyle('visibility', 'hidden');
@@ -1313,7 +1314,7 @@ MochaUI.Window = new Class({
 		}
 
 		// Inject window into DOM
-		this.windowEl.injectInside(this.options.container);
+		this.windowEl.injectInside(this.options.container);					
 
 		if (this.options.type != 'notification'){
 			this.setMochaControlsWidth();
@@ -1354,7 +1355,7 @@ MochaUI.Window = new Class({
 			});
 		}
 		
-		this.drawWindow(this.windowEl);
+		this.drawWindow(this.windowEl);		
 		
 		// Attach events to the window
 		this.attachDraggable(this.windowEl);
@@ -1399,7 +1400,7 @@ MochaUI.Window = new Class({
 			'top': y,
 			'left': x
 		});
-
+		
 		// Create opacityMorph
 		if (MochaUI.options.useEffects == true){
 			// IE cannot handle both element opacity and VML alpha at the same time.
@@ -1419,7 +1420,7 @@ MochaUI.Window = new Class({
 
 		if (this.options.type == 'modal' || this.options.type == 'modal2') {
 			MochaUI.currentModal = this.windowEl;
-			if (Browser.Engine.trident4){
+			if (Browser.Engine.trident4){				
 				$('modalFix').setStyle('display', 'block');
 			}
 			$('modalOverlay').setStyle('display', 'block');
@@ -1458,15 +1459,14 @@ MochaUI.Window = new Class({
 			});
 			setTimeout(MochaUI.focusWindow.pass(this.windowEl, this), 10);
 		}
-
+		
 		// This is a generic morph that can be reused later by functions like centerWindow()
 		this.morph = new Fx.Morph(this.windowEl, {
 			'duration': 200
 		});
 
 		// Add check mark to menu if link exists in menu
-		// Need to make sure the check mark is not added to links not in menu
-	
+		// Need to make sure the check mark is not added to links not in menu	
 		if ($(this.windowEl.id + 'LinkCheck')){
 			this.check = new Element('div', {
 				'class': 'check',
@@ -3253,13 +3253,8 @@ MochaUI.Desktop = new Class({
 		}		
 	},
 	resizePanels: function(){
-		if (Browser.Engine.trident4){
-			$$('.pad').setStyle('display', 'none');
-			$$('.rHeight').setStyle('height', 1);
-		}
 		MochaUI.panelHeight();
-		MochaUI.rWidth();
-		if (Browser.Engine.trident4) $$('.pad').setStyle('display', 'block');
+		MochaUI.rWidth();	
 	},
 	/*
 	
@@ -3549,6 +3544,11 @@ MochaUI.Column = new Class({
 			isCollapsed: false,
 			oldWidth: 0
 		});
+		
+		// If column has no ID, give it one.
+		if (this.options.id == null){
+			this.options.id = 'column' + (++MochaUI.Columns.columnIDCount);
+		}		
 
 		// Shorten object chain
 		var options = this.options;
@@ -3792,6 +3792,11 @@ MochaUI.Panel = new Class({
 			partner: null
 		});
 
+		// If panel has no ID, give it one.
+		if (this.options.id == null){
+			this.options.id = 'panel' + (++MochaUI.Panels.panelIDCount);
+		}
+
 		// Shorten object chain
 		var instances = MochaUI.Panels.instances;
 		var instanceID = instances.get(this.options.id);
@@ -3998,10 +4003,8 @@ MochaUI.Panel = new Class({
 				}
 				this.oldHeight = panel.getStyle('height').toInt();
 				if (this.oldHeight < 10) this.oldHeight = 20;
-				panel.setStyles({
-					'position': 'absolute', // This is so IE6 and IE7 will collapse the panel all the way
-					'height': 0
-				});								
+				this.contentEl.setStyle('position', 'absolute'); // This is so IE6 and IE7 will collapse the panel all the way		
+				panel.setStyle('height', 0);								
 				this.isCollapsed = true;
 				panel.addClass('collapsed');
 				panel.removeClass('expanded');
@@ -4013,10 +4016,8 @@ MochaUI.Panel = new Class({
 				this.fireEvent('onCollapse');
 			}
 			else {
-				panel.setStyles({
-					'position': 'relative',
-					'height': this.oldHeight
-				});
+				this.contentEl.setStyle('position', null); // This is so IE6 and IE7 will collapse the panel all the way				
+				panel.setStyle('height', this.oldHeight);
 				this.isCollapsed = false;
 				panel.addClass('expanded');
 				panel.removeClass('collapsed');
@@ -4027,8 +4028,7 @@ MochaUI.Panel = new Class({
 				this.collapseToggleEl.setProperty('title','Collapse Panel');
 				this.fireEvent('onExpand');
 			}
-		}
-		.bind(this));	
+		}.bind(this));	
 	}	
 });
 MochaUI.Panel.implement(new Options, new Events);

@@ -247,7 +247,8 @@ initializeWindows = function(){
 					title: 'Ajax Form',
 					loadMethod: 'xhr',
 					contentURL: 'pages/lipsum.html',
-					column: 'splitWindow_sideColumn'
+					column: 'splitWindow_sideColumn',
+					panelBackground: '#e5f1f7'
 				});
 
 			}			
@@ -675,8 +676,7 @@ initializeColumns = function(){
 	});
 	
 	MochaUI.splitPanelPanel = function(){
-		if ($('mainPanel')) {				
-			
+		if ($('mainPanel')) {			
 			new MochaUI.Column({
 				container: 'mainPanel',
 				id: 'sideColumn3',
@@ -695,16 +695,16 @@ initializeColumns = function(){
 			
 			new MochaUI.Panel({
 				header: false,
-				id: 'panelx',
+				id: 'splitPanel_mainPanel',
 				title: 'Ajax Form',
 				loadMethod: 'xhr',
-				contentURL: 'pages/lipsum.html',
+				contentURL: 'license.html',
 				column: 'mainColumn2'
 			});
 			
 			new MochaUI.Panel({
 				header: false,
-				id: 'panely',
+				id: 'splitPanel_sidePanel',
 				title: 'Ajax Form',
 				loadMethod: 'xhr',
 				contentURL: 'pages/lipsum.html',

@@ -128,13 +128,8 @@ MochaUI.Desktop = new Class({
 		}		
 	},
 	resizePanels: function(){
-		if (Browser.Engine.trident4){
-			$$('.pad').setStyle('display', 'none');
-			$$('.rHeight').setStyle('height', 1);
-		}
 		MochaUI.panelHeight();
-		MochaUI.rWidth();
-		if (Browser.Engine.trident4) $$('.pad').setStyle('display', 'block');
+		MochaUI.rWidth();	
 	},
 	/*
 	
@@ -424,6 +419,11 @@ MochaUI.Column = new Class({
 			isCollapsed: false,
 			oldWidth: 0
 		});
+		
+		// If column has no ID, give it one.
+		if (this.options.id == null){
+			this.options.id = 'column' + (++MochaUI.Columns.columnIDCount);
+		}		
 
 		// Shorten object chain
 		var options = this.options;
@@ -667,6 +667,11 @@ MochaUI.Panel = new Class({
 			partner: null
 		});
 
+		// If panel has no ID, give it one.
+		if (this.options.id == null){
+			this.options.id = 'panel' + (++MochaUI.Panels.panelIDCount);
+		}
+
 		// Shorten object chain
 		var instances = MochaUI.Panels.instances;
 		var instanceID = instances.get(this.options.id);
@@ -873,10 +878,8 @@ MochaUI.Panel = new Class({
 				}
 				this.oldHeight = panel.getStyle('height').toInt();
 				if (this.oldHeight < 10) this.oldHeight = 20;
-				panel.setStyles({
-					'position': 'absolute', // This is so IE6 and IE7 will collapse the panel all the way
-					'height': 0
-				});								
+				this.contentEl.setStyle('position', 'absolute'); // This is so IE6 and IE7 will collapse the panel all the way		
+				panel.setStyle('height', 0);								
 				this.isCollapsed = true;
 				panel.addClass('collapsed');
 				panel.removeClass('expanded');
@@ -888,10 +891,8 @@ MochaUI.Panel = new Class({
 				this.fireEvent('onCollapse');
 			}
 			else {
-				panel.setStyles({
-					'position': 'relative',
-					'height': this.oldHeight
-				});
+				this.contentEl.setStyle('position', null); // This is so IE6 and IE7 will collapse the panel all the way				
+				panel.setStyle('height', this.oldHeight);
 				this.isCollapsed = false;
 				panel.addClass('expanded');
 				panel.removeClass('collapsed');
@@ -902,8 +903,7 @@ MochaUI.Panel = new Class({
 				this.collapseToggleEl.setProperty('title','Collapse Panel');
 				this.fireEvent('onExpand');
 			}
-		}
-		.bind(this));	
+		}.bind(this));	
 	}	
 });
 MochaUI.Panel.implement(new Options, new Events);

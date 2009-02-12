@@ -343,12 +343,12 @@ MochaUI.Window = new Class({
 			this.options.footerHeight = 0;
 			this.options.headerHeight = 0;
 		}
-
+		
 		// If window has no ID, give it one.
 		if (options.id == null){
 			options.id = 'win' + (++MochaUI.Windows.windowIDCount);
 		}
-		this.windowEl = $(options.id);
+		this.windowEl = $(options.id);	
 		
 		this.newWindow();
 		
@@ -467,7 +467,6 @@ MochaUI.Window = new Class({
 			'padding-right': this.options.padding.right
 		});
 
-
 		if (this.options.shape == 'gauge'){
 			if (this.options.useCanvasControls){
 				this.canvasControlsEl.setStyle('visibility', 'hidden');
@@ -546,7 +545,7 @@ MochaUI.Window = new Class({
 				'data':	         this.options.toolbar2Data
 			});
 		}
-		
+        
 		this.drawWindow(this.windowEl);
 		
 		// Attach events to the window
@@ -592,7 +591,7 @@ MochaUI.Window = new Class({
 			'top': y,
 			'left': x
 		});
-
+		
 		// Create opacityMorph
 		if (MochaUI.options.useEffects == true){
 			// IE cannot handle both element opacity and VML alpha at the same time.
@@ -612,7 +611,7 @@ MochaUI.Window = new Class({
 
 		if (this.options.type == 'modal' || this.options.type == 'modal2') {
 			MochaUI.currentModal = this.windowEl;
-			if (Browser.Engine.trident4){
+			if (Browser.Engine.trident4){				
 				$('modalFix').setStyle('display', 'block');
 			}
 			$('modalOverlay').setStyle('display', 'block');
@@ -651,15 +650,14 @@ MochaUI.Window = new Class({
 			});
 			setTimeout(MochaUI.focusWindow.pass(this.windowEl, this), 10);
 		}
-
+		
 		// This is a generic morph that can be reused later by functions like centerWindow()
 		this.morph = new Fx.Morph(this.windowEl, {
 			'duration': 200
 		});
 
 		// Add check mark to menu if link exists in menu
-		// Need to make sure the check mark is not added to links not in menu
-	
+		// Need to make sure the check mark is not added to links not in menu	
 		if ($(this.windowEl.id + 'LinkCheck')){
 			this.check = new Element('div', {
 				'class': 'check',
