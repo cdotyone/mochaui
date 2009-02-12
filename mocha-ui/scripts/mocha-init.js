@@ -595,7 +595,7 @@ initializeColumns = function(){
 	// Add panels to first side column
 	new MochaUI.Panel({
 		id: 'files-panel',
-		title: 'File View',
+		title: 'Examples',
 		loadMethod: 'xhr',
 		contentURL: 'pages/file-view.html',
 		column: 'sideColumn1',
@@ -729,7 +729,7 @@ window.addEvent('load', function(){ //using load instead of domready for IE8
 		'background': '#fff',
 		'visibility': 'visible'
 	});
-	initializeWindows();
+	initializeWindows();	
 
 });
 

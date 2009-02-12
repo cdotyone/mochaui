@@ -27,6 +27,10 @@ function buildTree(treeID){
 			folder.minus = 'images/icons/tree/Rminus.gif'
 			folder.plus = 'images/icons/tree/Rplus.gif'
 		}
+		else if (folder.hasClass('first')) {
+			folder.minus = 'images/icons/tree/Fminus.gif'
+			folder.plus = 'images/icons/tree/Fplus.gif'
+		}		
 		else 
 			if (folder.getNext()) {
 				folder.minus = 'images/icons/tree/Tminus.gif'

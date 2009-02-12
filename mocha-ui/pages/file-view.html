@@ -1,18 +1,3 @@
-<ul id="tree1" class="tree">
-	<li class="folder f-open root"><span class="treeSectionTitle">Panel Examples</span>
-		<ul>
-			<li id="todoLink" class="doc"><span><a>XHR: Lorem Ipsum</a></span></li>
-			<li id="youtube4Link" class="doc"><span><a>Iframe: YouTube</a></span></li>
-			<li id="splitPanelLink" class="doc"><span><a>Split Panel</a></span></li>
-		</ul>
-	</li>
-	<li class="folder f-open"><span class="treeSectionTitle">Window Examples</span>
-		<ul>
-			<li id="splitWindowLink" class="doc"><span><a>Split Window</a></span></li>
-		</ul>
-	</li>			
-</ul>
-
 <script type="text/javascript">
 
 	$('todoLink').addEvent('click', function(e){
@@ -51,6 +36,51 @@
 	
 	$('splitWindowLink').addEvent('click', function(e){
 		MochaUI.splitWindow();
-	});				
+	});
+	
+	$('ajaxpageLink').addEvent('click', function(e){
+		MochaUI.ajaxpageWindow();
+	});
+	
+	$('jsonLink').addEvent('click', function(e){
+		MochaUI.jsonWindows();
+	});
+	
+	$('youtubeLink').addEvent('click', function(e){
+		MochaUI.youtubeWindow();
+	});
+	
+	$('accordiantestLink').addEvent('click', function(e){
+		MochaUI.accordiantestWindow();
+	});
+	
+	$('clockLink').addEvent('click', function(e){
+		MochaUI.clockWindow();
+	});
+	
+	$('parametricsLink').addEvent('click', function(e){
+		MochaUI.parametricsWindow();
+	});											
 
 </script>
+
+<ul id="tree1" class="tree">
+	<li class="folder f-open first"><span>Panel Examples</span>
+		<ul>
+			<li id="todoLink" class="doc"><span><a>XHR: Lorem Ipsum</a></span></li>
+			<li id="youtube4Link" class="doc"><span><a>Iframe: YouTube</a></span></li>
+			<li id="splitPanelLink" class="doc"><span><a>Split Panel</a></span></li>
+		</ul>
+	</li>
+	<li class="folder f-open"><span>Window Examples</span>
+		<ul>
+			<li id="ajaxpageLink" class="doc"><span><a>Ajax/XHR Demo</a></span></li>
+			<li id="jsonLink" class="doc"><span><a>Json Demo</a></span></li>
+			<li id="youtubeLink" class="doc"><span><a>Iframe: YouTube</a></span></li>
+			<li id="accordiantestLink" class="doc"><span><a>Accordian</a></span></li>
+			<li id="clockLink" class="doc"><span><a>Widget: Clock</a></span></li>
+			<li id="parametricsLink" class="doc"><span><a>Window Parametrics</a></span></li>
+			<li id="splitWindowLink" class="doc"><span><a>Split Window</a></span></li>						
+		</ul>
+	</li>			
+</ul>

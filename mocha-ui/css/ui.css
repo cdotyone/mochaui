@@ -427,10 +427,6 @@ li.divider {
 	border-bottom: 0;	
 }
 
-.panelFirefoxFix {
-	overflow: visible;	
-}	
-
 .collapsed {
 	position: relative;	
 }	
@@ -961,10 +957,6 @@ div.mochaToolbarWrapper.bottom {
 	white-space: nowrap;
 }
 
-.treeSectionTitle {
-	font-weight: bold;	
-}	
-
 .tree li a {
 	color: #3f3f3f;	
 }	
@@ -978,7 +970,7 @@ div.mochaToolbarWrapper.bottom {
 
 .tree li span {
 	padding-left: 2px;
-}
+}	
 
 /* Miscellaneous
 ---------------------------------------------------------------- */
