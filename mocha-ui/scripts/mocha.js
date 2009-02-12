@@ -2230,7 +2230,6 @@ MochaUI.Window = new Class({
 					break;
 			}
 
-
 			if (options.resizable){ 
 				MochaUI.triangle(
 					ctx,
@@ -2383,6 +2382,7 @@ MochaUI.Window = new Class({
 	},
 	drawBox: function(ctx, width, height, shadowBlur, shadowOffset, shadows){
 
+		var options = this.options;
 		var shadowBlur2x = shadowBlur * 2;
 		var cornerRadius = this.options.cornerRadius;
 
@@ -2409,7 +2409,7 @@ MochaUI.Window = new Class({
 			width - shadowBlur2x,         // width
 			height - shadowBlur2x,        // height
 			cornerRadius,                 // corner radius
-			this.options.bodyBgColor      // Footer color
+			options.bodyBgColor      // Footer color
 		);
 
 		if (this.options.type != 'notification'){
@@ -2419,10 +2419,10 @@ MochaUI.Window = new Class({
 				shadowBlur - shadowOffset.x,    // x
 				shadowBlur - shadowOffset.y,    // y
 				width - shadowBlur2x,           // width
-				this.options.headerHeight,      // height
+				options.headerHeight,      // height
 				cornerRadius,                   // corner radius
-				this.options.headerStartColor,  // Header gradient's top color
-				this.options.headerStopColor    // Header gradient's bottom color
+				options.headerStartColor,  // Header gradient's top color
+				options.headerStopColor    // Header gradient's bottom color
 			);
 		}	
 	},
@@ -2501,7 +2501,7 @@ MochaUI.Window = new Class({
 		ctx.stroke();
 	},
 	bodyRoundedRect: function(ctx, x, y, width, height, radius, rgb){
-		ctx.fillStyle = 'rgba(' + rgb.join(',') + ', 100)';
+		ctx.fillStyle = 'rgba(' + rgb.join(',') + ', 1)';
 		ctx.beginPath();
 		ctx.moveTo(x, y + radius);
 		ctx.lineTo(x, y + height - radius);
@@ -2517,8 +2517,8 @@ MochaUI.Window = new Class({
 	},
 	topRoundedRect: function(ctx, x, y, width, height, radius, headerStartColor, headerStopColor){
 		var lingrad = ctx.createLinearGradient(0, 0, 0, height);
-		lingrad.addColorStop(0, 'rgba(' + headerStartColor.join(',') + ', 1)');
-		lingrad.addColorStop(1, 'rgba(' + headerStopColor.join(',') + ', 1)');		
+		lingrad.addColorStop(0, 'rgb(' + headerStartColor.join(',') + ')');
+		lingrad.addColorStop(1, 'rgb(' + headerStopColor.join(',') + ')');		
 		ctx.fillStyle = lingrad;
 		ctx.beginPath();
 		ctx.moveTo(x, y);
@@ -2532,10 +2532,16 @@ MochaUI.Window = new Class({
 
 	},
 	topRoundedRect2: function(ctx, x, y, width, height, radius, headerStartColor, headerStopColor){
-		var lingrad = ctx.createLinearGradient(0, this.options.shadowBlur - 1, 0, height + this.options.shadowBlur + 3);
-		lingrad.addColorStop(0, 'rgba(' + headerStartColor.join(',') + ', 1)');
-		lingrad.addColorStop(1, 'rgba(' + headerStopColor.join(',') + ', 1)');
-		ctx.fillStyle = lingrad;
+		// Chrome is having trouble rendering the LinearGradient in this particular case
+		if (navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
+			ctx.fillStyle = 'rgba(' + headerStopColor.join(',') + ', 1)';
+		}
+		else {
+			var lingrad = ctx.createLinearGradient(0, this.options.shadowBlur - 1, 0, height + this.options.shadowBlur + 3);
+			lingrad.addColorStop(0, 'rgb(' + headerStartColor.join(',') + ')');
+			lingrad.addColorStop(1, 'rgb(' + headerStopColor.join(',') + ')');
+			ctx.fillStyle = lingrad;
+		}
 		ctx.beginPath();
 		ctx.moveTo(x, y + radius);
 		ctx.lineTo(x, y + height - radius);

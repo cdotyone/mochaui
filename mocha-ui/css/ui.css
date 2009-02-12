@@ -909,7 +909,7 @@ div.mochaToolbarWrapper.bottom {
 	width: 220px;
 	font-size: 1px;
 	line-height: 1px;
-	background: url(../images/slider-area.gif) repeat-x;
+	background: #f2f2f2 url(../images/slider-area.gif) repeat-x;
 	border: 1px solid #a3a3a3;
 	border-bottom: 1px solid #ccc;
 	border-left: 1px solid #ccc;
