@@ -23,7 +23,7 @@ Todo:
 
 var MochaUI = new Hash({
 	options: new Hash({
-		useEffects: true  // Toggles the majority of window fade and move effects.
+		useEffects: false  // Toggles the majority of window fade and move effects.
 	}),
 	Columns: {
 		instances:      new Hash(),
