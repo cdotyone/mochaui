@@ -592,7 +592,8 @@ initializeColumns = function(){
 	 If you do use panels, the main column is required. The side columns are optional.
 	 Create your columns from left to right. Then create your panels from top to bottom,
 	 left to right. New Panels are inserted at the bottom of their column.
-	 */
+
+	*/
 	new MochaUI.Column({
 		id: 'sideColumn1',
 		placement: 'left',
@@ -611,7 +612,7 @@ initializeColumns = function(){
 		id: 'sideColumn2',
 		placement: 'right',
 		width: 220,
-		resizeLimit: [195, 300]
+		resizeLimit: [200, 300]
 	});
 	
 	// Add panels to first side column
