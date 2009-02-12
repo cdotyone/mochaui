@@ -3946,7 +3946,13 @@ MochaUI.Panel = new Class({
 			'data':		this.options.data,
 			'url':      this.options.contentURL
 		});
-
+		
+		// Do this when creating and removing panels
+		$(this.options.column).getChildren('.panel').each( function(panel){
+			panel.removeClass('bottomPanel');
+		});
+		$(this.options.column).getChildren('.panel').getLast().addClass('bottomPanel');
+		
 		MochaUI.panelHeight(this.options.column, this.panelEl, 'new');
 
 	},
@@ -4546,6 +4552,8 @@ MochaUI.extend({
 		var instances = MochaUI.Panels.instances;
 		var currentInstance = instances.get(panelEl.id);
 		if (panelEl != $(panelEl) || currentInstance.isClosing) return;
+		
+		var column = currentInstance.options.column;
 			
 		currentInstance.isClosing = true;		
 		
@@ -4565,9 +4573,17 @@ MochaUI.extend({
 		}
 		if (MochaUI.Desktop) {
 			MochaUI.Desktop.resizePanels();
-		}	
+		}
+
+		// Do this when creating and removing panels
+		$(column).getChildren('.panel').each( function(panel){
+			panel.removeClass('bottomPanel');
+		});
+		$(column).getChildren('.panel').getLast().addClass('bottomPanel');
+	
 		instances.erase(currentInstance.options.id);
-		return true;		
+		return true;
+		
 	}
 });
 /*

@@ -422,6 +422,11 @@ li.divider {
 	border-bottom: 1px solid #b9b9b9;
 }
 
+.bottomPanel {
+	background: #f00;
+	border-bottom: 0;	
+}
+
 .collapsed {
 	position: relative;	
 }	
@@ -491,7 +496,7 @@ li.divider {
 
 .panel-footerContent {
 	margin-top: 5px;
-}
+}	
 
 /* Handles */	
 
@@ -524,6 +529,7 @@ li.divider {
 	background: #bbb url(../images/handle-icon.gif) center center no-repeat;
 	border: 1px solid #9a9a9a;
 	border-top: 0;
+	border-bottom: 0;
 }
 
 /* Viewport overlays
