@@ -424,7 +424,6 @@ li.divider {
 }
 
 .bottomPanel {
-	background: #f00;
 	border-bottom: 0;	
 }	
 
@@ -772,12 +771,12 @@ div.mochaToolbarWrapper.bottom {
 /* Window Themes */
 
 .mocha.no-canvas {
-	background: #f1f1f1;
-	border: 2px solid #555;	
+	background: #e5e5e5;
+	border: 1px solid #555;	
 }
 
 .mocha.no-canvas .mochaTitlebar {
-	background: #f1f1f1;	
+	background: #e5e5e5;	
 }
 
 .mocha.transparent .mochaTitlebar h3 {

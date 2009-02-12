@@ -72,7 +72,8 @@ var MochaUI = new Hash({
 			'loadMethod':   null,
 			'url':          null,
 			'scrollbars':   null,			
-			'padding':      null
+			'padding':      null,
+			'bgColor':      null  /* Not implemented yet */
 		};
 		$extend(options, updateOptions);
 
@@ -133,6 +134,10 @@ var MochaUI = new Hash({
 			// Panels are not loaded into the padding div, so we remove them separately.
 			contentEl.getAllNext('.column').destroy();
 			contentEl.getAllNext('.columnHandle').destroy();
+		}
+		
+		if (options.bgColor != null) {
+			contentEl.getParent().setStyle('background', options.bgColor);
 		}
 
 		// Load new content.

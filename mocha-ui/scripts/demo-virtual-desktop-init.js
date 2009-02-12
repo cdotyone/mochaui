@@ -1,6 +1,6 @@
 /* -----------------------------------------------------------------
 
-	In this file:
+	In this file initialize your Layouts and Windows:
 	
 	1. Define windows
 	
