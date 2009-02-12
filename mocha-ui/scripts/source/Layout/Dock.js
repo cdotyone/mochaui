@@ -98,7 +98,7 @@ MochaUI.Dock = new Class({
 		}
 
 		this.dockSortables = new Sortables('#dockSort', {
-			opacity: Browser.Engine.trident ? 1 : .5,
+			opacity: 1,
 			constrain: true,
 			clone: false,
 			revert: false
@@ -298,7 +298,7 @@ MochaUI.Dock = new Class({
 		var dockTabText = new Element('div', {
 			'id': currentInstance.options.id + '_dockTabText',
 			'class': 'dockText'
-		}).set('html', titleText.substring(0,20) + (titleText.length > 20 ? '...' : '')).inject($(dockTab));
+		}).set('html', titleText.substring(0,19) + (titleText.length > 19 ? '...' : '')).inject($(dockTab));
 
 		// If I implement this again, will need to also adjust the titleText truncate and the tab's
 		// left padding.

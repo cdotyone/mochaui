@@ -447,6 +447,12 @@ initializeWindows = function(){
 			new Event(e).stop();
 			MochaUI.toggleEffects($('toggleEffectsLinkCheck'));			
 		});
+		if (MochaUI.options.useEffects == true) {
+			MochaUI.toggleEffectsLink = new Element('div', {
+				'class': 'check',
+				'id': 'toggleEffects_check'
+			}).inject($('toggleEffectsLinkCheck'));
+		}
 	}	
 
 	// Help	

@@ -234,7 +234,6 @@ initializeWindows = function(){
 				new MochaUI.Panel({
 					header: false,
 					id: 'splitWindow_panel1',
-					title: 'Ajax Form',
 					loadMethod: 'xhr',
 					contentURL: 'license.html',
 					column: 'splitWindow_mainColumn',
@@ -244,7 +243,6 @@ initializeWindows = function(){
 				new MochaUI.Panel({
 					header: false,
 					id: 'splitWindow_panel2',
-					title: 'Ajax Form',
 					loadMethod: 'xhr',
 					contentURL: 'pages/lipsum.html',
 					column: 'splitWindow_sideColumn',
@@ -506,6 +504,12 @@ initializeWindows = function(){
 			new Event(e).stop();
 			MochaUI.toggleEffects($('toggleEffectsLinkCheck'));			
 		});
+		if (MochaUI.options.useEffects == true) {
+			MochaUI.toggleEffectsLink = new Element('div', {
+				'class': 'check',
+				'id': 'toggleEffects_check'
+			}).inject($('toggleEffectsLinkCheck'));
+		}
 	}	
 
 	// Help	
@@ -549,6 +553,24 @@ initializeWindows = function(){
 			MochaUI.aboutWindow();
 		});
 	}
+	
+	// Misc
+	MochaUI.licenseWindow = function(){
+		new MochaUI.Window({
+			id: 'License',
+			title: 'License',			
+			loadMethod: 'xhr',
+			contentURL: 'license.html',
+			width: 375,
+			height: 340
+		});
+	}	
+	if ($('licenseLink')){ 
+		$('licenseLink').addEvent('click', function(e){
+			new Event(e).stop();
+			MochaUI.licenseWindow();
+		});
+	}	
 
 	// Deactivate menu header links
 	$$('a.returnFalse').each(function(el){
@@ -619,7 +641,7 @@ initializeColumns = function(){
 		loadMethod: 'xhr',
 		contentURL: 'pages/ajax.form.html',
 		column: 'sideColumn1',
-		height: 250
+		height: 230
 	});
 	
 	// Add panels to main column	
@@ -696,7 +718,6 @@ initializeColumns = function(){
 			new MochaUI.Panel({
 				header: false,
 				id: 'splitPanel_mainPanel',
-				title: 'Ajax Form',
 				loadMethod: 'xhr',
 				contentURL: 'license.html',
 				column: 'mainColumn2'
@@ -705,7 +726,6 @@ initializeColumns = function(){
 			new MochaUI.Panel({
 				header: false,
 				id: 'splitPanel_sidePanel',
-				title: 'Ajax Form',
 				loadMethod: 'xhr',
 				contentURL: 'pages/lipsum.html',
 				column: 'sideColumn3',

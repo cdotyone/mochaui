@@ -8,8 +8,8 @@
 		"resizable": false,
 		"headerStartColor": [230, 160, 160],
 		"headerStoptColor": [237, 237, 237],
-		"x": 50,
-		"y": 115
+		"x": 250,
+		"y": 135
 	},
 	{
 		"id": "json02",
@@ -19,8 +19,8 @@
 		"resizable": false,
 		"headerStartColor": [230, 190, 160],
 		"headerStoptColor": [237, 237, 237],	
-		"x": 110,
-		"y": 190
+		"x": 310,
+		"y": 210
 	},
 	{
 		"id": "json03",
@@ -30,8 +30,8 @@
 		"resizable": false,
 		"headerStartColor": [160, 160, 230],
 		"headerStoptColor": [237, 237, 237],
-		"x": 170,
-		"y": 265
+		"x": 370,
+		"y": 285
 	}
 
 ]}
