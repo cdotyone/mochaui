@@ -45,12 +45,9 @@ h2 {
 	font-weight: bold;
 }
 	
-#mochaPage h3 {
-	display: block;
-	font-size: 12px;
-	padding: 6px 0 6px 0;
-	margin: 0 0 8px 0;
-	border-bottom: 1px solid #bbb;
+h3 {
+	font-size: 13px;
+	font-weight: bold;
 }
 
 h4 {
@@ -184,3 +181,7 @@ hr {
 .nobr {
 	white-space: nowrap;
 }
+
+.textBox {
+	max-width: 500px;	
+}	

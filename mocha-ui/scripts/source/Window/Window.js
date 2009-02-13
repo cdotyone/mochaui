@@ -258,6 +258,8 @@ MochaUI.Windows.windowOptions = {
 	onCloseComplete:   $empty
 };
 
+MochaUI.Windows.windowOptionsOriginal = $merge(MochaUI.Windows.windowOptions);
+
 MochaUI.Window = new Class({
 	options: MochaUI.Windows.windowOptions,
 	initialize: function(options){

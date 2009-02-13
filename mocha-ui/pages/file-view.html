@@ -1,4 +1,15 @@
 <script type="text/javascript">
+	
+	$('notesLink').addEvent('click', function(e){
+		MochaUI.updateContent({
+			'element': $('mainPanel'),
+			'loadMethod': 'xhr',
+			'url': 'pages/notes.html',
+			'title': 'Development Notes',
+			'padding': { top: 8, right: 8, bottom: 8, left: 8 },
+			'bgColor': '#fff'
+		});
+	});	
 
 	$('xhrLink').addEvent('click', function(e){
 		MochaUI.updateContent({
@@ -66,7 +77,8 @@
 <ul id="tree1" class="tree">
 	<li class="folder f-open first"><span>Panel Examples</span>
 		<ul>
-			<li id="xhrLink" class="doc"><span><a>XHR: Lorem Ipsum</a></span></li>
+			<li id="notesLink" class="doc"><span><a>Notes</a></span></li>
+			<li id="xhrLink" class="doc"><span><a>XHR: Lorem Ipsum</a></span></li>			
 			<li id="youtube4Link" class="doc"><span><a>Iframe: YouTube</a></span></li>
 			<li id="splitPanelLink" class="doc"><span><a>Split Panel</a></span></li>
 		</ul>

@@ -971,6 +971,10 @@ div.mochaToolbarWrapper.bottom {
 /* Miscellaneous
 ---------------------------------------------------------------- */
 
+#themeControl {
+	margin-top: 2px;	
+}	
+
 /* Window Builder Form Elements */
 
 .form {

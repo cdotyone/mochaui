@@ -47,6 +47,8 @@
 
    ----------------------------------------------------------------- */
 
+MochaUI.themeInit(); // Experimental. NOT FULLY IMPLEMENTED YET
+
 initializeWindows = function(){
 
 	// Examples
@@ -648,9 +650,9 @@ initializeColumns = function(){
 	// Add panels to main column	
 	new MochaUI.Panel({
 		id: 'mainPanel',
-		title: 'Lorem Ipsum',
+		title: 'Notes',
 		loadMethod: 'xhr',
-		contentURL: 'pages/lipsum.html',
+		contentURL: 'pages/notes.html',
 		column: 'mainColumn',
 		panelBackground: '#fff',
 		headerToolbox: true,
@@ -754,9 +756,6 @@ window.addEvent('load', function(){ //using load instead of domready for IE8
 
 });
 
-// This runs when a person leaves your page.
 window.addEvent('unload', function(){
-	if (MochaUI && Browser.Engine.trident != true) {
-		MochaUI.garbageCleanUp();
-	}	
+	// This runs when a user leaves your page.	
 });

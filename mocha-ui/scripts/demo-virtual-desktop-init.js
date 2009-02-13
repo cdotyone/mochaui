@@ -538,9 +538,6 @@ window.addEvent('load', function(){
 	});
 });	
 
-// This runs when a person leaves your page.
 window.addEvent('unload', function(){
-	if (MochaUI && Browser.Engine.trident != true) {
-		MochaUI.garbageCleanUp();
-	}	
+	// This runs when a user leaves your page.	
 });
