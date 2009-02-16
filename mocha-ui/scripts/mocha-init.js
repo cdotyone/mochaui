@@ -95,8 +95,7 @@ initializeWindows = function(){
 			height: 280,
 			resizeLimit: {'x': [330, 2500], 'y': [250, 2000]},
 			toolbar: true,
-			toolbarURL: 'pages/youtube-tabs.html',
-			contentBgColor: '#000'
+			toolbarURL: 'pages/youtube-tabs.html'
 		});
 	}
 	if ($('youtubeLinkCheck')) {
@@ -489,8 +488,7 @@ initializeWindows = function(){
 			height: 420,
 			maximizable: false,
 			resizable: false,
-			scrollbars: false,
-			contentBgColor: '#f5f5f7'
+			scrollbars: false
 		});
 	}
 	if ($('builderLinkCheck')) {
@@ -555,13 +553,13 @@ initializeWindows = function(){
 	MochaUI.aboutWindow = function() {
 		new MochaUI.Window({
 			id: 'about',
+			addClass: 'about',
 			title: 'MochaUI',
 			loadMethod: 'xhr',
 			contentURL: 'pages/about.html',
 			type: 'modal2',
 			width: 350,
 			height: 195,
-			contentBgColor: '#e5e5e5 url(images/logo2.gif) left 3px no-repeat',
 			padding: { top: 43, right: 12, bottom: 10, left: 12 },
 			scrollbars: false
 		});

@@ -16,7 +16,7 @@ Requires:
 
 MochaUI.options.extend({
 		themesDir:      'themes',    // Path to themes directory - Experimental
-		theme:          'test'    // Experimental
+		theme:          'default'    // Experimental
 		// stylesheets:    []	
 });
 
@@ -62,8 +62,8 @@ MochaUI.extend({
 								
 	},
 	updateThemeStyleSheets: function(){
-		// Get all header stylesheets whose title starts with 'css' and redirect them to the proper theme folder.
-		
+
+		// Get all header stylesheets whose title starts with 'css' and redirect them to the proper theme folder.		
 		this.sheetsToLoad = $$('link').length;
 		this.sheetsLoaded = 0;
 		
@@ -139,18 +139,17 @@ MochaUI.extend({
 			
 		}.bind(this));
 
-		// Reformat the desktop		
-		//MochaUI.Desktop.setDesktopSize();
-		
-		var checker = (function(){
-			// Make sure the style sheets are really ready.
-			if ($('desktop').getStyle('overflow') != 'hidden') {
-				return;
-			}
-			$clear(checker);
-			MochaUI.Desktop.setDesktopSize();
-		}).periodical(50);		
-		
+		// Reformat layout
+		if (MochaUI.Desktop.desktop) {
+			var checker = (function(){
+				// Make sure the style sheets are really ready.
+				if (MochaUI.Desktop.desktop.getStyle('overflow') != 'hidden') {
+					return;
+				}
+				$clear(checker);
+				MochaUI.Desktop.setDesktopSize();
+			}).periodical(50);
+		}		
 		
 	}
 });

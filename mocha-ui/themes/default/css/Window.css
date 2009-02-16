@@ -225,7 +225,11 @@ div.mochaToolbarWrapper.bottom {
 
 .mocha.transparent .mochaContentWrapper {
 	background: transparent;	
-}	
+}
+
+.mocha.about .mochaContentWrapper {
+	background: #e5e5e5 url(../images/logo2.gif) left 3px no-repeat;
+}				
 
 .mocha.notification .mochaTitlebar {
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */		

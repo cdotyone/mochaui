@@ -227,6 +227,14 @@ div.mochaToolbarWrapper.bottom {
 	background: transparent;	
 }
 
+.mocha.about {
+	border: 8px solid #404040;	
+}
+
+.mocha.about .mochaContentWrapper {
+	background: #191919 url(../images/logo2.gif) left 3px no-repeat;		
+}
+
 .mocha.notification .mochaTitlebar {
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */		
 	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0); /* IE6 and 7*/	
