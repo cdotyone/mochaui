@@ -23,7 +23,7 @@ html, body {
 }
 
 body {
-	margin: 0; /* Required */
+	margin: 0; /* Required */	
 }
 
 #desktop {
@@ -387,7 +387,7 @@ li.divider {
 
 div.toolbox.divider { /* Have to specify div here for IE6's sake */
 	padding-left: 8px;
-	border-left: 1px solid #454545;
+	border-left: 1px solid #555;
 }
 
 div.toolbox.divider2 { /* Have to specify div here for IE6's sake */

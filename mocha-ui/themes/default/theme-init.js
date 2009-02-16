@@ -5,10 +5,10 @@ Theme: Default
 */
 
 /*  
-Stylesheets  
+Additional Stylesheets
 ---------------------------------------------------------------- */
 
-MochaUI.options.stylesheets = [];
+MochaUI.options.stylesheets = []; // NOT IMPLEMENTED YET
 
 /*  
 Window Options  
@@ -22,4 +22,4 @@ MochaUI.newWindowOptions = new Hash({
 Change Themes 
 ---------------------------------------------------------------- */
 
-MochaUI.themeChange();
+MochaUI.changeTheme();

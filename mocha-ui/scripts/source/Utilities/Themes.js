@@ -1,6 +1,6 @@
 /*
 
-Script: Dock.js
+Script: Themes.js
 	Allows for switching themes dynamically.
 
 Copyright:
@@ -16,7 +16,7 @@ Requires:
 
 MochaUI.options.extend({
 		themesDir:      'themes',    // Path to themes directory - Experimental
-		theme:          'default'    // Experimental
+		theme:          'test'    // Experimental
 		// stylesheets:    []	
 });
 
@@ -45,7 +45,7 @@ MochaUI.extend({
 		new Asset.javascript(this.options.themesDir + '/' + this.options.theme + '/theme-init.js', {id: 'themeInitFile'});		
 						
 	},
-	themeChange: function(){
+	changeTheme: function(){
 
 		// Reset original options
 		$extend(MochaUI.Windows.windowOptions, $merge(MochaUI.Windows.windowOptionsOriginal));
@@ -58,29 +58,56 @@ MochaUI.extend({
 			}
 		});
 		
+		this.updateThemeStyleSheets();
+								
+	},
+	updateThemeStyleSheets: function(){
 		// Get all header stylesheets whose title starts with 'css' and redirect them to the proper theme folder.
+		
+		this.sheetsToLoad = $$('link').length;
+		this.sheetsLoaded = 0;
+		
 		$$('link').each( function(link){
 			var href = this.options.themesDir + '/' + this.options.theme + '/css/' + link.id.substring(3) +'.css';			
 			if (link.href.contains(href)) return;
 			if (link.id.substring(0,3) == 'css') {
-				link.href = href;				
+								
+				var id = link.id;
+				link.destroy();
+				
+				var cssRequest = new Request({
+					method: 'get',
+					url: href,
+					onComplete: function(response) { 
+						new Element('link', {
+							'id': id,
+							'rel': 'stylesheet',
+							'media': 'screen',
+							'type': 'text/css',
+							'href': href
+						}).inject(document.head);												
+					},					
+					onSuccess: function(){
+						MochaUI.sheetsLoaded++;
+						if (MochaUI.sheetsLoaded == MochaUI.sheetsToLoad) {
+							MochaUI.redrawTheme();
+						}  
+					}
+				});
+				cssRequest.send();
+				
 			}
 		}.bind(this));
-		
-		// There is a bug in IE that if you dynamically upload more than one style sheet at a time
-		// you will get a '1 item remaining' message that stays in the status bar indefinitely, and the page will
-		// not re-render until you click on it. The following hack fixes this issue.
-		if (Browser.Engine.trident) {
-			new Asset.javascript('blank.js');
-		}
-		
-		// Redraw open windows
-		
+	
+	},
+	redrawTheme: function(){
+
+		// Redraw open windows		
 		$$('.mocha').each( function(element){			
 			var currentInstance = MochaUI.Windows.instances.get(element.id);		
 						
 			new Hash(currentInstance.options).each( function(value, key){							
-				if (this.Windows.themable.contains(key)) {					
+				if (MochaUI.Windows.themable.contains(key)) {					
 
 					/*
 					if (eval('MochaUI.Windows.windowOptions.' + key + ' == null') && eval('MochaUI.Windows.windowOptionsOriginal.' + key + ' == null')){
@@ -107,9 +134,23 @@ MochaUI.extend({
 					*/					
 				}								
 			}.bind(this));
-						
+							
 			currentInstance.drawWindow(currentInstance.windowEl);
-		}.bind(this));	
-						
+			
+		}.bind(this));
+
+		// Reformat the desktop		
+		//MochaUI.Desktop.setDesktopSize();
+		
+		var checker = (function(){
+			// Make sure the style sheets are really ready.
+			if ($('desktop').getStyle('overflow') != 'hidden') {
+				return;
+			}
+			$clear(checker);
+			MochaUI.Desktop.setDesktopSize();
+		}).periodical(50);		
+		
+		
 	}
 });

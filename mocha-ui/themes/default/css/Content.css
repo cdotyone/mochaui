@@ -17,7 +17,7 @@ Note:
 
 /* Reset */
 
-ul,ol,dl,li,dt,dd,h1,h2,h3,h4,h5,h6,pre,form,body,html,p,blockquote,fieldset,input,object,iframe { margin: 0; padding: 0; }
+ul,ol,dl,li,dt,dd,h1,h2,h3,h4,h5,h6,form,body,html,p,blockquote,fieldset,input,object,iframe { margin: 0; padding: 0; }
 a img,:link img,:visited img { border: none; }
 table { border-collapse: collapse; border-spacing: 0; }
 :focus { outline: none; }
@@ -161,7 +161,6 @@ pre {
 	display: block;
 	font-family: 'Courier New', Courier, monospace;
 	font-size: 11px;
-	max-height: 250px;
 	overflow: auto;
 	margin: 0 0 10px 0;
 	padding: 10px;

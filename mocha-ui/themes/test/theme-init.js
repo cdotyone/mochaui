@@ -5,10 +5,10 @@ Theme: Test
 */
 
 /*  
-Stylesheets  
+Additional Stylesheets  
 ---------------------------------------------------------------- */
 
-MochaUI.options.stylesheets = [];
+MochaUI.options.stylesheets = []; // NOT IMPLEMENTED YET
 
 /*  
 Window Options  
@@ -24,11 +24,11 @@ MochaUI.newWindowOptions = new Hash({
 	maximizeColor:    [250, 250, 250],
 	closeBgColor:     [100, 100, 100],
 	closeColor:       [250, 250, 250],
-	resizableColor:   [254, 254, 254]		
+	resizableColor:   [100, 100, 100]		
 });
 
 /*  
 Change Themes 
 ---------------------------------------------------------------- */
 
-MochaUI.themeChange();
+MochaUI.changeTheme();
