@@ -1,0 +1,231 @@
+/*
+
+Core.css for Mocha UI
+
+Theme: Default
+
+Copyright:
+	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.
+	
+License:
+	MIT-style license.
+
+Notes:
+	CSS rules in this file:
+	
+	1. Rules required by all MochaUI components or are shared by more than one.
+	2. Rules that had no better place to go.
+ 
+*/
+
+
+/* Components
+---------------------------------------------------------------- */
+
+/* Accordian */
+
+.accordianWrapper {
+	padding: 0;
+	/* background: #f00; Uncomment this if you want to change the background of the accordian sections. */	
+}
+
+.accordianToggler {
+	margin: 0;
+	padding: 6px 10px;
+	background: #f1f1f1 url(../images/bg-panel-header.gif) repeat-x;
+	font-size: 12px;
+	cursor: pointer;
+	border-top: 1px solid #e3e3e3;	
+}
+
+.topToggler {
+	border-top: none;
+}
+
+.accordianToggler.open {
+	/* background: #f00; Uncomment this if you want to change the background of the open section's header */	
+}
+
+.accordianContent {
+	padding: 10px 10px 5px 10px;
+}
+
+/* Sliders */
+
+.slider {
+	clear: both;
+	position: relative;
+	font-size: 12px;
+	font-weight: bold;
+	width: 200px;
+	margin-bottom: 15px;	
+}
+
+.sliderWrapper {
+	position: relative;
+	font-size: 1px;
+	line-height: 1px;
+	height: 9px;
+	width: 222px;
+}
+
+.sliderarea {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 7px;
+	width: 220px;
+	font-size: 1px;
+	line-height: 1px;
+	background: #f2f2f2 url(../images/slider-area.gif) repeat-x;
+	border: 1px solid #a3a3a3;
+	border-bottom: 1px solid #ccc;
+	border-left: 1px solid #ccc;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+ 
+.sliderknob {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 9px;
+	width: 19px;
+	font-size: 1px;
+	line-height: 1px;	
+	background: url(../images/knob.gif) no-repeat;
+	cursor: pointer;
+	overflow: hidden;
+	z-index: 2;
+}
+	
+.update {
+	padding-bottom: 5px;	
+}
+
+/* Folder Tree */
+
+.tree {
+	font-size: 11px;
+	line-height: 15px;
+	margin: 0 0 10px 0;
+}
+
+.tree ul {
+	margin: 0;
+}
+
+.tree li {
+	list-style-type: none;
+	white-space: nowrap;
+}
+
+.tree li a {
+	color: #3f3f3f;	
+}	
+
+.tree li img {
+	vertical-align: middle;
+	width: 18px;
+	height: 18px;
+	overflow: hidden;
+}
+
+.tree li span {
+	padding-left: 2px;
+}	
+
+/* Miscellaneous
+---------------------------------------------------------------- */
+
+#themeControl {
+	margin-top: 2px;	
+}	
+
+/* Window Builder Form Elements */
+
+.form {
+	padding: 0 0 10px 10px;	
+}		
+
+#newWindowForm {
+	width: 320px;
+}
+
+#newWindowForm .input {
+	width: 225px;
+}
+
+#desktop textarea {
+	width: 225px;
+	height: 60px;
+}
+
+#desktop .formLabel {
+	float: left;	
+	text-align: right;
+	width: 80px;
+	margin: 0 0 8px 0;
+	font-weight: bold;
+}
+
+#desktop .label {
+	font-size: 11px;
+	font-weight: bold;
+	padding-bottom: 2px;	
+}
+	
+#desktop .formRow {
+	margin: 0 0 8px 0;
+}	
+
+#desktop .formField {
+	float: right;
+	padding: 0 0 0 0;
+	width: 230px;
+}
+
+#desktop form .number {
+	width: 40px;
+}
+
+/* Forms */
+
+.buttonRow {
+	margin-bottom: 10px;	
+}
+
+/* Menus */
+
+.menu-right li {
+	list-style-type: none;
+	display: inline;	
+	margin: 0 0 0 15px;
+}
+
+/* Status Messages */
+.error,
+.notice, 
+.success    { padding: 8px; margin-bottom: 10px; border: 2px solid #ddd; }
+.error      { background: #FBE3E4; color: #D12F19; border-color: #FBC2C4; }
+.notice     { background: #FFF6BF; color: #817134; border-color: #FFD324; }
+.success    { background: #E6EFC2; color: #529214; border-color: #C6D880; }
+.error a    { color: #D12F19; }
+.notice a   { color: #817134; }
+.success a  { color: #529214; }
+
+
+/* Clears */
+
+.clear {
+	clear: both;
+	height: 0;
+}
+
+* html .clear {
+	font-size: 1px;
+	line-height: 1px;
+	overflow: hidden;
+	visibility: hidden;
+}

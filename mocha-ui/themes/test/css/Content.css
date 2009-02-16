@@ -1,0 +1,193 @@
+/*
+
+CSS for Mocha UI
+
+Theme: Test
+
+Copyright:
+	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.
+
+License:
+	MIT-style license.
+
+Note:	
+	If you are adding MochaUI to an existing site, this CSS file may not be necessary.
+
+*/
+
+
+/* Reset */
+
+ul,ol,dl,li,dt,dd,h1,h2,h3,h4,h5,h6,pre,form,body,html,p,blockquote,fieldset,input,object,iframe { margin: 0; padding: 0; }
+a img,:link img,:visited img { border: none; }
+table { border-collapse: collapse; border-spacing: 0; }
+:focus { outline: none; }
+
+/* Structure */
+
+body {
+	text-align: left;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	line-height: 18px;
+	color: #d0d0d0;	
+}
+
+/* Typography */
+	
+h2, h3, h4 {
+	margin: 0;
+	padding: 0 0 5px 0;
+	font-size: 12px;
+	font-weight: bold;
+	color: #fff;		
+}
+	
+h2 {
+	font-size: 14px;
+	font-weight: bold;
+}
+	
+h3 {
+	font-size: 13px;
+	font-weight: bold;
+}
+
+h4 {
+	font-size: 11px;
+}
+
+a {
+	color: #7dd0fa;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+a:hover {
+	text-decoration: none;
+}
+
+p {
+	margin: 0;
+	padding: 0 0 9px 0;
+}
+
+.lite {
+	color: #999;
+}
+
+/* List Elements */
+
+ul {
+	list-style: outside;
+	margin: 0 0 9px 16px;
+	list-style-type: disc;
+}
+
+dt {
+	font-weight: bold;
+}
+
+dd {
+	padding: 0 0 9px 0;
+}
+
+/* Forms */
+
+textarea, input {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #ddd;
+	background: #303030;			
+}
+
+.input {
+	padding: 2px 0 2px 3px;
+	border: 1px solid #141414;	
+}
+
+.searchField {
+	width: 150px;
+	overflow: hidden;
+	line-height: 15px; 
+	margin: 0;
+	padding: 4px 0 3px 5px;
+	border: 1px solid #141414;	
+	border-right: 0;
+	vertical-align: middle;		
+}
+
+* html .toolbox .searchField, * html .toolbox .button, * html .toolbox .button2 { /* IE6 Hack */
+	margin-top: -1px;		
+}
+
+*:first-child+html .toolbox .searchField, *:first-child+html .toolbox .button, *:first-child+html .toolbox .button2 { /* IE7 Hack */
+	margin-top: -1px;		
+}
+
+.button, .button2 {
+	height: 24px;
+	margin: 0;
+	padding: 3px 6px;
+	background: #a3c5ef url(../images/bg-buttons.gif) repeat-x;
+	font-size: 12px;
+	font-weight: bold;
+	color: #141414;
+	cursor: pointer;
+	vertical-align: middle;
+	border: 1px solid #141414;	
+}
+
+* html .button {
+	padding: 3px 1px;		
+}
+
+* html .button2 {
+	padding: 3px 1px;	
+}	 
+
+.button2 {
+	background-position: 0 -60px;
+}	
+		
+.button:hover {
+	background-position: 0 -30px;	
+}
+
+.button2:hover {
+	background-position: 0 -90px;
+}
+
+/* Code */
+
+pre {
+	background-color: #191919;
+	color: #080;
+	display: block;
+	font-family: 'Courier New', Courier, monospace;
+	font-size: 11px;
+	max-height: 250px;
+	overflow: auto;
+	margin: 0 0 10px 0;
+	padding: 10px;
+	border: 1px solid #262626;	
+}
+
+/* Dividers */
+
+hr {
+	background-color: #454545;
+	color: #ccc;
+	height: 1px;
+	border: 0px;
+}
+
+/* Misc */
+
+.nobr {
+	white-space: nowrap;
+}
+
+.textBox {
+	max-width: 650px;	
+}	
