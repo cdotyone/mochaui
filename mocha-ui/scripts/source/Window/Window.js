@@ -73,10 +73,10 @@ Options:
 	controlsOffset - Change this if you want to reposition the window controls.
 	useCanvas - (boolean) Set this to false if you don't want a canvas body.
 	useCanvasControls - (boolean) Set this to false if you wish to use images for the buttons.
+	useSpinner - (boolean) Toggles whether or not the ajax spinners are displayed in window footers. Defaults to true.
 	headerHeight - (number) Height of window titlebar.
 	footerHeight - (number) Height of window footer.
 	cornerRadius - (number)
-	contentBgColor - (hex) Body background color
 	headerStartColor - ([r,g,b,]) Titlebar gradient's top color
 	headerStopColor - ([r,g,b,]) Titlebar gradient's bottom color
 	bodyBgColor - ([r,g,b,]) Background color of the main canvas shape
@@ -227,13 +227,12 @@ MochaUI.Windows.windowOptions = {
 	controlsOffset:    {'right': 6, 'top': 6},
 	useCanvas:         true,
 	useCanvasControls: true,
-	useSpinner:        true,    // Toggles whether or not the ajax spinners are displayed in window footers.
-
-	// Color options:		
+	useSpinner:        true,
 	headerHeight:      25,
 	footerHeight:      25,
 	cornerRadius:      8,
-	contentBgColor:    '#fff',
+
+	// Color options:
 	headerStartColor:  [250, 250, 250],
 	headerStopColor:   [229, 229, 229],
 	bodyBgColor:       [229, 229, 229],
@@ -458,8 +457,7 @@ MochaUI.Window = new Class({
 
 		// Set scrollbars, always use 'hidden' for iframe windows
 		this.contentWrapperEl.setStyles({
-			'overflow': 'hidden',
-			'background': this.options.contentBgColor
+			'overflow': 'hidden'
 		});
 
 		this.contentEl.setStyles({
@@ -1054,13 +1052,21 @@ MochaUI.Window = new Class({
 				'scrolling': 'no',
 				'marginWidth': 0,
 				'marginHeight': 0,
-				'src': ''
+				'src': '',
+				'styles': {
+					'position': 'absolute' // This is set here to make theme transitions smoother
+				}
 			}).inject(this.windowEl);
 		}
 
 		cache.overlayEl = new Element('div', {
 			'id': id + '_overlay',
-			'class': 'mochaOverlay'
+			'class': 'mochaOverlay',
+			'styles': {
+				'position': 'absolute', // This is set here to make theme transitions smoother
+				'top': 0,
+				'left': 0
+			}
 		}).inject(this.windowEl);
 
 		cache.titleBarEl = new Element('div', {

@@ -266,18 +266,18 @@ initializeWindows = function(){
 		});
 	}
 
-	MochaUI.iframetestWindow = function(){
+	MochaUI.iframetestsWindow = function(){
 		new MochaUI.Window({
-			id: 'iframetest',
+			id: 'iframetests',
 			title: 'Iframe Tests',
 			loadMethod: 'iframe',
-			contentURL: 'pages/iframetest.html'
+			contentURL: 'pages/iframetests.html'
 		});
 	}
-	if ($('iframetestLinkCheck')) {
-		$('iframetestLinkCheck').addEvent('click', function(e){
+	if ($('iframetestsLinkCheck')) {
+		$('iframetestsLinkCheck').addEvent('click', function(e){
 		new Event(e).stop();
-			MochaUI.iframetestWindow();
+			MochaUI.iframetestsWindow();
 		});
 	}
 

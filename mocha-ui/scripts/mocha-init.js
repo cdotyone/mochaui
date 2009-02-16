@@ -195,8 +195,7 @@ initializeWindows = function(){
 			y: 160,
 			padding: { top: 12, right: 12, bottom: 10, left: 12 },
 			resizable: false,
-			maximizable: false,
-			contentBgColor: '#fff'
+			maximizable: false
 		});
 	}
 	if ($('parametricsLinkCheck')){
@@ -245,10 +244,10 @@ initializeWindows = function(){
 				new MochaUI.Panel({
 					header: false,
 					id: 'splitWindow_panel2',
+					addClass: 'panelAlt',
 					loadMethod: 'xhr',
 					contentURL: 'pages/lipsum.html',
-					column: 'splitWindow_sideColumn',
-					panelBackground: '#e5f1f7'
+					column: 'splitWindow_sideColumn'					
 				});
 
 			}			
@@ -317,29 +316,47 @@ initializeWindows = function(){
 			y: 100
 		});
 	}
-	if ($('containertestLinkCheck')){ 
+	if ($('containertestLinkCheck')) { 
 		$('containertestLinkCheck').addEvent('click', function(e){
 			new Event(e).stop();
 			MochaUI.containertestWindow();
 		});
 	}
 	
-	MochaUI.iframetestWindow = function(){
+	MochaUI.iframetestsWindow = function() {
 		new MochaUI.Window({
-			id: 'iframetest',
+			id: 'iframetests',
 			title: 'Iframe Tests',
 			loadMethod: 'iframe',
-			contentURL: 'pages/iframetest.html'
+			contentURL: 'pages/iframetests.html'
 		});
 	}
-	if ($('iframetestLinkCheck')) {
-		$('iframetestLinkCheck').addEvent('click', function(e){
+	if ($('iframetestsLinkCheck')) {
+		$('iframetestsLinkCheck').addEvent('click', function(e){
 		new Event(e).stop();
-			MochaUI.iframetestWindow();
+			MochaUI.iframetestsWindow();
 		});
 	}
+	
+	MochaUI.formtestsWindow = function() {
+		new MochaUI.Window({
+			id: 'formtests',
+			title: 'Form Tests',
+			loadMethod: 'xhr',
+			contentURL: 'pages/formtests.html',
+			onContentLoaded: function(){
+				document.testForm.focusTest.focus();
+			}			
+		});
+	}
+	if ($('formtestsLinkCheck')) {
+		$('formtestsLinkCheck').addEvent('click', function(e){
+		new Event(e).stop();
+			MochaUI.formtestsWindow();
+		});
+	}	
 
-	MochaUI.accordiantestWindow = function(){
+	MochaUI.accordiantestWindow = function() {
 		var id = 'accordiantest';
 		new MochaUI.Window({
 			id: id,
@@ -381,14 +398,14 @@ initializeWindows = function(){
 			}
 		});
 	}	
-	if ($('accordiantestLinkCheck')){ 
+	if ($('accordiantestLinkCheck')) { 
 		$('accordiantestLinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
 			MochaUI.accordiantestWindow();
 		});
 	}
 
-	MochaUI.noCanvasWindow = function(){
+	MochaUI.noCanvasWindow = function() {
 		new MochaUI.Window({
 			id: 'nocanvas',
 			title: 'No Canvas',
@@ -402,7 +419,7 @@ initializeWindows = function(){
 			useCanvas: false
 		});
 	}
-	if ($('noCanvasLinkCheck')){
+	if ($('noCanvasLinkCheck')) {
 		$('noCanvasLinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
 			MochaUI.noCanvasWindow();
@@ -410,35 +427,35 @@ initializeWindows = function(){
 	}
 
 	// View
-	if ($('sidebarLinkCheck')){
+	if ($('sidebarLinkCheck')) {
 		$('sidebarLinkCheck').addEvent('click', function(e){
 			new Event(e).stop();
 			MochaUI.Desktop.sidebarToggle();
 		});
 	}
 
-	if ($('cascadeLink')){
+	if ($('cascadeLink')) {
 		$('cascadeLink').addEvent('click', function(e){
 			new Event(e).stop();
 			MochaUI.arrangeCascade();
 		});
 	}
 
-	if ($('tileLink')){
+	if ($('tileLink')) {
 		$('tileLink').addEvent('click', function(e){
 			new Event(e).stop();
 			MochaUI.arrangeTile();
 		});
 	}
 
-	if ($('closeLink')){
+	if ($('closeLink')) {
 		$('closeLink').addEvent('click', function(e){
 			new Event(e).stop();
 			MochaUI.closeAll();
 		});
 	}
 
-	if ($('minimizeLink')){
+	if ($('minimizeLink')) {
 		$('minimizeLink').addEvent('click', function(e){
 			new Event(e).stop();
 			MochaUI.minimizeAll();
@@ -446,7 +463,7 @@ initializeWindows = function(){
 	}	
 
 	// Tools
-	MochaUI.builderWindow = function(){	
+	MochaUI.builderWindow = function() {	
 		new MochaUI.Window({
 			id: 'builder',
 			title: 'Window Builder',
@@ -476,8 +493,8 @@ initializeWindows = function(){
 			contentBgColor: '#f5f5f7'
 		});
 	}
-	if ($('builderLinkCheck')){
-		$('builderLinkCheck').addEvent('click', function(e){
+	if ($('builderLinkCheck')) {
+		$('builderLinkCheck').addEvent('click', function(e) {
 			new Event(e).stop();
 			MochaUI.builderWindow();
 		});
@@ -487,21 +504,21 @@ initializeWindows = function(){
 	
 	// Workspaces
 	
-	if ($('saveWorkspaceLink')){
-		$('saveWorkspaceLink').addEvent('click', function(e){
+	if ($('saveWorkspaceLink')) {
+		$('saveWorkspaceLink').addEvent('click', function(e) {
 			new Event(e).stop();
 			MochaUI.saveWorkspace();
 		});
 	}
 
-	if ($('loadWorkspaceLink')){
-		$('loadWorkspaceLink').addEvent('click', function(e){
+	if ($('loadWorkspaceLink')) {
+		$('loadWorkspaceLink').addEvent('click', function(e) {
 			new Event(e).stop();
 			MochaUI.loadWorkspace();
 		});
 	}
 	
-	if ($('toggleEffectsLinkCheck')){
+	if ($('toggleEffectsLinkCheck')) {
 		$('toggleEffectsLinkCheck').addEvent('click', function(e){
 			new Event(e).stop();
 			MochaUI.toggleEffects($('toggleEffectsLinkCheck'));			
@@ -515,7 +532,7 @@ initializeWindows = function(){
 	}	
 
 	// Help	
-	MochaUI.featuresWindow = function(){
+	MochaUI.featuresWindow = function() {
 		new MochaUI.Window({
 			id: 'features',
 			title: 'Features',
@@ -528,14 +545,14 @@ initializeWindows = function(){
 			toolbarURL: 'pages/features-tabs.html'
 		});
 	}
-	if ($('featuresLinkCheck')){
+	if ($('featuresLinkCheck')) {
 		$('featuresLinkCheck').addEvent('click', function(e){
 			new Event(e).stop();
 			MochaUI.featuresWindow();
 		});
 	}
 
-	MochaUI.aboutWindow = function(){
+	MochaUI.aboutWindow = function() {
 		new MochaUI.Window({
 			id: 'about',
 			title: 'MochaUI',
@@ -549,7 +566,7 @@ initializeWindows = function(){
 			scrollbars: false
 		});
 	}
-	if ($('aboutLink')){
+	if ($('aboutLink')) {
 		$('aboutLink').addEvent('click', function(e){
 			new Event(e).stop();
 			MochaUI.aboutWindow();
@@ -557,7 +574,7 @@ initializeWindows = function(){
 	}
 	
 	// Misc
-	MochaUI.licenseWindow = function(){
+	MochaUI.licenseWindow = function() {
 		new MochaUI.Window({
 			id: 'License',
 			title: 'License',			
@@ -568,15 +585,15 @@ initializeWindows = function(){
 		});
 	}	
 	if ($('licenseLink')){ 
-		$('licenseLink').addEvent('click', function(e){
+		$('licenseLink').addEvent('click', function(e) {
 			new Event(e).stop();
 			MochaUI.licenseWindow();
 		});
 	}	
 
 	// Deactivate menu header links
-	$$('a.returnFalse').each(function(el){
-		el.addEvent('click', function(e){
+	$$('a.returnFalse').each(function(el) {
+		el.addEvent('click', function(e) {
 			new Event(e).stop();
 		});
 	});
@@ -586,7 +603,7 @@ initializeWindows = function(){
 	
 }
 
-initializeColumns = function(){
+initializeColumns = function() {
 
 	/* Create Columns
 	 
@@ -650,11 +667,10 @@ initializeColumns = function(){
 	// Add panels to main column	
 	new MochaUI.Panel({
 		id: 'mainPanel',
-		title: 'Notes',
+		title: 'Development Notes',
 		loadMethod: 'xhr',
 		contentURL: 'pages/notes.html',
 		column: 'mainColumn',
-		panelBackground: '#fff',
 		headerToolbox: true,
 		headerToolboxURL: 'pages/toolbox-demo3.html'
 	});
@@ -700,7 +716,7 @@ initializeColumns = function(){
 		footerURL: 'pages/toolbox-demo.html'
 	});
 	
-	MochaUI.splitPanelPanel = function(){
+	MochaUI.splitPanelPanel = function() {
 		if ($('mainPanel')) {			
 			new MochaUI.Column({
 				container: 'mainPanel',
@@ -729,10 +745,10 @@ initializeColumns = function(){
 			new MochaUI.Panel({
 				header: false,
 				id: 'splitPanel_sidePanel',
+				addClass: 'panelAlt',
 				loadMethod: 'xhr',
 				contentURL: 'pages/lipsum.html',
-				column: 'sideColumn3',
-				panelBackground: '#e5f1f7'
+				column: 'sideColumn3'
 			});
 		}
 	}
@@ -749,13 +765,12 @@ window.addEvent('load', function(){ //using load instead of domready for IE8
 	MochaUI.Modal = new MochaUI.Modal();
 	
 	MochaUI.Desktop.desktop.setStyles({
-		'background': '#fff',
 		'visibility': 'visible'
 	});
 	initializeWindows();	
 
 });
 
-window.addEvent('unload', function(){
+window.addEvent('unload', function() {
 	// This runs when a user leaves your page.	
 });

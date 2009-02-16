@@ -22,6 +22,7 @@ MochaUI.extend({
 
 	*/
 	initializeTabs: function(el){
+		$(el).setStyle('list-style', 'none'); // This is to fix a glitch that occurs in IE8 RC1 when dynamically switching themes
 		$(el).getElements('li').each(function(listitem){
 			listitem.addEvent('click', function(e){
 				MochaUI.selected(this, el);

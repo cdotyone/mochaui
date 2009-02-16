@@ -23,8 +23,7 @@ window.addEvent('domready', function() {
 					'content': response,
 					'title': 'Ajax Response',
 					'padding': { top: 8, right: 8, bottom: 8, left: 8 }
-				});
-				$('mainPanel').setStyle('background','#fff');			
+				});			
 			},
 			onSuccess: function(){
 				$('postContent').setStyle('opacity', 0);
@@ -43,12 +42,8 @@ window.addEvent('domready', function() {
 <form id="myForm" action="scripts/ajax.form.php" method="post">
 	<div id="form_box">
 		<div class="formRow">
-			<div class="label">First Name:</div>
-			<input type="text" name="first_name" class="input" style="width:150px;" value="John" />
-		</div>
-		<div class="formRow">
-			<div class="label">Last Name:</div>
-			<input type="text" name="last_name" class="input" style="width:150px;" value="Hancock" />
+			<div class="label">Name:</div>
+			<input type="text" name="name" class="input" style="width:150px;" value="John Adams" />
 		</div>
 		<div class="buttonRow">
 			<input type="submit" name="button" id="submitter" class="button" value="Submit" />

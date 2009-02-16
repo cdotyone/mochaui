@@ -23,15 +23,18 @@ Todo:
 
 var MochaUI = new Hash({
 	options: new Hash({
-		useEffects: false  // Toggles the majority of window fade and move effects.
+		themesDir:      'themes',    // Path to themes directory - Experimental
+		theme:          'default',   // Experimental
+		stylesheets:    [],
+		useEffects:     false        // Toggles the majority of window fade and move effects.
 	}),
 	Columns: {
 		instances:      new Hash(),
-		columnIDCount:  0             // Used for columns without an ID defined by the user		
+		columnIDCount:  0            // Used for columns without an ID defined by the user		
 	},
 	Panels: {
 		instances:      new Hash(),
-		panelIDCount:  0              // Used for panels without an ID defined by the user		
+		panelIDCount:   0            // Used for panels without an ID defined by the user		
 	},		
 	Windows: {	  
 		instances:      new Hash(),
@@ -39,9 +42,85 @@ var MochaUI = new Hash({
 		windowIDCount:  0,            // Used for windows without an ID defined by the user
 		windowsVisible: true          // Ctrl-Alt-Q to toggle window visibility
 	},	
-	ieSupport:  'excanvas',   // Makes it easier to switch between Excanvas and Moocanvas for testing
-	focusingWindow: 'false',
+	ieSupport:          'excanvas',   // Makes it easier to switch between Excanvas and Moocanvas for testing	
+	currentStylesheets: [],
+	stylesheetCount:    0,
+	focusingWindow:     'false',
+	/*
+	
+	Function: themeInit
+		Initialize a theme. This is experimental and not fully implemented yet.
+		
+	*/	
+	themeInit: function(newTheme){
+		if (newTheme != null && newTheme != this.options.theme){
+			this.options.theme = newTheme;
+		}
+		// Need to create a way to reset original settings before applying theme-init.js		
+		var themeInitFile = new Asset.javascript(this.options.themesDir + '/' + this.options.theme + '/theme-init.js', {id: 'themeInitFile'});		
+						
+	},
+	themeChange: function(){
+		// Remove current theme stylesheets
+		//this.currentStylesheets.each( function(sheet){
+		//	if (sheet) {
+		//		sheet.disabled = true; // For IE and Safari 
+		//		sheet.destroy();
+		//	}			
+		//});		
 
+		// Add new stylesheets							
+		//if (this.options.stylesheets.length > 0){
+		//	this.currentStylesheets = [];
+		//	this.options.stylesheets.each(function(stylesheet){
+		//		var myCSS = new Asset.css(this.options.themesDir + '/' + this.options.theme + '/css/' + stylesheet, {
+		//			id: 'myStyle' + this.stylesheetCount++
+		//		}).addClass('themeStyles');
+		//		this.currentStylesheets.push(myCSS);
+		//	}.bind(this));
+		//}
+		
+		/*
+		$$('link').each( function(link){
+			if (link.id == 'cssContent') {
+				link.href = this.options.themesDir + '/' + this.options.theme + '/css/content.css';
+			}
+		}.bind(this));
+		*/				
+		
+		// Get all header stylesheets whose title starts with 'css' and redirect them to the proper theme folder.
+		$$('link').each( function(link){
+			var href = this.options.themesDir + '/' + this.options.theme + '/css/' + link.id.substring(3) +'.css';			
+			if (link.href.contains(href)) return;
+			if (link.id.substring(0,3) == 'css') {
+				link.href = href;
+			}
+		}.bind(this));		
+		
+		
+		// Not for Firefox, Safari, Chrome
+		if (MochaUI.Columns.instances.getKeys().length > 0) {
+			//MochaUI.Desktop.resizePanels();
+		}
+		
+		// Redraw open windows
+		$$('.mocha').each( function(element){			
+			var currentInstance = MochaUI.Windows.instances.get(element.id);
+			
+			// Reset original options
+			$extend(currentInstance.options, MochaUI.Windows.windowOptionsOriginal);
+			
+			// Set new options
+			$extend(currentInstance.options, MochaUI.Windows.windowOptions);
+			if (currentInstance.isCollapsed == false) {
+				currentInstance.drawWindow(currentInstance.windowEl);
+			}
+			else {
+				currentInstance.drawWindowCollapsed(currentInstance.windowEl);
+			}
+		});	
+						
+	},			
 	/*
 	
 	Function: updateContent
@@ -73,7 +152,7 @@ var MochaUI = new Hash({
 			'url':          null,
 			'scrollbars':   null,			
 			'padding':      null,
-			'bgColor':      null  /* Not implemented yet */
+			'bgColor':      null
 		};
 		$extend(options, updateOptions);
 
@@ -748,7 +827,6 @@ window.addEvent('resize', function(){
 	}
 });
 
-
 /*
 
 Shake effect by Uvumi Tools
@@ -1071,6 +1149,8 @@ MochaUI.Windows.windowOptions = {
 	onClose:           $empty,
 	onCloseComplete:   $empty
 };
+
+MochaUI.Windows.windowOptionsOriginal = $merge(MochaUI.Windows.windowOptions);
 
 MochaUI.Window = new Class({
 	options: MochaUI.Windows.windowOptions,
@@ -2225,7 +2305,7 @@ MochaUI.Window = new Class({
 		});
 
 		// Make sure loading icon is placed correctly.
-		if (options.useSpinner == true && options.shape != 'gauge' && options.type != 'notification'){
+		if (this.spinnerEl && options.useSpinner == true && options.shape != 'gauge' && options.type != 'notification'){
 			this.spinnerEl.setStyles({
 				'left': shadowBlur - shadowOffset.x + 3,
 				'bottom': shadowBlur + shadowOffset.y +  4

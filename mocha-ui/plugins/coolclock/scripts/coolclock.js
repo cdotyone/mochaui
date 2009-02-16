@@ -46,7 +46,7 @@ CoolClock.config = {
 		// more skins in moreskins.js
 		// try making your own...
 
-		swissRail: {
+		'swissRail': {
 			outerBorder: { lineWidth: 1, radius:95, color: "black", alpha: 1 },
 			smallIndicator: { lineWidth: 2, startAt: 89, endAt: 93, color: "black", alpha: 1 },
 			largeIndicator: { lineWidth: 4, startAt: 80, endAt: 93, color: "black", alpha: 1 },
@@ -55,7 +55,7 @@ CoolClock.config = {
 			secondHand: { lineWidth: 1, startAt: -20, endAt: 85, color: "red", alpha: 1 },
 			secondDecoration: { lineWidth: 1, startAt: 70, radius: 4, fillColor: "red", color: "red", alpha: 1 }
 		},
-		chunkySwiss: {
+		'chunkySwiss': {
 			outerBorder: { lineWidth: 4, radius:97, color: "black", alpha: 1 },
 			smallIndicator: { lineWidth: 4, startAt: 89, endAt: 93, color: "black", alpha: 1 },
 			largeIndicator: { lineWidth: 8, startAt: 80, endAt: 93, color: "black", alpha: 1 },
@@ -64,7 +64,7 @@ CoolClock.config = {
 			secondHand: { lineWidth: 4, startAt: -20, endAt: 85, color: "red", alpha: 1 },
 			secondDecoration: { lineWidth: 2, startAt: 70, radius: 8, fillColor: "red", color: "red", alpha: 1 }
 		},
-		chunkySwissOnBlack: {
+		'chunkySwissOnBlack': {
 			outerBorder: { lineWidth: 4, radius:97, color: "white", alpha: 1 },
 			smallIndicator: { lineWidth: 4, startAt: 89, endAt: 93, color: "white", alpha: 1 },
 			largeIndicator: { lineWidth: 8, startAt: 80, endAt: 93, color: "white", alpha: 1 },
@@ -73,7 +73,7 @@ CoolClock.config = {
 			secondHand: { lineWidth: 4, startAt: -20, endAt: 85, color: "red", alpha: 1 },
 			secondDecoration: { lineWidth: 2, startAt: 70, radius: 8, fillColor: "red", color: "red", alpha: 1 }
 		},
-		mochaUI: {
+		'mochaUI': {
 			outerBorder: { lineWidth: 185, radius:1, color: "#000", alpha: 0 },
 			smallIndicator: { lineWidth: 3, startAt: 88, endAt: 94, color: "#595959", alpha: 1 },
 			largeIndicator: { lineWidth: 3, startAt: 82, endAt: 94, color: "#ddd", alpha: 1 },
@@ -82,7 +82,7 @@ CoolClock.config = {
 			secondHand: { lineWidth: 4, startAt: 82, endAt: 94, color: "#98B8D9", alpha: 1 },
 			secondDecoration: { lineWidth: 3, startAt: 0, radius: 6, fillColor: "white", color: "white", alpha: 1 }
 		},
-		mochaUI2: {
+		'default': {
 			outerBorder: { lineWidth: 6, radius:98, color: "#fff", alpha: 0 },
 			smallIndicator: { lineWidth: 2, startAt: 86, endAt: 91, color: "#555", alpha: 1 },
 			largeIndicator: { lineWidth: 3, startAt: 80, endAt: 91, color: "#555", alpha: 1 },
@@ -91,7 +91,7 @@ CoolClock.config = {
 			secondHand: { lineWidth: 1, startAt: -16, endAt: 80, color: "#ce1717", alpha: 1 },
 			secondDecoration: { lineWidth: 2, startAt: 0, radius: 7, fillColor: "#fff", color: "#ce1717", alpha: 0 }
 		},
-		mochaUI3: {
+		'mochaUI3': {
 			outerBorder: { lineWidth: 185, radius:1, color: "#000", alpha: 0 },
 			smallIndicator: { lineWidth: 3, startAt: 88, endAt: 94, color: "#2CC2D1", alpha: 1 },
 			largeIndicator: { lineWidth: 3, startAt: 82, endAt: 94, color: "#1BFFD9", alpha: 1 },
@@ -100,7 +100,7 @@ CoolClock.config = {
 			secondHand: { lineWidth: 4, startAt: 82, endAt: 94, color: "#EFCD5F", alpha: 1 },
 			secondDecoration: { lineWidth: 0, startAt: 0, radius: 6, fillColor: "#fff", color: "#000", alpha: 1 }
 		},
-		mochaUI4: {
+		'mochaUI4': {
 			outerBorder: { lineWidth: 185, radius:1, color: "#000", alpha: 0 },
 			smallIndicator: { lineWidth: 3, startAt: 88, endAt: 94, color: "#C7C3B7", alpha: 1 },
 			largeIndicator: { lineWidth: 3, startAt: 82, endAt: 94, color: "#C7C3B7", alpha: 1 },
@@ -118,7 +118,7 @@ CoolClock.prototype = {
 		canvasId = 'myClock';
 		this.canvasId = canvasId;
 		this.displayRadius = 75;
-		this.skinId = 'mochaUI2';
+		this.skinId = 'default';
 		this.showSecondHand = true;
 		this.tickDelay = 1000;
 		

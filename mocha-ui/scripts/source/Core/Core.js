@@ -23,9 +23,6 @@ Todo:
 
 var MochaUI = new Hash({
 	options: new Hash({
-		themesDir:      'themes',    // Path to themes directory - Experimental
-		theme:          'default',   // Experimental
-		stylesheets:    [],
 		useEffects:     false        // Toggles the majority of window fade and move effects.
 	}),
 	Columns: {
@@ -38,66 +35,12 @@ var MochaUI = new Hash({
 	},		
 	Windows: {	  
 		instances:      new Hash(),
-		indexLevel:     100,          // Used for z-Index
+		indexLevel:     100,          // Used for window z-Index
 		windowIDCount:  0,            // Used for windows without an ID defined by the user
-		windowsVisible: true          // Ctrl-Alt-Q to toggle window visibility
+		windowsVisible: true          // Ctrl-Alt-Q to toggle window visibility		
 	},	
-	ieSupport:          'excanvas',   // Makes it easier to switch between Excanvas and Moocanvas for testing	
-	currentStylesheets: [],
-	stylesheetCount:    0,
-	focusingWindow:     'false',
-	/*
-	
-	Function: themeInit
-		Initialize a theme. This is experimental and not fully implemented yet.
-		
-	*/	
-	themeInit: function(newTheme){
-		if (newTheme != null && newTheme != this.options.theme){
-			this.options.theme = newTheme;
-		}
-		// Need to create a way to reset original settings before applying theme-init.js		
-		var themeInitFile = new Asset.javascript(this.options.themesDir + '/' + this.options.theme + '/theme-init.js', {id: 'themeInitFile'});		
-						
-	},
-	themeChange: function(){
-		// Remove current theme stylesheets
-		this.currentStylesheets.each( function(sheet){
-			if (sheet) {
-				sheet.disabled = true; // For IE and Safari 
-				sheet.destroy();
-			}			
-		});		
-
-		// Add new stylesheets							
-		if (this.options.stylesheets.length > 0){
-			this.currentStylesheets = [];
-			this.options.stylesheets.each(function(stylesheet){
-				var myCSS = new Asset.css(this.options.themesDir + '/' + this.options.theme + '/css/' + stylesheet, {
-					id: 'myStyle' + this.stylesheetCount++
-				}).addClass('themeStyles');
-				this.currentStylesheets.push(myCSS);
-			}.bind(this));
-		}
-		
-		// Redraw open windows
-		$$('.mocha').each( function(element){			
-			var currentInstance = MochaUI.Windows.instances.get(element.id);
-			
-			// Reset original options
-			$extend(currentInstance.options, MochaUI.Windows.windowOptionsOriginal);
-			
-			// Set new options
-			$extend(currentInstance.options, MochaUI.Windows.windowOptions);
-			if (currentInstance.isCollapsed == false) {
-				currentInstance.drawWindow(currentInstance.windowEl);
-			}
-			else {
-				currentInstance.drawWindowCollapsed(currentInstance.windowEl);
-			}
-		});	
-						
-	},			
+	ieSupport:          'excanvas',   // Makes it easier to switch between Excanvas and Moocanvas for testing
+	focusingWindow:     'false',			
 	/*
 	
 	Function: updateContent
@@ -128,8 +71,7 @@ var MochaUI = new Hash({
 			'loadMethod':   null,
 			'url':          null,
 			'scrollbars':   null,			
-			'padding':      null,
-			'bgColor':      null
+			'padding':      null
 		};
 		$extend(options, updateOptions);
 
@@ -192,10 +134,6 @@ var MochaUI = new Hash({
 			contentEl.getAllNext('.columnHandle').destroy();
 		}
 		
-		if (options.bgColor != null) {
-			contentEl.getParent().setStyle('background', options.bgColor);
-		}
-
 		// Load new content.
 		switch(loadMethod){
 			case 'xhr':
@@ -668,8 +606,7 @@ var MochaUI = new Hash({
 				height: 40,
 				y: 53,
 				padding:  { top: 10, right: 12, bottom: 10, left: 12 },
-				shadowBlur: 5,
-				bodyBgColor: [255, 255, 255]	
+				shadowBlur: 5	
 			});
 	},
 	/*

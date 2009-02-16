@@ -38,7 +38,19 @@ MochaUI.Desktop = new Class({
 		this.desktopNavBar   = $(this.options.desktopNavBar);
 		this.pageWrapper     = $(this.options.pageWrapper);
 		this.page            = $(this.options.page);
-		this.desktopFooter   = $(this.options.desktopFooter);		
+		this.desktopFooter   = $(this.options.desktopFooter);
+		
+		if (this.desktop) {
+			($$('body')).setStyles({
+				overflow: 'hidden',
+				height: '100%',
+				margin: 0
+			});
+			($$('html')).setStyles({
+				overflow: 'hidden',
+				height: '100%'
+			});			
+		}		
 	
 		// This is run on dock initialize so no need to do it twice.
 		if (!MochaUI.Dock.dockWrapper){
@@ -593,7 +605,6 @@ Options:
 	addClass - (string) Add a class to the panel.
 	scrollbars - (boolean)
 	padding - (object)
-	panelBackground - CSS background property for the panel.
 	collapsible - (boolean)
 	onBeforeBuild - (function) Fired before the panel is created.
 	onContentLoaded - (function) Fired after the panel's conten is loaded.
@@ -642,9 +653,6 @@ MochaUI.Panel = new Class({
 		addClass:         '',
 		scrollbars:       true,
 		padding:   		  { top: 8, right: 8, bottom: 8, left: 8 },
-
-		// Color options:		
-		panelBackground:   '#f8f8f8',
 		
 		// Other:
 		collapsible:	  true,
@@ -705,8 +713,7 @@ MochaUI.Panel = new Class({
 			'id': this.options.id,
 			'class': 'panel expanded',
 			'styles': {
-				'height': this.options.height,
-				'background': this.options.panelBackground
+				'height': this.options.height
 			}
 		}).inject($(this.options.column));
 
@@ -887,21 +894,21 @@ MochaUI.Panel = new Class({
 				this.contentEl.setStyle('position', 'absolute'); // This is so IE6 and IE7 will collapse the panel all the way		
 				panel.setStyle('height', 0);								
 				this.isCollapsed = true;
-				panel.addClass('collapsed');
+				panel.addClass('collapsed');				
 				panel.removeClass('expanded');
 				MochaUI.panelHeight(this.options.column, panel, 'collapsing');
 				MochaUI.panelHeight(); // Run this a second time for panels within panels
 				this.collapseToggleEl.removeClass('panel-collapsed');
 				this.collapseToggleEl.addClass('panel-expand');
 				this.collapseToggleEl.setProperty('title','Expand Panel');
-				this.fireEvent('onCollapse');
+				this.fireEvent('onCollapse');				
 			}
 			else {
 				this.contentEl.setStyle('position', null); // This is so IE6 and IE7 will collapse the panel all the way				
 				panel.setStyle('height', this.oldHeight);
 				this.isCollapsed = false;
 				panel.addClass('expanded');
-				panel.removeClass('collapsed');
+				panel.removeClass('collapsed');				
 				MochaUI.panelHeight(this.options.column, panel, 'expanding');
 				MochaUI.panelHeight(); // Run this a second time for panels within panels
 				this.collapseToggleEl.removeClass('panel-expand');

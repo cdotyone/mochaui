@@ -24,6 +24,7 @@ Example:
 // Array of files to merge
 $files = array(
 	'Core/Core.js',
+	'Utilities/Themes.js',
 	'Window/Window.js',
 	'Window/Modal.js',
 	'Window/Windows-from-html.js',
