@@ -261,6 +261,17 @@ initializeWindows = function(){
 			
 
 	// Examples > Tests
+	
+	MochaUI.serverRepsonseWindow = function(response){
+		new MochaUI.Window({
+			id: 'serverResponse',
+			loadMethod: 'html',
+			content: response,
+			width: 350,
+			height: 350
+		});
+	}		
+	
 	MochaUI.eventsWindow = function(){
 		new MochaUI.Window({
 			id: 'windowevents',
@@ -674,10 +685,11 @@ initializeColumns = function() {
 	});
 	
 	new MochaUI.Panel({
-		id: 'panel1',
-		title: 'Panel',
-		loadMethod: 'xhr',
-		contentURL: 'pages/lipsum.html',
+		id: 'mochaConsole',
+		addClass: 'mochaConsole',
+		title: 'Console',
+		loadMethod: 'html',
+		content: '',
 		column: 'mainColumn',
 		height: 200,
 		headerToolbox: true,

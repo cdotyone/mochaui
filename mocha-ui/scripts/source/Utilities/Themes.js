@@ -32,8 +32,12 @@ MochaUI.extend({
 		
 	*/	
 	themeInit: function(newTheme){
-		if (newTheme != null && newTheme != this.options.theme){
-			this.options.theme = newTheme;
+		if (newTheme == null || newTheme == this.options.theme) return;
+
+		this.options.theme = newTheme;
+		
+		if ($('spinner')) {
+			$('spinner').setStyle('visibility', 'visible');
 		}
 		
 		// Store the current options so we can compare them to currently open windows.
@@ -58,46 +62,73 @@ MochaUI.extend({
 			}
 		});
 		
-		this.updateThemeStyleSheets();
-								
-	},
-	updateThemeStyleSheets: function(){
-
-		// Get all header stylesheets whose title starts with 'css' and redirect them to the proper theme folder.		
+		// Get all header stylesheets whose id's starts with 'css'.		
 		this.sheetsToLoad = $$('link').length;
 		this.sheetsLoaded = 0;
-		
+
+		/* Add old style sheets to an array */
+		this.oldSheets = [];
 		$$('link').each( function(link){
 			var href = this.options.themesDir + '/' + this.options.theme + '/css/' + link.id.substring(3) +'.css';			
 			if (link.href.contains(href)) return;
+			
+			if (link.id.substring(0,3) == 'css') {
+				this.oldSheets.push(link);				
+			}
+		}.bind(this));
+		
+		/* Download new stylesheets and add them to an array */
+		this.newSheets = [];
+		$$('link').each( function(link){
+			var href = this.options.themesDir + '/' + this.options.theme + '/css/' + link.id.substring(3) +'.css';			
+			if (link.href.contains(href)) return;
+			
 			if (link.id.substring(0,3) == 'css') {
 								
 				var id = link.id;
-				link.destroy();
+				//link.destroy();
 				
 				var cssRequest = new Request({
 					method: 'get',
 					url: href,
 					onComplete: function(response) { 
-						new Element('link', {
+						var newSheet = new Element('link', {
 							'id': id,
 							'rel': 'stylesheet',
 							'media': 'screen',
 							'type': 'text/css',
 							'href': href
-						}).inject(document.head);												
+						});
+						MochaUI.newSheets.push(newSheet);											
 					},					
-					onSuccess: function(){
+					onSuccess: function(){						
 						MochaUI.sheetsLoaded++;
 						if (MochaUI.sheetsLoaded == MochaUI.sheetsToLoad) {
-							MochaUI.redrawTheme();
+							MochaUI.updateThemeStyleSheets();
 						}  
 					}
 				});
-				cssRequest.send();
-				
+				cssRequest.send();				
 			}
 		}.bind(this));
+								
+	},
+	updateThemeStyleSheets: function(){
+
+		MochaUI.oldSheets.each( function(sheet){
+			sheet.destroy();
+		});
+
+		MochaUI.newSheets.each( function(sheet){
+			sheet.inject(document.head);
+		});
+
+		if (!Browser.Engine.presto) {
+			MochaUI.redrawTheme.delay(10);
+		}
+		else {
+			MochaUI.redrawTheme.delay(200);
+		}
 	
 	},
 	redrawTheme: function(){
@@ -135,21 +166,25 @@ MochaUI.extend({
 				}								
 			}.bind(this));
 							
-			currentInstance.drawWindow(currentInstance.windowEl);
+			currentInstance.drawWindow(currentInstance.windowEl);			
 			
 		}.bind(this));
 
 		// Reformat layout
 		if (MochaUI.Desktop.desktop) {
 			var checker = (function(){
-				// Make sure the style sheets are really ready.
-				if (MochaUI.Desktop.desktop.getStyle('overflow') != 'hidden') {
+				// Make sure the style sheets are really ready.				
+				if (MochaUI.Desktop.desktop.getStyle('overflow') != 'hidden') {					
 					return;
 				}
-				$clear(checker);
-				MochaUI.Desktop.setDesktopSize();
+				$clear(checker);								
+				MochaUI.Desktop.setDesktopSize();				
 			}).periodical(50);
-		}		
+		}
 		
+		if ($('spinner')) {
+			$('spinner').setStyle('visibility', 'hidden');
+		}		
+						
 	}
 });

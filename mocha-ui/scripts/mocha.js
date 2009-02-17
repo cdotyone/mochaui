@@ -23,9 +23,6 @@ Todo:
 
 var MochaUI = new Hash({
 	options: new Hash({
-		themesDir:      'themes',    // Path to themes directory - Experimental
-		theme:          'default',   // Experimental
-		stylesheets:    [],
 		useEffects:     false        // Toggles the majority of window fade and move effects.
 	}),
 	Columns: {
@@ -38,89 +35,19 @@ var MochaUI = new Hash({
 	},		
 	Windows: {	  
 		instances:      new Hash(),
-		indexLevel:     100,          // Used for z-Index
+		indexLevel:     100,          // Used for window z-Index
 		windowIDCount:  0,            // Used for windows without an ID defined by the user
-		windowsVisible: true          // Ctrl-Alt-Q to toggle window visibility
+		windowsVisible: true          // Ctrl-Alt-Q to toggle window visibility		
 	},	
-	ieSupport:          'excanvas',   // Makes it easier to switch between Excanvas and Moocanvas for testing	
-	currentStylesheets: [],
-	stylesheetCount:    0,
-	focusingWindow:     'false',
-	/*
-	
-	Function: themeInit
-		Initialize a theme. This is experimental and not fully implemented yet.
-		
-	*/	
-	themeInit: function(newTheme){
-		if (newTheme != null && newTheme != this.options.theme){
-			this.options.theme = newTheme;
-		}
-		// Need to create a way to reset original settings before applying theme-init.js		
-		var themeInitFile = new Asset.javascript(this.options.themesDir + '/' + this.options.theme + '/theme-init.js', {id: 'themeInitFile'});		
-						
-	},
-	themeChange: function(){
-		// Remove current theme stylesheets
-		//this.currentStylesheets.each( function(sheet){
-		//	if (sheet) {
-		//		sheet.disabled = true; // For IE and Safari 
-		//		sheet.destroy();
-		//	}			
-		//});		
-
-		// Add new stylesheets							
-		//if (this.options.stylesheets.length > 0){
-		//	this.currentStylesheets = [];
-		//	this.options.stylesheets.each(function(stylesheet){
-		//		var myCSS = new Asset.css(this.options.themesDir + '/' + this.options.theme + '/css/' + stylesheet, {
-		//			id: 'myStyle' + this.stylesheetCount++
-		//		}).addClass('themeStyles');
-		//		this.currentStylesheets.push(myCSS);
-		//	}.bind(this));
-		//}
-		
-		/*
-		$$('link').each( function(link){
-			if (link.id == 'cssContent') {
-				link.href = this.options.themesDir + '/' + this.options.theme + '/css/content.css';
+	ieSupport:          'excanvas',   // Makes it easier to switch between Excanvas and Moocanvas for testing
+	focusingWindow:     'false',	
+	console: {
+		log: function(html){
+			if ($('mochaConsole_pad')) {
+				$('mochaConsole_pad').set('html', $('mochaConsole_pad').innerHTML + html + '<br />');
 			}
-		}.bind(this));
-		*/				
-		
-		// Get all header stylesheets whose title starts with 'css' and redirect them to the proper theme folder.
-		$$('link').each( function(link){
-			var href = this.options.themesDir + '/' + this.options.theme + '/css/' + link.id.substring(3) +'.css';			
-			if (link.href.contains(href)) return;
-			if (link.id.substring(0,3) == 'css') {
-				link.href = href;
-			}
-		}.bind(this));		
-		
-		
-		// Not for Firefox, Safari, Chrome
-		if (MochaUI.Columns.instances.getKeys().length > 0) {
-			//MochaUI.Desktop.resizePanels();
-		}
-		
-		// Redraw open windows
-		$$('.mocha').each( function(element){			
-			var currentInstance = MochaUI.Windows.instances.get(element.id);
-			
-			// Reset original options
-			$extend(currentInstance.options, MochaUI.Windows.windowOptionsOriginal);
-			
-			// Set new options
-			$extend(currentInstance.options, MochaUI.Windows.windowOptions);
-			if (currentInstance.isCollapsed == false) {
-				currentInstance.drawWindow(currentInstance.windowEl);
-			}
-			else {
-				currentInstance.drawWindowCollapsed(currentInstance.windowEl);
-			}
-		});	
-						
-	},			
+		}		
+	},				
 	/*
 	
 	Function: updateContent
@@ -151,8 +78,7 @@ var MochaUI = new Hash({
 			'loadMethod':   null,
 			'url':          null,
 			'scrollbars':   null,			
-			'padding':      null,
-			'bgColor':      null
+			'padding':      null
 		};
 		$extend(options, updateOptions);
 
@@ -215,10 +141,6 @@ var MochaUI = new Hash({
 			contentEl.getAllNext('.columnHandle').destroy();
 		}
 		
-		if (options.bgColor != null) {
-			contentEl.getParent().setStyle('background', options.bgColor);
-		}
-
 		// Load new content.
 		switch(loadMethod){
 			case 'xhr':
@@ -691,8 +613,7 @@ var MochaUI = new Hash({
 				height: 40,
 				y: 53,
 				padding:  { top: 10, right: 12, bottom: 10, left: 12 },
-				shadowBlur: 5,
-				bodyBgColor: [255, 255, 255]	
+				shadowBlur: 5	
 			});
 	},
 	/*
@@ -892,6 +813,196 @@ Element.implement({
 }); 
 /*
 
+Script: Themes.js
+	Allows for switching themes dynamically.
+
+Copyright:
+	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.	
+
+License:
+	MIT-style license.
+
+Requires:
+	Core.js
+
+*/
+
+MochaUI.options.extend({
+		themesDir:      'themes',    // Path to themes directory - Experimental
+		theme:          'default'    // Experimental
+		// stylesheets:    []	
+});
+
+MochaUI.Windows.themable = ['headerStartColor','headerStopColor','bodyBgColor','minimizeBgColor','minimizeColor','maximizeBgColor',
+							'maximizeColor','closeBgColor','closeColor','resizableColor'];
+MochaUI.extend({
+	// currentStylesheets: [],
+	// stylesheetCount:    0,
+	/*
+	
+	Function: themeInit
+		Initialize a theme. This is experimental and not fully implemented yet.
+		
+	*/	
+	themeInit: function(newTheme){
+		if (newTheme == null || newTheme == this.options.theme) return;
+
+		this.options.theme = newTheme;
+		
+		if ($('spinner')) {
+			$('spinner').setStyle('visibility', 'visible');
+		}
+		
+		// Store the current options so we can compare them to currently open windows.
+		// Windows with different options than these will keep their settings since the defaults were overridden
+		// when these windows were created.
+		MochaUI.Windows.windowOptionsPrevious = new Hash($merge(MochaUI.Windows.windowOptions));
+		
+		// Run theme init file		
+		new Asset.javascript(this.options.themesDir + '/' + this.options.theme + '/theme-init.js', {id: 'themeInitFile'});		
+						
+	},
+	changeTheme: function(){
+
+		// Reset original options
+		$extend(MochaUI.Windows.windowOptions, $merge(MochaUI.Windows.windowOptionsOriginal));
+
+		// Set new options defined in the theme init file
+		// Undefined options that are null in the original need to be set to null!!!!
+		MochaUI.newWindowOptions.each( function(value, key){							
+			if (MochaUI.Windows.themable.contains(key)) {
+				eval('MochaUI.Windows.windowOptions.' + key + ' = value');
+			}
+		});
+		
+		// Get all header stylesheets whose id's starts with 'css'.		
+		this.sheetsToLoad = $$('link').length;
+		this.sheetsLoaded = 0;
+
+		/* Add old style sheets to an array */
+		this.oldSheets = [];
+		$$('link').each( function(link){
+			var href = this.options.themesDir + '/' + this.options.theme + '/css/' + link.id.substring(3) +'.css';			
+			if (link.href.contains(href)) return;
+			
+			if (link.id.substring(0,3) == 'css') {
+				this.oldSheets.push(link);				
+			}
+		}.bind(this));
+		
+		/* Download new stylesheets and add them to an array */
+		this.newSheets = [];
+		$$('link').each( function(link){
+			var href = this.options.themesDir + '/' + this.options.theme + '/css/' + link.id.substring(3) +'.css';			
+			if (link.href.contains(href)) return;
+			
+			if (link.id.substring(0,3) == 'css') {
+								
+				var id = link.id;
+				//link.destroy();
+				
+				var cssRequest = new Request({
+					method: 'get',
+					url: href,
+					onComplete: function(response) { 
+						var newSheet = new Element('link', {
+							'id': id,
+							'rel': 'stylesheet',
+							'media': 'screen',
+							'type': 'text/css',
+							'href': href
+						});
+						MochaUI.newSheets.push(newSheet);											
+					},					
+					onSuccess: function(){						
+						MochaUI.sheetsLoaded++;
+						if (MochaUI.sheetsLoaded == MochaUI.sheetsToLoad) {
+							MochaUI.updateThemeStyleSheets();
+						}  
+					}
+				});
+				cssRequest.send();				
+			}
+		}.bind(this));
+								
+	},
+	updateThemeStyleSheets: function(){
+
+		MochaUI.oldSheets.each( function(sheet){
+			sheet.destroy();
+		});
+
+		MochaUI.newSheets.each( function(sheet){
+			sheet.inject(document.head);
+		});
+
+		if (!Browser.Engine.presto) {
+			MochaUI.redrawTheme.delay(10);
+		}
+		else {
+			MochaUI.redrawTheme.delay(200);
+		}
+	
+	},
+	redrawTheme: function(){
+
+		// Redraw open windows		
+		$$('.mocha').each( function(element){			
+			var currentInstance = MochaUI.Windows.instances.get(element.id);		
+						
+			new Hash(currentInstance.options).each( function(value, key){							
+				if (MochaUI.Windows.themable.contains(key)) {					
+
+					/*
+					if (eval('MochaUI.Windows.windowOptions.' + key + ' == null') && eval('MochaUI.Windows.windowOptionsOriginal.' + key + ' == null')){
+						eval('currentInstance.options.' + key + ' = null');
+						return;	
+					}
+					*/					
+
+					if ($type(value) == 'array') {						
+						// If it is an rgb color
+						if (MochaUI.Windows.windowOptionsPrevious.get(key).rgbToHex() == null) return;
+						if (MochaUI.Windows.windowOptionsPrevious.get(key).rgbToHex().substring(1) != value.rgbToHex().substring(1)) 
+							return;
+						eval('currentInstance.options.' + key + ' = MochaUI.Windows.windowOptions.' + key);
+					}
+					
+					/*
+					else if ($type(value) == 'string'){
+						// If it is a hex color
+						if (MochaUI.Windows.windowOptionsPrevious.get(key).substring(1) != value.substring(1)) 
+							return;							
+						eval('currentInstance.options.' + key + ' = MochaUI.Windows.windowOptions.' + key);											
+					}
+					*/					
+				}								
+			}.bind(this));
+							
+			currentInstance.drawWindow(currentInstance.windowEl);			
+			
+		}.bind(this));
+
+		// Reformat layout
+		if (MochaUI.Desktop.desktop) {
+			var checker = (function(){
+				// Make sure the style sheets are really ready.				
+				if (MochaUI.Desktop.desktop.getStyle('overflow') != 'hidden') {					
+					return;
+				}
+				$clear(checker);								
+				MochaUI.Desktop.setDesktopSize();				
+			}).periodical(50);
+		}
+		
+		if ($('spinner')) {
+			$('spinner').setStyle('visibility', 'hidden');
+		}		
+						
+	}
+});
+/*
+
 Script: Window.js
 	Build windows.
 
@@ -965,10 +1076,10 @@ Options:
 	controlsOffset - Change this if you want to reposition the window controls.
 	useCanvas - (boolean) Set this to false if you don't want a canvas body.
 	useCanvasControls - (boolean) Set this to false if you wish to use images for the buttons.
+	useSpinner - (boolean) Toggles whether or not the ajax spinners are displayed in window footers. Defaults to true.
 	headerHeight - (number) Height of window titlebar.
 	footerHeight - (number) Height of window footer.
 	cornerRadius - (number)
-	contentBgColor - (hex) Body background color
 	headerStartColor - ([r,g,b,]) Titlebar gradient's top color
 	headerStopColor - ([r,g,b,]) Titlebar gradient's bottom color
 	bodyBgColor - ([r,g,b,]) Background color of the main canvas shape
@@ -1119,13 +1230,12 @@ MochaUI.Windows.windowOptions = {
 	controlsOffset:    {'right': 6, 'top': 6},
 	useCanvas:         true,
 	useCanvasControls: true,
-	useSpinner:        true,    // Toggles whether or not the ajax spinners are displayed in window footers.
-
-	// Color options:		
+	useSpinner:        true,
 	headerHeight:      25,
 	footerHeight:      25,
 	cornerRadius:      8,
-	contentBgColor:    '#fff',
+
+	// Color options:
 	headerStartColor:  [250, 250, 250],
 	headerStopColor:   [229, 229, 229],
 	bodyBgColor:       [229, 229, 229],
@@ -1350,8 +1460,7 @@ MochaUI.Window = new Class({
 
 		// Set scrollbars, always use 'hidden' for iframe windows
 		this.contentWrapperEl.setStyles({
-			'overflow': 'hidden',
-			'background': this.options.contentBgColor
+			'overflow': 'hidden'
 		});
 
 		this.contentEl.setStyles({
@@ -1946,13 +2055,21 @@ MochaUI.Window = new Class({
 				'scrolling': 'no',
 				'marginWidth': 0,
 				'marginHeight': 0,
-				'src': ''
+				'src': '',
+				'styles': {
+					'position': 'absolute' // This is set here to make theme transitions smoother
+				}
 			}).inject(this.windowEl);
 		}
 
 		cache.overlayEl = new Element('div', {
 			'id': id + '_overlay',
-			'class': 'mochaOverlay'
+			'class': 'mochaOverlay',
+			'styles': {
+				'position': 'absolute', // This is set here to make theme transitions smoother
+				'top': 0,
+				'left': 0
+			}
 		}).inject(this.windowEl);
 
 		cache.titleBarEl = new Element('div', {
@@ -2305,7 +2422,7 @@ MochaUI.Window = new Class({
 		});
 
 		// Make sure loading icon is placed correctly.
-		if (this.spinnerEl && options.useSpinner == true && options.shape != 'gauge' && options.type != 'notification'){
+		if (options.useSpinner == true && options.shape != 'gauge' && options.type != 'notification'){
 			this.spinnerEl.setStyles({
 				'left': shadowBlur - shadowOffset.x + 3,
 				'bottom': shadowBlur + shadowOffset.y +  4
@@ -2826,12 +2943,16 @@ MochaUI.Modal = new Class({
 		var modalOverlay = new Element('div', {
 			'id': 'modalOverlay',
 			'styles': {
-				'height': document.getCoordinates().height,
+				'height': document.getCoordinates().height,				
 				'opacity': .6
 			}
 		}).inject(document.body);
 		
-		if (this.options.modalOverlayClose) {
+		modalOverlay.setStyles({
+				'position': Browser.Engine.trident4 ? 'absolute' : 'fixed'
+		});
+		
+		if (this.options.modalOverlayClose == true) {
 			modalOverlay.addEvent('click', function(e){
 				MochaUI.closeWindow(MochaUI.currentModal);
 			});
@@ -3191,6 +3312,7 @@ MochaUI.extend({
 
 	*/
 	initializeTabs: function(el){
+		$(el).setStyle('list-style', 'none'); // This is to fix a glitch that occurs in IE8 RC1 when dynamically switching themes
 		$(el).getElements('li').each(function(listitem){
 			listitem.addEvent('click', function(e){
 				MochaUI.selected(this, el);
@@ -3260,7 +3382,19 @@ MochaUI.Desktop = new Class({
 		this.desktopNavBar   = $(this.options.desktopNavBar);
 		this.pageWrapper     = $(this.options.pageWrapper);
 		this.page            = $(this.options.page);
-		this.desktopFooter   = $(this.options.desktopFooter);		
+		this.desktopFooter   = $(this.options.desktopFooter);
+		
+		if (this.desktop) {
+			($$('body')).setStyles({
+				overflow: 'hidden',
+				height: '100%',
+				margin: 0
+			});
+			($$('html')).setStyles({
+				overflow: 'hidden',
+				height: '100%'
+			});			
+		}		
 	
 		// This is run on dock initialize so no need to do it twice.
 		if (!MochaUI.Dock.dockWrapper){
@@ -3815,7 +3949,6 @@ Options:
 	addClass - (string) Add a class to the panel.
 	scrollbars - (boolean)
 	padding - (object)
-	panelBackground - CSS background property for the panel.
 	collapsible - (boolean)
 	onBeforeBuild - (function) Fired before the panel is created.
 	onContentLoaded - (function) Fired after the panel's conten is loaded.
@@ -3864,9 +3997,6 @@ MochaUI.Panel = new Class({
 		addClass:         '',
 		scrollbars:       true,
 		padding:   		  { top: 8, right: 8, bottom: 8, left: 8 },
-
-		// Color options:		
-		panelBackground:   '#f8f8f8',
 		
 		// Other:
 		collapsible:	  true,
@@ -3927,8 +4057,7 @@ MochaUI.Panel = new Class({
 			'id': this.options.id,
 			'class': 'panel expanded',
 			'styles': {
-				'height': this.options.height,
-				'background': this.options.panelBackground
+				'height': this.options.height
 			}
 		}).inject($(this.options.column));
 
@@ -4109,21 +4238,21 @@ MochaUI.Panel = new Class({
 				this.contentEl.setStyle('position', 'absolute'); // This is so IE6 and IE7 will collapse the panel all the way		
 				panel.setStyle('height', 0);								
 				this.isCollapsed = true;
-				panel.addClass('collapsed');
+				panel.addClass('collapsed');				
 				panel.removeClass('expanded');
 				MochaUI.panelHeight(this.options.column, panel, 'collapsing');
 				MochaUI.panelHeight(); // Run this a second time for panels within panels
 				this.collapseToggleEl.removeClass('panel-collapsed');
 				this.collapseToggleEl.addClass('panel-expand');
 				this.collapseToggleEl.setProperty('title','Expand Panel');
-				this.fireEvent('onCollapse');
+				this.fireEvent('onCollapse');				
 			}
 			else {
 				this.contentEl.setStyle('position', null); // This is so IE6 and IE7 will collapse the panel all the way				
 				panel.setStyle('height', this.oldHeight);
 				this.isCollapsed = false;
 				panel.addClass('expanded');
-				panel.removeClass('collapsed');
+				panel.removeClass('collapsed');				
 				MochaUI.panelHeight(this.options.column, panel, 'expanding');
 				MochaUI.panelHeight(); // Run this a second time for panels within panels
 				this.collapseToggleEl.removeClass('panel-expand');

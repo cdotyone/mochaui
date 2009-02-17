@@ -270,10 +270,6 @@ div.mochaToolbarWrapper.bottom {
 	z-index: 10000;
 }
 
-* html 	#modalOverlay {
-	position: absolute;
-}
-
 /* Fix for IE6 select z-index issue */
 #modalFix {
 	display: none;

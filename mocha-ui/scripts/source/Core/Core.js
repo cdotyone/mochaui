@@ -40,7 +40,14 @@ var MochaUI = new Hash({
 		windowsVisible: true          // Ctrl-Alt-Q to toggle window visibility		
 	},	
 	ieSupport:          'excanvas',   // Makes it easier to switch between Excanvas and Moocanvas for testing
-	focusingWindow:     'false',			
+	focusingWindow:     'false',	
+	console: {
+		log: function(html){
+			if ($('mochaConsole_pad')) {
+				$('mochaConsole_pad').set('html', $('mochaConsole_pad').innerHTML + html + '<br />');
+			}
+		}		
+	},				
 	/*
 	
 	Function: updateContent

@@ -36,12 +36,16 @@ MochaUI.Modal = new Class({
 		var modalOverlay = new Element('div', {
 			'id': 'modalOverlay',
 			'styles': {
-				'height': document.getCoordinates().height,
+				'height': document.getCoordinates().height,				
 				'opacity': .6
 			}
 		}).inject(document.body);
 		
-		if (this.options.modalOverlayClose) {
+		modalOverlay.setStyles({
+				'position': Browser.Engine.trident4 ? 'absolute' : 'fixed'
+		});
+		
+		if (this.options.modalOverlayClose == true) {
 			modalOverlay.addEvent('click', function(e){
 				MochaUI.closeWindow(MochaUI.currentModal);
 			});
