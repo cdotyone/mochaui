@@ -564,7 +564,6 @@ initializeWindows = function(){
 	MochaUI.aboutWindow = function() {
 		new MochaUI.Window({
 			id: 'about',
-			addClass: 'about',
 			title: 'MochaUI',
 			loadMethod: 'xhr',
 			contentURL: 'pages/about.html',
