@@ -45,11 +45,12 @@ MochaUI.Modal = new Class({
 				'position': Browser.Engine.trident4 ? 'absolute' : 'fixed'
 		});
 		
-		if (this.options.modalOverlayClose == true) {
-			modalOverlay.addEvent('click', function(e){
+		modalOverlay.addEvent('click', function(e){
+			var currentModalInstance = MochaUI.Windows.instances.get(MochaUI.currentModal.id);
+			if (currentModalInstance.options.modalOverlayClose == true) {
 				MochaUI.closeWindow(MochaUI.currentModal);
-			});
-		}
+			}
+		});
 		
 		if (Browser.Engine.trident4){
 			var modalFix = new Element('iframe', {
@@ -65,8 +66,8 @@ MochaUI.Modal = new Class({
 		}
 
 		this.modalOverlayOpenMorph = new Fx.Morph($('modalOverlay'), {
-				'duration': 150
-				});
+			'duration': 150
+		});
 		this.modalOverlayCloseMorph = new Fx.Morph($('modalOverlay'), {
 			'duration': 150,
 			onComplete: function(){
