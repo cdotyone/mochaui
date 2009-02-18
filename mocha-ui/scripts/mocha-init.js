@@ -688,9 +688,10 @@ initializeColumns = function() {
 		addClass: 'mochaConsole',
 		title: 'Console',
 		loadMethod: 'html',
-		content: '',
+		content: new Element('ul', {'id': 'mochaConsoleLog'}),
 		column: 'mainColumn',
 		height: 200,
+		padding: { top: 1, right: 1, bottom: 1, left: 1 },		
 		headerToolbox: true,
 		headerToolboxURL: 'pages/console.toolbox.html'
 	});

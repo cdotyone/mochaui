@@ -23,33 +23,60 @@ Todo:
 
 var MochaUI = new Hash({
 	options: new Hash({
-		useEffects:     false        // Toggles the majority of window fade and move effects.
-	}),
-	Columns: {
-		instances:      new Hash(),
-		columnIDCount:  0            // Used for columns without an ID defined by the user		
-	},
-	Panels: {
-		instances:      new Hash(),
-		panelIDCount:   0            // Used for panels without an ID defined by the user		
-	},		
-	Windows: {	  
-		instances:      new Hash(),
-		indexLevel:     100,          // Used for window z-Index
-		windowIDCount:  0,            // Used for windows without an ID defined by the user
-		windowsVisible: true          // Ctrl-Alt-Q to toggle window visibility		
-	},	
-	ieSupport:          'excanvas',   // Makes it easier to switch between Excanvas and Moocanvas for testing
-	focusingWindow:     'false',	
+		useEffects: false   // Toggles the majority of window fade and move effects.
+	}),	
+	
+	ieSupport: 'excanvas',  // Makes it easier to switch between Excanvas and Moocanvas for testing	
+	/*
+	  
+	This console code could be re-used for a chat window.
+	  
+	*/	
 	console: {
 		log: function(html){
-			if ($('mochaConsole_pad')) {
-				$('mochaConsole_pad').set('html', $('mochaConsole_pad').innerHTML + html + '<br />');
+			if ($('mochaConsoleLog')) {
+
+				var scrolldown = false;
+								
+				if (!MochaUI.console.scroller) {
+					MochaUI.console.scroller = new Fx.Scroll($('mochaConsole'), {
+						'duration': 250,
+						'ignore': 'ignore',
+						onComplete: function(){							 							
+							if ($('mochaConsole').scrollHeight.toInt() - $('mochaConsole').getCoordinates().height.toInt() != $('mochaConsole').scrollTop.toInt()) {
+								MochaUI.console.scroller.toBottom();
+							}
+						}.bind(this)
+					});
+				}
+								
+				if ($('mochaConsole').scrollHeight.toInt() - $('mochaConsole').getCoordinates().height.toInt() == $('mochaConsole').scrollTop.toInt()) {
+					scrolldown = true;
+				}
+				if ($('mochaConsole').getCoordinates().height.toInt() - $('mochaConsole').scrollHeight.toInt() < 30 && $('mochaConsole').getCoordinates().height.toInt() - $('mochaConsole').scrollHeight.toInt() > -20){
+					scrolldown = true; // For IE7
+				}
+				var currentTime = new Date();
+				var hours = currentTime.getHours();
+				var minutes = currentTime.getMinutes();
+				if (minutes < 10){
+					minutes = "0" + minutes;
+				}
+				var seconds = currentTime.getSeconds();
+				if (seconds < 10){
+					seconds = "0" + seconds;
+				}
+				new Element('li', {
+					'html': hours + ':' + minutes + ':' + seconds + ' - ' + html
+				}).inject($('mochaConsoleLog'));
+				if (scrolldown == true) {
+					MochaUI.console.scroller.toBottom();					
+				}
 			}
 		},
 		clear: function(){
-			if ($('mochaConsole_pad')) {
-				$('mochaConsole_pad').empty();
+			if ($('mochaConsoleLog')) {
+				$('mochaConsoleLog').empty();
 			}
 		}				
 	},				
@@ -837,29 +864,45 @@ License:
 
 Requires:
 	Core.js
+	
+Notes:
+	Themes are new and experimental.	
+	
+Syntax:
+	(start code)
+	new MochaUI.Themes.themeInit(newTheme);
+	(end)
+	
+Example:
+	(start code)
+	new MochaUI.Themes.themeInit('charcoal');
+	(end)		
+
+Arguments:
+	newTheme - (string) The theme name	
 
 */
-
-MochaUI.options.extend({
-		themesDir:      'themes',    // Path to themes directory - Experimental
-		theme:          'default'    // Experimental
+	
+MochaUI.Themes = {
+	options: {
+		themesDir:      'themes',    // Path to themes directory
+		theme:          'default'
+	
 		// stylesheets:    []	
-});
-
-MochaUI.Windows.themable = ['headerStartColor','headerStopColor','bodyBgColor','minimizeBgColor','minimizeColor','maximizeBgColor',
-							'maximizeColor','closeBgColor','closeColor','resizableColor'];
-MochaUI.extend({
-	// currentStylesheets: [],
-	// stylesheetCount:    0,
+		// currentStylesheets: [],
+		// stylesheetCount:    0,
+	},
+	themableWindowOptions: ['headerStartColor','headerStopColor','bodyBgColor','minimizeBgColor','minimizeColor','maximizeBgColor',
+		'maximizeColor','closeBgColor','closeColor','resizableColor'],	
 	/*
 	
 	Function: themeInit
 		Initialize a theme. This is experimental and not fully implemented yet.
 		
 	*/	
-	themeInit: function(newTheme){
-		this.newTheme = newTheme;
-		if (!newTheme || newTheme == null || newTheme == this.options.theme) return;
+	init: function(newTheme){
+		this.newTheme = newTheme.toLowerCase();
+		if (!this.newTheme || this.newTheme == null) return;
 		
 		if ($('spinner')) {
 			$('spinner').setStyle('visibility', 'visible');
@@ -871,10 +914,15 @@ MochaUI.extend({
 		MochaUI.Windows.windowOptionsPrevious = new Hash($merge(MochaUI.Windows.windowOptions));
 		
 		// Run theme init file		
-		new Asset.javascript(this.options.themesDir + '/' + this.newTheme + '/theme-init.js', {id: 'themeInitFile'});		
+		new Asset.javascript(this.options.themesDir + '/' + this.newTheme + '/theme-init.js', {id: 'themeInitFile'});	
 						
 	},
 	changeTheme: function(){
+
+		if (this.newTheme == this.options.theme.toLowerCase()) {
+			this.updateThemeSettings();			
+			return;
+		}
 
 		// Get all header stylesheets whose id's starts with 'css'.		
 		this.sheetsToLoad = $$('link').length;
@@ -912,30 +960,43 @@ MochaUI.extend({
 							'type': 'text/css',
 							'href': href
 						});
-						MochaUI.newSheets.push(newSheet);											
-					},
+						this.newSheets.push(newSheet);											
+					}.bind(this),
 					onFailure: function(response){
 						var getTitle = new RegExp("<title>[\n\r\s]*(.*)[\n\r\s]*</title>", "gmi");
 						var error = getTitle.exec(response.responseText);
 						MochaUI.console.log(href + ' : ' + error[1] );
-						MochaUI.themeLoadSuccess = false;
+						this.themeLoadSuccess = false;
 						if ($('spinner')) {
 							$('spinner').setStyle('visibility', 'hidden');
 						}
 						MochaUI.notification('Stylesheets did not load.');						
 					},					
 					onSuccess: function(){						
-						MochaUI.sheetsLoaded++;
-						if (MochaUI.sheetsLoaded == MochaUI.sheetsToLoad) {
-							MochaUI.updateThemeSettings();
-							MochaUI.themeLoadSuccess = true;
+						this.sheetsLoaded++;
+						if (this.sheetsLoaded == this.sheetsToLoad) {
+							this.updateThemeStylesheets();
+							this.themeLoadSuccess = true;
 						}  
-					}
+					}.bind(this)
 				});
 				cssRequest.send();				
 			}
 		}.bind(this));
 								
+	},
+	updateThemeStylesheets: function(){
+
+		this.oldSheets.each( function(sheet){
+			sheet.destroy();
+		});
+
+		this.newSheets.each( function(sheet){
+			sheet.inject(document.head);
+		});
+
+		this.updateThemeSettings();
+	
 	},
 	updateThemeSettings: function(){
 
@@ -943,42 +1004,28 @@ MochaUI.extend({
 		$extend(MochaUI.Windows.windowOptions, $merge(MochaUI.Windows.windowOptionsOriginal));
 
 		// Set new options defined in the theme init file
-		// Undefined options that are null in the original need to be set to null!!!!
 		MochaUI.newWindowOptions.each( function(value, key){							
-			if (MochaUI.Windows.themable.contains(key)) {
+			if (this.themableWindowOptions.contains(key)) {
 				eval('MochaUI.Windows.windowOptions.' + key + ' = value');
 			}
-		});
+		}.bind(this));
 		
-		this.updateThemeStylesheets();
-
-	},
-	updateThemeStylesheets: function(){
-
-		MochaUI.oldSheets.each( function(sheet){
-			sheet.destroy();
-		});
-
-		MochaUI.newSheets.each( function(sheet){
-			sheet.inject(document.head);
-		});
-
 		if (!Browser.Engine.presto) {
-			MochaUI.redrawTheme.delay(10);
+			this.redraw.delay(10);
 		}
 		else {
-			MochaUI.redrawTheme.delay(200);
+			this.redraw.delay(200);
 		}
-	
-	},
-	redrawTheme: function(){
+
+	},	
+	redraw: function(){
 
 		// Redraw open windows		
 		$$('.mocha').each( function(element){			
 			var currentInstance = MochaUI.Windows.instances.get(element.id);		
 						
 			new Hash(currentInstance.options).each( function(value, key){							
-				if (MochaUI.Windows.themable.contains(key)) {					
+				if (MochaUI.Themes.themableWindowOptions.contains(key)){					
 
 					/*
 					if (eval('MochaUI.Windows.windowOptions.' + key + ' == null') && eval('MochaUI.Windows.windowOptionsOriginal.' + key + ' == null')){
@@ -987,7 +1034,7 @@ MochaUI.extend({
 					}
 					*/					
 
-					if ($type(value) == 'array') {						
+					if ($type(value) == 'array'){						
 						// If it is an rgb color
 						if (MochaUI.Windows.windowOptionsPrevious.get(key).rgbToHex() == null) return;
 						if (MochaUI.Windows.windowOptionsPrevious.get(key).rgbToHex().substring(1) != value.rgbToHex().substring(1)) 
@@ -1011,10 +1058,10 @@ MochaUI.extend({
 		}.bind(this));
 
 		// Reformat layout
-		if (MochaUI.Desktop.desktop) {
+		if (MochaUI.Desktop.desktop){
 			var checker = (function(){
 				// Make sure the style sheets are really ready.				
-				if (MochaUI.Desktop.desktop.getStyle('overflow') != 'hidden') {					
+				if (MochaUI.Desktop.desktop.getStyle('overflow') != 'hidden'){					
 					return;
 				}
 				$clear(checker);								
@@ -1026,10 +1073,10 @@ MochaUI.extend({
 			$('spinner').setStyle('visibility', 'hidden');
 		}
 		
-		MochaUI.options.theme = MochaUI.newTheme;				
+		MochaUI.Themes.options.theme = MochaUI.Themes.newTheme;
 						
 	}
-});
+};
 /*
 
 Script: Window.js
@@ -1185,6 +1232,16 @@ Example:
 
 // Having these options outside of the Class allows us to add, change, and remove
 // individual options without rewriting all of them.
+
+MochaUI.extend({
+	Windows: {	  
+		instances:      new Hash(),
+		indexLevel:     100,          // Used for window z-Index
+		windowIDCount:  0,            // Used for windows without an ID defined by the user
+		windowsVisible: true          // Ctrl-Alt-Q to toggle window visibility		
+	},
+	focusingWindow:     'false'
+});	
 
 MochaUI.Windows.windowOptions = {
 	id:                null,
@@ -3387,6 +3444,17 @@ Requires:
 	Core.js, Window.js
 	
 */
+
+MochaUI.extend({
+	Columns: {
+		instances:      new Hash(),
+		columnIDCount:  0            // Used for columns without an ID defined by the user		
+	},
+	Panels: {
+		instances:      new Hash(),
+		panelIDCount:   0            // Used for panels without an ID defined by the user		
+	}
+});
 
 MochaUI.Desktop = new Class({
 

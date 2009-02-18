@@ -27,16 +27,56 @@ var MochaUI = new Hash({
 	}),	
 	
 	ieSupport: 'excanvas',  // Makes it easier to switch between Excanvas and Moocanvas for testing	
-	
+	/*
+	  
+	This console code could be re-used for a chat window.
+	  
+	*/	
 	console: {
 		log: function(html){
-			if ($('mochaConsole_pad')) {
-				$('mochaConsole_pad').set('html', $('mochaConsole_pad').innerHTML + html + '<br />');
+			if ($('mochaConsoleLog')) {
+
+				var scrolldown = false;
+								
+				if (!MochaUI.console.scroller) {
+					MochaUI.console.scroller = new Fx.Scroll($('mochaConsole'), {
+						'duration': 250,
+						'ignore': 'ignore',
+						onComplete: function(){							 							
+							if ($('mochaConsole').scrollHeight.toInt() - $('mochaConsole').getCoordinates().height.toInt() != $('mochaConsole').scrollTop.toInt()) {
+								MochaUI.console.scroller.toBottom();
+							}
+						}.bind(this)
+					});
+				}
+								
+				if ($('mochaConsole').scrollHeight.toInt() - $('mochaConsole').getCoordinates().height.toInt() == $('mochaConsole').scrollTop.toInt()) {
+					scrolldown = true;
+				}
+				if ($('mochaConsole').getCoordinates().height.toInt() - $('mochaConsole').scrollHeight.toInt() < 30 && $('mochaConsole').getCoordinates().height.toInt() - $('mochaConsole').scrollHeight.toInt() > -20){
+					scrolldown = true; // For IE7
+				}
+				var currentTime = new Date();
+				var hours = currentTime.getHours();
+				var minutes = currentTime.getMinutes();
+				if (minutes < 10){
+					minutes = "0" + minutes;
+				}
+				var seconds = currentTime.getSeconds();
+				if (seconds < 10){
+					seconds = "0" + seconds;
+				}
+				new Element('li', {
+					'html': hours + ':' + minutes + ':' + seconds + ' - ' + html
+				}).inject($('mochaConsoleLog'));
+				if (scrolldown == true) {
+					MochaUI.console.scroller.toBottom();					
+				}
 			}
 		},
 		clear: function(){
-			if ($('mochaConsole_pad')) {
-				$('mochaConsole_pad').empty();
+			if ($('mochaConsoleLog')) {
+				$('mochaConsoleLog').empty();
 			}
 		}				
 	},				

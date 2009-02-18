@@ -66,7 +66,12 @@
 	
 	$('parametricsLink').addEvent('click', function(e){
 		MochaUI.parametricsWindow();
-	});											
+	});
+	
+	$('test').addEvent('click', function(e){
+		new Event(e).stop();
+		MochaUI.console.log('This console code could be re-used for a chat as well.');
+	});													
 
 </script>
 
@@ -91,3 +96,5 @@
 		</ul>
 	</li>			
 </ul>
+
+<a href="MochaUI.console.log" id="test">Test Console Log</a>

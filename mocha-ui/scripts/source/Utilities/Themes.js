@@ -155,7 +155,7 @@ MochaUI.Themes = {
 			if (this.themableWindowOptions.contains(key)) {
 				eval('MochaUI.Windows.windowOptions.' + key + ' = value');
 			}
-		});
+		}.bind(this));
 		
 		if (!Browser.Engine.presto) {
 			this.redraw.delay(10);
@@ -172,7 +172,7 @@ MochaUI.Themes = {
 			var currentInstance = MochaUI.Windows.instances.get(element.id);		
 						
 			new Hash(currentInstance.options).each( function(value, key){							
-				if (this.themableWindowOptions.contains(key)){					
+				if (MochaUI.Themes.themableWindowOptions.contains(key)){					
 
 					/*
 					if (eval('MochaUI.Windows.windowOptions.' + key + ' == null') && eval('MochaUI.Windows.windowOptionsOriginal.' + key + ' == null')){
