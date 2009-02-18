@@ -101,7 +101,7 @@ MochaUI.extend({
 					onSuccess: function(){						
 						MochaUI.sheetsLoaded++;
 						if (MochaUI.sheetsLoaded == MochaUI.sheetsToLoad) {
-							MochaUI.updateThemeStyleSheets();
+							MochaUI.updateThemeSettings();
 							MochaUI.themeLoadSuccess = true;
 						}  
 					}
@@ -111,7 +111,7 @@ MochaUI.extend({
 		}.bind(this));
 								
 	},
-	updateThemeStyleSheets: function(){
+	updateThemeSettings: function(){
 
 		// Reset original options
 		$extend(MochaUI.Windows.windowOptions, $merge(MochaUI.Windows.windowOptionsOriginal));
@@ -123,6 +123,11 @@ MochaUI.extend({
 				eval('MochaUI.Windows.windowOptions.' + key + ' = value');
 			}
 		});
+		
+		this.updateThemeStylesheets();
+
+	},
+	updateThemeStylesheets: function(){
 
 		MochaUI.oldSheets.each( function(sheet){
 			sheet.destroy();
