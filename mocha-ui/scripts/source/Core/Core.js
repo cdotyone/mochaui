@@ -46,7 +46,12 @@ var MochaUI = new Hash({
 			if ($('mochaConsole_pad')) {
 				$('mochaConsole_pad').set('html', $('mochaConsole_pad').innerHTML + html + '<br />');
 			}
-		}		
+		},
+		clear: function(){
+			if ($('mochaConsole_pad')) {
+				$('mochaConsole_pad').empty();
+			}
+		}				
 	},				
 	/*
 	
@@ -147,7 +152,7 @@ var MochaUI = new Hash({
 				var data = options.data != null ? new Hash(options.data).toQueryString() : "";
 				new Request.HTML({
 					url: options.url,
-					update: contentContainer,
+					update: contentContainer, // Using update for some reason preserves whitespace in IE6 and 7. It is fine in IE8.
 					method: method,
 					data: data, 
 					evalScripts: currentInstance.options.evalScripts,

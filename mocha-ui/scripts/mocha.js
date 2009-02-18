@@ -46,7 +46,12 @@ var MochaUI = new Hash({
 			if ($('mochaConsole_pad')) {
 				$('mochaConsole_pad').set('html', $('mochaConsole_pad').innerHTML + html + '<br />');
 			}
-		}		
+		},
+		clear: function(){
+			if ($('mochaConsole_pad')) {
+				$('mochaConsole_pad').empty();
+			}
+		}				
 	},				
 	/*
 	
@@ -147,7 +152,7 @@ var MochaUI = new Hash({
 				var data = options.data != null ? new Hash(options.data).toQueryString() : "";
 				new Request.HTML({
 					url: options.url,
-					update: contentContainer,
+					update: contentContainer, // Using update for some reason preserves whitespace in IE6 and 7. It is fine in IE8.
 					method: method,
 					data: data, 
 					evalScripts: currentInstance.options.evalScripts,
@@ -160,9 +165,13 @@ var MochaUI = new Hash({
 							$('spinner').setStyle('visibility','visible');	
 						}
 					}.bind(this),
-					onFailure: function(){
+					onFailure: function(response){
 						if (contentContainer == contentEl){
-							contentContainer.set('html','<p><strong>Error Loading XMLHttpRequest</strong></p>');
+							var getTitle = new RegExp("<title>[\n\r\s]*(.*)[\n\r\s]*</title>", "gmi");
+							var error = getTitle.exec(response.responseText);
+							contentContainer.set('html', '<h3>Error: ' + error[1] + '</h3>');
+							
+							//contentContainer.set('html','<h3>Error: ' + response.responseText.split(/<title[^>]*>((?:.|\n)*)<\/title>/i)[1] + '</h3>');
 							if (recipient == 'window') {
 								currentInstance.hideSpinner(spinnerEl);
 							}
@@ -226,18 +235,22 @@ var MochaUI = new Hash({
 			default:
 				// Need to test injecting elements as content.
 				var elementTypes = new Array('element', 'textnode', 'whitespace', 'collection');
+				
 				if (elementTypes.contains($type(options.content))){
 					options.content.inject(contentContainer);
 				} else {
 					contentContainer.set('html', options.content);
 				}
-				if (recipient == 'window'){
-					currentInstance.hideSpinner(spinnerEl);
+				
+				if (contentContainer == contentEl){
+					if (recipient == 'window'){
+						currentInstance.hideSpinner(spinnerEl);
+					}
+					else if (recipient == 'panel' && $('spinner')){
+						$('spinner').setStyle('visibility', 'hidden');
+					}
+					currentInstance.fireEvent('onContentLoaded', element);
 				}
-				else if (recipient == 'panel' && $('spinner')){
-					$('spinner').setStyle('visibility', 'hidden');
-				}				
-				currentInstance.fireEvent('onContentLoaded', element);
 				break;
 		}
 
@@ -845,9 +858,8 @@ MochaUI.extend({
 		
 	*/	
 	themeInit: function(newTheme){
-		if (newTheme == null || newTheme == this.options.theme) return;
-
-		this.options.theme = newTheme;
+		this.newTheme = newTheme;
+		if (!newTheme || newTheme == null || newTheme == this.options.theme) return;
 		
 		if ($('spinner')) {
 			$('spinner').setStyle('visibility', 'visible');
@@ -859,22 +871,11 @@ MochaUI.extend({
 		MochaUI.Windows.windowOptionsPrevious = new Hash($merge(MochaUI.Windows.windowOptions));
 		
 		// Run theme init file		
-		new Asset.javascript(this.options.themesDir + '/' + this.options.theme + '/theme-init.js', {id: 'themeInitFile'});		
+		new Asset.javascript(this.options.themesDir + '/' + this.newTheme + '/theme-init.js', {id: 'themeInitFile'});		
 						
 	},
 	changeTheme: function(){
 
-		// Reset original options
-		$extend(MochaUI.Windows.windowOptions, $merge(MochaUI.Windows.windowOptionsOriginal));
-
-		// Set new options defined in the theme init file
-		// Undefined options that are null in the original need to be set to null!!!!
-		MochaUI.newWindowOptions.each( function(value, key){							
-			if (MochaUI.Windows.themable.contains(key)) {
-				eval('MochaUI.Windows.windowOptions.' + key + ' = value');
-			}
-		});
-		
 		// Get all header stylesheets whose id's starts with 'css'.		
 		this.sheetsToLoad = $$('link').length;
 		this.sheetsLoaded = 0;
@@ -882,7 +883,7 @@ MochaUI.extend({
 		/* Add old style sheets to an array */
 		this.oldSheets = [];
 		$$('link').each( function(link){
-			var href = this.options.themesDir + '/' + this.options.theme + '/css/' + link.id.substring(3) +'.css';			
+			var href = this.options.themesDir + '/' + this.newTheme + '/css/' + link.id.substring(3) +'.css';			
 			if (link.href.contains(href)) return;
 			
 			if (link.id.substring(0,3) == 'css') {
@@ -893,13 +894,12 @@ MochaUI.extend({
 		/* Download new stylesheets and add them to an array */
 		this.newSheets = [];
 		$$('link').each( function(link){
-			var href = this.options.themesDir + '/' + this.options.theme + '/css/' + link.id.substring(3) +'.css';			
+			var href = this.options.themesDir + '/' + this.newTheme + '/css/' + link.id.substring(3) +'.css';			
 			if (link.href.contains(href)) return;
 			
 			if (link.id.substring(0,3) == 'css') {
 								
 				var id = link.id;
-				//link.destroy();
 				
 				var cssRequest = new Request({
 					method: 'get',
@@ -913,11 +913,22 @@ MochaUI.extend({
 							'href': href
 						});
 						MochaUI.newSheets.push(newSheet);											
+					},
+					onFailure: function(response){
+						var getTitle = new RegExp("<title>[\n\r\s]*(.*)[\n\r\s]*</title>", "gmi");
+						var error = getTitle.exec(response.responseText);
+						MochaUI.console.log(href + ' : ' + error[1] );
+						MochaUI.themeLoadSuccess = false;
+						if ($('spinner')) {
+							$('spinner').setStyle('visibility', 'hidden');
+						}
+						MochaUI.notification('Stylesheets did not load.');						
 					},					
 					onSuccess: function(){						
 						MochaUI.sheetsLoaded++;
 						if (MochaUI.sheetsLoaded == MochaUI.sheetsToLoad) {
-							MochaUI.updateThemeStyleSheets();
+							MochaUI.updateThemeSettings();
+							MochaUI.themeLoadSuccess = true;
 						}  
 					}
 				});
@@ -926,7 +937,23 @@ MochaUI.extend({
 		}.bind(this));
 								
 	},
-	updateThemeStyleSheets: function(){
+	updateThemeSettings: function(){
+
+		// Reset original options
+		$extend(MochaUI.Windows.windowOptions, $merge(MochaUI.Windows.windowOptionsOriginal));
+
+		// Set new options defined in the theme init file
+		// Undefined options that are null in the original need to be set to null!!!!
+		MochaUI.newWindowOptions.each( function(value, key){							
+			if (MochaUI.Windows.themable.contains(key)) {
+				eval('MochaUI.Windows.windowOptions.' + key + ' = value');
+			}
+		});
+		
+		this.updateThemeStylesheets();
+
+	},
+	updateThemeStylesheets: function(){
 
 		MochaUI.oldSheets.each( function(sheet){
 			sheet.destroy();
@@ -997,7 +1024,9 @@ MochaUI.extend({
 		
 		if ($('spinner')) {
 			$('spinner').setStyle('visibility', 'hidden');
-		}		
+		}
+		
+		MochaUI.options.theme = MochaUI.newTheme;				
 						
 	}
 });

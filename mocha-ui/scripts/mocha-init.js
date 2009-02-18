@@ -688,11 +688,11 @@ initializeColumns = function() {
 		addClass: 'mochaConsole',
 		title: 'Console',
 		loadMethod: 'html',
-		content: '',
+		content: 'Console Initialized',
 		column: 'mainColumn',
 		height: 200,
 		headerToolbox: true,
-		headerToolboxURL: 'pages/toolbox-demo2.html'
+		headerToolboxURL: 'pages/console.toolbox.html'
 	});
 	
 	// Add panels to second side column
