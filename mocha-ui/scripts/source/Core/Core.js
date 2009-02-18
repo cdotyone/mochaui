@@ -160,9 +160,13 @@ var MochaUI = new Hash({
 							$('spinner').setStyle('visibility','visible');	
 						}
 					}.bind(this),
-					onFailure: function(){
+					onFailure: function(response){
 						if (contentContainer == contentEl){
-							contentContainer.set('html','<p><strong>Error Loading XMLHttpRequest</strong></p>');
+							var getTitle = new RegExp("<title>[\n\r\s]*(.*)[\n\r\s]*</title>", "gmi");
+							var error = getTitle.exec(response.responseText);
+							contentContainer.set('html', '<h3>Error: ' + error[1] + '</h3>');
+							
+							//contentContainer.set('html','<h3>Error: ' + response.responseText.split(/<title[^>]*>((?:.|\n)*)<\/title>/i)[1] + '</h3>');
 							if (recipient == 'window') {
 								currentInstance.hideSpinner(spinnerEl);
 							}
@@ -226,18 +230,22 @@ var MochaUI = new Hash({
 			default:
 				// Need to test injecting elements as content.
 				var elementTypes = new Array('element', 'textnode', 'whitespace', 'collection');
+				
 				if (elementTypes.contains($type(options.content))){
 					options.content.inject(contentContainer);
 				} else {
 					contentContainer.set('html', options.content);
 				}
-				if (recipient == 'window'){
-					currentInstance.hideSpinner(spinnerEl);
+				
+				if (contentContainer == contentEl){
+					if (recipient == 'window'){
+						currentInstance.hideSpinner(spinnerEl);
+					}
+					else if (recipient == 'panel' && $('spinner')){
+						$('spinner').setStyle('visibility', 'hidden');
+					}
+					currentInstance.fireEvent('onContentLoaded', element);
 				}
-				else if (recipient == 'panel' && $('spinner')){
-					$('spinner').setStyle('visibility', 'hidden');
-				}				
-				currentInstance.fireEvent('onContentLoaded', element);
 				break;
 		}
 

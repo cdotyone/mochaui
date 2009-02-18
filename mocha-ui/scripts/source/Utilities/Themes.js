@@ -32,9 +32,8 @@ MochaUI.extend({
 		
 	*/	
 	themeInit: function(newTheme){
-		if (newTheme == null || newTheme == this.options.theme) return;
-
-		this.options.theme = newTheme;
+		this.newTheme = newTheme;
+		if (!newTheme || newTheme == null || newTheme == this.options.theme) return;
 		
 		if ($('spinner')) {
 			$('spinner').setStyle('visibility', 'visible');
@@ -46,22 +45,11 @@ MochaUI.extend({
 		MochaUI.Windows.windowOptionsPrevious = new Hash($merge(MochaUI.Windows.windowOptions));
 		
 		// Run theme init file		
-		new Asset.javascript(this.options.themesDir + '/' + this.options.theme + '/theme-init.js', {id: 'themeInitFile'});		
+		new Asset.javascript(this.options.themesDir + '/' + this.newTheme + '/theme-init.js', {id: 'themeInitFile'});		
 						
 	},
 	changeTheme: function(){
 
-		// Reset original options
-		$extend(MochaUI.Windows.windowOptions, $merge(MochaUI.Windows.windowOptionsOriginal));
-
-		// Set new options defined in the theme init file
-		// Undefined options that are null in the original need to be set to null!!!!
-		MochaUI.newWindowOptions.each( function(value, key){							
-			if (MochaUI.Windows.themable.contains(key)) {
-				eval('MochaUI.Windows.windowOptions.' + key + ' = value');
-			}
-		});
-		
 		// Get all header stylesheets whose id's starts with 'css'.		
 		this.sheetsToLoad = $$('link').length;
 		this.sheetsLoaded = 0;
@@ -69,7 +57,7 @@ MochaUI.extend({
 		/* Add old style sheets to an array */
 		this.oldSheets = [];
 		$$('link').each( function(link){
-			var href = this.options.themesDir + '/' + this.options.theme + '/css/' + link.id.substring(3) +'.css';			
+			var href = this.options.themesDir + '/' + this.newTheme + '/css/' + link.id.substring(3) +'.css';			
 			if (link.href.contains(href)) return;
 			
 			if (link.id.substring(0,3) == 'css') {
@@ -80,13 +68,12 @@ MochaUI.extend({
 		/* Download new stylesheets and add them to an array */
 		this.newSheets = [];
 		$$('link').each( function(link){
-			var href = this.options.themesDir + '/' + this.options.theme + '/css/' + link.id.substring(3) +'.css';			
+			var href = this.options.themesDir + '/' + this.newTheme + '/css/' + link.id.substring(3) +'.css';			
 			if (link.href.contains(href)) return;
 			
 			if (link.id.substring(0,3) == 'css') {
 								
 				var id = link.id;
-				//link.destroy();
 				
 				var cssRequest = new Request({
 					method: 'get',
@@ -100,11 +87,22 @@ MochaUI.extend({
 							'href': href
 						});
 						MochaUI.newSheets.push(newSheet);											
+					},
+					onFailure: function(response){
+						var getTitle = new RegExp("<title>[\n\r\s]*(.*)[\n\r\s]*</title>", "gmi");
+						var error = getTitle.exec(response.responseText);
+						MochaUI.console.log(href + ' : ' + error[1] );
+						MochaUI.themeLoadSuccess = false;
+						if ($('spinner')) {
+							$('spinner').setStyle('visibility', 'hidden');
+						}
+						MochaUI.notification('Stylesheets did not load.');						
 					},					
 					onSuccess: function(){						
 						MochaUI.sheetsLoaded++;
 						if (MochaUI.sheetsLoaded == MochaUI.sheetsToLoad) {
 							MochaUI.updateThemeStyleSheets();
+							MochaUI.themeLoadSuccess = true;
 						}  
 					}
 				});
@@ -114,6 +112,17 @@ MochaUI.extend({
 								
 	},
 	updateThemeStyleSheets: function(){
+
+		// Reset original options
+		$extend(MochaUI.Windows.windowOptions, $merge(MochaUI.Windows.windowOptionsOriginal));
+
+		// Set new options defined in the theme init file
+		// Undefined options that are null in the original need to be set to null!!!!
+		MochaUI.newWindowOptions.each( function(value, key){							
+			if (MochaUI.Windows.themable.contains(key)) {
+				eval('MochaUI.Windows.windowOptions.' + key + ' = value');
+			}
+		});
 
 		MochaUI.oldSheets.each( function(sheet){
 			sheet.destroy();
@@ -184,7 +193,9 @@ MochaUI.extend({
 		
 		if ($('spinner')) {
 			$('spinner').setStyle('visibility', 'hidden');
-		}		
+		}
+		
+		MochaUI.options.theme = MochaUI.newTheme;				
 						
 	}
 });
