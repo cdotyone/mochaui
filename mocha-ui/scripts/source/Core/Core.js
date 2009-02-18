@@ -23,24 +23,11 @@ Todo:
 
 var MochaUI = new Hash({
 	options: new Hash({
-		useEffects:     false        // Toggles the majority of window fade and move effects.
-	}),
-	Columns: {
-		instances:      new Hash(),
-		columnIDCount:  0            // Used for columns without an ID defined by the user		
-	},
-	Panels: {
-		instances:      new Hash(),
-		panelIDCount:   0            // Used for panels without an ID defined by the user		
-	},		
-	Windows: {	  
-		instances:      new Hash(),
-		indexLevel:     100,          // Used for window z-Index
-		windowIDCount:  0,            // Used for windows without an ID defined by the user
-		windowsVisible: true          // Ctrl-Alt-Q to toggle window visibility		
-	},	
-	ieSupport:          'excanvas',   // Makes it easier to switch between Excanvas and Moocanvas for testing
-	focusingWindow:     'false',	
+		useEffects: false   // Toggles the majority of window fade and move effects.
+	}),	
+	
+	ieSupport: 'excanvas',  // Makes it easier to switch between Excanvas and Moocanvas for testing	
+	
 	console: {
 		log: function(html){
 			if ($('mochaConsole_pad')) {

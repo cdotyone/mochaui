@@ -29,9 +29,7 @@ Arguments:
 	newTheme - (string) The theme name	
 
 */
-
-MochaUI.Windows.themable = ['headerStartColor','headerStopColor','bodyBgColor','minimizeBgColor','minimizeColor','maximizeBgColor',
-							'maximizeColor','closeBgColor','closeColor','resizableColor'];
+	
 MochaUI.Themes = {
 	options: {
 		themesDir:      'themes',    // Path to themes directory
@@ -41,6 +39,8 @@ MochaUI.Themes = {
 		// currentStylesheets: [],
 		// stylesheetCount:    0,
 	},
+	themableWindowOptions: ['headerStartColor','headerStopColor','bodyBgColor','minimizeBgColor','minimizeColor','maximizeBgColor',
+		'maximizeColor','closeBgColor','closeColor','resizableColor'],	
 	/*
 	
 	Function: themeInit
@@ -152,7 +152,7 @@ MochaUI.Themes = {
 
 		// Set new options defined in the theme init file
 		MochaUI.newWindowOptions.each( function(value, key){							
-			if (MochaUI.Windows.themable.contains(key)) {
+			if (this.themableWindowOptions.contains(key)) {
 				eval('MochaUI.Windows.windowOptions.' + key + ' = value');
 			}
 		});
@@ -172,7 +172,7 @@ MochaUI.Themes = {
 			var currentInstance = MochaUI.Windows.instances.get(element.id);		
 						
 			new Hash(currentInstance.options).each( function(value, key){							
-				if (MochaUI.Windows.themable.contains(key)){					
+				if (this.themableWindowOptions.contains(key)){					
 
 					/*
 					if (eval('MochaUI.Windows.windowOptions.' + key + ' == null') && eval('MochaUI.Windows.windowOptionsOriginal.' + key + ' == null')){

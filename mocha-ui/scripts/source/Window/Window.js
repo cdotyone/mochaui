@@ -154,6 +154,16 @@ Example:
 // Having these options outside of the Class allows us to add, change, and remove
 // individual options without rewriting all of them.
 
+MochaUI.extend({
+	Windows: {	  
+		instances:      new Hash(),
+		indexLevel:     100,          // Used for window z-Index
+		windowIDCount:  0,            // Used for windows without an ID defined by the user
+		windowsVisible: true          // Ctrl-Alt-Q to toggle window visibility		
+	},
+	focusingWindow:     'false'
+});	
+
 MochaUI.Windows.windowOptions = {
 	id:                null,
 	title:             'New Window',

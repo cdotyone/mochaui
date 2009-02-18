@@ -680,7 +680,7 @@ initializeColumns = function() {
 		contentURL: 'pages/notes.html',
 		column: 'mainColumn',
 		headerToolbox: true,
-		headerToolboxURL: 'pages/toolbox-demo3.html'
+		headerToolboxURL: 'pages/toolbox-demo2.html'
 	});
 	
 	new MochaUI.Panel({

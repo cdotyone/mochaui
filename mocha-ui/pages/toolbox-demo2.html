@@ -1,5 +1,45 @@
-<div class="toolbox divider">
-	<span class="iconWrapper"><img src="images/icons/page_green.gif" width="16" height="16" alt="Action 2" title="Action 2" onclick="MochaUI.notification('Do Something')" /></span>
-	<span class="iconWrapper"><img src="images/icons/page_red.gif" width="16" height="16" alt="Action 2" title="Action 2" onclick="MochaUI.notification('Do Something')" /></span>
-	<span class="iconWrapper"><img src="images/icons/page.gif" width="16" height="16" alt="Action 3" title="Action 3" onclick="MochaUI.notification('Do Something')" /></span>
+<script type="text/javascript">
+	if ($('demoSearch')) {
+		$('demoSearch').addEvent('submit', function(e){
+			e.stop();
+			$('spinner').setStyle('visibility', 'visible');
+			if ($('postContent')) {
+				$('postContent').setStyle('opacity', 0);
+			}
+			else {
+				$('mainPanel_pad').empty();
+			}
+			this.set('send', {
+				onComplete: function(response){
+					MochaUI.updateContent({
+						'element': $('mainPanel'),
+						'loadMethod': 'html',
+						'content': response,
+						'title': 'Ajax Response',
+						'padding': {
+							top: 8,
+							right: 8,
+							bottom: 8,
+							left: 8
+						}
+					});
+				},
+				onSuccess: function(){
+					$('postContent').setStyle('opacity', 0);
+					new Fx.Morph($('postContent'), {
+						duration: 500
+					}).start({
+						'opacity': 1
+					});
+				}
+			});
+			this.send();
+		});
+	}
+</script>
+
+<div class="toolbox divider nobr">
+	<form id="demoSearch" action="scripts/ajax.form.php" method="post">		
+		<input type="text" name="search_query" class="searchField" /><input type="submit"  name="button searchButton" class="button" value="Go" />
+	</form>
 </div>

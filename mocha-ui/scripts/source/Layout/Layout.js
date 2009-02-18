@@ -14,6 +14,17 @@ Requires:
 	
 */
 
+MochaUI.extend({
+	Columns: {
+		instances:      new Hash(),
+		columnIDCount:  0            // Used for columns without an ID defined by the user		
+	},
+	Panels: {
+		instances:      new Hash(),
+		panelIDCount:   0            // Used for panels without an ID defined by the user		
+	}
+});
+
 MochaUI.Desktop = new Class({
 
 	Extends: MochaUI.Window,
