@@ -8,18 +8,18 @@ Theme: Default
 Additional Stylesheets
 ---------------------------------------------------------------- */
 
-MochaUI.options.stylesheets = []; // NOT IMPLEMENTED YET
+MochaUI.Themes.options.stylesheets = []; // NOT IMPLEMENTED YET
 
 /*  
 Window Options  
 ---------------------------------------------------------------- */
 
 MochaUI.newWindowOptions = new Hash({
-
+	// headerStartColor: [200, 0, 0]
 });
 
 /*  
 Change Themes 
 ---------------------------------------------------------------- */
 
-MochaUI.changeTheme();
+MochaUI.Themes.changeTheme();

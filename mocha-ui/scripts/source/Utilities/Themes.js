@@ -11,29 +11,45 @@ License:
 
 Requires:
 	Core.js
+	
+Notes:
+	Themes are new and experimental.	
+	
+Syntax:
+	(start code)
+	new MochaUI.Themes.themeInit(newTheme);
+	(end)
+	
+Example:
+	(start code)
+	new MochaUI.Themes.themeInit('charcoal');
+	(end)		
+
+Arguments:
+	newTheme - (string) The theme name	
 
 */
 
-MochaUI.options.extend({
-		themesDir:      'themes',    // Path to themes directory - Experimental
-		theme:          'default'    // Experimental
-		// stylesheets:    []	
-});
-
 MochaUI.Windows.themable = ['headerStartColor','headerStopColor','bodyBgColor','minimizeBgColor','minimizeColor','maximizeBgColor',
 							'maximizeColor','closeBgColor','closeColor','resizableColor'];
-MochaUI.extend({
-	// currentStylesheets: [],
-	// stylesheetCount:    0,
+MochaUI.Themes = {
+	options: {
+		themesDir:      'themes',    // Path to themes directory
+		theme:          'default'
+	
+		// stylesheets:    []	
+		// currentStylesheets: [],
+		// stylesheetCount:    0,
+	},
 	/*
 	
 	Function: themeInit
 		Initialize a theme. This is experimental and not fully implemented yet.
 		
 	*/	
-	themeInit: function(newTheme){
-		this.newTheme = newTheme;
-		if (!newTheme || newTheme == null || newTheme == this.options.theme) return;
+	init: function(newTheme){
+		this.newTheme = newTheme.toLowerCase();
+		if (!this.newTheme || this.newTheme == null) return;
 		
 		if ($('spinner')) {
 			$('spinner').setStyle('visibility', 'visible');
@@ -45,10 +61,15 @@ MochaUI.extend({
 		MochaUI.Windows.windowOptionsPrevious = new Hash($merge(MochaUI.Windows.windowOptions));
 		
 		// Run theme init file		
-		new Asset.javascript(this.options.themesDir + '/' + this.newTheme + '/theme-init.js', {id: 'themeInitFile'});		
+		new Asset.javascript(this.options.themesDir + '/' + this.newTheme + '/theme-init.js', {id: 'themeInitFile'});	
 						
 	},
 	changeTheme: function(){
+
+		if (this.newTheme == this.options.theme.toLowerCase()) {
+			this.updateThemeSettings();			
+			return;
+		}
 
 		// Get all header stylesheets whose id's starts with 'css'.		
 		this.sheetsToLoad = $$('link').length;
@@ -86,30 +107,43 @@ MochaUI.extend({
 							'type': 'text/css',
 							'href': href
 						});
-						MochaUI.newSheets.push(newSheet);											
-					},
+						this.newSheets.push(newSheet);											
+					}.bind(this),
 					onFailure: function(response){
 						var getTitle = new RegExp("<title>[\n\r\s]*(.*)[\n\r\s]*</title>", "gmi");
 						var error = getTitle.exec(response.responseText);
 						MochaUI.console.log(href + ' : ' + error[1] );
-						MochaUI.themeLoadSuccess = false;
+						this.themeLoadSuccess = false;
 						if ($('spinner')) {
 							$('spinner').setStyle('visibility', 'hidden');
 						}
 						MochaUI.notification('Stylesheets did not load.');						
 					},					
 					onSuccess: function(){						
-						MochaUI.sheetsLoaded++;
-						if (MochaUI.sheetsLoaded == MochaUI.sheetsToLoad) {
-							MochaUI.updateThemeSettings();
-							MochaUI.themeLoadSuccess = true;
+						this.sheetsLoaded++;
+						if (this.sheetsLoaded == this.sheetsToLoad) {
+							this.updateThemeStylesheets();
+							this.themeLoadSuccess = true;
 						}  
-					}
+					}.bind(this)
 				});
 				cssRequest.send();				
 			}
 		}.bind(this));
 								
+	},
+	updateThemeStylesheets: function(){
+
+		this.oldSheets.each( function(sheet){
+			sheet.destroy();
+		});
+
+		this.newSheets.each( function(sheet){
+			sheet.inject(document.head);
+		});
+
+		this.updateThemeSettings();
+	
 	},
 	updateThemeSettings: function(){
 
@@ -117,42 +151,28 @@ MochaUI.extend({
 		$extend(MochaUI.Windows.windowOptions, $merge(MochaUI.Windows.windowOptionsOriginal));
 
 		// Set new options defined in the theme init file
-		// Undefined options that are null in the original need to be set to null!!!!
 		MochaUI.newWindowOptions.each( function(value, key){							
 			if (MochaUI.Windows.themable.contains(key)) {
 				eval('MochaUI.Windows.windowOptions.' + key + ' = value');
 			}
 		});
 		
-		this.updateThemeStylesheets();
-
-	},
-	updateThemeStylesheets: function(){
-
-		MochaUI.oldSheets.each( function(sheet){
-			sheet.destroy();
-		});
-
-		MochaUI.newSheets.each( function(sheet){
-			sheet.inject(document.head);
-		});
-
 		if (!Browser.Engine.presto) {
-			MochaUI.redrawTheme.delay(10);
+			this.redraw.delay(10);
 		}
 		else {
-			MochaUI.redrawTheme.delay(200);
+			this.redraw.delay(200);
 		}
-	
-	},
-	redrawTheme: function(){
+
+	},	
+	redraw: function(){
 
 		// Redraw open windows		
 		$$('.mocha').each( function(element){			
 			var currentInstance = MochaUI.Windows.instances.get(element.id);		
 						
 			new Hash(currentInstance.options).each( function(value, key){							
-				if (MochaUI.Windows.themable.contains(key)) {					
+				if (MochaUI.Windows.themable.contains(key)){					
 
 					/*
 					if (eval('MochaUI.Windows.windowOptions.' + key + ' == null') && eval('MochaUI.Windows.windowOptionsOriginal.' + key + ' == null')){
@@ -161,7 +181,7 @@ MochaUI.extend({
 					}
 					*/					
 
-					if ($type(value) == 'array') {						
+					if ($type(value) == 'array'){						
 						// If it is an rgb color
 						if (MochaUI.Windows.windowOptionsPrevious.get(key).rgbToHex() == null) return;
 						if (MochaUI.Windows.windowOptionsPrevious.get(key).rgbToHex().substring(1) != value.rgbToHex().substring(1)) 
@@ -185,10 +205,10 @@ MochaUI.extend({
 		}.bind(this));
 
 		// Reformat layout
-		if (MochaUI.Desktop.desktop) {
+		if (MochaUI.Desktop.desktop){
 			var checker = (function(){
 				// Make sure the style sheets are really ready.				
-				if (MochaUI.Desktop.desktop.getStyle('overflow') != 'hidden') {					
+				if (MochaUI.Desktop.desktop.getStyle('overflow') != 'hidden'){					
 					return;
 				}
 				$clear(checker);								
@@ -200,7 +220,7 @@ MochaUI.extend({
 			$('spinner').setStyle('visibility', 'hidden');
 		}
 		
-		MochaUI.options.theme = MochaUI.newTheme;				
+		MochaUI.Themes.options.theme = MochaUI.Themes.newTheme;
 						
 	}
-});
+};

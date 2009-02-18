@@ -47,7 +47,7 @@
 
    ----------------------------------------------------------------- */
 
-MochaUI.themeInit(); // Experimental. NOT FULLY IMPLEMENTED YET
+// MochaUI.Themes.init('default'); // If your initial theme requires theme-init.js, then uncomment this line.
 
 initializeWindows = function(){
 
@@ -688,7 +688,7 @@ initializeColumns = function() {
 		addClass: 'mochaConsole',
 		title: 'Console',
 		loadMethod: 'html',
-		content: 'Console Initialized',
+		content: '',
 		column: 'mainColumn',
 		height: 200,
 		headerToolbox: true,
