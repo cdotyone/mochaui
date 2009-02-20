@@ -69,10 +69,6 @@ MochaUI.Themes = {
 			return;
 		}
 
-		// Get all header stylesheets whose id's starts with 'css'.		
-		this.sheetsToLoad = $$('link').length;
-		this.sheetsLoaded = 0;
-
 		/* Add old style sheets to an array */
 		this.oldSheets = [];
 		$$('link').each( function(link){
@@ -83,14 +79,14 @@ MochaUI.Themes = {
 				this.oldSheets.push(link);				
 			}
 		}.bind(this));
+	
+		this.sheetsToLoad = this.oldSheets.length;
+		this.sheetsLoaded = 0;
 		
 		/* Download new stylesheets and add them to an array */
 		this.newSheets = [];
-		$$('link').each( function(link){
-			var href = this.options.themesDir + '/' + this.newTheme + '/css/' + link.id.substring(3) +'.css';			
-			if (link.href.contains(href)) return;
-			
-			if (link.id.substring(0,3) == 'css') {
+		this.oldSheets.each( function(link){
+			var href = this.options.themesDir + '/' + this.newTheme + '/css/' + link.id.substring(3) +'.css';
 								
 				var id = link.id;
 				
@@ -121,7 +117,7 @@ MochaUI.Themes = {
 					}.bind(this)
 				});
 				cssRequest.send();				
-			}
+
 		}.bind(this));
 								
 	},

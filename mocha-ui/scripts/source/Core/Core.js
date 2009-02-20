@@ -44,6 +44,7 @@ var MochaUI = new Hash({
 		url - Used if loadMethod is set to 'xhr' or 'iframe'.
 		scrollbars - (boolean)		
 		padding - (object)
+		onContentLoaded - (function)
 
 	*/	
 	updateContent: function(updateOptions){

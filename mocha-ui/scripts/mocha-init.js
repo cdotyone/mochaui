@@ -171,6 +171,10 @@ initializeWindows = function(){
 			title: 'Window Parametrics',
 			loadMethod: 'xhr',
 			contentURL: 'plugins/parametrics/index.html',
+			onBeforeBuild: function(){
+				if ($('parametricsStyle')) return;
+				new Asset.css('plugins/parametrics/css/style.css', {id: 'parametricsStyle'});
+			},			
 			onContentLoaded: function(){
 				if ( !MochaUI.parametricsScript == true ){
 					new Request({
@@ -480,7 +484,11 @@ initializeWindows = function(){
 			icon: 'images/icons/page.gif',
 			loadMethod: 'xhr',
 			contentURL: 'plugins/windowform/',
-			onContentLoaded: function(){
+			onBeforeBuild: function(){
+				if ($('builderStyle')) return;
+				new Asset.css('plugins/windowform/css/style.css', {id: 'builderStyle'});
+			},
+			onContentLoaded: function(){				
 				if ( !MochaUI.windowformScript == true ){
 					new Request({
 						url: 'plugins/windowform/scripts/Window-from-form.js',
@@ -613,12 +621,19 @@ initializeWindows = function(){
 
 initializeColumns = function() {
 
-	/* Create Columns
+	/* Creating a Column and Panel Layout:
 	 
-	 If you are not using panels then these columns are not required.
-	 If you do use panels, the main column is required. The side columns are optional.
-	 Create your columns from left to right. Then create your panels from top to bottom,
-	 left to right. New Panels are inserted at the bottom of their column.
+	 - If you are not using panels then these columns are not required.
+	 - If you do use panels, the main column is required. The side columns are optional.
+	 
+	 Columns
+	 - Create your columns from left to right.
+	 - One column should not have it's width set. This column will have a fluid width.
+	 
+	 Panels
+	 - After creating Columns, create your panels from top to bottom, left to right.
+	 - One panel in each column should not have it's height set. This panel will have a fluid height.	 
+	 - New Panels are inserted at the bottom of their column.
 
 	*/
 	new MochaUI.Column({
@@ -631,7 +646,6 @@ initializeColumns = function() {
 	new MochaUI.Column({
 		id: 'mainColumn',
 		placement: 'main',
-		width: null,
 		resizeLimit: [100, 300]
 	});
 	
@@ -649,6 +663,10 @@ initializeColumns = function() {
 		loadMethod: 'xhr',
 		contentURL: 'pages/file-view.html',
 		column: 'sideColumn1',
+		onBeforeBuild: function(){
+			if ($('treeStyle')) return;
+			new Asset.css('plugins/tree/css/style.css', {id: 'treeStyle'});
+		},		
 		onContentLoaded: function(){
 			if (!MochaUI.treeScript == true) {
 				new Request({

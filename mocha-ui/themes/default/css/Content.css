@@ -74,7 +74,7 @@ p {
 	color: #999;
 }
 
-/* List Elements */
+/* Lists */
 
 ul {
 	list-style: outside;
@@ -88,6 +88,14 @@ dt {
 
 dd {
 	padding: 0 0 9px 0;
+}
+
+/* Menus */
+
+.menu-right li {
+	list-style-type: none;
+	display: inline;	
+	margin: 0 0 0 15px;
 }
 
 /* Forms */
@@ -163,6 +171,14 @@ textarea, input {
 	background-position: 0 -90px;
 }
 
+.formRow {
+	margin: 0 0 8px 0;
+}
+
+.buttonRow {
+	margin-bottom: 10px;	
+}
+
 /* Code */
 
 pre {
@@ -176,6 +192,17 @@ pre {
 	padding: 10px;
 	border: 1px solid #d1d7dc;	
 }
+
+/* Status Messages */
+.error,
+.notice, 
+.success    { padding: 8px; margin-bottom: 10px; border: 2px solid #ddd; }
+.error      { background: #FBE3E4; color: #D12F19; border-color: #FBC2C4; }
+.notice     { background: #FFF6BF; color: #817134; border-color: #FFD324; }
+.success    { background: #E6EFC2; color: #529214; border-color: #C6D880; }
+.error a    { color: #D12F19; }
+.notice a   { color: #817134; }
+.success a  { color: #529214; }
 
 /* Dividers */
 
