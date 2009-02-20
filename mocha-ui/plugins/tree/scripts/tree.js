@@ -12,11 +12,13 @@ License:
 */
 
 function buildTree(treeID){
+	
+	var iconPath = "plugins/tree/images/"
 
 	$$('#'+treeID+' li.folder').each(function(folder){
 		var folderContents = folder.getChildren('ul');
 		var folderImage = new Element('img', {
-			'src': 'images/icons/tree/_open.gif',
+			'src': iconPath + '_open.gif',
 			'width': 18,
 			'height': 18
 		}).inject(folder, 'top');
@@ -24,21 +26,21 @@ function buildTree(treeID){
 		// Determine which open and close graphic each folder gets
 		
 		if (folder.hasClass('root')) {
-			folder.minus = 'images/icons/tree/Rminus.gif'
-			folder.plus = 'images/icons/tree/Rplus.gif'
+			folder.minus = iconPath + 'Rminus.gif'
+			folder.plus = iconPath + 'Rplus.gif'
 		}
 		else if (folder.hasClass('first')) {
-			folder.minus = 'images/icons/tree/Fminus.gif'
-			folder.plus = 'images/icons/tree/Fplus.gif'
+			folder.minus = iconPath + 'Fminus.gif'
+			folder.plus = iconPath + 'Fplus.gif'
 		}		
 		else 
 			if (folder.getNext()) {
-				folder.minus = 'images/icons/tree/Tminus.gif'
-				folder.plus = 'images/icons/tree/Tplus.gif'
+				folder.minus = iconPath + 'Tminus.gif'
+				folder.plus = iconPath + 'Tplus.gif'
 			}
 			else {
-				folder.minus = 'images/icons/tree/Lminus.gif'
-				folder.plus = 'images/icons/tree/Lplus.gif'
+				folder.minus = iconPath + 'Lminus.gif'
+				folder.plus = iconPath + 'Lplus.gif'
 			}
 		
 		var image = new Element('img', {
@@ -48,7 +50,7 @@ function buildTree(treeID){
 		}).addEvent('click', function(){
 			if (folder.hasClass('f-open')) {
 				image.setProperty('src', folder.plus);
-				folderImage.setProperty('src', 'images/icons/tree/_closed.gif');
+				folderImage.setProperty('src', iconPath + '_closed.gif');
 				folderContents.each(function(el){
 					el.setStyle('display', 'none');
 				});
@@ -56,7 +58,7 @@ function buildTree(treeID){
 			}
 			else {
 				image.setProperty('src', folder.minus);
-				folderImage.setProperty('src', 'images/icons/tree/_open.gif');
+				folderImage.setProperty('src', iconPath + '_open.gif');
 				folderContents.each(function(el){
 					el.setStyle('display', 'block');
 				});
@@ -79,14 +81,14 @@ function buildTree(treeID){
 			docs.each(function(el){
 				if (el == docs.getLast() && !el.getNext()) {
 					new Element('img', {
-						'src': 'images/icons/tree/L.gif',
+						'src': iconPath + 'L.gif',
 						'width': 18,
 						'height': 18
 					}).inject(el.getElement('span'), 'before');
 				}
 				else {
 					new Element('img', {
-						'src': 'images/icons/tree/T.gif',
+						'src': iconPath + 'T.gif',
 						'width': 18,
 						'height': 18
 					}).inject(el.getElement('span'), 'before');
@@ -102,14 +104,14 @@ function buildTree(treeID){
 		node.getParents('li').each(function(parent){
 			if (parent.getNext()) {
 				new Element('img', {
-					'src': 'images/icons/tree/I.gif',
+					'src': iconPath + 'I.gif',
 					'width': 18,
 					'height': 18
 				}).inject(node, 'top');
 			}
 			else {
 				new Element('img', {
-					'src': 'images/spacer.gif',
+					'src': iconPath + 'spacer.gif',
 					'width': 18,
 					'height': 18
 				}).inject(node, 'top');
@@ -119,7 +121,7 @@ function buildTree(treeID){
 
 	$$('#'+treeID+' li.doc').each(function(el){
 		new Element('img', {
-			'src': 'images/icons/tree/_doc.gif',
+			'src': iconPath + '_doc.gif',
 			'width': 18,
 			'height': 18
 		}).inject(el.getElement('span'), 'before');
