@@ -44,69 +44,35 @@ Notes:
 }
 
 
-/* Theme Specific Adjustments to Default Pluing Styles
+/* Theme Specific Adjustments to Default Plugin Styles
 ---------------------------------------------------------------- */
-
-/* Console */
-
-#mochaConsoleLog {
-	margin: 0;
-	padding: 0;
-}	
-
-#mochaConsoleLog li {
-	font-size: 11px;	
-	list-style-type: none;
-	list-style-position: outside;	
-	display: block;	
-	background: #2d2d2d;	
-	margin: 0 0 1px 0;
-	padding: 2px 5px;
-}
 
 /* Accordian */
 
-.accordianWrapper {
-	padding: 0;
-	/* background: #f00; Uncomment this if you want to change the background of the accordian sections. */
-}
-
 .accordianToggler {
-	margin: 0;
-	padding: 6px 10px;
-	background: #4c4c4c url(../images/bg-panel-header.gif) repeat-x;
-	font-size: 12px;
-	cursor: pointer;
-	border-top: 1px solid #141414;	
+	background: #4c4c4c url(../images/bg-panel-header.gif) repeat-x !important;
+	border-top: 1px solid #141414 !important;	
 }
 
 .topToggler {
-	border-top: none;
-}
-
-.accordianToggler.open {
-	/* background: #f00; Uncomment this if you want to change the background of the open section's header. */	
-}
-
-.accordianContent {
-	padding: 10px 10px 5px 10px;
+	border-top: none !important;
 }
 
 /* Sliders */
 
 .sliderarea {
-	background: #303030;
-	border: 1px solid #252525;
-	border-bottom: 1px solid #252525;
-	border-left: 1px solid #252525;
+	background: #303030 !important;
+	border: 1px solid #252525 !important;
+	border-bottom: 1px solid #252525 !important;
+	border-left: 1px solid #252525 !important;
 }
  
 .sliderknob {
-	background: url(../images/knob.gif) no-repeat;
+	background: url(../images/knob.gif) no-repeat !important;
 }
 
 /* Folder Tree */
 
 .tree li a {
-	color: #d0d0d0;	
+	color: #d0d0d0 !important;	
 }	

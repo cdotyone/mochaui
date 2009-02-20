@@ -383,6 +383,10 @@ initializeWindows = function(){
 			resizable: false,
 			maximizable: false,				
 			padding: { top: 0, right: 0, bottom: 0, left: 0 },
+			onBeforeBuild: function(){
+				if ($('accordianStyle')) return;
+				new Asset.css('plugins/accordian/css/style.css', {id: 'accoridanStyle'});
+			},			
 			onContentLoaded: function(windowEl){
 				this.windowEl = windowEl;
 				var accordianDelay = function(){
