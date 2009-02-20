@@ -169,6 +169,10 @@ initializeWindows = function(){
 			title: 'Window Parametrics',
 			loadMethod: 'xhr',
 			contentURL: 'plugins/parametrics/index.html',
+			onBeforeBuild: function(){
+				if ($('parametricsStyle')) return;
+				new Asset.css('plugins/parametrics/css/style.css', {id: 'parametricsStyle'});
+			},			
 			onContentLoaded: function(){
 				if ( !MochaUI.parametricsScript == true ){
 					new Request({
@@ -292,6 +296,10 @@ initializeWindows = function(){
 			resizable: false,
 			maximizable: false,
 			padding: { top: 0, right: 0, bottom: 0, left: 0 },
+			onBeforeBuild: function(){
+				if ($('accordianStyle')) return;
+				new Asset.css('plugins/accordian/css/style.css', {id: 'accoridanStyle'});
+			},			
 			onContentLoaded: function(windowEl){
 				this.windowEl = windowEl;
 				var accordianDelay = function(){
@@ -393,6 +401,10 @@ initializeWindows = function(){
 			icon: 'images/icons/page.gif',
 			loadMethod: 'xhr',
 			contentURL: 'plugins/windowform/',
+			onBeforeBuild: function(){
+				if ($('builderStyle')) return;
+				new Asset.css('plugins/windowform/css/style.css', {id: 'builderStyle'});
+			},			
 			onContentLoaded: function(){
 				if ( !MochaUI.windowformScript == true ){
 					new Request({
