@@ -427,6 +427,7 @@ MochaUI.Window = new Class({
 			'class': 'mocha',
 			'id':    this.options.id,
 			'styles': {
+				'position': 'absolute',
 				'width':   this.options.width,
 				'height':  this.options.height,
 				'display': 'block',
@@ -555,18 +556,18 @@ MochaUI.Window = new Class({
 				'data':	         this.options.toolbar2Data
 			});
 		}
-        
+		        
 		this.drawWindow(this.windowEl);
-		
+				
 		// Attach events to the window
-		this.attachDraggable(this.windowEl);
+		this.attachDraggable(this.windowEl); 
 		this.attachResizable(this.windowEl);
 		this.setupEvents(this.windowEl);
 		
 		if (this.options.resizable){
 			this.adjustHandles();
 		}
-
+		
 		// Position window. If position not specified by user then center the window on the page.
 		if (this.options.container == document.body || this.options.container == MochaUI.Desktop.desktop){
 			var dimensions = window.getSize();
@@ -682,7 +683,7 @@ MochaUI.Window = new Class({
 		if (MochaUI.Dock && $(MochaUI.options.dock) && this.options.type == 'window' ){
 			MochaUI.Dock.createDockTab(this.windowEl);
 		}
-
+		
 	},
 	setupEvents: function(windowEl) {
 
@@ -1833,7 +1834,7 @@ MochaUI.Window = new Class({
 	*/	
 	hideSpinner: function(spinner) {
 		if (!this.options.useSpinner || this.options.shape == 'gauge' || this.options.type == 'notification') return;
-		if ($(spinner))	$(spinner).setStyle('visibility', 'hidden');
+		if ($(spinner))	$(spinner).hide();
 	},
 	/*
 
@@ -1843,9 +1844,7 @@ MochaUI.Window = new Class({
 	*/	
 	showSpinner: function(spinner){
 		if (!this.options.useSpinner || this.options.shape == 'gauge' || this.options.type == 'notification') return;
-		$(spinner).setStyles({
-			'visibility': 'visible'
-		});
+		$(spinner).show();
 	},
 	/* 
 

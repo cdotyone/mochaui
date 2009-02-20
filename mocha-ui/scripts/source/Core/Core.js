@@ -23,63 +23,11 @@ Todo:
 
 var MochaUI = new Hash({
 	options: new Hash({
-		useEffects: false   // Toggles the majority of window fade and move effects.
+		useEffects: false   // Toggles the majority of window fade and move effects.		
 	}),	
 	
 	ieSupport: 'excanvas',  // Makes it easier to switch between Excanvas and Moocanvas for testing	
-	/*
-	  
-	This console code could be re-used for a chat window.
-	  
-	*/	
-	console: {
-		log: function(html){
-			if ($('mochaConsoleLog')) {
-
-				var scrolldown = false;
-								
-				if (!MochaUI.console.scroller) {
-					MochaUI.console.scroller = new Fx.Scroll($('mochaConsole'), {
-						'duration': 250,
-						'ignore': 'ignore',
-						onComplete: function(){							 							
-							if ($('mochaConsole').scrollHeight.toInt() - $('mochaConsole').getCoordinates().height.toInt() != $('mochaConsole').scrollTop.toInt()) {
-								MochaUI.console.scroller.toBottom();
-							}
-						}.bind(this)
-					});
-				}
-								
-				if ($('mochaConsole').scrollHeight.toInt() - $('mochaConsole').getCoordinates().height.toInt() == $('mochaConsole').scrollTop.toInt()) {
-					scrolldown = true;
-				}
-				if ($('mochaConsole').getCoordinates().height.toInt() - $('mochaConsole').scrollHeight.toInt() < 30 && $('mochaConsole').getCoordinates().height.toInt() - $('mochaConsole').scrollHeight.toInt() > -20){
-					scrolldown = true; // For IE7
-				}
-				var currentTime = new Date();
-				var hours = currentTime.getHours();
-				var minutes = currentTime.getMinutes();
-				if (minutes < 10){
-					minutes = "0" + minutes;
-				}
-				var seconds = currentTime.getSeconds();
-				if (seconds < 10){
-					seconds = "0" + seconds;
-				}
-				new Element('li', {
-					'html': hours + ':' + minutes + ':' + seconds + ' - ' + html
-				}).inject($('mochaConsoleLog'));
-				if (scrolldown == true) {
-					MochaUI.console.scroller.toBottom();					
-				}
-			}
-		},
-		clear: function(){
-			if ($('mochaConsoleLog')) {
-				$('mochaConsoleLog').empty();
-			}
-		}				
-	},				
+	
 	/*
 	
 	Function: updateContent
@@ -110,7 +58,8 @@ var MochaUI = new Hash({
 			'loadMethod':   null,
 			'url':          null,
 			'scrollbars':   null,			
-			'padding':      null
+			'padding':      null,
+			'onContentLoaded': null
 		};
 		$extend(options, updateOptions);
 
@@ -189,34 +138,26 @@ var MochaUI = new Hash({
 							currentInstance.showSpinner(spinnerEl);
 						}
 						else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')){
-							$('spinner').setStyle('visibility','visible');	
+							$('spinner').show();	
 						}
 					}.bind(this),
 					onFailure: function(response){
 						if (contentContainer == contentEl){
+
 							var getTitle = new RegExp("<title>[\n\r\s]*(.*)[\n\r\s]*</title>", "gmi");
 							var error = getTitle.exec(response.responseText);
-							contentContainer.set('html', '<h3>Error: ' + error[1] + '</h3>');
-							
-							//contentContainer.set('html','<h3>Error: ' + response.responseText.split(/<title[^>]*>((?:.|\n)*)<\/title>/i)[1] + '</h3>');
-							if (recipient == 'window') {
-								currentInstance.hideSpinner(spinnerEl);
-							}
-							else if (recipient == 'panel' && $('spinner')) {
-								$('spinner').setStyle('visibility', 'hidden');
-							}
+							contentContainer.set('html', '<h3>Error: ' + error[1] + '</h3>');					
+
+							if (recipient == 'window') currentInstance.hideSpinner(spinnerEl);						
+							else if (recipient == 'panel' && $('spinner')) $('spinner').hide();							
 						}
 					}.bind(this),
 					onException: function(){}.bind(this),
 					onSuccess: function(){
 						if (contentContainer == contentEl){
-							if (recipient == 'window'){
-								currentInstance.hideSpinner(spinnerEl);
-							}
-							else if (recipient == 'panel' && $('spinner')){
-								$('spinner').setStyle('visibility', 'hidden');
-							}
-							currentInstance.fireEvent('onContentLoaded', element);
+							if (recipient == 'window') currentInstance.hideSpinner(spinnerEl);							
+							else if (recipient == 'panel' && $('spinner')) $('spinner').hide();							
+							options.onContentLoaded ? options.onContentLoaded() : currentInstance.fireEvent('onContentLoaded', element);
 						}
 					}.bind(this),
 					onComplete: function(){}.bind(this)
@@ -243,20 +184,12 @@ var MochaUI = new Hash({
 
 				// Add onload event to iframe so we can hide the spinner and run onContentLoaded()
 				currentInstance.iframeEl.addEvent('load', function(e) {
-					if (recipient == 'window') {
-						currentInstance.hideSpinner(spinnerEl);
-					}
-					else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) {
-						$('spinner').setStyle('visibility', 'hidden');
-					}
-					currentInstance.fireEvent('onContentLoaded', element);
+					if (recipient == 'window') currentInstance.hideSpinner(spinnerEl);					
+					else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) $('spinner').hide();					
+					options.onContentLoaded ? options.onContentLoaded() : currentInstance.fireEvent('onContentLoaded', element);
 				}.bind(this));
-				if (recipient == 'window') {
-					currentInstance.showSpinner(spinnerEl);
-				}
-				else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')){
-					$('spinner').setStyle('visibility', 'visible');	
-				}
+				if (recipient == 'window') currentInstance.showSpinner(spinnerEl);				
+				else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) $('spinner').show();				
 				break;
 			case 'html':
 			default:
@@ -270,13 +203,9 @@ var MochaUI = new Hash({
 				}
 				
 				if (contentContainer == contentEl){
-					if (recipient == 'window'){
-						currentInstance.hideSpinner(spinnerEl);
-					}
-					else if (recipient == 'panel' && $('spinner')){
-						$('spinner').setStyle('visibility', 'hidden');
-					}
-					currentInstance.fireEvent('onContentLoaded', element);
+					if (recipient == 'window') currentInstance.hideSpinner(spinnerEl);					
+					else if (recipient == 'panel' && $('spinner')) $('spinner').hide();					
+					options.onContentLoaded ? options.onContentLoaded() : currentInstance.fireEvent('onContentLoaded', element);
 				}
 				break;
 		}
@@ -788,6 +717,17 @@ window.addEvent('resize', function(){
 	}
 });
 
+Element.implement({
+	hide: function(){
+		this.setStyle('display', 'none');
+		return this;
+	},
+	show: function(){
+		this.setStyle('display', 'block');
+		return this;
+	}	
+});	
+
 /*
 
 Shake effect by Uvumi Tools
@@ -804,16 +744,16 @@ Example:
 */
 
 Element.implement({
-	shake : function(radius,duration){
+	shake: function(radius,duration){
 		radius = radius || 3;
 		duration = duration || 500;
 		duration = (duration/50).toInt() - 1;
 		var parent = this.getParent();
-		if(parent != $(document.body) && parent.getStyle('position')=='static'){
+		if(parent != $(document.body) && parent.getStyle('position') == 'static'){
 			parent.setStyle('position','relative');
 		}
 		var position = this.getStyle('position');
-		if(position=='static'){
+		if(position == 'static'){
 			this.setStyle('position','relative');
 			position = 'relative';
 		}

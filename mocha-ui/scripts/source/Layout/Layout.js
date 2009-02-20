@@ -153,7 +153,7 @@ MochaUI.Desktop = new Class({
 	resizePanels: function(){
 		MochaUI.panelHeight();
 		MochaUI.rWidth();	
-	},
+	},	
 	/*
 	
 	Function: maximizeWindow
@@ -1123,7 +1123,8 @@ MochaUI.extend({
 			
 			panelsExpanded.each(function(panel){
 				MochaUI.resizeChildren(panel);
-			}.bind(this));
+			}.bind(this));			
+			
 	},
 	// May rename this resizeIframeEl()
 	resizeChildren: function(panel){
@@ -1180,7 +1181,8 @@ MochaUI.extend({
 			column.getChildren('.panel').each(function(panel){
 				panel.setStyle('width', newWidth - panel.getStyle('border-left').toInt() - panel.getStyle('border-right').toInt());
 				MochaUI.resizeChildren(panel);
-			}.bind(this));
+			}.bind(this));	
+			
 		});
 	}
 
@@ -1216,9 +1218,17 @@ function addResizeRight(element, min, max){
 			element.getNext('.column').getElements('iframe').setStyle('visibility','hidden');
 		}.bind(this),
 		onDrag: function(){
-			element.getNext('.column').setStyle('overflow','visible'); // Fix for a rendering bug in FF
+			if (Browser.Engine.gecko) { 
+				$$('.panel').each(function(panel){					
+					if (panel.getElements('.mochaIframe').length == 0) {
+						panel.setStyle('display', 'none'); // Fix for a rendering bug in FF
+					}
+				});
+			}				
 			MochaUI.rWidth();
-			element.getNext('.column').setStyle('overflow','hidden'); // Fix for a rendering bug in FF
+			if (Browser.Engine.gecko) {
+				$$('.panel').setStyle('display', 'block'); // Fix for a rendering bug in FF			
+			}
 			if (Browser.Engine.trident4){
 				element.getChildren().each(function(el){
 					var width = $(element).getStyle('width').toInt();
@@ -1277,7 +1287,7 @@ function addResizeLeft(element, min, max){
 			MochaUI.rWidth();
 			$(element).getElements('iframe').setStyle('visibility','visible');
 			partner.getElements('iframe').setStyle('visibility','visible');
-			currentInstance.fireEvent('onResize');
+			currentInstance.fireEvent('onResize');			
 		}.bind(this)
 	});
 }
@@ -1367,7 +1377,7 @@ function addResizeBottom(element){
 					MochaUI.rWidth();
 					currentInstance.iframeEl.setStyle('width', width);									
 				}
-			}			
+			}		
 			currentInstance.fireEvent('onResize');
 		}.bind(this)
 	});

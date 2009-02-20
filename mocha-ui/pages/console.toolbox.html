@@ -1,10 +1,4 @@
 <script type="text/javascript">
-	if ($('clearLog')) {
-		$('clearLog').addEvent('click', function(e){
-			e.stop();
-			MochaUI.console.clear();
-		});	
-	}
 	$$('.demoAction').each(function(element){
 		element.addEvent('click', function(e){
 			MochaUI.notification('Do Something');
@@ -13,7 +7,7 @@
 </script>
 
 <div class="toolbox divider nobr">
-	<input type="button" id="clearLog" class="button" value="Clear Log" />
+	<input type="button" class="button demoAction" value="Button" />
 </div>
 
 <div class="toolbox divider">

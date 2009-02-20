@@ -51,9 +51,7 @@ MochaUI.Themes = {
 		this.newTheme = newTheme.toLowerCase();
 		if (!this.newTheme || this.newTheme == null) return;
 		
-		if ($('spinner')) {
-			$('spinner').setStyle('visibility', 'visible');
-		}
+		if ($('spinner')) $('spinner').show();		
 		
 		// Store the current options so we can compare them to currently open windows.
 		// Windows with different options than these will keep their settings since the defaults were overridden
@@ -110,13 +108,8 @@ MochaUI.Themes = {
 						this.newSheets.push(newSheet);											
 					}.bind(this),
 					onFailure: function(response){
-						var getTitle = new RegExp("<title>[\n\r\s]*(.*)[\n\r\s]*</title>", "gmi");
-						var error = getTitle.exec(response.responseText);
-						MochaUI.console.log(href + ' : ' + error[1] );
 						this.themeLoadSuccess = false;
-						if ($('spinner')) {
-							$('spinner').setStyle('visibility', 'hidden');
-						}
+						if ($('spinner')) $('spinner').hide();						
 						MochaUI.notification('Stylesheets did not load.');						
 					},					
 					onSuccess: function(){						
@@ -216,10 +209,7 @@ MochaUI.Themes = {
 			}).periodical(50);
 		}
 		
-		if ($('spinner')) {
-			$('spinner').setStyle('visibility', 'hidden');
-		}
-		
+		if ($('spinner')) $('spinner').hide();		
 		MochaUI.Themes.options.theme = MochaUI.Themes.newTheme;
 						
 	}

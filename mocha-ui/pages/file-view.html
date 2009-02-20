@@ -1,82 +1,5 @@
-<script type="text/javascript">
-	
-	$('notesLink').addEvent('click', function(e){
-		MochaUI.updateContent({
-			'element': $('mainPanel'),
-			'loadMethod': 'xhr',
-			'url': 'pages/notes.html',
-			'title': 'Development Notes',
-			'padding': { top: 8, right: 8, bottom: 8, left: 8 }
-		});
-	});	
-
-	$('xhrLink').addEvent('click', function(e){
-		MochaUI.updateContent({
-			'element': $('mainPanel'),
-			'loadMethod': 'xhr',
-			'url': 'pages/lipsum.html',
-			'title': 'Lorem Ipsum',
-			'padding': { top: 8, right: 8, bottom: 8, left: 8 }
-		});
-	});
-
-	$('youtube4Link').addEvent('click', function(e){
-		MochaUI.updateContent({
-			'element': $('mainPanel'),
-			'loadMethod': 'iframe',
-			'url': 'pages/youtube4.html',
-			'title': 'Iframe: YouTube',
-			'padding': { top: 0, right: 0, bottom: 0, left: 0 }
-		});
-	});
-	
-	$('splitPanelLink').addEvent('click', function(e){
-		MochaUI.updateContent({
-			'element': $('mainPanel'),
-			'loadMethod': 'html',  // May create a 'panel' method in the future
-			'title': 'Split Panel',
-			'padding': { top: 0, right: 0, bottom: 0, left: 0 }
-		});
-		MochaUI.splitPanelPanel(); // This is initialized in mocha-init.js just like the windows.	
-	});
-	
-	$('splitWindowLink').addEvent('click', function(e){
-		MochaUI.splitWindow();
-	});
-	
-	$('ajaxpageLink').addEvent('click', function(e){
-		MochaUI.ajaxpageWindow();
-	});
-	
-	$('jsonLink').addEvent('click', function(e){
-		MochaUI.jsonWindows();
-	});
-	
-	$('youtubeLink').addEvent('click', function(e){
-		MochaUI.youtubeWindow();
-	});
-	
-	$('accordiantestLink').addEvent('click', function(e){
-		MochaUI.accordiantestWindow();
-	});
-	
-	$('clockLink').addEvent('click', function(e){
-		MochaUI.clockWindow();
-	});
-	
-	$('parametricsLink').addEvent('click', function(e){
-		MochaUI.parametricsWindow();
-	});
-	
-	$('test').addEvent('click', function(e){
-		new Event(e).stop();
-		MochaUI.console.log('This console code could be re-used for a chat as well.');
-	});													
-
-</script>
-
 <ul id="tree1" class="tree">
-	<li class="folder f-open first"><span>Panel Examples</span>
+	<li class="folder f-open first"><span>Panels</span>
 		<ul>
 			<li id="notesLink" class="doc"><span><a>Development Notes</a></span></li>
 			<li id="xhrLink" class="doc"><span><a>XHR: Lorem Ipsum</a></span></li>			
@@ -84,17 +7,19 @@
 			<li id="splitPanelLink" class="doc"><span><a>Split Panel</a></span></li>
 		</ul>
 	</li>
-	<li class="folder f-open"><span>Window Examples</span>
+	<li class="folder f-open"><span>Windows</span>
 		<ul>
 			<li id="ajaxpageLink" class="doc"><span><a>Ajax/XHR Demo</a></span></li>
 			<li id="jsonLink" class="doc"><span><a>Json Demo</a></span></li>
 			<li id="youtubeLink" class="doc"><span><a>Iframe: YouTube</a></span></li>
 			<li id="accordiantestLink" class="doc"><span><a>Accordian</a></span></li>
-			<li id="clockLink" class="doc"><span><a>Widget: Clock</a></span></li>
 			<li id="parametricsLink" class="doc"><span><a>Window Parametrics</a></span></li>
 			<li id="splitWindowLink" class="doc"><span><a>Split Window</a></span></li>						
 		</ul>
-	</li>			
+	</li>
+	<li class="folder f-open"><span>Widgets</span>
+		<ul>
+			<li id="clockLink" class="doc"><span><a>Clock</a></span></li>						
+		</ul>
+	</li>				
 </ul>
-
-<a href="MochaUI.console.log" id="test">Test Console Log</a>

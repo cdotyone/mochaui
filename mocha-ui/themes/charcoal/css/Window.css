@@ -19,9 +19,6 @@ Required by:
 ---------------------------------------------------------------- */
 
 .mocha {
-	position: absolute; /* This is also set in theme.js to make theme transitions smoother */
-	top: 0;
-	left: 0;
 	display: none;
 	overflow: hidden;	
 }
@@ -30,7 +27,7 @@ Required by:
 }	
 
 .mochaOverlay {
-	position: absolute; /* This is also set in theme.js to make theme transitions smoother */
+	position: absolute; /* This is also set in theme.js in order to make theme transitions smoother */
 	top: 0;
 	left: 0;	
 }
@@ -171,7 +168,7 @@ div.mochaToolbarWrapper.bottom {
 }
 
 .mochaSpinner{
-	visibility: hidden;	
+	display: none;
 	position: absolute;
 	bottom: 7px;
 	left: 6px;

@@ -659,7 +659,64 @@ initializeColumns = function() {
 						MochaUI.treeScript = true;
 					}.bind(this)
 				}).send();
-			}
+			}	
+			$('notesLink').addEvent('click', function(e){
+				MochaUI.updateContent({
+					'element': $('mainPanel'),
+					'loadMethod': 'xhr',
+					'url': 'pages/notes.html',
+					'title': 'Development Notes',
+					'padding': { top: 8, right: 8, bottom: 8, left: 8 }
+				});
+			});
+			$('xhrLink').addEvent('click', function(e){
+				MochaUI.updateContent({
+					'element': $('mainPanel'),
+					'loadMethod': 'xhr',
+					'url': 'pages/lipsum.html',
+					'title': 'Lorem Ipsum',
+					'padding': { top: 8, right: 8, bottom: 8, left: 8 }
+				});
+			});
+			$('youtube4Link').addEvent('click', function(e){
+				MochaUI.updateContent({
+					'element': $('mainPanel'),
+					'loadMethod': 'iframe',
+					'url': 'pages/youtube4.html',
+					'title': 'Iframe: YouTube',
+					'padding': { top: 0, right: 0, bottom: 0, left: 0 }
+				});
+			});	
+			$('splitPanelLink').addEvent('click', function(e){
+				MochaUI.updateContent({
+					'element': $('mainPanel'),
+					'loadMethod': 'html',  // May create a 'panel' method in the future
+					'title': 'Split Panel',
+					'padding': { top: 0, right: 0, bottom: 0, left: 0 }
+				});
+				MochaUI.splitPanelPanel(); // This is initialized in mocha-init.js just like the windows.	
+			});	
+			$('splitWindowLink').addEvent('click', function(e){
+				MochaUI.splitWindow();
+			});		
+			$('ajaxpageLink').addEvent('click', function(e){
+				MochaUI.ajaxpageWindow();
+			});	
+			$('jsonLink').addEvent('click', function(e){
+				MochaUI.jsonWindows();
+			});	
+			$('youtubeLink').addEvent('click', function(e){
+				MochaUI.youtubeWindow();
+			});	
+			$('accordiantestLink').addEvent('click', function(e){
+				MochaUI.accordiantestWindow();
+			});	
+			$('clockLink').addEvent('click', function(e){
+				MochaUI.clockWindow();
+			});
+			$('parametricsLink').addEvent('click', function(e){
+				MochaUI.parametricsWindow();
+			});
 		}
 	});
 	
@@ -669,7 +726,39 @@ initializeColumns = function() {
 		loadMethod: 'xhr',
 		contentURL: 'pages/ajax.form.html',
 		column: 'sideColumn1',
-		height: 230
+		height: 230,
+		onContentLoaded: function(){
+			$('myForm').addEvent('submit', function(e) {
+				e.stop();
+
+				$('spinner').show();
+				if ($('postContent')) {
+					$('postContent').setStyle('opacity', 0);	
+				}
+				else {
+					$('mainPanel_pad').empty();
+				}
+	
+				this.set('send', {
+					onComplete: function(response) { 
+	 						MochaUI.updateContent({
+							'element': $('mainPanel'),
+							'loadMethod': 'html',
+							'content': response,
+							'title': 'Ajax Response',
+							'padding': { top: 8, right: 8, bottom: 8, left: 8 }
+						});			
+					},
+					onSuccess: function(){
+						$('postContent').setStyle('opacity', 0);
+						new Fx.Morph($('postContent'), {duration: 500} ).start({
+							'opacity': 1
+						});
+					}
+				});
+				this.send();
+			});		
+		}
 	});
 	
 	// Add panels to main column	
@@ -687,11 +776,10 @@ initializeColumns = function() {
 		id: 'mochaConsole',
 		addClass: 'mochaConsole',
 		title: 'Console',
-		loadMethod: 'html',
-		content: new Element('ul', {'id': 'mochaConsoleLog'}),
+		loadMethod: 'xhr',
+		contentURL: 'pages/lipsum.html',
 		column: 'mainColumn',
-		height: 200,
-		padding: { top: 1, right: 1, bottom: 1, left: 1 },		
+		height: 200,	
 		headerToolbox: true,
 		headerToolboxURL: 'pages/console.toolbox.html'
 	});
