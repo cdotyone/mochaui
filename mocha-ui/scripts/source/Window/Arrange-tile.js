@@ -80,7 +80,7 @@ MochaUI.extend({
 				var left = (x + (col * col_width));
 				var top = (y + (row * col_height));
 
-				instance.drawWindow(instance.windowEl);
+				instance.drawWindow();
 				
 				MochaUI.focusWindow(instance.windowEl);
 				

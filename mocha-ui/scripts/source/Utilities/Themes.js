@@ -189,7 +189,7 @@ MochaUI.Themes = {
 				}								
 			}.bind(this));
 							
-			currentInstance.drawWindow(currentInstance.windowEl);			
+			currentInstance.drawWindow();			
 			
 		}.bind(this));
 

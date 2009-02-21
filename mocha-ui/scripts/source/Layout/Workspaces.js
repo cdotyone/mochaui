@@ -82,7 +82,7 @@ MochaUI.extend({
 					'width': instance.width,
 					'height': instance.height
 				});
-				currentInstance.drawWindow(currentInstance.windowEl);
+				currentInstance.drawWindow();
 			}
 		}.bind(this));
 		this.loadingWorkspace = false;

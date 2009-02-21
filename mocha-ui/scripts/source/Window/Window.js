@@ -312,12 +312,7 @@ MochaUI.Window = new Class({
 
 		// Set this.options.draggable if it was not defined
 		if (options.draggable == null){
-			if (options.type != 'window'){
-				options.draggable = false;
-			}
-			else {
-				options.draggable = true;
-			}
+			options.draggable = options.type != 'window' ? false : true;
 		}
 
 		// Gauges are not maximizable or resizable
@@ -386,9 +381,7 @@ MochaUI.Window = new Class({
 		var instanceID = instances.get(this.options.id);
 	
 		// Here we check to see if there is already a class instance for this window
-		if (instanceID){
-			var currentInstance = instanceID;
-		}
+		if (instanceID) var currentInstance = instanceID;		
 
 		// Check if window already exists and is not in progress of closing
 		if ( this.windowEl && !this.isClosing ){
@@ -425,11 +418,11 @@ MochaUI.Window = new Class({
 		MochaUI.Windows.indexLevel++;
 		this.windowEl = new Element('div', {
 			'class': 'mocha',
-			'id':    this.options.id,
+			'id': this.options.id,
 			'styles': {
 				'position': 'absolute',
-				'width':   this.options.width,
-				'height':  this.options.height,
+				'width': this.options.width,
+				'height': this.options.height,
 				'display': 'block',
 				'opacity': 0,
 				'zIndex': MochaUI.Windows.indexLevel += 2
@@ -464,12 +457,10 @@ MochaUI.Window = new Class({
 		this.insertWindowElements();
 
 		// Set title
-		this.titleEl.set('html',this.options.title);
+		this.titleEl.set('html', this.options.title);
 
 		// Set scrollbars, always use 'hidden' for iframe windows
-		this.contentWrapperEl.setStyles({
-			'overflow': 'hidden'
-		});
+		this.contentWrapperEl.setStyle('overflow', 'hidden');
 
 		this.contentEl.setStyles({
 			'padding-top': this.options.padding.top,
@@ -516,7 +507,7 @@ MochaUI.Window = new Class({
 		}
 
 		// Inject window into DOM
-		this.windowEl.injectInside(this.options.container);
+		this.windowEl.inject(this.options.container);
 
 		if (this.options.type != 'notification'){
 			this.setMochaControlsWidth();
@@ -557,12 +548,12 @@ MochaUI.Window = new Class({
 			});
 		}
 		        
-		this.drawWindow(this.windowEl);
+		this.drawWindow();
 				
 		// Attach events to the window
-		this.attachDraggable(this.windowEl); 
-		this.attachResizable(this.windowEl);
-		this.setupEvents(this.windowEl);
+		this.attachDraggable(); 
+		this.attachResizable();
+		this.setupEvents();
 		
 		if (this.options.resizable){
 			this.adjustHandles();
@@ -607,14 +598,14 @@ MochaUI.Window = new Class({
 		if (MochaUI.options.useEffects == true){
 			// IE cannot handle both element opacity and VML alpha at the same time.
 			if (Browser.Engine.trident){
-				this.drawWindow(this.windowEl, false);
+				this.drawWindow(false);
 			}
 			this.opacityMorph = new Fx.Morph(this.windowEl, {
 				'duration': 350,
 				transition: Fx.Transitions.Sine.easeInOut,
 				onComplete: function(){
 					if (Browser.Engine.trident){
-						this.drawWindow(this.windowEl);
+						this.drawWindow();
 					}
 				}.bind(this)
 			});
@@ -685,8 +676,8 @@ MochaUI.Window = new Class({
 		}
 		
 	},
-	setupEvents: function(windowEl) {
-
+	setupEvents: function() {
+		var windowEl = this.windowEl;
 		// Set events
 		// Note: if a button does not exist, its due to properties passed to newWindow() stating otherwice
 		if (this.closeButtonEl){
@@ -753,12 +744,10 @@ MochaUI.Window = new Class({
 
 	Internal Function: attachDraggable()
 		Make window draggable.
-
-	Arguments:
-		windowEl
 		
 	*/
-	attachDraggable: function(windowEl){
+	attachDraggable: function(){
+		var windowEl = this.windowEl;
 		if (!this.options.draggable) return;
 		this.windowDrag = new Drag.Move(windowEl, {
 			handle: this.titleBarEl,
@@ -802,11 +791,9 @@ MochaUI.Window = new Class({
 	Internal Function: attachResizable
 		Make window resizable.
 
-	Arguments:
-		windowEl
-
 	*/
-	attachResizable: function(windowEl){
+	attachResizable: function(){
+		var windowEl = this.windowEl;
 		if (!this.options.resizable) return;
 		this.resizable1 = this.windowEl.makeResizable({
 			handle: [this.n, this.ne, this.nw],
@@ -1368,12 +1355,14 @@ MochaUI.Window = new Class({
 		shadows: (boolean) false will draw a window without shadows
 
 	*/	
-	drawWindow: function(windowEl, shadows) {
+	drawWindow: function(shadows) {		
 				
 		if (this.isCollapsed){
-			this.drawWindowCollapsed(windowEl, shadows);
+			this.drawWindowCollapsed(shadows);
 			return;
 		}
+		
+		var windowEl = this.windowEl;
 
 		var options = this.options;
 		var shadowBlur = options.shadowBlur;
@@ -1480,10 +1469,14 @@ MochaUI.Window = new Class({
 			this.contentWrapperEl.getChildren('.column').each(function(column){
 				MochaUI.panelHeight(column);
 			});
-		}		
+		}
+		
+		return this;		
 
 	},
-	drawWindowCollapsed: function(windowEl, shadows) {
+	drawWindowCollapsed: function(shadows) {
+
+		var windowEl = this.windowEl;
 		
 		var options = this.options;
 		var shadowBlur = options.shadowBlur;
@@ -1535,6 +1528,8 @@ MochaUI.Window = new Class({
 				MochaUI.triangle(ctx, 0, 0, 10, 10, options.resizableColor, 0);
 			}
 		}
+		
+		return this;
 
 	},	
 	drawControls : function(width, height, shadows){

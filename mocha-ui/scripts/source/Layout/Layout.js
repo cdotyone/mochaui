@@ -107,7 +107,7 @@ MochaUI.Desktop = new Class({
 						'width': coordinates.width
 					});
 
-					instance.drawWindow($(instance.options.id));
+					instance.drawWindow();
 					if ( instance.iframeEl ){
 						instance.iframeEl.setStyles({
 							'height': instance.contentWrapperEl.getStyle('height')
@@ -237,7 +237,7 @@ MochaUI.Desktop = new Class({
 				'height': newHeight,
 				'width':  windowDimensions.width
 			});
-			currentInstance.drawWindow(windowEl);
+			currentInstance.drawWindow();
 			// Show iframe
 			if ( currentInstance.iframeEl ) {
 				if (!Browser.Engine.trident) {
@@ -257,11 +257,11 @@ MochaUI.Desktop = new Class({
 				duration: 100,
 				transition: Fx.Transitions.Sine.easeInOut,
 				onStart: function(windowEl){
-					currentInstance.maximizeAnimation = currentInstance.drawWindow.periodical(20, currentInstance, windowEl);
+					currentInstance.maximizeAnimation = currentInstance.drawWindow.periodical(20, currentInstance);
 				}.bind(this),
 				onComplete: function(windowEl){
 					$clear(currentInstance.maximizeAnimation);
-					currentInstance.drawWindow(windowEl);
+					currentInstance.drawWindow();
 					// Show iframe
 					if ( currentInstance.iframeEl ) {
 						currentInstance.iframeEl.setStyle('visibility', 'visible');
@@ -329,7 +329,7 @@ MochaUI.Desktop = new Class({
 				'width':  contentWrapperEl.oldWidth,
 				'height': contentWrapperEl.oldHeight
 			});
-			currentInstance.drawWindow(windowEl);
+			currentInstance.drawWindow();
 			windowEl.setStyles({
 				'top': currentInstance.oldTop,
 				'left': currentInstance.oldLeft
@@ -355,11 +355,11 @@ MochaUI.Desktop = new Class({
 				'duration':   200,
 				transition: Fx.Transitions.Sine.easeInOut,
 				'onStart': function(windowEl){
-					currentInstance.maximizeAnimation = currentInstance.drawWindow.periodical(20, currentInstance, windowEl);
+					currentInstance.maximizeAnimation = currentInstance.drawWindow.periodical(20, currentInstance);
 				}.bind(this),
 				'onComplete': function(el){
 					$clear(currentInstance.maximizeAnimation);
-					currentInstance.drawWindow(windowEl);
+					currentInstance.drawWindow();
 					if (currentInstance.iframeEl){
 						if (!Browser.Engine.trident) {
 							currentInstance.iframeEl.setStyle('visibility', 'visible');
