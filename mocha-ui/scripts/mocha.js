@@ -117,7 +117,7 @@ var MochaUI = new Hash({
 		// Remove old content.
 		if (contentContainer == contentEl) {
 			contentEl.empty();
-			contentEl.setStyle('display', 'block');			
+			contentEl.show();			
 			// Panels are not loaded into the padding div, so we remove them separately.
 			contentEl.getAllNext('.column').destroy();
 			contentEl.getAllNext('.columnHandle').destroy();
@@ -252,7 +252,7 @@ var MochaUI = new Hash({
 		if (currentInstance.isMaximized == true) return;		
 		if (currentInstance.isCollapsed == false) {
 			currentInstance.isCollapsed = true;
-			handles.setStyle('display', 'none');
+			handles.hide();
 			if ( currentInstance.iframeEl ) {
 				currentInstance.iframeEl.setStyle('visibility', 'hidden');
 			}
@@ -292,7 +292,7 @@ var MochaUI = new Hash({
 			if ( currentInstance.iframeEl ) {
 				currentInstance.iframeEl.setStyle('visibility', 'visible');
 			}
-			handles.setStyle('display', 'block');
+			handles.show();
 		}
 	},
 	/*
@@ -325,7 +325,7 @@ var MochaUI = new Hash({
 		if (currentInstance.check) currentInstance.check.destroy();
 
 		if ((currentInstance.options.type == 'modal' || currentInstance.options.type == 'modal2') && Browser.Engine.trident4){
-			$('modalFix').setStyle('display', 'none');
+			$('modalFix').hide();
 		}
 		
 		if (MochaUI.options.useEffects == false){			
@@ -1507,7 +1507,7 @@ MochaUI.Window = new Class({
 							this.controlsEl.setStyle('visibility', 'visible');
 						}
 						this.canvasHeaderEl.setStyle('visibility', 'visible');
-						this.titleEl.setStyle('display', 'block');
+						this.titleEl.show();
 					}
 				};
 				showControls.delay(0, this);
@@ -1522,7 +1522,7 @@ MochaUI.Window = new Class({
 					this.controlsEl.setStyle('visibility', 'hidden');
 				}
 				this.canvasHeaderEl.setStyle('visibility', 'hidden');
-				this.titleEl.setStyle('display', 'none');
+				this.titleEl.hide();
 			}.bind(this));
 		}
 
@@ -1634,9 +1634,9 @@ MochaUI.Window = new Class({
 		if (this.options.type == 'modal' || this.options.type == 'modal2') {
 			MochaUI.currentModal = this.windowEl;
 			if (Browser.Engine.trident4){				
-				$('modalFix').setStyle('display', 'block');
+				$('modalFix').show();
 			}
-			$('modalOverlay').setStyle('display', 'block');
+			$('modalOverlay').show();
 			if (MochaUI.options.useEffects == false){
 				$('modalOverlay').setStyle('opacity', .6);
 				this.windowEl.setStyles({
@@ -1780,27 +1780,27 @@ MochaUI.Window = new Class({
 			onStart: function() {
 				if (this.options.type != 'modal' && this.options.type != 'modal2'){ 
 					MochaUI.focusWindow(windowEl);
-					$('windowUnderlay').setStyle('display','block');
+					$('windowUnderlay').show();
 				}
 				if (this.iframeEl) {
 					if (!Browser.Engine.trident) {
 						this.iframeEl.setStyle('visibility', 'hidden');
 					}
 					else {
-						this.iframeEl.setStyle('display', 'none');
+						this.iframeEl.hide();
 					}
 				}	
 			}.bind(this),
 			onComplete: function() {
 				if (this.options.type != 'modal' && this.options.type != 'modal2') {
-					$('windowUnderlay').setStyle('display', 'none');
+					$('windowUnderlay').hide();
 				}
 				if ( this.iframeEl ){
 					if (!Browser.Engine.trident) {
 						this.iframeEl.setStyle('visibility', 'visible');
 					}
 					else {
-						this.iframeEl.setStyle('display', 'block');
+						this.iframeEl.show();
 					}
 				}
 				// Store new position in options.
@@ -1930,13 +1930,13 @@ MochaUI.Window = new Class({
 
 	},
 	resizeOnStart: function(){
-		$('windowUnderlay').setStyle('display','block');
+		$('windowUnderlay').show();
 		if (this.iframeEl){
 			if (!Browser.Engine.trident) {
 				this.iframeEl.setStyle('visibility', 'hidden');
 			}
 			else {
-				this.iframeEl.setStyle('display', 'none');
+				this.iframeEl.hide();
 			}
 		}	
 	},
@@ -1957,13 +1957,13 @@ MochaUI.Window = new Class({
 		}			
 	},		
 	resizeOnComplete: function(){
-		$('windowUnderlay').setStyle('display','none');
+		$('windowUnderlay').hide();
 		if (this.iframeEl){
 			if (!Browser.Engine.trident) {
 				this.iframeEl.setStyle('visibility', 'visible');
 			}
 			else {
-				this.iframeEl.setStyle('display', 'block');
+				this.iframeEl.show();
 				// The following hack is to get IE8 RC1 IE8 Standards Mode to properly resize an iframe
 				// when only the vertical dimension is changed.
 				this.iframeEl.setStyle('width', '99%');
@@ -2040,7 +2040,7 @@ MochaUI.Window = new Class({
 			this.resizable3.detach();
 			this.resizable4.detach();
 			this.resizable5.detach();
-			this.windowEl.getElements('.handle').setStyle('display', 'none');
+			this.windowEl.getElements('.handle').hide();
 	},
 	reattachResizable: function(){
 			this.resizable1.attach();
@@ -2048,7 +2048,7 @@ MochaUI.Window = new Class({
 			this.resizable3.attach();
 			this.resizable4.attach();
 			this.resizable5.attach();
-			this.windowEl.getElements('.handle').setStyle('display', 'block');
+			this.windowEl.getElements('.handle').show();
 	},
 	/*
 
@@ -2995,9 +2995,9 @@ MochaUI.Modal = new Class({
 		this.modalOverlayCloseMorph = new Fx.Morph($('modalOverlay'), {
 			'duration': 150,
 			onComplete: function(){
-				$('modalOverlay').setStyle('display', 'none');
+				$('modalOverlay').hide();
 				if (Browser.Engine.trident4){
-					$('modalFix').setStyle('display', 'none');
+					$('modalFix').hide();
 				}
 			}.bind(this)
 		});
@@ -3043,7 +3043,7 @@ MochaUI.extend({
 		$$('div.mocha').each(function(el) {
 			// Get the window title and destroy that element, so it does not end up in window content
 			if ( Browser.Engine.presto || Browser.Engine.trident5 ){
-				el.setStyle('display','block'); // Required by Opera, and probably IE7
+				el.hide(); // Required by Opera, and probably IE7
 			}
 			var title = el.getElement('h3.mochaTitle');
 			var elDimensions = el.getStyles('height', 'width');
@@ -3577,7 +3577,7 @@ MochaUI.Desktop = new Class({
 				currentInstance.iframeEl.setStyle('visibility', 'hidden');
 			}
 			else {
-				currentInstance.iframeEl.setStyle('display', 'none');
+				currentInstance.iframeEl.hide();
 			}
 		}
 
@@ -3606,7 +3606,7 @@ MochaUI.Desktop = new Class({
 					currentInstance.iframeEl.setStyle('visibility', 'visible');
 				}
 				else {
-					currentInstance.iframeEl.setStyle('display', 'block');
+					currentInstance.iframeEl.show();
 				}
 			}
 			currentInstance.fireEvent('onMaximize', windowEl);
@@ -3680,7 +3680,7 @@ MochaUI.Desktop = new Class({
 				currentInstance.iframeEl.setStyle('visibility', 'hidden');
 			}
 			else {
-				currentInstance.iframeEl.setStyle('display', 'none');
+				currentInstance.iframeEl.hide();
 			}
 		}
 		
@@ -3701,7 +3701,7 @@ MochaUI.Desktop = new Class({
 					currentInstance.iframeEl.setStyle('visibility', 'visible');
 				}
 				else {
-					currentInstance.iframeEl.setStyle('display', 'block');
+					currentInstance.iframeEl.show();
 				}
 			}			
 			if (options.container != this.desktop){
@@ -3727,7 +3727,7 @@ MochaUI.Desktop = new Class({
 							currentInstance.iframeEl.setStyle('visibility', 'visible');
 						}
 						else {
-							currentInstance.iframeEl.setStyle('display', 'block');
+							currentInstance.iframeEl.show();
 						}
 					}
 					if (options.container != this.desktop){
@@ -3837,12 +3837,12 @@ MochaUI.Column = new Class({
 		
 		// If loading columns into a panel, hide the regular content container.
 		if ($(options.container).getElement('.pad') != null) {
-			$(options.container).getElement('.pad').setStyle('display', 'none');
+			$(options.container).getElement('.pad').hide();
 		}
 		
 		// If loading columns into a window, hide the regular content container.
 		if ($(options.container).getElement('.mochaContent') != null) {
-			$(options.container).getElement('.mochaContent').setStyle('display', 'none');
+			$(options.container).getElement('.mochaContent').hide();
 		}		
 				
 		this.columnEl = new Element('div', {
@@ -4348,7 +4348,7 @@ MochaUI.extend({
 					currentInstance.handleEl.setStyle('cursor', null).addClass('detached');
 				}
 				if (panel.getNext('.panel') == null){
-					currentInstance.handleEl.setStyle('display', 'none');
+					currentInstance.handleEl.hide();
 				}
 			}.bind(this));
 			
@@ -4583,13 +4583,13 @@ function addResizeRight(element, min, max){
 			if (Browser.Engine.gecko) { 
 				$$('.panel').each(function(panel){					
 					if (panel.getElements('.mochaIframe').length == 0) {
-						panel.setStyle('display', 'none'); // Fix for a rendering bug in FF
+						panel.hide(); // Fix for a rendering bug in FF
 					}
 				});
 			}				
 			MochaUI.rWidth();
 			if (Browser.Engine.gecko) {
-				$$('.panel').setStyle('display', 'block'); // Fix for a rendering bug in FF			
+				$$('.panel').show(); // Fix for a rendering bug in FF			
 			}
 			if (Browser.Engine.trident4){
 				element.getChildren().each(function(el){
@@ -4695,8 +4695,8 @@ function addResizeBottom(element){
 					partner.getElements('iframe').setStyle('visibility','hidden');
 				}
 				else {
-					currentInstance.iframeEl.setStyle('display', 'none');
-					partner.getElements('iframe').setStyle('display','none');
+					currentInstance.iframeEl.hide();
+					partner.getElements('iframe').hide();
 				}
 			}
 			
@@ -4730,8 +4730,8 @@ function addResizeBottom(element){
 					partner.getElements('iframe').setStyle('visibility','visible');
 				}
 				else {
-					currentInstance.iframeEl.setStyle('display', 'block');
-					partner.getElements('iframe').setStyle('display','block');
+					currentInstance.iframeEl.show();
+					partner.getElements('iframe').show();
 					// The following hack is to get IE8 Standards Mode to properly resize an iframe
 					// when only the vertical dimension is changed.
 					var width = currentInstance.iframeEl.getStyle('width').toInt();
@@ -5015,20 +5015,20 @@ MochaUI.Dock = new Class({
 					}						
 					if (!MochaUI.Desktop.desktopFooter && event.client.y > (document.getCoordinates().height - dockHotspotHeight)){
 						if (!MochaUI.dockVisible){
-							this.dockWrapper.setStyle('display', 'block');
+							this.dockWrapper.show();
 							MochaUI.dockVisible = true;
 							MochaUI.Desktop.setDesktopSize();
 						}
 					}
 					else if (MochaUI.Desktop.desktopFooter && event.client.y > (document.getCoordinates().height - dockHotspotHeight)){
 						if (!MochaUI.dockVisible){
-							this.dockWrapper.setStyle('display', 'block');
+							this.dockWrapper.show();
 							MochaUI.dockVisible = true;
 							MochaUI.Desktop.setDesktopSize();
 						}
 					}
 					else if (MochaUI.dockVisible){
-						this.dockWrapper.setStyle('display', 'none');
+						this.dockWrapper.hide();
 						MochaUI.dockVisible = false;
 						MochaUI.Desktop.setDesktopSize();
 						
@@ -5198,14 +5198,14 @@ MochaUI.Dock = new Class({
 				currentInstance.iframeEl.setStyle('visibility', 'hidden');
 			}
 			else {
-				currentInstance.iframeEl.setStyle('display', 'none');
+				currentInstance.iframeEl.hide();
 			}
 		}
 
 		// Hide window and add to dock	
 		currentInstance.contentBorderEl.setStyle('visibility', 'hidden');
 		if(currentInstance.toolbarWrapperEl){		
-			currentInstance.toolbarWrapperEl.setStyle('display', 'none');
+			currentInstance.toolbarWrapperEl.hide();
 		}
 		windowEl.setStyle('visibility', 'hidden');
 
@@ -5254,7 +5254,7 @@ MochaUI.Dock = new Class({
 		windowEl.setStyle('visibility', 'visible');
 		currentInstance.contentBorderEl.setStyle('visibility', 'visible');
 		if(currentInstance.toolbarWrapperEl){
-			currentInstance.toolbarWrapperEl.setStyle('display', 'block');
+			currentInstance.toolbarWrapperEl.show();
 		}
 
 		// Show iframe
@@ -5263,7 +5263,7 @@ MochaUI.Dock = new Class({
 				currentInstance.iframeEl.setStyle('visibility', 'visible');
 			}
 			else {
-				currentInstance.iframeEl.setStyle('display', 'block');
+				currentInstance.iframeEl.show();
 			}
 		}
 

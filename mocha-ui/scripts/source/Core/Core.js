@@ -117,7 +117,7 @@ var MochaUI = new Hash({
 		// Remove old content.
 		if (contentContainer == contentEl) {
 			contentEl.empty();
-			contentEl.setStyle('display', 'block');			
+			contentEl.show();			
 			// Panels are not loaded into the padding div, so we remove them separately.
 			contentEl.getAllNext('.column').destroy();
 			contentEl.getAllNext('.columnHandle').destroy();
@@ -252,7 +252,7 @@ var MochaUI = new Hash({
 		if (currentInstance.isMaximized == true) return;		
 		if (currentInstance.isCollapsed == false) {
 			currentInstance.isCollapsed = true;
-			handles.setStyle('display', 'none');
+			handles.hide();
 			if ( currentInstance.iframeEl ) {
 				currentInstance.iframeEl.setStyle('visibility', 'hidden');
 			}
@@ -292,7 +292,7 @@ var MochaUI = new Hash({
 			if ( currentInstance.iframeEl ) {
 				currentInstance.iframeEl.setStyle('visibility', 'visible');
 			}
-			handles.setStyle('display', 'block');
+			handles.show();
 		}
 	},
 	/*
@@ -325,7 +325,7 @@ var MochaUI = new Hash({
 		if (currentInstance.check) currentInstance.check.destroy();
 
 		if ((currentInstance.options.type == 'modal' || currentInstance.options.type == 'modal2') && Browser.Engine.trident4){
-			$('modalFix').setStyle('display', 'none');
+			$('modalFix').hide();
 		}
 		
 		if (MochaUI.options.useEffects == false){			

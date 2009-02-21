@@ -162,20 +162,20 @@ MochaUI.Dock = new Class({
 					}						
 					if (!MochaUI.Desktop.desktopFooter && event.client.y > (document.getCoordinates().height - dockHotspotHeight)){
 						if (!MochaUI.dockVisible){
-							this.dockWrapper.setStyle('display', 'block');
+							this.dockWrapper.show();
 							MochaUI.dockVisible = true;
 							MochaUI.Desktop.setDesktopSize();
 						}
 					}
 					else if (MochaUI.Desktop.desktopFooter && event.client.y > (document.getCoordinates().height - dockHotspotHeight)){
 						if (!MochaUI.dockVisible){
-							this.dockWrapper.setStyle('display', 'block');
+							this.dockWrapper.show();
 							MochaUI.dockVisible = true;
 							MochaUI.Desktop.setDesktopSize();
 						}
 					}
 					else if (MochaUI.dockVisible){
-						this.dockWrapper.setStyle('display', 'none');
+						this.dockWrapper.hide();
 						MochaUI.dockVisible = false;
 						MochaUI.Desktop.setDesktopSize();
 						
@@ -345,14 +345,14 @@ MochaUI.Dock = new Class({
 				currentInstance.iframeEl.setStyle('visibility', 'hidden');
 			}
 			else {
-				currentInstance.iframeEl.setStyle('display', 'none');
+				currentInstance.iframeEl.hide();
 			}
 		}
 
 		// Hide window and add to dock	
 		currentInstance.contentBorderEl.setStyle('visibility', 'hidden');
 		if(currentInstance.toolbarWrapperEl){		
-			currentInstance.toolbarWrapperEl.setStyle('display', 'none');
+			currentInstance.toolbarWrapperEl.hide();
 		}
 		windowEl.setStyle('visibility', 'hidden');
 
@@ -401,7 +401,7 @@ MochaUI.Dock = new Class({
 		windowEl.setStyle('visibility', 'visible');
 		currentInstance.contentBorderEl.setStyle('visibility', 'visible');
 		if(currentInstance.toolbarWrapperEl){
-			currentInstance.toolbarWrapperEl.setStyle('display', 'block');
+			currentInstance.toolbarWrapperEl.show();
 		}
 
 		// Show iframe
@@ -410,7 +410,7 @@ MochaUI.Dock = new Class({
 				currentInstance.iframeEl.setStyle('visibility', 'visible');
 			}
 			else {
-				currentInstance.iframeEl.setStyle('display', 'block');
+				currentInstance.iframeEl.show();
 			}
 		}
 

@@ -215,7 +215,7 @@ MochaUI.Desktop = new Class({
 				currentInstance.iframeEl.setStyle('visibility', 'hidden');
 			}
 			else {
-				currentInstance.iframeEl.setStyle('display', 'none');
+				currentInstance.iframeEl.hide();
 			}
 		}
 
@@ -244,7 +244,7 @@ MochaUI.Desktop = new Class({
 					currentInstance.iframeEl.setStyle('visibility', 'visible');
 				}
 				else {
-					currentInstance.iframeEl.setStyle('display', 'block');
+					currentInstance.iframeEl.show();
 				}
 			}
 			currentInstance.fireEvent('onMaximize', windowEl);
@@ -318,7 +318,7 @@ MochaUI.Desktop = new Class({
 				currentInstance.iframeEl.setStyle('visibility', 'hidden');
 			}
 			else {
-				currentInstance.iframeEl.setStyle('display', 'none');
+				currentInstance.iframeEl.hide();
 			}
 		}
 		
@@ -339,7 +339,7 @@ MochaUI.Desktop = new Class({
 					currentInstance.iframeEl.setStyle('visibility', 'visible');
 				}
 				else {
-					currentInstance.iframeEl.setStyle('display', 'block');
+					currentInstance.iframeEl.show();
 				}
 			}			
 			if (options.container != this.desktop){
@@ -365,7 +365,7 @@ MochaUI.Desktop = new Class({
 							currentInstance.iframeEl.setStyle('visibility', 'visible');
 						}
 						else {
-							currentInstance.iframeEl.setStyle('display', 'block');
+							currentInstance.iframeEl.show();
 						}
 					}
 					if (options.container != this.desktop){
@@ -475,12 +475,12 @@ MochaUI.Column = new Class({
 		
 		// If loading columns into a panel, hide the regular content container.
 		if ($(options.container).getElement('.pad') != null) {
-			$(options.container).getElement('.pad').setStyle('display', 'none');
+			$(options.container).getElement('.pad').hide();
 		}
 		
 		// If loading columns into a window, hide the regular content container.
 		if ($(options.container).getElement('.mochaContent') != null) {
-			$(options.container).getElement('.mochaContent').setStyle('display', 'none');
+			$(options.container).getElement('.mochaContent').hide();
 		}		
 				
 		this.columnEl = new Element('div', {
@@ -986,7 +986,7 @@ MochaUI.extend({
 					currentInstance.handleEl.setStyle('cursor', null).addClass('detached');
 				}
 				if (panel.getNext('.panel') == null){
-					currentInstance.handleEl.setStyle('display', 'none');
+					currentInstance.handleEl.hide();
 				}
 			}.bind(this));
 			
@@ -1221,13 +1221,13 @@ function addResizeRight(element, min, max){
 			if (Browser.Engine.gecko) { 
 				$$('.panel').each(function(panel){					
 					if (panel.getElements('.mochaIframe').length == 0) {
-						panel.setStyle('display', 'none'); // Fix for a rendering bug in FF
+						panel.hide(); // Fix for a rendering bug in FF
 					}
 				});
 			}				
 			MochaUI.rWidth();
 			if (Browser.Engine.gecko) {
-				$$('.panel').setStyle('display', 'block'); // Fix for a rendering bug in FF			
+				$$('.panel').show(); // Fix for a rendering bug in FF			
 			}
 			if (Browser.Engine.trident4){
 				element.getChildren().each(function(el){
@@ -1333,8 +1333,8 @@ function addResizeBottom(element){
 					partner.getElements('iframe').setStyle('visibility','hidden');
 				}
 				else {
-					currentInstance.iframeEl.setStyle('display', 'none');
-					partner.getElements('iframe').setStyle('display','none');
+					currentInstance.iframeEl.hide();
+					partner.getElements('iframe').hide();
 				}
 			}
 			
@@ -1368,8 +1368,8 @@ function addResizeBottom(element){
 					partner.getElements('iframe').setStyle('visibility','visible');
 				}
 				else {
-					currentInstance.iframeEl.setStyle('display', 'block');
-					partner.getElements('iframe').setStyle('display','block');
+					currentInstance.iframeEl.show();
+					partner.getElements('iframe').show();
 					// The following hack is to get IE8 Standards Mode to properly resize an iframe
 					// when only the vertical dimension is changed.
 					var width = currentInstance.iframeEl.getStyle('width').toInt();

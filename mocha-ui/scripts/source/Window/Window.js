@@ -496,7 +496,7 @@ MochaUI.Window = new Class({
 							this.controlsEl.setStyle('visibility', 'visible');
 						}
 						this.canvasHeaderEl.setStyle('visibility', 'visible');
-						this.titleEl.setStyle('display', 'block');
+						this.titleEl.show();
 					}
 				};
 				showControls.delay(0, this);
@@ -511,7 +511,7 @@ MochaUI.Window = new Class({
 					this.controlsEl.setStyle('visibility', 'hidden');
 				}
 				this.canvasHeaderEl.setStyle('visibility', 'hidden');
-				this.titleEl.setStyle('display', 'none');
+				this.titleEl.hide();
 			}.bind(this));
 		}
 
@@ -623,9 +623,9 @@ MochaUI.Window = new Class({
 		if (this.options.type == 'modal' || this.options.type == 'modal2') {
 			MochaUI.currentModal = this.windowEl;
 			if (Browser.Engine.trident4){				
-				$('modalFix').setStyle('display', 'block');
+				$('modalFix').show();
 			}
-			$('modalOverlay').setStyle('display', 'block');
+			$('modalOverlay').show();
 			if (MochaUI.options.useEffects == false){
 				$('modalOverlay').setStyle('opacity', .6);
 				this.windowEl.setStyles({
@@ -769,27 +769,27 @@ MochaUI.Window = new Class({
 			onStart: function() {
 				if (this.options.type != 'modal' && this.options.type != 'modal2'){ 
 					MochaUI.focusWindow(windowEl);
-					$('windowUnderlay').setStyle('display','block');
+					$('windowUnderlay').show();
 				}
 				if (this.iframeEl) {
 					if (!Browser.Engine.trident) {
 						this.iframeEl.setStyle('visibility', 'hidden');
 					}
 					else {
-						this.iframeEl.setStyle('display', 'none');
+						this.iframeEl.hide();
 					}
 				}	
 			}.bind(this),
 			onComplete: function() {
 				if (this.options.type != 'modal' && this.options.type != 'modal2') {
-					$('windowUnderlay').setStyle('display', 'none');
+					$('windowUnderlay').hide();
 				}
 				if ( this.iframeEl ){
 					if (!Browser.Engine.trident) {
 						this.iframeEl.setStyle('visibility', 'visible');
 					}
 					else {
-						this.iframeEl.setStyle('display', 'block');
+						this.iframeEl.show();
 					}
 				}
 				// Store new position in options.
@@ -919,13 +919,13 @@ MochaUI.Window = new Class({
 
 	},
 	resizeOnStart: function(){
-		$('windowUnderlay').setStyle('display','block');
+		$('windowUnderlay').show();
 		if (this.iframeEl){
 			if (!Browser.Engine.trident) {
 				this.iframeEl.setStyle('visibility', 'hidden');
 			}
 			else {
-				this.iframeEl.setStyle('display', 'none');
+				this.iframeEl.hide();
 			}
 		}	
 	},
@@ -946,13 +946,13 @@ MochaUI.Window = new Class({
 		}			
 	},		
 	resizeOnComplete: function(){
-		$('windowUnderlay').setStyle('display','none');
+		$('windowUnderlay').hide();
 		if (this.iframeEl){
 			if (!Browser.Engine.trident) {
 				this.iframeEl.setStyle('visibility', 'visible');
 			}
 			else {
-				this.iframeEl.setStyle('display', 'block');
+				this.iframeEl.show();
 				// The following hack is to get IE8 RC1 IE8 Standards Mode to properly resize an iframe
 				// when only the vertical dimension is changed.
 				this.iframeEl.setStyle('width', '99%');
@@ -1029,7 +1029,7 @@ MochaUI.Window = new Class({
 			this.resizable3.detach();
 			this.resizable4.detach();
 			this.resizable5.detach();
-			this.windowEl.getElements('.handle').setStyle('display', 'none');
+			this.windowEl.getElements('.handle').hide();
 	},
 	reattachResizable: function(){
 			this.resizable1.attach();
@@ -1037,7 +1037,7 @@ MochaUI.Window = new Class({
 			this.resizable3.attach();
 			this.resizable4.attach();
 			this.resizable5.attach();
-			this.windowEl.getElements('.handle').setStyle('display', 'block');
+			this.windowEl.getElements('.handle').show();
 	},
 	/*
 

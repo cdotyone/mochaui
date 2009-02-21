@@ -111,7 +111,7 @@ initializeWindows = function(){
 			title: 'Canvas Clock',
 			addClass: 'transparent',
 			loadMethod: 'xhr',
-			contentURL: 'plugins/coolclock/index.html?t=' + new Date().getTime(),
+			contentURL: 'plugins/coolclock/index.html',
 			shape: 'gauge',
 			headerHeight: 30,
 			width: 160,
@@ -123,16 +123,14 @@ initializeWindows = function(){
 			onContentLoaded: function(){
 				if ( !MochaUI.clockScript == true ){
 					new Request({
-						url: 'plugins/coolclock/scripts/coolclock.js?t=' + new Date().getTime(),
+						url: 'plugins/coolclock/scripts/coolclock.js',
 						method: 'get',
 						onSuccess: function() {
 							if (Browser.Engine.trident) {
 								myClockInit = function(){
 									new CoolClock();
 								};
-								window.addEvent('domready', function(){
-									myClockInit.delay(50); // Delay is for IE
-								});
+								myClockInit.delay(50); // Delay is for IE					
 								MochaUI.clockScript = true;
 							}
 							else {
@@ -145,10 +143,8 @@ initializeWindows = function(){
 					if (Browser.Engine.trident) {
 						myClockInit = function(){
 							new CoolClock();
-						};
-						window.addEvent('domready', function(){
-							myClockInit.delay(50); // Delay is for IE
-						});
+						};				
+						myClockInit.delay(50); // Delay is for IE				
 						MochaUI.clockScript = true;
 					}
 					else {

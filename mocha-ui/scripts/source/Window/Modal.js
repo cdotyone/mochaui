@@ -71,9 +71,9 @@ MochaUI.Modal = new Class({
 		this.modalOverlayCloseMorph = new Fx.Morph($('modalOverlay'), {
 			'duration': 150,
 			onComplete: function(){
-				$('modalOverlay').setStyle('display', 'none');
+				$('modalOverlay').hide();
 				if (Browser.Engine.trident4){
-					$('modalFix').setStyle('display', 'none');
+					$('modalFix').hide();
 				}
 			}.bind(this)
 		});
