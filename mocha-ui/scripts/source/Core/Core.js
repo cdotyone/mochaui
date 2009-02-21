@@ -123,6 +123,10 @@ var MochaUI = new Hash({
 			contentEl.getAllNext('.columnHandle').destroy();
 		}
 		
+		var onContentLoaded = function(){
+			options.onContentLoaded ? options.onContentLoaded() : currentInstance.fireEvent('onContentLoaded', element);
+		};		
+		
 		// Load new content.
 		switch(loadMethod){
 			case 'xhr':
@@ -158,8 +162,8 @@ var MochaUI = new Hash({
 					onSuccess: function(){
 						if (contentContainer == contentEl){
 							if (recipient == 'window') currentInstance.hideSpinner(spinnerEl);							
-							else if (recipient == 'panel' && $('spinner')) $('spinner').hide();							
-							options.onContentLoaded ? options.onContentLoaded() : currentInstance.fireEvent('onContentLoaded', element);
+							else if (recipient == 'panel' && $('spinner')) $('spinner').hide();
+							Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();
 						}
 					}.bind(this),
 					onComplete: function(){}.bind(this)
@@ -187,8 +191,8 @@ var MochaUI = new Hash({
 				// Add onload event to iframe so we can hide the spinner and run onContentLoaded()
 				currentInstance.iframeEl.addEvent('load', function(e) {
 					if (recipient == 'window') currentInstance.hideSpinner(spinnerEl);					
-					else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) $('spinner').hide();					
-					options.onContentLoaded ? options.onContentLoaded() : currentInstance.fireEvent('onContentLoaded', element);
+					else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) $('spinner').hide();
+					Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();	
 				}.bind(this));
 				if (recipient == 'window') currentInstance.showSpinner(spinnerEl);				
 				else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) $('spinner').show();				
@@ -207,7 +211,7 @@ var MochaUI = new Hash({
 				if (contentContainer == contentEl){
 					if (recipient == 'window') currentInstance.hideSpinner(spinnerEl);					
 					else if (recipient == 'panel' && $('spinner')) $('spinner').hide();					
-					options.onContentLoaded ? options.onContentLoaded() : currentInstance.fireEvent('onContentLoaded', element);
+					Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();					
 				}
 				break;
 		}
@@ -792,4 +796,4 @@ Element.implement({
 		}.bind(this));
 		return this;
 	}
-}); 
+});

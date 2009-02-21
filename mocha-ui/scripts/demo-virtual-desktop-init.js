@@ -110,6 +110,14 @@ initializeWindows = function(){
 			addClass: 'transparent',
 			loadMethod: 'xhr',
 			contentURL: 'plugins/coolclock/index.html?t=' + new Date().getTime(),
+			shape: 'gauge',
+			headerHeight: 30,
+			width: 160,
+			height: 160,
+			x: 570,
+			y: 152,
+			padding: { top: 0, right: 0, bottom: 0, left: 0 },
+			bodyBgColor: [250,250,250],
 			onContentLoaded: function(){
 				if ( !MochaUI.clockScript == true ){
 					new Request({
@@ -145,15 +153,7 @@ initializeWindows = function(){
 						new CoolClock();
 					}
 				}
-			},
-			shape: 'gauge',
-			headerHeight: 30,
-			width: 160,
-			height: 160,
-			x: 570,
-			y: 152,
-			padding: { top: 0, right: 0, bottom: 0, left: 0 },
-			bodyBgColor: [250,250,250]
+			}			
 		});	
 	}
 	if ($('clockLinkCheck')){
@@ -169,6 +169,13 @@ initializeWindows = function(){
 			title: 'Window Parametrics',
 			loadMethod: 'xhr',
 			contentURL: 'plugins/parametrics/index.html',
+			width: 305,
+			height: 110,
+			x: 230,
+			y: 180,
+			padding: { top: 12, right: 12, bottom: 10, left: 12 },
+			resizable: false,
+			maximizable: false,
 			onBeforeBuild: function(){
 				if ($('parametricsStyle')) return;
 				new Asset.css('plugins/parametrics/css/style.css', {id: 'parametricsStyle'});
@@ -189,14 +196,7 @@ initializeWindows = function(){
 					MochaUI.addRadiusSlider.delay(10); // Delay is for IE6
 					MochaUI.addShadowSlider.delay(10); // Delay is for IE6
 				}
-			},
-			width: 305,
-			height: 110,
-			x: 230,
-			y: 180,
-			padding: { top: 12, right: 12, bottom: 10, left: 12 },
-			resizable: false,
-			maximizable: false
+			}			
 		});
 	}
 	if ($('parametricsLinkCheck')){
@@ -213,6 +213,8 @@ initializeWindows = function(){
 			title: 'Window Events',
 			loadMethod: 'xhr',
 			contentURL: 'pages/events.html',
+			width: 340,
+			height: 250,			
 			onContentLoaded: function(windowEl){
 				MochaUI.notification('Window content was loaded.');
 			},
@@ -236,9 +238,7 @@ initializeWindows = function(){
 			},
 			onBlur: function(windowEl){
 				MochaUI.notification('Window lost focus.');
-			},
-			width: 340,
-			height: 250
+			}
 		});
 	}	
 	if ($('windoweventsLinkCheck')){
@@ -302,30 +302,27 @@ initializeWindows = function(){
 			},			
 			onContentLoaded: function(windowEl){
 				this.windowEl = windowEl;
-				var accordianDelay = function(){
-					new Accordion('#' + id + ' h3.accordianToggler', "#" + id + ' div.accordianElement', {
-					//	start: 'all-closed',
-						opacity: false,
-						alwaysHide: true,
-						onActive: function(toggler, element){
-								toggler.addClass('open');
-						},
-						onBackground: function(toggler, element){
-								toggler.removeClass('open');
-						},							
-						onStart: function(toggler, element){
-							this.windowEl.accordianResize = function(){
-								MochaUI.dynamicResize($(id));
-							}
-							this.windowEl.accordianTimer = this.windowEl.accordianResize.periodical(10);
-						}.bind(this),
-						onComplete: function(){
-							this.windowEl.accordianTimer = $clear(this.windowEl.accordianTimer);
-							MochaUI.dynamicResize($(id)) // once more for good measure
-						}.bind(this)
-					}, $(id));
-				}.bind(this)
-				accordianDelay.delay(10, this); // Delay is a fix for IE
+				new Accordion('#' + id + ' h3.accordianToggler', "#" + id + ' div.accordianElement', {
+				//	start: 'all-closed',
+					opacity: false,
+					alwaysHide: true,
+					onActive: function(toggler, element){
+							toggler.addClass('open');
+					},
+					onBackground: function(toggler, element){
+							toggler.removeClass('open');
+					},							
+					onStart: function(toggler, element){
+						this.windowEl.accordianResize = function(){
+							MochaUI.dynamicResize($(id));
+						}
+						this.windowEl.accordianTimer = this.windowEl.accordianResize.periodical(10);
+					}.bind(this),
+					onComplete: function(){
+						this.windowEl.accordianTimer = $clear(this.windowEl.accordianTimer);
+						MochaUI.dynamicResize($(id)) // once more for good measure
+					}.bind(this)
+				}, $(id));				
 			}
 		});
 	}	
@@ -401,6 +398,11 @@ initializeWindows = function(){
 			icon: 'images/icons/page.gif',
 			loadMethod: 'xhr',
 			contentURL: 'plugins/windowform/',
+			width: 370,
+			height: 410,
+			maximizable: false,
+			resizable: false,
+			scrollbars: false,
 			onBeforeBuild: function(){
 				if ($('builderStyle')) return;
 				new Asset.css('plugins/windowform/css/style.css', {id: 'builderStyle'});
@@ -419,12 +421,7 @@ initializeWindows = function(){
 						}.bind(this)
 					}).send();
 				}
-			},
-			width: 370,
-			height: 410,
-			maximizable: false,
-			resizable: false,
-			scrollbars: false
+			}			
 		});
 	}
 	if ($('builderLinkCheck')){

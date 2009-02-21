@@ -44,6 +44,7 @@ var MochaUI = new Hash({
 		url - Used if loadMethod is set to 'xhr' or 'iframe'.
 		scrollbars - (boolean)		
 		padding - (object)
+		onContentLoaded - (function)
 
 	*/	
 	updateContent: function(updateOptions){
@@ -122,6 +123,10 @@ var MochaUI = new Hash({
 			contentEl.getAllNext('.columnHandle').destroy();
 		}
 		
+		var onContentLoaded = function(){
+			options.onContentLoaded ? options.onContentLoaded() : currentInstance.fireEvent('onContentLoaded', element);
+		};		
+		
 		// Load new content.
 		switch(loadMethod){
 			case 'xhr':
@@ -146,6 +151,7 @@ var MochaUI = new Hash({
 
 							var getTitle = new RegExp("<title>[\n\r\s]*(.*)[\n\r\s]*</title>", "gmi");
 							var error = getTitle.exec(response.responseText);
+							if (!error) error = 'Unknown';							 
 							contentContainer.set('html', '<h3>Error: ' + error[1] + '</h3>');					
 
 							if (recipient == 'window') currentInstance.hideSpinner(spinnerEl);						
@@ -156,8 +162,8 @@ var MochaUI = new Hash({
 					onSuccess: function(){
 						if (contentContainer == contentEl){
 							if (recipient == 'window') currentInstance.hideSpinner(spinnerEl);							
-							else if (recipient == 'panel' && $('spinner')) $('spinner').hide();							
-							options.onContentLoaded ? options.onContentLoaded() : currentInstance.fireEvent('onContentLoaded', element);
+							else if (recipient == 'panel' && $('spinner')) $('spinner').hide();
+							Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();
 						}
 					}.bind(this),
 					onComplete: function(){}.bind(this)
@@ -185,8 +191,8 @@ var MochaUI = new Hash({
 				// Add onload event to iframe so we can hide the spinner and run onContentLoaded()
 				currentInstance.iframeEl.addEvent('load', function(e) {
 					if (recipient == 'window') currentInstance.hideSpinner(spinnerEl);					
-					else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) $('spinner').hide();					
-					options.onContentLoaded ? options.onContentLoaded() : currentInstance.fireEvent('onContentLoaded', element);
+					else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) $('spinner').hide();
+					Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();	
 				}.bind(this));
 				if (recipient == 'window') currentInstance.showSpinner(spinnerEl);				
 				else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) $('spinner').show();				
@@ -205,7 +211,7 @@ var MochaUI = new Hash({
 				if (contentContainer == contentEl){
 					if (recipient == 'window') currentInstance.hideSpinner(spinnerEl);					
 					else if (recipient == 'panel' && $('spinner')) $('spinner').hide();					
-					options.onContentLoaded ? options.onContentLoaded() : currentInstance.fireEvent('onContentLoaded', element);
+					Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();					
 				}
 				break;
 		}
@@ -790,7 +796,7 @@ Element.implement({
 		}.bind(this));
 		return this;
 	}
-}); 
+});
 /*
 
 Script: Themes.js
@@ -862,10 +868,6 @@ MochaUI.Themes = {
 			return;
 		}
 
-		// Get all header stylesheets whose id's starts with 'css'.		
-		this.sheetsToLoad = $$('link').length;
-		this.sheetsLoaded = 0;
-
 		/* Add old style sheets to an array */
 		this.oldSheets = [];
 		$$('link').each( function(link){
@@ -876,14 +878,14 @@ MochaUI.Themes = {
 				this.oldSheets.push(link);				
 			}
 		}.bind(this));
+	
+		this.sheetsToLoad = this.oldSheets.length;
+		this.sheetsLoaded = 0;
 		
 		/* Download new stylesheets and add them to an array */
 		this.newSheets = [];
-		$$('link').each( function(link){
-			var href = this.options.themesDir + '/' + this.newTheme + '/css/' + link.id.substring(3) +'.css';			
-			if (link.href.contains(href)) return;
-			
-			if (link.id.substring(0,3) == 'css') {
+		this.oldSheets.each( function(link){
+			var href = this.options.themesDir + '/' + this.newTheme + '/css/' + link.id.substring(3) +'.css';
 								
 				var id = link.id;
 				
@@ -914,7 +916,7 @@ MochaUI.Themes = {
 					}.bind(this)
 				});
 				cssRequest.send();				
-			}
+
 		}.bind(this));
 								
 	},
