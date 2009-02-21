@@ -128,26 +128,17 @@ initializeWindows = function(){
 								myClockInit = function(){
 									new CoolClock();
 								};
-								myClockInit.delay(50); // Delay is for IE
-								MochaUI.clockScript = true;
+								myClockInit.delay(50); // Delay is for IE								
 							}
 							else {
 								new CoolClock();
 							}
+							MochaUI.clockScript = true;
 						}.bind(this)
 					}).send();
 				}
 				else {
-					if (Browser.Engine.trident) {
-						myClockInit = function(){
-							new CoolClock();
-						};
-						myClockInit.delay(50); // Delay is for IE
-						MochaUI.clockScript = true;
-					}
-					else {
-						new CoolClock();
-					}
+					new CoolClock();
 				}
 			}			
 		});	

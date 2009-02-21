@@ -64,6 +64,9 @@ Options:
 	addClass - (string) Add a class to the window for more control over styling.	
 	width - (number) Width of content area.	
 	height - (number) Height of content area.
+	headerHeight - (number) Height of window titlebar.
+	footerHeight - (number) Height of window footer.
+	cornerRadius - (number)	
 	x - (number) If x and y are left undefined the window is centered on the page.
 	y - (number)
 	scrollbars - (boolean)
@@ -74,9 +77,6 @@ Options:
 	useCanvas - (boolean) Set this to false if you don't want a canvas body.
 	useCanvasControls - (boolean) Set this to false if you wish to use images for the buttons.
 	useSpinner - (boolean) Toggles whether or not the ajax spinners are displayed in window footers. Defaults to true.
-	headerHeight - (number) Height of window titlebar.
-	footerHeight - (number) Height of window footer.
-	cornerRadius - (number)
 	headerStartColor - ([r,g,b,]) Titlebar gradient's top color
 	headerStopColor - ([r,g,b,]) Titlebar gradient's bottom color
 	bodyBgColor - ([r,g,b,]) Background color of the main canvas shape
@@ -159,9 +159,9 @@ MochaUI.extend({
 		instances:      new Hash(),
 		indexLevel:     100,          // Used for window z-Index
 		windowIDCount:  0,            // Used for windows without an ID defined by the user
-		windowsVisible: true          // Ctrl-Alt-Q to toggle window visibility		
-	},
-	focusingWindow:     'false'
+		windowsVisible: true,         // Ctrl-Alt-Q to toggle window visibility
+		focusingWindow: false		
+	}	
 });	
 
 MochaUI.Windows.windowOptions = {
@@ -228,6 +228,9 @@ MochaUI.Windows.windowOptions = {
 	addClass:          '',
 	width:             300,
 	height:            125,
+	headerHeight:      25,
+	footerHeight:      25,
+	cornerRadius:      8,	
 	x:                 null,
 	y:                 null,
 	scrollbars:        true,
@@ -238,9 +241,6 @@ MochaUI.Windows.windowOptions = {
 	useCanvas:         true,
 	useCanvasControls: true,
 	useSpinner:        true,
-	headerHeight:      25,
-	footerHeight:      25,
-	cornerRadius:      8,
 
 	// Color options:
 	headerStartColor:  [250, 250, 250],

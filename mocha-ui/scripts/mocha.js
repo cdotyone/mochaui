@@ -421,9 +421,9 @@ var MochaUI = new Hash({
 	focusWindow: function(windowEl, fireEvent){
 
 		// This is used with blurAll
-		MochaUI.focusingWindow = 'true';
+		MochaUI.Windows.focusingWindow = true;
 		var windowClicked = function(){
-			MochaUI.focusingWindow = 'false';
+			MochaUI.Windows.focusingWindow = false;
 		};
 		windowClicked.delay(170, this);
 		
@@ -479,7 +479,7 @@ var MochaUI = new Hash({
 		return this.windowWithHighestZindex;
 	},
 	blurAll: function(){		
-		if (MochaUI.focusingWindow == 'false') {
+		if (MochaUI.Windows.focusingWindow == false) {
 			$$('.mocha').each(function(windowEl){
 				var instances =  MochaUI.Windows.instances;
 				var currentInstance = instances.get(windowEl.id);
@@ -931,12 +931,7 @@ MochaUI.Themes = {
 			}
 		}.bind(this));
 		
-		if (!Browser.Engine.presto) {
-			this.redraw.delay(10);
-		}
-		else {
-			this.redraw.delay(200);
-		}
+		this.redraw.delay(200, this); // Delay gives the stylesheets time to take effect.		
 
 	},	
 	redraw: function(){
@@ -946,7 +941,7 @@ MochaUI.Themes = {
 			var currentInstance = MochaUI.Windows.instances.get(element.id);		
 						
 			new Hash(currentInstance.options).each( function(value, key){							
-				if (MochaUI.Themes.themableWindowOptions.contains(key)){					
+				if (this.themableWindowOptions.contains(key)){					
 
 					/*
 					if (eval('MochaUI.Windows.windowOptions.' + key + ' == null') && eval('MochaUI.Windows.windowOptionsOriginal.' + key + ' == null')){
@@ -991,7 +986,7 @@ MochaUI.Themes = {
 		}
 		
 		if ($('spinner')) $('spinner').hide();		
-		MochaUI.Themes.options.theme = MochaUI.Themes.newTheme;
+		this.options.theme = this.newTheme;
 						
 	}
 };
@@ -1061,6 +1056,9 @@ Options:
 	addClass - (string) Add a class to the window for more control over styling.	
 	width - (number) Width of content area.	
 	height - (number) Height of content area.
+	headerHeight - (number) Height of window titlebar.
+	footerHeight - (number) Height of window footer.
+	cornerRadius - (number)	
 	x - (number) If x and y are left undefined the window is centered on the page.
 	y - (number)
 	scrollbars - (boolean)
@@ -1071,9 +1069,6 @@ Options:
 	useCanvas - (boolean) Set this to false if you don't want a canvas body.
 	useCanvasControls - (boolean) Set this to false if you wish to use images for the buttons.
 	useSpinner - (boolean) Toggles whether or not the ajax spinners are displayed in window footers. Defaults to true.
-	headerHeight - (number) Height of window titlebar.
-	footerHeight - (number) Height of window footer.
-	cornerRadius - (number)
 	headerStartColor - ([r,g,b,]) Titlebar gradient's top color
 	headerStopColor - ([r,g,b,]) Titlebar gradient's bottom color
 	bodyBgColor - ([r,g,b,]) Background color of the main canvas shape
@@ -1156,9 +1151,9 @@ MochaUI.extend({
 		instances:      new Hash(),
 		indexLevel:     100,          // Used for window z-Index
 		windowIDCount:  0,            // Used for windows without an ID defined by the user
-		windowsVisible: true          // Ctrl-Alt-Q to toggle window visibility		
-	},
-	focusingWindow:     'false'
+		windowsVisible: true,         // Ctrl-Alt-Q to toggle window visibility
+		focusingWindow: false		
+	}	
 });	
 
 MochaUI.Windows.windowOptions = {
@@ -1225,6 +1220,9 @@ MochaUI.Windows.windowOptions = {
 	addClass:          '',
 	width:             300,
 	height:            125,
+	headerHeight:      25,
+	footerHeight:      25,
+	cornerRadius:      8,	
 	x:                 null,
 	y:                 null,
 	scrollbars:        true,
@@ -1235,9 +1233,6 @@ MochaUI.Windows.windowOptions = {
 	useCanvas:         true,
 	useCanvasControls: true,
 	useSpinner:        true,
-	headerHeight:      25,
-	footerHeight:      25,
-	cornerRadius:      8,
 
 	// Color options:
 	headerStartColor:  [250, 250, 250],

@@ -146,12 +146,7 @@ MochaUI.Themes = {
 			}
 		}.bind(this));
 		
-		if (!Browser.Engine.presto) {
-			this.redraw.delay(10);
-		}
-		else {
-			this.redraw.delay(200);
-		}
+		this.redraw.delay(200, this); // Delay gives the stylesheets time to take effect.		
 
 	},	
 	redraw: function(){
@@ -161,7 +156,7 @@ MochaUI.Themes = {
 			var currentInstance = MochaUI.Windows.instances.get(element.id);		
 						
 			new Hash(currentInstance.options).each( function(value, key){							
-				if (MochaUI.Themes.themableWindowOptions.contains(key)){					
+				if (this.themableWindowOptions.contains(key)){					
 
 					/*
 					if (eval('MochaUI.Windows.windowOptions.' + key + ' == null') && eval('MochaUI.Windows.windowOptionsOriginal.' + key + ' == null')){
@@ -206,7 +201,7 @@ MochaUI.Themes = {
 		}
 		
 		if ($('spinner')) $('spinner').hide();		
-		MochaUI.Themes.options.theme = MochaUI.Themes.newTheme;
+		this.options.theme = this.newTheme;
 						
 	}
 };
