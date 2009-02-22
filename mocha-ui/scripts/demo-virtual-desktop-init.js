@@ -93,7 +93,31 @@ initializeWindows = function(){
 			height: 280,
 			resizeLimit:  {'x': [330, 2500], 'y': [250, 2000]},
 			toolbar: true,
-			toolbarURL: 'pages/youtube-tabs.html'
+			toolbarURL: 'pages/youtube-tabs.html',
+			toolbarOnload: function(){
+				MochaUI.initializeTabs('youtubeTabs');	
+
+				$('youtube1Link').addEvent('click', function(e){
+					MochaUI.updateContent({
+						'element':  $('youtube'),
+						'url':      'pages/youtube.html'
+					});
+				});
+	
+				$('youtube2Link').addEvent('click', function(e){
+					MochaUI.updateContent({
+						'element':  $('youtube'),
+						'url':      'pages/youtube2.html'
+					});
+				});
+	
+				$('youtube3Link').addEvent('click', function(e){
+					MochaUI.updateContent({
+						'element':  $('youtube'),	
+						'url':      'pages/youtube3.html'
+					});
+				});	
+			}			
 		});
 	}	
 	if ($('youtubeLinkCheck')) {
@@ -433,7 +457,31 @@ initializeWindows = function(){
 			height: 175,
 			resizeLimit: {'x': [275, 2500], 'y': [125, 2000]},
 			toolbar: true,
-			toolbarURL: 'pages/features-tabs.html'
+			toolbarURL: 'pages/features-tabs.html',
+			toolbarOnload: function(){
+				MochaUI.initializeTabs('featuresTabs');
+
+				$('featuresLayoutLink').addEvent('click', function(e){
+					MochaUI.updateContent({
+						'element':  $('features'),
+						'url':       'pages/features-layout.html'
+					});
+				});
+
+				$('featuresWindowsLink').addEvent('click', function(e){
+					MochaUI.updateContent({
+						'element':  $('features'),
+						'url':       'pages/features-windows.html'
+					});
+				});
+
+				$('featuresGeneralLink').addEvent('click', function(e){
+					MochaUI.updateContent({
+						'element':  $('features'),
+						'url':       'pages/features-general.html'
+					});
+				});
+			}			
 		});
 	}
 	if ($('featuresLinkCheck')){

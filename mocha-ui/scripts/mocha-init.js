@@ -95,7 +95,31 @@ initializeWindows = function(){
 			height: 280,
 			resizeLimit: {'x': [330, 2500], 'y': [250, 2000]},
 			toolbar: true,
-			toolbarURL: 'pages/youtube-tabs.html'
+			toolbarURL: 'pages/youtube-tabs.html',
+			toolbarOnload: function(){
+				MochaUI.initializeTabs('youtubeTabs');	
+
+				$('youtube1Link').addEvent('click', function(e){
+					MochaUI.updateContent({
+						'element':  $('youtube'),
+						'url':      'pages/youtube.html'
+					});
+				});
+	
+				$('youtube2Link').addEvent('click', function(e){
+					MochaUI.updateContent({
+						'element':  $('youtube'),
+						'url':      'pages/youtube2.html'
+					});
+				});
+	
+				$('youtube3Link').addEvent('click', function(e){
+					MochaUI.updateContent({
+						'element':  $('youtube'),	
+						'url':      'pages/youtube3.html'
+					});
+				});	
+			}
 		});
 	}
 	if ($('youtubeLinkCheck')) {
@@ -520,7 +544,31 @@ initializeWindows = function(){
 			height: 175,
 			resizeLimit: {'x': [275, 2500], 'y': [125, 2000]},
 			toolbar: true,
-			toolbarURL: 'pages/features-tabs.html'
+			toolbarURL: 'pages/features-tabs.html',
+			toolbarOnload: function(){
+				MochaUI.initializeTabs('featuresTabs');
+
+				$('featuresLayoutLink').addEvent('click', function(e){
+					MochaUI.updateContent({
+						'element':  $('features'),
+						'url':       'pages/features-layout.html'
+					});
+				});
+
+				$('featuresWindowsLink').addEvent('click', function(e){
+					MochaUI.updateContent({
+						'element':  $('features'),
+						'url':       'pages/features-windows.html'
+					});
+				});
+
+				$('featuresGeneralLink').addEvent('click', function(e){
+					MochaUI.updateContent({
+						'element':  $('features'),
+						'url':       'pages/features-general.html'
+					});
+				});
+			}
 		});
 	}
 	if ($('featuresLinkCheck')) {
@@ -744,7 +792,46 @@ initializeColumns = function() {
 		contentURL: 'pages/notes.html',
 		column: 'mainColumn',
 		headerToolbox: true,
-		headerToolboxURL: 'pages/toolbox-demo2.html'
+		headerToolboxURL: 'pages/toolbox-demo2.html',
+		headerToolboxOnload: function(){
+			if ($('demoSearch')) {
+				$('demoSearch').addEvent('submit', function(e){
+					e.stop();
+					$('spinner').setStyle('visibility', 'visible');
+					if ($('postContent')) {
+						$('postContent').setStyle('opacity', 0);
+					}
+					else {
+						$('mainPanel_pad').empty();
+					}
+					this.set('send', {
+						onComplete: function(response){
+							MochaUI.updateContent({
+								'element': $('mainPanel'),
+								'loadMethod': 'html',
+								'content': response,
+								'title': 'Ajax Response',
+								'padding': {
+									top: 8,
+									right: 8,
+									bottom: 8,
+									left: 8
+								}
+							});
+						},
+						onSuccess: function(){
+							$('postContent').setStyle('opacity', 0);
+							new Fx.Morph($('postContent'), {
+								duration: 500
+							}).start({
+								'opacity': 1
+							});
+						}
+					});
+					this.send();
+				});
+			}
+		}		
 	});
 	
 	new MochaUI.Panel({
@@ -756,7 +843,14 @@ initializeColumns = function() {
 		column: 'mainColumn',
 		height: 200,	
 		headerToolbox: true,
-		headerToolboxURL: 'pages/console.toolbox.html'
+		headerToolboxURL: 'pages/console.toolbox.html',
+		headerToolboxOnload: function(){
+			$$('.demoAction').each(function(element){
+				element.addEvent('click', function(e){
+					MochaUI.notification('Do Something');
+				});
+			});
+		}
 	});
 	
 	// Add panels to second side column
@@ -786,7 +880,14 @@ initializeColumns = function() {
 		column: 'sideColumn2',
 		height: 140,
 		footer: true,
-		footerURL: 'pages/toolbox-demo.html'
+		footerURL: 'pages/toolbox-demo.html',
+		footerOnload: function(){
+			$$('.demoAction').each(function(element){
+				element.addEvent('click', function(e){
+					MochaUI.notification('Do Something');
+				});
+			});
+		}
 	});
 	
 	MochaUI.splitPanelPanel = function() {

@@ -1,5 +1,4 @@
 <div class="toolbarTabs">
-	<!-- <div style="float:right;padding-top:3px;"><img src="images/icons/help.gif" width="16" height="16" alt="Help" /></div> -->
 	<ul id="featuresTabs" class="tab-menu">
 		<li id="featuresLayoutLink" class="selected"><a>Layout</a></li>
 		<li id="featuresWindowsLink"><a>Windows</a></li>
@@ -7,30 +6,3 @@
 	</ul>
 	<div class="clear"></div>
 </div>
-
-<script type="text/javascript">
-
-	MochaUI.initializeTabs('featuresTabs');
-
-	$('featuresLayoutLink').addEvent('click', function(e){
-		MochaUI.updateContent({
-			'element':  $('features'),
-			'url':       'pages/features-layout.html'
-		});
-	});
-
-	$('featuresWindowsLink').addEvent('click', function(e){
-		MochaUI.updateContent({
-			'element':  $('features'),
-			'url':       'pages/features-windows.html'
-		});
-	});
-
-	$('featuresGeneralLink').addEvent('click', function(e){
-		MochaUI.updateContent({
-			'element':  $('features'),
-			'url':       'pages/features-general.html'
-		});
-	});
-
-</script>

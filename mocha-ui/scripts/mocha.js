@@ -82,7 +82,7 @@ var MochaUI = new Hash({
 			'url':          null,
 			'scrollbars':   null,			
 			'padding':      null,
-			'onContentLoaded': null
+			'onContentLoaded': $empty
 		};
 		$extend(options, updateOptions);
 
@@ -177,9 +177,9 @@ var MochaUI = new Hash({
 					onSuccess: function(){
 						if (contentContainer == contentEl){
 							if (recipient == 'window') currentInstance.hideSpinner(spinnerEl);							
-							else if (recipient == 'panel' && $('spinner')) $('spinner').hide();
-							Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();
-						}						
+							else if (recipient == 'panel' && $('spinner')) $('spinner').hide();							
+						}
+						Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();						
 						MochaUI.nextInQueue();
 					}.bind(this),
 					onComplete: function(){}.bind(this)
@@ -225,9 +225,9 @@ var MochaUI = new Hash({
 				}				
 				if (contentContainer == contentEl){
 					if (recipient == 'window') currentInstance.hideSpinner(spinnerEl);					
-					else if (recipient == 'panel' && $('spinner')) $('spinner').hide();
-					Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();				
-				}				
+					else if (recipient == 'panel' && $('spinner')) $('spinner').hide();									
+				}
+				Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();				
 				MochaUI.nextInQueue();	
 				break;
 		}
@@ -845,7 +845,7 @@ Asset.extend({
 			var checker = (function(){
 				if (!$try(check)) return;
 				$clear(checker);
-				load();
+				load.delay(100);
 			}).periodical(50);
 		}	
 		return script.inject(doc.head);
@@ -1252,6 +1252,7 @@ MochaUI.Windows.windowOptions = {
 	toolbarURL:        'pages/lipsum.html',
 	toolbarData:	   null,
 	toolbarContent:    '',
+	toolbarOnload:     $empty,
 
 	// Toolbar
 	toolbar2:           false,
@@ -1259,7 +1260,8 @@ MochaUI.Windows.windowOptions = {
 	toolbar2Height:     29,
 	toolbar2URL:        'pages/lipsum.html',
 	toolbar2Data:	    null,
-	toolbar2Content:    '',	
+	toolbar2Content:    '',
+	toolbar2Onload:     $empty,	
 
 	// Container options
 	container:         null,
@@ -1440,6 +1442,7 @@ MochaUI.Window = new Class({
 		// Shorten object chain
 		var instances = MochaUI.Windows.instances;
 		var instanceID = instances.get(this.options.id);
+		var options = this.options;
 	
 		// Here we check to see if there is already a class instance for this window
 		if (instanceID) var currentInstance = instanceID;		
@@ -1469,7 +1472,7 @@ MochaUI.Window = new Class({
 			return;
 		}
 		else {
-			instances.set(this.options.id, this);
+			instances.set(options.id, this);
 		}
 
 		this.isClosing = false;
@@ -1479,29 +1482,29 @@ MochaUI.Window = new Class({
 		MochaUI.Windows.indexLevel++;
 		this.windowEl = new Element('div', {
 			'class': 'mocha',
-			'id': this.options.id,
+			'id': options.id,
 			'styles': {
 				'position': 'absolute',
-				'width': this.options.width,
-				'height': this.options.height,
+				'width': options.width,
+				'height': options.height,
 				'display': 'block',
 				'opacity': 0,
 				'zIndex': MochaUI.Windows.indexLevel += 2
 			}
 		});
 
-		this.windowEl.addClass(this.options.addClass);
+		this.windowEl.addClass(options.addClass);
 		
-		if (this.options.type == 'modal2') {
+		if (options.type == 'modal2') {
 			this.windowEl.addClass('modal2');
 		}
 
 		// Fix a mouseover issue with gauges in IE7
-		if ( Browser.Engine.trident && this.options.shape == 'gauge') {
+		if ( Browser.Engine.trident && options.shape == 'gauge') {
 			this.windowEl.setStyle('background', 'url(../images/spacer.gif)');
 		}
 
-		if ((this.options.type == 'modal' || this.options.type == 'modal2' ) && Browser.Platform.mac && Browser.Engine.gecko){
+		if ((this.options.type == 'modal' || options.type == 'modal2' ) && Browser.Platform.mac && Browser.Engine.gecko){
 			if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent)) {
 				var ffversion = new Number(RegExp.$1);
 				if (ffversion < 3) {
@@ -1510,28 +1513,28 @@ MochaUI.Window = new Class({
 			}
 		}
 
-		if (this.options.loadMethod == 'iframe') {
-			this.options.padding = { top: 0, right: 0, bottom: 0, left: 0 };
+		if (options.loadMethod == 'iframe') {
+			options.padding = { top: 0, right: 0, bottom: 0, left: 0 };
 		}
 
 		// Insert sub elements inside windowEl
 		this.insertWindowElements();
 
 		// Set title
-		this.titleEl.set('html', this.options.title);
+		this.titleEl.set('html', options.title);
 
 		// Set scrollbars, always use 'hidden' for iframe windows
 		this.contentWrapperEl.setStyle('overflow', 'hidden');
 
 		this.contentEl.setStyles({
-			'padding-top': this.options.padding.top,
-			'padding-bottom': this.options.padding.bottom,
-			'padding-left': this.options.padding.left,
-			'padding-right': this.options.padding.right
+			'padding-top': options.padding.top,
+			'padding-bottom': options.padding.bottom,
+			'padding-left': options.padding.left,
+			'padding-right': options.padding.right
 		});
 
-		if (this.options.shape == 'gauge'){
-			if (this.options.useCanvasControls){
+		if (options.shape == 'gauge'){
+			if (options.useCanvasControls){
 				this.canvasControlsEl.setStyle('visibility', 'hidden');
 			}
 			else {
@@ -1541,7 +1544,7 @@ MochaUI.Window = new Class({
 				this.mouseover = true;
 				var showControls = function(){
 					if (this.mouseover != false){
-						if (this.options.useCanvasControls){
+						if (options.useCanvasControls){
 							this.canvasControlsEl.setStyle('visibility', 'visible');
 						}
 						else {
@@ -1568,44 +1571,47 @@ MochaUI.Window = new Class({
 		}
 
 		// Inject window into DOM
-		this.windowEl.inject(this.options.container);
+		this.windowEl.inject(options.container);
 
-		if (this.options.type != 'notification'){
+		if (options.type != 'notification'){
 			this.setMochaControlsWidth();
 		}		
 
 		// Add content to window.
 		MochaUI.updateContent({
-			'element':  this.windowEl,
-			'content':  this.options.content,
-			'method':   this.options.method,
-			'url':      this.options.contentURL,
-			'data':     this.options.data
+			'element': this.windowEl,
+			'content': options.content,
+			'method': options.method,
+			'url': options.contentURL,
+			'data': options.data,
+			'onContentLoaded': null
 		});	
 		
 		// Add content to window toolbar.
 		if (this.options.toolbar == true){
 			MochaUI.updateContent({
-				'element':       this.windowEl,
-				'childElement':  this.toolbarEl,
-				'content':       this.options.toolbarContent,
-				'loadMethod':    'xhr',
-				'method':        this.options.method,
-				'url':           this.options.toolbarURL,
-				'data':	         this.options.toolbarData
+				'element': this.windowEl,
+				'childElement': this.toolbarEl,
+				'content': options.toolbarContent,
+				'loadMethod': 'xhr',
+				'method': options.method,
+				'url': options.toolbarURL,
+				'data':	options.toolbarData,
+				'onContentLoaded': options.toolbarOnload
 			});
 		}
 
 		// Add content to window toolbar.
 		if (this.options.toolbar2 == true){
 			MochaUI.updateContent({
-				'element':       this.windowEl,
-				'childElement':  this.toolbar2El,
-				'content':       this.options.toolbar2Content,
-				'loadMethod':    'xhr',
-				'method':        this.options.method,
-				'url':           this.options.toolbar2URL,
-				'data':	         this.options.toolbar2Data
+				'element': this.windowEl,
+				'childElement': this.toolbar2El,
+				'content': options.toolbar2Content,
+				'loadMethod': 'xhr',
+				'method': options.method,
+				'url': options.toolbar2URL,
+				'data':	options.toolbar2Data,
+				'onContentLoaded': options.toolbar2Onload
 			});
 		}
 		        
@@ -1616,38 +1622,38 @@ MochaUI.Window = new Class({
 		this.attachResizable();
 		this.setupEvents();
 		
-		if (this.options.resizable){
+		if (options.resizable){
 			this.adjustHandles();
 		}
 		
 		// Position window. If position not specified by user then center the window on the page.
-		if (this.options.container == document.body || this.options.container == MochaUI.Desktop.desktop){
+		if (options.container == document.body || options.container == MochaUI.Desktop.desktop){
 			var dimensions = window.getSize();
 		}
 		else {
 			var dimensions = $(this.options.container).getSize();
 		}
 
-		if (!this.options.y) {
+		if (!options.y) {
 			if (MochaUI.Desktop && MochaUI.Desktop.desktop) {
 				var y = (dimensions.y * .5) - (this.windowEl.offsetHeight * .5);
-				if (y < -this.options.shadowBlur) y = -this.options.shadowBlur;			
+				if (y < -options.shadowBlur) y = -options.shadowBlur;			
 			}
 			else {
 				var y = window.getScroll().y + (window.getSize().y * .5) - (this.windowEl.offsetHeight * .5);
-				if (y < -this.options.shadowBlur) y = -this.options.shadowBlur;
+				if (y < -options.shadowBlur) y = -options.shadowBlur;
 			}
 		}
 		else {
-			var y = this.options.y - this.options.shadowBlur;
+			var y = options.y - options.shadowBlur;
 		}
 
 		if (!this.options.x) {
 			var x =	(dimensions.x * .5) - (this.windowEl.offsetWidth * .5);
-			if (x < -this.options.shadowBlur) x = -this.options.shadowBlur;
+			if (x < -options.shadowBlur) x = -options.shadowBlur;
 		}
 		else {
-			var x = this.options.x - this.options.shadowBlur;
+			var x = options.x - options.shadowBlur;
 		}
 
 		this.windowEl.setStyles({
@@ -1672,7 +1678,7 @@ MochaUI.Window = new Class({
 			});
 		}
 
-		if (this.options.type == 'modal' || this.options.type == 'modal2') {
+		if (options.type == 'modal' || options.type == 'modal2') {
 			MochaUI.currentModal = this.windowEl;
 			if (Browser.Engine.trident4){				
 				$('modalFix').show();
@@ -4041,49 +4047,51 @@ MochaUI.Panel = new Class({
 	Implements: [Events, Options],
 	
 	options: {
-		id:               null,
-		title:            'New Panel',
-		column:           null,
-		loadMethod:       'html',
-		contentURL:       'pages/lipsum.html',
+		id:                 null,
+		title:              'New Panel',
+		column:             null,
+		loadMethod:         'html',
+		contentURL:         'pages/lipsum.html',
 	
 		// xhr options
-		method:           'get',
-		data:             null,
-		evalScripts:      true,
-		evalResponse:     false,
+		method:             'get',
+		data:               null,
+		evalScripts:        true,
+		evalResponse:       false,
 	
 		// html options
-		content:          'Panel content',
+		content:            'Panel content',
 		
 		// Tabs
-		tabsURL:          null,
-		tabsData:         null,
+		tabsURL:            null,
+		tabsData:           null,
+		tabsOnload:         $empty,
 
-		header:           true,
-		
-		headerToolbox:    false,
-		headerToolboxURL: 'pages/lipsum.html',
+		header:             true,		
+		headerToolbox:      false,
+		headerToolboxURL:   'pages/lipsum.html',
+		headerToolboxOnload: $empty,		
 
-		footer:           false,
-		footerURL:        'pages/lipsum.html',
-		footerData:       null,
+		footer:             false,
+		footerURL:          'pages/lipsum.html',
+		footerData:         null,
+		footerOnload:       $empty,
 		
 		// Style options:
-		height:           125,
-		addClass:         '',
-		scrollbars:       true,
-		padding:   		  { top: 8, right: 8, bottom: 8, left: 8 },
+		height:             125,
+		addClass:           '',
+		scrollbars:         true,
+		padding:   		    { top: 8, right: 8, bottom: 8, left: 8 },
 		
 		// Other:
-		collapsible:	  true,
+		collapsible:	    true,
 
 		// Events
-		onBeforeBuild:     $empty,
-		onContentLoaded:   $empty,
-		onResize:          $empty,
-		onCollapse:        $empty,
-		onExpand:          $empty
+		onBeforeBuild:       $empty,
+		onContentLoaded:     $empty,
+		onResize:            $empty,
+		onCollapse:          $empty,
+		onExpand:            $empty
 
 	},	
 	initialize: function(options){
@@ -4104,6 +4112,7 @@ MochaUI.Panel = new Class({
 		// Shorten object chain
 		var instances = MochaUI.Panels.instances;
 		var instanceID = instances.get(this.options.id);
+		var options = this.options;
 	
 		// Check to see if there is already a class instance for this panel
 		if (instanceID){
@@ -4118,15 +4127,15 @@ MochaUI.Panel = new Class({
 			instances.set(this.options.id, this);
 		}
 
-		this.fireEvent('onBeforeBuild');
+		this.fireEvent('onBeforeBuild');		
 		
-		if (this.options.loadMethod == 'iframe') {
+		if (options.loadMethod == 'iframe') {
 			// Iframes have their own padding.
-			this.options.padding = { top: 0, right: 0, bottom: 0, left: 0 };
+			options.padding = { top: 0, right: 0, bottom: 0, left: 0 };
 		}
 
 		this.showHandle = true;
-		if ($(this.options.column).getChildren().length == 0){
+		if ($(options.column).getChildren().length == 0){
 			this.showHandle = false;
 		}
 
@@ -4134,34 +4143,35 @@ MochaUI.Panel = new Class({
 			'id': this.options.id,
 			'class': 'panel expanded',
 			'styles': {
-				'height': this.options.height
+				'height': options.height
 			}
-		}).inject($(this.options.column));
+		}).inject($(options.column));
 
-		this.panelEl.addClass(this.options.addClass);
+		this.panelEl.addClass(options.addClass);
 
 		this.contentEl = new Element('div', {
-			'id': this.options.id + '_pad',
+			'id': options.id + '_pad',
 			'class': 'pad'
 		}).inject(this.panelEl);		
 
-		if (this.options.footer){
+		if (options.footer){
 			this.footerWrapperEl = new Element('div', {
-				'id': this.options.id + '_panelFooterWrapper',
+				'id': options.id + '_panelFooterWrapper',
 				'class': 'panel-footerWrapper'
 			}).inject(this.panelEl);
 			
 			this.footerEl = new Element('div', {
-				'id': this.options.id + '_panelFooter',
+				'id': options.id + '_panelFooter',
 				'class': 'panel-footer'
 			}).inject(this.footerWrapperEl);
 
 			MochaUI.updateContent({
-				'element':       this.panelEl,
-				'childElement':  this.footerEl,
-				'loadMethod':    'xhr',
-				'data':	         this.options.footerData,
-				'url':           this.options.footerURL
+				'element': this.panelEl,
+				'childElement': this.footerEl,
+				'loadMethod': 'xhr',
+				'data':	options.footerData,
+				'url': options.footerURL,
+				'onContentLoaded': options.footerOnload
 			});
 			
 		}
@@ -4171,17 +4181,17 @@ MochaUI.Panel = new Class({
 		this.contentWrapperEl = this.panelEl;
 		
 		this.contentEl.setStyles({
-			'padding-top': this.options.padding.top,
-			'padding-bottom': this.options.padding.bottom,
-			'padding-left': this.options.padding.left,
-			'padding-right': this.options.padding.right
+			'padding-top': options.padding.top,
+			'padding-bottom': options.padding.bottom,
+			'padding-left': options.padding.left,
+			'padding-right': options.padding.right
 		});			
 		
 		this.panelHeaderEl = new Element('div', {
 			'id': this.options.id + '_header',
 			'class': 'panel-header',
 			'styles': {
-				'display': this.options.header ? 'block' : 'none'
+				'display': options.header ? 'block' : 'none'
 			}
 		}).inject(this.panelEl, 'before');
 		
@@ -4191,43 +4201,45 @@ MochaUI.Panel = new Class({
 
 		if (this.options.headerToolbox) {
 			this.panelHeaderToolboxEl = new Element('div', {
-				'id': this.options.id + '_headerToolbox',
+				'id': options.id + '_headerToolbox',
 				'class': 'panel-header-toolbox'
 			}).inject(this.panelHeaderEl);
 			
 			MochaUI.updateContent({
-				'element':       this.panelEl,
-				'childElement':  this.panelHeaderToolboxEl,
-				'loadMethod':    'xhr',
-				'url':           this.options.headerToolboxURL
+				'element': this.panelEl,
+				'childElement': this.panelHeaderToolboxEl,
+				'loadMethod': 'xhr',
+				'url': options.headerToolboxURL,
+				'onContentLoaded': options.headerToolboxOnload
 			});			
 		}
 	
 		this.panelHeaderContentEl = new Element('div', {
-			'id': this.options.id + '_headerContent',
+			'id': options.id + '_headerContent',
 			'class': 'panel-headerContent'
 		}).inject(this.panelHeaderEl);
 
 		this.titleEl = new Element('h2', {
-			'id': this.options.id + '_title'
+			'id': options.id + '_title'
 		}).inject(this.panelHeaderContentEl);
 
-		if (this.options.tabsURL == null){
-			this.titleEl.set('html', this.options.title);
+		if (options.tabsURL == null){
+			this.titleEl.set('html', options.title);
 		}		
 		else {
 			this.panelHeaderContentEl.addClass('tabs');
 			MochaUI.updateContent({
-				'element':      this.panelEl,
+				'element': this.panelEl,
 				'childElement': this.panelHeaderContentEl,
-				'loadMethod':   'xhr',
-				'url':          this.options.tabsURL,
-				'data':		    this.options.tabsData
+				'loadMethod': 'xhr',
+				'url': options.tabsURL,
+				'data': options.tabsData,
+				'onContentLoaded': options.tabsOnload   
 			});
 		}
 
 		this.handleEl = new Element('div', {
-			'id': this.options.id + '_handle',
+			'id': options.id + '_handle',
 			'class': 'horizontalHandle',
 			'styles': {
 				'display': this.showHandle == true ? 'block' : 'none'
@@ -4235,43 +4247,46 @@ MochaUI.Panel = new Class({
 		}).inject(this.panelEl, 'after');
 		
 		this.handleIconEl = new Element('div', {
-			'id': this.options.id + '_handle_icon',
+			'id': options.id + '_handle_icon',
 			'class': 'handleIcon'
 		}).inject(this.handleEl);
 
-		addResizeBottom(this.options.id);
+		addResizeBottom(options.id);
 
 		// Add content to panel.
 		MochaUI.updateContent({
-			'element':  this.panelEl,
-			'content':  this.options.content,
-			'method':	this.options.method,
-			'data':		this.options.data,
-			'url':      this.options.contentURL
+			'element': this.panelEl,
+			'content': options.content,
+			'method': options.method,
+			'data':	options.data,
+			'url': options.contentURL,
+			'onContentLoaded': null
 		});
 		
 		// Do this when creating and removing panels
-		$(this.options.column).getChildren('.panel').each( function(panel){
+		$(options.column).getChildren('.panel').each( function(panel){
 			panel.removeClass('bottomPanel');
 		});
-		$(this.options.column).getChildren('.panel').getLast().addClass('bottomPanel');
+		$(options.column).getChildren('.panel').getLast().addClass('bottomPanel');
 		
-		MochaUI.panelHeight(this.options.column, this.panelEl, 'new');
+		MochaUI.panelHeight(options.column, this.panelEl, 'new');
 
 	},
 	collapseToggleInit: function(options){
 
+		var options = this.options;
+
 		this.panelHeaderCollapseBoxEl = new Element('div', {
-			'id': this.options.id + '_headerCollapseBox',
+			'id': options.id + '_headerCollapseBox',
 			'class': 'toolbox'
 		}).inject(this.panelHeaderEl);
 
-		if (this.options.headerToolbox) {
+		if (options.headerToolbox) {
 			this.panelHeaderCollapseBoxEl.addClass('divider');
 		}
 
 		this.collapseToggleEl = new Element('div', {
-			'id': this.options.id + '_collapseToggle',
+			'id': options.id + '_collapseToggle',
 			'class': 'panel-collapse icon16',
 			'styles': {
 				'width': 16,
@@ -4300,10 +4315,10 @@ MochaUI.Panel = new Class({
 			});
 
 			if (this.isCollapsed == false) {
-				var currentColumn = MochaUI.Columns.instances.get($(this.options.column).id);
+				var currentColumn = MochaUI.Columns.instances.get($(options.column).id);
 
 				if (expandedSiblings.length == 0 && currentColumn.options.placement != 'main'){
-					var currentColumn = MochaUI.Columns.instances.get($(this.options.column).id);
+					var currentColumn = MochaUI.Columns.instances.get($(options.column).id);
 					currentColumn.columnToggle();
 					return;
 				}
@@ -4317,7 +4332,7 @@ MochaUI.Panel = new Class({
 				this.isCollapsed = true;
 				panel.addClass('collapsed');				
 				panel.removeClass('expanded');
-				MochaUI.panelHeight(this.options.column, panel, 'collapsing');
+				MochaUI.panelHeight(options.column, panel, 'collapsing');
 				MochaUI.panelHeight(); // Run this a second time for panels within panels
 				this.collapseToggleEl.removeClass('panel-collapsed');
 				this.collapseToggleEl.addClass('panel-expand');

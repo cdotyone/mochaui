@@ -82,7 +82,7 @@ var MochaUI = new Hash({
 			'url':          null,
 			'scrollbars':   null,			
 			'padding':      null,
-			'onContentLoaded': null
+			'onContentLoaded': $empty
 		};
 		$extend(options, updateOptions);
 
@@ -177,9 +177,9 @@ var MochaUI = new Hash({
 					onSuccess: function(){
 						if (contentContainer == contentEl){
 							if (recipient == 'window') currentInstance.hideSpinner(spinnerEl);							
-							else if (recipient == 'panel' && $('spinner')) $('spinner').hide();
-							Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();
-						}						
+							else if (recipient == 'panel' && $('spinner')) $('spinner').hide();							
+						}
+						Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();						
 						MochaUI.nextInQueue();
 					}.bind(this),
 					onComplete: function(){}.bind(this)
@@ -225,9 +225,9 @@ var MochaUI = new Hash({
 				}				
 				if (contentContainer == contentEl){
 					if (recipient == 'window') currentInstance.hideSpinner(spinnerEl);					
-					else if (recipient == 'panel' && $('spinner')) $('spinner').hide();
-					Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();				
-				}				
+					else if (recipient == 'panel' && $('spinner')) $('spinner').hide();									
+				}
+				Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();				
 				MochaUI.nextInQueue();	
 				break;
 		}
@@ -845,7 +845,7 @@ Asset.extend({
 			var checker = (function(){
 				if (!$try(check)) return;
 				$clear(checker);
-				load();
+				load.delay(100);
 			}).periodical(50);
 		}	
 		return script.inject(doc.head);
