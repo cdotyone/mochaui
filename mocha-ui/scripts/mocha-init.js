@@ -121,28 +121,13 @@ initializeWindows = function(){
 			padding: { top: 0, right: 0, bottom: 0, left: 0 },
 			bodyBgColor: [250,250,250],
 			onContentLoaded: function(){
-				if ( !MochaUI.clockScript == true ){
-					new Request({
-						url: 'plugins/coolclock/scripts/coolclock.js',
-						method: 'get',
-						onSuccess: function() {
-							if (Browser.Engine.trident) {
-								myClockInit = function(){
-									new CoolClock();
-								};
-								myClockInit.delay(50); // Delay is for IE								
-							}
-							else {
-								new CoolClock();
-							}
-							MochaUI.clockScript = true;
-						}.bind(this)
-					}).send();
-				}
-				else {
-					new CoolClock();	
-				}
-			}			
+				new Asset.javascript('plugins/coolclock/scripts/coolclock.js', {
+					id: 'coolclockScript',
+					onload: function(){
+						if (CoolClock) new CoolClock();
+					}
+				});
+			}				
 		});	
 	}
 	if ($('clockLinkCheck')){
@@ -170,22 +155,14 @@ initializeWindows = function(){
 				new Asset.css('plugins/parametrics/css/style.css', {id: 'parametricsStyle'});
 			},			
 			onContentLoaded: function(){
-				if ( !MochaUI.parametricsScript == true ){
-					new Request({
-						url: 'plugins/parametrics/scripts/parametrics.js',
-						method: 'get',
-						onSuccess: function() {
-							MochaUI.addRadiusSlider.delay(10); // Delay is for IE6
-							MochaUI.addShadowSlider.delay(10); // Delay is for IE6
-							MochaUI.parametricsScript = true;
-						}.bind(this)
-					}).send();
-				}
-				else {
-					MochaUI.addRadiusSlider.delay(10); // Delay is for IE6
-					MochaUI.addShadowSlider.delay(10); // Delay is for IE6
-				}
-			}			
+				new Asset.javascript('plugins/parametrics/scripts/parametrics.js', {
+					id: 'parametricsScript',
+					onload: function(){
+						if (MochaUI.addRadiusSlider) MochaUI.addRadiusSlider();
+						if (MochaUI.addShadowSlider) MochaUI.addShadowSlider();
+					}
+				});
+			}					
 		});
 	}
 	if ($('parametricsLinkCheck')){
@@ -469,7 +446,7 @@ initializeWindows = function(){
 		new MochaUI.Window({
 			id: 'builder',
 			title: 'Window Builder',
-			icon: 'images/icons/page.gif',
+			icon: 'images/icons/16x16/page.gif',
 			loadMethod: 'xhr',
 			contentURL: 'plugins/windowform/',
 			width: 375,
@@ -481,20 +458,16 @@ initializeWindows = function(){
 				if ($('builderStyle')) return;
 				new Asset.css('plugins/windowform/css/style.css', {id: 'builderStyle'});
 			},
-			onContentLoaded: function(){				
-				if ( !MochaUI.windowformScript == true ){
-					new Request({
-						url: 'plugins/windowform/scripts/Window-from-form.js',
-						method: 'get',
-						onSuccess: function() {
-							$('newWindowSubmit').addEvent('click', function(e){
-								new Event(e).stop();
-								new MochaUI.WindowForm();
-							});
-							MochaUI.windowformScript = true;
-						}.bind(this)
-					}).send();
-				}
+			onContentLoaded: function(){
+				new Asset.javascript('plugins/windowform/scripts/Window-from-form.js', {
+					id: 'builderScript',
+					onload: function(){
+						$('newWindowSubmit').addEvent('click', function(e){
+							new Event(e).stop();
+							new MochaUI.WindowForm();
+						});
+					}
+				});
 			}			
 		});
 	}
@@ -656,16 +629,12 @@ initializeColumns = function() {
 			new Asset.css('plugins/tree/css/style.css', {id: 'treeStyle'});
 		},		
 		onContentLoaded: function(){
-			if (!MochaUI.treeScript == true) {
-				new Request({
-					url: 'plugins/tree/scripts/tree.js',
-					method: 'get',
-					onSuccess: function(){
-						buildTree('tree1');
-						MochaUI.treeScript = true;
-					}.bind(this)
-				}).send();
-			}	
+			new Asset.javascript('plugins/tree/scripts/tree.js', {
+				id: 'treeScript',
+				onload: function(){
+					if (buildTree) buildTree('tree1');
+				}
+			});		
 			$('notesLink').addEvent('click', function(e){
 				MochaUI.updateContent({
 					'element': $('mainPanel'),
@@ -734,7 +703,7 @@ initializeColumns = function() {
 		column: 'sideColumn1',
 		height: 230,
 		onContentLoaded: function(){
-			$('myForm').addEvent('submit', function(e) {
+			$('myForm').addEvent('submit', function(e){
 				e.stop();
 
 				$('spinner').show();

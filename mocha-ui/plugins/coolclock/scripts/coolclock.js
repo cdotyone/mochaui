@@ -41,47 +41,8 @@ CoolClock.config = {
 	longTickDelay: 15000,
 	defaultRadius: 85,
 	renderRadius: 100,
-	defaultSkin: "swissRail",
+	defaultSkin: "default",
 	skins:	{
-		// more skins in moreskins.js
-		// try making your own...
-
-		'swissRail': {
-			outerBorder: { lineWidth: 1, radius:95, color: "black", alpha: 1 },
-			smallIndicator: { lineWidth: 2, startAt: 89, endAt: 93, color: "black", alpha: 1 },
-			largeIndicator: { lineWidth: 4, startAt: 80, endAt: 93, color: "black", alpha: 1 },
-			hourHand: { lineWidth: 8, startAt: -15, endAt: 50, color: "black", alpha: 1 },
-			minuteHand: { lineWidth: 7, startAt: -15, endAt: 75, color: "black", alpha: 1 },
-			secondHand: { lineWidth: 1, startAt: -20, endAt: 85, color: "red", alpha: 1 },
-			secondDecoration: { lineWidth: 1, startAt: 70, radius: 4, fillColor: "red", color: "red", alpha: 1 }
-		},
-		'chunkySwiss': {
-			outerBorder: { lineWidth: 4, radius:97, color: "black", alpha: 1 },
-			smallIndicator: { lineWidth: 4, startAt: 89, endAt: 93, color: "black", alpha: 1 },
-			largeIndicator: { lineWidth: 8, startAt: 80, endAt: 93, color: "black", alpha: 1 },
-			hourHand: { lineWidth: 12, startAt: -15, endAt: 60, color: "black", alpha: 1 },
-			minuteHand: { lineWidth: 10, startAt: -15, endAt: 85, color: "black", alpha: 1 },
-			secondHand: { lineWidth: 4, startAt: -20, endAt: 85, color: "red", alpha: 1 },
-			secondDecoration: { lineWidth: 2, startAt: 70, radius: 8, fillColor: "red", color: "red", alpha: 1 }
-		},
-		'chunkySwissOnBlack': {
-			outerBorder: { lineWidth: 4, radius:97, color: "white", alpha: 1 },
-			smallIndicator: { lineWidth: 4, startAt: 89, endAt: 93, color: "white", alpha: 1 },
-			largeIndicator: { lineWidth: 8, startAt: 80, endAt: 93, color: "white", alpha: 1 },
-			hourHand: { lineWidth: 12, startAt: -15, endAt: 60, color: "white", alpha: 1 },
-			minuteHand: { lineWidth: 10, startAt: -15, endAt: 85, color: "white", alpha: 1 },
-			secondHand: { lineWidth: 4, startAt: -20, endAt: 85, color: "red", alpha: 1 },
-			secondDecoration: { lineWidth: 2, startAt: 70, radius: 8, fillColor: "red", color: "red", alpha: 1 }
-		},
-		'mochaUI': {
-			outerBorder: { lineWidth: 185, radius:1, color: "#000", alpha: 0 },
-			smallIndicator: { lineWidth: 3, startAt: 88, endAt: 94, color: "#595959", alpha: 1 },
-			largeIndicator: { lineWidth: 3, startAt: 82, endAt: 94, color: "#ddd", alpha: 1 },
-			hourHand: { lineWidth: 4, startAt: 0, endAt: 58, color: "#fff", alpha: 1 },
-			minuteHand: { lineWidth: 4, startAt: 0, endAt: 78, color: "#fff", alpha: 1 },
-			secondHand: { lineWidth: 4, startAt: 82, endAt: 94, color: "#98B8D9", alpha: 1 },
-			secondDecoration: { lineWidth: 3, startAt: 0, radius: 6, fillColor: "white", color: "white", alpha: 1 }
-		},
 		'default': {
 			outerBorder: { lineWidth: 6, radius:98, color: "#fff", alpha: 0 },
 			smallIndicator: { lineWidth: 2, startAt: 86, endAt: 91, color: "#555", alpha: 1 },
@@ -91,7 +52,16 @@ CoolClock.config = {
 			secondHand: { lineWidth: 1, startAt: -16, endAt: 80, color: "#ce1717", alpha: 1 },
 			secondDecoration: { lineWidth: 2, startAt: 0, radius: 7, fillColor: "#fff", color: "#ce1717", alpha: 0 }
 		},
-		'mochaUI3': {
+		'mochaUI1': {
+			outerBorder: { lineWidth: 185, radius:1, color: "#000", alpha: 0 },
+			smallIndicator: { lineWidth: 3, startAt: 88, endAt: 94, color: "#595959", alpha: 1 },
+			largeIndicator: { lineWidth: 3, startAt: 82, endAt: 94, color: "#ddd", alpha: 1 },
+			hourHand: { lineWidth: 4, startAt: 0, endAt: 58, color: "#fff", alpha: 1 },
+			minuteHand: { lineWidth: 4, startAt: 0, endAt: 78, color: "#fff", alpha: 1 },
+			secondHand: { lineWidth: 4, startAt: 82, endAt: 94, color: "#98B8D9", alpha: 1 },
+			secondDecoration: { lineWidth: 3, startAt: 0, radius: 6, fillColor: "white", color: "white", alpha: 1 }
+		},
+		'mochaUI2': {
 			outerBorder: { lineWidth: 185, radius:1, color: "#000", alpha: 0 },
 			smallIndicator: { lineWidth: 3, startAt: 88, endAt: 94, color: "#2CC2D1", alpha: 1 },
 			largeIndicator: { lineWidth: 3, startAt: 82, endAt: 94, color: "#1BFFD9", alpha: 1 },
@@ -100,7 +70,7 @@ CoolClock.config = {
 			secondHand: { lineWidth: 4, startAt: 82, endAt: 94, color: "#EFCD5F", alpha: 1 },
 			secondDecoration: { lineWidth: 0, startAt: 0, radius: 6, fillColor: "#fff", color: "#000", alpha: 1 }
 		},
-		'mochaUI4': {
+		'mochaUI3': {
 			outerBorder: { lineWidth: 185, radius:1, color: "#000", alpha: 0 },
 			smallIndicator: { lineWidth: 3, startAt: 88, endAt: 94, color: "#C7C3B7", alpha: 1 },
 			largeIndicator: { lineWidth: 3, startAt: 82, endAt: 94, color: "#C7C3B7", alpha: 1 },
@@ -161,124 +131,123 @@ CoolClock.prototype = {
 	},
 
 	fullCircleAt: function(x,y,skin) {
-		with (this.ctx) {
-			save();
-			globalAlpha = skin.alpha;
-			lineWidth = skin.lineWidth;
-			if (document.all)
-				// excanvas doesn't scale line width so we will do it here
-				lineWidth = lineWidth * this.scale;
-			beginPath();	
-			arc(x, y, skin.radius, 0, 2*Math.PI, false);
-			closePath();
-		
-			if (document.all)
-				// excanvas doesn't close the circle so let's color in the gap
-				arc(x, y, skin.radius, -0.1, 0.1, false);
-			if (skin.fillColor) {
-				fillStyle = skin.fillColor
-				fill();
-			}
-			if (skin.color) {
-				// XXX why not stroke and fill
-				strokeStyle = skin.color;
-				stroke();
-			}
-			restore();
+		this.ctx.save();
+		this.ctx.globalAlpha = skin.alpha;
+		this.ctx.lineWidth = skin.lineWidth;
+		if (document.all) {
+			// excanvas doesn't scale line width so we will do it here
+			this.ctx.lineWidth = this.ctx.lineWidth * this.scale;
+		}	
+		this.ctx.beginPath();	
+		this.ctx.arc(x, y, skin.radius, 0, 2*Math.PI, false);
+		this.ctx.closePath();
+			
+		if (document.all) {
+			// excanvas doesn't close the circle so let's color in the gap
+			this.ctx.arc(x, y, skin.radius, -0.1, 0.1, false);
+		}	
+		if (skin.fillColor) {
+			this.ctx.fillStyle = skin.fillColor
+			this.ctx.fill();
 		}
+		if (skin.color) {
+			// XXX why not stroke and fill
+			this.ctx.strokeStyle = skin.color;
+			this.ctx.stroke();
+		}
+		this.ctx.restore();
+
 	},
 
 	reflection: function(){
-		with (this.ctx) {
-  			beginPath();
-   			fillStyle = 'rgba(250, 250, 250, .4)';  
-  			arc(100, 100, 98, 0, Math.PI, true);
-  			bezierCurveTo(60, 80, 160, 80, 196, 100);    
-  			fill();
-		}
+   		this.ctx.fillStyle = 'rgba(250, 250, 250, .4)';
+  		this.ctx.beginPath(); 
+  		this.ctx.arc(100, 100, 98, 0, Math.PI, true);
+  		this.ctx.bezierCurveTo(60, 80, 160, 80, 196, 100);    
+  		this.ctx.fill();
 	},
 
 	bgGradient: function(){
 		var lingrad = this.ctx.createLinearGradient(0, 0, 0, 200);
-		lingrad.addColorStop(0, 'rgba(190, 190, 190, 1)');
-		lingrad.addColorStop(1, 'rgba(230, 230, 230, 1)');
-		with (this.ctx) {
-			fillStyle = lingrad;			
-			beginPath();			
-			arc(100, 100, 99, 0, 2*Math.PI, false);
-			closePath();
-			fill();
-		}
+		lingrad.addColorStop(0, 'rgb(190, 190, 190)');
+		lingrad.addColorStop(1, 'rgb(230, 230, 230)');
+		this.ctx.fillStyle = lingrad;			
+		this.ctx.beginPath();			
+		this.ctx.arc(100, 100, 99, 0, 2*Math.PI, false);
+		this.ctx.closePath();
+		this.ctx.fill();
 	},
 
 	center: function(){
-		with (this.ctx) {
-			beginPath();
-			fillStyle = "#fff";
-			arc(100, 100, 7, 0, 2 * Math.PI, false);
-			fill();
-			strokeStyle = "#ce1717";
-			lineWidth = 2;
-			arc(100, 100, 7, 0, 2 * Math.PI, false);
-			stroke();
-			
-		}
+		this.ctx.beginPath();
+		this.ctx.fillStyle = "#fff";
+		this.ctx.arc(100, 100, 7, 0, 2 * Math.PI, false);
+		this.ctx.fill();
+		this.ctx.strokeStyle = "#ce1717";
+		this.ctx.lineWidth = 2;
+		this.ctx.arc(100, 100, 7, 0, 2 * Math.PI, false);
+		this.ctx.stroke();	
 	},
 
 	radialLineAtAngle: function(angleFraction,skin) {
-		with (this.ctx) {
-			save();
-			translate(this.renderRadius,this.renderRadius);
-			rotate(Math.PI * (2 * angleFraction - 0.5));
-			globalAlpha = skin.alpha;
-			strokeStyle = skin.color;
-			lineWidth = skin.lineWidth;
-			if (document.all)
-				// excanvas doesn't scale line width so we will do it here
-				lineWidth = lineWidth * this.scale;
-			if (skin.radius) {
-				this.fullCircleAt(skin.startAt,0,skin)
-			}
-			else {
-				beginPath();
-				moveTo(skin.startAt,0)
-				lineTo(skin.endAt,0);
-				stroke();
-			}
-			restore();
+		this.ctx.save();
+		this.ctx.translate(this.renderRadius,this.renderRadius);
+		this.ctx.rotate(Math.PI * (2 * angleFraction - 0.5));
+		this.ctx.globalAlpha = skin.alpha;
+		this.ctx.strokeStyle = skin.color;
+		this.ctx.lineWidth = skin.lineWidth;
+		if (document.all){
+			// excanvas doesn't scale line width so we will do it here
+			this.ctx.lineWidth = this.ctx.lineWidth * this.scale;
+		}	
+		if (skin.radius) {
+			this.fullCircleAt(skin.startAt,0,skin)
 		}
+		else {
+			this.ctx.beginPath();
+			this.ctx.moveTo(skin.startAt,0)
+			this.ctx.lineTo(skin.endAt,0);
+			this.ctx.stroke();
+		}
+		this.ctx.restore();
+
 	},
 
-	render: function(hour,min,sec) {
+	render: function(hour,min,sec){
 		var skin = CoolClock.config.skins[this.skinId];
 		this.ctx.clearRect(0,0,this.renderRadius*2,this.renderRadius*2);
 
 		this.bgGradient();
 		//this.fullCircle(skin.outerBorder);
 
-		for (var i=0;i<60;i++)
-			this.radialLineAtAngle(i/60,skin[ i%5 ? "smallIndicator" : "largeIndicator"]);
+		for (var i = 0; i < 60; i++){
+			this.radialLineAtAngle(i / 60, skin[i % 5 ? "smallIndicator" : "largeIndicator"]);
+		}
 
 		this.radialLineAtAngle((hour+min/60)/12,skin.hourHand);
 		this.radialLineAtAngle((min+sec/60)/60,skin.minuteHand);
-		if (this.showSecondHand) {
+		if (this.showSecondHand){
 			this.radialLineAtAngle(sec/60,skin.secondHand);
 			this.radialLineAtAngle(sec/60,skin.secondDecoration);
 		}
 		this.center();
+		// Chrome has trouble with the reflection.
+		if (navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
+			return;
+		}		
 		this.reflection();
 	},
 
 
-	nextTick: function() {
+	nextTick: function(){
 		setTimeout("CoolClock.config.clockTracker['"+this.canvasId+"'].tick()",this.tickDelay);
 	},
 
-	stillHere: function() {
-		return document.getElementById(this.canvasId) != null;
+	stillHere: function(){
+		return $(this.canvasId) != null;
 	},
 
-	refreshDisplay: function() {
+	refreshDisplay: function(){
 		var now = new Date();
 		if (this.gmtOffset != null) {
 			// use GMT + gmtOffset

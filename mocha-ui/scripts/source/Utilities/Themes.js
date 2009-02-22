@@ -59,7 +59,7 @@ MochaUI.Themes = {
 		MochaUI.Windows.windowOptionsPrevious = new Hash($merge(MochaUI.Windows.windowOptions));
 		
 		// Run theme init file		
-		new Asset.javascript(this.options.themesDir + '/' + this.newTheme + '/theme-init.js', {id: 'themeInitFile'});	
+		new Asset.javascript(this.options.themesDir + '/' + this.newTheme + '/theme-init.js');	
 						
 	},
 	changeTheme: function(){

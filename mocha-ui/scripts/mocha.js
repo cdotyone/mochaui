@@ -16,24 +16,38 @@ Contributors:
 Note:
 	This documentation is taken directly from the javascript source files. It is built using Natural Docs.
 
-Todo:
-	Consider making title tooltips optional and using them more often.
-
 */
 
 var MochaUI = new Hash({
 	options: new Hash({
 		useEffects: false   // Toggles the majority of window fade and move effects.		
 	}),	
-	
+
 	ieSupport: 'excanvas',  // Makes it easier to switch between Excanvas and Moocanvas for testing	
-	
+
+	// Functionality for queuing content updates. This is currently used for Opera only.
+	// Opera gets confused when several XMLHttpRequests and DOM Javascript injections are going on concurrently.
+	queue: [],
+	updating: false,
+	nextInQueue: function(){
+		if (MochaUI.queue.length) {
+			MochaUI.updateContent(MochaUI.queue.shift(), true);			
+		}
+		else {
+			MochaUI.updating = false;
+			return false;			
+		}				
+	},	
 	/*
 	
 	Function: updateContent
 		Replace the content of a window or panel.
 		
 	Arguments:
+		updateOptions - (object)
+		next - (boolean) True if next in download queu.
+	
+	updateOptions:
 		element - The parent window or panel.
 		childElement - The child element of the window or panel recieving the content.
 		method - ('get', or 'post') The way data is transmitted.
@@ -47,8 +61,16 @@ var MochaUI = new Hash({
 		onContentLoaded - (function)
 
 	*/	
-	updateContent: function(updateOptions){
+	updateContent: function(updateOptions, next){
 
+		if (Browser.Engine.presto) {
+			if (MochaUI.updating == true && !next) {
+				MochaUI.queue.push(updateOptions);
+				return;
+			}
+			MochaUI.updating = true;
+		}
+	
 		var options = {
 			'element':      null,
 			'childElement': null,
@@ -115,15 +137,16 @@ var MochaUI = new Hash({
 		var onContentLoaded = function(){
 			options.onContentLoaded ? options.onContentLoaded() : currentInstance.fireEvent('onContentLoaded', element);
 		};		
-		
+				
 		// Load new content.
 		switch(loadMethod){
-			case 'xhr':
+			case 'xhr':			
 				var data = options.data != null ? new Hash(options.data).toQueryString() : "";
 				new Request.HTML({
 					url: options.url,
 					update: contentContainer, // Using update for some reason preserves whitespace in IE6 and 7. It is fine in IE8.
 					method: method,
+					//async: false,
 					data: data, 
 					evalScripts: currentInstance.options.evalScripts,
 					evalResponse: currentInstance.options.evalResponse,
@@ -144,16 +167,20 @@ var MochaUI = new Hash({
 							contentContainer.set('html', '<h3>Error: ' + error[1] + '</h3>');					
 
 							if (recipient == 'window') currentInstance.hideSpinner(spinnerEl);						
-							else if (recipient == 'panel' && $('spinner')) $('spinner').hide();							
+							else if (recipient == 'panel' && $('spinner')) $('spinner').hide();
+							MochaUI.nextInQueue();							
 						}
 					}.bind(this),
-					onException: function(){}.bind(this),
+					onException: function(){
+						MochaUI.nextInQueue();
+					}.bind(this),
 					onSuccess: function(){
 						if (contentContainer == contentEl){
 							if (recipient == 'window') currentInstance.hideSpinner(spinnerEl);							
 							else if (recipient == 'panel' && $('spinner')) $('spinner').hide();
 							Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();
-						}
+						}						
+						MochaUI.nextInQueue();
 					}.bind(this),
 					onComplete: function(){}.bind(this)
 				}).send();
@@ -181,7 +208,8 @@ var MochaUI = new Hash({
 				currentInstance.iframeEl.addEvent('load', function(e) {
 					if (recipient == 'window') currentInstance.hideSpinner(spinnerEl);					
 					else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) $('spinner').hide();
-					Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();	
+					Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();
+					MochaUI.nextInQueue();	
 				}.bind(this));
 				if (recipient == 'window') currentInstance.showSpinner(spinnerEl);				
 				else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) $('spinner').show();				
@@ -194,13 +222,13 @@ var MochaUI = new Hash({
 					options.content.inject(contentContainer);
 				} else {
 					contentContainer.set('html', options.content);
-				}
-				
+				}				
 				if (contentContainer == contentEl){
 					if (recipient == 'window') currentInstance.hideSpinner(spinnerEl);					
-					else if (recipient == 'panel' && $('spinner')) $('spinner').hide();					
-					Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();					
-				}
+					else if (recipient == 'panel' && $('spinner')) $('spinner').hide();
+					Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();				
+				}				
+				MochaUI.nextInQueue();	
 				break;
 		}
 
@@ -783,6 +811,47 @@ Element.implement({
 		return this;
 	}
 });
+
+/* Fix an Opera bug in Mootools 1.2 */
+Asset.extend({
+
+	javascript: function(source, properties){
+		properties = $extend({
+			onload: $empty,
+			document: document,
+			check: $lambda(true)
+		}, properties);
+		
+		if ($(properties.id)) {
+			properties.onload();
+			return $(properties.id);
+		}		
+		
+		var script = new Element('script', {'src': source, 'type': 'text/javascript'});
+		
+		var load = properties.onload.bind(script), check = properties.check, doc = properties.document;
+		delete properties.onload; delete properties.check; delete properties.document;
+		
+		if (!Browser.Engine.webkit419 && !Browser.Engine.presto){
+			script.addEvents({
+				load: load,
+				readystatechange: function(){
+					if (Browser.Engine.trident && ['loaded', 'complete'].contains(this.readyState)) 
+						load();
+				}
+			}).setProperties(properties);
+		}
+		else {
+			var checker = (function(){
+				if (!$try(check)) return;
+				$clear(checker);
+				load();
+			}).periodical(50);
+		}	
+		return script.inject(doc.head);
+	}
+	
+});
 /*
 
 Script: Themes.js
@@ -844,7 +913,7 @@ MochaUI.Themes = {
 		MochaUI.Windows.windowOptionsPrevious = new Hash($merge(MochaUI.Windows.windowOptions));
 		
 		// Run theme init file		
-		new Asset.javascript(this.options.themesDir + '/' + this.newTheme + '/theme-init.js', {id: 'themeInitFile'});	
+		new Asset.javascript(this.options.themesDir + '/' + this.newTheme + '/theme-init.js');	
 						
 	},
 	changeTheme: function(){
@@ -3022,6 +3091,9 @@ MochaUI.extend({
 				el.hide(); // Required by Opera, and probably IE7
 			}
 			var title = el.getElement('h3.mochaTitle');
+			
+			if(Browser.Engine.presto) el.show();
+			
 			var elDimensions = el.getStyles('height', 'width');
 			var properties = {
 				id: el.getProperty('id'),
