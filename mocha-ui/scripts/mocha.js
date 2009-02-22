@@ -1103,11 +1103,13 @@ Options:
 	toolbarHeight - (number)
 	toolbarURL - (url) Defaults to 'pages/lipsum.html'.
 	toolbarContent - (string)
+	toolbarOnload - (function)
 	toolbar2 - (boolean) Create window toolbar. Defaults to false. This can be used for tabs, media controls, and so forth.
 	toolbar2Position - ('top' or 'bottom') Defaults to top.
 	toolbar2Height - (number)
 	toolbar2URL - (url) Defaults to 'pages/lipsum.html'.
-	toolbar2Content - (string)	
+	toolbar2Content - (string)
+	toolbar2Onload - (function)	
 	container - (element ID) Element the window is injected in. The container defaults to 'desktop'. If no desktop then to document.body. Use 'pageWrapper' if you don't want the windows to overlap the toolbars.
 	restrict - (boolean) Restrict window to container when dragging.
 	shape - ('box' or 'gauge') Shape of window. Defaults to 'box'.
@@ -4024,10 +4026,15 @@ Options:
 	content - (string or element) An html loadMethod option.
 	tabsURL - (url)	
 	tabsData - (hash) Data to send with the URL. Defaults to null.
+	tabsOnload - (function)
 	header - (boolean) Display the panel header or not
+	headerToolbox: (boolean)
+	headerToolboxURL: (url)
+	headerToolboxOnload: (function)	
 	footer - (boolean) Add a panel footer or not
 	footerURL - (url)
 	footerData - (hash) Data to send with the URL. Defaults to null.
+	footerOnload - (function)
 	height - (number) Height of content area.
 	addClass - (string) Add a class to the panel.
 	scrollbars - (boolean)

@@ -42,11 +42,13 @@ Options:
 	toolbarHeight - (number)
 	toolbarURL - (url) Defaults to 'pages/lipsum.html'.
 	toolbarContent - (string)
+	toolbarOnload - (function)
 	toolbar2 - (boolean) Create window toolbar. Defaults to false. This can be used for tabs, media controls, and so forth.
 	toolbar2Position - ('top' or 'bottom') Defaults to top.
 	toolbar2Height - (number)
 	toolbar2URL - (url) Defaults to 'pages/lipsum.html'.
-	toolbar2Content - (string)	
+	toolbar2Content - (string)
+	toolbar2Onload - (function)	
 	container - (element ID) Element the window is injected in. The container defaults to 'desktop'. If no desktop then to document.body. Use 'pageWrapper' if you don't want the windows to overlap the toolbars.
 	restrict - (boolean) Restrict window to container when dragging.
 	shape - ('box' or 'gauge') Shape of window. Defaults to 'box'.

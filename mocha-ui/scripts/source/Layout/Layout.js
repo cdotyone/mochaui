@@ -608,10 +608,15 @@ Options:
 	content - (string or element) An html loadMethod option.
 	tabsURL - (url)	
 	tabsData - (hash) Data to send with the URL. Defaults to null.
+	tabsOnload - (function)
 	header - (boolean) Display the panel header or not
+	headerToolbox: (boolean)
+	headerToolboxURL: (url)
+	headerToolboxOnload: (function)	
 	footer - (boolean) Add a panel footer or not
 	footerURL - (url)
 	footerData - (hash) Data to send with the URL. Defaults to null.
+	footerOnload - (function)
 	height - (number) Height of content area.
 	addClass - (string) Add a class to the panel.
 	scrollbars - (boolean)
