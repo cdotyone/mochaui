@@ -34,6 +34,9 @@ MochaUI.extend({
 				el.hide(); // Required by Opera, and probably IE7
 			}
 			var title = el.getElement('h3.mochaTitle');
+			
+			if(Browser.Engine.presto) el.show();
+			
 			var elDimensions = el.getStyles('height', 'width');
 			var properties = {
 				id: el.getProperty('id'),
