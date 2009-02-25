@@ -1364,6 +1364,9 @@ MochaUI.Window = new Class({
 
 	*/	
 	drawWindow: function(shadows) {		
+		
+		if (this.drawingWindow == true) return;
+		this.drawingWindow = true;
 				
 		if (this.isCollapsed){
 			this.drawWindowCollapsed(shadows);
@@ -1479,6 +1482,7 @@ MochaUI.Window = new Class({
 			});
 		}
 		
+		this.drawingWindow = false;
 		return this;		
 
 	},
@@ -1537,6 +1541,7 @@ MochaUI.Window = new Class({
 			}
 		}
 		
+		this.drawingWindow = false;
 		return this;
 
 	},	

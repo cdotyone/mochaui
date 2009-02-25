@@ -146,10 +146,9 @@ var MochaUI = new Hash({
 					url: options.url,
 					update: contentContainer, // Using update for some reason preserves whitespace in IE6 and 7. It is fine in IE8.
 					method: method,
-					//async: false,
 					data: data, 
 					evalScripts: currentInstance.options.evalScripts,
-					evalResponse: currentInstance.options.evalResponse,
+					evalResponse: currentInstance.options.evalResponse,				
 					onRequest: function(){
 						if (recipient == 'window' && contentContainer == contentEl){
 							currentInstance.showSpinner(spinnerEl);
@@ -812,6 +811,25 @@ Element.implement({
 	}
 });
 
+// This makes it so Request will work to some degree locally
+if (location.protocol == "file:"){
+
+	Request.implement({
+		isSuccess : function(status){
+			return (status == 0 || (status >= 200) && (status < 300));
+		}
+	});
+
+	Browser.Request = function(){
+		return $try(function(){
+			return new ActiveXObject('MSXML2.XMLHTTP');
+		}, function(){
+			return new XMLHttpRequest();
+		});
+	};
+	
+}
+
 /* Fix an Opera bug in Mootools 1.2 */
 Asset.extend({
 
@@ -845,7 +863,7 @@ Asset.extend({
 			var checker = (function(){
 				if (!$try(check)) return;
 				$clear(checker);
-				load.delay(100);
+				load.delay(250);
 			}).periodical(50);
 		}	
 		return script.inject(doc.head);

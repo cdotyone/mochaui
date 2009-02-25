@@ -35,9 +35,8 @@ MochaUI.extend({
 					// Change corner radius of all active classes and their windows
 					MochaUI.Windows.instances.each(function(instance) {
 						instance.options.cornerRadius = pos;
-						instance.drawWindow($(instance.options.id));
+						instance.drawWindow();
 					}.bind(this));
-					MochaUI.Windows.indexLevel++;
 				}.bind(this)
 			}).set(windowOptions.cornerRadius);
 		}
@@ -49,12 +48,6 @@ MochaUI.extend({
 			var mochaSlide = new Slider($('shadowSliderarea'), $('shadowSliderknob'), {
 				range: [1, 10],
 				offset: 0,
-				onStart: function(){
-					// Set variable to adjust position in relation to shadow width
-					MochaUI.Windows.instances.each(function(instance) {
-						instance.adjusted = false;
-					}.bind(this));			
-				}.bind(this),
 				onChange: function(pos){
 					$('shadowUpdatevalue').set('html', pos);
 					// Change default shadow width of the original class
@@ -68,23 +61,22 @@ MochaUI.extend({
 					}
 					// Change shadow width of all active classes and their windows
 					MochaUI.Windows.instances.each(function(instance) {
-						instance.oldshadowBlur = instance.options.shadowBlur;
+						var oldshadowBlur = instance.options.shadowBlur;
 						instance.options.shadowBlur = pos;
 						instance.windowEl.setStyles({
-							'top': instance.windowEl.getStyle('top').toInt() - (instance.options.shadowBlur - instance.oldshadowBlur),
-							'left': instance.windowEl.getStyle('left').toInt() - (instance.options.shadowBlur - instance.oldshadowBlur)
+							'top': instance.windowEl.getStyle('top').toInt() - (instance.options.shadowBlur - oldshadowBlur),
+							'left': instance.windowEl.getStyle('left').toInt() - (instance.options.shadowBlur - oldshadowBlur)
 						});
-						instance.drawWindow($(instance.options.id));
+						instance.drawWindow();
 					}.bind(this));
-					MochaUI.Windows.indexLevel++; 
 				}.bind(this),
 				onComplete: function(){
 					MochaUI.Windows.instances.each(function(instance) {
 						if (instance.options.resizable){
 							instance.adjustHandles();
 						}
-					}.bind(this));
-				}.bind(this)
+					});
+				}
 			}).set(windowOptions.shadowBlur);
 		}
 	}

@@ -427,7 +427,7 @@ initializeWindows = function(){
 			new Event(e).stop();
 			MochaUI.noCanvasWindow();
 		});
-	}
+	}	
 
 	// View
 	if ($('sidebarLinkCheck')) {
@@ -937,10 +937,7 @@ window.addEvent('load', function(){ //using load instead of domready for IE8
 	initializeColumns();
 
 	MochaUI.Modal = new MochaUI.Modal();
-	
-	MochaUI.Desktop.desktop.setStyles({
-		'visibility': 'visible'
-	});
+
 	initializeWindows();	
 
 });

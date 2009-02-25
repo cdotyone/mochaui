@@ -1239,7 +1239,7 @@ function addResizeRight(element, min, max){
 					}
 				});
 			}				
-			MochaUI.rWidth();
+			MochaUI.rWidth(element.getParent());
 			if (Browser.Engine.gecko) {
 				$$('.panel').show(); // Fix for a rendering bug in FF			
 			}
@@ -1255,7 +1255,7 @@ function addResizeRight(element, min, max){
 			}						
 		}.bind(this),
 		onComplete: function(){
-			MochaUI.rWidth();
+			MochaUI.rWidth(element.getParent());
 			element.getElements('iframe').setStyle('visibility','visible');
 			element.getNext('.column').getElements('iframe').setStyle('visibility','visible');
 			currentInstance.fireEvent('onResize');
@@ -1295,10 +1295,10 @@ function addResizeLeft(element, min, max){
 			partner.getElements('iframe').setStyle('visibility','hidden');
 		}.bind(this),
 		onDrag: function(){
-			MochaUI.rWidth();
+			MochaUI.rWidth(element.getParent());
 		}.bind(this),
 		onComplete: function(){
-			MochaUI.rWidth();
+			MochaUI.rWidth(element.getParent());
 			$(element).getElements('iframe').setStyle('visibility','visible');
 			partner.getElements('iframe').setStyle('visibility','visible');
 			currentInstance.fireEvent('onResize');			
