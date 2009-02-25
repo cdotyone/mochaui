@@ -31,7 +31,7 @@ $files = array(
 	'Window/Windows-from-json.js',
 	'Window/Arrange-cascade.js',
 	'Window/Arrange-tile.js',
-	'Window/Tabs.js',
+	'Components/Tabs.js',
 	'Layout/Layout.js',
 	'Layout/Dock.js',
 	'Layout/Workspaces.js'
