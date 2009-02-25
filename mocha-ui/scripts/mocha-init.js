@@ -502,8 +502,32 @@ initializeWindows = function(){
 		});
 	}
 	
-	// Todo: Add menu check mark functionality for workspaces.
+	if ($('toggleStandardEffectsLinkCheck')) {
+		$('toggleStandardEffectsLinkCheck').addEvent('click', function(e){
+			new Event(e).stop();
+			MochaUI.toggleStandardEffects($('toggleStandardEffectsLinkCheck'));			
+		});
+		if (MochaUI.options.standardEffects == true) {
+			MochaUI.toggleStandardEffectsLink = new Element('div', {
+				'class': 'check',
+				'id': 'toggleStandardEffects_check'
+			}).inject($('toggleStandardEffectsLinkCheck'));
+		}
+	}	
 	
+	if ($('toggleAdvancedEffectsLinkCheck')) {
+		$('toggleAdvancedEffectsLinkCheck').addEvent('click', function(e){
+			new Event(e).stop();
+			MochaUI.toggleAdvancedEffects($('toggleAdvancedEffectsLinkCheck'));			
+		});
+		if (MochaUI.options.advancedEffects == true) {
+			MochaUI.toggleAdvancedEffectsLink = new Element('div', {
+				'class': 'check',
+				'id': 'toggleAdvancedEffects_check'
+			}).inject($('toggleAdvancedEffectsLinkCheck'));
+		}
+	}	
+		
 	// Workspaces
 	
 	if ($('saveWorkspaceLink')) {
@@ -520,19 +544,6 @@ initializeWindows = function(){
 		});
 	}
 	
-	if ($('toggleEffectsLinkCheck')) {
-		$('toggleEffectsLinkCheck').addEvent('click', function(e){
-			new Event(e).stop();
-			MochaUI.toggleEffects($('toggleEffectsLinkCheck'));			
-		});
-		if (MochaUI.options.useEffects == true) {
-			MochaUI.toggleEffectsLink = new Element('div', {
-				'class': 'check',
-				'id': 'toggleEffects_check'
-			}).inject($('toggleEffectsLinkCheck'));
-		}
-	}	
-
 	// Help	
 	MochaUI.featuresWindow = function() {
 		new MochaUI.Window({
@@ -755,7 +766,7 @@ initializeColumns = function() {
 				e.stop();
 
 				$('spinner').show();
-				if ($('postContent')) {
+				if ($('postContent') && MochaUI.options.standardEffects == true) {
 					$('postContent').setStyle('opacity', 0);	
 				}
 				else {
@@ -773,10 +784,9 @@ initializeColumns = function() {
 						});			
 					},
 					onSuccess: function(){
-						$('postContent').setStyle('opacity', 0);
-						new Fx.Morph($('postContent'), {duration: 500} ).start({
-							'opacity': 1
-						});
+						if (MochaUI.options.standardEffects == true) {
+							$('postContent').setStyle('opacity', 0).get('morph').start({'opacity': 1});
+						}
 					}
 				});
 				this.send();
@@ -798,7 +808,7 @@ initializeColumns = function() {
 				$('demoSearch').addEvent('submit', function(e){
 					e.stop();
 					$('spinner').setStyle('visibility', 'visible');
-					if ($('postContent')) {
+					if ($('postContent') && MochaUI.options.standardEffects == true) {
 						$('postContent').setStyle('opacity', 0);
 					}
 					else {
@@ -820,12 +830,9 @@ initializeColumns = function() {
 							});
 						},
 						onSuccess: function(){
-							$('postContent').setStyle('opacity', 0);
-							new Fx.Morph($('postContent'), {
-								duration: 500
-							}).start({
-								'opacity': 1
-							});
+							if ($('postContent') && MochaUI.options.standardEffects == true) {								
+								$('postContent').setStyle('opacity', 0).get('morph').start({'opacity': 1});
+							}
 						}
 					});
 					this.send();

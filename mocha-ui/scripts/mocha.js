@@ -20,7 +20,8 @@ Note:
 
 var MochaUI = new Hash({
 	options: new Hash({
-		useEffects: false   // Toggles the majority of window fade and move effects.		
+		advancedEffects: false, // Effects that require fast browsers and are cpu intensive.
+		standardEffects: true   // Basic effects that tend to run smoothly.
 	}),	
 
 	ieSupport: 'excanvas',  // Makes it easier to switch between Excanvas and Moocanvas for testing	
@@ -146,10 +147,9 @@ var MochaUI = new Hash({
 					url: options.url,
 					update: contentContainer, // Using update for some reason preserves whitespace in IE6 and 7. It is fine in IE8.
 					method: method,
-					//async: false,
 					data: data, 
 					evalScripts: currentInstance.options.evalScripts,
-					evalResponse: currentInstance.options.evalResponse,
+					evalResponse: currentInstance.options.evalResponse,				
 					onRequest: function(){
 						if (recipient == 'window' && contentContainer == contentEl){
 							currentInstance.showSpinner(spinnerEl);
@@ -339,7 +339,7 @@ var MochaUI = new Hash({
 			$('modalFix').hide();
 		}
 		
-		if (MochaUI.options.useEffects == false){			
+		if (MochaUI.options.advancedEffects == false){			
 			if (currentInstance.options.type == 'modal' || currentInstance.options.type == 'modal2'){
 				$('modalOverlay').setStyle('opacity', 0);
 			}			
@@ -576,7 +576,7 @@ var MochaUI = new Hash({
 		if (windowPosLeft < -currentInstance.options.shadowBlur){
 			windowPosLeft = -currentInstance.options.shadowBlur;
 		}
-		if (MochaUI.options.useEffects == true){
+		if (MochaUI.options.advancedEffects == true){
 			currentInstance.morph.start({
 				'top': windowPosTop,
 				'left': windowPosLeft
@@ -626,23 +626,46 @@ var MochaUI = new Hash({
 		Turn effects on and off
 
 	*/
-	toggleEffects: function(link){
-		if (MochaUI.options.useEffects == false) {
-			MochaUI.options.useEffects = true;
+	toggleAdvancedEffects: function(link){
+		if (MochaUI.options.advancedEffects == false) {
+			MochaUI.options.advancedEffects = true;
 			if (link){
-				this.toggleEffectsLink = new Element('div', {
+				this.toggleAdvancedEffectsLink = new Element('div', {
 					'class': 'check',
-					'id': 'toggleEffects_check'
+					'id': 'toggleAdvancedEffects_check'
 				}).inject(link);
 			}			
 		}
 		else {
-			MochaUI.options.useEffects = false;
-			if (this.toggleEffectsLink) {
-				this.toggleEffectsLink.destroy();
+			MochaUI.options.advancedEffects = false;
+			if (this.toggleAdvancedEffectsLink) {
+				this.toggleAdvancedEffectsLink.destroy();
 			}		
 		}
-	},		
+	},
+	/*
+	  	
+	Function: toggleStandardEffects
+		Turn standard effects on and off
+
+	*/
+	toggleStandardEffects: function(link){
+		if (MochaUI.options.standardEffects == false) {
+			MochaUI.options.standardEffects = true;
+			if (link){
+				this.toggleStandardEffectsLink = new Element('div', {
+					'class': 'check',
+					'id': 'toggleStandardEffects_check'
+				}).inject(link);
+			}			
+		}
+		else {
+			MochaUI.options.standardEffects = false;
+			if (this.toggleStandardEffectsLink) {
+				this.toggleStandardEffectsLink.destroy();
+			}		
+		}
+	},			
 	/*
 
 	Function: garbageCleanUp
@@ -812,6 +835,25 @@ Element.implement({
 	}
 });
 
+// This makes it so Request will work to some degree locally
+if (location.protocol == "file:"){
+
+	Request.implement({
+		isSuccess : function(status){
+			return (status == 0 || (status >= 200) && (status < 300));
+		}
+	});
+
+	Browser.Request = function(){
+		return $try(function(){
+			return new ActiveXObject('MSXML2.XMLHTTP');
+		}, function(){
+			return new XMLHttpRequest();
+		});
+	};
+	
+}
+
 /* Fix an Opera bug in Mootools 1.2 */
 Asset.extend({
 
@@ -845,7 +887,8 @@ Asset.extend({
 			var checker = (function(){
 				if (!$try(check)) return;
 				$clear(checker);
-				load.delay(100);
+				// Opera has difficulty with multiple scripts being injected into the head simultaneously. We need to give it time to catch up.
+				Browser.Engine.presto ? load.delay(500) : load();
 			}).periodical(50);
 		}	
 		return script.inject(doc.head);
@@ -1467,7 +1510,7 @@ MochaUI.Window = new Class({
 					MochaUI.centerWindow(this.windowEl);	
 				}
 				setTimeout(MochaUI.focusWindow.pass(this.windowEl, this),10);
-				if (MochaUI.options.useEffects == true) {
+				if (MochaUI.options.standardEffects == true) {
 					this.windowEl.shake();
 				}	
 			}
@@ -1664,7 +1707,7 @@ MochaUI.Window = new Class({
 		});
 		
 		// Create opacityMorph
-		if (MochaUI.options.useEffects == true){
+		if (MochaUI.options.advancedEffects == true){
 			// IE cannot handle both element opacity and VML alpha at the same time.
 			if (Browser.Engine.trident){
 				this.drawWindow(false);
@@ -1686,7 +1729,7 @@ MochaUI.Window = new Class({
 				$('modalFix').show();
 			}
 			$('modalOverlay').show();
-			if (MochaUI.options.useEffects == false){
+			if (MochaUI.options.advancedEffects == false){
 				$('modalOverlay').setStyle('opacity', .6);
 				this.windowEl.setStyles({
 					'zIndex': 11000,
@@ -1711,7 +1754,7 @@ MochaUI.Window = new Class({
 			this.windowEl.addClass('isFocused');
 			
 		}
-		else if (MochaUI.options.useEffects == false){
+		else if (MochaUI.options.advancedEffects == false){
 			this.windowEl.setStyle('opacity', 1);
 			setTimeout(MochaUI.focusWindow.pass(this.windowEl, this), 10);
 		}
@@ -2425,6 +2468,9 @@ MochaUI.Window = new Class({
 
 	*/	
 	drawWindow: function(shadows) {		
+		
+		if (this.drawingWindow == true) return;
+		this.drawingWindow = true;
 				
 		if (this.isCollapsed){
 			this.drawWindowCollapsed(shadows);
@@ -2540,6 +2586,7 @@ MochaUI.Window = new Class({
 			});
 		}
 		
+		this.drawingWindow = false;
 		return this;		
 
 	},
@@ -2598,6 +2645,7 @@ MochaUI.Window = new Class({
 			}
 		}
 		
+		this.drawingWindow = false;
 		return this;
 
 	},	
@@ -3233,7 +3281,7 @@ MochaUI.extend({
 				x += leftOffset;
 				y += topOffset;
 
-				if (MochaUI.options.useEffects == false){
+				if (MochaUI.options.advancedEffects == false){
 					windowEl.setStyles({
 						'top': y,
 						'left': x
@@ -3338,7 +3386,7 @@ MochaUI.extend({
 				
 				MochaUI.focusWindow(instance.windowEl);
 				
-				if (MochaUI.options.useEffects == false){
+				if (MochaUI.options.advancedEffects == false){
 					instance.windowEl.setStyles({
 						'top': top,
 						'left': left
@@ -3646,7 +3694,7 @@ MochaUI.Desktop = new Class({
 		newHeight -= currentInstance.contentBorderEl.getStyle('border-bottom').toInt();
 		newHeight -= (  currentInstance.toolbarWrapperEl ? currentInstance.toolbarWrapperEl.getStyle('height').toInt() + currentInstance.toolbarWrapperEl.getStyle('border-top').toInt() : 0);
 
-		if (MochaUI.options.useEffects == false){
+		if (MochaUI.options.advancedEffects == false){
 			windowEl.setStyles({
 				'top': shadowOffset.y - shadowBlur,
 				'left': shadowOffset.x - shadowBlur
@@ -3742,7 +3790,7 @@ MochaUI.Desktop = new Class({
 		
 		var contentWrapperEl = currentInstance.contentWrapperEl;
 		
-		if (MochaUI.options.useEffects == false){
+		if (MochaUI.options.advancedEffects == false){
 			contentWrapperEl.setStyles({
 				'width':  contentWrapperEl.oldWidth,
 				'height': contentWrapperEl.oldHeight
@@ -4657,7 +4705,7 @@ function addResizeRight(element, min, max){
 					}
 				});
 			}				
-			MochaUI.rWidth();
+			MochaUI.rWidth(element.getParent());
 			if (Browser.Engine.gecko) {
 				$$('.panel').show(); // Fix for a rendering bug in FF			
 			}
@@ -4673,7 +4721,7 @@ function addResizeRight(element, min, max){
 			}						
 		}.bind(this),
 		onComplete: function(){
-			MochaUI.rWidth();
+			MochaUI.rWidth(element.getParent());
 			element.getElements('iframe').setStyle('visibility','visible');
 			element.getNext('.column').getElements('iframe').setStyle('visibility','visible');
 			currentInstance.fireEvent('onResize');
@@ -4713,10 +4761,10 @@ function addResizeLeft(element, min, max){
 			partner.getElements('iframe').setStyle('visibility','hidden');
 		}.bind(this),
 		onDrag: function(){
-			MochaUI.rWidth();
+			MochaUI.rWidth(element.getParent());
 		}.bind(this),
 		onComplete: function(){
-			MochaUI.rWidth();
+			MochaUI.rWidth(element.getParent());
 			$(element).getElements('iframe').setStyle('visibility','visible');
 			partner.getElements('iframe').setStyle('visibility','visible');
 			currentInstance.fireEvent('onResize');			
