@@ -84,7 +84,7 @@ MochaUI.extend({
 				
 				MochaUI.focusWindow(instance.windowEl);
 				
-				if (MochaUI.options.useEffects == false){
+				if (MochaUI.options.advancedEffects == false){
 					instance.windowEl.setStyles({
 						'top': top,
 						'left': left

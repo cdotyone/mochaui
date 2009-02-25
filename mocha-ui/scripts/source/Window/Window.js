@@ -406,7 +406,7 @@ MochaUI.Window = new Class({
 					MochaUI.centerWindow(this.windowEl);	
 				}
 				setTimeout(MochaUI.focusWindow.pass(this.windowEl, this),10);
-				if (MochaUI.options.useEffects == true) {
+				if (MochaUI.options.standardEffects == true) {
 					this.windowEl.shake();
 				}	
 			}
@@ -603,7 +603,7 @@ MochaUI.Window = new Class({
 		});
 		
 		// Create opacityMorph
-		if (MochaUI.options.useEffects == true){
+		if (MochaUI.options.advancedEffects == true){
 			// IE cannot handle both element opacity and VML alpha at the same time.
 			if (Browser.Engine.trident){
 				this.drawWindow(false);
@@ -625,7 +625,7 @@ MochaUI.Window = new Class({
 				$('modalFix').show();
 			}
 			$('modalOverlay').show();
-			if (MochaUI.options.useEffects == false){
+			if (MochaUI.options.advancedEffects == false){
 				$('modalOverlay').setStyle('opacity', .6);
 				this.windowEl.setStyles({
 					'zIndex': 11000,
@@ -650,7 +650,7 @@ MochaUI.Window = new Class({
 			this.windowEl.addClass('isFocused');
 			
 		}
-		else if (MochaUI.options.useEffects == false){
+		else if (MochaUI.options.advancedEffects == false){
 			this.windowEl.setStyle('opacity', 1);
 			setTimeout(MochaUI.focusWindow.pass(this.windowEl, this), 10);
 		}

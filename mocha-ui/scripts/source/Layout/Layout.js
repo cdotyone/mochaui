@@ -228,7 +228,7 @@ MochaUI.Desktop = new Class({
 		newHeight -= currentInstance.contentBorderEl.getStyle('border-bottom').toInt();
 		newHeight -= (  currentInstance.toolbarWrapperEl ? currentInstance.toolbarWrapperEl.getStyle('height').toInt() + currentInstance.toolbarWrapperEl.getStyle('border-top').toInt() : 0);
 
-		if (MochaUI.options.useEffects == false){
+		if (MochaUI.options.advancedEffects == false){
 			windowEl.setStyles({
 				'top': shadowOffset.y - shadowBlur,
 				'left': shadowOffset.x - shadowBlur
@@ -324,7 +324,7 @@ MochaUI.Desktop = new Class({
 		
 		var contentWrapperEl = currentInstance.contentWrapperEl;
 		
-		if (MochaUI.options.useEffects == false){
+		if (MochaUI.options.advancedEffects == false){
 			contentWrapperEl.setStyles({
 				'width':  contentWrapperEl.oldWidth,
 				'height': contentWrapperEl.oldHeight

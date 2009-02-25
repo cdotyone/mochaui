@@ -20,7 +20,8 @@ Note:
 
 var MochaUI = new Hash({
 	options: new Hash({
-		useEffects: false   // Toggles the majority of window fade and move effects.		
+		advancedEffects: false, // Effects that require fast browsers and are cpu intensive.
+		standardEffects: true   // Basic effects that tend to run smoothly.
 	}),	
 
 	ieSupport: 'excanvas',  // Makes it easier to switch between Excanvas and Moocanvas for testing	
@@ -338,7 +339,7 @@ var MochaUI = new Hash({
 			$('modalFix').hide();
 		}
 		
-		if (MochaUI.options.useEffects == false){			
+		if (MochaUI.options.advancedEffects == false){			
 			if (currentInstance.options.type == 'modal' || currentInstance.options.type == 'modal2'){
 				$('modalOverlay').setStyle('opacity', 0);
 			}			
@@ -575,7 +576,7 @@ var MochaUI = new Hash({
 		if (windowPosLeft < -currentInstance.options.shadowBlur){
 			windowPosLeft = -currentInstance.options.shadowBlur;
 		}
-		if (MochaUI.options.useEffects == true){
+		if (MochaUI.options.advancedEffects == true){
 			currentInstance.morph.start({
 				'top': windowPosTop,
 				'left': windowPosLeft
@@ -625,23 +626,46 @@ var MochaUI = new Hash({
 		Turn effects on and off
 
 	*/
-	toggleEffects: function(link){
-		if (MochaUI.options.useEffects == false) {
-			MochaUI.options.useEffects = true;
+	toggleAdvancedEffects: function(link){
+		if (MochaUI.options.advancedEffects == false) {
+			MochaUI.options.advancedEffects = true;
 			if (link){
-				this.toggleEffectsLink = new Element('div', {
+				this.toggleAdvancedEffectsLink = new Element('div', {
 					'class': 'check',
-					'id': 'toggleEffects_check'
+					'id': 'toggleAdvancedEffects_check'
 				}).inject(link);
 			}			
 		}
 		else {
-			MochaUI.options.useEffects = false;
-			if (this.toggleEffectsLink) {
-				this.toggleEffectsLink.destroy();
+			MochaUI.options.advancedEffects = false;
+			if (this.toggleAdvancedEffectsLink) {
+				this.toggleAdvancedEffectsLink.destroy();
 			}		
 		}
-	},		
+	},
+	/*
+	  	
+	Function: toggleStandardEffects
+		Turn standard effects on and off
+
+	*/
+	toggleStandardEffects: function(link){
+		if (MochaUI.options.standardEffects == false) {
+			MochaUI.options.standardEffects = true;
+			if (link){
+				this.toggleStandardEffectsLink = new Element('div', {
+					'class': 'check',
+					'id': 'toggleStandardEffects_check'
+				}).inject(link);
+			}			
+		}
+		else {
+			MochaUI.options.standardEffects = false;
+			if (this.toggleStandardEffectsLink) {
+				this.toggleStandardEffectsLink.destroy();
+			}		
+		}
+	},			
 	/*
 
 	Function: garbageCleanUp
@@ -863,7 +887,8 @@ Asset.extend({
 			var checker = (function(){
 				if (!$try(check)) return;
 				$clear(checker);
-				load.delay(250);
+				// Opera has difficulty with multiple scripts being injected into the head simultaneously. We need to give it time to catch up.
+				Browser.Engine.presto ? load.delay(500) : load();
 			}).periodical(50);
 		}	
 		return script.inject(doc.head);

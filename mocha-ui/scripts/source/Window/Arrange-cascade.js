@@ -60,7 +60,7 @@ MochaUI.extend({
 				x += leftOffset;
 				y += topOffset;
 
-				if (MochaUI.options.useEffects == false){
+				if (MochaUI.options.advancedEffects == false){
 					windowEl.setStyles({
 						'top': y,
 						'left': x
