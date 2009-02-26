@@ -47,8 +47,6 @@
 
    ----------------------------------------------------------------- */
 
-// MochaUI.Themes.init('default'); // If your initial theme requires theme-init.js, then uncomment this line.
-
 initializeWindows = function(){
 
 	// Examples

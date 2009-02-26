@@ -34,13 +34,9 @@ MochaUI.Themes = {
 	options: {
 		themesDir:      'themes',    // Path to themes directory
 		theme:          'default'
-	
-		// stylesheets:    []	
-		// currentStylesheets: [],
-		// stylesheetCount:    0,
+
 	},
-	themableWindowOptions: ['headerStartColor','headerStopColor','bodyBgColor','minimizeBgColor','minimizeColor','maximizeBgColor',
-		'maximizeColor','closeBgColor','closeColor','resizableColor'],	
+
 	/*
 	
 	Function: themeInit
@@ -49,25 +45,9 @@ MochaUI.Themes = {
 	*/	
 	init: function(newTheme){
 		this.newTheme = newTheme.toLowerCase();
-		if (!this.newTheme || this.newTheme == null) return;
-		
-		if ($('spinner')) $('spinner').show();		
-		
-		// Store the current options so we can compare them to currently open windows.
-		// Windows with different options than these will keep their settings since the defaults were overridden
-		// when these windows were created.
-		MochaUI.Windows.windowOptionsPrevious = new Hash($merge(MochaUI.Windows.windowOptions));
-		
-		// Run theme init file		
-		new Asset.javascript(this.options.themesDir + '/' + this.newTheme + '/theme-init.js');	
-						
-	},
-	changeTheme: function(){
-
-		if (this.newTheme == this.options.theme.toLowerCase()) {
-			this.updateThemeSettings();			
-			return;
-		}
+		if (!this.newTheme || this.newTheme == null || this.newTheme == this.options.theme.toLowerCase()) return;
+				
+		if ($('spinner')) $('spinner').show();
 
 		/* Add old style sheets to an array */
 		this.oldSheets = [];
@@ -129,75 +109,30 @@ MochaUI.Themes = {
 
 		this.newSheets.each( function(sheet){
 			sheet.inject(document.head);
-		});
+		});		
 
-		this.updateThemeSettings();
+		// Delay gives the stylesheets time to take effect. IE6 needs more delay.	
+		if (Browser.Engine.trident){
+			this.redraw.delay(1250, this);
+		}
+		else {
+			this.redraw.delay(250, this);
+		}	
 	
-	},
-	updateThemeSettings: function(){
-
-		$$('.replaced').removeClass('replaced');
-
-		// Reset original options
-		$extend(MochaUI.Windows.windowOptions, $merge(MochaUI.Windows.windowOptionsOriginal));
-
-		// Set new options defined in the theme init file
-		MochaUI.newWindowOptions.each( function(value, key){							
-			if (this.themableWindowOptions.contains(key)) {
-				eval('MochaUI.Windows.windowOptions.' + key + ' = value');
-			}
-		}.bind(this));
-		
-		this.redraw.delay(200, this); // Delay gives the stylesheets time to take effect.		
-
 	},	
 	redraw: function(){
+
+		$$('.replaced').removeClass('replaced');
 
 		// Redraw open windows		
 		$$('.mocha').each( function(element){			
 			var currentInstance = MochaUI.Windows.instances.get(element.id);
 			
 			// Convert CSS colors to Canvas colors.
-			currentInstance.setColors();		
-						
-			new Hash(currentInstance.options).each( function(value, key){
-				if (this.themableWindowOptions.contains(key)){
-
-					/*
-					if (eval('MochaUI.Windows.windowOptions.' + key + ' == null') && eval('MochaUI.Windows.windowOptionsOriginal.' + key + ' == null')){
-						eval('currentInstance.options.' + key + ' = null');
-						return;
-					}
-					*/					
-
-					if ($type(value) == 'array'){						
-						
-						// If value is not an rgb color
-						if (MochaUI.Windows.windowOptionsPrevious.get(key).rgbToHex() == null) return;
-						
-						// If the value was not specifically set when creating the window as different from the theme's default
-						// !!! This is a little buggy. If the value was specifically set when creating the window, but was the
-						// same as the previous themes, it will get reset in the new theme when it shouldn't.
-						// This problem could be resolved by using CSS rather than javascript options.
-						if (MochaUI.Windows.windowOptionsPrevious.get(key).rgbToHex().substring(1) != value.rgbToHex().substring(1)) return;
-						
-						eval('currentInstance.options.' + key + ' = MochaUI.Windows.windowOptions.' + key);						
-					}
-					
-					/*
-					else if ($type(value) == 'string'){
-						// If it is a hex color
-						if (MochaUI.Windows.windowOptionsPrevious.get(key).substring(1) != value.substring(1)) 
-							return;							
-						eval('currentInstance.options.' + key + ' = MochaUI.Windows.windowOptions.' + key);											
-					}
-					*/					
-				}								
-			}.bind(this));
-							
+			currentInstance.setColors();							
 			currentInstance.drawWindow();			
 			
-		}.bind(this));
+		});
 
 		// Reformat layout
 		if (MochaUI.Desktop.desktop){

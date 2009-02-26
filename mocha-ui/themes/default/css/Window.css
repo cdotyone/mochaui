@@ -20,7 +20,8 @@ Required by:
 
 .mocha {
 	display: none;
-	overflow: hidden;	
+	overflow: hidden;
+	background-color: #e5e5e5;	
 }
 
 .mocha.isFocused {	
@@ -31,10 +32,22 @@ Required by:
 	top: 0;
 	left: 0;	
 }
+
+/*
+
+	We get a little creative here in order to define a gradient in the CSS using a query
+	string appended to a background image.
 	
+	"from" is the top color of the gradient. "to" is the bottom color of the gradient.
+	
+	Both must be hex values without the leading # sign.
+  
+*/	
+
 .mochaTitlebar {
 	width: 100%;
-	overflow: hidden;	
+	overflow: hidden;
+	background: url(../images/spacer.gif?from=fafafa&to=e5e5e5); 
 }
 
 .mochaTitlebar h3 {
@@ -99,15 +112,15 @@ div.mochaToolbarWrapper.bottom {
 }
 
 .mocha .corner { /* Corner resize handles */
-	background: #f00;
 	width: 10px;
 	height: 10px;
+	background: #f00;	
 }
 
 .mocha .cornerSE { /* Bottom right resize handle */
-	background: #f00;
 	width: 20px;
 	height: 20px;
+	background: #fefefe; /* This is the color of the visible resize handle */	
 }
 
 .mochaCanvasHeader {
@@ -143,7 +156,7 @@ div.mochaToolbarWrapper.bottom {
 	1. Set the useCanvasControls window option to false.
 	2. If you use a different button size you may need to reposition the controls.
 	   Modify the controlsOffset window option.		
-	2. Add background images to each button.
+	2. Replcac the background-color with a background-image for each button.
 
 */
 .mochaMinimizeButton, .mochaMaximizeButton, .mochaCloseButton {
@@ -153,7 +166,8 @@ div.mochaToolbarWrapper.bottom {
 	font-size: 1px;	
 	cursor: pointer;
 	z-index: 4;
-	background: #f00;
+	color: #000;
+	background-color: #fff;
 	margin-left: 5px;
 }
 
@@ -196,10 +210,6 @@ div.mochaToolbarWrapper.bottom {
 
 /* Modals */
 
-.mochaTitlebar.replaced {
-	background-color: transparent !important;	
-}
-
 .modal2 {
 	border: 8px solid #fff;		
 }
@@ -211,24 +221,29 @@ div.mochaToolbarWrapper.bottom {
 /* Window Themes */
 
 #json01 .mochaTitlebar {
-	background-color: #e33;
+	background: #6dd2db;
 }
 
 #json02 .mochaTitlebar {
-	background-color: #33e;
+	background: #6db6db;
 }
 
 #json03 .mochaTitlebar {
-	background-color: #3e3;
+	background: #6d92db;
 }
 
-#json01 .mochaTitlebar h3, #json02 .mochaTitlebar h3, #json03 .mochaTitlebar h3 {
-	color: #ccc;
+.jsonExample .mochaTitlebar h3 {
+	color: #ddd;
 }	
 
-#json01.isFocused .mochaTitlebar h3, #json02.isFocused .mochaTitlebar h3, #json03.isFocused .mochaTitlebar h3 {
+/* This does not work in IE6. */
+.isFocused.jsonExample .mochaTitlebar h3 {
 	color: #fff;
 }
+
+#clock {
+	background: #fff;	
+}	
 
 .mocha.no-canvas {
 	background: #e5e5e5;
@@ -317,5 +332,11 @@ div.mochaToolbarWrapper.bottom {
 }
 
 * html #windowUnderlay { 
-	position: absolute;
+	position: absolute; 
+}
+
+/* The replaced class is used internally when converting CSS values to Canvas. These classes should not be removed. */
+
+.mocha.replaced, .mochaTitlebar.replaced, .mochaMinimizeButton.replaced, .mochaMaximizeButton.replaced, .mochaCloseButton.replaced {
+	background-color: transparent !important;
 }

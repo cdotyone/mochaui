@@ -1092,9 +1092,9 @@ MochaUI.Window = new Class({
 		}).inject(cache.titleBarEl);
 
 		if (options.icon != false){
-			cache.titleBarEl.setStyles({
-				'padding-left': 15,
-				'background': 'url(' + options.icon + ') 5px 5px no-repeat'
+			cache.titleEl.setStyles({
+				'padding-left': 25,
+				'background': 'url(' + options.icon + ') no-repeat'
 			});
 		}
 		
@@ -1205,34 +1205,25 @@ MochaUI.Window = new Class({
 		if (options.closable){
 			cache.closeButtonEl = new Element('div', {
 				'id': id + '_closeButton',
-				'class': 'mochaCloseButton',
+				'class': 'mochaCloseButton mochaWindowButton',
 				'title': 'Close'
 			}).inject(cache.controlsEl);
-			if (options.useCanvasControls == true){
-				cache.closeButtonEl.setStyle('background', 'none');
-			}
 		}
 
 		if (options.maximizable){
 			cache.maximizeButtonEl = new Element('div', {
 				'id': id + '_maximizeButton',
-				'class': 'mochaMaximizeButton',
+				'class': 'mochaMaximizeButton mochaWindowButton',
 				'title': 'Maximize'
 			}).inject(cache.controlsEl);
-			if (options.useCanvasControls == true){
-				cache.maximizeButtonEl.setStyle('background', 'none');
-			}
 		}
 
 		if (options.minimizable){
 			cache.minimizeButtonEl = new Element('div', {
 				'id': id + '_minimizeButton',
-				'class': 'mochaMinimizeButton',
+				'class': 'mochaMinimizeButton mochaWindowButton',
 				'title': 'Minimize'
 			}).inject(cache.controlsEl);
-			if (options.useCanvasControls == true){
-				cache.minimizeButtonEl.setStyle('background', 'none');
-			}
 		}
 
 		if (options.useSpinner == true && options.shape != 'gauge' && options.type != 'notification'){
@@ -1362,12 +1353,87 @@ MochaUI.Window = new Class({
 	  
 	*/	
 	setColors: function(){
+		
 		if (this.options.useCanvas == true) {
+
 			// Set TitlebarColor
-			if (this.titleBarEl.getStyle('background-color') !== '' && this.titleBarEl.getStyle('background-color') !== 'transparent') {			
+			var pattern = /\?(.*?)\)/;
+			if (this.titleBarEl.getStyle('backgroundImage') != 'none'){
+				var gradient = this.titleBarEl.getStyle('backgroundImage');								
+				gradient = gradient.match(pattern)[1];
+				gradient = gradient.parseQueryString();
+				var gradientFrom = gradient.from; 
+				var gradientTo = gradient.to.replace(/\"/, ''); // IE7 was adding a quotation mark in. No idea why.						
+				
+				this.options.headerStartColor = new Color(gradientFrom);
+				this.options.headerStopColor = new Color(gradientTo);
+				this.titleBarEl.addClass('replaced');
+			}			
+			else if (this.titleBarEl.getStyle('background-color') !== '' && this.titleBarEl.getStyle('background-color') !== 'transparent') {			
 				this.options.headerStartColor = new Color(this.titleBarEl.getStyle('background-color')).mix('#fff', 20);			
 				this.options.headerStopColor = new Color(this.titleBarEl.getStyle('background-color')).mix('#000', 20);
-				this.titleBarEl.addClass('replaced');		
+				this.titleBarEl.addClass('replaced');
+			}
+			
+			// Set BodyBGColor
+			if (this.windowEl.getStyle('background-color') !== '' && this.windowEl.getStyle('background-color') !== 'transparent') {			
+				this.options.bodyBgColor = new Color(this.windowEl.getStyle('background-color'));
+				this.windowEl.addClass('replaced');		
+			}
+			
+			// Set resizableColor, the color of the SE corner resize handle			
+			if (this.options.resizable && this.se.getStyle('background-color') !== '' && this.se.getStyle('background-color') !== 'transparent') {			
+				this.options.resizableColor = new Color(this.se.getStyle('background-color'));
+				this.se.addClass('replaced');		
+			}									
+
+		}
+		
+		if (this.options.useCanvasControls == true){
+
+			if (this.minimizeButtonEl){
+
+				// Set Minimize Button Foreground Color
+				if (this.minimizeButtonEl.getStyle('color') !== '' && this.minimizeButtonEl.getStyle('color') !== 'transparent') {			
+					this.options.minimizeColor = new Color(this.minimizeButtonEl.getStyle('color'));					
+				}
+
+				// Set Minimize Button Background Color
+				if (this.minimizeButtonEl.getStyle('background-color') !== '' && this.minimizeButtonEl.getStyle('background-color') !== 'transparent') {			
+					this.options.minimizeBgColor = new Color(this.minimizeButtonEl.getStyle('background-color'));
+					this.minimizeButtonEl.addClass('replaced');
+				}				
+				
+			}
+						
+			if (this.maximizeButtonEl){
+
+				// Set Maximize Button Foreground Color
+				if (this.maximizeButtonEl.getStyle('color') !== '' && this.maximizeButtonEl.getStyle('color') !== 'transparent') {			
+					this.options.maximizeColor = new Color(this.maximizeButtonEl.getStyle('color'));					
+				}
+			
+				// Set Maximize Button Background Color
+				if (this.maximizeButtonEl.getStyle('background-color') !== '' && this.maximizeButtonEl.getStyle('background-color') !== 'transparent') {			
+					this.options.maximizeBgColor = new Color(this.maximizeButtonEl.getStyle('background-color'));
+					this.maximizeButtonEl.addClass('replaced');
+				}
+			
+			}
+			
+			if (this.closeButtonEl){
+
+				// Set Close Button Foreground Color
+				if (this.closeButtonEl.getStyle('color') !== '' && this.closeButtonEl.getStyle('color') !== 'transparent') {			
+					this.options.closeColor = new Color(this.closeButtonEl.getStyle('color'));					
+				}
+			
+				// Set Close Button Background Color
+				if (this.closeButtonEl.getStyle('background-color') !== '' && this.closeButtonEl.getStyle('background-color') !== 'transparent') {			
+					this.options.closeBgColor = new Color(this.closeButtonEl.getStyle('background-color'));
+					this.closeButtonEl.addClass('replaced');
+				}
+									
 			}
 		}
 	},

@@ -3,36 +3,54 @@
 
 	<p>Themes are new and experimental. As they are developed their implementation may change a great deal, though their file structure will probably remain basically the same.</p>
 
-	<p>Themes go in individual folders in the themes directory. Each theme needs an init file, css folder, and images folder.</p>
+	<p>Themes go in individual folders in the themes directory. Each theme needs a css folder, and images folder.</p>
 
 	<p>The CSS has been separated into style sheets that correspond with the various JavaScript files. Layout.css goes with Layout.js for instance. The style sheets that were in the css folder are now in themes/default/css/.</p>
 	
-	<p>If you want to be able to dynamically change themes (without a screen refresh), style sheet links in the page headers should follow the convention below. Each style sheet should have an id that is "css" + the file name minus the file extension. So the id for "Core.css" is "cssCore". There must then be a Core.css file in every theme's css folder.</p>
+	<p>If you want to be able to dynamically change themes (without a screen refresh and rewriting the links in the header with backend code), then the following two conventions are required.</p>
+	
+	<p>1. Each theme needs to have the same number of stylesheets and corresponding names. So if Theme 1 has a Layout.css, Themes 2 and 3 also need to have a Layout.css.</p>
+	
+	<p>2. Style sheet links in the page headers should follow the convention below. Each style sheet should have an id that is "css" + the file name minus the file extension. So the id for "Core.css" is "cssCore". There must then be a Core.css file in every theme's css folder.</p>
 	
 	<pre>&lt;link rel="stylesheet" type="text/css" id="cssCore" href="themes/default/css/Core.css" /&gt;</pre>
 	
-	<p>In the theme-init.file you can currently change the following Window options:</p>
-	<ul>
-		<li>headerStartColor</li>
-		<li>headerStopColor</li>
-		<li>bodyBgColor</li>
-		<li>minimizeBgColor</li>
-		<li>minimizeColor</li>
-		<li>maximizeBgColor</li>
-		<li>maximizeColor</li>
-		<li>closeBgColor</li>
-		<li>closeColor</li>
-		<li>resizableColor</li>		
-	</ul>
-	
-	<p>You can change the default theme in themes.js. You can change the themes directory path there as well.</p>		
+	<p>You can change the themes directory path in Themes.js.</p>	
 
-	<p>If you don't wish to use Themes, remove the following line from mocha-init.js:</p>
-	
-	<pre>MochaUI.themeInit();</pre>
+	<h3>Color Options</h3>
 
 	<p>The contentBgColor option has been removed from the Window Class, and the panelBackground option has been removed from the Panel Class. You should now use CSS for changing these colors. The addClass option in both the Window Class and Panel Class is helpful when styling some windows or panels differently than others.</p>  
 
+	<p>As a matter of fact, all of the color options in Window.js are being deprecated. They should now be defined in the CSS.</p>
+	
+	<ul>
+		<li><strong>headerStartColor: </strong>.mochaTitlebar background-color (See notes below.)</li>
+		<li><strong>headerStopColor: </strong>.mochaTitlebar background-color (See notes below.)</li>
+		<li><strong>bodyBgColor: </strong>.mocha background-color</li>
+		<li><strong>minimizeColor: </strong>.mochaMinimizeButton color</li>
+		<li><strong>minimizeBgColor: </strong>.mochaMinimizeButton background-color</li>
+		<li><strong>maximizeColor: </strong>.mochaMaximizeButton color</li>				
+		<li><strong>maximizeBgColor: </strong>.mochaMaximizeButton background-color</li>
+		<li><strong>closeColor: </strong>.mochaCloseButton color</li>		
+		<li><strong>closeBgColor: </strong>.mochaCloseButton background-color</li>
+		<li><strong>resizableColor: </strong>.mocha .cornerSE background-color</li>
+	</ul>
+	
+	<p>If you set the background color of .mochaTitlebar, a gradient will be created from that value. The gradient with start with the value you gave plus 20% white, and end with the value you assigned plus 20% black. So the color in the middle of the gradient should be the color you defined.</p>	
+	
+	<p>If you want more control over the start and end colors of the gradient then you will need to set the background-image of .mochaTitlebar in the following way. Here we got a bit creative using a query string appended to a background image.</p>
+		
+	<pre>background: url(../images/spacer.gif?from=fafafa&amp;to=e5e5e5);</pre>
+	
+	<p>"from" is the top color of the gradient. "to" is the bottom color of the gradient. Both must be hex values without the leading # sign.</p>
+	
+	<p>To style some windows or panels differntly than others using the addClass option. The example windows created from with JSON for instance have been given the class, "jsonExample". We can change their title bar color like so:</p>	
+	
+<pre>.jsonExample .mochaTitlebar {
+	background-color: #6db6db;
+}		
+</pre>	
+	
 	<h3>Split Panels and Windows</h3>
 	<p>Split panels and windows are new as well, though they should be production ready. If you find any bugs with them let me know.</p>
 </div>

@@ -21,6 +21,7 @@ Required by:
 .mocha {
 	display: none;
 	overflow: hidden;	
+	background-color: #474747;	
 }
 
 .mocha.isFocused {	
@@ -34,7 +35,8 @@ Required by:
 	
 .mochaTitlebar {
 	width: 100%;
-	overflow: hidden;	
+	overflow: hidden;
+	background-color: #4d4d4d;	
 }
 
 .mochaTitlebar h3 {
@@ -43,7 +45,7 @@ Required by:
 	font-weight: bold;
 	margin: 5px 10px 4px 12px;
 	padding: 0;
-	color: #ccc;
+	color: #ddd;
 }
 
 .mocha.isFocused .mochaTitlebar h3 {
@@ -99,15 +101,15 @@ div.mochaToolbarWrapper.bottom {
 }
 
 .mocha .corner { /* Corner resize handles */
-	background: #f00;
 	width: 10px;
 	height: 10px;
+	background: #f00;	
 }
 
 .mocha .cornerSE { /* Bottom right resize handle */
-	background: #f00;
 	width: 20px;
 	height: 20px;
+	background: #646464; /* This is the color of the visible resize handle */	
 }
 
 .mochaCanvasHeader {
@@ -153,7 +155,8 @@ div.mochaToolbarWrapper.bottom {
 	font-size: 1px;	
 	cursor: pointer;
 	z-index: 4;
-	background: #f00;
+	color: #fafafa;
+	background: #646464;
 	margin-left: 5px;
 }
 
@@ -206,21 +209,14 @@ div.mochaToolbarWrapper.bottom {
 	
 /* Window Themes */
 
-.mochaTitlebar.replaced {
-	background-color: transparent !important;	
+.jsonExample .mochaTitlebar {
+	background-color: #6db6db;
+}
+
+.jsonExample .mochaWindowButton {
+	color: #000;
+	background-color: #fff;			
 }	
-
-#json01 .mochaTitlebar {
-	background-color: #6db6db;
-}
-
-#json02 .mochaTitlebar {
-	background-color: #6db6db;
-}
-
-#json03 .mochaTitlebar {
-	background-color: #6db6db;
-}
 
 .mocha.no-canvas {
 	background: #4c4c4c;	
@@ -309,4 +305,10 @@ div.mochaToolbarWrapper.bottom {
 
 * html #windowUnderlay { 
 	position: absolute;
+}
+
+/* The replaced class is used internally when converting CSS values to Canvas. These classes should not be removed. */
+
+.mocha.replaced, .mochaTitlebar.replaced, .mochaMinimizeButton.replaced, .mochaMaximizeButton.replaced, .mochaCloseButton.replaced {
+	background-color: transparent !important;
 }
