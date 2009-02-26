@@ -196,6 +196,10 @@ div.mochaToolbarWrapper.bottom {
 
 /* Modals */
 
+.mochaTitlebar.replaced {
+	background-color: transparent !important;	
+}
+
 .modal2 {
 	border: 8px solid #fff;		
 }
@@ -205,6 +209,26 @@ div.mochaToolbarWrapper.bottom {
 }
 	
 /* Window Themes */
+
+#json01 .mochaTitlebar {
+	background-color: #e33;
+}
+
+#json02 .mochaTitlebar {
+	background-color: #33e;
+}
+
+#json03 .mochaTitlebar {
+	background-color: #3e3;
+}
+
+#json01 .mochaTitlebar h3, #json02 .mochaTitlebar h3, #json03 .mochaTitlebar h3 {
+	color: #ccc;
+}	
+
+#json01.isFocused .mochaTitlebar h3, #json02.isFocused .mochaTitlebar h3, #json03.isFocused .mochaTitlebar h3 {
+	color: #fff;
+}
 
 .mocha.no-canvas {
 	background: #e5e5e5;

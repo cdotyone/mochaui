@@ -136,6 +136,8 @@ MochaUI.Themes = {
 	},
 	updateThemeSettings: function(){
 
+		$$('.replaced').removeClass('replaced');
+
 		// Reset original options
 		$extend(MochaUI.Windows.windowOptions, $merge(MochaUI.Windows.windowOptionsOriginal));
 
@@ -153,24 +155,33 @@ MochaUI.Themes = {
 
 		// Redraw open windows		
 		$$('.mocha').each( function(element){			
-			var currentInstance = MochaUI.Windows.instances.get(element.id);		
+			var currentInstance = MochaUI.Windows.instances.get(element.id);
+			
+			// Convert CSS colors to Canvas colors.
+			currentInstance.setColors();		
 						
-			new Hash(currentInstance.options).each( function(value, key){							
-				if (this.themableWindowOptions.contains(key)){					
+			new Hash(currentInstance.options).each( function(value, key){
+				if (this.themableWindowOptions.contains(key)){
 
 					/*
 					if (eval('MochaUI.Windows.windowOptions.' + key + ' == null') && eval('MochaUI.Windows.windowOptionsOriginal.' + key + ' == null')){
 						eval('currentInstance.options.' + key + ' = null');
-						return;	
+						return;
 					}
 					*/					
 
 					if ($type(value) == 'array'){						
-						// If it is an rgb color
+						
+						// If value is not an rgb color
 						if (MochaUI.Windows.windowOptionsPrevious.get(key).rgbToHex() == null) return;
-						if (MochaUI.Windows.windowOptionsPrevious.get(key).rgbToHex().substring(1) != value.rgbToHex().substring(1)) 
-							return;
-						eval('currentInstance.options.' + key + ' = MochaUI.Windows.windowOptions.' + key);
+						
+						// If the value was not specifically set when creating the window as different from the theme's default
+						// !!! This is a little buggy. If the value was specifically set when creating the window, but was the
+						// same as the previous themes, it will get reset in the new theme when it shouldn't.
+						// This problem could be resolved by using CSS rather than javascript options.
+						if (MochaUI.Windows.windowOptionsPrevious.get(key).rgbToHex().substring(1) != value.rgbToHex().substring(1)) return;
+						
+						eval('currentInstance.options.' + key + ' = MochaUI.Windows.windowOptions.' + key);						
 					}
 					
 					/*

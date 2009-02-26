@@ -6,8 +6,10 @@
 		"content":"First window",
 		"maximizable": false,
 		"resizable": false,
-		"headerStartColor": [230, 160, 160],
-		"headerStoptColor": [237, 237, 237],
+		"minimizeBgColor": [252, 252, 252],
+		"minimizeColor": [1, 1, 1],
+		"closeBgColor": [252, 252, 252],
+		"closeColor": [1, 1, 1],
 		"x": 250,
 		"y": 135
 	},
@@ -17,8 +19,10 @@
 		"content":"Second window",
 		"maximizable": false,
 		"resizable": false,
-		"headerStartColor": [230, 190, 160],
-		"headerStoptColor": [237, 237, 237],	
+		"minimizeBgColor": [252, 252, 252],
+		"minimizeColor": [1, 1, 1],
+		"closeBgColor": [252, 252, 252],
+		"closeColor": [1, 1, 1],	
 		"x": 310,
 		"y": 210
 	},
@@ -28,8 +32,10 @@
 		"content":"Third",
 		"maximizable": false,
 		"resizable": false,
-		"headerStartColor": [160, 160, 230],
-		"headerStoptColor": [237, 237, 237],
+		"minimizeBgColor": [252, 252, 252],
+		"minimizeColor": [1, 1, 1],
+		"closeBgColor": [252, 252, 252],
+		"closeColor": [1, 1, 1],		
 		"x": 370,
 		"y": 285
 	}

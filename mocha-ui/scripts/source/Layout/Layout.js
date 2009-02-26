@@ -64,7 +64,7 @@ MochaUI.Desktop = new Class({
 		}		
 	
 		// This is run on dock initialize so no need to do it twice.
-		if (!MochaUI.Dock.dockWrapper){
+		if (!MochaUI.Dock){
 			this.setDesktopSize();
 		}
 		this.menuInitialize();		

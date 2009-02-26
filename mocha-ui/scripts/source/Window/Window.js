@@ -513,7 +513,10 @@ MochaUI.Window = new Class({
 
 		// Inject window into DOM
 		this.windowEl.inject(options.container);
-
+		
+		// Convert CSS colors to Canvas colors.
+		this.setColors();
+		
 		if (options.type != 'notification'){
 			this.setMochaControlsWidth();
 		}		
@@ -555,7 +558,7 @@ MochaUI.Window = new Class({
 				'onContentLoaded': options.toolbar2Onload
 			});
 		}
-		        
+				        
 		this.drawWindow();
 				
 		// Attach events to the window
@@ -1354,6 +1357,21 @@ MochaUI.Window = new Class({
 		
 	},
 	/*
+	
+	Convert CSS colors to Canvas colors. 
+	  
+	*/	
+	setColors: function(){
+		if (this.options.useCanvas == true) {
+			// Set TitlebarColor
+			if (this.titleBarEl.getStyle('background-color') !== '' && this.titleBarEl.getStyle('background-color') !== 'transparent') {			
+				this.options.headerStartColor = new Color(this.titleBarEl.getStyle('background-color')).mix('#fff', 20);			
+				this.options.headerStopColor = new Color(this.titleBarEl.getStyle('background-color')).mix('#000', 20);
+				this.titleBarEl.addClass('replaced');		
+			}
+		}
+	},
+	/*
 
 	Internal function: drawWindow
 		This is where we create the canvas GUI	
@@ -1645,14 +1663,14 @@ MochaUI.Window = new Class({
 		if (this.options.type != 'notification'){
 		// Window header.
 			this.topRoundedRect(
-				ctx,                            // context
-				shadowBlur - shadowOffset.x,    // x
-				shadowBlur - shadowOffset.y,    // y
-				width - shadowBlur2x,           // width
-				options.headerHeight,      // height
-				cornerRadius,                   // corner radius
-				options.headerStartColor,  // Header gradient's top color
-				options.headerStopColor    // Header gradient's bottom color
+				ctx,                          // context
+				shadowBlur - shadowOffset.x,  // x
+				shadowBlur - shadowOffset.y,  // y
+				width - shadowBlur2x,         // width
+				options.headerHeight,         // height
+				cornerRadius,                 // corner radius
+				options.headerStartColor,     // Header gradient's top color
+				options.headerStopColor       // Header gradient's bottom color
 			);
 		}	
 	},

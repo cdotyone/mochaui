@@ -206,13 +206,29 @@ div.mochaToolbarWrapper.bottom {
 	
 /* Window Themes */
 
+.mochaTitlebar.replaced {
+	background-color: transparent !important;	
+}	
+
+#json01 .mochaTitlebar {
+	background-color: #6db6db;
+}
+
+#json02 .mochaTitlebar {
+	background-color: #6db6db;
+}
+
+#json03 .mochaTitlebar {
+	background-color: #6db6db;
+}
+
 .mocha.no-canvas {
-	background: #e5e5e5;
-	border: 1px solid #555;	
+	background: #4c4c4c;	
+	border: 1px solid #666;	
 }
 
 .mocha.no-canvas .mochaTitlebar {
-	background: #e5e5e5;	
+	background: #4c4c4c;	
 }
 
 .mocha.transparent .mochaTitlebar h3 {
