@@ -734,16 +734,15 @@ MochaUI.Window = new Class({
 				e = new Event(e).stop();
 			}.bind(this));
 			
-			this.titleBarEl.addEvent('mousedown', function(e) {
-				if (Browser.Engine.trident) {
-					this.titleEl.setCapture();
-				}
-			}.bind(this));
-			this.titleBarEl.addEvent('mouseup', function(e) {
-				if (Browser.Engine.trident) {
-					this.titleEl.releaseCapture();
-				}
-			}.bind(this));
+			if (Browser.Engine.trident) {
+				this.titleBarEl.addEvent('mousedown', function(e) {
+					this.titleEl.setCapture();				
+				}.bind(this));
+				this.titleBarEl.addEvent('mouseup', function(e) {
+						this.titleEl.releaseCapture();
+				}.bind(this));
+			}
+	
 			this.titleBarEl.addEvent('dblclick', function(e) {
 				e = new Event(e).stop();
 				MochaUI.collapseToggle(this.windowEl);
@@ -1871,51 +1870,47 @@ MochaUI.Window = new Class({
 	maximizebutton: function(ctx, x, y, rgbBg, aBg, rgb, a){
 		// Circle
 		ctx.beginPath();
-		ctx.moveTo(x, y);
 		ctx.arc(x, y, 7, 0, Math.PI*2, true);
 		ctx.fillStyle = 'rgba(' + rgbBg.join(',') + ',' + aBg + ')';
 		ctx.fill();
 		// X sign
 		ctx.strokeStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
+		ctx.lineWidth = 2;	
 		ctx.beginPath();
-		ctx.moveTo(x, y - 4);
-		ctx.lineTo(x, y + 4);
-		ctx.stroke();
-		ctx.beginPath();
-		ctx.moveTo(x - 4, y);
-		ctx.lineTo(x + 4, y);
+		ctx.moveTo(x, y - 3.25);
+		ctx.lineTo(x, y + 3.25);
+		ctx.moveTo(x - 3.25, y);
+		ctx.lineTo(x + 3.25, y);
 		ctx.stroke();
 	},
 	closebutton: function(ctx, x, y, rgbBg, aBg, rgb, a){
 		// Circle
 		ctx.beginPath();
-		ctx.moveTo(x, y);
 		ctx.arc(x, y, 7, 0, Math.PI*2, true);
 		ctx.fillStyle = 'rgba(' + rgbBg.join(',') + ',' + aBg + ')';
 		ctx.fill();
 		// Plus sign
 		ctx.strokeStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
+		ctx.lineWidth = 2;		
 		ctx.beginPath();
-		ctx.moveTo(x - 3, y - 3);
-		ctx.lineTo(x + 3, y + 3);
-		ctx.stroke();
-		ctx.beginPath();
-		ctx.moveTo(x + 3, y - 3);
-		ctx.lineTo(x - 3, y + 3);
+		ctx.moveTo(x - 2.75, y - 2.75);
+		ctx.lineTo(x + 2.75, y + 2.75);
+		ctx.moveTo(x + 2.75, y - 2.75);
+		ctx.lineTo(x - 2.75, y + 2.75);
 		ctx.stroke();
 	},
 	minimizebutton: function(ctx, x, y, rgbBg, aBg, rgb, a){
 		// Circle
 		ctx.beginPath();
-		ctx.moveTo(x,y);
 		ctx.arc(x,y,7,0,Math.PI*2,true);
 		ctx.fillStyle = 'rgba(' + rgbBg.join(',') + ',' + aBg + ')';
 		ctx.fill();
 		// Minus sign
 		ctx.strokeStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
+		ctx.lineWidth = 2;		
 		ctx.beginPath();
-		ctx.moveTo(x - 4, y);
-		ctx.lineTo(x + 4, y);
+		ctx.moveTo(x - 3.25, y);
+		ctx.lineTo(x + 3.25, y);
 		ctx.stroke();
 	},
 	/*

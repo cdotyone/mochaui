@@ -152,11 +152,11 @@ div.mochaToolbarWrapper.bottom {
 	float: right;
 	width: 14px;
 	height: 14px;
-	font-size: 1px;	
+	font-size: 1px;
 	cursor: pointer;
 	z-index: 4;
 	color: #fafafa;
-	background: #646464;
+	background: #707070;
 	margin-left: 5px;
 }
 
@@ -214,7 +214,7 @@ div.mochaToolbarWrapper.bottom {
 }
 
 .jsonExample .mochaWindowButton {
-	color: #000;
+	color: #666;
 	background-color: #fff;			
 }	
 

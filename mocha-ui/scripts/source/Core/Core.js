@@ -543,7 +543,6 @@ var MochaUI = new Hash({
 	},
 	circle: function(ctx, x, y, diameter, rgb, a){
 		ctx.beginPath();
-		ctx.moveTo(x, y);
 		ctx.arc(x, y, diameter, 0, Math.PI*2, true);
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
 		ctx.fill();
