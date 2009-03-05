@@ -263,6 +263,10 @@ div.mochaToolbarWrapper.bottom {
 	background: transparent;	
 }
 
+.mocha.notification {
+	background: #CEDFF2;	
+}	
+
 .mocha.notification .mochaTitlebar {
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */		
 	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0); /* IE6 and 7*/	

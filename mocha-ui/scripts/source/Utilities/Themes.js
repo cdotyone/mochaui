@@ -17,12 +17,12 @@ Notes:
 	
 Syntax:
 	(start code)
-	new MochaUI.Themes.themeInit(newTheme);
+	new MochaUI.Themes.init(newTheme);
 	(end)
 	
 Example:
 	(start code)
-	new MochaUI.Themes.themeInit('charcoal');
+	new MochaUI.Themes.init('charcoal');
 	(end)		
 
 Arguments:

@@ -943,7 +943,7 @@ window.addEvent('load', function(){ //using load instead of domready for IE8
 
 	MochaUI.Modal = new MochaUI.Modal();
 
-	initializeWindows();	
+	initializeWindows();
 
 });
 
