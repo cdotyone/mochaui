@@ -68,21 +68,21 @@ MochaUI.extend({
 		}		
 	},
 	loadWorkspace2: function(workspaceWindows){		
-		workspaceWindows.each(function(instance){
-			windowFunction = eval('MochaUI.' + instance.id + 'Window');
+		workspaceWindows.each(function(workspaceWindow){				
+			windowFunction = eval('MochaUI.' + workspaceWindow.id + 'Window');
 			if (windowFunction){
-				eval('MochaUI.' + instance.id + 'Window({width:'+ instance.width +',height:' + instance.height + '});');
-				$(instance.id).setStyles({
-					'top': instance.top,
-					'left': instance.left
+				eval('MochaUI.' + workspaceWindow.id + 'Window({width:'+ workspaceWindow.width +',height:' + workspaceWindow.height + '});');
+				var windowEl = $(workspaceWindow.id);
+				windowEl.setStyles({
+					'top': workspaceWindow.top,
+					'left': workspaceWindow.left
 				});
-				var currentInstance = MochaUI.Windows.instances.get(instance.id);				
-				var contentWrapperEl = currentInstance.contentWrapperEl;
-				contentWrapperEl.setStyles({
-					'width': instance.width,
-					'height': instance.height
+				var instance = windowEl.retrieve('instance');
+				instance.contentWrapperEl.setStyles({
+					'width': workspaceWindow.width,
+					'height': workspaceWindow.height
 				});
-				currentInstance.drawWindow();
+				instance.drawWindow();
 			}
 		}.bind(this));
 		this.loadingWorkspace = false;

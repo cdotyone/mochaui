@@ -126,11 +126,11 @@ MochaUI.Themes = {
 
 		// Redraw open windows		
 		$$('.mocha').each( function(element){			
-			var currentInstance = MochaUI.Windows.instances.get(element.id);
+			var instance = element.retrieve('instance');
 			
 			// Convert CSS colors to Canvas colors.
-			currentInstance.setColors();							
-			currentInstance.drawWindow();			
+			instance.setColors();							
+			instance.drawWindow();			
 			
 		});
 

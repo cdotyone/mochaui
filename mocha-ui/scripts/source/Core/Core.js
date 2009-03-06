@@ -92,31 +92,29 @@ var MochaUI = new Hash({
 		var element = options.element;
 
 		if (MochaUI.Windows.instances.get(element.id)){
-			var recipient = 'window';
-			var currentInstance = MochaUI.Windows.instances.get(element.id);
-			if (options.title) currentInstance.titleEl.set('html', options.title);			
+			var recipient = 'window';		
 		}
 		else {
-			var recipient = 'panel';
-			var currentInstance = MochaUI.Panels.instances.get(element.id);
-			if (options.title) currentInstance.titleEl.set('html', options.title);			
+			var recipient = 'panel';		
 		}
+		var instance = element.retrieve('instance');
+		if (options.title) instance.titleEl.set('html', options.title);			
 
-		var contentEl = currentInstance.contentEl;
-		var contentContainer = options.childElement != null ? options.childElement : currentInstance.contentEl;		
-		var loadMethod = options.loadMethod != null ? options.loadMethod : currentInstance.options.loadMethod;
+		var contentEl = instance.contentEl;
+		var contentContainer = options.childElement != null ? options.childElement : instance.contentEl;		
+		var loadMethod = options.loadMethod != null ? options.loadMethod : instance.options.loadMethod;
 		var method = options.method != null ? options.method : "get";
 				
 		// Set scrollbars if loading content in main content container.
 		// Always use 'hidden' for iframe windows
-		var scrollbars = options.scrollbars || currentInstance.options.scrollbars;
-		if (contentContainer == currentInstance.contentEl) {
-			currentInstance.contentWrapperEl.setStyles({
+		var scrollbars = options.scrollbars || instance.options.scrollbars;
+		if (contentContainer == instance.contentEl) {
+			instance.contentWrapperEl.setStyles({
 				'overflow': scrollbars != false && loadMethod != 'iframe' ? 'auto' : 'hidden'
 			});
 		}		
 
-		var contentWrapperEl = currentInstance.contentWrapperEl;
+		var contentWrapperEl = instance.contentWrapperEl;
 		
 		if (options.padding != null) {
 			contentEl.setStyles({
@@ -136,7 +134,7 @@ var MochaUI = new Hash({
 		}
 		
 		var onContentLoaded = function(){
-			options.onContentLoaded ? options.onContentLoaded() : currentInstance.fireEvent('onContentLoaded', element);
+			options.onContentLoaded ? options.onContentLoaded() : instance.fireEvent('onContentLoaded', element);
 		};		
 				
 		// Load new content.
@@ -148,11 +146,11 @@ var MochaUI = new Hash({
 					update: contentContainer, // Using update for some reason preserves whitespace in IE6 and 7. It is fine in IE8.
 					method: method,
 					data: data, 
-					evalScripts: currentInstance.options.evalScripts,
-					evalResponse: currentInstance.options.evalResponse,				
+					evalScripts: instance.options.evalScripts,
+					evalResponse: instance.options.evalResponse,				
 					onRequest: function(){
 						if (recipient == 'window' && contentContainer == contentEl){
-							currentInstance.showSpinner();
+							instance.showSpinner();
 						}
 						else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')){
 							$('spinner').show();	
@@ -166,7 +164,7 @@ var MochaUI = new Hash({
 							if (!error) error = 'Unknown';							 
 							contentContainer.set('html', '<h3>Error: ' + error[1] + '</h3>');					
 
-							if (recipient == 'window') currentInstance.hideSpinner();						
+							if (recipient == 'window') instance.hideSpinner();						
 							else if (recipient == 'panel' && $('spinner')) $('spinner').hide();
 							MochaUI.nextInQueue();							
 						}
@@ -176,7 +174,7 @@ var MochaUI = new Hash({
 					}.bind(this),
 					onSuccess: function(){
 						if (contentContainer == contentEl){
-							if (recipient == 'window') currentInstance.hideSpinner();							
+							if (recipient == 'window') instance.hideSpinner();							
 							else if (recipient == 'panel' && $('spinner')) $('spinner').hide();							
 						}
 						Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();						
@@ -186,12 +184,12 @@ var MochaUI = new Hash({
 				}).send();
 				break;
 			case 'iframe': // May be able to streamline this if the iframe already exists.
-				if ( currentInstance.options.contentURL == '' || contentContainer != contentEl) {
+				if ( instance.options.contentURL == '' || contentContainer != contentEl) {
 					break;
 				}
-				currentInstance.iframeEl = new Element('iframe', {
-					'id': currentInstance.options.id + '_iframe',
-					'name':  currentInstance.options.id + '_iframe',
+				instance.iframeEl = new Element('iframe', {
+					'id': instance.options.id + '_iframe',
+					'name':  instance.options.id + '_iframe',
 					'class': 'mochaIframe',
 					'src': options.url,
 					'marginwidth':  0,
@@ -200,18 +198,18 @@ var MochaUI = new Hash({
 					'scrolling':    'auto',
 					'styles': {
 						'height': contentWrapperEl.offsetHeight - contentWrapperEl.getStyle('border-top').toInt() - contentWrapperEl.getStyle('border-bottom').toInt(),
-						'width': currentInstance.panelEl ? contentWrapperEl.offsetWidth - contentWrapperEl.getStyle('border-left').toInt() - contentWrapperEl.getStyle('border-right').toInt() : '100%'	
+						'width': instance.panelEl ? contentWrapperEl.offsetWidth - contentWrapperEl.getStyle('border-left').toInt() - contentWrapperEl.getStyle('border-right').toInt() : '100%'	
 					}
 				}).injectInside(contentEl);
 
 				// Add onload event to iframe so we can hide the spinner and run onContentLoaded()
-				currentInstance.iframeEl.addEvent('load', function(e) {
-					if (recipient == 'window') currentInstance.hideSpinner();					
+				instance.iframeEl.addEvent('load', function(e) {
+					if (recipient == 'window') instance.hideSpinner();					
 					else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) $('spinner').hide();
 					Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();
 					MochaUI.nextInQueue();	
 				}.bind(this));
-				if (recipient == 'window') currentInstance.showSpinner();				
+				if (recipient == 'window') instance.showSpinner();				
 				else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) $('spinner').show();				
 				break;
 			case 'html':
@@ -224,7 +222,7 @@ var MochaUI = new Hash({
 					contentContainer.set('html', options.content);
 				}				
 				if (contentContainer == contentEl){
-					if (recipient == 'window') currentInstance.hideSpinner();					
+					if (recipient == 'window') instance.hideSpinner();					
 					else if (recipient == 'panel' && $('spinner')) $('spinner').hide();									
 				}
 				Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();				

@@ -33,8 +33,8 @@ MochaUI.extend({
 	*/	
 	minimizeAll: function() {
 		$$('.mocha').each(function(windowEl){
-		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
-			if (!currentInstance.isMinimized && currentInstance.options.minimizable == true){
+			var instance = windowEl.retrieve('instance');
+			if (!instance.isMinimized && instance.options.minimizable == true){
 				MochaUI.Dock.minimizeWindow(windowEl);
 			}
 		}.bind(this));
@@ -242,10 +242,10 @@ MochaUI.Dock = new Class({
 	},
 	createDockTab: function(windowEl){
 
-		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
+		var instance = windowEl.retrieve('instance');
 
 		var dockTab = new Element('div', {
-			'id': currentInstance.options.id + '_dockTab',
+			'id': instance.options.id + '_dockTab',
 			'class': 'dockTab',
 			'title': titleText
 		}).inject($('dockClear'), 'before');
@@ -261,7 +261,7 @@ MochaUI.Dock = new Class({
 				// If the visibility of the windows on the page are toggled off, toggle visibility on.
 				if (MochaUI.Windows.windowsVisible == false) {
 					MochaUI.toggleWindowVisibility();
-					if (currentInstance.isMinimized == true) {
+					if (instance.isMinimized == true) {
 						MochaUI.Dock.restoreMinimized.delay(25, MochaUI.Dock, windowEl);
 					}
 					else {
@@ -270,12 +270,12 @@ MochaUI.Dock = new Class({
 					return;
 				}
 				// If window is minimized, restore window.
-				if (currentInstance.isMinimized == true) {
+				if (instance.isMinimized == true) {
 					MochaUI.Dock.restoreMinimized.delay(25, MochaUI.Dock, windowEl);
 				}
 				else{
 					// If window is not minimized and is focused, minimize window.
-					if (currentInstance.windowEl.hasClass('isFocused') && currentInstance.options.minimizable == true){
+					if (instance.windowEl.hasClass('isFocused') && instance.options.minimizable == true){
 						MochaUI.Dock.minimizeWindow(windowEl)
 					}
 					// If window is not minimized and is not focused, focus window.	
@@ -293,17 +293,17 @@ MochaUI.Dock = new Class({
 
 		this.dockSortables.addItems(dockTab);
 
-		var titleText = currentInstance.titleEl.innerHTML;
+		var titleText = instance.titleEl.innerHTML;
 
 		var dockTabText = new Element('div', {
-			'id': currentInstance.options.id + '_dockTabText',
+			'id': instance.options.id + '_dockTabText',
 			'class': 'dockText'
 		}).set('html', titleText.substring(0,19) + (titleText.length > 19 ? '...' : '')).inject($(dockTab));
 
 		// If I implement this again, will need to also adjust the titleText truncate and the tab's
 		// left padding.
-		if (currentInstance.options.icon != false){
-			// dockTabText.setStyle('background', 'url(' + currentInstance.options.icon + ') 4px 4px no-repeat');
+		if (instance.options.icon != false){
+			// dockTabText.setStyle('background', 'url(' + instance.options.icon + ') 4px 4px no-repeat');
 		}
 		
 		// Need to resize everything in case the dock wraps when a new tab is added
@@ -315,53 +315,53 @@ MochaUI.Dock = new Class({
 		// getWindowWith HighestZindex is used in case the currently focused window
 		// is closed.		
 		var windowEl = MochaUI.getWindowWithHighestZindex();
-		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
+		var instance = windowEl.retrieve('instance');
 		
 		$$('.dockTab').removeClass('activeDockTab');
-		if (currentInstance.isMinimized != true) {
+		if (instance.isMinimized != true) {
 			
-			currentInstance.windowEl.addClass('isFocused');
+			instance.windowEl.addClass('isFocused');
 
-			var currentButton = $(currentInstance.options.id + '_dockTab');
+			var currentButton = $(instance.options.id + '_dockTab');
 			if (currentButton != null) {
 				currentButton.addClass('activeDockTab');
 			}
 		}
 		else {
-			currentInstance.windowEl.removeClass('isFocused');
+			instance.windowEl.removeClass('isFocused');
 		}	
 	},	
 	minimizeWindow: function(windowEl){
 		if (windowEl != $(windowEl)) return;
 		
-		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
-		currentInstance.isMinimized = true;
+		var instance = windowEl.retrieve('instance');
+		instance.isMinimized = true;
 
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
-		if ( currentInstance.iframeEl ) {
+		if ( instance.iframeEl ) {
 			// Some elements are still visible in IE8 in the iframe when the iframe's visibility is set to hidden.
 			if (!Browser.Engine.trident) {
-				currentInstance.iframeEl.setStyle('visibility', 'hidden');
+				instance.iframeEl.setStyle('visibility', 'hidden');
 			}
 			else {
-				currentInstance.iframeEl.hide();
+				instance.iframeEl.hide();
 			}
 		}
 
 		// Hide window and add to dock	
-		currentInstance.contentBorderEl.setStyle('visibility', 'hidden');
-		if(currentInstance.toolbarWrapperEl){		
-			currentInstance.toolbarWrapperEl.hide();
+		instance.contentBorderEl.setStyle('visibility', 'hidden');
+		if(instance.toolbarWrapperEl){		
+			instance.toolbarWrapperEl.hide();
 		}
 		windowEl.setStyle('visibility', 'hidden');
 
 		 // Fixes a scrollbar issue in Mac FF2
 		if (Browser.Platform.mac && Browser.Engine.gecko){
-			if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent)) {
+			if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent)){
 				var ffversion = new Number(RegExp.$1);
 				if (ffversion < 3) {
-					currentInstance.contentWrapperEl.setStyle('overflow', 'hidden');
+					instance.contentWrapperEl.setStyle('overflow', 'hidden');
 				}
 			}
 		}
@@ -375,13 +375,13 @@ MochaUI.Dock = new Class({
 			this.makeActiveTab();	
 		}.bind(this),100);	
 
-		currentInstance.fireEvent('onMinimize', windowEl);
+		instance.fireEvent('onMinimize', windowEl);
 	},
 	restoreMinimized: function(windowEl) {
 
-		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
+		var instance = windowEl.retrieve('instance');
 
-		if (currentInstance.isMinimized == false) return;
+		if (instance.isMinimized == false) return;
 
 		if (MochaUI.Windows.windowsVisible == false){
 			MochaUI.toggleWindowVisibility();
@@ -390,33 +390,33 @@ MochaUI.Dock = new Class({
 		MochaUI.Desktop.setDesktopSize();
 
 		 // Part of Mac FF2 scrollbar fix
-		if (currentInstance.options.scrollbars == true && !currentInstance.iframeEl){ 
-			currentInstance.contentWrapperEl.setStyle('overflow', 'auto');
+		if (instance.options.scrollbars == true && !instance.iframeEl){ 
+			instance.contentWrapperEl.setStyle('overflow', 'auto');
 		}
 
-		if (currentInstance.isCollapsed) {
+		if (instance.isCollapsed) {
 			MochaUI.collapseToggle(windowEl);
 		}
 
 		windowEl.setStyle('visibility', 'visible');
-		currentInstance.contentBorderEl.setStyle('visibility', 'visible');
-		if(currentInstance.toolbarWrapperEl){
-			currentInstance.toolbarWrapperEl.show();
+		instance.contentBorderEl.setStyle('visibility', 'visible');
+		if(instance.toolbarWrapperEl){
+			instance.toolbarWrapperEl.show();
 		}
 
 		// Show iframe
-		if ( currentInstance.iframeEl ) {
-			if (!Browser.Engine.trident) {
-				currentInstance.iframeEl.setStyle('visibility', 'visible');
+		if (instance.iframeEl){
+			if (!Browser.Engine.trident){
+				instance.iframeEl.setStyle('visibility', 'visible');
 			}
 			else {
-				currentInstance.iframeEl.show();
+				instance.iframeEl.show();
 			}
 		}
 
-		currentInstance.isMinimized = false;
+		instance.isMinimized = false;
 		MochaUI.focusWindow(windowEl);
-		currentInstance.fireEvent('onRestore', windowEl);
+		instance.fireEvent('onRestore', windowEl);
 
 	}
 });

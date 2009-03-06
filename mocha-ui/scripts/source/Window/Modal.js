@@ -46,8 +46,8 @@ MochaUI.Modal = new Class({
 		});
 		
 		modalOverlay.addEvent('click', function(e){
-			var currentModalInstance = MochaUI.Windows.instances.get(MochaUI.currentModal.id);
-			if (currentModalInstance.options.modalOverlayClose == true) {
+			var instance = MochaUI.Windows.instances.get(MochaUI.currentModal.id);
+			if (instance.options.modalOverlayClose == true) {
 				MochaUI.closeWindow(MochaUI.currentModal);
 			}
 		});
