@@ -228,56 +228,13 @@ MochaUI.Desktop = new Class({
 		newHeight -= currentInstance.contentBorderEl.getStyle('border-bottom').toInt();
 		newHeight -= (  currentInstance.toolbarWrapperEl ? currentInstance.toolbarWrapperEl.getStyle('height').toInt() + currentInstance.toolbarWrapperEl.getStyle('border-top').toInt() : 0);
 
-		if (MochaUI.options.advancedEffects == false){
-			windowEl.setStyles({
-				'top': shadowOffset.y - shadowBlur,
-				'left': shadowOffset.x - shadowBlur
-			});
-			currentInstance.contentWrapperEl.setStyles({
-				'height': newHeight,
-				'width':  windowDimensions.width
-			});
-			currentInstance.drawWindow();
-			// Show iframe
-			if ( currentInstance.iframeEl ) {
-				if (!Browser.Engine.trident) {
-					currentInstance.iframeEl.setStyle('visibility', 'visible');
-				}
-				else {
-					currentInstance.iframeEl.show();
-				}
-			}
-			currentInstance.fireEvent('onMaximize', windowEl);
-		}
-		else {
-
-			// Todo: Initialize the variables for these morphs once in an initialize function and reuse them
-
-			var maximizeMorph = new Fx.Elements([contentWrapperEl, windowEl], { 
-				duration: 100,
-				transition: Fx.Transitions.Sine.easeInOut,
-				onStart: function(windowEl){
-					currentInstance.maximizeAnimation = currentInstance.drawWindow.periodical(20, currentInstance);
-				}.bind(this),
-				onComplete: function(windowEl){
-					$clear(currentInstance.maximizeAnimation);
-					currentInstance.drawWindow();
-					// Show iframe
-					if ( currentInstance.iframeEl ) {
-						currentInstance.iframeEl.setStyle('visibility', 'visible');
-					}
-					currentInstance.fireEvent('onMaximize', windowEl);	
-				}.bind(this)
-			});
-			maximizeMorph.start({
-				'0': {	'height': newHeight,
-						'width':  windowDimensions.width
-				},
-				'1': {	'top': shadowOffset.y - shadowBlur,
-						'left': shadowOffset.x - shadowBlur 
-				}
-			});		
-		}
+		MochaUI.resizeWindow(windowEl,{
+			width: windowDimensions.width,
+			height: newHeight,
+			top: shadowOffset.y - shadowBlur,
+			left: shadowOffset.x - shadowBlur
+		});
+		currentInstance.fireEvent('onMaximize', windowEl);
 		currentInstance.maximizeButtonEl.setProperty('title', 'Restore');
 		MochaUI.focusWindow(windowEl);
 
@@ -490,6 +447,8 @@ MochaUI.Column = new Class({
 				'width': options.placement == 'main' ? null : options.width
 			}
 		}).inject($(options.container));
+		
+		this.columnEl.store('instance', this);
 
 		var parent = this.columnEl.getParent();
 		var columnHeight = parent.getStyle('height').toInt();
@@ -735,6 +694,8 @@ MochaUI.Panel = new Class({
 				'height': options.height
 			}
 		}).inject($(options.column));
+		
+		this.panelEl.store('instance', this);
 
 		this.panelEl.addClass(options.addClass);
 

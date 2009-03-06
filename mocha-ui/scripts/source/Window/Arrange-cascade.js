@@ -52,7 +52,7 @@ MochaUI.extend({
 
 		var x = this.options.viewportLeftOffset;
 		var y = this.options.viewportTopOffset;
-		$$('div.mocha').each(function(windowEl){
+		$$('.mocha').each(function(windowEl){
 			var currentWindowClass = MochaUI.Windows.instances.get(windowEl.id);
 			if (!currentWindowClass.isMinimized && !currentWindowClass.isMaximized && currentWindowClass.options.draggable){
 				id = windowEl.id;

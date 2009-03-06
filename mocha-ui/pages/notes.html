@@ -53,4 +53,26 @@
 	
 	<h3>Split Panels and Windows</h3>
 	<p>Split panels and windows are new as well, though they should be production ready. If you find any bugs with them let me know.</p>
+
+	<h3>Window methods</h3>
+	<p>It is now considerably easier to fire window methods and some new methods have been added.</p>
+
+<pre>// Returns the window's Class instance	
+$('myWindow').retrieve('instance').close();
+$('myWindow').retrieve('instance').minimize();
+$('myWindow').retrieve('instance').maximize();
+$('myWindow').retrieve('instance').restore();
+$('myWindow').retrieve('instance').center();
+$('myWindow').retrieve('instance').showSpinner();
+$('myWindow').retrieve('instance').hideSpinner();
+$('myWindow').retrieve('instance').hide();
+$('myWindow').retrieve('instance').show();
+$('myWindow').retrieve('instance').resize({width:500,height:300});
+
+// Returns the window element
+$('myWindow').hide();
+$('myWindow').show();
+$('myWindow').shake();</pre>
+
 </div>
+

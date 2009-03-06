@@ -32,7 +32,7 @@ MochaUI.extend({
 
 	*/	
 	minimizeAll: function() {
-		$$('div.mocha').each(function(windowEl){
+		$$('.mocha').each(function(windowEl){
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
 			if (!currentInstance.isMinimized && currentInstance.options.minimizable == true){
 				MochaUI.Dock.minimizeWindow(windowEl);
@@ -317,7 +317,7 @@ MochaUI.Dock = new Class({
 		var windowEl = MochaUI.getWindowWithHighestZindex();
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
 		
-		$$('div.dockTab').removeClass('activeDockTab');
+		$$('.dockTab').removeClass('activeDockTab');
 		if (currentInstance.isMinimized != true) {
 			
 			currentInstance.windowEl.addClass('isFocused');

@@ -63,7 +63,7 @@ MochaUI.extend({
 		
 	},
 	windowUnload: function(){
-		if ($$('div.mocha').length == 0 && this.myChain){
+		if ($$('.mocha').length == 0 && this.myChain){
 			this.myChain.callChain();
 		}		
 	},
@@ -119,12 +119,12 @@ MochaUI.extend({
 			return;
 		}
 
-		if ($$('div.mocha').length != 0){
+		if ($$('.mocha').length != 0){
 			this.loadingWorkspace = true;
 			this.myChain = new Chain();
 			this.myChain.chain(
 				function(){
-					$$('div.mocha').each(function(el) {
+					$$('.mocha').each(function(el) {
 						this.closeWindow(el);
 					}.bind(this));
 				}.bind(this),

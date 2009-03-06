@@ -19,6 +19,7 @@ Note:
 */
 
 var MochaUI = new Hash({
+	version: '0.9.5 development',
 	options: new Hash({
 		advancedEffects: false, // Effects that require fast browsers and are cpu intensive.
 		standardEffects: true   // Basic effects that tend to run smoothly.
@@ -31,7 +32,7 @@ var MochaUI = new Hash({
 	queue: [],
 	updating: false,
 	nextInQueue: function(){
-		if (MochaUI.queue.length) {
+		if (MochaUI.queue.length){
 			MochaUI.updateContent(MochaUI.queue.shift(), true);			
 		}
 		else {
@@ -64,7 +65,7 @@ var MochaUI = new Hash({
 	*/	
 	updateContent: function(updateOptions, next){
 
-		if (Browser.Engine.presto) {
+		if (Browser.Engine.presto){
 			if (MochaUI.updating == true && !next) {
 				MochaUI.queue.push(updateOptions);
 				return;
@@ -93,7 +94,6 @@ var MochaUI = new Hash({
 		if (MochaUI.Windows.instances.get(element.id)){
 			var recipient = 'window';
 			var currentInstance = MochaUI.Windows.instances.get(element.id);
-			var spinnerEl = currentInstance.spinnerEl;
 			if (options.title) currentInstance.titleEl.set('html', options.title);			
 		}
 		else {
@@ -109,7 +109,7 @@ var MochaUI = new Hash({
 				
 		// Set scrollbars if loading content in main content container.
 		// Always use 'hidden' for iframe windows
-		var scrollbars = options.scrollbars != null ? options.scrollbars : currentInstance.options.scrollbars;	
+		var scrollbars = options.scrollbars || currentInstance.options.scrollbars;
 		if (contentContainer == currentInstance.contentEl) {
 			currentInstance.contentWrapperEl.setStyles({
 				'overflow': scrollbars != false && loadMethod != 'iframe' ? 'auto' : 'hidden'
@@ -152,7 +152,7 @@ var MochaUI = new Hash({
 					evalResponse: currentInstance.options.evalResponse,				
 					onRequest: function(){
 						if (recipient == 'window' && contentContainer == contentEl){
-							currentInstance.showSpinner(spinnerEl);
+							currentInstance.showSpinner();
 						}
 						else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')){
 							$('spinner').show();	
@@ -166,7 +166,7 @@ var MochaUI = new Hash({
 							if (!error) error = 'Unknown';							 
 							contentContainer.set('html', '<h3>Error: ' + error[1] + '</h3>');					
 
-							if (recipient == 'window') currentInstance.hideSpinner(spinnerEl);						
+							if (recipient == 'window') currentInstance.hideSpinner();						
 							else if (recipient == 'panel' && $('spinner')) $('spinner').hide();
 							MochaUI.nextInQueue();							
 						}
@@ -176,7 +176,7 @@ var MochaUI = new Hash({
 					}.bind(this),
 					onSuccess: function(){
 						if (contentContainer == contentEl){
-							if (recipient == 'window') currentInstance.hideSpinner(spinnerEl);							
+							if (recipient == 'window') currentInstance.hideSpinner();							
 							else if (recipient == 'panel' && $('spinner')) $('spinner').hide();							
 						}
 						Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();						
@@ -206,12 +206,12 @@ var MochaUI = new Hash({
 
 				// Add onload event to iframe so we can hide the spinner and run onContentLoaded()
 				currentInstance.iframeEl.addEvent('load', function(e) {
-					if (recipient == 'window') currentInstance.hideSpinner(spinnerEl);					
+					if (recipient == 'window') currentInstance.hideSpinner();					
 					else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) $('spinner').hide();
 					Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();
 					MochaUI.nextInQueue();	
 				}.bind(this));
-				if (recipient == 'window') currentInstance.showSpinner(spinnerEl);				
+				if (recipient == 'window') currentInstance.showSpinner();				
 				else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) $('spinner').show();				
 				break;
 			case 'html':
@@ -224,7 +224,7 @@ var MochaUI = new Hash({
 					contentContainer.set('html', options.content);
 				}				
 				if (contentContainer == contentEl){
-					if (recipient == 'window') currentInstance.hideSpinner(spinnerEl);					
+					if (recipient == 'window') currentInstance.hideSpinner();					
 					else if (recipient == 'panel' && $('spinner')) $('spinner').hide();									
 				}
 				Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();				
@@ -256,268 +256,6 @@ var MochaUI = new Hash({
 	reloadIframe: function(iframe){
 		Browser.Engine.gecko ? $(iframe).src = $(iframe).src : top.frames[iframe].location.reload(true);		
 	},
-	collapseToggle: function(windowEl){
-		var instances = MochaUI.Windows.instances;
-		var currentInstance = instances.get(windowEl.id);
-		var handles = currentInstance.windowEl.getElements('.handle');
-		if (currentInstance.isMaximized == true) return;		
-		if (currentInstance.isCollapsed == false) {
-			currentInstance.isCollapsed = true;
-			handles.hide();
-			if ( currentInstance.iframeEl ) {
-				currentInstance.iframeEl.setStyle('visibility', 'hidden');
-			}
-			currentInstance.contentBorderEl.setStyles({
-				visibility: 'hidden',
-				position: 'absolute',
-				top: -10000,
-				left: -10000
-			});
-			if(currentInstance.toolbarWrapperEl){
-				currentInstance.toolbarWrapperEl.setStyles({
-					visibility: 'hidden',
-					position: 'absolute',
-					top: -10000,
-					left: -10000
-				});
-			}
-			currentInstance.drawWindowCollapsed();
-		}
-		else {
-			currentInstance.isCollapsed = false;
-			currentInstance.drawWindow();
-			currentInstance.contentBorderEl.setStyles({
-				visibility: 'visible',
-				position: null,
-				top: null,
-				left: null
-			});
-			if(currentInstance.toolbarWrapperEl){
-				currentInstance.toolbarWrapperEl.setStyles({
-					visibility: 'visible',
-					position: null,
-					top: null,
-					left: null
-				});
-			}
-			if ( currentInstance.iframeEl ) {
-				currentInstance.iframeEl.setStyle('visibility', 'visible');
-			}
-			handles.show();
-		}
-	},
-	/*
-
-	Function: closeWindow
-		Closes a window.
-
-	Syntax:
-	(start code)
-		MochaUI.closeWindow();
-	(end)
-
-	Arguments: 
-		windowEl - the ID of the window to be closed
-
-	Returns:
-		true - the window was closed
-		false - the window was not closed
-
-	*/
-	closeWindow: function(windowEl){
-		// Does window exist and is not already in process of closing ?
-
-		var instances = MochaUI.Windows.instances;
-		var currentInstance = instances.get(windowEl.id);
-		if (windowEl != $(windowEl) || currentInstance.isClosing) return;
-			
-		currentInstance.isClosing = true;
-		currentInstance.fireEvent('onClose', windowEl);
-		if (currentInstance.check) currentInstance.check.destroy();
-
-		if ((currentInstance.options.type == 'modal' || currentInstance.options.type == 'modal2') && Browser.Engine.trident4){
-			$('modalFix').hide();
-		}
-		
-		if (MochaUI.options.advancedEffects == false){			
-			if (currentInstance.options.type == 'modal' || currentInstance.options.type == 'modal2'){
-				$('modalOverlay').setStyle('opacity', 0);
-			}			
-			MochaUI.closingJobs(windowEl);			
-			return true;	
-		}
-		else {
-			// Redraws IE windows without shadows since IE messes up canvas alpha when you change element opacity
-			if (Browser.Engine.trident) currentInstance.drawWindow(false);
-			if (currentInstance.options.type == 'modal' || currentInstance.options.type == 'modal2'){
-				MochaUI.Modal.modalOverlayCloseMorph.start({
-					'opacity': 0
-				});
-			}
-			var closeMorph = new Fx.Morph(windowEl, {
-				duration: 120,
-				onComplete: function(){
-					MochaUI.closingJobs(windowEl);
-					return true;
-				}.bind(this)
-			});
-			closeMorph.start({
-				'opacity': .4
-			});
-		}
-
-	},
-	closingJobs: function(windowEl){
-
-		var instances = MochaUI.Windows.instances;
-		var currentInstance = instances.get(windowEl.id);		
-		windowEl.setStyle('visibility', 'hidden');
-		// Destroy throws an error in IE8
-		if (Browser.Engine.trident) {
-			windowEl.dispose();
-		}
-		else {
-			windowEl.destroy();
-		}
-		currentInstance.fireEvent('onCloseComplete');		
-		
-		if (currentInstance.options.type != 'notification'){
-			var newFocus = this.getWindowWithHighestZindex();
-			this.focusWindow(newFocus);
-		}
-
-		instances.erase(currentInstance.options.id);
-		if (this.loadingWorkspace == true) {
-			this.windowUnload();
-		}
-
-		if (MochaUI.Dock && $(MochaUI.options.dock) && currentInstance.options.type == 'window') {
-			var currentButton = $(currentInstance.options.id + '_dockTab');
-			if (currentButton != null) {
-				MochaUI.Dock.dockSortables.removeItems(currentButton).destroy();
-			}
-			// Need to resize everything in case the dock becomes smaller when a tab is removed
-			MochaUI.Desktop.setDesktopSize();
-		}
-	},
-	/*
-	
-	Function: closeAll	
-		Close all open windows.
-
-	*/
-	closeAll: function() {		
-		$$('div.mocha').each(function(windowEl){
-			this.closeWindow(windowEl);
-		}.bind(this));
-	},
-	/*
-
-	Function: toggleWindowVisibility
-		Toggle window visibility with Ctrl-Alt-Q.
-
-	*/	
-	toggleWindowVisibility: function(){
-		MochaUI.Windows.instances.each(function(instance){
-			if (instance.options.type == 'modal' || instance.options.type == 'modal2' || instance.isMinimized == true) return;									
-			var id = $(instance.options.id);
-			if (id.getStyle('visibility') == 'visible'){
-				if (instance.iframe){
-					instance.iframeEl.setStyle('visibility', 'hidden');
-				}
-				if (instance.toolbarEl){
-					instance.toolbarWrapperEl.setStyle('visibility', 'hidden');
-				}
-				instance.contentBorderEl.setStyle('visibility', 'hidden');
-				id.setStyle('visibility', 'hidden');
-				MochaUI.Windows.windowsVisible = false;
-			}
-			else {
-				id.setStyle('visibility', 'visible');
-				instance.contentBorderEl.setStyle('visibility', 'visible');
-				if (instance.iframe){
-					instance.iframeEl.setStyle('visibility', 'visible');
-				}
-				if (instance.toolbarEl){
-					instance.toolbarWrapperEl.setStyle('visibility', 'visible');
-				}
-				MochaUI.Windows.windowsVisible = true;
-			}
-		}.bind(this));
-
-	},
-	focusWindow: function(windowEl, fireEvent){
-
-		// This is used with blurAll
-		MochaUI.Windows.focusingWindow = true;
-		var windowClicked = function(){
-			MochaUI.Windows.focusingWindow = false;
-		};
-		windowClicked.delay(170, this);
-		
-		// Only focus when needed
-		if ($$('.mocha').length == 0) return;
-		if (windowEl != $(windowEl) || windowEl.hasClass('isFocused')) return;
-
-		var instances =  MochaUI.Windows.instances;
-		var currentInstance = instances.get(windowEl.id);
-	
-		if (currentInstance.options.type == 'notification'){
-			windowEl.setStyle('zIndex',11001);
-			return;
-		};
-
-		MochaUI.Windows.indexLevel += 2;
-		windowEl.setStyle('zIndex', MochaUI.Windows.indexLevel);
-
-		// Used when dragging and resizing windows
-		$('windowUnderlay').setStyle('zIndex', MochaUI.Windows.indexLevel - 1).inject($(windowEl),'after');
-
-		// Fire onBlur for the window that lost focus.
-		instances.each(function(instance){
-			if (instance.windowEl.hasClass('isFocused')){
-				instance.fireEvent('onBlur', instance.windowEl);
-			}
-			instance.windowEl.removeClass('isFocused');
-		});
-
-		if (MochaUI.Dock && $(MochaUI.options.dock) && currentInstance.options.type == 'window') {
-			MochaUI.Dock.makeActiveTab();
-		}
-		windowEl.addClass('isFocused');
-
-		if (fireEvent != false){
-			currentInstance.fireEvent('onFocus', windowEl);
-		}
-
-	},
-	getWindowWithHighestZindex: function(){
-		this.highestZindex = 0;
-		$$('div.mocha').each(function(element){
-			this.zIndex = element.getStyle('zIndex');
-			if (this.zIndex >= this.highestZindex) {
-				this.highestZindex = this.zIndex;
-			}	
-		}.bind(this));
-		$$('div.mocha').each(function(element){
-			if (element.getStyle('zIndex') == this.highestZindex) {
-				this.windowWithHighestZindex = element;
-			}
-		}.bind(this));
-		return this.windowWithHighestZindex;
-	},
-	blurAll: function(){		
-		if (MochaUI.Windows.focusingWindow == false) {
-			$$('.mocha').each(function(windowEl){
-				var instances =  MochaUI.Windows.instances;
-				var currentInstance = instances.get(windowEl.id);
-				if (currentInstance.options.type != 'modal' && currentInstance.options.type != 'modal2'){
-					windowEl.removeClass('isFocused');
-				}
-			});
-			$$('div.dockTab').removeClass('activeDockTab');
-		}
-	},
 	roundedRect: function(ctx, x, y, width, height, radius, rgb, a){
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
 		ctx.beginPath();
@@ -543,51 +281,9 @@ var MochaUI = new Hash({
 	},
 	circle: function(ctx, x, y, diameter, rgb, a){
 		ctx.beginPath();
-		ctx.moveTo(x, y);
 		ctx.arc(x, y, diameter, 0, Math.PI*2, true);
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
 		ctx.fill();
-	},
-	/*
-
-	Function: centerWindow
-		Center a window in it's container. If windowEl is undefined it will center the window that has focus.
-
-	*/
-	centerWindow: function(windowEl){
-		
-		if(!windowEl){
-			MochaUI.Windows.instances.each(function(instance){
-				if (instance.windowEl.hasClass('isFocused')){
-					windowEl = instance.windowEl;
-				}
-			});
-		}
-
-		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
-		var options = currentInstance.options;
-		var dimensions = options.container.getCoordinates();
-				
-		var windowPosTop = window.getScroll().y + (window.getSize().y * .5) - (windowEl.offsetHeight * .5);
-		if (windowPosTop < -currentInstance.options.shadowBlur){
-			windowPosTop = -currentInstance.options.shadowBlur;
-		}
-		var windowPosLeft =	(dimensions.width * .5) - (windowEl.offsetWidth * .5);
-		if (windowPosLeft < -currentInstance.options.shadowBlur){
-			windowPosLeft = -currentInstance.options.shadowBlur;
-		}
-		if (MochaUI.options.advancedEffects == true){
-			currentInstance.morph.start({
-				'top': windowPosTop,
-				'left': windowPosLeft
-			});
-		}
-		else {
-			windowEl.setStyles({
-				'top': windowPosTop,
-				'left': windowPosLeft
-			});
-		}
 	},
 	notification: function(message){
 			new MochaUI.Window({
@@ -602,23 +298,6 @@ var MochaUI = new Hash({
 				padding:  { top: 10, right: 12, bottom: 10, left: 12 },
 				shadowBlur: 5	
 			});
-	},
-	/*
-
-	Function: dynamicResize
-		Use with a timer to resize a window as the window's content size changes, such as with an accordian.
-
-	*/
-	dynamicResize: function(windowEl){
-		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
-		var contentWrapperEl = currentInstance.contentWrapperEl;
-		var contentEl = currentInstance.contentEl;
-		
-		contentWrapperEl.setStyles({
-			'height': contentEl.offsetHeight,
-			'width': contentEl.offsetWidth
-		});				
-		currentInstance.drawWindow();
 	},
 	/*
 	  	
@@ -678,7 +357,7 @@ var MochaUI = new Hash({
 	
 	*/
 	garbageCleanUp: function(){
-		$$('div.mocha').each(function(el){
+		$$('.mocha').each(function(el){
 			el.destroy();
 		}.bind(this));
 	},
@@ -734,13 +413,6 @@ function fixPNG(myImage){
 		myImage.outerHTML = strNewHTML;		
 	}
 }
-
-// Toggle window visibility with Ctrl-Alt-Q
-document.addEvent('keydown', function(event){
-	if (event.key == 'q' && event.control && event.alt) {
-		MochaUI.toggleWindowVisibility();
-	}
-});
 
 // Blur all windows if user clicks anywhere else on the page
 document.addEvent('mousedown', function(event){
@@ -895,6 +567,20 @@ Asset.extend({
 	}
 	
 });
+
+String.implement({
+ 
+	parseQueryString: function() {
+		var vars = this.split(/[&;]/);
+		var rs = {};
+		if (vars.length) vars.each(function(val) {
+			var keys = val.split('=');
+			if (keys.length && keys.length == 2) rs[decodeURIComponent(keys[0])] = decodeURIComponent(keys[1]);
+		});
+		return rs;
+	}
+ 
+});
 /*
 
 Script: Themes.js
@@ -914,12 +600,12 @@ Notes:
 	
 Syntax:
 	(start code)
-	new MochaUI.Themes.themeInit(newTheme);
+	new MochaUI.Themes.init(newTheme);
 	(end)
 	
 Example:
 	(start code)
-	new MochaUI.Themes.themeInit('charcoal');
+	new MochaUI.Themes.init('charcoal');
 	(end)		
 
 Arguments:
@@ -931,13 +617,9 @@ MochaUI.Themes = {
 	options: {
 		themesDir:      'themes',    // Path to themes directory
 		theme:          'default'
-	
-		// stylesheets:    []	
-		// currentStylesheets: [],
-		// stylesheetCount:    0,
+
 	},
-	themableWindowOptions: ['headerStartColor','headerStopColor','bodyBgColor','minimizeBgColor','minimizeColor','maximizeBgColor',
-		'maximizeColor','closeBgColor','closeColor','resizableColor'],	
+
 	/*
 	
 	Function: themeInit
@@ -946,25 +628,9 @@ MochaUI.Themes = {
 	*/	
 	init: function(newTheme){
 		this.newTheme = newTheme.toLowerCase();
-		if (!this.newTheme || this.newTheme == null) return;
-		
-		if ($('spinner')) $('spinner').show();		
-		
-		// Store the current options so we can compare them to currently open windows.
-		// Windows with different options than these will keep their settings since the defaults were overridden
-		// when these windows were created.
-		MochaUI.Windows.windowOptionsPrevious = new Hash($merge(MochaUI.Windows.windowOptions));
-		
-		// Run theme init file		
-		new Asset.javascript(this.options.themesDir + '/' + this.newTheme + '/theme-init.js');	
-						
-	},
-	changeTheme: function(){
-
-		if (this.newTheme == this.options.theme.toLowerCase()) {
-			this.updateThemeSettings();			
-			return;
-		}
+		if (!this.newTheme || this.newTheme == null || this.newTheme == this.options.theme.toLowerCase()) return;
+				
+		if ($('spinner')) $('spinner').show();
 
 		/* Add old style sheets to an array */
 		this.oldSheets = [];
@@ -1026,64 +692,30 @@ MochaUI.Themes = {
 
 		this.newSheets.each( function(sheet){
 			sheet.inject(document.head);
-		});
+		});		
 
-		this.updateThemeSettings();
+		// Delay gives the stylesheets time to take effect. IE6 needs more delay.	
+		if (Browser.Engine.trident){
+			this.redraw.delay(1250, this);
+		}
+		else {
+			this.redraw.delay(250, this);
+		}	
 	
-	},
-	updateThemeSettings: function(){
-
-		// Reset original options
-		$extend(MochaUI.Windows.windowOptions, $merge(MochaUI.Windows.windowOptionsOriginal));
-
-		// Set new options defined in the theme init file
-		MochaUI.newWindowOptions.each( function(value, key){							
-			if (this.themableWindowOptions.contains(key)) {
-				eval('MochaUI.Windows.windowOptions.' + key + ' = value');
-			}
-		}.bind(this));
-		
-		this.redraw.delay(200, this); // Delay gives the stylesheets time to take effect.		
-
 	},	
 	redraw: function(){
 
+		$$('.replaced').removeClass('replaced');
+
 		// Redraw open windows		
 		$$('.mocha').each( function(element){			
-			var currentInstance = MochaUI.Windows.instances.get(element.id);		
-						
-			new Hash(currentInstance.options).each( function(value, key){							
-				if (this.themableWindowOptions.contains(key)){					
-
-					/*
-					if (eval('MochaUI.Windows.windowOptions.' + key + ' == null') && eval('MochaUI.Windows.windowOptionsOriginal.' + key + ' == null')){
-						eval('currentInstance.options.' + key + ' = null');
-						return;	
-					}
-					*/					
-
-					if ($type(value) == 'array'){						
-						// If it is an rgb color
-						if (MochaUI.Windows.windowOptionsPrevious.get(key).rgbToHex() == null) return;
-						if (MochaUI.Windows.windowOptionsPrevious.get(key).rgbToHex().substring(1) != value.rgbToHex().substring(1)) 
-							return;
-						eval('currentInstance.options.' + key + ' = MochaUI.Windows.windowOptions.' + key);
-					}
-					
-					/*
-					else if ($type(value) == 'string'){
-						// If it is a hex color
-						if (MochaUI.Windows.windowOptionsPrevious.get(key).substring(1) != value.substring(1)) 
-							return;							
-						eval('currentInstance.options.' + key + ' = MochaUI.Windows.windowOptions.' + key);											
-					}
-					*/					
-				}								
-			}.bind(this));
-							
+			var currentInstance = MochaUI.Windows.instances.get(element.id);
+			
+			// Convert CSS colors to Canvas colors.
+			currentInstance.setColors();							
 			currentInstance.drawWindow();			
 			
-		}.bind(this));
+		});
 
 		// Reformat layout
 		if (MochaUI.Desktop.desktop){
@@ -1398,8 +1030,7 @@ MochaUI.Window = new Class({
 			isCollapsed: false,
 			timestamp: $time()
 		});
-		
-		// May be better to use if type != window
+				
 		if (options.type != 'window'){
 			options.container = document.body;
 			options.minimizable = false;
@@ -1458,10 +1089,9 @@ MochaUI.Window = new Class({
 			this.options.headerHeight = 0;
 		}
 		
-		// If window has no ID, give it one.
-		if (options.id == null){
-			options.id = 'win' + (++MochaUI.Windows.windowIDCount);
-		}
+		// If window has no ID, give it one.		
+		options.id = options.id || 'win' + (++MochaUI.Windows.windowIDCount);
+		
 		this.windowEl = $(options.id);	
 		
 		this.newWindow();
@@ -1519,7 +1149,7 @@ MochaUI.Window = new Class({
 		else {
 			instances.set(options.id, this);
 		}
-
+		
 		this.isClosing = false;
 		this.fireEvent('onBeforeBuild');
 
@@ -1537,6 +1167,8 @@ MochaUI.Window = new Class({
 				'zIndex': MochaUI.Windows.indexLevel += 2
 			}
 		});
+
+		this.windowEl.store('instance', this);
 
 		this.windowEl.addClass(options.addClass);
 		
@@ -1568,7 +1200,6 @@ MochaUI.Window = new Class({
 		// Set title
 		this.titleEl.set('html', options.title);
 
-		// Set scrollbars, always use 'hidden' for iframe windows
 		this.contentWrapperEl.setStyle('overflow', 'hidden');
 
 		this.contentEl.setStyles({
@@ -1617,7 +1248,10 @@ MochaUI.Window = new Class({
 
 		// Inject window into DOM
 		this.windowEl.inject(options.container);
-
+		
+		// Convert CSS colors to Canvas colors.
+		this.setColors();
+		
 		if (options.type != 'notification'){
 			this.setMochaControlsWidth();
 		}		
@@ -1659,7 +1293,7 @@ MochaUI.Window = new Class({
 				'onContentLoaded': options.toolbar2Onload
 			});
 		}
-		        
+				        
 		this.drawWindow();
 				
 		// Attach events to the window
@@ -1766,9 +1400,28 @@ MochaUI.Window = new Class({
 		}
 		
 		// This is a generic morph that can be reused later by functions like centerWindow()
+		// It returns the windowEl element rather than this Class.
 		this.morph = new Fx.Morph(this.windowEl, {
 			'duration': 200
 		});
+		this.windowEl.store('morph', this.morph);
+
+		this.resizeMorph = new Fx.Elements([this.contentWrapperEl, this.windowEl], { 
+			duration: 400,
+			transition: Fx.Transitions.Sine.easeInOut,
+			onStart: function(){
+				this.resizeAnimation = this.drawWindow.periodical(20, this);
+			}.bind(this),
+			onComplete: function(){
+				$clear(this.resizeAnimation);
+				this.drawWindow();
+				// Show iframe
+				if ( this.iframeEl ) {
+					this.iframeEl.setStyle('visibility', 'visible');
+				}	
+			}.bind(this)
+		});
+		this.windowEl.store('resizeMorph', this.resizeMorph);	
 
 		// Add check mark to menu if link exists in menu
 		// Need to make sure the check mark is not added to links not in menu	
@@ -1835,16 +1488,15 @@ MochaUI.Window = new Class({
 				e = new Event(e).stop();
 			}.bind(this));
 			
-			this.titleBarEl.addEvent('mousedown', function(e) {
-				if (Browser.Engine.trident) {
-					this.titleEl.setCapture();
-				}
-			}.bind(this));
-			this.titleBarEl.addEvent('mouseup', function(e) {
-				if (Browser.Engine.trident) {
-					this.titleEl.releaseCapture();
-				}
-			}.bind(this));
+			if (Browser.Engine.trident) {
+				this.titleBarEl.addEvent('mousedown', function(e) {
+					this.titleEl.setCapture();				
+				}.bind(this));
+				this.titleBarEl.addEvent('mouseup', function(e) {
+						this.titleEl.releaseCapture();
+				}.bind(this));
+			}
+	
 			this.titleBarEl.addEvent('dblclick', function(e) {
 				e = new Event(e).stop();
 				MochaUI.collapseToggle(this.windowEl);
@@ -2193,9 +1845,9 @@ MochaUI.Window = new Class({
 		}).inject(cache.titleBarEl);
 
 		if (options.icon != false){
-			cache.titleBarEl.setStyles({
-				'padding-left': 15,
-				'background': 'url(' + options.icon + ') 5px 5px no-repeat'
+			cache.titleEl.setStyles({
+				'padding-left': 25,
+				'background': 'url(' + options.icon + ') no-repeat'
 			});
 		}
 		
@@ -2306,34 +1958,25 @@ MochaUI.Window = new Class({
 		if (options.closable){
 			cache.closeButtonEl = new Element('div', {
 				'id': id + '_closeButton',
-				'class': 'mochaCloseButton',
+				'class': 'mochaCloseButton mochaWindowButton',
 				'title': 'Close'
 			}).inject(cache.controlsEl);
-			if (options.useCanvasControls == true){
-				cache.closeButtonEl.setStyle('background', 'none');
-			}
 		}
 
 		if (options.maximizable){
 			cache.maximizeButtonEl = new Element('div', {
 				'id': id + '_maximizeButton',
-				'class': 'mochaMaximizeButton',
+				'class': 'mochaMaximizeButton mochaWindowButton',
 				'title': 'Maximize'
 			}).inject(cache.controlsEl);
-			if (options.useCanvasControls == true){
-				cache.maximizeButtonEl.setStyle('background', 'none');
-			}
 		}
 
 		if (options.minimizable){
 			cache.minimizeButtonEl = new Element('div', {
 				'id': id + '_minimizeButton',
-				'class': 'mochaMinimizeButton',
+				'class': 'mochaMinimizeButton mochaWindowButton',
 				'title': 'Minimize'
 			}).inject(cache.controlsEl);
-			if (options.useCanvasControls == true){
-				cache.minimizeButtonEl.setStyle('background', 'none');
-			}
 		}
 
 		if (options.useSpinner == true && options.shape != 'gauge' && options.type != 'notification'){
@@ -2456,6 +2099,96 @@ MochaUI.Window = new Class({
 		}
 		$extend(this, cache);
 		
+	},
+	/*
+	
+	Convert CSS colors to Canvas colors. 
+	  
+	*/	
+	setColors: function(){
+		
+		if (this.options.useCanvas == true) {
+
+			// Set TitlebarColor
+			var pattern = /\?(.*?)\)/;
+			if (this.titleBarEl.getStyle('backgroundImage') != 'none'){
+				var gradient = this.titleBarEl.getStyle('backgroundImage');								
+				gradient = gradient.match(pattern)[1];
+				gradient = gradient.parseQueryString();
+				var gradientFrom = gradient.from; 
+				var gradientTo = gradient.to.replace(/\"/, ''); // IE7 was adding a quotation mark in. No idea why.						
+				
+				this.options.headerStartColor = new Color(gradientFrom);
+				this.options.headerStopColor = new Color(gradientTo);
+				this.titleBarEl.addClass('replaced');
+			}			
+			else if (this.titleBarEl.getStyle('background-color') !== '' && this.titleBarEl.getStyle('background-color') !== 'transparent') {			
+				this.options.headerStartColor = new Color(this.titleBarEl.getStyle('background-color')).mix('#fff', 20);			
+				this.options.headerStopColor = new Color(this.titleBarEl.getStyle('background-color')).mix('#000', 20);
+				this.titleBarEl.addClass('replaced');
+			}
+			
+			// Set BodyBGColor
+			if (this.windowEl.getStyle('background-color') !== '' && this.windowEl.getStyle('background-color') !== 'transparent') {			
+				this.options.bodyBgColor = new Color(this.windowEl.getStyle('background-color'));
+				this.windowEl.addClass('replaced');		
+			}
+			
+			// Set resizableColor, the color of the SE corner resize handle			
+			if (this.options.resizable && this.se.getStyle('background-color') !== '' && this.se.getStyle('background-color') !== 'transparent') {			
+				this.options.resizableColor = new Color(this.se.getStyle('background-color'));
+				this.se.addClass('replaced');		
+			}									
+
+		}
+		
+		if (this.options.useCanvasControls == true){
+
+			if (this.minimizeButtonEl){
+
+				// Set Minimize Button Foreground Color
+				if (this.minimizeButtonEl.getStyle('color') !== '' && this.minimizeButtonEl.getStyle('color') !== 'transparent') {			
+					this.options.minimizeColor = new Color(this.minimizeButtonEl.getStyle('color'));					
+				}
+
+				// Set Minimize Button Background Color
+				if (this.minimizeButtonEl.getStyle('background-color') !== '' && this.minimizeButtonEl.getStyle('background-color') !== 'transparent') {			
+					this.options.minimizeBgColor = new Color(this.minimizeButtonEl.getStyle('background-color'));
+					this.minimizeButtonEl.addClass('replaced');
+				}				
+				
+			}
+						
+			if (this.maximizeButtonEl){
+
+				// Set Maximize Button Foreground Color
+				if (this.maximizeButtonEl.getStyle('color') !== '' && this.maximizeButtonEl.getStyle('color') !== 'transparent') {			
+					this.options.maximizeColor = new Color(this.maximizeButtonEl.getStyle('color'));					
+				}
+			
+				// Set Maximize Button Background Color
+				if (this.maximizeButtonEl.getStyle('background-color') !== '' && this.maximizeButtonEl.getStyle('background-color') !== 'transparent') {			
+					this.options.maximizeBgColor = new Color(this.maximizeButtonEl.getStyle('background-color'));
+					this.maximizeButtonEl.addClass('replaced');
+				}
+			
+			}
+			
+			if (this.closeButtonEl){
+
+				// Set Close Button Foreground Color
+				if (this.closeButtonEl.getStyle('color') !== '' && this.closeButtonEl.getStyle('color') !== 'transparent') {			
+					this.options.closeColor = new Color(this.closeButtonEl.getStyle('color'));					
+				}
+			
+				// Set Close Button Background Color
+				if (this.closeButtonEl.getStyle('background-color') !== '' && this.closeButtonEl.getStyle('background-color') !== 'transparent') {			
+					this.options.closeBgColor = new Color(this.closeButtonEl.getStyle('background-color'));
+					this.closeButtonEl.addClass('replaced');
+				}
+									
+			}
+		}
 	},
 	/*
 
@@ -2749,14 +2482,14 @@ MochaUI.Window = new Class({
 		if (this.options.type != 'notification'){
 		// Window header.
 			this.topRoundedRect(
-				ctx,                            // context
-				shadowBlur - shadowOffset.x,    // x
-				shadowBlur - shadowOffset.y,    // y
-				width - shadowBlur2x,           // width
-				options.headerHeight,      // height
-				cornerRadius,                   // corner radius
-				options.headerStartColor,  // Header gradient's top color
-				options.headerStopColor    // Header gradient's bottom color
+				ctx,                          // context
+				shadowBlur - shadowOffset.x,  // x
+				shadowBlur - shadowOffset.y,  // y
+				width - shadowBlur2x,         // width
+				options.headerHeight,         // height
+				cornerRadius,                 // corner radius
+				options.headerStartColor,     // Header gradient's top color
+				options.headerStopColor       // Header gradient's bottom color
 			);
 		}	
 	},
@@ -2891,35 +2624,31 @@ MochaUI.Window = new Class({
 	maximizebutton: function(ctx, x, y, rgbBg, aBg, rgb, a){
 		// Circle
 		ctx.beginPath();
-		ctx.moveTo(x, y);
 		ctx.arc(x, y, 7, 0, Math.PI*2, true);
 		ctx.fillStyle = 'rgba(' + rgbBg.join(',') + ',' + aBg + ')';
 		ctx.fill();
 		// X sign
 		ctx.strokeStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
+		ctx.lineWidth = 2;	
 		ctx.beginPath();
-		ctx.moveTo(x, y - 4);
-		ctx.lineTo(x, y + 4);
-		ctx.stroke();
-		ctx.beginPath();
-		ctx.moveTo(x - 4, y);
-		ctx.lineTo(x + 4, y);
+		ctx.moveTo(x, y - 3.5);
+		ctx.lineTo(x, y + 3.5);
+		ctx.moveTo(x - 3.5, y);
+		ctx.lineTo(x + 3.5, y);
 		ctx.stroke();
 	},
 	closebutton: function(ctx, x, y, rgbBg, aBg, rgb, a){
 		// Circle
 		ctx.beginPath();
-		ctx.moveTo(x, y);
 		ctx.arc(x, y, 7, 0, Math.PI*2, true);
 		ctx.fillStyle = 'rgba(' + rgbBg.join(',') + ',' + aBg + ')';
 		ctx.fill();
 		// Plus sign
 		ctx.strokeStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
+		ctx.lineWidth = 2;		
 		ctx.beginPath();
 		ctx.moveTo(x - 3, y - 3);
 		ctx.lineTo(x + 3, y + 3);
-		ctx.stroke();
-		ctx.beginPath();
 		ctx.moveTo(x + 3, y - 3);
 		ctx.lineTo(x - 3, y + 3);
 		ctx.stroke();
@@ -2927,82 +2656,16 @@ MochaUI.Window = new Class({
 	minimizebutton: function(ctx, x, y, rgbBg, aBg, rgb, a){
 		// Circle
 		ctx.beginPath();
-		ctx.moveTo(x,y);
 		ctx.arc(x,y,7,0,Math.PI*2,true);
 		ctx.fillStyle = 'rgba(' + rgbBg.join(',') + ',' + aBg + ')';
 		ctx.fill();
 		// Minus sign
 		ctx.strokeStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
+		ctx.lineWidth = 2;		
 		ctx.beginPath();
-		ctx.moveTo(x - 4, y);
-		ctx.lineTo(x + 4, y);
+		ctx.moveTo(x - 3.5, y);
+		ctx.lineTo(x + 3.5, y);
 		ctx.stroke();
-	},
-	/*
-
-	Function: hideSpinner
-		Hides the spinner.
-		
-	*/	
-	hideSpinner: function(spinner) {
-		if (!this.options.useSpinner || this.options.shape == 'gauge' || this.options.type == 'notification') return;
-		if ($(spinner))	$(spinner).hide();
-	},
-	/*
-
-	Function: showSpinner
-		Shows the spinner.
-	
-	*/	
-	showSpinner: function(spinner){
-		if (!this.options.useSpinner || this.options.shape == 'gauge' || this.options.type == 'notification') return;
-		$(spinner).show();
-	},
-	/* 
-
-	Function: close
-		Closes the window. This is an alternative to using MochaUI.Core.closeWindow().
-		
-	 */
-	close: function( ) {
-		if ( !this.isClosing )
-			MochaUI.closeWindow( $(this.options.id) );
-		return this;
-	},
-	/*
-
-	Function: minimize
-		Minimizes the window.
-
-	 */
-	minimize: function( ) {
-		MochaUI.Dock.minimizeWindow( $(this.options.id) )
-		return this;
-	},
-	/*
-
-	Function: maximize
-		Maximizes the window.
-
-	 */
-	maximize: function( ) {
-		if ( this.isMinimized )
-			MochaUI.Dock.restoreMinimized( $(this.options.id) );
-		MochaUI.Desktop.maximizeWindow( $(this.options.id) );
-		return this;
-	},
-	/*
-
-	Function: restore
-		Restores a minimized/maximized window to its original size.
-
-	 */
-	restore: function( ) {
-		if ( this.isMinimized )
-			MochaUI.Dock.restoreMinimized( $(this.options.id) );
-		else if ( this.isMaximized )
-			MochaUI.Desktop.restoreWindow( $(this.options.id) );
-		return this;
 	},
 	setMochaControlsWidth: function(){
 		this.mochaControlsWidth = 0;
@@ -3020,9 +2683,537 @@ MochaUI.Window = new Class({
 		if (options.useCanvasControls == true){
 			this.canvasControlsEl.setProperty('width', this.mochaControlsWidth);
 		}
-	}
+	},
+	/*
+
+	Function: hideSpinner
+		Hides the spinner.
+		
+	Example:	
+		(start code)
+		$('myWindow').retrieve('instance').hideSpinner();
+		(end)		
+		
+	*/	
+	hideSpinner: function() {
+		if (this.spinnerEl)	this.spinnerEl.hide();
+		return this;
+	},
+	/*
+
+	Function: showSpinner
+		Shows the spinner.
+		
+	Example:	
+		(start code)
+		$('myWindow').retrieve('instance').showSpinner();
+		(end)		
+	
+	*/	
+	showSpinner: function(){		
+		if (this.spinnerEl) this.spinnerEl.show();
+		return this;
+	},	
+	/* 
+
+	Function: close
+		Closes the window. This is an alternative to using MochaUI.Core.closeWindow().
+		
+	Example:	
+		(start code)
+		$('myWindow').retrieve('instance').close();
+		(end)		
+		
+	 */
+	close: function( ) {
+		if (!this.isClosing) MochaUI.closeWindow(this.windowEl);
+		return this;
+	},
+	/*
+
+	Function: minimize
+		Minimizes the window.
+		
+	Example:	
+		(start code)
+		$('myWindow').retrieve('instance').minimize();
+		(end)		
+
+	 */
+	minimize: function( ){
+		MochaUI.Dock.minimizeWindow(this.windowEl);
+		return this;
+	},
+	/*
+
+	Function: maximize
+		Maximizes the window.
+		
+	Example:	
+		(start code)
+		$('myWindow').retrieve('instance').maximize();
+		(end)		
+
+	 */
+	maximize: function( ) {
+		if (this.isMinimized){
+			MochaUI.Dock.restoreMinimized(this.windowEl);
+		}	
+		MochaUI.Desktop.maximizeWindow(this.windowEl);
+		return this;
+	},
+	/*
+
+	Function: restore
+		Restores a minimized/maximized window to its original size.
+		
+	Example:	
+		(start code)
+		$('myWindow').retrieve('instance').restore();
+		(end)		
+
+	 */
+	restore: function() {
+		if ( this.isMinimized )
+			MochaUI.Dock.restoreMinimized(this.windowEl);
+		else if ( this.isMaximized )
+			MochaUI.Desktop.restoreWindow(this.windowEl);
+		return this;
+	},
+	/*
+
+	Function: resize
+		Resize a window.
+		
+	Notes:
+		If Advanced Effects are on the resize is animated. If centered is set to true the window remains centered as it resizes.	
+			
+	Example:	
+		(start code)
+		$('myWindow').retrieve('instance').resize({width:500,height:300,centered:true});
+		(end)		
+
+	 */	
+	resize: function(options){		
+		MochaUI.resizeWindow(this.windowEl, options);
+		return this;
+	},	
+	/*
+
+	Function: center
+		Center a window.
+			
+	Example:	
+		(start code)
+		$('myWindow').retrieve('instance').center();
+		(end)		
+
+	 */
+	center: function() {
+		MochaUI.centerWindow(this.windowEl);
+		return this;
+	},	
+	
+	hide: function(){
+		this.windowEl.setStyle('display', 'none');
+		return this;
+	},
+	
+	show: function(){
+		this.windowEl.setStyle('display', 'block');
+		return this;
+	}	
+			
 });
 MochaUI.Window.implement(new Options, new Events);
+
+MochaUI.extend({
+	/*
+
+	Function: closeWindow
+		Closes a window.
+
+	Syntax:
+	(start code)
+		MochaUI.closeWindow();
+	(end)
+
+	Arguments: 
+		windowEl - the ID of the window to be closed
+
+	Returns:
+		true - the window was closed
+		false - the window was not closed
+
+	*/
+	closeWindow: function(windowEl){		
+
+		var instances = MochaUI.Windows.instances;
+		var currentInstance = instances.get(windowEl.id);
+		
+		// Does window exist and is not already in process of closing ?
+		if (windowEl != $(windowEl) || currentInstance.isClosing) return;
+			
+		currentInstance.isClosing = true;
+		currentInstance.fireEvent('onClose', windowEl);
+		if (currentInstance.check) currentInstance.check.destroy();
+
+		if ((currentInstance.options.type == 'modal' || currentInstance.options.type == 'modal2') && Browser.Engine.trident4){
+			$('modalFix').hide();
+		}
+		
+		if (MochaUI.options.advancedEffects == false){			
+			if (currentInstance.options.type == 'modal' || currentInstance.options.type == 'modal2'){
+				$('modalOverlay').setStyle('opacity', 0);
+			}			
+			MochaUI.closingJobs(windowEl);			
+			return true;	
+		}
+		else {
+			// Redraws IE windows without shadows since IE messes up canvas alpha when you change element opacity
+			if (Browser.Engine.trident) currentInstance.drawWindow(false);
+			if (currentInstance.options.type == 'modal' || currentInstance.options.type == 'modal2'){
+				MochaUI.Modal.modalOverlayCloseMorph.start({
+					'opacity': 0
+				});
+			}
+			var closeMorph = new Fx.Morph(windowEl, {
+				duration: 120,
+				onComplete: function(){
+					MochaUI.closingJobs(windowEl);
+					return true;
+				}.bind(this)
+			});
+			closeMorph.start({
+				'opacity': .4
+			});
+		}
+
+	},
+	closingJobs: function(windowEl){
+
+		var instances = MochaUI.Windows.instances;
+		var currentInstance = instances.get(windowEl.id);		
+		windowEl.setStyle('visibility', 'hidden');
+		// Destroy throws an error in IE8
+		if (Browser.Engine.trident) {
+			windowEl.dispose();
+		}
+		else {
+			windowEl.destroy();
+		}
+		currentInstance.fireEvent('onCloseComplete');		
+		
+		if (currentInstance.options.type != 'notification'){
+			var newFocus = this.getWindowWithHighestZindex();
+			this.focusWindow(newFocus);
+		}
+
+		instances.erase(currentInstance.options.id);
+		if (this.loadingWorkspace == true) {
+			this.windowUnload();
+		}
+
+		if (MochaUI.Dock && $(MochaUI.options.dock) && currentInstance.options.type == 'window') {
+			var currentButton = $(currentInstance.options.id + '_dockTab');
+			if (currentButton != null) {
+				MochaUI.Dock.dockSortables.removeItems(currentButton).destroy();
+			}
+			// Need to resize everything in case the dock becomes smaller when a tab is removed
+			MochaUI.Desktop.setDesktopSize();
+		}
+	},
+	/*
+	
+	Function: closeAll	
+		Close all open windows.
+
+	*/
+	closeAll: function() {		
+		$$('.mocha').each(function(windowEl){
+			this.closeWindow(windowEl);
+		}.bind(this));
+	},
+	/*
+	  	
+	Function: collapseToggle
+		Collapses an expanded window. Expands a collapsed window.
+
+	*/
+	collapseToggle: function(windowEl){
+		var instances = MochaUI.Windows.instances;
+		var currentInstance = instances.get(windowEl.id);
+		var handles = currentInstance.windowEl.getElements('.handle');
+		if (currentInstance.isMaximized == true) return;		
+		if (currentInstance.isCollapsed == false) {
+			currentInstance.isCollapsed = true;
+			handles.hide();
+			if ( currentInstance.iframeEl ) {
+				currentInstance.iframeEl.setStyle('visibility', 'hidden');
+			}
+			currentInstance.contentBorderEl.setStyles({
+				visibility: 'hidden',
+				position: 'absolute',
+				top: -10000,
+				left: -10000
+			});
+			if(currentInstance.toolbarWrapperEl){
+				currentInstance.toolbarWrapperEl.setStyles({
+					visibility: 'hidden',
+					position: 'absolute',
+					top: -10000,
+					left: -10000
+				});
+			}
+			currentInstance.drawWindowCollapsed();
+		}
+		else {
+			currentInstance.isCollapsed = false;
+			currentInstance.drawWindow();
+			currentInstance.contentBorderEl.setStyles({
+				visibility: 'visible',
+				position: null,
+				top: null,
+				left: null
+			});
+			if(currentInstance.toolbarWrapperEl){
+				currentInstance.toolbarWrapperEl.setStyles({
+					visibility: 'visible',
+					position: null,
+					top: null,
+					left: null
+				});
+			}
+			if ( currentInstance.iframeEl ) {
+				currentInstance.iframeEl.setStyle('visibility', 'visible');
+			}
+			handles.show();
+		}
+	},	
+	/*
+
+	Function: toggleWindowVisibility
+		Toggle window visibility with Ctrl-Alt-Q.
+
+	*/	
+	toggleWindowVisibility: function(){
+		MochaUI.Windows.instances.each(function(instance){
+			if (instance.options.type == 'modal' || instance.options.type == 'modal2' || instance.isMinimized == true) return;									
+			var id = $(instance.options.id);
+			if (id.getStyle('visibility') == 'visible'){
+				if (instance.iframe){
+					instance.iframeEl.setStyle('visibility', 'hidden');
+				}
+				if (instance.toolbarEl){
+					instance.toolbarWrapperEl.setStyle('visibility', 'hidden');
+				}
+				instance.contentBorderEl.setStyle('visibility', 'hidden');
+				id.setStyle('visibility', 'hidden');
+				MochaUI.Windows.windowsVisible = false;
+			}
+			else {
+				id.setStyle('visibility', 'visible');
+				instance.contentBorderEl.setStyle('visibility', 'visible');
+				if (instance.iframe){
+					instance.iframeEl.setStyle('visibility', 'visible');
+				}
+				if (instance.toolbarEl){
+					instance.toolbarWrapperEl.setStyle('visibility', 'visible');
+				}
+				MochaUI.Windows.windowsVisible = true;
+			}
+		}.bind(this));
+
+	},
+	focusWindow: function(windowEl, fireEvent){
+
+		// This is used with blurAll
+		MochaUI.Windows.focusingWindow = true;
+		var windowClicked = function(){
+			MochaUI.Windows.focusingWindow = false;
+		};
+		windowClicked.delay(170, this);
+		
+		// Only focus when needed
+		if ($$('.mocha').length == 0) return;
+		if (windowEl != $(windowEl) || windowEl.hasClass('isFocused')) return;
+
+		var instances =  MochaUI.Windows.instances;
+		var currentInstance = instances.get(windowEl.id);
+	
+		if (currentInstance.options.type == 'notification'){
+			windowEl.setStyle('zIndex', 11001);
+			return;
+		};
+
+		MochaUI.Windows.indexLevel += 2;
+		windowEl.setStyle('zIndex', MochaUI.Windows.indexLevel);
+
+		// Used when dragging and resizing windows
+		$('windowUnderlay').setStyle('zIndex', MochaUI.Windows.indexLevel - 1).inject($(windowEl),'after');
+
+		// Fire onBlur for the window that lost focus.
+		instances.each(function(instance){
+			if (instance.windowEl.hasClass('isFocused')){
+				instance.fireEvent('onBlur', instance.windowEl);
+			}
+			instance.windowEl.removeClass('isFocused');
+		});
+
+		if (MochaUI.Dock && $(MochaUI.options.dock) && currentInstance.options.type == 'window') {
+			MochaUI.Dock.makeActiveTab();
+		}
+		windowEl.addClass('isFocused');
+
+		if (fireEvent != false){
+			currentInstance.fireEvent('onFocus', windowEl);
+		}
+
+	},
+	getWindowWithHighestZindex: function(){
+		this.highestZindex = 0;
+		$$('.mocha').each(function(element){
+			this.zIndex = element.getStyle('zIndex');
+			if (this.zIndex >= this.highestZindex) {
+				this.highestZindex = this.zIndex;
+			}	
+		}.bind(this));
+		$$('.mocha').each(function(element){
+			if (element.getStyle('zIndex') == this.highestZindex) {
+				this.windowWithHighestZindex = element;
+			}
+		}.bind(this));
+		return this.windowWithHighestZindex;
+	},
+	blurAll: function(){		
+		if (MochaUI.Windows.focusingWindow == false) {
+			$$('.mocha').each(function(windowEl){
+				var instances =  MochaUI.Windows.instances;
+				var currentInstance = instances.get(windowEl.id);
+				if (currentInstance.options.type != 'modal' && currentInstance.options.type != 'modal2'){
+					windowEl.removeClass('isFocused');
+				}
+			});
+			$$('.dockTab').removeClass('activeDockTab');
+		}
+	},
+	centerWindow: function(windowEl){
+		
+		if(!windowEl){
+			MochaUI.Windows.instances.each(function(instance){
+				if (instance.windowEl.hasClass('isFocused')){
+					windowEl = instance.windowEl;
+				}
+			});
+		}
+
+		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
+		var options = currentInstance.options;
+		var dimensions = options.container.getCoordinates();
+				
+		var windowPosTop = window.getScroll().y + (window.getSize().y * .5) - (windowEl.offsetHeight * .5);
+		if (windowPosTop < -currentInstance.options.shadowBlur){
+			windowPosTop = -currentInstance.options.shadowBlur;
+		}
+		var windowPosLeft =	(dimensions.width * .5) - (windowEl.offsetWidth * .5);
+		if (windowPosLeft < -currentInstance.options.shadowBlur){
+			windowPosLeft = -currentInstance.options.shadowBlur;
+		}
+		if (MochaUI.options.advancedEffects == true){
+			currentInstance.morph.start({
+				'top': windowPosTop,
+				'left': windowPosLeft
+			});
+		}
+		else {
+			windowEl.setStyles({
+				'top': windowPosTop,
+				'left': windowPosLeft
+			});
+		}
+	},
+	resizeWindow: function(windowEl, options){
+		var instance = windowEl.retrieve('instance');
+		
+		$extend({
+			width: null,
+			height: null,
+			top: null,
+			left: null,
+			centered: true
+		}, options);
+				
+		var oldWidth = windowEl.getStyle('width').toInt();
+		var oldHeight = windowEl.getStyle('height').toInt();
+		var oldTop = windowEl.getStyle('top').toInt();
+		var oldLeft = windowEl.getStyle('left').toInt();
+		
+		if (options.centered){
+			var top = options.top || oldTop - ((options.height - oldHeight) * .5);
+			var left = options.left || oldLeft - ((options.width - oldWidth) * .5);
+		}
+		else {
+			var top =  options.top || oldTop;
+			var left = options.left || oldLeft;
+		}				
+		
+		if (MochaUI.options.advancedEffects == false){
+			windowEl.setStyles({
+				'top': top,
+				'left': left
+			});
+			instance.contentWrapperEl.setStyles({
+				'height': options.height,
+				'width':  options.width
+			});
+			instance.drawWindow();
+			// Show iframe
+			if (instance.iframeEl){
+				if (!Browser.Engine.trident) {
+					instance.iframeEl.setStyle('visibility', 'visible');
+				}
+				else {
+					instance.iframeEl.show();
+				}
+			}
+		}
+		else {
+			windowEl.retrieve('resizeMorph').start({
+				'0': {	'height': options.height,
+						'width':  options.width
+				},
+				'1': {	'top': top,
+						'left': left 
+				}
+			});		
+		}
+		return instance;
+	},
+	/*
+
+	Internal Function: dynamicResize
+		Use with a timer to resize a window as the window's content size changes, such as with an accordian.
+
+	*/
+	dynamicResize: function(windowEl){
+		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
+		var contentWrapperEl = currentInstance.contentWrapperEl;
+		var contentEl = currentInstance.contentEl;
+		
+		contentWrapperEl.setStyles({
+			'height': contentEl.offsetHeight,
+			'width': contentEl.offsetWidth
+		});				
+		currentInstance.drawWindow();
+	}	
+});
+
+// Toggle window visibility with Ctrl-Alt-Q
+document.addEvent('keydown', function(event){
+	if (event.key == 'q' && event.control && event.alt) {
+		MochaUI.toggleWindowVisibility();
+	}
+});
 /*
 
 Script: Modal.js
@@ -3141,7 +3332,7 @@ See Also:
 
 MochaUI.extend({
 	NewWindowsFromHTML: function(){
-		$$('div.mocha').each(function(el) {
+		$$('.mocha').each(function(el) {
 			// Get the window title and destroy that element, so it does not end up in window content
 			if ( Browser.Engine.presto || Browser.Engine.trident5 ){
 				el.hide(); // Required by Opera, and probably IE7
@@ -3273,7 +3464,7 @@ MochaUI.extend({
 
 		var x = this.options.viewportLeftOffset;
 		var y = this.options.viewportTopOffset;
-		$$('div.mocha').each(function(windowEl){
+		$$('.mocha').each(function(windowEl){
 			var currentWindowClass = MochaUI.Windows.instances.get(windowEl.id);
 			if (!currentWindowClass.isMinimized && !currentWindowClass.isMaximized && currentWindowClass.options.draggable){
 				id = windowEl.id;
@@ -3530,7 +3721,7 @@ MochaUI.Desktop = new Class({
 		}		
 	
 		// This is run on dock initialize so no need to do it twice.
-		if (!MochaUI.Dock.dockWrapper){
+		if (!MochaUI.Dock){
 			this.setDesktopSize();
 		}
 		this.menuInitialize();		
@@ -3694,56 +3885,13 @@ MochaUI.Desktop = new Class({
 		newHeight -= currentInstance.contentBorderEl.getStyle('border-bottom').toInt();
 		newHeight -= (  currentInstance.toolbarWrapperEl ? currentInstance.toolbarWrapperEl.getStyle('height').toInt() + currentInstance.toolbarWrapperEl.getStyle('border-top').toInt() : 0);
 
-		if (MochaUI.options.advancedEffects == false){
-			windowEl.setStyles({
-				'top': shadowOffset.y - shadowBlur,
-				'left': shadowOffset.x - shadowBlur
-			});
-			currentInstance.contentWrapperEl.setStyles({
-				'height': newHeight,
-				'width':  windowDimensions.width
-			});
-			currentInstance.drawWindow();
-			// Show iframe
-			if ( currentInstance.iframeEl ) {
-				if (!Browser.Engine.trident) {
-					currentInstance.iframeEl.setStyle('visibility', 'visible');
-				}
-				else {
-					currentInstance.iframeEl.show();
-				}
-			}
-			currentInstance.fireEvent('onMaximize', windowEl);
-		}
-		else {
-
-			// Todo: Initialize the variables for these morphs once in an initialize function and reuse them
-
-			var maximizeMorph = new Fx.Elements([contentWrapperEl, windowEl], { 
-				duration: 100,
-				transition: Fx.Transitions.Sine.easeInOut,
-				onStart: function(windowEl){
-					currentInstance.maximizeAnimation = currentInstance.drawWindow.periodical(20, currentInstance);
-				}.bind(this),
-				onComplete: function(windowEl){
-					$clear(currentInstance.maximizeAnimation);
-					currentInstance.drawWindow();
-					// Show iframe
-					if ( currentInstance.iframeEl ) {
-						currentInstance.iframeEl.setStyle('visibility', 'visible');
-					}
-					currentInstance.fireEvent('onMaximize', windowEl);	
-				}.bind(this)
-			});
-			maximizeMorph.start({
-				'0': {	'height': newHeight,
-						'width':  windowDimensions.width
-				},
-				'1': {	'top': shadowOffset.y - shadowBlur,
-						'left': shadowOffset.x - shadowBlur 
-				}
-			});		
-		}
+		MochaUI.resizeWindow(windowEl,{
+			width: windowDimensions.width,
+			height: newHeight,
+			top: shadowOffset.y - shadowBlur,
+			left: shadowOffset.x - shadowBlur
+		});
+		currentInstance.fireEvent('onMaximize', windowEl);
 		currentInstance.maximizeButtonEl.setProperty('title', 'Restore');
 		MochaUI.focusWindow(windowEl);
 
@@ -3956,6 +4104,8 @@ MochaUI.Column = new Class({
 				'width': options.placement == 'main' ? null : options.width
 			}
 		}).inject($(options.container));
+		
+		this.columnEl.store('instance', this);
 
 		var parent = this.columnEl.getParent();
 		var columnHeight = parent.getStyle('height').toInt();
@@ -4201,6 +4351,8 @@ MochaUI.Panel = new Class({
 				'height': options.height
 			}
 		}).inject($(options.column));
+		
+		this.panelEl.store('instance', this);
 
 		this.panelEl.addClass(options.addClass);
 
@@ -5003,7 +5155,7 @@ MochaUI.extend({
 
 	*/	
 	minimizeAll: function() {
-		$$('div.mocha').each(function(windowEl){
+		$$('.mocha').each(function(windowEl){
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
 			if (!currentInstance.isMinimized && currentInstance.options.minimizable == true){
 				MochaUI.Dock.minimizeWindow(windowEl);
@@ -5288,7 +5440,7 @@ MochaUI.Dock = new Class({
 		var windowEl = MochaUI.getWindowWithHighestZindex();
 		var currentInstance = MochaUI.Windows.instances.get(windowEl.id);
 		
-		$$('div.dockTab').removeClass('activeDockTab');
+		$$('.dockTab').removeClass('activeDockTab');
 		if (currentInstance.isMinimized != true) {
 			
 			currentInstance.windowEl.addClass('isFocused');
@@ -5457,7 +5609,7 @@ MochaUI.extend({
 		
 	},
 	windowUnload: function(){
-		if ($$('div.mocha').length == 0 && this.myChain){
+		if ($$('.mocha').length == 0 && this.myChain){
 			this.myChain.callChain();
 		}		
 	},
@@ -5513,12 +5665,12 @@ MochaUI.extend({
 			return;
 		}
 
-		if ($$('div.mocha').length != 0){
+		if ($$('.mocha').length != 0){
 			this.loadingWorkspace = true;
 			this.myChain = new Chain();
 			this.myChain.chain(
 				function(){
-					$$('div.mocha').each(function(el) {
+					$$('.mocha').each(function(el) {
 						this.closeWindow(el);
 					}.bind(this));
 				}.bind(this),
