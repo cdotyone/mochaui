@@ -241,6 +241,10 @@ div.mochaToolbarWrapper.bottom {
 	color: #fff;
 }
 
+#fxmorpherExample .mochaContentWrapper {
+	background: #f00;	
+}
+
 #clock {
 	background: #fff;	
 }	
@@ -264,8 +268,8 @@ div.mochaToolbarWrapper.bottom {
 }
 
 .mocha.notification {
-	background: #CEDFF2;	
-}	
+	background: #cedff2;	
+}
 
 .mocha.notification .mochaTitlebar {
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */		

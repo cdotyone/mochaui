@@ -141,7 +141,6 @@ initializeWindows = function(){
 			x: 570,
 			y: 152,
 			padding: { top: 0, right: 0, bottom: 0, left: 0 },
-			bodyBgColor: [250,250,250],
 			onContentLoaded: function(){
 				new Asset.javascript('plugins/coolclock/scripts/coolclock.js', {
 					id: 'coolclockScript',

@@ -216,6 +216,10 @@ div.mochaToolbarWrapper.bottom {
 .jsonExample .mochaWindowButton {
 	color: #666;
 	background-color: #fff;			
+}
+
+#fxmorpherExample .mochaContentWrapper {
+	background: #f00;	
 }	
 
 .mocha.no-canvas {

@@ -141,7 +141,6 @@ initializeWindows = function(){
 			x: 570,
 			y: 140,
 			padding: { top: 0, right: 0, bottom: 0, left: 0 },
-			bodyBgColor: [250,250,250],
 			onContentLoaded: function(){
 				new Asset.javascript('plugins/coolclock/scripts/coolclock.js', {
 					id: 'coolclockScript',
@@ -247,8 +246,38 @@ initializeWindows = function(){
 		new Event(e).stop();
 			MochaUI.splitWindow();
 		});
-	}	
-			
+	}
+	
+	MochaUI.fxmorpherWindow = function(){
+		new MochaUI.Window({
+			id: 'fxmorpherExample',
+			title: 'Path Animation Example',
+			loadMethod: 'xhr',
+			contentURL: 'plugins/Fx.Morpher/example.html',
+			width: 330,
+			height: 330,
+			padding: { top: 0, right: 0, bottom: 0, left: 0 },
+			scrollbars: false,
+			resizable: false,
+			onBeforeBuild: function(){
+				if ($('accordianStyle')) return;
+				new Asset.css('plugins/Fx.Morpher/css/style.css', {id: 'cboxStyle'});
+			},			
+			onContentLoaded: function() {
+				new Asset.javascript('plugins/Fx.Morpher/scripts/cbox.js', {
+					id: 'cboxScript',
+					onload: function(){
+						new Asset.javascript('plugins/Fx.Morpher/scripts/example.js', {
+							id: 'animationExampleScript',
+							onload: function(){
+							}
+						});	
+
+					}
+				});						
+			}				
+		});	
+	}			
 
 	// Examples > Tests
 	
@@ -749,6 +778,16 @@ initializeColumns = function() {
 			$('parametricsLink').addEvent('click', function(e){
 				MochaUI.parametricsWindow();
 			});
+			$('fxmorpherLink').addEvent('click', function(e){
+				MochaUI.updateContent({
+					'element': $('mainPanel'),
+					'loadMethod': 'xhr',
+					'url': 'plugins/Fx.Morpher/',
+					'title': 'Fx.Morpher Path Animation',
+					'padding': { top: 8, right: 8, bottom: 8, left: 8 }
+				});
+				MochaUI.fxmorpherWindow();
+			});			
 		}
 	});
 	

@@ -1267,7 +1267,8 @@ function addResizeBottom(element){
 			
 		}.bind(this),
 		onDrag: function(){
-			partnerHeight = partnerOriginalHeight + (this.originalHeight - element.getStyle('height').toInt());
+			partnerHeight = partnerOriginalHeight;
+			partnerHeight += (this.originalHeight - element.getStyle('height').toInt());
 			partner.setStyle('height', partnerHeight);
 			MochaUI.resizeChildren(element, element.getStyle('height').toInt());
 			MochaUI.resizeChildren(partner, partnerHeight);
@@ -1279,7 +1280,8 @@ function addResizeBottom(element){
 			});						
 		}.bind(this),
 		onComplete: function(){
-			partnerHeight = partnerOriginalHeight + (this.originalHeight - element.getStyle('height').toInt());
+			partnerHeight = partnerOriginalHeight;
+			partnerHeight += (this.originalHeight - element.getStyle('height').toInt());
 			partner.setStyle('height', partnerHeight);
 			MochaUI.resizeChildren(element, element.getStyle('height').toInt());
 			MochaUI.resizeChildren(partner, partnerHeight);
