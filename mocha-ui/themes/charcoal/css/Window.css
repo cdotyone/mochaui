@@ -79,7 +79,7 @@ div.mochaToolbarWrapper.bottom {
 .mochaContentWrapper { /* Has a fixed height and scrollbars if required. */
 	font-size: 12px;
 	overflow: auto;
-	background: #191919;
+	background: #222;
 }
 	
 .mochaContent {

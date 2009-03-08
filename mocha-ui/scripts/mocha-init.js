@@ -582,7 +582,7 @@ initializeWindows = function(){
 			loadMethod: 'xhr',
 			contentURL: 'pages/features-layout.html',
 			width: 305,
-			height: 175,
+			height: 250,
 			resizeLimit: {'x': [275, 2500], 'y': [125, 2000]},
 			toolbar: true,
 			toolbarURL: 'pages/features-tabs.html',
@@ -781,6 +781,26 @@ initializeColumns = function() {
 			$('parametricsLink').addEvent('click', function(e){
 				MochaUI.parametricsWindow();
 			});
+			$('calendarLink').addEvent('click', function(e){
+				MochaUI.updateContent({
+					'element': $('mainPanel'),
+					'loadMethod': 'xhr',
+					'url': 'plugins/calendar/example.html',
+					'title': 'Calendar Component',
+					'padding': { top: 8, right: 8, bottom: 8, left: 8 },
+					onContentLoaded: function(){
+						if (!$('calendarStyle')){
+							new Asset.css('plugins/calendar/css/calendar.css', {id: 'calendarStyle'});
+						}
+						new Asset.javascript('plugins/calendar/scripts/calendar.js', {
+							id: 'calendarScript',
+							onload: function(){
+								myCal1 = new Calendar({ date1: 'd/m/Y' }, { direction: 1, tweak: { x: 6, y: 0 }});
+							}
+						});
+					}										
+				});
+			});			
 			$('fxmorpherLink').addEvent('click', function(e){
 				MochaUI.updateContent({
 					'element': $('mainPanel'),

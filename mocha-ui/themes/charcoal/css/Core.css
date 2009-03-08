@@ -61,10 +61,8 @@ Notes:
 /* Sliders */
 
 .sliderarea {
-	background: #303030 !important;
-	border: 1px solid #252525 !important;
-	border-bottom: 1px solid #252525 !important;
-	border-left: 1px solid #252525 !important;
+	background: #404040 !important;
+	border: 1px solid #141414 !important;
 }
  
 .sliderknob {

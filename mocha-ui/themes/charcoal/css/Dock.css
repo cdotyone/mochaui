@@ -20,11 +20,9 @@ Required by:
 #dockWrapper {
 	display: none;
 	width: 100%;
-	border-top: 1px solid #222;
 }
 
 #dockWrapper.top {
-	border: 0;
 }
 
 #dock {

@@ -102,16 +102,66 @@ dd {
 
 /* Forms */
 
-textarea, input {
+form fieldset {
+	border: 2px solid #454545;
+	clear: both;
+	margin-bottom: 9px;
+	overflow: hidden;
+	padding: 9px 18px;
+}
+
+form legend {
+	background: #454545;
+	margin-bottom: 9px;
+	padding: 2px 11px;
+}
+
+form label {
+	font-weight: bold;
+	margin-right: 6px;
+	text-align: right;
+	width: 50px;
+}
+
+textarea, input, select {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
+	vertical-align: middle;				
+}
+
+textarea, input {
 	color: #ddd;
-	background: #303030;			
+	background: #555;			
 }
 
 .input {
 	padding: 2px 0 2px 3px;
 	border: 1px solid #141414;	
+}
+
+form button {
+	vertical-align: middle;	
+}
+
+.button, .button2 {
+	height: 24px;
+	margin: 0;
+	padding: 3px 6px;
+	background: #718ba6;
+	font-size: 12px;
+	font-weight: bold;
+	color: #fff;
+	cursor: pointer;
+	vertical-align: middle;
+	border: 1px solid #141414;	
+}
+
+* html .button {
+	padding: 3px 1px;		
+}
+
+* html .button2 {
+	padding: 3px 1px;	
 }
 
 .searchField {
@@ -142,28 +192,6 @@ textarea, input {
 	vertical-align: top;
 	margin-top: 0;	
 }
-
-.button, .button2 {
-	height: 24px;
-	margin: 0;
-	padding: 3px 6px;
-	background: #718ba6;
-	font-size: 12px;
-	font-weight: bold;
-	color: #fff;
-	cursor: pointer;
-	vertical-align: middle;
-	border: 1px solid #141414;	
-}
-
-* html .button {
-	padding: 3px 1px;		
-}
-
-* html .button2 {
-	padding: 3px 1px;	
-}	 
-
 
 .formRow {
 	margin: 0 0 8px 0;
@@ -201,7 +229,6 @@ pre {
 
 hr {
 	background-color: #454545;
-	color: #ccc;
 	height: 1px;
 	border: 0px;
 }

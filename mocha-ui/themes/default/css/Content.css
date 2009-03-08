@@ -100,14 +100,62 @@ dd {
 
 /* Forms */
 
-textarea, input {
+form fieldset {
+	border: 2px solid #e5e5e5;
+	clear: both;
+	margin-bottom: 9px;
+	overflow: hidden;
+	padding: 9px 18px;
+}
+
+form legend {
+	background: #e5e5e5;
+	color: #262626;
+	margin-bottom: 9px;
+	padding: 2px 11px;
+}
+
+form label {
+	font-weight: bold;
+	margin-right: 6px;
+	text-align: right;
+	width: 50px;
+}
+
+textarea, input, select {
 	font-family: Arial, Helvetica, sans-serif;
-	font-size: 12px;		
+	font-size: 12px;
+	vertical-align: middle;		
 }
 
 .input {
 	padding: 2px 0 2px 3px;
 	border: 1px solid #848484;	
+}
+
+form button {
+	vertical-align: middle;	
+}
+
+.button, .button2 {
+	height: 24px;
+	margin: 0;
+	padding: 3px 6px;
+	background: #718ba6;
+	font-size: 12px;
+	font-weight: bold;
+	color: #fff;
+	cursor: pointer;
+	vertical-align: middle;
+	border: 1px solid #606060;	
+}
+
+* html .button {
+	padding: 3px 1px;		
+}
+
+* html .button2 {
+	padding: 3px 1px;	
 }
 
 .searchField {
@@ -137,27 +185,6 @@ textarea, input {
 *:first-child+html .toolbox .button, *:first-child+html .toolbox .button2 { /* IE7 Hack */
 	vertical-align: top;
 	margin-top: 0;	
-}
-
-.button, .button2 {
-	height: 24px;
-	margin: 0;
-	padding: 3px 6px;
-	background: #718ba6;
-	font-size: 12px;
-	font-weight: bold;
-	color: #fff;
-	cursor: pointer;
-	vertical-align: middle;
-	border: 1px solid #606060;	
-}
-
-* html .button {
-	padding: 3px 1px;		
-}
-
-* html .button2 {
-	padding: 3px 1px;	
 }
 
 .formRow {
@@ -207,7 +234,3 @@ hr {
 .nobr {
 	white-space: nowrap;
 }
-
-.textBox {
-	max-width: 650px;	
-}	
