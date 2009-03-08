@@ -103,8 +103,8 @@ Fx.Morpher = new Class({
 			if(path && this.options.usepath.contains(p)) {
 				var coords = path.getCoordinates(1 - delta);
 				//TODO: make it work with usepath[] and avoid that if/then crap...
-				if(p == 'left') x =coords.x;
-				if(p == 'top') y = coords.y;
+				if(p == 'left') x = coords.x ? coords.x : null;
+				if(p == 'top') y = coords.y ? coords.y : null;
 			}
 			
 			switch(p) {
@@ -330,7 +330,7 @@ Fx.Path = new Class({
 		
 		var mapped = (((p % this._blocksize) * 100) / this._blocksize) / 100;
 		
-		return seg.getCoordinates(mapped);
+		return seg ? seg.getCoordinates(mapped) : null;
 	},
 	
 	//p[0 -> 1] r[0-#elements]

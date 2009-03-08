@@ -197,80 +197,6 @@ div.mochaToolbarWrapper.bottom {
 	border: 1px solid transparent;
 }
 
-/* Modals */
-
-.modal2 {
-	border: 8px solid #fff;		
-}
-
-.modal2 .mochaContentBorder {
-	border-width: 0px;
-}
-	
-/* Window Themes */
-
-.jsonExample .mochaTitlebar {
-	background-color: #6db6db;
-}
-
-.jsonExample .mochaWindowButton {
-	color: #666;
-	background-color: #fff;			
-}
-
-#fxmorpherExample .mochaContentWrapper {
-	background: #f00;	
-}	
-
-.mocha.no-canvas {
-	background: #4c4c4c;	
-	border: 1px solid #666;	
-}
-
-.mocha.no-canvas .mochaTitlebar {
-	background: #4c4c4c;	
-}
-
-.mocha.transparent .mochaTitlebar h3 {
-	color: #fff;
-	display: none;
-}
-
-.mocha.transparent .mochaContentWrapper {
-	background: transparent;	
-}
-
-.mocha.notification {
-	background: #fff;
-	color: #141414;	
-}
-
-.mocha.notification .mochaTitlebar {
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */		
-	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0); /* IE6 and 7*/	
-	opacity: .0;
-	-moz-opacity: 0;
-}
-
-.mocha.notification .mochaContentBorder {
-	border-width: 0px;
-}
-
-.mocha.notification .mochaContentWrapper {
-	text-align: center;
-	font-size: 12px;
-	font-weight: bold;
-	background: transparent;	
-}
-
-#about {
-	border: 8px solid #404040;	
-}
-
-#about_contentWrapper {
-	background: #191919 url(../images/logo2.gif) left 3px no-repeat;		
-}
-
 /* Viewport overlays
 ---------------------------------------------------------------- */
 
@@ -320,4 +246,80 @@ div.mochaToolbarWrapper.bottom {
 
 .mocha.replaced, .mochaTitlebar.replaced, .mochaMinimizeButton.replaced, .mochaMaximizeButton.replaced, .mochaCloseButton.replaced {
 	background-color: transparent !important;
+}
+
+/* Modals */
+
+.modal2 {
+	border: 8px solid #fff;		
+}
+
+.modal2 .mochaContentBorder {
+	border-width: 0px;
+}
+	
+/* Window Themes */
+
+.mocha.no-canvas {
+	background: #4c4c4c;	
+	border: 1px solid #666;	
+}
+
+.mocha.no-canvas .mochaTitlebar {
+	background: #4c4c4c;	
+}
+
+.mocha.transparent .mochaTitlebar h3 {
+	color: #fff;
+	display: none;
+}
+
+.mocha.transparent .mochaContentWrapper {
+	background: transparent;	
+}
+
+.mocha.notification {
+	background: #fff;
+	color: #141414;	
+}
+
+.mocha.notification .mochaTitlebar {
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */		
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0); /* IE6 and 7*/	
+	opacity: .0;
+	-moz-opacity: 0;
+}
+
+.mocha.notification .mochaContentBorder {
+	border-width: 0px;
+}
+
+.mocha.notification .mochaContentWrapper {
+	text-align: center;
+	font-size: 12px;
+	font-weight: bold;
+	background: transparent;	
+}
+
+/* Example Window Themes */
+
+#about {
+	border: 8px solid #404040;	
+}
+
+#about_contentWrapper {
+	background: #191919 url(../images/logo2.gif) 3px 3px no-repeat;		
+}
+
+.jsonExample .mochaTitlebar {
+	background-color: #6db6db;
+}
+
+.jsonExample .mochaWindowButton {
+	color: #666;
+	background-color: #fff;			
+}
+
+#fxmorpherExample .mochaContentWrapper {
+	background: #577a9e;	
 }

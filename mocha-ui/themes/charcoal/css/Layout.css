@@ -64,11 +64,13 @@ body {
 }
 
 #desktopTitlebar h2.tagline {
-	font-size: 12px;    
+	padding: 7px 0 0 0;	
+	font-family: Verdana, Arial, Helvetica, sans-serif;	
+	font-size: 10px;    
 	color: #b2b2b2;    
 	font-weight: bold;
-	padding: 6px 0 0 0;
 	text-align: center;
+	text-transform: uppercase;	
 }
 
 #desktopTitlebar h2.tagline .taglineEm {

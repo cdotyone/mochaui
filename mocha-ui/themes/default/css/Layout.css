@@ -36,14 +36,14 @@ body {
 }
 
 #desktopHeader {
-	background: #f1f1f1;
+	background: #f2f2f2;
 }
 
 #desktopTitlebarWrapper {
 	position: relative;	
 	height: 45px;
 	overflow: hidden;
-	background: #333 url(../images/bg-header.gif) repeat-x;
+	background: #718BA6 url(../images/bg-header.gif) repeat-x;
 }
 
 #desktopTitlebar {
@@ -64,11 +64,13 @@ body {
 }
 
 #desktopTitlebar h2.tagline {
-	font-size: 12px;    
+	padding: 7px 0 0 0;	
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;    
 	color: #d4dce4;    
 	font-weight: bold;
-	padding: 6px 0 0 0;
 	text-align: center;
+	text-transform: uppercase;
 }
 
 #desktopTitlebar h2.tagline .taglineEm {

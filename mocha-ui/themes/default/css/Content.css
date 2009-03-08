@@ -158,18 +158,6 @@ textarea, input {
 
 * html .button2 {
 	padding: 3px 1px;	
-}	 
-
-.button2 {
-	background-position: 0 -60px;
-}	
-		
-.button:hover {
-	background-position: 0 -30px;	
-}
-
-.button2:hover {
-	background-position: 0 -90px;
 }
 
 .formRow {

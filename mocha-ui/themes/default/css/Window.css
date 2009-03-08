@@ -208,96 +208,6 @@ div.mochaToolbarWrapper.bottom {
 	border: 1px solid transparent;
 }
 
-/* Modals */
-
-.modal2 {
-	border: 8px solid #fff;		
-}
-
-.modal2 .mochaContentBorder {
-	border-width: 0px;
-}
-	
-/* Window Themes */
-
-#json01 .mochaTitlebar {
-	background: #6dd2db;
-}
-
-#json02 .mochaTitlebar {
-	background: #6db6db;
-}
-
-#json03 .mochaTitlebar {
-	background: #6d92db;
-}
-
-.jsonExample .mochaTitlebar h3 {
-	color: #ddd;
-}	
-
-/* This does not work in IE6. */
-.isFocused.jsonExample .mochaTitlebar h3 {
-	color: #fff;
-}
-
-#fxmorpherExample .mochaContentWrapper {
-	background: #577a9e;	
-}
-
-#clock {
-	background: #fff;	
-}	
-
-.mocha.no-canvas {
-	background: #e5e5e5;
-	border: 1px solid #555;	
-}
-
-.mocha.no-canvas .mochaTitlebar {
-	background: #e5e5e5;	
-}
-
-.mocha.transparent .mochaTitlebar h3 {
-	color: #fff;
-	display: none;
-}
-
-.mocha.transparent .mochaContentWrapper {
-	background: transparent;	
-}
-
-.mocha.notification {
-	background: #cedff2;	
-}
-
-.mocha.notification .mochaTitlebar {
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */		
-	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0); /* IE6 and 7*/	
-	opacity: .0;
-	-moz-opacity: 0;
-}
-
-.mocha.notification .mochaContentBorder {
-	border-width: 0px;
-}
-
-.mocha.notification .mochaContentWrapper {
-	text-align: center;
-	font-size: 12px;
-	font-weight: bold;
-	background: transparent;
-}
-
-#about_contentWrapper {
-	background: #e5e5e5 url(../images/logo2.gif) left 3px no-repeat;
-}
-
-#builder_contentWrapper {
-	background: #f5f5f7;
-}
-
-
 /* Viewport overlays
 ---------------------------------------------------------------- */
 
@@ -347,4 +257,95 @@ div.mochaToolbarWrapper.bottom {
 
 .mocha.replaced, .mochaTitlebar.replaced, .mochaMinimizeButton.replaced, .mochaMaximizeButton.replaced, .mochaCloseButton.replaced {
 	background-color: transparent !important;
+}
+
+/* Modals */
+
+.modal2 {
+	border: 8px solid #fff;		
+}
+
+.modal2 .mochaContentBorder {
+	border-width: 0px;
+}
+	
+/* Window Themes */
+
+.mocha.no-canvas {
+	background: #e5e5e5;
+	border: 1px solid #555;	
+}
+
+.mocha.no-canvas .mochaTitlebar {
+	background: #e5e5e5;	
+}
+
+.mocha.transparent .mochaTitlebar h3 {
+	color: #fff;
+	display: none;
+}
+
+.mocha.transparent .mochaContentWrapper {
+	background: transparent;	
+}
+
+.mocha.notification {
+	background: #cedff2;	
+}
+
+.mocha.notification .mochaTitlebar {
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */		
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0); /* IE6 and 7*/	
+	opacity: .0;
+	-moz-opacity: 0;
+}
+
+.mocha.notification .mochaContentBorder {
+	border-width: 0px;
+}
+
+.mocha.notification .mochaContentWrapper {
+	text-align: center;
+	font-size: 12px;
+	font-weight: bold;
+	background: transparent;
+}
+
+/* Example Window Themes */
+
+#about_contentWrapper {
+	background: #e5e5e5 url(../images/logo2.gif) 3px 3px no-repeat;
+}
+
+#builder_contentWrapper {
+	background: #f5f5f7;
+}
+
+#json01 .mochaTitlebar {
+	background: #6dd2db;
+}
+
+#json02 .mochaTitlebar {
+	background: #6db6db;
+}
+
+#json03 .mochaTitlebar {
+	background: #6d92db;
+}
+
+.jsonExample .mochaTitlebar h3 {
+	color: #ddd;
+}	
+
+/* This does not work in IE6. */
+.isFocused.jsonExample .mochaTitlebar h3 {
+	color: #fff;
+}
+
+#fxmorpherExample .mochaContentWrapper {
+	background: #577a9e;	
+}
+
+#clock {
+	background: #fff;	
 }

@@ -147,10 +147,10 @@ textarea, input {
 	height: 24px;
 	margin: 0;
 	padding: 3px 6px;
-	background: #a3c5ef url(../images/bg-buttons.gif) repeat-x;
+	background: #718ba6;
 	font-size: 12px;
 	font-weight: bold;
-	color: #141414;
+	color: #fff;
 	cursor: pointer;
 	vertical-align: middle;
 	border: 1px solid #141414;	
@@ -164,17 +164,6 @@ textarea, input {
 	padding: 3px 1px;	
 }	 
 
-.button2 {
-	background-position: 0 -60px;
-}	
-		
-.button:hover {
-	background-position: 0 -30px;	
-}
-
-.button2:hover {
-	background-position: 0 -90px;
-}
 
 .formRow {
 	margin: 0 0 8px 0;
