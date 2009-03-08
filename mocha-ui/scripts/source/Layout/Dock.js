@@ -48,7 +48,7 @@ MochaUI.Dock = new Class({
 
 	options: {
 		useControls:          true,      // Toggles autohide and dock placement controls.
-		dockPosition:         'top',     // Position the dock starts in, top or bottom.
+		dockPosition:         'bottom',  // Position the dock starts in, top or bottom.
 		// Style options
 		dockTabColor:         [255, 255, 255],
 		trueButtonColor:      [70, 245, 70],     // Color for autohide on

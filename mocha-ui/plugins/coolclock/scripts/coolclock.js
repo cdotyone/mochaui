@@ -44,6 +44,16 @@ CoolClock.config = {
 	defaultSkin: "default",
 	skins:	{
 		'default': {
+			outerBorder: { lineWidth: 0, radius:99, fillColor: "#577a9e", color: "#fff", alpha: 0 },
+			smallIndicator: { lineWidth: 6, startAt: 82, endAt: 89, color: "#fff", alpha: .15 },
+			largeIndicator: { lineWidth: 6, startAt: 82, endAt: 89, color: "#fff", alpha: .50 },
+			hourHand: { lineWidth: 6, startAt: 0, endAt: 53, color: "#fff", alpha: 1 },
+			minuteHand: { lineWidth: 6, startAt: 0, endAt: 80, color: "#fff", alpha: 1 },
+			secondHand: { lineWidth: 2, startAt: -18, endAt: 88, color: "#fff", alpha: 1 },
+			secondDecoration: { lineWidth: 0, startAt: 79, radius: 5, fillColor: "#fff", color: "#fff", alpha: 1 }
+			// secondDecoration2: { lineWidth: 2, startAt: 0, radius: 8, fillColor: "#577a9e", color: "#fff", alpha: 1 }
+		},
+		'defaultOld': {
 			outerBorder: { lineWidth: 6, radius:98, color: "#fff", alpha: 0 },
 			smallIndicator: { lineWidth: 2, startAt: 86, endAt: 91, color: "#555", alpha: 1 },
 			largeIndicator: { lineWidth: 3, startAt: 80, endAt: 91, color: "#555", alpha: 1 },
@@ -51,7 +61,7 @@ CoolClock.config = {
 			minuteHand: { lineWidth: 4, startAt: -1, endAt: 78, color: "#141414", alpha: 1 },
 			secondHand: { lineWidth: 1, startAt: -16, endAt: 80, color: "#ce1717", alpha: 1 },
 			secondDecoration: { lineWidth: 2, startAt: 0, radius: 7, fillColor: "#fff", color: "#ce1717", alpha: 0 }
-		},
+		},		
 		'mochaUI1': {
 			outerBorder: { lineWidth: 185, radius:1, color: "#000", alpha: 0 },
 			smallIndicator: { lineWidth: 3, startAt: 88, endAt: 94, color: "#595959", alpha: 1 },
@@ -167,25 +177,21 @@ CoolClock.prototype = {
   		this.ctx.fill();
 	},
 
-	bgGradient: function(){
-		var lingrad = this.ctx.createLinearGradient(0, 0, 0, 200);
-		lingrad.addColorStop(0, 'rgb(190, 190, 190)');
-		lingrad.addColorStop(1, 'rgb(230, 230, 230)');
-		this.ctx.fillStyle = lingrad;			
-		this.ctx.beginPath();			
-		this.ctx.arc(100, 100, 99, 0, 2*Math.PI, false);
-		this.ctx.closePath();
+	bg: function(){
+		this.ctx.beginPath();
+		this.ctx.fillStyle = "#577a9e";
+		this.ctx.arc(100, 100, 99, 0, 2 * Math.PI, false);
 		this.ctx.fill();
 	},
 
 	center: function(){
 		this.ctx.beginPath();
-		this.ctx.fillStyle = "#fff";
-		this.ctx.arc(100, 100, 7, 0, 2 * Math.PI, false);
+		this.ctx.fillStyle = "#577a9e";
+		this.ctx.arc(100, 100, 8, 0, 2 * Math.PI, false);
 		this.ctx.fill();
-		this.ctx.strokeStyle = "#ce1717";
+		this.ctx.strokeStyle = "#fff";
 		this.ctx.lineWidth = 2;
-		this.ctx.arc(100, 100, 7, 0, 2 * Math.PI, false);
+		this.ctx.arc(100, 100, 8, 0, 2 * Math.PI, false);
 		this.ctx.stroke();	
 	},
 
@@ -196,6 +202,7 @@ CoolClock.prototype = {
 		this.ctx.globalAlpha = skin.alpha;
 		this.ctx.strokeStyle = skin.color;
 		this.ctx.lineWidth = skin.lineWidth;
+		this.ctx.lineCap = 'round';
 		if (document.all){
 			// excanvas doesn't scale line width so we will do it here
 			this.ctx.lineWidth = this.ctx.lineWidth * this.scale;
@@ -217,8 +224,10 @@ CoolClock.prototype = {
 		var skin = CoolClock.config.skins[this.skinId];
 		this.ctx.clearRect(0,0,this.renderRadius*2,this.renderRadius*2);
 
-		this.bgGradient();
-		//this.fullCircle(skin.outerBorder);
+			
+		//this.bgGradient();
+		this.bg();
+		this.fullCircle(skin.outerBorder);
 
 		for (var i = 0; i < 60; i++){
 			this.radialLineAtAngle(i / 60, skin[i % 5 ? "smallIndicator" : "largeIndicator"]);
@@ -228,14 +237,11 @@ CoolClock.prototype = {
 		this.radialLineAtAngle((min+sec/60)/60,skin.minuteHand);
 		if (this.showSecondHand){
 			this.radialLineAtAngle(sec/60,skin.secondHand);
-			this.radialLineAtAngle(sec/60,skin.secondDecoration);
+			if (!Browser.Engine.trident){
+				this.radialLineAtAngle(sec/60,skin.secondDecoration);
+			}
 		}
 		this.center();
-		// Chrome has trouble with the reflection.
-		if (navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
-			return;
-		}		
-		this.reflection();
 	},
 
 

@@ -893,6 +893,7 @@ initializeColumns = function() {
 		headerToolboxURL: 'pages/console.toolbox.html',
 		headerToolboxOnload: function(){
 			$$('.demoAction').each(function(element){
+				element.removeEvents();
 				element.addEvent('click', function(e){
 					MochaUI.notification('Do Something');
 				});
@@ -930,6 +931,7 @@ initializeColumns = function() {
 		footerURL: 'pages/toolbox-demo.html',
 		footerOnload: function(){
 			$$('.demoAction').each(function(element){
+				element.removeEvents();
 				element.addEvent('click', function(e){
 					MochaUI.notification('Do Something');
 				});
