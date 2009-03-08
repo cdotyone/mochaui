@@ -264,17 +264,20 @@ initializeWindows = function(){
 				new Asset.css('plugins/Fx.Morpher/css/style.css', {id: 'cboxStyle'});
 			},			
 			onContentLoaded: function() {
-				new Asset.javascript('plugins/Fx.Morpher/scripts/cbox.js', {
-					id: 'cboxScript',
-					onload: function(){
-						new Asset.javascript('plugins/Fx.Morpher/scripts/example.js', {
-							id: 'animationExampleScript',
-							onload: function(){
-							}
-						});	
-
-					}
-				});						
+				if (!$('cboxScript') || !$('animationExampleScript')){
+					new Asset.javascript('plugins/Fx.Morpher/scripts/cbox.js', {
+						id: 'cboxScript',
+						onload: function(){
+							new Asset.javascript('plugins/Fx.Morpher/scripts/example.js', {
+								id: 'animationExampleScript'
+							});	
+						}
+					});
+				}
+				else {
+					createCanvas();
+					myAnim.delay(250);
+				}							
 			}				
 		});	
 	}			
@@ -834,9 +837,9 @@ initializeColumns = function() {
 	// Add panels to main column	
 	new MochaUI.Panel({
 		id: 'mainPanel',
-		title: 'Development Notes',
+		title: 'Lorem Ipsum',
 		loadMethod: 'xhr',
-		contentURL: 'pages/notes.html',
+		contentURL: 'pages/lipsum.html',
 		column: 'mainColumn',
 		headerToolbox: true,
 		headerToolboxURL: 'pages/toolbox-demo2.html',

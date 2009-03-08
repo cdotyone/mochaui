@@ -56,7 +56,7 @@ h4 {
 }
 
 a {
-	color: #098ed1;
+	color: #096DD1;
 	text-decoration: none;
 	cursor: pointer;
 }
@@ -143,9 +143,10 @@ textarea, input {
 	height: 24px;
 	margin: 0;
 	padding: 3px 6px;
-	background: #a3c5ef url(../images/bg-buttons.gif) repeat-x;
+	background: #718ba6;
 	font-size: 12px;
 	font-weight: bold;
+	color: #fff;
 	cursor: pointer;
 	vertical-align: middle;
 	border: 1px solid #606060;	
@@ -182,7 +183,7 @@ textarea, input {
 /* Code */
 
 pre {
-	background-color: #ececea;
+	background-color: #f2f2f2;
 	color: #070;
 	display: block;
 	font-family: 'Courier New', Courier, monospace;
@@ -190,7 +191,7 @@ pre {
 	overflow: auto;
 	margin: 0 0 10px 0;
 	padding: 10px;
-	border: 1px solid #d1d7dc;	
+	border: 1px solid #ddd;	
 }
 
 /* Status Messages */

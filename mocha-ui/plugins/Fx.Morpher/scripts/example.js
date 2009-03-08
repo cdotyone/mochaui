@@ -17,12 +17,12 @@ function createCanvas(){
 	
 	this.canvasSprite = new Element('canvas', {
 		'id': 'sprite',
-		'width': 12,
-		'height': 12,
+		'width': 10,
+		'height': 10,
 		'styles': {
 			'zIndex': 100,
-			'top': 0,
-			'left': 150
+			'top': -5,
+			'left': 145
 		}
 	}).inject(animationWrapper);
 	
@@ -56,7 +56,7 @@ function renderCanvasSprite(){
 	var ctx = this.canvasSprite.getContext('2d');	
 	ctx.fillStyle = 'rgb(255, 255, 255)';
 	ctx.beginPath();
-	ctx.arc(6, 6, 6, 0, Math.PI*2, true);
+	ctx.arc(5, 5, 5, 0, Math.PI*2, true);
 	ctx.fill();
 }
 		
@@ -81,7 +81,6 @@ function myAnim(){
 	});  
 	sprite.morpher();
 }
-
 
 createCanvas();
 myAnim.delay(250);

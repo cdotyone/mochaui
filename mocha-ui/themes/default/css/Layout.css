@@ -65,7 +65,7 @@ body {
 
 #desktopTitlebar h2.tagline {
 	font-size: 12px;    
-	color: #b2b2b2;    
+	color: #d4dce4;    
 	font-weight: bold;
 	padding: 6px 0 0 0;
 	text-align: center;
@@ -82,13 +82,13 @@ body {
 	position: absolute;
 	right: 0;
 	top: 0;
-	color: #b2b2b2;
+	color: #d4dce4;
 	text-align: right;
 	padding: 13px 10px 0 0;
 }
 
 #topNav a {
-	color: #7DD0FA;
+	color: #fff;
 	font-weight: normal;
 }
 
@@ -99,7 +99,7 @@ body {
 /* Navbar */
 
 #desktopNavbar {
-	background: #4C4C4C;
+	background: #f2f2f2;
 	height: 30px;
 	margin: 0 0px;
 	overflow: hidden; /* Remove this line if you want the menu to be backward compatible with Firefox 2 */	
@@ -122,12 +122,12 @@ body {
 	
 #desktopNavbar ul li a {
 	padding: 6px 10px 6px 10px;	
-	color: #b2b2b2;
+	color: #333;
 	font-weight: normal;
 }
 
 #desktopNavbar ul li a:hover {
-	color: #fff;
+	color: #333;
 }
 
 #desktopNavbar ul li a.arrow-right, #desktopNavbar ul li a:hover.arrow-right {
@@ -208,7 +208,8 @@ li.divider {
 #pageWrapper {
 	position: relative;
 	overflow: hidden; /* This can be set to hidden or auto */
-	border-top: 1px solid #222;
+	border-top: 1px solid #232323;
+	border-bottom: 1px solid #232323;	
 }
 
 /* Footer */
@@ -220,7 +221,6 @@ li.divider {
 	width: 100%;
 	height: 30px;
 	overflow: hidden;
-	border-top: 1px solid #222;
 }
 
 #desktopFooter {
@@ -228,18 +228,10 @@ li.divider {
 	font-size: 10px;
 	height: 24px;
 	padding: 6px 8px 0 8px;
-	background: #333;
-	color: #b2b2b2;
+	background: #f2f2f2;
 }
 
-#desktopFooter a {
-	color: #7DD0FA;
-	font-weight: normal;
-}
 
-#desktopFooter a:hover {
-	text-decoration: none;
-}
 
 /* Panel Layout
 ---------------------------------------------------------------- */
@@ -262,7 +254,7 @@ li.divider {
 }
 
 .panelAlt {
-	background: #e5f1f7;	
+	background: #f2f2f2;	
 }
 
 .bottomPanel {
@@ -364,8 +356,8 @@ li.divider {
 	float: left;
 	width: 4px;
 	overflow: hidden;
-	background: #bbb url(../images/handle-icon.gif) center center no-repeat;
-	border: 1px solid #9a9a9a;
+	background: #c0c0c0 url(../images/handle-icon.gif) center center no-repeat;
+	border: 1px solid #909090;
 	border-top: 0;
 	border-bottom: 0;
 }
