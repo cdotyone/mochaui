@@ -579,3 +579,16 @@ String.implement({
 	}
  
 });
+
+// Mootools Patch: Fixes issues in Safari, Chrome, and Internet Explorer caused by processing text as XML. 
+Request.HTML.implement({
+ 
+	processHTML: function(text){
+		var match = text.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+		text = (match) ? match[1] : text;           
+		var container = new Element('div');           
+		return container.set('html', text);
+	}
+   
+});
+ 

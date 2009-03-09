@@ -56,7 +56,7 @@ Options:
 	minimizable - (boolean) Requires MochaUI.Desktop and MochaUI.Dock. Defaults to true if dependenices are met. 
 	maximizable - (boolean) Requires MochaUI.Desktop. Defaults to true if dependenices are met.
 	closable - (boolean) Defaults to true.
-	storeOnClose - (boolean) Hides a window and it's dock tab rather than destroying them on close.
+	storeOnClose - (boolean) Hides a window and it's dock tab rather than destroying them on close. If you try to create the window again it will unhide the window and dock tab.
 	modalOverlayClose - (boolean) Whether or not you can close a modal by clicking on the modal overlay. Defaults to true.
 	draggable - (boolean) Defaults to false for modals; otherwise true.
 	draggableGrid - (false or number) Distance in pixels for snap-to-grid dragging. Defaults to false. 
