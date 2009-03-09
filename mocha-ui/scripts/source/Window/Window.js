@@ -56,7 +56,7 @@ Options:
 	minimizable - (boolean) Requires MochaUI.Desktop and MochaUI.Dock. Defaults to true if dependenices are met. 
 	maximizable - (boolean) Requires MochaUI.Desktop. Defaults to true if dependenices are met.
 	closable - (boolean) Defaults to true.
-	keepOnClose - (boolean) Hides a window and it's dock tab rather than destroying them on close.
+	storeOnClose - (boolean) Hides a window and it's dock tab rather than destroying them on close.
 	modalOverlayClose - (boolean) Whether or not you can close a modal by clicking on the modal overlay. Defaults to true.
 	draggable - (boolean) Defaults to false for modals; otherwise true.
 	draggableGrid - (false or number) Distance in pixels for snap-to-grid dragging. Defaults to false. 
@@ -217,7 +217,7 @@ MochaUI.Windows.windowOptions = {
 	closable:          true,
 	
 	// Close options	
-	keepOnClose:       false, 
+	storeOnClose:       false, 
 
 	// Modal options	
 	modalOverlayClose: true,
@@ -2148,8 +2148,8 @@ MochaUI.extend({
 		instance.isClosing = true;
 		instance.fireEvent('onClose', windowEl);
 		
-		if (instance.options.keepOnClose){
-			this.keepOnClose(instance, windowEl);
+		if (instance.options.storeOnClose){
+			this.storeOnClose(instance, windowEl);
 			return;
 		}
 		if (instance.check) instance.check.destroy();
@@ -2219,7 +2219,7 @@ MochaUI.extend({
 			MochaUI.Desktop.setDesktopSize();
 		}
 	},
-	keepOnClose: function(instance, windowEl){
+	storeOnClose: function(instance, windowEl){
 	
 		if (instance.check) instance.check.hide();
 
