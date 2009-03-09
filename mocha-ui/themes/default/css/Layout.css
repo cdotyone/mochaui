@@ -255,6 +255,10 @@ li.divider {
 	border-bottom: 1px solid #b9b9b9;
 }
 
+.panel.collapsed {
+	border-bottom: 0;	
+}
+
 .panelAlt {
 	background: #f2f2f2;	
 }

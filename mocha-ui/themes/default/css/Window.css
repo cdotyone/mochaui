@@ -259,6 +259,26 @@ div.mochaToolbarWrapper.bottom {
 	background-color: transparent !important;
 }
 
+.windowClosed {
+	visibility: hidden;	
+	display: none;
+	position: absolute;
+	top: -20000px;
+	left: -20000px;
+	z-index: -1;
+	overflow: hidden;		
+}
+
+.windowClosed .mochaContentBorder, .windowClosed .mochaToolbarWrapper, .windowClosed .mochaTitlebar, .windowClosed .mochaControls,
+.windowClosed .mochaCanvasControls {
+	position: absolute;
+	top: 0;
+	left: 0;
+	visibility: hidden;	
+	display: none;
+	z-index: -1;	
+}		
+
 /* Modals */
 
 .modal2 {

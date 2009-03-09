@@ -148,6 +148,33 @@ MochaUI.Themes = {
 		
 		if ($('spinner')) $('spinner').hide();		
 		this.options.theme = this.newTheme;
+		
+		/*		
+		this.cookie = new Hash.Cookie('mochaUIthemeCookie', {duration: 3600});
+		this.cookie.empty();
+		this.cookie.set('theme', this.options.theme);
+		this.cookie.save();
+		*/			
 						
 	}
 };
+
+window.addEvent('load', function(){
+	/*
+	// Load theme the user was last using. This needs work.
+	var cookie = new Hash.Cookie('mochaUIthemeCookie', {duration: 3600});
+	var themeCookie = cookie.load();
+	if(cookie.getKeys().length){	
+		if (themeCookie.get('theme') != MochaUI.Themes.options.theme){
+			MochaUI.Themes.init.delay(1000, MochaUI.Themes, themeCookie.get('theme'));
+		}
+	}
+	*/
+		
+	if ($('themeControl')){
+		$('themeControl').getElements('option').setProperty('selected', 'false');
+		if ($('chooseTheme')){
+			$('chooseTheme').setProperty('selected', 'true');
+		}
+	}
+});

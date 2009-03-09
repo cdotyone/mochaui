@@ -729,9 +729,36 @@ MochaUI.Themes = {
 		
 		if ($('spinner')) $('spinner').hide();		
 		this.options.theme = this.newTheme;
+		
+		/*		
+		this.cookie = new Hash.Cookie('mochaUIthemeCookie', {duration: 3600});
+		this.cookie.empty();
+		this.cookie.set('theme', this.options.theme);
+		this.cookie.save();
+		*/			
 						
 	}
 };
+
+window.addEvent('load', function(){
+	/*
+	// Load theme the user was last using. This needs work.
+	var cookie = new Hash.Cookie('mochaUIthemeCookie', {duration: 3600});
+	var themeCookie = cookie.load();
+	if(cookie.getKeys().length){	
+		if (themeCookie.get('theme') != MochaUI.Themes.options.theme){
+			MochaUI.Themes.init.delay(1000, MochaUI.Themes, themeCookie.get('theme'));
+		}
+	}
+	*/
+		
+	if ($('themeControl')){
+		$('themeControl').getElements('option').setProperty('selected', 'false');
+		if ($('chooseTheme')){
+			$('chooseTheme').setProperty('selected', 'true');
+		}
+	}
+});
 /*
 
 Script: Window.js
@@ -790,6 +817,7 @@ Options:
 	minimizable - (boolean) Requires MochaUI.Desktop and MochaUI.Dock. Defaults to true if dependenices are met. 
 	maximizable - (boolean) Requires MochaUI.Desktop. Defaults to true if dependenices are met.
 	closable - (boolean) Defaults to true.
+	keepOnClose - (boolean) Hides a window and it's dock tab rather than destroying them on close.
 	modalOverlayClose - (boolean) Whether or not you can close a modal by clicking on the modal overlay. Defaults to true.
 	draggable - (boolean) Defaults to false for modals; otherwise true.
 	draggableGrid - (false or number) Distance in pixels for snap-to-grid dragging. Defaults to false. 
@@ -948,8 +976,11 @@ MochaUI.Windows.windowOptions = {
 	minimizable:       true,
 	maximizable:       true,
 	closable:          true,
+	
+	// Close options	
+	keepOnClose:       false, 
 
-	// Modal Options	
+	// Modal options	
 	modalOverlayClose: true,
 
 	// Draggable
@@ -1127,9 +1158,28 @@ MochaUI.Window = new Class({
 				MochaUI.Dock.restoreMinimized(this.windowEl);
 			}
 			// Expand and focus if collapsed
-			if (instance.isCollapsed){
+			else if (instance.isCollapsed){
 				MochaUI.collapseToggle(this.windowEl);
 				setTimeout(MochaUI.focusWindow.pass(this.windowEl, this),10);
+			}
+			else if (this.windowEl.hasClass('windowClosed')){
+
+				if (instance.check) instance.check.show();
+
+				this.windowEl.removeClass('windowClosed');
+				this.windowEl.setStyle('opacity', 0);
+				this.windowEl.addClass('mocha');						
+
+				if (MochaUI.Dock && $(MochaUI.options.dock) && instance.options.type == 'window') {
+					var currentButton = $(instance.options.id + '_dockTab');
+					if (currentButton != null) {
+						currentButton.show();
+					}
+					MochaUI.Desktop.setDesktopSize();
+				}
+				
+				instance.displayNewWindow();
+
 			}
 			// Else focus
 			else {
@@ -1176,7 +1226,7 @@ MochaUI.Window = new Class({
 
 		// Fix a mouseover issue with gauges in IE7
 		if ( Browser.Engine.trident && options.shape == 'gauge') {
-			this.windowEl.setStyle('background', 'url(../images/spacer.gif)');
+			this.windowEl.setStyle('backgroundImage', 'url(../images/spacer.gif)');
 		}
 
 		if ((this.options.type == 'modal' || options.type == 'modal2' ) && Browser.Platform.mac && Browser.Engine.gecko){
@@ -1339,63 +1389,18 @@ MochaUI.Window = new Class({
 		});
 		
 		// Create opacityMorph
-		if (MochaUI.options.advancedEffects == true){
-			// IE cannot handle both element opacity and VML alpha at the same time.
-			if (Browser.Engine.trident){
-				this.drawWindow(false);
-			}
-			this.opacityMorph = new Fx.Morph(this.windowEl, {
-				'duration': 350,
-				transition: Fx.Transitions.Sine.easeInOut,
-				onComplete: function(){
-					if (Browser.Engine.trident){
-						this.drawWindow();
-					}
-				}.bind(this)
-			});
-		}
+		
+		this.opacityMorph = new Fx.Morph(this.windowEl, {
+			'duration': 350,
+			transition: Fx.Transitions.Sine.easeInOut,
+			onComplete: function(){
+				if (Browser.Engine.trident){
+					this.drawWindow();
+				}
+			}.bind(this)
+		});		
 
-		if (options.type == 'modal' || options.type == 'modal2') {
-			MochaUI.currentModal = this.windowEl;
-			if (Browser.Engine.trident4){				
-				$('modalFix').show();
-			}
-			$('modalOverlay').show();
-			if (MochaUI.options.advancedEffects == false){
-				$('modalOverlay').setStyle('opacity', .6);
-				this.windowEl.setStyles({
-					'zIndex': 11000,
-					'opacity': 1
-				});
-			}
-			else {
-				MochaUI.Modal.modalOverlayCloseMorph.cancel();
-				MochaUI.Modal.modalOverlayOpenMorph.start({
-					'opacity': .6
-				});
-				this.windowEl.setStyles({
-					'zIndex': 11000
-				});
-				this.opacityMorph.start({
-					'opacity': 1
-				});
-			}
-
-			$$('.dockTab').removeClass('activeDockTab');
-			$$('.mocha').removeClass('isFocused');
-			this.windowEl.addClass('isFocused');
-			
-		}
-		else if (MochaUI.options.advancedEffects == false){
-			this.windowEl.setStyle('opacity', 1);
-			setTimeout(MochaUI.focusWindow.pass(this.windowEl, this), 10);
-		}
-		else {
-			this.opacityMorph.start({
-				'opacity': 1
-			});
-			setTimeout(MochaUI.focusWindow.pass(this.windowEl, this), 10);
-		}
+		this.displayNewWindow();		
 		
 		// This is a generic morph that can be reused later by functions like centerWindow()
 		// It returns the windowEl element rather than this Class.
@@ -1439,6 +1444,56 @@ MochaUI.Window = new Class({
 		}
 		
 	},
+	displayNewWindow: function(){
+
+		options = this.options;
+		if (options.type == 'modal' || options.type == 'modal2') {
+			MochaUI.currentModal = this.windowEl;
+			if (Browser.Engine.trident4){				
+				$('modalFix').show();
+			}
+			$('modalOverlay').show();
+			if (MochaUI.options.advancedEffects == false){
+				$('modalOverlay').setStyle('opacity', .6);
+				this.windowEl.setStyles({
+					'zIndex': 11000,
+					'opacity': 1
+				});
+			}
+			else {
+				MochaUI.Modal.modalOverlayCloseMorph.cancel();
+				MochaUI.Modal.modalOverlayOpenMorph.start({
+					'opacity': .6
+				});
+				this.windowEl.setStyles({
+					'zIndex': 11000
+				});
+				this.opacityMorph.start({
+					'opacity': 1
+				});
+			}
+
+			$$('.dockTab').removeClass('activeDockTab');
+			$$('.mocha').removeClass('isFocused');
+			this.windowEl.addClass('isFocused');
+			
+		}
+		else if (MochaUI.options.advancedEffects == false){
+			this.windowEl.setStyle('opacity', 1);
+			setTimeout(MochaUI.focusWindow.pass(this.windowEl, this), 10);
+		}
+		else {
+			// IE cannot handle both element opacity and VML alpha at the same time.
+			if (Browser.Engine.trident){
+				this.drawWindow(false);
+			}
+			this.opacityMorph.start({
+				'opacity': 1
+			});
+			setTimeout(MochaUI.focusWindow.pass(this.windowEl, this), 10);
+		}
+
+	},	
 	setupEvents: function() {
 		var windowEl = this.windowEl;
 		// Set events
@@ -2853,6 +2908,11 @@ MochaUI.extend({
 			
 		instance.isClosing = true;
 		instance.fireEvent('onClose', windowEl);
+		
+		if (instance.options.keepOnClose){
+			this.keepOnClose(instance, windowEl);
+			return;
+		}
 		if (instance.check) instance.check.destroy();
 
 		if ((instance.options.type == 'modal' || instance.options.type == 'modal2') && Browser.Engine.trident4){
@@ -2919,6 +2979,34 @@ MochaUI.extend({
 			// Need to resize everything in case the dock becomes smaller when a tab is removed
 			MochaUI.Desktop.setDesktopSize();
 		}
+	},
+	keepOnClose: function(instance, windowEl){
+	
+		if (instance.check) instance.check.hide();
+
+		windowEl.setStyles({
+			zIndex: -1
+		});
+		windowEl.addClass('windowClosed');
+		windowEl.removeClass('mocha');		
+
+		if (MochaUI.Dock && $(MochaUI.options.dock) && instance.options.type == 'window') {
+			var currentButton = $(instance.options.id + '_dockTab');
+			if (currentButton != null) {
+				currentButton.hide();
+			}
+			MochaUI.Desktop.setDesktopSize();
+		}
+		
+		instance.fireEvent('onCloseComplete');		
+		
+		if (instance.options.type != 'notification'){
+			var newFocus = this.getWindowWithHighestZindex();
+			this.focusWindow(newFocus);
+		}
+		
+		instance.isClosing = false;		
+		
 	},
 	/*
 	

@@ -581,7 +581,7 @@ initializeWindows = function(){
 			title: 'Features',
 			loadMethod: 'xhr',
 			contentURL: 'pages/features-layout.html',
-			width: 305,
+			width: 275,
 			height: 250,
 			resizeLimit: {'x': [275, 2500], 'y': [125, 2000]},
 			toolbar: true,
