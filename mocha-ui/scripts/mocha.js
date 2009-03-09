@@ -97,25 +97,25 @@ var MochaUI = new Hash({
 		else {
 			var recipient = 'panel';		
 		}
+
 		var instance = element.retrieve('instance');
 		if (options.title) instance.titleEl.set('html', options.title);			
 
 		var contentEl = instance.contentEl;
 		var contentContainer = options.childElement != null ? options.childElement : instance.contentEl;		
+		var contentWrapperEl = instance.contentWrapperEl;
+
 		var loadMethod = options.loadMethod != null ? options.loadMethod : instance.options.loadMethod;
-		var method = options.method != null ? options.method : "get";
 				
 		// Set scrollbars if loading content in main content container.
 		// Always use 'hidden' for iframe windows
 		var scrollbars = options.scrollbars || instance.options.scrollbars;
 		if (contentContainer == instance.contentEl) {
-			instance.contentWrapperEl.setStyles({
+			contentWrapperEl.setStyles({
 				'overflow': scrollbars != false && loadMethod != 'iframe' ? 'auto' : 'hidden'
 			});
 		}		
 
-		var contentWrapperEl = instance.contentWrapperEl;
-		
 		if (options.padding != null) {
 			contentEl.setStyles({
 				'padding-top': options.padding.top,
@@ -140,96 +140,106 @@ var MochaUI = new Hash({
 		// Load new content.
 		switch(loadMethod){
 			case 'xhr':			
-				var data = options.data != null ? new Hash(options.data).toQueryString() : "";
-				new Request.HTML({
-					url: options.url,
-					update: contentContainer, // Using update for some reason preserves whitespace in IE6 and 7. It is fine in IE8.
-					method: method,
-					data: data, 
-					evalScripts: instance.options.evalScripts,
-					evalResponse: instance.options.evalResponse,				
-					onRequest: function(){
-						if (recipient == 'window' && contentContainer == contentEl){
-							instance.showSpinner();
-						}
-						else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')){
-							$('spinner').show();	
-						}
-					}.bind(this),
-					onFailure: function(response){
-						if (contentContainer == contentEl){
-
-							var getTitle = new RegExp("<title>[\n\r\s]*(.*)[\n\r\s]*</title>", "gmi");
-							var error = getTitle.exec(response.responseText);
-							if (!error) error = 'Unknown';							 
-							contentContainer.set('html', '<h3>Error: ' + error[1] + '</h3>');					
-
-							if (recipient == 'window') instance.hideSpinner();						
-							else if (recipient == 'panel' && $('spinner')) $('spinner').hide();
-							MochaUI.nextInQueue();							
-						}
-					}.bind(this),
-					onException: function(){
-						MochaUI.nextInQueue();
-					}.bind(this),
-					onSuccess: function(){
-						if (contentContainer == contentEl){
-							if (recipient == 'window') instance.hideSpinner();							
-							else if (recipient == 'panel' && $('spinner')) $('spinner').hide();							
-						}
-						Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();						
-						MochaUI.nextInQueue();
-					}.bind(this),
-					onComplete: function(){}.bind(this)
-				}).send();
+				this.updateContentXHR(instance, options, recipient, contentEl, contentContainer, onContentLoaded);
 				break;
-			case 'iframe': // May be able to streamline this if the iframe already exists.
-				if ( instance.options.contentURL == '' || contentContainer != contentEl) {
-					break;
-				}
-				instance.iframeEl = new Element('iframe', {
-					'id': instance.options.id + '_iframe',
-					'name':  instance.options.id + '_iframe',
-					'class': 'mochaIframe',
-					'src': options.url,
-					'marginwidth':  0,
-					'marginheight': 0,
-					'frameBorder':  0,
-					'scrolling':    'auto',
-					'styles': {
-						'height': contentWrapperEl.offsetHeight - contentWrapperEl.getStyle('border-top').toInt() - contentWrapperEl.getStyle('border-bottom').toInt(),
-						'width': instance.panelEl ? contentWrapperEl.offsetWidth - contentWrapperEl.getStyle('border-left').toInt() - contentWrapperEl.getStyle('border-right').toInt() : '100%'	
-					}
-				}).injectInside(contentEl);
-
-				// Add onload event to iframe so we can hide the spinner and run onContentLoaded()
-				instance.iframeEl.addEvent('load', function(e) {
-					if (recipient == 'window') instance.hideSpinner();					
-					else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) $('spinner').hide();
-					Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();
-					MochaUI.nextInQueue();	
-				}.bind(this));
-				if (recipient == 'window') instance.showSpinner();				
-				else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) $('spinner').show();				
+			case 'iframe':
+				this.updateContentIframe(instance, options, recipient, contentEl, contentWrapperEl, contentContainer, onContentLoaded);				
 				break;
 			case 'html':
 			default:
-				var elementTypes = new Array('element', 'textnode', 'whitespace', 'collection');
-				
-				if (elementTypes.contains($type(options.content))){
-					options.content.inject(contentContainer);
-				} else {
-					contentContainer.set('html', options.content);
-				}				
-				if (contentContainer == contentEl){
-					if (recipient == 'window') instance.hideSpinner();					
-					else if (recipient == 'panel' && $('spinner')) $('spinner').hide();									
-				}
-				Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();				
-				MochaUI.nextInQueue();	
+				this.updateContentHTML(instance, options, recipient, contentEl, contentContainer, onContentLoaded);
 				break;
 		}
 
+	},
+	updateContentXHR: function(instance, options, recipient, contentEl, contentContainer, onContentLoaded){
+		new Request.HTML({
+			url: options.url,
+			update: contentContainer,
+			method: options.method != null ? options.method : 'get',
+			data: options.data != null ? new Hash(options.data).toQueryString() : '', 
+			evalScripts: instance.options.evalScripts,
+			evalResponse: instance.options.evalResponse,				
+			onRequest: function(){
+				if (recipient == 'window' && contentContainer == contentEl){
+					instance.showSpinner();
+				}
+				else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')){
+					$('spinner').show();	
+				}
+			}.bind(this),
+			onFailure: function(response){
+				if (contentContainer == contentEl){
+					var getTitle = new RegExp("<title>[\n\r\s]*(.*)[\n\r\s]*</title>", "gmi");
+					var error = getTitle.exec(response.responseText);
+					if (!error) error = 'Unknown';							 
+					contentContainer.set('html', '<h3>Error: ' + error[1] + '</h3>');
+					if (recipient == 'window'){
+						instance.hideSpinner();
+					}							
+					else if (recipient == 'panel' && $('spinner')){
+						$('spinner').hide();
+					}	
+					MochaUI.nextInQueue();							
+				}
+			}.bind(this),
+			onException: function(){
+				MochaUI.nextInQueue();
+			}.bind(this),
+			onSuccess: function(){
+				if (contentContainer == contentEl){
+					if (recipient == 'window') instance.hideSpinner();							
+					else if (recipient == 'panel' && $('spinner')) $('spinner').hide();							
+				}
+				Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();						
+				MochaUI.nextInQueue();
+			}.bind(this),
+			onComplete: function(){}.bind(this)
+		}).send();
+	},
+	updateContentIframe: function(instance, options, recipient, contentEl, contentWrapperEl, contentContainer, onContentLoaded){
+		if ( instance.options.contentURL == '' || contentContainer != contentEl) {
+			return;
+		}
+		instance.iframeEl = new Element('iframe', {
+			'id': instance.options.id + '_iframe',
+			'name': instance.options.id + '_iframe',
+			'class': 'mochaIframe',
+			'src': options.url,
+			'marginwidth': 0,
+			'marginheight': 0,
+			'frameBorder': 0,
+			'scrolling': 'auto',
+			'styles': {
+				'height': contentWrapperEl.offsetHeight - contentWrapperEl.getStyle('border-top').toInt() - contentWrapperEl.getStyle('border-bottom').toInt(),
+				'width': instance.panelEl ? contentWrapperEl.offsetWidth - contentWrapperEl.getStyle('border-left').toInt() - contentWrapperEl.getStyle('border-right').toInt() : '100%'	
+			}
+		}).injectInside(contentEl);
+
+		// Add onload event to iframe so we can hide the spinner and run onContentLoaded()
+		instance.iframeEl.addEvent('load', function(e) {
+			if (recipient == 'window') instance.hideSpinner();					
+			else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) $('spinner').hide();
+			Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();
+			MochaUI.nextInQueue();	
+		}.bind(this));
+		if (recipient == 'window') instance.showSpinner();				
+		else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) $('spinner').show();
+	},
+	updateContentHTML: function(instance, options, recipient, contentEl, contentContainer, onContentLoaded){
+		var elementTypes = new Array('element', 'textnode', 'whitespace', 'collection');
+				
+		if (elementTypes.contains($type(options.content))){
+			options.content.inject(contentContainer);
+		} else {
+			contentContainer.set('html', options.content);
+		}				
+		if (contentContainer == contentEl){
+			if (recipient == 'window') instance.hideSpinner();					
+			else if (recipient == 'panel' && $('spinner')) $('spinner').hide();									
+		}
+		Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();				
+		MochaUI.nextInQueue();	
 	},
 	/*
 	
