@@ -30,7 +30,7 @@ body {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
 	line-height: 18px;
-	color: #d0d0d0;	
+	color: #cfcfcf;	
 }
 
 /* Typography */
@@ -58,7 +58,7 @@ h4 {
 }
 
 a {
-	color: #7dd0fa;
+	color: #A5DFF2;
 	text-decoration: none;
 	cursor: pointer;
 }
@@ -131,37 +131,34 @@ textarea, input, select {
 
 textarea, input {
 	color: #ddd;
-	background: #555;			
+	background: #282828;			
 }
 
 .input {
 	padding: 2px 0 2px 3px;
-	border: 1px solid #141414;	
+	border: 1px solid #181818;	
 }
 
 form button {
 	vertical-align: middle;	
 }
 
-.button, .button2 {
+.button {
 	height: 24px;
 	margin: 0;
 	padding: 3px 6px;
-	background: #718ba6;
+	background: #404040 url(../images/bg-panel-header.gif) repeat-x;
 	font-size: 12px;
 	font-weight: bold;
-	color: #fff;
+	color: #A5DFF2;
 	cursor: pointer;
 	vertical-align: middle;
-	border: 1px solid #141414;	
+	border: 1px solid #181818;
+	-moz-border-radius: 3px;		
 }
 
 * html .button {
 	padding: 3px 1px;		
-}
-
-* html .button2 {
-	padding: 3px 1px;	
 }
 
 .searchField {
@@ -170,16 +167,23 @@ form button {
 	line-height: 15px; 
 	margin: 0;
 	padding: 4px 0 3px 5px;
-	border: 1px solid #141414;	
+	border: 1px solid #181818;	
 	border-right: 0;
 	vertical-align: middle;		
+	-moz-border-radius-topleft: 3px;
+	-moz-border-radius-bottomleft: 3px;
+}
+
+.searchButton {
+	-moz-border-radius-topleft: 0;
+	-moz-border-radius-bottomleft: 0;		
 }
 
 * html .toolbox .searchField, * html .toolbox .searchButton { /* IE6 Hack */
 	margin-top: -1px;		
 }
 
-* html .toolbox .button, * html .toolbox .button2 { /* IE6 Hack */
+* html .toolbox .button { /* IE6 Hack */
 	vertical-align: top;
 	margin-top: 0;			
 }
@@ -188,7 +192,7 @@ form button {
 	margin-top: -1px;	
 }
 
-*:first-child+html .toolbox .button, *:first-child+html .toolbox .button2 { /* IE7 Hack */
+*:first-child+html .toolbox .button { /* IE7 Hack */
 	vertical-align: top;
 	margin-top: 0;	
 }
@@ -204,14 +208,14 @@ form button {
 /* Code */
 
 pre {
-	background-color: #191919;
-	color: #080;
+	background-color: #282828;
+	color: #17998E;
 	display: block;
 	font-family: 'Courier New', Courier, monospace;
 	font-size: 11px;
 	margin: 0 0 10px 0;
 	padding: 10px;
-	border: 1px solid #262626;	
+	border: 1px solid #222;	
 }
 
 /* Status Messages */
@@ -228,7 +232,7 @@ pre {
 /* Dividers */
 
 hr {
-	background-color: #454545;
+	background-color: #262626;
 	height: 1px;
 	border: 0px;
 }

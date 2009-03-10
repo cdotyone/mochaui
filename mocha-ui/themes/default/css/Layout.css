@@ -156,7 +156,7 @@ body {
 }
 
 #desktopNavbar li ul ul { /* third-and-above-level lists */
-	margin: -22px 0 0 164px;
+	margin: -22px 0 0 165px;
 }
 
 #desktopNavbar li ul li .check {
@@ -176,12 +176,13 @@ body {
 	padding: 1px 9px 1px 25px;
 	width: 130px;
 	color: #3f3f3f;
-	font-weight: normal;
+	font-weight: normal;	
 }
 
 #desktopNavbar li ul li a:hover {
 	background: #6C98D9;
 	color: #fff;
+	-moz-border-radius: 2px;	
 }
 
 #desktopNavbar li ul li a:hover .check {
@@ -210,8 +211,8 @@ li.divider {
 #pageWrapper {
 	position: relative;
 	overflow: hidden; /* This can be set to hidden or auto */
-	border-top: 1px solid #232323;
-	border-bottom: 1px solid #232323;	
+	border-top: 1px solid #909090;
+	border-bottom: 1px solid #909090;	
 }
 
 /* Footer */
@@ -387,11 +388,6 @@ div.toolbox.divider { /* Have to specify div here for IE6's sake */
 	padding-left: 8px;
 }
 
-div.toolbox.divider2 { /* Have to specify div here for IE6's sake */
-	background: url(../images/toolbox-divider2.gif) repeat-y;
-	padding-left: 7px;
-}
-
 .toolbox img.disabled {
 	cursor: default;
 }
@@ -416,11 +412,8 @@ div.toolbox.divider2 { /* Have to specify div here for IE6's sake */
 }
 
 .iconWrapper:hover {
-	border: 1px solid #c0c0c0;
-}
-
-#desktopNavbar .iconWrapper:hover {
-    border: 1px solid #777;
+	border: 1px solid #a0a0a0;
+	-moz-border-radius: 3px;	
 }
 
 #spinnerWrapper {

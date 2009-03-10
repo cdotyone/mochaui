@@ -13,10 +13,6 @@
 .tree li {
 	list-style-type: none;
 	white-space: nowrap;
-}
-
-.tree li a {
-	color: #3f3f3f;	
 }	
 
 .tree li img {

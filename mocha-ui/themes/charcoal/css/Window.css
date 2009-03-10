@@ -21,7 +21,7 @@ Required by:
 .mocha {
 	display: none;
 	overflow: hidden;	
-	background-color: #474747;	
+	background-color: #404040;	
 }
 
 .mocha.isFocused {	
@@ -36,20 +36,20 @@ Required by:
 .mochaTitlebar {
 	width: 100%;
 	overflow: hidden;
-	background-color: #4d4d4d;	
+	background: url(../images/spacer.gif?from=494949&to=393939); 	
 }
 
 .mochaTitlebar h3 {
 	font-size: 12px;
 	line-height: 15px;	
 	font-weight: bold;
-	margin: 5px 10px 4px 12px;
-	padding: 0;
-	color: #ddd;
+	margin: 0;
+	padding: 5px 10px 4px 12px;
+	color: #d0d0d0;
 }
 
 .mocha.isFocused .mochaTitlebar h3 {
-	color: #fff;
+	color: #B3D9FF;
 }
 
 .mochaToolbarWrapper {
@@ -63,23 +63,23 @@ Required by:
 
 div.mochaToolbarWrapper.bottom {
 	border: 0;
-	border-bottom: 1px solid #141414;
+	border-bottom: 1px solid #222;
 }
 
 .mochaToolbar {
 	width: 100%; /* For IE */
-	border-top: 1px solid #141414;
+	border-top: 1px solid #222;
 }
 
 .mochaContentBorder {
-	border-top: 1px solid #141414;
-	border-bottom: 1px solid #141414;
+	border-top: 1px solid #282828;
+	border-bottom: 1px solid #282828;
 }
 
 .mochaContentWrapper { /* Has a fixed height and scrollbars if required. */
 	font-size: 12px;
 	overflow: auto;
-	background: #222;
+	background: #303030;
 }
 	
 .mochaContent {
@@ -155,8 +155,8 @@ div.mochaToolbarWrapper.bottom {
 	font-size: 1px;
 	cursor: pointer;
 	z-index: 4;
-	color: #fafafa;
-	background: #707070;
+	color: #A5DFF2;
+	background: #2B2B2B;
 	margin-left: 5px;
 }
 
@@ -280,7 +280,7 @@ div.mochaToolbarWrapper.bottom {
 
 .mocha.notification {
 	background: #fff;
-	color: #141414;	
+	color: #222;	
 }
 
 .mocha.notification .mochaTitlebar {
@@ -304,7 +304,7 @@ div.mochaToolbarWrapper.bottom {
 /* Example Window Themes */
 
 #about {
-	border: 8px solid #404040;	
+	border: 6px solid #333;	
 }
 
 #about_contentWrapper {
@@ -325,5 +325,5 @@ div.mochaToolbarWrapper.bottom {
 }
 
 #clock {
-	background: #2e2e2e;	
+	background: #393939;	
 }

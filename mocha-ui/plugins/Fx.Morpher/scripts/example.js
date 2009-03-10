@@ -73,6 +73,7 @@ function myAnim(){
 			new CubicBezier([300,149.99], [198,101.99], [271.17,149.14], [238.42,56.95]),
 			new CubicBezier([198,101.99], [150,0], [243.03,61.57], [150.84,28.82])									
  		]),
+		fps: 30,
 		regpoint: Fx.RegPoint.Center,  
 		duration: 7000,
 		onComplete: function(){

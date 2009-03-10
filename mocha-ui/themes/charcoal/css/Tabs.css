@@ -59,7 +59,7 @@ Required by:
 }
 
 .tab-menu li.selected a {
-	color: #fff;
+	color: #B3D9FF;
 	font-weight: bold;	
 	background: url(../images/tabs.gif) repeat-x;
 	background-position: right 0;

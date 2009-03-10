@@ -54,8 +54,8 @@ Required by:
 	font-size: 12px;
 	line-height: 15px;	
 	font-weight: bold;
-	margin: 5px 10px 4px 12px;
-	padding: 0;
+	margin: 0;
+	padding: 5px 10px 4px 12px;
 	color: #888;
 }
 

@@ -1138,8 +1138,8 @@ MochaUI.Window = new Class({
 
 		if (options.icon != false){
 			cache.titleEl.setStyles({
-				'padding-left': 25,
-				'background': 'url(' + options.icon + ') no-repeat'
+				'padding-left': 28,
+				'background': 'url(' + options.icon + ') 5px 4px no-repeat'
 			});
 		}
 		

@@ -61,16 +61,10 @@ Notes:
 /* Sliders */
 
 .sliderarea {
-	background: #404040 !important;
-	border: 1px solid #141414 !important;
+	background: #292929 !important;
+	border: 1px solid #222 !important;
 }
  
 .sliderknob {
 	background: url(../images/knob.gif) no-repeat !important;
-}
-
-/* Folder Tree */
-
-.tree li a {
-	color: #d0d0d0 !important;	
 }	

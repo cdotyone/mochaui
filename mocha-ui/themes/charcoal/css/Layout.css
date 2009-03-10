@@ -19,7 +19,7 @@ Required by:
 ---------------------------------------------------------------- */
 
 html, body {
-	background: #141414;
+	background: #222;
 }
 
 body {
@@ -43,7 +43,7 @@ body {
 	position: relative;	
 	height: 45px;
 	overflow: hidden;
-	background: #333 url(../images/bg-header.gif) repeat-x;
+	background: #303030 url(../images/bg-header.gif) repeat-x;
 }
 
 #desktopTitlebar {
@@ -60,7 +60,7 @@ body {
 	font-size: 20px;
 	line-height: 25px;
 	font-weight: bold;
-	color: #fff;
+	color: #eee;
 }
 
 #desktopTitlebar h2.tagline {
@@ -74,7 +74,7 @@ body {
 }
 
 #desktopTitlebar h2.tagline .taglineEm {
-	color: #fff;
+	color: #eee;
 	font-weight: bold;
 }
 
@@ -89,19 +89,10 @@ body {
 	padding: 13px 10px 0 0;
 }
 
-#topNav a {
-	color: #7DD0FA;
-	font-weight: normal;
-}
-
-#topNav a:hover {
-	text-decoration: none;
-}
-
 /* Navbar */
 
 #desktopNavbar {
-	background: #4C4C4C;
+	background: #404040;
 	height: 30px;
 	margin: 0 0px;
 	overflow: hidden; /* Remove this line if you want the menu to be backward compatible with Firefox 2 */	
@@ -124,12 +115,12 @@ body {
 	
 #desktopNavbar ul li a {
 	padding: 6px 10px 6px 10px;	
-	color: #b2b2b2;
+	color: #eee;
 	font-weight: normal;
 }
 
 #desktopNavbar ul li a:hover {
-	color: #fff;
+	color: #eee;
 }
 
 #desktopNavbar ul li a.arrow-right, #desktopNavbar ul li a:hover.arrow-right {
@@ -141,7 +132,7 @@ body {
 #desktopNavbar li ul {
 	padding: 2px;
 	border: 1px solid #3f3f3f;
-	background: #fff url(../images/bg-dropdown.gif) repeat-y;
+	background: #eee url(../images/bg-dropdown.gif) repeat-y;
 	position: absolute;
 	width: 164px;
 	left: -999em;
@@ -156,7 +147,7 @@ body {
 }
 
 #desktopNavbar li ul ul { /* third-and-above-level lists */
-	margin: -22px 0 0 164px;
+	margin: -22px 0 0 165px;
 }
 
 #desktopNavbar li ul li .check {
@@ -181,11 +172,12 @@ body {
 
 #desktopNavbar li ul li a:hover {
 	background: #6C98D9;
-	color: #fff;
+	color: #eee;
+	-moz-border-radius: 2px;	
 }
 
 #desktopNavbar li ul li a:hover .check {
-	background: #fff;
+	background: #eee;
 }
 
 #desktopNavbar li:hover ul,
@@ -204,14 +196,14 @@ body {
 li.divider {
 	margin-top: 2px;
 	padding-top: 3px;	
-	border-top: 1px solid #ebebeb;
+	border-top: 1px solid #e0e0e0;
 }	
 
 #pageWrapper {
 	position: relative;
 	overflow: hidden; /* This can be set to hidden or auto */
-	border-top: 1px solid #222;
-	border-bottom: 1px solid #222;
+	border-top: 1px solid #181818;
+	border-bottom: 1px solid #181818;
 }
 
 /* Footer */
@@ -230,17 +222,8 @@ li.divider {
 	font-size: 10px;
 	height: 24px;
 	padding: 6px 8px 0 8px;
-	background: #4c4c4c;
+	background: #404040;
 	color: #b2b2b2;
-}
-
-#desktopFooter a {
-	color: #7DD0FA;
-	font-weight: normal;
-}
-
-#desktopFooter a:hover {
-	text-decoration: none;
 }
 
 /* Panel Layout
@@ -259,8 +242,8 @@ li.divider {
 .panel {
 	position: relative;
 	overflow: auto;
-	background: #222;
-	border-bottom: 1px solid #141414;
+	background: #303030;
+	border-bottom: 1px solid #282828;
 }
 
 .panel.collapsed {
@@ -284,10 +267,10 @@ li.divider {
 
 .panel-header {
 	position: relative;	
-	background: #4c4c4c url(../images/bg-panel-header.gif) repeat-x;
+	background: #404040 url(../images/bg-panel-header.gif) repeat-x;
 	height: 30px;
 	overflow: hidden;
-	border-bottom: 1px solid #141414;		
+	border-bottom: 1px solid #282828;		
 }
 
 .panel-headerContent {
@@ -306,7 +289,7 @@ li.divider {
 	padding: 3px 8px 0 8px;
 	height: 22px;
 	overflow: hidden;
-	color: #fff;
+	color: #B3D9FF;
 }
 
 .panel-collapse {
@@ -330,7 +313,7 @@ li.divider {
 	background: #404040;
 	height: 30px;
 	overflow: hidden;
-	border-top: 1px solid #141414;
+	border-top: 1px solid #222;
 }
 
 .panel-footer {
@@ -369,8 +352,8 @@ li.divider {
 	float: left;
 	width: 4px;
 	overflow: hidden;
-	background: #333 url(../images/handle-icon.gif) center center no-repeat;
-	border: 1px solid #141414;
+	background: #272727 url(../images/handle-icon.gif) center center no-repeat;
+	border: 1px solid #222;
 	border-top: 0;
 	border-bottom: 0;
 }
@@ -391,12 +374,7 @@ li.divider {
 
 div.toolbox.divider { /* Have to specify div here for IE6's sake */
 	padding-left: 8px;
-	border-left: 1px solid #555;
-}
-
-div.toolbox.divider2 { /* Have to specify div here for IE6's sake */
-	padding-left: 7px;
-	border-left: 1px solid #777;	
+	border-left: 1px solid #282828;
 }
 
 .toolbox img.disabled {
@@ -423,11 +401,9 @@ div.toolbox.divider2 { /* Have to specify div here for IE6's sake */
 }
 
 .iconWrapper:hover {
-	border: 1px solid #c0c0c0;
-}
-
-#desktopNavbar .iconWrapper:hover {
-    border: 1px solid #777;
+	background: #404040 url(../images/bg-panel-header.gif) repeat-x;	
+	border: 1px solid #181818;
+	-moz-border-radius: 3px;	
 }
 
 #spinnerWrapper {
