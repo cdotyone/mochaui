@@ -107,3 +107,15 @@ Required by:
 	z-index: 3; /* for IE */
 	text-align: right;	
 }
+
+.dockButtonEnabled {
+	background-color: #7399bf;
+}
+
+.dockButtonDisabled {
+	background-color: #aaa;	
+}
+
+.dockButtonTrue {
+	background-color: #46f546;
+}

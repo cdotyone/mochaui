@@ -131,8 +131,14 @@ MochaUI.Themes = {
 			// Convert CSS colors to Canvas colors.
 			instance.setColors();							
 			instance.drawWindow();			
-			
 		});
+		
+		if (MochaUI.Dock){
+			if (MochaUI.Dock.options.useControls){
+				MochaUI.Dock.setDockColors();
+				MochaUI.Dock.renderDockControls();
+			}
+		}
 
 		// Reformat layout
 		if (MochaUI.Desktop.desktop){

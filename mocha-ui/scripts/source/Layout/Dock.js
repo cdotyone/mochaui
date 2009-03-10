@@ -50,11 +50,11 @@ MochaUI.Dock = new Class({
 		useControls:          true,      // Toggles autohide and dock placement controls.
 		dockPosition:         'bottom',  // Position the dock starts in, top or bottom.
 		// Style options
-		dockTabColor:         [255, 255, 255],
 		trueButtonColor:      [70, 245, 70],     // Color for autohide on
 		enabledButtonColor:   [115, 153, 191], 
 		disabledButtonColor:  [170, 170, 170]
 	},
+	
 	initialize: function(options){
 		// Stops if MochaUI.Desktop is not implemented
 		if (!MochaUI.Desktop) return;
@@ -106,7 +106,11 @@ MochaUI.Dock = new Class({
 
 		MochaUI.Desktop.setDesktopSize();
 	},
+	
 	initializeDockControls: function(){
+		
+		// Convert CSS colors to Canvas colors.
+		this.setDockColors();
 		
 		if (this.options.useControls){
 			// Insert canvas
@@ -195,17 +199,43 @@ MochaUI.Dock = new Class({
 
 		}.bind(this));
 
-		// Draw dock controls
-		var ctx = $('dockCanvas').getContext('2d');
-		ctx.clearRect(0, 0, 100, 100);
-		MochaUI.circle(ctx, 5 , 4, 3, this.options.enabledButtonColor, 1.0);
-		MochaUI.circle(ctx, 5 , 14, 3, this.options.enabledButtonColor, 1.0);
+		this.renderDockControls();
 		
 		if (this.options.dockPosition == 'top'){
 			this.moveDock();
 		}
 
 	},
+	
+	setDockColors: function(){	
+		if (MochaUI.getCSSRule('.dockButtonEnabled').style.backgroundColor){
+			this.options.enabledButtonColor = new Color(MochaUI.getCSSRule('.dockButtonEnabled').style.backgroundColor);
+		}
+		if (MochaUI.getCSSRule('.dockButtonDisabled').style.backgroundColor){
+			this.options.disabledButtonColor = new Color(MochaUI.getCSSRule('.dockButtonDisabled').style.backgroundColor);
+		}
+		if (MochaUI.getCSSRule('.dockButtonTrue').style.backgroundColor){
+			this.options.trueButtonColor = new Color(MochaUI.getCSSRule('.dockButtonTrue').style.backgroundColor);
+		}									
+	},
+		
+	renderDockControls: function(){
+		// Draw dock controls
+		var ctx = $('dockCanvas').getContext('2d');
+		ctx.clearRect(0, 0, 100, 100);
+		MochaUI.circle(ctx, 5 , 4, 3, this.options.enabledButtonColor, 1.0);
+		
+		if( this.dockWrapper.getProperty('dockPosition') == 'top'){
+			MochaUI.circle(ctx, 5 , 14, 3, this.options.disabledButtonColor, 1.0)
+		}
+		else if (this.dockAutoHide){
+			MochaUI.circle(ctx, 5 , 14, 3, this.options.trueButtonColor, 1.0);
+		}
+		else {
+			MochaUI.circle(ctx, 5 , 14, 3, this.options.enabledButtonColor, 1.0);
+		}
+	},
+	
 	moveDock: function(){
 			var ctx = $('dockCanvas').getContext('2d');
 			// Move dock to top position
@@ -240,6 +270,7 @@ MochaUI.Dock = new Class({
 				$('dockAutoHide').setProperty('title', 'Turn Auto Hide On');
 			}
 	},
+	
 	createDockTab: function(windowEl){
 
 		var instance = windowEl.retrieve('instance');
@@ -310,6 +341,7 @@ MochaUI.Dock = new Class({
 		MochaUI.Desktop.setDesktopSize();
 
 	},
+	
 	makeActiveTab: function(){
 
 		// getWindowWith HighestZindex is used in case the currently focused window
@@ -330,7 +362,8 @@ MochaUI.Dock = new Class({
 		else {
 			instance.windowEl.removeClass('isFocused');
 		}	
-	},	
+	},
+		
 	minimizeWindow: function(windowEl){
 		if (windowEl != $(windowEl)) return;
 		
@@ -377,6 +410,7 @@ MochaUI.Dock = new Class({
 
 		instance.fireEvent('onMinimize', windowEl);
 	},
+	
 	restoreMinimized: function(windowEl) {
 
 		var instance = windowEl.retrieve('instance');
