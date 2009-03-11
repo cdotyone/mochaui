@@ -110,7 +110,7 @@ MochaUI.Dock = new Class({
 	initializeDockControls: function(){
 		
 		// Convert CSS colors to Canvas colors.
-		this.setDockColors();
+		//this.setDockColors();
 		
 		if (this.options.useControls){
 			// Insert canvas

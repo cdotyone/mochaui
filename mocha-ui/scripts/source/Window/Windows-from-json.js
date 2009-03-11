@@ -38,9 +38,16 @@ See Also:
 */
 
 MochaUI.extend({	
-	newWindowsFromJSON: function(properties){
-		properties.each(function(properties) {
-				new MochaUI.Window(properties);
-		}.bind(this));
+	newWindowsFromJSON: function(newWindows){
+		newWindows.each(function(options) {
+			var temp = new Hash(options);
+			temp.each( function(value, key, hash) {
+				if ($type(value) != 'string') return;
+				if (value.substring(0,8) == 'function'){
+					eval("options." + key + " = " + value);
+				}
+			});			
+			new MochaUI.Window(options);
+		});
 	}
 });
