@@ -17,25 +17,22 @@ Notes:
 	
 Syntax:
 	(start code)
-	new MochaUI.Themes.init(newTheme);
+	new MUI.Themes.init(newTheme);
 	(end)
 	
 Example:
 	(start code)
-	new MochaUI.Themes.init('charcoal');
+	new MUI.Themes.init('charcoal');
 	(end)		
 
 Arguments:
 	newTheme - (string) The theme name	
 
 */
-	
-MochaUI.Themes = {
-	options: {
-		themesDir:      'themes',    // Path to themes directory
-		theme:          'default'
 
-	},
+MUI.files[MUI.path.source + 'Utilities/Themes.js'] = 1;
+	
+MUI.Themes = {
 
 	/*
 	
@@ -45,48 +42,61 @@ MochaUI.Themes = {
 	*/	
 	init: function(newTheme){
 		this.newTheme = newTheme.toLowerCase();
-		if (!this.newTheme || this.newTheme == null || this.newTheme == this.options.theme.toLowerCase()) return;
-				
-		if ($('spinner')) $('spinner').show();
+		if (!this.newTheme || this.newTheme == null || this.newTheme == MUI.options.theme.toLowerCase()) return;
 
-		/* Add old style sheets to an array */
+		if ($('spinner')) $('spinner').show();
+		
+		this.oldURIs = [];
 		this.oldSheets = [];
-		$$('link').each( function(link){
-			var href = this.options.themesDir + '/' + this.newTheme + '/css/' + link.id.substring(3) +'.css';			
-			if (link.href.contains(href)) return;
-			
-			if (link.id.substring(0,3) == 'css') {
-				this.oldSheets.push(link);				
+		
+		$$('link').each( function(link){			
+				var href = link.get('href');
+				if (href.contains(MUI.path.themes + MUI.options.theme)){
+					this.oldURIs.push(href);
+					this.oldSheets.push(link);
+				}
+
+		}.bind(this));		
+		
+		/*
+		MUI.files.each( function(value, key, hash){			
+			if (key.contains(MUI.path.themes + MUI.options.theme)){
+				this.oldURIs.push(key);
 			}
 		}.bind(this));
-	
-		this.sheetsToLoad = this.oldSheets.length;
+		*/		
+		
+		this.newSheetURLs = this.oldURIs.map(function(item, index){
+    		return item.replace("/" + MUI.options.theme + "/", "/" + MUI.Themes.newTheme + "/");
+		}.bind(this));
+			
+		this.sheetsToLoad = this.oldURIs.length;
 		this.sheetsLoaded = 0;
 		
-		/* Download new stylesheets and add them to an array */
+		// Download new stylesheets and add them to an array
 		this.newSheets = [];
-		this.oldSheets.each( function(link){
-			var href = this.options.themesDir + '/' + this.newTheme + '/css/' + link.id.substring(3) +'.css';
+		this.newSheetURLs.each( function(link){
+			var href = link;
 								
-				var id = link.id;
+				//var id = link.id;
 				
 				var cssRequest = new Request({
 					method: 'get',
 					url: href,
 					onComplete: function(response) { 
 						var newSheet = new Element('link', {
-							'id': id,
+							//'id': id,
 							'rel': 'stylesheet',
 							'media': 'screen',
 							'type': 'text/css',
 							'href': href
 						});
-						this.newSheets.push(newSheet);											
+						this.newSheets.push(newSheet);										
 					}.bind(this),
 					onFailure: function(response){
 						this.themeLoadSuccess = false;
 						if ($('spinner')) $('spinner').hide();						
-						MochaUI.notification('Stylesheets did not load.');						
+						MUI.notification('Stylesheets did not load.');						
 					},					
 					onSuccess: function(){						
 						this.sheetsLoaded++;
@@ -105,9 +115,10 @@ MochaUI.Themes = {
 
 		this.oldSheets.each( function(sheet){
 			sheet.destroy();
-		});
+		});		
 
 		this.newSheets.each( function(sheet){
+			MUI.files[sheet.get('href')] = 1;
 			sheet.inject(document.head);
 		});		
 
@@ -133,32 +144,32 @@ MochaUI.Themes = {
 			instance.drawWindow();			
 		});
 		
-		if (MochaUI.Dock){
-			if (MochaUI.Dock.options.useControls){
-				MochaUI.Dock.setDockColors();
-				MochaUI.Dock.renderDockControls();
+		if (MUI.Dock){
+			if (MUI.Dock.options.useControls){
+				MUI.Dock.setDockColors();
+				MUI.Dock.renderDockControls();
 			}
 		}
 
 		// Reformat layout
-		if (MochaUI.Desktop.desktop){
+		if (MUI.Desktop.desktop){
 			var checker = (function(){
 				// Make sure the style sheets are really ready.				
-				if (MochaUI.Desktop.desktop.getStyle('overflow') != 'hidden'){					
+				if (MUI.Desktop.desktop.getStyle('overflow') != 'hidden'){					
 					return;
 				}
 				$clear(checker);								
-				MochaUI.Desktop.setDesktopSize();				
+				MUI.Desktop.setDesktopSize();				
 			}).periodical(50);
 		}
 		
 		if ($('spinner')) $('spinner').hide();		
-		this.options.theme = this.newTheme;
+		MUI.options.theme = this.newTheme;
 		
 		/*		
 		this.cookie = new Hash.Cookie('mochaUIthemeCookie', {duration: 3600});
 		this.cookie.empty();
-		this.cookie.set('theme', this.options.theme);
+		this.cookie.set('theme', MUI.options.theme);
 		this.cookie.save();
 		*/			
 						
@@ -171,8 +182,8 @@ window.addEvent('load', function(){
 	var cookie = new Hash.Cookie('mochaUIthemeCookie', {duration: 3600});
 	var themeCookie = cookie.load();
 	if(cookie.getKeys().length){	
-		if (themeCookie.get('theme') != MochaUI.Themes.options.theme){
-			MochaUI.Themes.init.delay(1000, MochaUI.Themes, themeCookie.get('theme'));
+		if (themeCookie.get('theme') != MUI.Themes.options.theme){
+			MUI.Themes.init.delay(1000, MUI.Themes, themeCookie.get('theme'));
 		}
 	}
 	*/

@@ -1,7 +1,7 @@
 /* 
 
 Script: Core.js
-	MochaUI - A Web Applications User Interface Framework.
+	MUI - A Web Applications User Interface Framework.
 
 Copyright:
 	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.
@@ -18,28 +18,41 @@ Note:
 
 */
 
-var MochaUI = new Hash({
-	version: '0.9.5 development',
+var MUI = MochaUI = new Hash({
+	
+	version: '0.9.6 development',
+
 	options: new Hash({
+		theme: 'default',				
 		advancedEffects: false, // Effects that require fast browsers and are cpu intensive.
 		standardEffects: true   // Basic effects that tend to run smoothly.
-	}),	
+	}),
+
+	path: {			
+		source:  'scripts/source/', // Path to MochaUI source JavaScript
+		themes:  'themes/',         // Path to MochaUI Themes
+		plugins: 'plugins/'         // Path to Plugins
+	},
+	
+	// Returns the path to the current theme directory
+	themePath: function(){
+		return MUI.path.themes + MUI.options.theme + '/'; 
+	},
+	
+	files: new Hash()
+	
+});
+
+MUI.files[MUI.path.source + 'Core/Core.js'] = 'loaded';
+
+MUI.extend({
+	
+	Windows: {
+		instances: new Hash()
+	},
 
 	ieSupport: 'excanvas',  // Makes it easier to switch between Excanvas and Moocanvas for testing	
-
-	// Functionality for queuing content updates. This is currently used for Opera only.
-	// Opera gets confused when several XMLHttpRequests and DOM Javascript injections are going on concurrently.
-	queue: [],
-	updating: false,
-	nextInQueue: function(){
-		if (MochaUI.queue.length){
-			MochaUI.updateContent(MochaUI.queue.shift(), true);			
-		}
-		else {
-			MochaUI.updating = false;
-			return false;			
-		}				
-	},	
+	
 	/*
 	
 	Function: updateContent
@@ -47,7 +60,6 @@ var MochaUI = new Hash({
 		
 	Arguments:
 		updateOptions - (object)
-		next - (boolean) True if next in download queu.
 	
 	updateOptions:
 		element - The parent window or panel.
@@ -63,56 +75,66 @@ var MochaUI = new Hash({
 		onContentLoaded - (function)
 
 	*/	
-	updateContent: function(updateOptions, next){
+	updateContent: function(options){
 
-		if (Browser.Engine.presto){
-			if (MochaUI.updating == true && !next) {
-				MochaUI.queue.push(updateOptions);
-				return;
-			}
-			MochaUI.updating = true;
-		}
+		var options = $extend({
+			element:      null,
+			childElement: null,
+			method:       null,
+			data:         null,
+			title:        null,
+			content:      null,
+			loadMethod:   null,
+			url:          null,
+			scrollbars:   null,			
+			padding:      null,
+			require:      {},
+			onContentLoaded: $empty
+		}, options);		
 	
-		var options = {
-			'element':      null,
-			'childElement': null,
-			'method':	    null,
-			'data':		    null,
-			'title':        null,
-			'content':      null,
-			'loadMethod':   null,
-			'url':          null,
-			'scrollbars':   null,			
-			'padding':      null,
-			'onContentLoaded': $empty
-		};
-		$extend(options, updateOptions);
-
+		options.require = $extend({
+			css: [], images: [], js: [], onload: null
+		}, options.require);		
+		
+		var args = {};
+				
 		if (!options.element) return;
-		var element = options.element;
+		var element = options.element;		
 
-		if (MochaUI.Windows.instances.get(element.id)){
-			var recipient = 'window';		
+		if (MUI.Windows.instances.get(element.id)){
+			args.recipient = 'window';		
 		}
 		else {
-			var recipient = 'panel';		
+			args.recipient = 'panel';		
 		}
 
 		var instance = element.retrieve('instance');
 		if (options.title) instance.titleEl.set('html', options.title);			
 
 		var contentEl = instance.contentEl;
-		var contentContainer = options.childElement != null ? options.childElement : instance.contentEl;		
+		args.contentContainer = options.childElement != null ? options.childElement : instance.contentEl;		
 		var contentWrapperEl = instance.contentWrapperEl;
 
-		var loadMethod = options.loadMethod != null ? options.loadMethod : instance.options.loadMethod;
+		if (!options.loadMethod){
+			if (!instance.options.loadMethod){
+				if (!options.url){
+					options.loadMethod = 'html';
+				}
+				else {
+					options.loadMethod = 'xhr';
+				}
+			}
+			else {	
+				options.loadMethod = instance.options.loadMethod;
+			}
+		}	
 				
 		// Set scrollbars if loading content in main content container.
 		// Always use 'hidden' for iframe windows
 		var scrollbars = options.scrollbars || instance.options.scrollbars;
-		if (contentContainer == instance.contentEl) {
+		if (args.contentContainer == instance.contentEl) {
 			contentWrapperEl.setStyles({
-				'overflow': scrollbars != false && loadMethod != 'iframe' ? 'auto' : 'hidden'
+				'overflow': scrollbars != false && options.loadMethod != 'iframe' ? 'auto' : 'hidden'
 			});
 		}		
 
@@ -126,33 +148,71 @@ var MochaUI = new Hash({
 		}
 
 		// Remove old content.
-		if (contentContainer == contentEl) {
+		if (args.contentContainer == contentEl) {
 			contentEl.empty().show();			
 			// Panels are not loaded into the padding div, so we remove them separately.
 			contentEl.getAllNext('.column').destroy();
 			contentEl.getAllNext('.columnHandle').destroy();
 		}
 		
-		var onContentLoaded = function(){
-			options.onContentLoaded ? options.onContentLoaded() : instance.fireEvent('onContentLoaded', element);
-		};		
+		args.onContentLoaded = function(){
+			
+			if (options.require.js.length || typeof options.require.onload == 'function'){
+				new MUI.Require({
+					js: options.require.js,
+					onload: function(){
+						if (Browser.Engine.presto){
+							options.require.onload.delay(100);
+						}
+						else {
+							options.require.onload();
+						}
+						options.onContentLoaded ? options.onContentLoaded() : instance.fireEvent('onContentLoaded', element);
+					}.bind(this)		
+				});
+			}		
+			else {
+				options.onContentLoaded ? options.onContentLoaded() : instance.fireEvent('onContentLoaded', element);
+			}			
+		
+		};
+		
+		if (options.require.css.length || options.require.images.length){
+			new MUI.Require({
+				css: options.require.css,
+				images: options.require.images,
+				onload: function(){
+					this.loadSelect(instance, options, args);
+				}.bind(this)		
+			});
+		}		
+		else {
+			this.loadSelect(instance, options, args);
+		}
+	},
+	
+	loadSelect: function(instance, options, args){					
 				
 		// Load new content.
-		switch(loadMethod){
+		switch(options.loadMethod){
 			case 'xhr':			
-				this.updateContentXHR(instance, options, recipient, contentEl, contentContainer, onContentLoaded);
+				this.updateContentXHR(instance, options, args);
 				break;
 			case 'iframe':
-				this.updateContentIframe(instance, options, recipient, contentEl, contentWrapperEl, contentContainer, onContentLoaded);				
+				this.updateContentIframe(instance, options, args);				
 				break;
 			case 'html':
 			default:
-				this.updateContentHTML(instance, options, recipient, contentEl, contentContainer, onContentLoaded);
+				this.updateContentHTML(instance, options, args);
 				break;
 		}
 
 	},
-	updateContentXHR: function(instance, options, recipient, contentEl, contentContainer, onContentLoaded){
+	
+	updateContentXHR: function(instance, options, args){
+		var contentEl = instance.contentEl;
+		var contentContainer = args.contentContainer;
+		var onContentLoaded = args.onContentLoaded;
 		new Request.HTML({
 			url: options.url,
 			update: contentContainer,
@@ -161,10 +221,10 @@ var MochaUI = new Hash({
 			evalScripts: instance.options.evalScripts,
 			evalResponse: instance.options.evalResponse,				
 			onRequest: function(){
-				if (recipient == 'window' && contentContainer == contentEl){
+				if (args.recipient == 'window' && contentContainer == contentEl){
 					instance.showSpinner();
 				}
-				else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')){
+				else if (args.recipient == 'panel' && contentContainer == contentEl && $('spinner')){
 					$('spinner').show();	
 				}
 			}.bind(this),
@@ -174,30 +234,30 @@ var MochaUI = new Hash({
 					var error = getTitle.exec(response.responseText);
 					if (!error) error = 'Unknown';							 
 					contentContainer.set('html', '<h3>Error: ' + error[1] + '</h3>');
-					if (recipient == 'window'){
+					if (args.recipient == 'window'){
 						instance.hideSpinner();
 					}							
-					else if (recipient == 'panel' && $('spinner')){
+					else if (args.recipient == 'panel' && $('spinner')){
 						$('spinner').hide();
-					}	
-					MochaUI.nextInQueue();							
+					}						
 				}
-			}.bind(this),
-			onException: function(){
-				MochaUI.nextInQueue();
 			}.bind(this),
 			onSuccess: function(){
 				if (contentContainer == contentEl){
-					if (recipient == 'window') instance.hideSpinner();							
-					else if (recipient == 'panel' && $('spinner')) $('spinner').hide();							
+					if (args.recipient == 'window') instance.hideSpinner();							
+					else if (args.recipient == 'panel' && $('spinner')) $('spinner').hide();							
 				}
-				Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();						
-				MochaUI.nextInQueue();
+				Browser.Engine.trident4 ? onContentLoaded.delay(750) : onContentLoaded();
 			}.bind(this),
 			onComplete: function(){}.bind(this)
 		}).send();
 	},
-	updateContentIframe: function(instance, options, recipient, contentEl, contentWrapperEl, contentContainer, onContentLoaded){
+	
+	updateContentIframe: function(instance, options, args){
+		var contentEl = instance.contentEl;
+		var contentContainer = args.contentContainer;
+		var contentWrapperEl = instance.contentWrapperEl;
+		var onContentLoaded = args.onContentLoaded;			
 		if ( instance.options.contentURL == '' || contentContainer != contentEl) {
 			return;
 		}
@@ -218,15 +278,18 @@ var MochaUI = new Hash({
 
 		// Add onload event to iframe so we can hide the spinner and run onContentLoaded()
 		instance.iframeEl.addEvent('load', function(e) {
-			if (recipient == 'window') instance.hideSpinner();					
-			else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) $('spinner').hide();
+			if (args.recipient == 'window') instance.hideSpinner();					
+			else if (args.recipient == 'panel' && contentContainer == contentEl && $('spinner')) $('spinner').hide();
 			Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();
-			MochaUI.nextInQueue();	
 		}.bind(this));
-		if (recipient == 'window') instance.showSpinner();				
-		else if (recipient == 'panel' && contentContainer == contentEl && $('spinner')) $('spinner').show();
+		if (args.recipient == 'window') instance.showSpinner();				
+		else if (args.recipient == 'panel' && contentContainer == contentEl && $('spinner')) $('spinner').show();
 	},
-	updateContentHTML: function(instance, options, recipient, contentEl, contentContainer, onContentLoaded){
+	
+	updateContentHTML: function(instance, options, args){
+		var contentEl = instance.contentEl;
+		var contentContainer = args.contentContainer;
+		var onContentLoaded = args.onContentLoaded;			
 		var elementTypes = new Array('element', 'textnode', 'whitespace', 'collection');
 				
 		if (elementTypes.contains($type(options.content))){
@@ -235,12 +298,12 @@ var MochaUI = new Hash({
 			contentContainer.set('html', options.content);
 		}				
 		if (contentContainer == contentEl){
-			if (recipient == 'window') instance.hideSpinner();					
-			else if (recipient == 'panel' && $('spinner')) $('spinner').hide();									
+			if (args.recipient == 'window') instance.hideSpinner();					
+			else if (args.recipient == 'panel' && $('spinner')) $('spinner').hide();									
 		}
-		Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();				
-		MochaUI.nextInQueue();	
+		Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();
 	},
+	
 	/*
 	
 	Function: reloadIframe
@@ -251,19 +314,20 @@ var MochaUI = new Hash({
 
 	Syntax:
 		(start code)
-		MochaUI.reloadIframe(element);
+		MUI.reloadIframe(element);
 		(end)
 
 	Example:
 		To reload an iframe from within another iframe:
 		(start code)
-		parent.MochaUI.reloadIframe('myIframeName');
+		parent.MUI.reloadIframe('myIframeName');
 		(end)
 
 	*/
 	reloadIframe: function(iframe){
 		Browser.Engine.gecko ? $(iframe).src = $(iframe).src : top.frames[iframe].location.reload(true);		
 	},
+	
 	roundedRect: function(ctx, x, y, width, height, radius, rgb, a){
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
 		ctx.beginPath();
@@ -278,6 +342,7 @@ var MochaUI = new Hash({
 		ctx.quadraticCurveTo(x, y, x, y + radius);
 		ctx.fill(); 
 	},
+	
 	triangle: function(ctx, x, y, width, height, rgb, a){
 		ctx.beginPath();
 		ctx.moveTo(x + width, y);
@@ -287,14 +352,16 @@ var MochaUI = new Hash({
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
 		ctx.fill();
 	},
+	
 	circle: function(ctx, x, y, diameter, rgb, a){
 		ctx.beginPath();
 		ctx.arc(x, y, diameter, 0, Math.PI*2, true);
 		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
 		ctx.fill();
 	},
+	
 	notification: function(message){
-			new MochaUI.Window({
+			new MUI.Window({
 				loadMethod: 'html',
 				closeAfter: 1500,
 				type: 'notification',
@@ -307,6 +374,7 @@ var MochaUI = new Hash({
 				shadowBlur: 5	
 			});
 	},
+	
 	/*
 	  	
 	Function: toggleEffects
@@ -314,8 +382,8 @@ var MochaUI = new Hash({
 
 	*/
 	toggleAdvancedEffects: function(link){
-		if (MochaUI.options.advancedEffects == false) {
-			MochaUI.options.advancedEffects = true;
+		if (MUI.options.advancedEffects == false) {
+			MUI.options.advancedEffects = true;
 			if (link){
 				this.toggleAdvancedEffectsLink = new Element('div', {
 					'class': 'check',
@@ -324,7 +392,7 @@ var MochaUI = new Hash({
 			}			
 		}
 		else {
-			MochaUI.options.advancedEffects = false;
+			MUI.options.advancedEffects = false;
 			if (this.toggleAdvancedEffectsLink) {
 				this.toggleAdvancedEffectsLink.destroy();
 			}		
@@ -337,8 +405,8 @@ var MochaUI = new Hash({
 
 	*/
 	toggleStandardEffects: function(link){
-		if (MochaUI.options.standardEffects == false) {
-			MochaUI.options.standardEffects = true;
+		if (MUI.options.standardEffects == false) {
+			MUI.options.standardEffects = true;
 			if (link){
 				this.toggleStandardEffectsLink = new Element('div', {
 					'class': 'check',
@@ -347,28 +415,13 @@ var MochaUI = new Hash({
 			}			
 		}
 		else {
-			MochaUI.options.standardEffects = false;
+			MUI.options.standardEffects = false;
 			if (this.toggleStandardEffectsLink) {
 				this.toggleStandardEffectsLink.destroy();
 			}		
 		}
 	},			
-	/*
-
-	Function: garbageCleanUp
-		Empties all windows of their children, and removes and garbages the windows. It is does not trigger onClose() or onCloseComplete(). This is useful to clear memory before the pageUnload.
-
-	Syntax:
-	(start code)
-		MochaUI.garbageCleanUp();
-	(end)
 	
-	*/
-	garbageCleanUp: function(){
-		$$('.mocha').each(function(el){
-			el.destroy();
-		}.bind(this));
-	},
 	/*
 	
 	The underlay is inserted directly under windows when they are being dragged or resized
@@ -424,19 +477,19 @@ function fixPNG(myImage){
 
 // Blur all windows if user clicks anywhere else on the page
 document.addEvent('mousedown', function(event){
-	MochaUI.blurAll.delay(50);
+	MUI.blurAll.delay(50);
 });
 
 window.addEvent('domready', function(){
-	MochaUI.underlayInitialize();
+	MUI.underlayInitialize();
 });
 
 window.addEvent('resize', function(){
 	if ($('windowUnderlay')) {
-		MochaUI.setUnderlaySize();
+		MUI.setUnderlaySize();
 	}
 	else {
-		MochaUI.underlayInitialize();
+		MUI.underlayInitialize();
 	}
 });
 
@@ -515,67 +568,6 @@ Element.implement({
 	}
 });
 
-// This makes it so Request will work to some degree locally
-if (location.protocol == "file:"){
-
-	Request.implement({
-		isSuccess : function(status){
-			return (status == 0 || (status >= 200) && (status < 300));
-		}
-	});
-
-	Browser.Request = function(){
-		return $try(function(){
-			return new ActiveXObject('MSXML2.XMLHTTP');
-		}, function(){
-			return new XMLHttpRequest();
-		});
-	};
-	
-}
-
-/* Fix an Opera bug in Mootools 1.2 */
-Asset.extend({
-
-	javascript: function(source, properties){
-		properties = $extend({
-			onload: $empty,
-			document: document,
-			check: $lambda(true)
-		}, properties);
-		
-		if ($(properties.id)) {
-			properties.onload();
-			return $(properties.id);
-		}		
-		
-		var script = new Element('script', {'src': source, 'type': 'text/javascript'});
-		
-		var load = properties.onload.bind(script), check = properties.check, doc = properties.document;
-		delete properties.onload; delete properties.check; delete properties.document;
-		
-		if (!Browser.Engine.webkit419 && !Browser.Engine.presto){
-			script.addEvents({
-				load: load,
-				readystatechange: function(){
-					if (Browser.Engine.trident && ['loaded', 'complete'].contains(this.readyState)) 
-						load();
-				}
-			}).setProperties(properties);
-		}
-		else {
-			var checker = (function(){
-				if (!$try(check)) return;
-				$clear(checker);
-				// Opera has difficulty with multiple scripts being injected into the head simultaneously. We need to give it time to catch up.
-				Browser.Engine.presto ? load.delay(500) : load();
-			}).periodical(50);
-		}	
-		return script.inject(doc.head);
-	}
-	
-});
-
 String.implement({
  
 	parseQueryString: function() {
@@ -611,53 +603,353 @@ Request.HTML.implement({
 		(end)
   
 */
-MochaUI.getCSSRule = function(ruleName, deleteFlag) {
-   ruleName=ruleName.toLowerCase();
-   if (document.styleSheets) {
-      for (var i=0; i<document.styleSheets.length; i++) {
-         var styleSheet=document.styleSheets[i];
-         var ii=0;
-         var cssRule=false;
-         do {
-            if (styleSheet.cssRules) { 
-               cssRule = styleSheet.cssRules[ii]; 
-            } else {
-               cssRule = styleSheet.rules[ii]; 
-            }
-            if (cssRule)  {
-               if (cssRule.selectorText.toLowerCase()==ruleName) {
-                  if (deleteFlag=='delete') {
-                     if (styleSheet.cssRules) {
-                        styleSheet.deleteRule(ii);
-                     } else {
-                        styleSheet.removeRule(ii);
-                     }
-                     return true;
-                  } else {
-                     return cssRule;
-                  }
-               }
-            }
-            ii++;
-         } while (cssRule)
-      }
-   }
-   return false;
+MUI.getCSSRule = function(selector) {
+	for (var ii = 0; ii < document.styleSheets.length; ii++) {
+		var mysheet = document.styleSheets[ii];
+		var myrules = mysheet.cssRules ? mysheet.cssRules : mysheet.rules;
+		for (i = 0; i < myrules.length; i++){
+			if (myrules[i].selectorText == selector){
+				return myrules[i];
+			}
+		}
+	}		  
+	return false;
 }
 
-function killCSSRule(ruleName) { 
-   return getCSSRule(ruleName,'delete');
+// This makes it so Request will work to some degree locally
+if (location.protocol == "file:"){
+
+	Request.implement({
+		isSuccess : function(status){
+			return (status == 0 || (status >= 200) && (status < 300));
+		}
+	});
+
+	Browser.Request = function(){
+		return $try(function(){
+			return new ActiveXObject('MSXML2.XMLHTTP');
+		}, function(){
+			return new XMLHttpRequest();
+		});
+	};
+	
 }
-function addCSSRule(ruleName) {
-   if (document.styleSheets) {
-      if (!getCSSRule(ruleName)) {
-         if (document.styleSheets[0].addRule) {
-            document.styleSheets[0].addRule(ruleName, null,0);
-         } else {
-            document.styleSheets[0].insertRule(ruleName+' { }', 0);
-         }                                               
-      } 
-   }
-   return getCSSRule(ruleName);
-}
- 
+
+MUI.Require = new Class({
+
+	Implements: [Options],
+
+	options: {
+		css: [],
+		images: [],
+		js: [],		
+		onload: $empty
+	},
+	
+	initialize: function(options){
+		this.setOptions(options);
+		var options = this.options;		
+		
+		this.assetsToLoad = options.css.length + options.images.length + options.js.length;		
+		this.assetsLoaded = 0;
+		
+		var cssLoaded = 0;
+		
+		// Load CSS before images and JavaScript	
+				
+		if (options.css.length){
+			options.css.each( function(sheet){
+				
+				this.getAsset(sheet, function(){
+					if (cssLoaded == options.css.length - 1){
+						
+						if (this.assetsLoaded == this.assetsToLoad - 1){
+							this.requireOnload();
+						}
+						else {
+							// Add a little delay since we are relying on cached CSS from XHR request.
+							this.assetsLoaded++;	 					
+							this.requireContinue.delay(50, this);
+						}				
+					}
+					else {
+						cssLoaded++;
+						this.assetsLoaded++;						
+					}
+				}.bind(this));
+			}.bind(this));
+		}
+		else if (!options.js.length && !options.images.length){
+			this.options.onload();
+			return true;
+		}
+		else {
+			this.requireContinue.delay(50, this); // Delay is for Safari
+		}		
+		
+	},
+	
+	requireOnload: function(){
+		this.assetsLoaded++;
+		if (this.assetsLoaded == this.assetsToLoad){
+			this.options.onload();
+			return true;				
+		}
+
+	},	
+	
+	requireContinue: function(){
+
+		var options = this.options;
+		if (options.images.length){
+			options.images.each( function(image){
+				this.getAsset(image, this.requireOnload.bind(this));
+			}.bind(this));
+		}
+	
+		if (options.js.length){
+			options.js.each( function(script){
+				this.getAsset(script, this.requireOnload.bind(this));			
+			}.bind(this));
+		}
+	
+	},
+	
+	getAsset: function(source, onload){
+
+		// If the asset is loaded, fire the onload function.
+		if ( MUI.files[source] == 'loaded' ){
+			if (typeof onload == 'function'){
+				onload();
+			}
+			return true;	
+		}
+	
+		// If the asset is loading, wait until it is loaded and then fire the onload function.
+		// If asset doesn't load by a number of tries, fire onload anyway.
+		else if ( MUI.files[source] == 'loading' ){
+			var tries = 0;
+			var checker = (function(){
+				tries++;
+				if (MUI.files[source] == 'loading' && tries < '100') return;
+				$clear(checker);
+				if (typeof onload == 'function'){
+					onload();
+				}
+			}).periodical(50);
+		}
+	
+		// If the asset is not yet loaded or loading, start loading the asset.
+		else {
+			MUI.files[source] = 'loading';	
+	
+			properties = {
+				'onload': onload != 'undefined' ? onload : $empty	
+			};	
+	
+			// Add to the onload function
+			var oldonload = properties.onload;
+			properties.onload = function() {
+				MUI.files[source] = 'loaded';
+				if (oldonload) {
+						oldonload();
+				}	
+			}.bind(this);			
+	
+			switch ( source.match(/\.\w+$/)[0] ) {
+				case '.js': return Asset.javascript(source, properties);
+				case '.css': return Asset.css(source, properties);
+				case '.jpg':
+				case '.png':
+				case '.gif': return Asset.image(source, properties);
+			}
+	
+			alert('The required file "' + source + '" could not be loaded');
+		}
+	}			
+		
+});
+
+Asset.extend({
+
+	/* Fix an Opera bug in Mootools 1.2 */
+	javascript: function(source, properties){
+		properties = $extend({
+			onload: $empty,
+			document: document,
+			check: $lambda(true)
+		}, properties);
+		
+		if ($(properties.id)) {
+			properties.onload();
+			return $(properties.id);
+		}				
+		
+		var script = new Element('script', {'src': source, 'type': 'text/javascript'});
+		
+		var load = properties.onload.bind(script), check = properties.check, doc = properties.document;
+		delete properties.onload; delete properties.check; delete properties.document;
+		
+		if (!Browser.Engine.webkit419 && !Browser.Engine.presto){
+			script.addEvents({
+				load: load,
+				readystatechange: function(){
+					if (Browser.Engine.trident && ['loaded', 'complete'].contains(this.readyState)) 
+						load();
+				}
+			}).setProperties(properties);
+		}
+		else {
+			var checker = (function(){
+				if (!$try(check)) return;
+				$clear(checker);
+				// Opera has difficulty with multiple scripts being injected into the head simultaneously. We need to give it time to catch up.
+				Browser.Engine.presto ? load.delay(500) : load();
+			}).periodical(50);
+		}	
+		return script.inject(doc.head);
+	},
+	
+	// Get the CSS with XHR before appending it to document.head so that we can have an onload callback.
+	css: function(source, properties){
+		
+		properties = $extend({
+			id: null,
+			media: 'screen',
+			onload: $empty
+		}, properties);		
+		
+		new Request({
+			method: 'get',
+			url: source,
+			onComplete: function(response) { 
+				var newSheet = new Element('link', {
+					'id': properties.id,
+					'rel': 'stylesheet',
+					'media': properties.media,
+					'type': 'text/css',
+					'href': source
+				}).inject(document.head);						
+				properties.onload();										
+			}.bind(this),
+			onFailure: function(response){						
+			},					
+			onSuccess: function(){						 
+			}.bind(this)
+		}).send();		
+	}	
+	
+});
+
+/*
+
+REGISTER PLUGINS
+
+	Register Components and Plugins for Lazy Loading
+
+	How this works may take a moment to grasp. Take a look at MUI.Window below.
+	If we try to create a new Window and Window.js has not been loaded then the function
+	below will run. It will load the CSS required by the MUI.Window Class and then
+	then it will load Window.js. Here is the interesting part. When Window.js loads,
+	it will overwrite the function below, and new MUI.Window(arg) will be ran
+	again. This time it will create a new MUI.Window instance, and any future calls
+	to new MUI.Window(arg) will immediately create new windows since the assets
+	have already been loaded and our temporary function below has been overwritten.	
+	
+	Example:
+	
+	MyPlugins.extend({
+
+		MyGadget: function(arg){
+			new MUI.Require({
+				css: [MUI.path.plugins + 'myGadget/css/style.css'],
+				images: [MUI.path.plugins + 'myGadget/images/background.gif']
+				js: [MUI.path.plugins + 'myGadget/scripts/myGadget.js'],
+				onload: function(){
+					new MyPlguins.MyGadget(arg);
+				}		
+			});
+		}
+	
+	});	
+	
+-------------------------------------------------------------------- */
+
+MUI.extend({
+
+	Modal: function(arg){		
+		new MUI.Require({
+			js: [MUI.path.source + 'Window/Modal.js'],
+			onload: function(){
+				new MUI.Modal(arg);
+			}		
+		});		
+	},
+	
+	newWindowsFromJSON: function(arg){
+		new MUI.Require({
+			js: [MUI.path.source + 'Window/Windows-from-json.js'],
+			onload: function(){
+				new MUI.newWindowsFromJSON(arg);
+			}		
+		});
+	},	
+	
+	arrangeCascade: function(){
+		new MUI.Require({
+			js: [MUI.path.source + 'Window/Arrange-cascade.js'],
+			onload: function(){
+				new MUI.arrangeCascade();
+			}		
+		});		
+	},
+	
+	arrangeTile: function(){
+		new MUI.Require({
+			js: [MUI.path.source + 'Window/Arrange-tile.js'],
+			onload: function(){
+				new MUI.arrangeTile();
+			}		
+		});		
+	},
+	
+	saveWorkspace: function(){
+		new MUI.Require({
+			js: [MUI.path.source + 'Layout/Workspaces.js'],
+			onload: function(){
+				new MUI.saveWorkspace();
+			}		
+		});		
+	},
+	
+	loadWorkspace: function(){
+		new MUI.Require({
+			js: [MUI.path.source + 'Layout/Workspaces.js'],
+			onload: function(){
+				new MUI.loadWorkspace();
+			}		
+		});			
+	},
+
+	Themes: {
+		init: function(arg){			
+			new MUI.Require({
+				js: [MUI.path.source + 'Utilities/Themes.js'],
+				onload: function(){
+					MUI.Themes.init(arg);
+				}		
+			});			
+		}
+	},
+	
+	initializeTabs: function(arg){
+		new MUI.Require({
+			css: [MUI.themePath() + 'css/Tabs.css'],
+			js: [MUI.path.source + 'Components/Tabs.js'],
+			onload: function(){
+				MUI.initializeTabs(arg);
+			}		
+		});		
+	}
+	
+});

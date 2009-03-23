@@ -23,8 +23,8 @@
 
 	<script type="text/javascript">
 		
-	MochaUI.testWindow = function(){
-		new MochaUI.Window({
+	MUI.testWindow = function(){
+		new MUI.Window({
 			id: 'test',
 			title: 'Test',
 			loadMethod: 'xhr',
@@ -33,11 +33,11 @@
 	}		
 		
 	window.addEvent('load', function(){
-		MochaUI.NewWindowsFromHTML = new MochaUI.NewWindowsFromHTML();
+		MUI.NewWindowsFromHTML = new MUI.NewWindowsFromHTML();
 		
 		$('testLink').addEvent('click', function(e){
 			new Event(e).stop();
-			MochaUI.testWindow();
+			MUI.testWindow();
 		});		
 		
 	});

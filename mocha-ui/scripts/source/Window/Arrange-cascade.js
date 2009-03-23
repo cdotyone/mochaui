@@ -14,53 +14,54 @@ Requires:
 
 Syntax:
 	(start code)
-	MochaUI.arrangeCascade();
+	MUI.arrangeCascade();
 	(end)
 
 */
 
-MochaUI.options.extend({
-	viewportTopOffset:  30,    // Use a negative number if neccessary to place first window where you want it
-	viewportLeftOffset: 20,
-	windowTopOffset:    50,    // Initial vertical spacing of each window
-	windowLeftOffset:   40     // Initial horizontal spacing of each window	
-});
+MUI.files[MUI.path.source + 'Window/Arrange-cascade.js'] = 'loaded';
 
-MochaUI.extend({   
+MUI.extend({   
 	arrangeCascade: function(){
+
+		var	viewportTopOffset = 30;    // Use a negative number if neccessary to place first window where you want it
+	var viewportLeftOffset = 20;
+	var windowTopOffset = 50;    // Initial vertical spacing of each window
+	var windowLeftOffset = 40; 
+
 		// See how much space we have to work with
 		var coordinates = document.getCoordinates();
 		
 		var openWindows = 0;
-		MochaUI.Windows.instances.each(function(instance){
+		MUI.Windows.instances.each(function(instance){
 			if (!instance.isMinimized && instance.options.draggable) openWindows ++; 
 		});
 		
-		if ((this.options.windowTopOffset * (openWindows + 1)) >= (coordinates.height - this.options.viewportTopOffset)) {
-			var topOffset = (coordinates.height - this.options.viewportTopOffset) / (openWindows + 1);
+		if ((windowTopOffset * (openWindows + 1)) >= (coordinates.height - viewportTopOffset)) {
+			var topOffset = (coordinates.height - viewportTopOffset) / (openWindows + 1);
 		}
 		else {
-			var topOffset = this.options.windowTopOffset;
+			var topOffset = windowTopOffset;
 		}
 		
-		if ((this.options.windowLeftOffset * (openWindows + 1)) >= (coordinates.width - this.options.viewportLeftOffset - 20)) {
-			var leftOffset = (coordinates.width - this.options.viewportLeftOffset - 20) / (openWindows + 1);
+		if ((windowLeftOffset * (openWindows + 1)) >= (coordinates.width - viewportLeftOffset - 20)) {
+			var leftOffset = (coordinates.width - viewportLeftOffset - 20) / (openWindows + 1);
 		}
 		else {
-			var leftOffset = this.options.windowLeftOffset;
+			var leftOffset = windowLeftOffset;
 		}
 
-		var x = this.options.viewportLeftOffset;
-		var y = this.options.viewportTopOffset;
+		var x = viewportLeftOffset;
+		var y = viewportTopOffset;
 		$$('.mocha').each(function(windowEl){
 			var instance = windowEl.retrieve('instance');
 			if (!instance.isMinimized && !instance.isMaximized && instance.options.draggable){
 				id = windowEl.id;
-				MochaUI.focusWindow(windowEl);
+				MUI.focusWindow(windowEl);
 				x += leftOffset;
 				y += topOffset;
 
-				if (MochaUI.options.advancedEffects == false){
+				if (MUI.options.advancedEffects == false){
 					windowEl.setStyles({
 						'top': y,
 						'left': x

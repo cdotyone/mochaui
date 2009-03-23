@@ -17,19 +17,26 @@ See Also:
 	
 */
 
-MochaUI.Modal = new Class({
+MUI.files[MUI.path.source + 'Window/Modal.js'] = 'loaded';
 
-	Extends: MochaUI.Window,
+MUI.Modal = new Class({
 
-	Implements: [Events, Options],
-
+	Extends: MUI.Window,
+	
+	options: {
+		type: 'modal'
+	},	
+	
 	initialize: function(options){
-
-		this.modalInitialize();
 		
-		window.addEvent('resize', function(){
-			this.setModalSize();
-		}.bind(this));
+		if (!$('modalOverlay')){
+			this.modalInitialize();
+		
+			window.addEvent('resize', function(){
+				this.setModalSize();
+			}.bind(this));
+		}		
+		this.parent(options);
 
 	},
 	modalInitialize: function(){
@@ -46,9 +53,9 @@ MochaUI.Modal = new Class({
 		});
 		
 		modalOverlay.addEvent('click', function(e){
-			var instance = MochaUI.Windows.instances.get(MochaUI.currentModal.id);
+			var instance = MUI.Windows.instances.get(MUI.currentModal.id);
 			if (instance.options.modalOverlayClose == true) {
-				MochaUI.closeWindow(MochaUI.currentModal);
+				MUI.closeWindow(MUI.currentModal);
 			}
 		});
 		
@@ -84,5 +91,5 @@ MochaUI.Modal = new Class({
 			$('modalFix').setStyle('height', document.getCoordinates().height);
 		}
 	}
+
 });
-MochaUI.Modal.implement(new Options, new Events);

@@ -78,8 +78,8 @@
 
 	<script type="text/javascript">
 	
-	MochaUI.aboutWindow = function(){
-		new MochaUI.Window({
+	MUI.aboutWindow = function(){
+		new MUI.Modal({
 			id: 'about',
 			title: 'MochaUI',
 			loadMethod: 'xhr',
@@ -94,16 +94,13 @@
 	}	
 
 	window.addEvent('load', function(){
-		MochaUI.Desktop = new MochaUI.Desktop();
-		MochaUI.Dock = new MochaUI.Dock({
-			dockPosition: 'bottom'
-		});
-		MochaUI.Modal = new MochaUI.Modal();
-		MochaUI.NewWindowsFromHTML = new MochaUI.NewWindowsFromHTML();
+		MUI.Desktop.initialize();
+		MUI.Dock.initialize();
+		MUI.NewWindowsFromHTML = new MUI.NewWindowsFromHTML();
 
 		$('aboutLink').addEvent('click', function(e){
 			new Event(e).stop();
-			MochaUI.aboutWindow();
+			MUI.aboutWindow();
 		});
 
 	});

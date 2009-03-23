@@ -17,7 +17,9 @@ To do:
 
 */
 
-MochaUI.extend({			   
+MUI.files[MUI.path.source + 'Layout/Workspaces.js'] = 'loaded';
+
+MUI.extend({			   
 	/*
 	
 	Function: saveWorkspace
@@ -25,7 +27,7 @@ MochaUI.extend({
 	
 	Syntax:
 	(start code)
-		MochaUI.saveWorkspace();
+		MUI.saveWorkspace();
 	(end)
 	
 	Notes:
@@ -35,7 +37,7 @@ MochaUI.extend({
 	saveWorkspace: function(){
 		this.cookie = new Hash.Cookie('mochaUIworkspaceCookie', {duration: 3600});
 		this.cookie.empty();
-		MochaUI.Windows.instances.each(function(instance) {
+		MUI.Windows.instances.each(function(instance) {
 			instance.saveValues();
 			this.cookie.set(instance.options.id, {
 				'id': instance.options.id,
@@ -47,7 +49,7 @@ MochaUI.extend({
 		}.bind(this));
 		this.cookie.save();
 
-		new MochaUI.Window({
+		new MUI.Window({
 			loadMethod: 'html',
 			type: 'notification',
 			addClass: 'notification',
@@ -69,9 +71,9 @@ MochaUI.extend({
 	},
 	loadWorkspace2: function(workspaceWindows){		
 		workspaceWindows.each(function(workspaceWindow){				
-			windowFunction = eval('MochaUI.' + workspaceWindow.id + 'Window');
+			windowFunction = eval('MUI.' + workspaceWindow.id + 'Window');
 			if (windowFunction){
-				eval('MochaUI.' + workspaceWindow.id + 'Window({width:'+ workspaceWindow.width +',height:' + workspaceWindow.height + '});');
+				eval('MUI.' + workspaceWindow.id + 'Window({width:'+ workspaceWindow.width +',height:' + workspaceWindow.height + '});');
 				var windowEl = $(workspaceWindow.id);
 				windowEl.setStyles({
 					'top': workspaceWindow.top,
@@ -94,7 +96,7 @@ MochaUI.extend({
 
 	Syntax:
 	(start code)
-		MochaUI.loadWorkspace();
+		MUI.loadWorkspace();
 	(end)
 
 	*/
@@ -103,7 +105,7 @@ MochaUI.extend({
 		workspaceWindows = cookie.load();
 
 		if(!cookie.getKeys().length){
-			new MochaUI.Window({
+			new MUI.Window({
 				loadMethod: 'html',
 				type: 'notification',
 				addClass: 'notification',

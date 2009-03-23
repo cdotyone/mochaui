@@ -82,7 +82,4 @@ function myAnim(){
 	});  
 	sprite.morpher();
 }
-
-createCanvas();
-myAnim.delay(250);
 	

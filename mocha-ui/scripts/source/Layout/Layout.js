@@ -10,11 +10,13 @@ License:
 	MIT-style license.	
 
 Requires:
-	Core.js, Window.js
+	Core.js
 	
 */
 
-MochaUI.extend({
+MUI.files[MUI.path.source + 'Layout/Layout.js'] = 'loaded';
+
+MUI.extend({
 	Columns: {
 		instances: new Hash(),
 		columnIDCount: 0 // Used for columns without an ID defined by the user
@@ -25,15 +27,11 @@ MochaUI.extend({
 	}
 });
 
-MochaUI.Desktop = new Class({
-
-	Extends: MochaUI.Window,
-
-	Implements: [Events, Options],
+MUI.Desktop = {
 	
 	options: {
 		// Naming options:
-		// If you change the IDs of the Mocha Desktop containers in your HTML, you need to change them here as well.
+		// If you change the IDs of the MochaUI Desktop containers in your HTML, you need to change them here as well.
 		desktop:             'desktop',
 		desktopHeader:       'desktopHeader',
 		desktopFooter:       'desktopFooter',
@@ -42,8 +40,8 @@ MochaUI.Desktop = new Class({
 		page:                'page',
 		desktopFooter:       'desktopFooterWrapper'
 	},	
-	initialize: function(options){
-		this.setOptions(options);
+	initialize: function(){
+
 		this.desktop         = $(this.options.desktop);
 		this.desktopHeader   = $(this.options.desktopHeader);
 		this.desktopNavBar   = $(this.options.desktopNavBar);
@@ -64,7 +62,7 @@ MochaUI.Desktop = new Class({
 		}		
 	
 		// This is run on dock initialize so no need to do it twice.
-		if (!MochaUI.Dock){
+		if (!MUI.Dock){
 			this.setDesktopSize();
 		}
 		this.menuInitialize();		
@@ -73,6 +71,11 @@ MochaUI.Desktop = new Class({
 		window.addEvent('resize', function(e){
 			this.onBrowserResize();
 		}.bind(this));
+		
+		if (MUI.myChain){
+			MUI.myChain.callChain();
+		}
+		
 	},
 	menuInitialize: function(){
 		// Fix for dropdown menus in IE6
@@ -91,7 +94,7 @@ MochaUI.Desktop = new Class({
 		this.setDesktopSize();
 		// Resize maximized windows to fit new browser window size
 		setTimeout( function(){
-			MochaUI.Windows.instances.each(function(instance){
+			MUI.Windows.instances.each(function(instance){
 				if (instance.isMaximized){
 
 					// Hide iframe while resize for better performance
@@ -122,8 +125,8 @@ MochaUI.Desktop = new Class({
 	setDesktopSize: function(){
 		var windowDimensions = window.getCoordinates();
 
-		// var dock = $(MochaUI.options.dock);
-		var dockWrapper = $(MochaUI.options.dockWrapper);
+		// var dock = $(MUI.options.dock);
+		var dockWrapper = $(MUI.options.dockWrapper);
 		
 		// Setting the desktop height may only be needed by IE7
 		if (this.desktop){
@@ -132,7 +135,7 @@ MochaUI.Desktop = new Class({
 
 		// Set pageWrapper height so the dock doesn't cover the pageWrapper scrollbars.
 		if (this.pageWrapper) {
-			var dockOffset = MochaUI.dockVisible ? dockWrapper.offsetHeight : 0;
+			var dockOffset = MUI.dockVisible ? dockWrapper.offsetHeight : 0;
 			var pageWrapperHeight = windowDimensions.height;
 			pageWrapperHeight -= this.pageWrapper.getStyle('border-top').toInt();
 			pageWrapperHeight -= this.pageWrapper.getStyle('border-bottom').toInt();
@@ -146,13 +149,13 @@ MochaUI.Desktop = new Class({
 			this.pageWrapper.setStyle('height', pageWrapperHeight);
 		}
 
-		if (MochaUI.Columns.instances.getKeys().length > 0){ // Conditional is a fix for a bug in IE6 in the no toolbars demo.
-			MochaUI.Desktop.resizePanels();
+		if (MUI.Columns.instances.getKeys().length > 0){ // Conditional is a fix for a bug in IE6 in the no toolbars demo.
+			MUI.Desktop.resizePanels();
 		}		
 	},
 	resizePanels: function(){
-		MochaUI.panelHeight();
-		MochaUI.rWidth();	
+		MUI.panelHeight();
+		MUI.rWidth();	
 	},	
 	/*
 	
@@ -161,13 +164,13 @@ MochaUI.Desktop = new Class({
 	
 	Syntax:
 		(start code)
-		MochaUI.Desktop.maximizeWindow(windowEl);
+		MUI.Desktop.maximizeWindow(windowEl);
 		(end)	
 
 	*/	
 	maximizeWindow: function(windowEl){
 
-		var instance = MochaUI.Windows.instances.get(windowEl.id);
+		var instance = MUI.Windows.instances.get(windowEl.id);
 		var options = instance.options;
 		var windowDrag = instance.windowDrag;
 
@@ -175,7 +178,7 @@ MochaUI.Desktop = new Class({
 		if (windowEl != $(windowEl) || instance.isMaximized ) return;
 		
 		if (instance.isCollapsed){
-			MochaUI.collapseToggle(windowEl);	
+			MUI.collapseToggle(windowEl);	
 		}
 
 		instance.isMaximized = true;
@@ -228,7 +231,7 @@ MochaUI.Desktop = new Class({
 		newHeight -= instance.contentBorderEl.getStyle('border-bottom').toInt();
 		newHeight -= (instance.toolbarWrapperEl ? instance.toolbarWrapperEl.getStyle('height').toInt() + instance.toolbarWrapperEl.getStyle('border-top').toInt() : 0);
 		
-		MochaUI.resizeWindow(windowEl, {
+		MUI.resizeWindow(windowEl, {
 			width: windowDimensions.width,
 			height: newHeight,
 			top: shadowOffset.y - shadowBlur,
@@ -239,7 +242,7 @@ MochaUI.Desktop = new Class({
 		if (instance.maximizeButtonEl) {
 			instance.maximizeButtonEl.setProperty('title', 'Restore');
 		}
-		MochaUI.focusWindow(windowEl);
+		MUI.focusWindow(windowEl);
 
 	},
 	/*
@@ -249,7 +252,7 @@ MochaUI.Desktop = new Class({
 
 	Syntax:
 		(start code)
-		MochaUI.Desktop.restoreWindow(windowEl);
+		MUI.Desktop.restoreWindow(windowEl);
 		(end)	
 
 	*/	
@@ -284,7 +287,7 @@ MochaUI.Desktop = new Class({
 		
 		var contentWrapperEl = instance.contentWrapperEl;	
 		
-		MochaUI.resizeWindow(windowEl,{
+		MUI.resizeWindow(windowEl,{
 			width: contentWrapperEl.oldWidth,
 			height: contentWrapperEl.oldHeight,
 			top: instance.oldTop,
@@ -296,8 +299,7 @@ MochaUI.Desktop = new Class({
 			instance.maximizeButtonEl.setProperty('title', 'Maximize');
 		}
 	}
-});
-MochaUI.Desktop.implement(new Options, new Events);
+};
 
 /*
 
@@ -306,7 +308,7 @@ Class: Column
 
 Syntax:
 (start code)
-	MochaUI.Column();
+	MUI.Column();
 (end)
 
 Arguments:
@@ -314,7 +316,7 @@ Arguments:
 
 Options:
 	id - The ID of the column. This must be set when creating the column.
-	container - Defaults to MochaUI.Desktop.pageWrapper. 	
+	container - Defaults to MUI.Desktop.pageWrapper. 	
 	placement - Can be 'right', 'main', or 'left'. There must be at least one column with the 'main' option.
 	width - 'main' column is fluid and should not be given a width.
 	resizeLimit - resizelimit of a 'right' or 'left' column.
@@ -323,9 +325,7 @@ Options:
 	onExpand - (function) Fired when the column is expanded.
 		
 */
-MochaUI.Column = new Class({
-
-	Extends: MochaUI.Desktop,
+MUI.Column = new Class({
 
 	Implements: [Events, Options],
 
@@ -353,16 +353,16 @@ MochaUI.Column = new Class({
 		
 		// If column has no ID, give it one.
 		if (this.options.id == null){
-			this.options.id = 'column' + (++MochaUI.Columns.columnIDCount);
+			this.options.id = 'column' + (++MUI.Columns.columnIDCount);
 		}		
 
 		// Shorten object chain
 		var options = this.options;
-		var instances = MochaUI.Columns.instances;
+		var instances = MUI.Columns.instances;
 		var instanceID = instances.get(options.id);
 
 		if (options.container == null) {
-			options.container = MochaUI.Desktop.pageWrapper
+			options.container = MUI.Desktop.pageWrapper
 		}
 		else {
 			$(options.container).setStyle('overflow', 'hidden');
@@ -448,7 +448,7 @@ MochaUI.Column = new Class({
 			}.bind(this));
 		}
 
-		MochaUI.rWidth();
+		MUI.rWidth();
 
 	},
 	columnToggle: function(){
@@ -469,7 +469,7 @@ MochaUI.Column = new Class({
 			this.isCollapsed = true;
 			column.addClass('collapsed');
 			column.removeClass('expanded');
-			MochaUI.rWidth();		
+			MUI.rWidth();		
 			this.fireEvent('onCollapse');
 		}
 		// Expand
@@ -486,12 +486,12 @@ MochaUI.Column = new Class({
 			this.resize.attach();
 			this.handleEl.setStyle('cursor', Browser.Engine.webkit ? 'col-resize' : 'e-resize').addClass('attached');
 
-			MochaUI.rWidth();
+			MUI.rWidth();
 			this.fireEvent('onExpand');
 		}
 	}
 });
-MochaUI.Column.implement(new Options, new Events);
+MUI.Column.implement(new Options, new Events);
 
 /*
 
@@ -500,7 +500,7 @@ Class: Panel
 
 Syntax:
 (start code)
-	MochaUI.Panel();
+	MUI.Panel();
 (end)
 
 Arguments:
@@ -509,7 +509,7 @@ Arguments:
 Options:
 	id - The ID of the panel. This must be set when creating the panel.
 	column - Where to inject the panel. This must be set when creating the panel.
-	loadMethod - ('html', 'xhr', or 'iframe')
+	loadMethod - ('html', 'xhr', or 'iframe') Defaults to 'html' if there is no contentURL. Defaults to 'xhr' if there is a contentURL. You only really need to set this if using the 'iframe' method. May create a 'panel' loadMethod in the future.
 	contentURL - Used if loadMethod is set to 'xhr' or 'iframe'.
 	method - ('get', or 'post') The method used to get the data. Defaults to 'get'.
 	data - (hash) Data to send with the URL. Defaults to null.
@@ -539,18 +539,22 @@ Options:
 	onExpand - (function) Fired when the panel is expanded.
 		
 */
-MochaUI.Panel = new Class({
+MUI.Panel = new Class({
 							
-	Extends: MochaUI.Desktop,
-	
 	Implements: [Events, Options],
 	
 	options: {
 		id:                 null,
 		title:              'New Panel',
 		column:             null,
-		loadMethod:         'html',
-		contentURL:         'pages/lipsum.html',
+		require:            {
+			css:            [],
+			images:         [],
+			js:             [],
+			onload:         null
+		},		
+		loadMethod:         null,
+		contentURL:         null,
 	
 		// xhr options
 		method:             'get',
@@ -605,11 +609,11 @@ MochaUI.Panel = new Class({
 
 		// If panel has no ID, give it one.
 		if (this.options.id == null){
-			this.options.id = 'panel' + (++MochaUI.Panels.panelIDCount);
+			this.options.id = 'panel' + (++MUI.Panels.panelIDCount);
 		}
 
 		// Shorten object chain
-		var instances = MochaUI.Panels.instances;
+		var instances = MUI.Panels.instances;
 		var instanceID = instances.get(this.options.id);
 		var options = this.options;
 	
@@ -664,17 +668,7 @@ MochaUI.Panel = new Class({
 			this.footerEl = new Element('div', {
 				'id': options.id + '_panelFooter',
 				'class': 'panel-footer'
-			}).inject(this.footerWrapperEl);
-			
-			MochaUI.updateContent({
-				'element': this.panelEl,
-				'childElement': this.footerEl,
-				'loadMethod': 'xhr',
-				'data': options.footerData,
-				'url': options.footerURL,
-				'onContentLoaded': options.footerOnload
-			});
-			
+			}).inject(this.footerWrapperEl);			
 		}
 
 		// This is in order to use the same variable as the windows do in updateContent.
@@ -705,14 +699,6 @@ MochaUI.Panel = new Class({
 				'id': options.id + '_headerToolbox',
 				'class': 'panel-header-toolbox'
 			}).inject(this.panelHeaderEl);
-			
-			MochaUI.updateContent({
-				'element': this.panelEl,
-				'childElement': this.panelHeaderToolboxEl,
-				'loadMethod': 'xhr',
-				'url': options.headerToolboxURL,
-				'onContentLoaded': options.headerToolboxOnload
-			});
 		}
 		this.panelHeaderContentEl = new Element('div', {
 			'id': options.id + '_headerContent',
@@ -723,20 +709,6 @@ MochaUI.Panel = new Class({
 			'id': options.id + '_title'
 		}).inject(this.panelHeaderContentEl);
 		
-		if (options.tabsURL == null) {
-			this.titleEl.set('html', options.title);
-		} else {
-			this.panelHeaderContentEl.addClass('tabs');
-			MochaUI.updateContent({
-				'element': this.panelEl,
-				'childElement': this.panelHeaderContentEl,
-				'loadMethod': 'xhr',
-				'url': options.tabsURL,
-				'data': options.tabsData,
-				'onContentLoaded': options.tabsOnload
-			});
-		}
-
 		this.handleEl = new Element('div', {
 			'id': options.id + '_handle',
 			'class': 'horizontalHandle',
@@ -752,14 +724,70 @@ MochaUI.Panel = new Class({
 		
 		addResizeBottom(options.id);
 		
+		if (options.require.css.length || options.require.images.length){
+			new MUI.Require({
+				css: options.require.css,
+				images: options.require.images,
+				onload: function(){
+					this.newPanel();
+				}.bind(this)		
+			});
+		}		
+		else {
+			this.newPanel();
+		}
+	},
+	newPanel: function(){
+		
+		options = this.options;
+		
+		if (options.footer) {			
+			MUI.updateContent({
+				'element': this.panelEl,
+				'childElement': this.footerEl,
+				'loadMethod': 'xhr',
+				'data': options.footerData,
+				'url': options.footerURL,
+				'onContentLoaded': options.footerOnload
+			});			
+		}				
+		
+		if (this.options.headerToolbox) {			
+			MUI.updateContent({
+				'element': this.panelEl,
+				'childElement': this.panelHeaderToolboxEl,
+				'loadMethod': 'xhr',
+				'url': options.headerToolboxURL,
+				'onContentLoaded': options.headerToolboxOnload
+			});
+		}		
+		
+		if (options.tabsURL == null) {
+			this.titleEl.set('html', options.title);
+		} else {
+			this.panelHeaderContentEl.addClass('tabs');
+			MUI.updateContent({
+				'element': this.panelEl,
+				'childElement': this.panelHeaderContentEl,
+				'loadMethod': 'xhr',
+				'url': options.tabsURL,
+				'data': options.tabsData,
+				'onContentLoaded': options.tabsOnload
+			});
+		}		
+		
 		// Add content to panel.
-		MochaUI.updateContent({
+		MUI.updateContent({
 			'element': this.panelEl,
 			'content': options.content,
 			'method': options.method,
 			'data': options.data,
 			'url': options.contentURL,
-			'onContentLoaded': null
+			'onContentLoaded': null,
+			'require': {
+				js: options.require.js,
+				onload: options.require.onload
+			}			
 		});
 		
 		// Do this when creating and removing panels
@@ -768,7 +796,7 @@ MochaUI.Panel = new Class({
 		});
 		$(options.column).getChildren('.panel').getLast().addClass('bottomPanel');
 		
-		MochaUI.panelHeight(options.column, this.panelEl, 'new');
+		MUI.panelHeight(options.column, this.panelEl, 'new');
 
 	},
 	collapseToggleInit: function(options){
@@ -798,7 +826,7 @@ MochaUI.Panel = new Class({
 			var panel = this.panelEl;
 			
 			// Get siblings and make sure they are not all collapsed.
-			var instances = MochaUI.Panels.instances;
+			var instances = MUI.Panels.instances;
 			var expandedSiblings = [];
 			panel.getAllPrevious('.panel').each(function(sibling){
 				var instance = instances.get(sibling.id);
@@ -814,10 +842,10 @@ MochaUI.Panel = new Class({
 			});
 
 			if (this.isCollapsed == false) {
-				var currentColumn = MochaUI.Columns.instances.get($(options.column).id);
+				var currentColumn = MUI.Columns.instances.get($(options.column).id);
 
 				if (expandedSiblings.length == 0 && currentColumn.options.placement != 'main'){
-					var currentColumn = MochaUI.Columns.instances.get($(options.column).id);
+					var currentColumn = MUI.Columns.instances.get($(options.column).id);
 					currentColumn.columnToggle();
 					return;
 				}
@@ -831,8 +859,8 @@ MochaUI.Panel = new Class({
 				this.isCollapsed = true;
 				panel.addClass('collapsed');				
 				panel.removeClass('expanded');
-				MochaUI.panelHeight(options.column, panel, 'collapsing');
-				MochaUI.panelHeight(); // Run this a second time for panels within panels
+				MUI.panelHeight(options.column, panel, 'collapsing');
+				MUI.panelHeight(); // Run this a second time for panels within panels
 				this.collapseToggleEl.removeClass('panel-collapsed');
 				this.collapseToggleEl.addClass('panel-expand');
 				this.collapseToggleEl.setProperty('title','Expand Panel');
@@ -844,8 +872,8 @@ MochaUI.Panel = new Class({
 				this.isCollapsed = false;
 				panel.addClass('expanded');
 				panel.removeClass('collapsed');				
-				MochaUI.panelHeight(this.options.column, panel, 'expanding');
-				MochaUI.panelHeight(); // Run this a second time for panels within panels
+				MUI.panelHeight(this.options.column, panel, 'expanding');
+				MUI.panelHeight(); // Run this a second time for panels within panels
 				this.collapseToggleEl.removeClass('panel-expand');
 				this.collapseToggleEl.addClass('panel-collapsed');
 				this.collapseToggleEl.setProperty('title','Collapse Panel');
@@ -854,18 +882,18 @@ MochaUI.Panel = new Class({
 		}.bind(this));	
 	}	
 });
-MochaUI.Panel.implement(new Options, new Events);
+MUI.Panel.implement(new Options, new Events);
 
 
-MochaUI.extend({
+MUI.extend({
 	// Panel Height	
 	panelHeight: function(column, changing, action){
 		if (column != null) {
-			MochaUI.panelHeight2($(column), changing, action);
+			MUI.panelHeight2($(column), changing, action);
 		}
 		else {
 			$$('.column').each(function(column){
-				MochaUI.panelHeight2(column);
+				MUI.panelHeight2(column);
 			}.bind(this));
 		}
 	},
@@ -876,11 +904,11 @@ MochaUI.extend({
 	*/
 	panelHeight2: function(column, changing, action){
 
-		var instances = MochaUI.Panels.instances;
+		var instances = MUI.Panels.instances;
 		
 		var parent = column.getParent();
 		var columnHeight = parent.getStyle('height').toInt();
-		if (Browser.Engine.trident4 && parent == MochaUI.Desktop.pageWrapper) {
+		if (Browser.Engine.trident4 && parent == MUI.Desktop.pageWrapper) {
 			columnHeight -= 1;
 		}
 		column.setStyle('height', columnHeight);
@@ -1037,20 +1065,20 @@ MochaUI.extend({
 			var parent = handle.getParent();
 			if (parent.getStyle('height').toInt() < 1) return; // Keeps IE7 and 8 from throwing an error when collapsing a panel within a panel
 			var handleHeight = parent.getStyle('height').toInt() - handle.getStyle('border-top').toInt() - handle.getStyle('border-bottom').toInt();
-			if (Browser.Engine.trident4 && parent == MochaUI.Desktop.pageWrapper){
+			if (Browser.Engine.trident4 && parent == MUI.Desktop.pageWrapper){
 				handleHeight -= 1;
 			}
 			handle.setStyle('height', handleHeight);
 		});
 			
 		panelsExpanded.each(function(panel){
-			MochaUI.resizeChildren(panel);
+			MUI.resizeChildren(panel);
 		}.bind(this));			
 			
 	},
 	// May rename this resizeIframeEl()
 	resizeChildren: function(panel){
-		var instances = MochaUI.Panels.instances;
+		var instances = MUI.Panels.instances;
 		var instance = instances.get(panel.id);
 		var contentWrapperEl = instance.contentWrapperEl;
 
@@ -1078,7 +1106,7 @@ MochaUI.extend({
 	// Remaining Width
 	rWidth: function(container){
 		if (container == null) {
-			var container = MochaUI.Desktop.desktop;
+			var container = MUI.Desktop.desktop;
 		}
 		container.getElements('.rWidth').each(function(column){
 			var currentWidth = column.offsetWidth.toInt();
@@ -1102,7 +1130,7 @@ MochaUI.extend({
 			column.setStyle('width', newWidth);
 			column.getChildren('.panel').each(function(panel){
 				panel.setStyle('width', newWidth - panel.getStyle('border-left').toInt() - panel.getStyle('border-right').toInt());
-				MochaUI.resizeChildren(panel);
+				MUI.resizeChildren(panel);
 			}.bind(this));
 			
 		});
@@ -1114,7 +1142,7 @@ function addResizeRight(element, min, max){
 	if (!$(element)) return;
 	element = $(element);
 	
-	var instances = MochaUI.Columns.instances;
+	var instances = MUI.Columns.instances;
 	var instance = instances.get(element.id);
 	
 	var handle = element.getNext('.columnHandle');
@@ -1152,7 +1180,7 @@ function addResizeRight(element, min, max){
 					}
 				});
 			}
-			MochaUI.rWidth(element.getParent());
+			MUI.rWidth(element.getParent());
 			if (Browser.Engine.gecko) {
 				$$('.panel').show(); // Fix for a rendering bug in FF			
 			}
@@ -1168,7 +1196,7 @@ function addResizeRight(element, min, max){
 			}
 		}.bind(this),
 		onComplete: function(){
-			MochaUI.rWidth(element.getParent());
+			MUI.rWidth(element.getParent());
 			element.getElements('iframe').setStyle('visibility', 'visible');
 			element.getNext('.column').getElements('iframe').setStyle('visibility', 'visible');
 			instance.fireEvent('onResize');
@@ -1180,7 +1208,7 @@ function addResizeLeft(element, min, max){
 	if (!$(element)) return;
 	element = $(element);
 
-	var instances = MochaUI.Columns.instances;
+	var instances = MUI.Columns.instances;
 	var instance = instances.get(element.id);
 
 	var handle = element.getPrevious('.columnHandle');
@@ -1208,10 +1236,10 @@ function addResizeLeft(element, min, max){
 			partner.getElements('iframe').setStyle('visibility','hidden');
 		}.bind(this),
 		onDrag: function(){
-			MochaUI.rWidth(element.getParent());
+			MUI.rWidth(element.getParent());
 		}.bind(this),
 		onComplete: function(){
-			MochaUI.rWidth(element.getParent());
+			MUI.rWidth(element.getParent());
 			$(element).getElements('iframe').setStyle('visibility','visible');
 			partner.getElements('iframe').setStyle('visibility','visible');
 			instance.fireEvent('onResize');			
@@ -1223,7 +1251,7 @@ function addResizeBottom(element){
 	if (!$(element)) return;
 	var element = $(element);
 	
-	var instances = MochaUI.Panels.instances;
+	var instances = MUI.Panels.instances;
 	var instance = instances.get(element.id);
 	var handle = instance.handleEl;
 	handle.setStyle('cursor', Browser.Engine.webkit ? 'row-resize' : 'n-resize');
@@ -1270,26 +1298,26 @@ function addResizeBottom(element){
 			partnerHeight = partnerOriginalHeight;
 			partnerHeight += (this.originalHeight - element.getStyle('height').toInt());
 			partner.setStyle('height', partnerHeight);
-			MochaUI.resizeChildren(element, element.getStyle('height').toInt());
-			MochaUI.resizeChildren(partner, partnerHeight);
+			MUI.resizeChildren(element, element.getStyle('height').toInt());
+			MUI.resizeChildren(partner, partnerHeight);
 			element.getChildren('.column').each( function(column){
-				MochaUI.panelHeight(column);
+				MUI.panelHeight(column);
 			});
 			partner.getChildren('.column').each( function(column){
-				MochaUI.panelHeight(column);
+				MUI.panelHeight(column);
 			});						
 		}.bind(this),
 		onComplete: function(){
 			partnerHeight = partnerOriginalHeight;
 			partnerHeight += (this.originalHeight - element.getStyle('height').toInt());
 			partner.setStyle('height', partnerHeight);
-			MochaUI.resizeChildren(element, element.getStyle('height').toInt());
-			MochaUI.resizeChildren(partner, partnerHeight);
+			MUI.resizeChildren(element, element.getStyle('height').toInt());
+			MUI.resizeChildren(partner, partnerHeight);
 			element.getChildren('.column').each( function(column){
-				MochaUI.panelHeight(column);
+				MUI.panelHeight(column);
 			});
 			partner.getChildren('.column').each( function(column){
-				MochaUI.panelHeight(column);
+				MUI.panelHeight(column);
 			});			
 			if (instance.iframeEl) {
 				if (!Browser.Engine.trident) {
@@ -1303,7 +1331,7 @@ function addResizeBottom(element){
 					// when only the vertical dimension is changed.
 					var width = instance.iframeEl.getStyle('width').toInt();
 					instance.iframeEl.setStyle('width', width - 1);
-					MochaUI.rWidth();
+					MUI.rWidth();
 					instance.iframeEl.setStyle('width', width);									
 				}
 			}		
@@ -1312,7 +1340,7 @@ function addResizeBottom(element){
 	});
 }
 
-MochaUI.extend({
+MUI.extend({
 	/*
 
 	Function: closeColumn
@@ -1320,7 +1348,7 @@ MochaUI.extend({
 
 	Syntax:
 	(start code)
-		MochaUI.closeColumn();
+		MUI.closeColumn();
 	(end)
 
 	Arguments: 
@@ -1332,7 +1360,7 @@ MochaUI.extend({
 
 	*/	
 	closeColumn: function(columnEl){
-		var instances = MochaUI.Columns.instances;
+		var instances = MUI.Columns.instances;
 		var instance = instances.get(columnEl.id);
 		if (columnEl != $(columnEl) || instance.isClosing) return;
 			
@@ -1341,7 +1369,7 @@ MochaUI.extend({
 		// Destroy all the panels in the column.
 		var panels = columnEl.getChildren('.panel');		
 		panels.each(function(panel){
-			MochaUI.closePanel($(panel.id));
+			MUI.closePanel($(panel.id));
 		}.bind(this));				
 		
 		if (Browser.Engine.trident) {
@@ -1356,8 +1384,8 @@ MochaUI.extend({
 				instance.handleEl.destroy();
 			}			
 		}
-		if (MochaUI.Desktop) {
-			MochaUI.Desktop.resizePanels();
+		if (MUI.Desktop) {
+			MUI.Desktop.resizePanels();
 		}	
 		instances.erase(instance.options.id);
 		return true;		
@@ -1369,7 +1397,7 @@ MochaUI.extend({
 
 	Syntax:
 	(start code)
-		MochaUI.closePanel();
+		MUI.closePanel();
 	(end)
 
 	Arguments: 
@@ -1381,7 +1409,7 @@ MochaUI.extend({
 
 	*/	
 	closePanel: function(panelEl){
-		var instances = MochaUI.Panels.instances;
+		var instances = MUI.Panels.instances;
 		var instance = instances.get(panelEl.id);
 		if (panelEl != $(panelEl) || instance.isClosing) return;
 		
@@ -1403,8 +1431,8 @@ MochaUI.extend({
 				instance.handleEl.destroy();
 			}
 		}
-		if (MochaUI.Desktop) {
-			MochaUI.Desktop.resizePanels();
+		if (MUI.Desktop) {
+			MUI.Desktop.resizePanels();
 		}
 		
 		// Do this when creating and removing panels

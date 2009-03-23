@@ -17,17 +17,23 @@ Requires:
 
 Syntax:
 	(start code)
-	MochaUI.arrangeTile();
+	MUI.arrangeTile();
 	(end)
 
 */
+
+MUI.files[MUI.path.source + 'Window/Arrange-tile.js'] = 'loaded';
  
-MochaUI.extend({
+MUI.extend({
 	arrangeTile: function(){
+
+		var	viewportTopOffset = 30;    // Use a negative number if neccessary to place first window where you want it
+		var viewportLeftOffset = 20;
+
 		var x = 10;
 		var y = 80;
 	
-		var instances =  MochaUI.Windows.instances;
+		var instances =  MUI.Windows.instances;
 
 		var windowsNum = 0;
 
@@ -42,8 +48,8 @@ MochaUI.extend({
 		
 		var coordinates = document.getCoordinates();
 	
-		var col_width = ((coordinates.width - this.options.viewportLeftOffset) / cols);
-		var col_height = ((coordinates.height - this.options.viewportTopOffset) / rows);
+		var col_width = ((coordinates.width - viewportLeftOffset) / cols);
+		var col_height = ((coordinates.height - viewportTopOffset) / rows);
 		
 		var row = 0;
 		var col = 0;
@@ -82,9 +88,9 @@ MochaUI.extend({
 
 				instance.drawWindow();
 				
-				MochaUI.focusWindow(instance.windowEl);
+				MUI.focusWindow(instance.windowEl);
 				
-				if (MochaUI.options.advancedEffects == false){
+				if (MUI.options.advancedEffects == false){
 					instance.windowEl.setStyles({
 						'top': top,
 						'left': left

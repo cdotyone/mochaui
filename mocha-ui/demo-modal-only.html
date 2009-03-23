@@ -18,17 +18,16 @@
 	<script type="text/javascript" src="scripts/mootools-1.2-more.js"></script>
 	
 	<script type="text/javascript" src="scripts/source/Core/Core.js"></script>
-	<script type="text/javascript" src="scripts/source/Window/Window.js"></script>
+	<script type="text/javascript" src="scripts/source/Window/Window.js"></script>	
 	<script type="text/javascript" src="scripts/source/Window/Modal.js"></script>	
 
 	<script type="text/javascript">
 		
 	function makeModal(){
-		new MochaUI.Window({
+		new MUI.Modal({
 			id: 'modalDemo',
 			title: 'A Modal Window',
 			content: 'Your modal window content',
-			type: 'modal',
 			width: 300,
 			height: 150
 		});
@@ -41,7 +40,6 @@
 				makeModal();
 			});
 		});
-		MochaUI.Modal = new MochaUI.Modal();
 	});
 
 	</script>	

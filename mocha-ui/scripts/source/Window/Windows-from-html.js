@@ -26,7 +26,9 @@ See Also:
 
 */
 
-MochaUI.extend({
+MUI.files[MUI.path.source + 'Window/Windows-from-html.js'] = 'loaded';
+
+MUI.extend({
 	NewWindowsFromHTML: function(){
 		$$('.mocha').each(function(el) {
 			// Get the window title and destroy that element, so it does not end up in window content
@@ -56,7 +58,7 @@ MochaUI.extend({
 			el.destroy();
 			
 			// Create window
-			new MochaUI.Window(properties, true);
+			new MUI.Window(properties, true);
 		}.bind(this));
 	}
 });

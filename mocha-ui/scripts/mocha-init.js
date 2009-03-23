@@ -1,14 +1,23 @@
-/* -----------------------------------------------------------------
+/* 
 
-	In this file initialize your Layouts and Windows:
+	In this file we setup our Windows, Columns and Panels,
+	and then inititialize MochaUI.
+	
+	At the bottom of Core.js you can setup lazy loading for your
+	own plugins.
+
+*/
+
+/*
+  
+INITIALIZE WINDOWS
 
 	1. Define windows
 	
 		var myWindow = function(){ 
-			new MochaUI.Window({
+			new MUI.Window({
 				id: 'mywindow',
 				title: 'My Window',
-				loadMethod: 'xhr',
 				contentURL: 'pages/lipsum.html',
 				width: 340,
 				height: 150
@@ -42,18 +51,26 @@
 
 	Notes:
 		If you need to add link events to links within windows you are creating, do
-		it in the onContentLoaded function of the new window.
-
-
-   ----------------------------------------------------------------- */
+		it in the onContentLoaded function of the new window. 
+ 
+-------------------------------------------------------------------- */
 
 initializeWindows = function(){
 
 	// Examples
-	MochaUI.ajaxpageWindow = function(){
-		new MochaUI.Window({
+	
+	MUI.htmlWindow = function(){
+		new MUI.Window({
+			id: 'htmlpage',
+			content: 'Hello World',
+			width: 340,
+			height: 150
+		});
+	}	
+	
+	MUI.ajaxpageWindow = function(){
+		new MUI.Window({
 			id: 'ajaxpage',
-			loadMethod: 'xhr',
 			contentURL: 'pages/lipsum.html',
 			width: 340,
 			height: 150
@@ -62,29 +79,27 @@ initializeWindows = function(){
 	if ($('ajaxpageLinkCheck')){ 
 		$('ajaxpageLinkCheck').addEvent('click', function(e){
 			new Event(e).stop();
-			MochaUI.ajaxpageWindow();
+			MUI.ajaxpageWindow();
 		});
 	}	
 	
-	MochaUI.jsonWindows = function(){
-		var url = 'data/json-windows-data.js';
+	MUI.jsonWindows = function(){
 		var request = new Request.JSON({
-			url: url,
-			method: 'get',
+			url: 'data/json-windows-data.js',
 			onComplete: function(properties) {
-				MochaUI.newWindowsFromJSON(properties.windows);
+				MUI.newWindowsFromJSON(properties.windows);
 			}
 		}).send();
 	}	
 	if ($('jsonLink')){
 		$('jsonLink').addEvent('click', function(e) {
 			new Event(e).stop();
-			MochaUI.jsonWindows();
+			MUI.jsonWindows();
 		});
 	}
 
-	MochaUI.youtubeWindow = function(){
-		new MochaUI.Window({
+	MUI.youtubeWindow = function(){
+		new MUI.Window({
 			id: 'youtube',
 			title: 'YouTube in Iframe',
 			loadMethod: 'iframe',
@@ -95,24 +110,24 @@ initializeWindows = function(){
 			toolbar: true,
 			toolbarURL: 'pages/youtube-tabs.html',
 			toolbarOnload: function(){
-				MochaUI.initializeTabs('youtubeTabs');	
+				MUI.initializeTabs('youtubeTabs');	
 
 				$('youtube1Link').addEvent('click', function(e){
-					MochaUI.updateContent({
+					MUI.updateContent({
 						'element':  $('youtube'),
 						'url':      'pages/youtube.html'
 					});
 				});
 	
 				$('youtube2Link').addEvent('click', function(e){
-					MochaUI.updateContent({
+					MUI.updateContent({
 						'element':  $('youtube'),
 						'url':      'pages/youtube2.html'
 					});
 				});
 	
 				$('youtube3Link').addEvent('click', function(e){
-					MochaUI.updateContent({
+					MUI.updateContent({
 						'element':  $('youtube'),	
 						'url':      'pages/youtube3.html'
 					});
@@ -123,17 +138,16 @@ initializeWindows = function(){
 	if ($('youtubeLinkCheck')) {
 		$('youtubeLinkCheck').addEvent('click', function(e){
 		new Event(e).stop();
-			MochaUI.youtubeWindow();
+			MUI.youtubeWindow();
 		});
 	}
 	
-	MochaUI.clockWindow = function(){
-		new MochaUI.Window({
+	MUI.clockWindow = function(){
+		new MUI.Window({
 			id: 'clock',
 			title: 'Canvas Clock',
 			addClass: 'transparent',
-			loadMethod: 'xhr',
-			contentURL: 'plugins/coolclock/index.html',
+			contentURL: MUI.path.plugins + 'coolclock/index.html',
 			shape: 'gauge',
 			headerHeight: 30,
 			width: 160,
@@ -141,29 +155,26 @@ initializeWindows = function(){
 			x: 570,
 			y: 140,
 			padding: { top: 0, right: 0, bottom: 0, left: 0 },
-			onContentLoaded: function(){
-				new Asset.javascript('plugins/coolclock/scripts/coolclock.js', {
-					id: 'coolclockScript',
-					onload: function(){
-						if (CoolClock) new CoolClock();
-					}
-				});
+			require: {			
+				js: [MUI.path.plugins + 'coolclock/scripts/coolclock.js'],
+				onload: function(){
+					if (CoolClock) new CoolClock();
+				}	
 			}				
 		});	
 	}
 	if ($('clockLinkCheck')){
 		$('clockLinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			MochaUI.clockWindow();
+			MUI.clockWindow();
 		});
 	}	
 	
-	MochaUI.parametricsWindow = function(){	
-		new MochaUI.Window({
+	MUI.parametricsWindow = function(){	
+		new MUI.Window({
 			id: 'parametrics',
-			title: 'Window Parametrics',
-			loadMethod: 'xhr',
-			contentURL: 'plugins/parametrics/index.html',
+			title: 'Window Parametrics',			
+			contentURL: MUI.path.plugins + 'parametrics/index.html',
 			width: 305,
 			height: 110,
 			x: 570,
@@ -171,40 +182,34 @@ initializeWindows = function(){
 			padding: { top: 12, right: 12, bottom: 10, left: 12 },
 			resizable: false,
 			maximizable: false,
-			onBeforeBuild: function(){
-				if ($('parametricsStyle')) return;
-				new Asset.css('plugins/parametrics/css/style.css', {id: 'parametricsStyle'});
-			},			
-			onContentLoaded: function(){
-				new Asset.javascript('plugins/parametrics/scripts/parametrics.js', {
-					id: 'parametricsScript',
-					onload: function(){
-						if (MochaUI.addRadiusSlider) MochaUI.addRadiusSlider();
-						if (MochaUI.addShadowSlider) MochaUI.addShadowSlider();
-					}
-				});
-			}					
+			require: {
+				css: [MUI.path.plugins + 'parametrics/css/style.css'],
+				js: [MUI.path.plugins + 'parametrics/scripts/parametrics.js'],
+				onload: function(){	
+					if (MUI.addRadiusSlider) MUI.addRadiusSlider();
+					if (MUI.addShadowSlider) MUI.addShadowSlider();
+				}		
+			}				
 		});
 	}
 	if ($('parametricsLinkCheck')){
 		$('parametricsLinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			MochaUI.parametricsWindow();
+			MUI.parametricsWindow();
 		});
 	}
 	
-	MochaUI.splitWindow = function(){
-		new MochaUI.Window({
+	MUI.splitWindow = function(){
+		new MUI.Window({
 			id: 'splitWindow',
 			title: 'Split Window',
-			loadMethod: 'html', // May create a 'panel' method in the future
 			width: 600,
 			height: 350,
 			resizeLimit: {'x': [450, 2500], 'y': [300, 2000]},
 			scrollbars: false, // Could make this automatic if a 'panel' method were created
 			onContentLoaded: function(){	
 		
-				new MochaUI.Column({
+				new MUI.Column({
 					container: 'splitWindow_contentWrapper',
 					id: 'splitWindow_sideColumn',
 					placement: 'left',
@@ -212,7 +217,7 @@ initializeWindows = function(){
 					resizeLimit: [100, 300]
 				});
 			
-				new MochaUI.Column({
+				new MUI.Column({
 					container: 'splitWindow_contentWrapper',
 					id: 'splitWindow_mainColumn',
 					placement: 'main',
@@ -220,20 +225,18 @@ initializeWindows = function(){
 					resizeLimit: [100, 300]
 				});
 			
-				new MochaUI.Panel({
+				new MUI.Panel({
 					header: false,
-					id: 'splitWindow_panel1',
-					loadMethod: 'xhr',
+					id: 'splitWindow_panel1',					
 					contentURL: 'license.html',
 					column: 'splitWindow_mainColumn',
 					panelBackground: '#fff'
 				});
 			
-				new MochaUI.Panel({
+				new MUI.Panel({
 					header: false,
 					id: 'splitWindow_panel2',
-					addClass: 'panelAlt',
-					loadMethod: 'xhr',
+					addClass: 'panelAlt',					
 					contentURL: 'pages/lipsum.html',
 					column: 'splitWindow_sideColumn'					
 				});
@@ -244,102 +247,86 @@ initializeWindows = function(){
 	if ($('splitWindowLinkCheck')) {
 		$('splitWindowLinkCheck').addEvent('click', function(e){
 		new Event(e).stop();
-			MochaUI.splitWindow();
+			MUI.splitWindow();
 		});
 	}
 	
-	MochaUI.fxmorpherWindow = function(){
-		new MochaUI.Window({
+	MUI.fxmorpherWindow = function(){
+		new MUI.Window({
 			id: 'fxmorpherExample',
-			title: 'Path Animation Example',
-			loadMethod: 'xhr',
-			contentURL: 'plugins/Fx.Morpher/example.html',
+			title: 'Path Animation Example',			
+			contentURL: MUI.path.plugins + 'Fx.Morpher/example.html',
 			width: 330,
 			height: 330,
 			padding: { top: 0, right: 0, bottom: 0, left: 0 },
 			scrollbars: false,
 			resizable: false,
-			onBeforeBuild: function(){
-				if ($('accordianStyle')) return;
-				new Asset.css('plugins/Fx.Morpher/css/style.css', {id: 'cboxStyle'});
-			},			
-			onContentLoaded: function() {
-				if (!$('cboxScript') || !$('animationExampleScript')){
-					new Asset.javascript('plugins/Fx.Morpher/scripts/cbox.js', {
-						id: 'cboxScript',
-						onload: function(){
-							new Asset.javascript('plugins/Fx.Morpher/scripts/example.js', {
-								id: 'animationExampleScript'
-							});	
-						}
-					});
-				}
-				else {
+			require: {
+				css: [MUI.path.plugins + 'Fx.Morpher/css/style.css'],
+				js: [MUI.path.plugins + 'Fx.Morpher/scripts/cbox.js', MUI.path.plugins + 'Fx.Morpher/scripts/example.js'],
+				onload: function(){
 					createCanvas();
-					myAnim.delay(250);
-				}							
-			}				
+					myAnim.delay(250);					
+				} 	
+			}			
 		});	
 	}			
 
 	// Examples > Tests
 	
-	MochaUI.serverRepsonseWindow = function(response){
-		new MochaUI.Window({
+	MUI.serverRepsonseWindow = function(response){
+		new MUI.Window({
 			id: 'serverResponse',
-			loadMethod: 'html',
 			content: response,
 			width: 350,
 			height: 350
 		});
 	}		
 	
-	MochaUI.eventsWindow = function(){
-		new MochaUI.Window({
+	MUI.eventsWindow = function(){
+		new MUI.Window({
 			id: 'windowevents',
-			title: 'Window Events',
-			loadMethod: 'xhr',
+			title: 'Window Events',			
 			contentURL: 'pages/events.html',
 			width: 340,
 			height: 250,			
 			onContentLoaded: function(windowEl){
-				MochaUI.notification('Window content was loaded.');
+				MUI.notification('Window content was loaded.');
 			},
 			onCloseComplete: function(){
-				MochaUI.notification('The window is closed.');
+				MUI.notification('The window is closed.');
 			},
 			onMinimize: function(windowEl){
-				MochaUI.notification('Window was minimized.');
+				MUI.notification('Window was minimized.');
 			},
 			onMaximize: function(windowEl){
-				MochaUI.notification('Window was maximized.');
+				MUI.notification('Window was maximized.');
 			},
 			onRestore: function(windowEl){
-				MochaUI.notification('Window was restored.');
+				MUI.notification('Window was restored.');
 			},
 			onResize: function(windowEl){
-				MochaUI.notification('Window was resized.');
+				MUI.notification('Window was resized.');
 			},
 			onFocus: function(windowEl){
-				MochaUI.notification('Window was focused.');
+				MUI.notification('Window was focused.');
 			},
 			onBlur: function(windowEl){
-				MochaUI.notification('Window lost focus.');
+				MUI.notification('Window lost focus.');
 			}
 		});
 	}	
 	if ($('windoweventsLinkCheck')){
 		$('windoweventsLinkCheck').addEvent('click', function(e){
 			new Event(e).stop();
-			MochaUI.eventsWindow();
+			MUI.eventsWindow();
 		});
 	}
 	
-	MochaUI.containertestWindow = function(){ 
-		new MochaUI.Window({
+	MUI.containertestWindow = function(){ 
+		new MUI.Window({
 			id: 'containertest',
 			title: 'Container Test',
-			loadMethod: 'xhr',
 			contentURL: 'pages/lipsum.html',
 			container: 'pageWrapper',
 			width: 340,
@@ -351,12 +338,12 @@ initializeWindows = function(){
 	if ($('containertestLinkCheck')) { 
 		$('containertestLinkCheck').addEvent('click', function(e){
 			new Event(e).stop();
-			MochaUI.containertestWindow();
+			MUI.containertestWindow();
 		});
 	}
 	
-	MochaUI.iframetestsWindow = function() {
-		new MochaUI.Window({
+	MUI.iframetestsWindow = function() {
+		new MUI.Window({
 			id: 'iframetests',
 			title: 'Iframe Tests',
 			loadMethod: 'iframe',
@@ -366,15 +353,14 @@ initializeWindows = function(){
 	if ($('iframetestsLinkCheck')) {
 		$('iframetestsLinkCheck').addEvent('click', function(e){
 		new Event(e).stop();
-			MochaUI.iframetestsWindow();
+			MUI.iframetestsWindow();
 		});
 	}
 	
-	MochaUI.formtestsWindow = function() {
-		new MochaUI.Window({
+	MUI.formtestsWindow = function() {
+		new MUI.Window({
 			id: 'formtests',
-			title: 'Form Tests',
-			loadMethod: 'xhr',
+			title: 'Form Tests',			
 			contentURL: 'pages/formtests.html',
 			onContentLoaded: function(){
 				document.testForm.focusTest.focus();
@@ -384,16 +370,15 @@ initializeWindows = function(){
 	if ($('formtestsLinkCheck')) {
 		$('formtestsLinkCheck').addEvent('click', function(e){
 		new Event(e).stop();
-			MochaUI.formtestsWindow();
+			MUI.formtestsWindow();
 		});
 	}	
 
-	MochaUI.accordiantestWindow = function() {
+	MUI.accordiantestWindow = function() {
 		var id = 'accordiantest';
-		new MochaUI.Window({
+		new MUI.Window({
 			id: id,
-			title: 'Accordian',
-			loadMethod: 'xhr',
+			title: 'Accordian',			
 			contentURL: 'pages/accordian-demo.html',
 			width: 300,
 			height: 200,
@@ -401,48 +386,45 @@ initializeWindows = function(){
 			resizable: false,
 			maximizable: false,				
 			padding: { top: 0, right: 0, bottom: 0, left: 0 },
-			onBeforeBuild: function(){
-				if ($('accordianStyle')) return;
-				new Asset.css('plugins/accordian/css/style.css', {id: 'accoridanStyle'});
-			},			
-			onContentLoaded: function(windowEl){
-				this.windowEl = windowEl;				
-				new Accordion('#' + id + ' h3.accordianToggler', "#" + id + ' div.accordianElement',{
-				//	start: 'all-closed',
-					opacity: false,
-					alwaysHide: true,
-					onActive: function(toggler, element){
-						toggler.addClass('open');
-					},
-					onBackground: function(toggler, element){
-						toggler.removeClass('open');
-					},							
-					onStart: function(toggler, element){
-						this.windowEl.accordianResize = function(){
-							MochaUI.dynamicResize($(id));
-						}
-						this.windowEl.accordianTimer = this.windowEl.accordianResize.periodical(10);
-					}.bind(this),
-					onComplete: function(){
-						this.windowEl.accordianTimer = $clear(this.windowEl.accordianTimer);
-						MochaUI.dynamicResize($(id)) // once more for good measure
-					}.bind(this)
-				}, $(id));				
-			}
+			require: {
+				css: [MUI.path.plugins + 'accordian/css/style.css'],
+				onload: function(){
+					this.windowEl = $(id);				
+					new Accordion('#' + id + ' h3.accordianToggler', "#" + id + ' div.accordianElement',{
+						opacity: false,
+						alwaysHide: true,
+						onActive: function(toggler, element){
+							toggler.addClass('open');
+						},
+						onBackground: function(toggler, element){
+							toggler.removeClass('open');
+						},							
+						onStart: function(toggler, element){
+							this.windowEl.accordianResize = function(){
+								MUI.dynamicResize($(id));
+							}
+							this.windowEl.accordianTimer = this.windowEl.accordianResize.periodical(10);
+						}.bind(this),
+						onComplete: function(){
+							this.windowEl.accordianTimer = $clear(this.windowEl.accordianTimer);
+							MUI.dynamicResize($(id)) // once more for good measure
+						}.bind(this)
+					}, $(id));
+				}	
+			}					
 		});
 	}	
 	if ($('accordiantestLinkCheck')) { 
 		$('accordiantestLinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			MochaUI.accordiantestWindow();
+			MUI.accordiantestWindow();
 		});
 	}
 
-	MochaUI.noCanvasWindow = function() {
-		new MochaUI.Window({
+	MUI.noCanvasWindow = function() {
+		new MUI.Window({
 			id: 'nocanvas',
-			title: 'No Canvas',
-			loadMethod: 'xhr',
+			title: 'No Canvas',			
 			contentURL: 'pages/lipsum.html',
 			addClass: 'no-canvas',
 			width: 305,
@@ -455,7 +437,7 @@ initializeWindows = function(){
 	if ($('noCanvasLinkCheck')) {
 		$('noCanvasLinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			MochaUI.noCanvasWindow();
+			MUI.noCanvasWindow();
 		});
 	}	
 
@@ -463,82 +445,76 @@ initializeWindows = function(){
 	if ($('sidebarLinkCheck')) {
 		$('sidebarLinkCheck').addEvent('click', function(e){
 			new Event(e).stop();
-			MochaUI.Desktop.sidebarToggle();
+			MUI.Desktop.sidebarToggle();
 		});
 	}
 
 	if ($('cascadeLink')) {
 		$('cascadeLink').addEvent('click', function(e){
 			new Event(e).stop();
-			MochaUI.arrangeCascade();
+			MUI.arrangeCascade();
 		});
 	}
 
 	if ($('tileLink')) {
 		$('tileLink').addEvent('click', function(e){
 			new Event(e).stop();
-			MochaUI.arrangeTile();
+			MUI.arrangeTile();
 		});
 	}
 
 	if ($('closeLink')) {
 		$('closeLink').addEvent('click', function(e){
 			new Event(e).stop();
-			MochaUI.closeAll();
+			MUI.closeAll();
 		});
 	}
 
 	if ($('minimizeLink')) {
 		$('minimizeLink').addEvent('click', function(e){
 			new Event(e).stop();
-			MochaUI.minimizeAll();
+			MUI.minimizeAll();
 		});
 	}	
 
 	// Tools
-	MochaUI.builderWindow = function() {	
-		new MochaUI.Window({
+	MUI.builderWindow = function() {	
+		new MUI.Window({
 			id: 'builder',
 			title: 'Window Builder',
-			icon: 'images/icons/16x16/page.gif',
-			loadMethod: 'xhr',
-			contentURL: 'plugins/windowform/',
+			icon: 'images/icons/16x16/page.gif',			
+			contentURL: MUI.path.plugins + 'windowform/',
 			width: 375,
 			height: 420,
 			maximizable: false,
 			resizable: false,
 			scrollbars: false,
-			onBeforeBuild: function(){
-				if ($('builderStyle')) return;
-				new Asset.css('plugins/windowform/css/style.css', {id: 'builderStyle'});
-			},
-			onContentLoaded: function(){
-				new Asset.javascript('plugins/windowform/scripts/Window-from-form.js', {
-					id: 'builderScript',
-					onload: function(){
-						$('newWindowSubmit').addEvent('click', function(e){
-							new Event(e).stop();
-							new MochaUI.WindowForm();
-						});
-					}
-				});
+			require: {
+				css: [MUI.path.plugins + 'windowform/css/style.css'],			
+				js: [MUI.path.plugins + 'windowform/scripts/Window-from-form.js'],
+				onload: function(){
+					$('newWindowSubmit').addEvent('click', function(e){
+						new Event(e).stop();
+						new MUI.WindowForm();
+					});
+				}	
 			}			
 		});
 	}
 	if ($('builderLinkCheck')) {
 		$('builderLinkCheck').addEvent('click', function(e) {
 			new Event(e).stop();
-			MochaUI.builderWindow();
+			MUI.builderWindow();
 		});
 	}
 	
 	if ($('toggleStandardEffectsLinkCheck')) {
 		$('toggleStandardEffectsLinkCheck').addEvent('click', function(e){
 			new Event(e).stop();
-			MochaUI.toggleStandardEffects($('toggleStandardEffectsLinkCheck'));			
+			MUI.toggleStandardEffects($('toggleStandardEffectsLinkCheck'));			
 		});
-		if (MochaUI.options.standardEffects == true) {
-			MochaUI.toggleStandardEffectsLink = new Element('div', {
+		if (MUI.options.standardEffects == true) {
+			MUI.toggleStandardEffectsLink = new Element('div', {
 				'class': 'check',
 				'id': 'toggleStandardEffects_check'
 			}).inject($('toggleStandardEffectsLinkCheck'));
@@ -548,10 +524,10 @@ initializeWindows = function(){
 	if ($('toggleAdvancedEffectsLinkCheck')) {
 		$('toggleAdvancedEffectsLinkCheck').addEvent('click', function(e){
 			new Event(e).stop();
-			MochaUI.toggleAdvancedEffects($('toggleAdvancedEffectsLinkCheck'));			
+			MUI.toggleAdvancedEffects($('toggleAdvancedEffectsLinkCheck'));			
 		});
-		if (MochaUI.options.advancedEffects == true) {
-			MochaUI.toggleAdvancedEffectsLink = new Element('div', {
+		if (MUI.options.advancedEffects == true) {
+			MUI.toggleAdvancedEffectsLink = new Element('div', {
 				'class': 'check',
 				'id': 'toggleAdvancedEffects_check'
 			}).inject($('toggleAdvancedEffectsLinkCheck'));
@@ -563,48 +539,50 @@ initializeWindows = function(){
 	if ($('saveWorkspaceLink')) {
 		$('saveWorkspaceLink').addEvent('click', function(e) {
 			new Event(e).stop();
-			MochaUI.saveWorkspace();
+			MUI.saveWorkspace();
 		});
 	}
 
 	if ($('loadWorkspaceLink')) {
 		$('loadWorkspaceLink').addEvent('click', function(e) {
 			new Event(e).stop();
-			MochaUI.loadWorkspace();
+			MUI.loadWorkspace();
 		});
 	}
 	
 	// Help	
-	MochaUI.featuresWindow = function() {
-		new MochaUI.Window({
+	MUI.featuresWindow = function() {
+		new MUI.Window({
 			id: 'features',
-			title: 'Features',
-			loadMethod: 'xhr',
+			title: 'Features',			
 			contentURL: 'pages/features-layout.html',
 			width: 275,
 			height: 250,
 			resizeLimit: {'x': [275, 2500], 'y': [125, 2000]},
+			require: {
+				css: [MUI.themePath() + 'css/Tabs.css']
+			},			
 			toolbar: true,
 			toolbarURL: 'pages/features-tabs.html',
 			toolbarOnload: function(){
-				MochaUI.initializeTabs('featuresTabs');
+				MUI.initializeTabs('featuresTabs');
 
 				$('featuresLayoutLink').addEvent('click', function(e){
-					MochaUI.updateContent({
+					MUI.updateContent({
 						'element':  $('features'),
 						'url':       'pages/features-layout.html'
 					});
 				});
 
 				$('featuresWindowsLink').addEvent('click', function(e){
-					MochaUI.updateContent({
+					MUI.updateContent({
 						'element':  $('features'),
 						'url':       'pages/features-windows.html'
 					});
 				});
 
 				$('featuresGeneralLink').addEvent('click', function(e){
-					MochaUI.updateContent({
+					MUI.updateContent({
 						'element':  $('features'),
 						'url':       'pages/features-general.html'
 					});
@@ -615,15 +593,14 @@ initializeWindows = function(){
 	if ($('featuresLinkCheck')) {
 		$('featuresLinkCheck').addEvent('click', function(e){
 			new Event(e).stop();
-			MochaUI.featuresWindow();
+			MUI.featuresWindow();
 		});
 	}
 
-	MochaUI.aboutWindow = function() {
-		new MochaUI.Window({
+	MUI.aboutWindow = function() {
+		new MUI.Modal({
 			id: 'about',
-			title: 'MochaUI',
-			loadMethod: 'xhr',
+			title: 'MUI',			
 			contentURL: 'pages/about.html',
 			type: 'modal2',
 			width: 350,
@@ -635,16 +612,15 @@ initializeWindows = function(){
 	if ($('aboutLink')) {
 		$('aboutLink').addEvent('click', function(e){
 			new Event(e).stop();
-			MochaUI.aboutWindow();
+			MUI.aboutWindow();
 		});
 	}
 	
 	// Misc
-	MochaUI.licenseWindow = function() {
-		new MochaUI.Window({
+	MUI.licenseWindow = function() {
+		new MUI.Window({
 			id: 'License',
-			title: 'License',			
-			loadMethod: 'xhr',
+			title: 'License',						
 			contentURL: 'license.html',
 			width: 375,
 			height: 340
@@ -653,7 +629,7 @@ initializeWindows = function(){
 	if ($('licenseLink')){ 
 		$('licenseLink').addEvent('click', function(e) {
 			new Event(e).stop();
-			MochaUI.licenseWindow();
+			MUI.licenseWindow();
 		});
 	}	
 
@@ -664,14 +640,18 @@ initializeWindows = function(){
 		});
 	});
 	
-	// Build windows onDomReady
-	MochaUI.parametricsWindow();
+	// Build windows onLoad
+	MUI.parametricsWindow();
+
+	MUI.myChain.callChain();
 	
 }
 
-initializeColumns = function() {
+/*
+  
+INITIALIZE COLUMNS AND PANELS  
 
-	/* Creating a Column and Panel Layout:
+	Creating a Column and Panel Layout:
 	 
 	 - If you are not using panels then these columns are not required.
 	 - If you do use panels, the main column is required. The side columns are optional.
@@ -683,23 +663,27 @@ initializeColumns = function() {
 	 Panels
 	 - After creating Columns, create your panels from top to bottom, left to right.
 	 - One panel in each column should not have it's height set. This panel will have a fluid height.	 
-	 - New Panels are inserted at the bottom of their column.
+	 - New Panels are inserted at the bottom of their column. 
+ 
+-------------------------------------------------------------------- */
 
-	*/
-	new MochaUI.Column({
+
+initializeColumns = function() {
+
+	new MUI.Column({
 		id: 'sideColumn1',
 		placement: 'left',
 		width: 200,
 		resizeLimit: [100, 300]
 	});
 	
-	new MochaUI.Column({
+	new MUI.Column({
 		id: 'mainColumn',
 		placement: 'main',
 		resizeLimit: [100, 300]
 	});
 	
-	new MochaUI.Column({
+	new MUI.Column({
 		id: 'sideColumn2',
 		placement: 'right',
 		width: 220,
@@ -707,117 +691,103 @@ initializeColumns = function() {
 	});
 	
 	// Add panels to first side column
-	new MochaUI.Panel({
+	new MUI.Panel({
 		id: 'files-panel',
-		title: 'Examples',
-		loadMethod: 'xhr',
+		title: 'Examples',		
 		contentURL: 'pages/file-view.html',
 		column: 'sideColumn1',
-		onBeforeBuild: function(){
-			if ($('treeStyle')) return;
-			new Asset.css('plugins/tree/css/style.css', {id: 'treeStyle'});
-		},		
-		onContentLoaded: function(){
-			new Asset.javascript('plugins/tree/scripts/tree.js', {
-				id: 'treeScript',
-				onload: function(){
-					if (buildTree) buildTree('tree1');
-				}
-			});		
+		require: {
+			css: [MUI.path.plugins + 'tree/css/style.css'],			
+			js: [MUI.path.plugins + 'tree/scripts/tree.js'],
+			onload: function(){
+				if (buildTree) buildTree('tree1');
+			}	
+		},
+		onContentLoaded: function(){		
 			$('notesLink').addEvent('click', function(e){
-				MochaUI.updateContent({
-					'element': $('mainPanel'),
-					'loadMethod': 'xhr',
-					'url': 'pages/notes.html',
-					'title': 'Development Notes',
-					'padding': { top: 8, right: 8, bottom: 8, left: 8 }
+				MUI.updateContent({
+					element: $('mainPanel'),					
+					url: 'pages/notes.html',
+					title: 'Development Notes',
+					padding: { top: 8, right: 8, bottom: 8, left: 8 }
 				});
 			});
 			$('xhrLink').addEvent('click', function(e){
-				MochaUI.updateContent({
-					'element': $('mainPanel'),
-					'loadMethod': 'xhr',
-					'url': 'pages/lipsum.html',
-					'title': 'Lorem Ipsum',
-					'padding': { top: 8, right: 8, bottom: 8, left: 8 }
+				MUI.updateContent({
+					element: $('mainPanel'),
+					url: 'pages/lipsum.html',
+					title: 'Lorem Ipsum',
+					padding: { top: 8, right: 8, bottom: 8, left: 8 }
 				});
 			});
 			$('youtube4Link').addEvent('click', function(e){
-				MochaUI.updateContent({
-					'element': $('mainPanel'),
-					'loadMethod': 'iframe',
-					'url': 'pages/youtube4.html',
-					'title': 'Iframe: YouTube',
-					'padding': { top: 0, right: 0, bottom: 0, left: 0 }
+				MUI.updateContent({
+					element: $('mainPanel'),
+					loadMethod: 'iframe',
+					url: 'pages/youtube4.html',
+					title: 'Iframe: YouTube',
+					padding: { top: 0, right: 0, bottom: 0, left: 0 }
 				});
 			});	
 			$('splitPanelLink').addEvent('click', function(e){
-				MochaUI.updateContent({
-					'element': $('mainPanel'),
-					'loadMethod': 'html',  // May create a 'panel' method in the future
-					'title': 'Split Panel',
-					'padding': { top: 0, right: 0, bottom: 0, left: 0 }
+				MUI.updateContent({
+					element: $('mainPanel'),
+					title: 'Split Panel',
+					padding: { top: 0, right: 0, bottom: 0, left: 0 }
 				});
-				MochaUI.splitPanelPanel(); // This is initialized in mocha-init.js just like the windows.	
+				MUI.splitPanelPanel(); // This is initialized in mocha-init.js just like the windows.	
 			});	
 			$('splitWindowLink').addEvent('click', function(e){
-				MochaUI.splitWindow();
+				MUI.splitWindow();
 			});		
 			$('ajaxpageLink').addEvent('click', function(e){
-				MochaUI.ajaxpageWindow();
+				MUI.ajaxpageWindow();
 			});	
 			$('jsonLink').addEvent('click', function(e){
-				MochaUI.jsonWindows();
+				MUI.jsonWindows();
 			});	
 			$('youtubeLink').addEvent('click', function(e){
-				MochaUI.youtubeWindow();
+				MUI.youtubeWindow();
 			});	
 			$('accordiantestLink').addEvent('click', function(e){
-				MochaUI.accordiantestWindow();
+				MUI.accordiantestWindow();
 			});	
 			$('clockLink').addEvent('click', function(e){
-				MochaUI.clockWindow();
+				MUI.clockWindow();
 			});
 			$('parametricsLink').addEvent('click', function(e){
-				MochaUI.parametricsWindow();
+				MUI.parametricsWindow();
 			});
 			$('calendarLink').addEvent('click', function(e){
-				MochaUI.updateContent({
-					'element': $('mainPanel'),
-					'loadMethod': 'xhr',
-					'url': 'plugins/calendar/example.html',
-					'title': 'Calendar Component',
-					'padding': { top: 8, right: 8, bottom: 8, left: 8 },
-					onContentLoaded: function(){
-						if (!$('calendarStyle')){
-							new Asset.css('plugins/calendar/css/calendar.css', {id: 'calendarStyle'});
-						}
-						new Asset.javascript('plugins/calendar/scripts/calendar.js', {
-							id: 'calendarScript',
-							onload: function(){
-								myCal1 = new Calendar({ date1: 'd/m/Y' }, { direction: 1, tweak: { x: 6, y: 0 }});
-							}
-						});
+				MUI.updateContent({
+					element: $('mainPanel'),
+					url: MUI.path.plugins + 'calendar/example.html',
+					title: 'Calendar Component',
+					padding: { top: 8, right: 8, bottom: 8, left: 8 },
+					require: {
+						css: [MUI.path.plugins + 'calendar/css/calendar.css'],			
+						js: [MUI.path.plugins + 'calendar/scripts/calendar.js'],
+						onload: function(){
+							myCal1 = new Calendar({ date1: 'd/m/Y' }, { direction: 1, tweak: { x: 6, y: 0 }});;
+						}	
 					}										
 				});
 			});			
 			$('fxmorpherLink').addEvent('click', function(e){
-				MochaUI.updateContent({
-					'element': $('mainPanel'),
-					'loadMethod': 'xhr',
-					'url': 'plugins/Fx.Morpher/',
-					'title': 'Fx.Morpher Path Animation',
-					'padding': { top: 8, right: 8, bottom: 8, left: 8 }
+				MUI.updateContent({
+					element: $('mainPanel'),
+					url: MUI.path.plugins + 'Fx.Morpher/',
+					title: 'Fx.Morpher Path Animation',
+					padding: { top: 8, right: 8, bottom: 8, left: 8 }
 				});
-				MochaUI.fxmorpherWindow();
+				MUI.fxmorpherWindow();
 			});			
 		}
 	});
 	
-	new MochaUI.Panel({
+	new MUI.Panel({
 		id: 'panel2',
 		title: 'Ajax Form',
-		loadMethod: 'xhr',
 		contentURL: 'pages/ajax.form.html',
 		column: 'sideColumn1',
 		height: 230,
@@ -826,7 +796,7 @@ initializeColumns = function() {
 				e.stop();
 
 				$('spinner').show();
-				if ($('postContent') && MochaUI.options.standardEffects == true) {
+				if ($('postContent') && MUI.options.standardEffects == true) {
 					$('postContent').setStyle('opacity', 0);	
 				}
 				else {
@@ -835,16 +805,15 @@ initializeColumns = function() {
 	
 				this.set('send', {
 					onComplete: function(response) { 
-	 						MochaUI.updateContent({
+	 						MUI.updateContent({
 							'element': $('mainPanel'),
-							'loadMethod': 'html',
 							'content': response,
 							'title': 'Ajax Response',
 							'padding': { top: 8, right: 8, bottom: 8, left: 8 }
 						});			
 					},
 					onSuccess: function(){
-						if (MochaUI.options.standardEffects == true) {
+						if (MUI.options.standardEffects == true) {
 							$('postContent').setStyle('opacity', 0).get('morph').start({'opacity': 1});
 						}
 					}
@@ -855,10 +824,9 @@ initializeColumns = function() {
 	});
 	
 	// Add panels to main column	
-	new MochaUI.Panel({
+	new MUI.Panel({
 		id: 'mainPanel',
 		title: 'Lorem Ipsum',
-		loadMethod: 'xhr',
 		contentURL: 'pages/lipsum.html',
 		column: 'mainColumn',
 		headerToolbox: true,
@@ -868,7 +836,7 @@ initializeColumns = function() {
 				$('demoSearch').addEvent('submit', function(e){
 					e.stop();
 					$('spinner').setStyle('visibility', 'visible');
-					if ($('postContent') && MochaUI.options.standardEffects == true) {
+					if ($('postContent') && MUI.options.standardEffects == true) {
 						$('postContent').setStyle('opacity', 0);
 					}
 					else {
@@ -876,9 +844,8 @@ initializeColumns = function() {
 					}
 					this.set('send', {
 						onComplete: function(response){
-							MochaUI.updateContent({
+							MUI.updateContent({
 								'element': $('mainPanel'),
-								'loadMethod': 'html',
 								'content': response,
 								'title': 'Ajax Response',
 								'padding': {
@@ -890,7 +857,7 @@ initializeColumns = function() {
 							});
 						},
 						onSuccess: function(){
-							if ($('postContent') && MochaUI.options.standardEffects == true) {								
+							if ($('postContent') && MUI.options.standardEffects == true) {								
 								$('postContent').setStyle('opacity', 0).get('morph').start({'opacity': 1});
 							}
 						}
@@ -901,11 +868,10 @@ initializeColumns = function() {
 		}		
 	});
 	
-	new MochaUI.Panel({
+	new MUI.Panel({
 		id: 'mochaConsole',
 		addClass: 'mochaConsole',
 		title: 'Console',
-		loadMethod: 'xhr',
 		contentURL: 'pages/lipsum.html',
 		column: 'mainColumn',
 		height: 200,	
@@ -915,7 +881,7 @@ initializeColumns = function() {
 			$$('.demoAction').each(function(element){
 				element.removeEvents();
 				element.addEvent('click', function(e){
-					MochaUI.notification('Do Something');
+					MUI.notification('Do Something');
 				});
 			});
 		}
@@ -923,27 +889,27 @@ initializeColumns = function() {
 	
 	// Add panels to second side column
 	
-	new MochaUI.Panel({
+	new MUI.Panel({
 		id: 'help-panel',
-		loadMethod: 'xhr',
 		contentURL: 'pages/overview.html',
 		column: 'sideColumn2',
-		tabsURL: 'pages/panel-tabs.html'
+		tabsURL: 'pages/panel-tabs.html',
+		require: {
+			css: [MUI.themePath() + 'css/Tabs.css']
+		}		
 	});
 
-	new MochaUI.Panel({
+	new MUI.Panel({
 		id: 'panel3',
 		title: 'Panel',
-		loadMethod: 'xhr',
 		contentURL: 'pages/lipsum.html',
 		column: 'sideColumn2',
 		height: 120
 	});	
 	
-	new MochaUI.Panel({
+	new MUI.Panel({
 		id: 'tips-panel',
 		title: 'Tips',
-		loadMethod: 'xhr',
 		contentURL: 'pages/tips.html',
 		column: 'sideColumn2',
 		height: 140,
@@ -953,15 +919,15 @@ initializeColumns = function() {
 			$$('.demoAction').each(function(element){
 				element.removeEvents();
 				element.addEvent('click', function(e){
-					MochaUI.notification('Do Something');
+					MUI.notification('Do Something');
 				});
 			});
 		}
 	});
 	
-	MochaUI.splitPanelPanel = function() {
+	MUI.splitPanelPanel = function() {
 		if ($('mainPanel')) {			
-			new MochaUI.Column({
+			new MUI.Column({
 				container: 'mainPanel',
 				id: 'sideColumn3',
 				placement: 'left',
@@ -969,7 +935,7 @@ initializeColumns = function() {
 				resizeLimit: [100, 300]
 			});
 			
-			new MochaUI.Column({
+			new MUI.Column({
 				container: 'mainPanel',
 				id: 'mainColumn2',
 				placement: 'main',
@@ -977,40 +943,36 @@ initializeColumns = function() {
 				resizeLimit: [100, 300]
 			});
 			
-			new MochaUI.Panel({
+			new MUI.Panel({
 				header: false,
 				id: 'splitPanel_mainPanel',
-				loadMethod: 'xhr',
 				contentURL: 'license.html',
 				column: 'mainColumn2'
 			});
 			
-			new MochaUI.Panel({
+			new MUI.Panel({
 				header: false,
 				id: 'splitPanel_sidePanel',
 				addClass: 'panelAlt',
-				loadMethod: 'xhr',
 				contentURL: 'pages/lipsum.html',
 				column: 'sideColumn3'
 			});
 		}
 	}
 	
-}	
+	MUI.myChain.callChain();
+	
+}
 
 // Initialize MochaUI when the DOM is ready
 window.addEvent('load', function(){ //using load instead of domready for IE8
-	MochaUI.Desktop = new MochaUI.Desktop();
-	MochaUI.Dock = new MochaUI.Dock();	
 
-	initializeColumns();
+	MUI.myChain = new Chain();
+	MUI.myChain.chain(
+		function(){MUI.Desktop.initialize();},
+		function(){MUI.Dock.initialize();},
+		function(){initializeColumns();},		
+		function(){initializeWindows();}		
+	).callChain();	
 
-	MochaUI.Modal = new MochaUI.Modal();
-
-	initializeWindows();
-
-});
-
-window.addEvent('unload', function() {
-	// This runs when a user leaves your page.	
 });

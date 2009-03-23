@@ -1,4 +1,8 @@
 <div>
+	<h3>Modals</h3>
+	
+	<p>Modals should now be created with new MUI.Modal() rather than new MUI.Window({type:'modal'}).</p>
+	
 	<h3>Themes</h3>
 
 	<p>Themes are new and experimental. As they are developed their implementation may change a great deal, though their file structure will probably remain basically the same.</p>
@@ -6,16 +10,10 @@
 	<p>Themes go in individual folders in the themes directory. Each theme needs a css folder, and images folder.</p>
 
 	<p>The CSS has been separated into style sheets that correspond with the various JavaScript files. Layout.css goes with Layout.js for instance. The style sheets that were in the css folder are now in themes/default/css/.</p>
+
+	<p>Each theme should have the same number of stylesheets and corresponding names. So if Theme 1 has a Layout.css, Themes 2 and 3 should also have a Layout.css.</p>
 	
-	<p>If you want to be able to dynamically change themes (without a screen refresh and rewriting the links in the header with backend code), then the following two conventions are required.</p>
-	
-	<p>1. Each theme needs to have the same number of stylesheets and corresponding names. So if Theme 1 has a Layout.css, Themes 2 and 3 also need to have a Layout.css.</p>
-	
-	<p>2. Style sheet links in the page headers should follow the convention below. Each style sheet should have an id that is "css" + the file name minus the file extension. So the id for "Core.css" is "cssCore". There must then be a Core.css file in every theme's css folder.</p>
-	
-	<pre>&lt;link rel="stylesheet" type="text/css" id="cssCore" href="themes/default/css/Core.css" /&gt;</pre>
-	
-	<p>You can change the themes directory path in Themes.js.</p>	
+	<p>You can change the themes directory path in Core.js.</p>	
 
 	<h3>Color Options</h3>
 
