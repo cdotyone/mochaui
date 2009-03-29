@@ -55,7 +55,6 @@ MUI.Themes = {
 					this.oldURIs.push(href);
 					this.oldSheets.push(link);
 				}
-
 		}.bind(this));		
 		
 		/*

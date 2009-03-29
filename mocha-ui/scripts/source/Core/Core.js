@@ -877,15 +877,6 @@ REGISTER PLUGINS
 
 MUI.extend({
 
-	Modal: function(arg){		
-		new MUI.Require({
-			js: [MUI.path.source + 'Window/Modal.js'],
-			onload: function(){
-				new MUI.Modal(arg);
-			}		
-		});		
-	},
-	
 	newWindowsFromJSON: function(arg){
 		new MUI.Require({
 			js: [MUI.path.source + 'Window/Windows-from-json.js'],

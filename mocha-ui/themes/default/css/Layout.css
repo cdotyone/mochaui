@@ -256,7 +256,7 @@ li.divider {
 	border-bottom: 1px solid #b9b9b9;
 }
 
-.panel.collapsed {
+.panelWrapper .collapsed {
 	border-bottom: 0;	
 }
 
@@ -363,7 +363,7 @@ li.divider {
 	float: left;
 	width: 4px;
 	overflow: hidden;
-	background: #c0c0c0 url(../images/handle-icon.gif) center center no-repeat;
+	background: #c3c3c3 url(../images/handle-icon.gif) center center no-repeat;
 	border: 1px solid #909090;
 	border-top: 0;
 	border-bottom: 0;

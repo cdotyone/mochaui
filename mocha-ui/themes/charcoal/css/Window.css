@@ -311,13 +311,13 @@ div.mochaToolbarWrapper.bottom {
 	background: #191919 url(../images/logo2.gif) 3px 3px no-repeat;		
 }
 
-.jsonExample .mochaTitlebar {
-	background-color: #6db6db;
+.jsonExample .mochaTitlebar {	
+	background: #6db6db;
 }
 
 .jsonExample .mochaWindowButton {
 	color: #666;
-	background-color: #fff;			
+	background-color: #fff;
 }
 
 #fxmorpherExample .mochaContentWrapper {

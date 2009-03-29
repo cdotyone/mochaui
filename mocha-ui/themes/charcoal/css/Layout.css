@@ -246,7 +246,7 @@ li.divider {
 	border-bottom: 1px solid #282828;
 }
 
-.panel.collapsed {
+.panelWrapper .collapsed {
 	border-bottom: 0;	
 }	
 
