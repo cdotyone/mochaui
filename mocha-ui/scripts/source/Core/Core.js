@@ -931,16 +931,6 @@ MUI.extend({
 				}		
 			});			
 		}
-	},
-	
-	initializeTabs: function(arg){
-		new MUI.Require({
-			css: [MUI.themePath() + 'css/Tabs.css'],
-			js: [MUI.path.source + 'Components/Tabs.js'],
-			onload: function(){
-				MUI.initializeTabs(arg);
-			}		
-		});		
 	}
 	
 });

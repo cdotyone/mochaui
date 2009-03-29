@@ -342,6 +342,7 @@ MUI.Column = new Class({
 		onExpand:     $empty
 
 	},
+	
 	initialize: function(options){
 		this.setOptions(options);
 		
@@ -366,6 +367,10 @@ MUI.Column = new Class({
 		}
 		else {
 			$(options.container).setStyle('overflow', 'hidden');
+		}
+
+		if (typeof this.options.container == 'string'){
+			this.options.container = $(this.options.container);
 		}
 
 		// Check to see if there is already a class instance for this Column
@@ -403,22 +408,33 @@ MUI.Column = new Class({
 		
 		var parent = this.columnEl.getParent();
 		var columnHeight = parent.getStyle('height').toInt();
-		this.columnEl.setStyle('height', columnHeight);
+		this.columnEl.setStyle('height', columnHeight);		
 		
-		this.sortables = new Sortables(this.columnEl, {
-			opacity: 1,
-			handle: '.panel-header',		
-			constrain: false,
-			clone: false,
-			revert: false,
-			onSort: function(){
-				this.columnEl.getChildren('.panelWrapper').each(function(panelWrapper){
-					panelWrapper.getElement('.panel').removeClass('bottomPanel');
-				});
-				this.columnEl.getChildren('.panelWrapper').getLast().getElement('.panel').addClass('bottomPanel');
-				MUI.panelHeight(this.options.column);
-			}.bind(this)
-		});		
+		if (!this.options.container.retrieve('sortables')){
+			var sortables = new Sortables(this.columnEl, {
+				opacity: 1,
+				handle: '.panel-header',		
+				constrain: false,
+				revert: false,				
+				onSort: function(){
+					$$('.column').each(function(column){
+						column.getChildren('.panelWrapper').each(function(panelWrapper){
+							panelWrapper.getElement('.panel').removeClass('bottomPanel');
+						});
+						if (column.getChildren('.panelWrapper').getLast()){
+							column.getChildren('.panelWrapper').getLast().getElement('.panel').addClass('bottomPanel');
+						}
+						MUI.panelHeight();
+					}.bind(this));
+				}.bind(this)
+			});
+			this.options.container.store('sortables', sortables);
+
+			
+		}
+		else {
+			this.options.container.retrieve('sortables').addLists(this.columnEl);
+		}		
 		
 		if (options.placement == 'main'){
 			this.columnEl.addClass('rWidth');
@@ -708,7 +724,7 @@ MUI.Panel = new Class({
 		
 		var columnInstances = MUI.Columns.instances;
 		var columnInstance = columnInstances.get(this.options.column);		
-		columnInstance.sortables.addItems(this.panelWrapperEl);		
+		columnInstance.options.container.retrieve('sortables').addItems(this.panelWrapperEl);		
 		
 		if (this.options.collapsible) {
 			this.collapseToggleInit();
@@ -884,7 +900,7 @@ MUI.Panel = new Class({
 				this.contentEl.setStyle('position', 'absolute'); // This is so IE6 and IE7 will collapse the panel all the way		
 				panel.setStyle('height', 0);								
 				this.isCollapsed = true;				
-				panelWrapper.addClass('collapsed2');
+				panelWrapper.addClass('collapsed');
 				panelWrapper.removeClass('expanded');				
 				MUI.panelHeight(options.column, panel, 'collapsing');
 				MUI.panelHeight(); // Run this a second time for panels within panels
@@ -900,7 +916,7 @@ MUI.Panel = new Class({
 				panel.setStyle('height', this.oldHeight);
 				this.isCollapsed = false;				
 				panelWrapper.addClass('expanded');
-				panelWrapper.removeClass('collapsed2');
+				panelWrapper.removeClass('collapsed');
 				MUI.panelHeight(this.options.column, panel, 'expanding');
 				MUI.panelHeight(); // Run this a second time for panels within panels
 				this.collapseToggleEl.removeClass('panel-expand');
@@ -1435,6 +1451,8 @@ MUI.extend({
 			
 		instance.isClosing = true;
 		
+		instance.container.retrieve('sortables').removeLists(this.columnEl);
+		
 		// Destroy all the panels in the column.
 		var panels = columnEl.getChildren('.panel');		
 		panels.each(function(panel){
@@ -1488,7 +1506,7 @@ MUI.extend({
 		
 		var columnInstances = MUI.Columns.instances;
 		var columnInstance = columnInstances.get(column);
-		columnInstance.sortables.removeItems(instance.panelWrapperEl);
+		columnInstance.options.container.retrieve('sortables').removeItems(instance.panelWrapperEl);
 
 		instance.panelWrapperEl.destroy();
 
