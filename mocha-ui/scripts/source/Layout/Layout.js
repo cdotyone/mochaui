@@ -320,6 +320,7 @@ Options:
 	placement - Can be 'right', 'main', or 'left'. There must be at least one column with the 'main' option.
 	width - 'main' column is fluid and should not be given a width.
 	resizeLimit - resizelimit of a 'right' or 'left' column.
+	sortable - (boolean) Whether the panels can be reordered via drag and drop.
 	onResize - (function) Fired when the column is resized.
 	onCollapse - (function) Fired when the column is collapsed.
 	onExpand - (function) Fired when the column is expanded.
@@ -335,6 +336,7 @@ MUI.Column = new Class({
 		placement:     null, 
 		width:         null,
 		resizeLimit:   [],
+		sortable:      true,
 
 		// Events
 		onResize:     $empty, 
@@ -410,30 +412,30 @@ MUI.Column = new Class({
 		var columnHeight = parent.getStyle('height').toInt();
 		this.columnEl.setStyle('height', columnHeight);		
 		
-		if (!this.options.container.retrieve('sortables')){
-			var sortables = new Sortables(this.columnEl, {
-				opacity: 1,
-				handle: '.panel-header',		
-				constrain: false,
-				revert: false,				
-				onSort: function(){
-					$$('.column').each(function(column){
-						column.getChildren('.panelWrapper').each(function(panelWrapper){
-							panelWrapper.getElement('.panel').removeClass('bottomPanel');
-						});
-						if (column.getChildren('.panelWrapper').getLast()){
-							column.getChildren('.panelWrapper').getLast().getElement('.panel').addClass('bottomPanel');
-						}
-						MUI.panelHeight();
-					}.bind(this));
-				}.bind(this)
-			});
-			this.options.container.store('sortables', sortables);
-
-			
-		}
-		else {
-			this.options.container.retrieve('sortables').addLists(this.columnEl);
+		if (this.options.sortable){
+			if (!this.options.container.retrieve('sortables')){
+				var sortables = new Sortables(this.columnEl, {
+					opacity: 1,
+					handle: '.panel-header',		
+					constrain: false,
+					revert: false,				
+					onSort: function(){
+						$$('.column').each(function(column){
+							column.getChildren('.panelWrapper').each(function(panelWrapper){
+								panelWrapper.getElement('.panel').removeClass('bottomPanel');
+							});
+							if (column.getChildren('.panelWrapper').getLast()){
+								column.getChildren('.panelWrapper').getLast().getElement('.panel').addClass('bottomPanel');
+							}
+							MUI.panelHeight();
+						}.bind(this));
+					}.bind(this)
+				});
+				this.options.container.store('sortables', sortables);			
+			}
+			else {
+				this.options.container.retrieve('sortables').addLists(this.columnEl);
+			}
 		}		
 		
 		if (options.placement == 'main'){
@@ -717,14 +719,17 @@ MUI.Panel = new Class({
 			'id': this.options.id + '_header',
 			'class': 'panel-header',
 			'styles': {
-				'display': options.header ? 'block' : 'none',
-				'cursor': 'move'
+				'display': options.header ? 'block' : 'none'
 			}
 		}).inject(this.panelEl, 'before');
 		
 		var columnInstances = MUI.Columns.instances;
-		var columnInstance = columnInstances.get(this.options.column);		
-		columnInstance.options.container.retrieve('sortables').addItems(this.panelWrapperEl);		
+		var columnInstance = columnInstances.get(this.options.column);
+		
+		if (columnInstance.options.sortable){
+			this.panelHeaderEl.setStyle('cursor', 'move');		
+			columnInstance.options.container.retrieve('sortables').addItems(this.panelWrapperEl);		
+		}
 		
 		if (this.options.collapsible) {
 			this.collapseToggleInit();
@@ -1451,7 +1456,9 @@ MUI.extend({
 			
 		instance.isClosing = true;
 		
-		instance.container.retrieve('sortables').removeLists(this.columnEl);
+		if (instance.options.sortable){
+			instance.container.retrieve('sortables').removeLists(this.columnEl);
+		}	
 		
 		// Destroy all the panels in the column.
 		var panels = columnEl.getChildren('.panel');		
@@ -1506,7 +1513,10 @@ MUI.extend({
 		
 		var columnInstances = MUI.Columns.instances;
 		var columnInstance = columnInstances.get(column);
-		columnInstance.options.container.retrieve('sortables').removeItems(instance.panelWrapperEl);
+		
+		if (columnInstance.options.sortable){
+			columnInstance.options.container.retrieve('sortables').removeItems(instance.panelWrapperEl);
+		}	
 
 		instance.panelWrapperEl.destroy();
 
