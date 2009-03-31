@@ -724,7 +724,7 @@ initializeColumns = function() {
 				MUI.updateContent({
 					element: $('mainPanel'),
 					loadMethod: 'iframe',
-					url: 'pages/youtube4.html',
+					url: 'pages/youtube.html',
 					title: 'Iframe: YouTube',
 					padding: { top: 0, right: 0, bottom: 0, left: 0 }
 				});

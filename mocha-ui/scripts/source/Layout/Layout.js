@@ -1004,7 +1004,10 @@ MUI.extend({
 				}).removeClass('detached');
 			} else {
 				instance.resize.detach();
-				instance.handleEl.setStyle('cursor', null).addClass('detached');
+				instance.handleEl.setStyles({
+					'display': 'none',
+					'cursor': null
+				}).addClass('detached');
 			}
 			if (panel.getParent().getNext('.panelWrapper') == null) {
 				instance.handleEl.hide();
