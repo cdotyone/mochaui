@@ -770,7 +770,7 @@ MUI.Require = new Class({
 		
 });
 
-Asset.extend({
+$extend(Asset, {
 
 	/* Fix an Opera bug in Mootools 1.2 */
 	javascript: function(source, properties){
@@ -4134,10 +4134,8 @@ MUI.extend({
 	*/
 	initializeTabs: function(el){
 		$(el).setStyle('list-style', 'none'); // This is to fix a glitch that occurs in IE8 RC1 when dynamically switching themes
-		$(el).getElements('li').each(function(listitem){
-			listitem.addEvent('click', function(e){
-				MUI.selected(this, el);
-			});
+		$(el).getElements('li').addEvent('click', function(e){
+			MUI.selected(this, el);
 		});
 	},
 	/*
@@ -4150,9 +4148,9 @@ MUI.extend({
 			selected(el, parent);
 		(end)
 
-Arguments:
-	el - the list item
-	parent - the ul
+	Arguments:
+		el - the list item
+		parent - the ul
 
 	*/
 	selected: function(el, parent){
@@ -4587,10 +4585,10 @@ MUI.Column = new Class({
 					onSort: function(){
 						$$('.column').each(function(column){
 							column.getChildren('.panelWrapper').each(function(panelWrapper){
-								panelWrapper.getElement('.panel').removeClass('bottomPanel');
+								panelWrapper.getElement('.panel-header').removeClass('bottomPanelHeader');
 							});
 							if (column.getChildren('.panelWrapper').getLast()){
-								column.getChildren('.panelWrapper').getLast().getElement('.panel').addClass('bottomPanel');
+								column.getChildren('.panelWrapper').getLast().getElement('.panel-header').addClass('bottomPanelHeader');
 							}
 							MUI.panelHeight();
 						}.bind(this));
@@ -4861,7 +4859,7 @@ MUI.Panel = new Class({
 			this.footerWrapperEl = new Element('div', {
 				'id': options.id + '_panelFooterWrapper',
 				'class': 'panel-footerWrapper'
-			}).inject(this.panelEl);
+			}).inject(this.panelWrapperEl);
 			
 			this.footerEl = new Element('div', {
 				'id': options.id + '_panelFooter',
@@ -4922,7 +4920,7 @@ MUI.Panel = new Class({
 			'styles': {
 				'display': this.showHandle == true ? 'block' : 'none'
 			}
-		}).inject(this.panelEl, 'after');
+		}).inject(this.panelWrapperEl);
 		
 		this.handleIconEl = new Element('div', {
 			'id': options.id + '_handle_icon',
@@ -4999,9 +4997,9 @@ MUI.Panel = new Class({
 		
 		// Do this when creating and removing panels
 		$(options.column).getChildren('.panelWrapper').each(function(panelWrapper){
-			panelWrapper.getElement('.panel').removeClass('bottomPanel');
+			panelWrapper.getElement('.panel-header').removeClass('bottomPanelHeader');
 		});
-		$(options.column).getChildren('.panelWrapper').getLast().getElement('.panel').addClass('bottomPanel');
+		$(options.column).getChildren('.panelWrapper').getLast().getElement('.panel-header').addClass('bottomPanelHeader');
 		
 		MUI.panelHeight(options.column, this.panelEl, 'new');
 
@@ -5130,9 +5128,6 @@ MUI.extend({
 		
 		var parent = column.getParent();
 		var columnHeight = parent.getStyle('height').toInt();
-		if (Browser.Engine.trident4 && parent == MUI.Desktop.pageWrapper) {
-			columnHeight -= 1;
-		}
 		column.setStyle('height', columnHeight);
 		
 		// Get column panels
@@ -5163,12 +5158,14 @@ MUI.extend({
 			if (panel.getParent().hasClass('expanded') && panel.getParent().getNext('.expanded')) {
 				instance.partner = panel.getParent().getNext('.expanded').getElement('.panel');
 				instance.resize.attach();
+				instance.panelWrapperEl.addClass('noHandle');
 				instance.handleEl.setStyles({
 					'display': 'block',
 					'cursor': Browser.Engine.webkit ? 'row-resize' : 'n-resize'
 				}).removeClass('detached');
 			} else {
 				instance.resize.detach();
+				instance.panelWrapperEl.removeClass('noHandle');
 				instance.handleEl.setStyles({
 					'display': 'none',
 					'cursor': null
@@ -5323,9 +5320,6 @@ MUI.extend({
 			var parent = handle.getParent();
 			if (parent.getStyle('height').toInt() < 1) return; // Keeps IE7 and 8 from throwing an error when collapsing a panel within a panel
 			var handleHeight = parent.getStyle('height').toInt() - handle.getStyle('border-top').toInt() - handle.getStyle('border-bottom').toInt();
-			if (Browser.Engine.trident4 && parent == MUI.Desktop.pageWrapper){
-				handleHeight -= 1;
-			}
 			handle.setStyle('height', handleHeight);
 		});
 			
@@ -5694,9 +5688,9 @@ MUI.extend({
 		
 		// Do this when creating and removing panels
 		$(column).getChildren('.panelWrapper').each(function(panelWrapper){
-			panelWrapper.getElement('.panel').removeClass('bottomPanel');
+			panelWrapper.getElement('.panel-header').removeClass('bottomPanelHeader');
 		});
-		$(column).getChildren('.panelWrapper').getLast().getElement('.panel').addClass('bottomPanel');
+		$(column).getChildren('.panelWrapper').getLast().getElement('.panel-header').addClass('bottomPanelHeader');
 		
 		instances.erase(instance.options.id);
 		return true;

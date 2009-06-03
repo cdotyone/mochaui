@@ -770,7 +770,7 @@ MUI.Require = new Class({
 		
 });
 
-Asset.extend({
+$extend(Asset, {
 
 	/* Fix an Opera bug in Mootools 1.2 */
 	javascript: function(source, properties){

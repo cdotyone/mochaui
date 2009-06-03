@@ -2,7 +2,9 @@
 // Calendar RC4, Copyright (c) 2007 Aeron Glemann <http://electricprism.com/aeron>, MIT Style License.
 // Mootools 1.2 compatibility by Davorin Å ego
 
-var Calendar = new Class({	
+var Calendar = new Class({
+
+	Implements: [ Events, Options ],	
 
 	options: {
 		blocked: [], // blocked dates 
