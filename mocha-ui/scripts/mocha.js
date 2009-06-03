@@ -3769,10 +3769,10 @@ MUI.Modal = new Class({
 			}).inject(document.body);
 		}
 
-		this.modalOverlayOpenMorph = new Fx.Morph($('modalOverlay'), {
+		MUI.Modal.modalOverlayOpenMorph = new Fx.Morph($('modalOverlay'), {
 			'duration': 150
 		});
-		this.modalOverlayCloseMorph = new Fx.Morph($('modalOverlay'), {
+		MUI.Modal.modalOverlayCloseMorph = new Fx.Morph($('modalOverlay'), {
 			'duration': 150,
 			onComplete: function(){
 				$('modalOverlay').hide();
