@@ -913,16 +913,7 @@ initializeColumns = function() {
 		contentURL: 'pages/tips.html',
 		column: 'sideColumn2',
 		height: 140,
-		footer: true,
-		footerURL: 'pages/toolbox-demo.html',
-		footerOnload: function(){
-			$$('.demoAction').each(function(element){
-				element.removeEvents();
-				element.addEvent('click', function(e){
-					MUI.notification('Do Something');
-				});
-			});
-		}
+		footer: true
 	});
 	
 	MUI.splitPanelPanel = function() {

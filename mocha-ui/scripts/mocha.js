@@ -4585,10 +4585,10 @@ MUI.Column = new Class({
 					onSort: function(){
 						$$('.column').each(function(column){
 							column.getChildren('.panelWrapper').each(function(panelWrapper){
-								panelWrapper.getElement('.panel-header').removeClass('bottomPanelHeader');
+								panelWrapper.getElement('.panel').removeClass('bottomPanel');
 							});
 							if (column.getChildren('.panelWrapper').getLast()){
-								column.getChildren('.panelWrapper').getLast().getElement('.panel-header').addClass('bottomPanelHeader');
+								column.getChildren('.panelWrapper').getLast().getElement('.panel').addClass('bottomPanel');
 							}
 							MUI.panelHeight();
 						}.bind(this));
@@ -4713,11 +4713,7 @@ Options:
 	header - (boolean) Display the panel header or not
 	headerToolbox: (boolean)
 	headerToolboxURL: (url)
-	headerToolboxOnload: (function)	
-	footer - (boolean) Add a panel footer or not
-	footerURL - (url)
-	footerData - (hash) Data to send with the URL. Defaults to null.
-	footerOnload - (function)
+	headerToolboxOnload: (function)
 	height - (number) Height of content area.
 	addClass - (string) Add a class to the panel.
 	scrollbars - (boolean)
@@ -4766,11 +4762,6 @@ MUI.Panel = new Class({
 		headerToolboxURL:   'pages/lipsum.html',
 		headerToolboxOnload: $empty,		
 
-		footer:             false,
-		footerURL:          'pages/lipsum.html',
-		footerData:         null,
-		footerOnload:       $empty,
-		
 		// Style options:
 		height:             125,
 		addClass:           '',
@@ -4854,18 +4845,6 @@ MUI.Panel = new Class({
 			'id': options.id + '_pad',
 			'class': 'pad'
 		}).inject(this.panelEl);
-		
-		if (options.footer) {
-			this.footerWrapperEl = new Element('div', {
-				'id': options.id + '_panelFooterWrapper',
-				'class': 'panel-footerWrapper'
-			}).inject(this.panelWrapperEl);
-			
-			this.footerEl = new Element('div', {
-				'id': options.id + '_panelFooter',
-				'class': 'panel-footer'
-			}).inject(this.footerWrapperEl);			
-		}
 
 		// This is in order to use the same variable as the windows do in updateContent.
 		// May rethink this.
@@ -4920,7 +4899,7 @@ MUI.Panel = new Class({
 			'styles': {
 				'display': this.showHandle == true ? 'block' : 'none'
 			}
-		}).inject(this.panelWrapperEl);
+		}).inject(this.panelEl, 'after');
 		
 		this.handleIconEl = new Element('div', {
 			'id': options.id + '_handle_icon',
@@ -4945,18 +4924,7 @@ MUI.Panel = new Class({
 	newPanel: function(){
 		
 		options = this.options;
-		
-		if (options.footer) {			
-			MUI.updateContent({
-				'element': this.panelEl,
-				'childElement': this.footerEl,
-				'loadMethod': 'xhr',
-				'data': options.footerData,
-				'url': options.footerURL,
-				'onContentLoaded': options.footerOnload
-			});			
-		}				
-		
+				
 		if (this.options.headerToolbox) {			
 			MUI.updateContent({
 				'element': this.panelEl,
@@ -4997,9 +4965,9 @@ MUI.Panel = new Class({
 		
 		// Do this when creating and removing panels
 		$(options.column).getChildren('.panelWrapper').each(function(panelWrapper){
-			panelWrapper.getElement('.panel-header').removeClass('bottomPanelHeader');
+			panelWrapper.getElement('.panel').removeClass('bottomPanel');
 		});
-		$(options.column).getChildren('.panelWrapper').getLast().getElement('.panel-header').addClass('bottomPanelHeader');
+		$(options.column).getChildren('.panelWrapper').getLast().getElement('.panel').addClass('bottomPanel');
 		
 		MUI.panelHeight(options.column, this.panelEl, 'new');
 
@@ -5128,6 +5096,9 @@ MUI.extend({
 		
 		var parent = column.getParent();
 		var columnHeight = parent.getStyle('height').toInt();
+		if (Browser.Engine.trident4 && parent == MUI.Desktop.pageWrapper) {
+			columnHeight -= 1;
+		}
 		column.setStyle('height', columnHeight);
 		
 		// Get column panels
@@ -5158,14 +5129,12 @@ MUI.extend({
 			if (panel.getParent().hasClass('expanded') && panel.getParent().getNext('.expanded')) {
 				instance.partner = panel.getParent().getNext('.expanded').getElement('.panel');
 				instance.resize.attach();
-				instance.panelWrapperEl.addClass('noHandle');
 				instance.handleEl.setStyles({
 					'display': 'block',
 					'cursor': Browser.Engine.webkit ? 'row-resize' : 'n-resize'
 				}).removeClass('detached');
 			} else {
 				instance.resize.detach();
-				instance.panelWrapperEl.removeClass('noHandle');
 				instance.handleEl.setStyles({
 					'display': 'none',
 					'cursor': null
@@ -5320,6 +5289,9 @@ MUI.extend({
 			var parent = handle.getParent();
 			if (parent.getStyle('height').toInt() < 1) return; // Keeps IE7 and 8 from throwing an error when collapsing a panel within a panel
 			var handleHeight = parent.getStyle('height').toInt() - handle.getStyle('border-top').toInt() - handle.getStyle('border-bottom').toInt();
+			if (Browser.Engine.trident4 && parent == MUI.Desktop.pageWrapper){
+				handleHeight -= 1;
+			}
 			handle.setStyle('height', handleHeight);
 		});
 			
@@ -5688,9 +5660,9 @@ MUI.extend({
 		
 		// Do this when creating and removing panels
 		$(column).getChildren('.panelWrapper').each(function(panelWrapper){
-			panelWrapper.getElement('.panel-header').removeClass('bottomPanelHeader');
+			panelWrapper.getElement('.panel').removeClass('bottomPanel');
 		});
-		$(column).getChildren('.panelWrapper').getLast().getElement('.panel-header').addClass('bottomPanelHeader');
+		$(column).getChildren('.panelWrapper').getLast().getElement('.panel').addClass('bottomPanel');
 		
 		instances.erase(instance.options.id);
 		return true;
