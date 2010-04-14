@@ -6,3 +6,6 @@ and logs, available at http://github.com/cdotyone/mochaui
 
 Greg Houstan (greg.houston@gmail.com)
 Chris Doty (cdoty1@yahoo.com)
+Scott F. Frederick
+Joel Lindau
+Harry Roberts 
