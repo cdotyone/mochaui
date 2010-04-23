@@ -4,7 +4,7 @@ Script: Tabs.js
 	Functionality for window tabs.
 
 Copyright:
-	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.	
+	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
 
 License:
 	MIT-style license.
@@ -14,8 +14,6 @@ Requires:
 
 */
 
-MUI.files[MUI.path.source + 'Components/Tabs.js'] = 'loaded';
-
 MUI.extend({
 	/*
 
@@ -23,10 +21,17 @@ MUI.extend({
 		Add click event to each list item that fires the selected function.
 
 	*/
-	initializeTabs: function(el){
+	initializeTabs: function(el, target){
 		$(el).setStyle('list-style', 'none'); // This is to fix a glitch that occurs in IE8 RC1 when dynamically switching themes
 		$(el).getElements('li').each(function(listitem){
+			var link = listitem.getFirst('a').addEvent('click', function(e){
+				e.preventDefault();
+			});
 			listitem.addEvent('click', function(e){
+				MUI.updateContent({
+					'element':  $(target),
+					'url':      link.get('href')
+				});
 				MUI.selected(this, el);
 			});
 		});
