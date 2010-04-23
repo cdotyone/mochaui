@@ -75,7 +75,7 @@ initializeWindows = function(){
 			width: 340,
 			height: 150
 		});
-	}	
+	};
 	if ($('ajaxpageLinkCheck')){ 
 		$('ajaxpageLinkCheck').addEvent('click', function(e){
 			new Event(e).stop();
@@ -90,7 +90,7 @@ initializeWindows = function(){
 				MUI.newWindowsFromJSON(properties.windows);
 			}
 		}).send();
-	}	
+	};
 	if ($('jsonLink')){
 		$('jsonLink').addEvent('click', function(e) {
 			new Event(e).stop();
@@ -112,21 +112,21 @@ initializeWindows = function(){
 			toolbarOnload: function(){
 				MUI.initializeTabs('youtubeTabs');	
 
-				$('youtube1Link').addEvent('click', function(e){
+				$('youtube1Link').addEvent('click', function(){
 					MUI.updateContent({
 						'element':  $('youtube'),
 						'url':      'pages/youtube.html'
 					});
 				});
 	
-				$('youtube2Link').addEvent('click', function(e){
+				$('youtube2Link').addEvent('click', function(){
 					MUI.updateContent({
 						'element':  $('youtube'),
 						'url':      'pages/youtube2.html'
 					});
 				});
 	
-				$('youtube3Link').addEvent('click', function(e){
+				$('youtube3Link').addEvent('click', function(){
 					MUI.updateContent({
 						'element':  $('youtube'),	
 						'url':      'pages/youtube3.html'
@@ -134,7 +134,7 @@ initializeWindows = function(){
 				});	
 			}
 		});
-	}
+	};
 	if ($('youtubeLinkCheck')) {
 		$('youtubeLinkCheck').addEvent('click', function(e){
 		new Event(e).stop();
@@ -162,7 +162,7 @@ initializeWindows = function(){
 				}	
 			}				
 		});	
-	}
+	};
 	if ($('clockLinkCheck')){
 		$('clockLinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
@@ -191,7 +191,7 @@ initializeWindows = function(){
 				}		
 			}				
 		});
-	}
+	};
 	if ($('parametricsLinkCheck')){
 		$('parametricsLinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
@@ -243,7 +243,7 @@ initializeWindows = function(){
 
 			}			
 		});
-	}
+	};
 	if ($('splitWindowLinkCheck')) {
 		$('splitWindowLinkCheck').addEvent('click', function(e){
 		new Event(e).stop();
@@ -270,10 +270,9 @@ initializeWindows = function(){
 				} 	
 			}			
 		});	
-	}			
+	};
 
 	// Examples > Tests
-	
 	MUI.serverRepsonseWindow = function(response){
 		new MUI.Window({
 			id: 'serverResponse',
@@ -281,7 +280,7 @@ initializeWindows = function(){
 			width: 350,
 			height: 350
 		});
-	}		
+	};
 	
 	MUI.eventsWindow = function(){
 		new MUI.Window({
@@ -315,7 +314,7 @@ initializeWindows = function(){
 				MUI.notification('Window lost focus.');
 			}
 		});
-	}	
+	};
 	if ($('windoweventsLinkCheck')){
 		$('windoweventsLinkCheck').addEvent('click', function(e){
 			new Event(e).stop();
@@ -334,7 +333,7 @@ initializeWindows = function(){
 			x: 100,
 			y: 100
 		});
-	}
+	};
 	if ($('containertestLinkCheck')) { 
 		$('containertestLinkCheck').addEvent('click', function(e){
 			new Event(e).stop();
@@ -349,7 +348,7 @@ initializeWindows = function(){
 			loadMethod: 'iframe',
 			contentURL: 'pages/iframetests.html'
 		});
-	}
+	};
 	if ($('iframetestsLinkCheck')) {
 		$('iframetestsLinkCheck').addEvent('click', function(e){
 		new Event(e).stop();
@@ -366,7 +365,7 @@ initializeWindows = function(){
 				document.testForm.focusTest.focus();
 			}			
 		});
-	}
+	};
 	if ($('formtestsLinkCheck')) {
 		$('formtestsLinkCheck').addEvent('click', function(e){
 		new Event(e).stop();
@@ -413,7 +412,7 @@ initializeWindows = function(){
 				}	
 			}					
 		});
-	}	
+	};
 	if ($('accordiantestLinkCheck')) { 
 		$('accordiantestLinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
@@ -433,7 +432,7 @@ initializeWindows = function(){
 			resizeLimit: {'x': [275, 2500], 'y': [125, 2000]},
 			useCanvas: false
 		});
-	}
+	};
 	if ($('noCanvasLinkCheck')) {
 		$('noCanvasLinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
@@ -500,7 +499,7 @@ initializeWindows = function(){
 				}	
 			}			
 		});
-	}
+	};
 	if ($('builderLinkCheck')) {
 		$('builderLinkCheck').addEvent('click', function(e) {
 			new Event(e).stop();
@@ -589,7 +588,7 @@ initializeWindows = function(){
 				});
 			}
 		});
-	}
+	};
 	if ($('featuresLinkCheck')) {
 		$('featuresLinkCheck').addEvent('click', function(e){
 			new Event(e).stop();
@@ -608,7 +607,7 @@ initializeWindows = function(){
 			padding: { top: 43, right: 12, bottom: 10, left: 12 },
 			scrollbars: false
 		});
-	}
+	};
 	if ($('aboutLink')) {
 		$('aboutLink').addEvent('click', function(e){
 			new Event(e).stop();
@@ -625,7 +624,7 @@ initializeWindows = function(){
 			width: 375,
 			height: 340
 		});
-	}	
+	};
 	if ($('licenseLink')){ 
 		$('licenseLink').addEvent('click', function(e) {
 			new Event(e).stop();
@@ -642,10 +641,8 @@ initializeWindows = function(){
 	
 	// Build windows onLoad
 	MUI.parametricsWindow();
-
 	MUI.myChain.callChain();
-	
-}
+};
 
 /*
   
@@ -949,11 +946,10 @@ initializeColumns = function() {
 				column: 'sideColumn3'
 			});
 		}
-	}
+	};
 	
 	MUI.myChain.callChain();
-	
-}
+};
 
 // Initialize MochaUI when the DOM is ready
 window.addEvent('load', function(){ //using load instead of domready for IE8
