@@ -243,6 +243,7 @@ MUI.extend({
 				}
 			}.bind(this),
 			onSuccess: function(){
+                contentEl.addClass("pad");
 				if (contentContainer == contentEl){
 					if (args.recipient == 'window') instance.hideSpinner();							
 					else if (args.recipient == 'panel' && $('spinner')) $('spinner').hide();							
@@ -261,6 +262,8 @@ MUI.extend({
 		if ( instance.options.contentURL == '' || contentContainer != contentEl) {
 			return;
 		}
+        contentEl.removeClass("pad");
+        contentEl.setStyle("padding","0px");
 		instance.iframeEl = new Element('iframe', {
 			'id': instance.options.id + '_iframe',
 			'name': instance.options.id + '_iframe',
@@ -291,7 +294,8 @@ MUI.extend({
 		var contentContainer = args.contentContainer;
 		var onContentLoaded = args.onContentLoaded;			
 		var elementTypes = new Array('element', 'textnode', 'whitespace', 'collection');
-				
+
+        contentEl.addClass("pad");
 		if (elementTypes.contains($type(options.content))){
 			options.content.inject(contentContainer);
 		} else {
