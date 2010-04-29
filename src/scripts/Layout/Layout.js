@@ -337,7 +337,8 @@ MUI.Column = new Class({
 		width:         null,
 		resizeLimit:   [],
 		sortable:      true,
-
+        isCollapsed:   false,
+        
 		// Events
 		onResize:     $empty, 
 		onCollapse:   $empty,
@@ -470,6 +471,10 @@ MUI.Column = new Class({
 				break;
 		}
 
+        if (this.options.isCollapsed && this.options.placement!='main'){
+            this.columnToggle();
+        }
+
 		if (this.handleEl != null){
 			this.handleEl.addEvent('dblclick', function(){
 				this.columnToggle();
@@ -479,44 +484,55 @@ MUI.Column = new Class({
 		MUI.rWidth();
 
 	},
+
+    columnCollapse: function(){
+        var column = this.columnEl;
+
+        this.oldWidth = column.getStyle('width').toInt();
+
+        this.resize.detach();
+        this.handleEl.removeEvents('dblclick');
+        this.handleEl.addEvent('click', function(){
+            this.columnExpand();
+        }.bind(this));
+        this.handleEl.setStyle('cursor', 'pointer').addClass('detached');
+
+        column.setStyle('width', 0);
+        this.isCollapsed = true;
+        column.addClass('collapsed');
+        column.removeClass('expanded');
+        MUI.rWidth();
+        this.fireEvent('onCollapse');
+        
+        return true;
+    },
+
+    columnExpand : function(){
+        var column = this.columnEl;
+
+        column.setStyle('width', this.oldWidth);
+        this.isCollapsed = false;
+        column.addClass('expanded');
+        column.removeClass('collapsed');
+
+        this.handleEl.removeEvents('click');
+        this.handleEl.addEvent('dblclick', function(){
+            this.columnCollapse();
+        }.bind(this));
+        this.resize.attach();
+        this.handleEl.setStyle('cursor', Browser.Engine.webkit ? 'col-resize' : 'e-resize').addClass('attached');
+
+        MUI.rWidth();
+        this.fireEvent('onExpand');
+        
+        return true;
+    },
+
 	columnToggle: function(){
-		var column = this.columnEl;
-		
-		// Collapse
-		if (this.isCollapsed == false){
-			this.oldWidth = column.getStyle('width').toInt();
-
-			this.resize.detach();
-			this.handleEl.removeEvents('dblclick');
-			this.handleEl.addEvent('click', function(){
-				this.columnToggle();
-			}.bind(this));
-			this.handleEl.setStyle('cursor', 'pointer').addClass('detached');
-			
-			column.setStyle('width', 0);
-			this.isCollapsed = true;
-			column.addClass('collapsed');
-			column.removeClass('expanded');
-			MUI.rWidth();		
-			this.fireEvent('onCollapse');
-		}
-		// Expand
-		else {
-			column.setStyle('width', this.oldWidth);
-			this.isCollapsed = false;
-			column.addClass('expanded');
-			column.removeClass('collapsed');
-
-			this.handleEl.removeEvents('click');
-			this.handleEl.addEvent('dblclick', function(){
-				this.columnToggle();
-			}.bind(this));
-			this.resize.attach();
-			this.handleEl.setStyle('cursor', Browser.Engine.webkit ? 'col-resize' : 'e-resize').addClass('attached');
-
-			MUI.rWidth();
-			this.fireEvent('onExpand');
-		}
+		if (this.isCollapsed == false)
+            this.columnCollapse();
+		else
+            this.columnExpand();
 	}
 });
 MUI.Column.implement(new Options, new Events);
