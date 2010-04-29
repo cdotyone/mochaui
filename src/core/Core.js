@@ -881,18 +881,27 @@ REGISTER PLUGINS
 
 MUI.extend({
 
+    newWindowsFromHTML: function(arg){
+        new MUI.Require({
+            js: [MUI.path.plugins + 'mochaui/Window/Windows-from-html.js'],
+            onload: function(){
+                new MUI.newWindowsFromHTML(arg);
+            }
+        });
+    },
+    
 	newWindowsFromJSON: function(arg){
 		new MUI.Require({
-			js: [MUI.path.source + 'Window/Windows-from-json.js'],
+			js: [MUI.path.plugins + 'mochaui/Window/Windows-from-json.js'],
 			onload: function(){
 				new MUI.newWindowsFromJSON(arg);
-			}		
+			}
 		});
-	},	
-	
+	},
+
 	arrangeCascade: function(){
 		new MUI.Require({
-			js: [MUI.path.source + 'Window/Arrange-cascade.js'],
+			js: [MUI.path.plugins + 'mochaui/Window/Arrange-cascade.js'],
 			onload: function(){
 				new MUI.arrangeCascade();
 			}		
@@ -901,16 +910,16 @@ MUI.extend({
 	
 	arrangeTile: function(){
 		new MUI.Require({
-			js: [MUI.path.source + 'Window/Arrange-tile.js'],
+			js: [MUI.path.plugins + 'mochaui/Window/Arrange-tile.js'],
 			onload: function(){
 				new MUI.arrangeTile();
 			}		
-		});		
+		});
 	},
 	
 	saveWorkspace: function(){
 		new MUI.Require({
-			js: [MUI.path.source + 'Layout/Workspaces.js'],
+			js: [MUI.path.plugins + 'mochaui/Layout/Workspaces.js'],
 			onload: function(){
 				new MUI.saveWorkspace();
 			}		
@@ -919,7 +928,7 @@ MUI.extend({
 	
 	loadWorkspace: function(){
 		new MUI.Require({
-			js: [MUI.path.source + 'Layout/Workspaces.js'],
+			js: [MUI.path.plugins + 'mochaui/Layout/Workspaces.js'],
 			onload: function(){
 				new MUI.loadWorkspace();
 			}		
@@ -929,7 +938,7 @@ MUI.extend({
 	Themes: {
 		init: function(arg){			
 			new MUI.Require({
-				js: [MUI.path.source + 'Utilities/Themes.js'],
+				js: [MUI.path.plugins + 'mochaui/Utilities/Themes.js'],
 				onload: function(){
 					MUI.Themes.init(arg);
 				}		

@@ -2564,3 +2564,4 @@ document.addEvent('keydown', function(event){
 		MUI.toggleWindowVisibility();
 	}
 });
+

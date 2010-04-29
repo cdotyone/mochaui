@@ -29,16 +29,16 @@ See Also:
 MUI.files[MUI.path.source + 'Window/Windows-from-html.js'] = 'loaded';
 
 MUI.extend({
-	NewWindowsFromHTML: function(){
+	newWindowsFromHTML: function(){
 		$$('.mocha').each(function(el) {
 			// Get the window title and destroy that element, so it does not end up in window content
 			if ( Browser.Engine.presto || Browser.Engine.trident5 ){
 				el.hide(); // Required by Opera, and probably IE7
 			}
 			var title = el.getElement('h3.mochaTitle');
-			
+
 			if(Browser.Engine.presto) el.show();
-			
+
 			var elDimensions = el.getStyles('height', 'width');
 			var properties = {
 				id: el.getProperty('id'),
@@ -52,11 +52,11 @@ MUI.extend({
 				properties.title = title.innerHTML;
 				title.destroy();
 			}
-		
+
 			// Get content and destroy the element
 			properties.content = el.innerHTML;
 			el.destroy();
-			
+
 			// Create window
 			new MUI.Window(properties, true);
 		}.bind(this));
