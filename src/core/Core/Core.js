@@ -947,3 +947,9 @@ MUI.extend({
 	}
 	
 });
+
+if (Browser.Engine.webkit) {
+    new MUI.Require({
+        js: [MUI.path.plugins + 'mochaui/Window/WebKitShadower.js']
+    });
+}
