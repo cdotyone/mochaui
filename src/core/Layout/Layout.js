@@ -412,28 +412,43 @@ MUI.Column = new Class({
 		var parent = this.columnEl.getParent();
 		var columnHeight = parent.getStyle('height').toInt();
 		this.columnEl.setStyle('height', columnHeight);		
-		
+
 		if (this.options.sortable){
-			if (!this.options.container.retrieve('sortables')){
-				var sortables = new Sortables(this.columnEl, {
-					opacity: 1,
-					handle: '.panel-header',		
-					constrain: false,
-					revert: false,				
-					onSort: function(){
-						$$('.column').each(function(column){
-							column.getChildren('.panelWrapper').each(function(panelWrapper){
-								panelWrapper.getElement('.panel').removeClass('bottomPanel');
-							});
-							if (column.getChildren('.panelWrapper').getLast()){
-								column.getChildren('.panelWrapper').getLast().getElement('.panel').addClass('bottomPanel');
-							}
-							MUI.panelHeight();
-						}.bind(this));
-					}.bind(this)
-				});
-				this.options.container.store('sortables', sortables);
-			}
+            if (!this.options.container.retrieve('sortables')){
+                var sortables = new Sortables(this.columnEl, {
+                    opacity: 1,
+                    handle: '.panel-header',
+                    constrain: false,
+                    revert: false,
+                    onSort: function(){
+                        $$('.column').each(function(column){
+                            column.getChildren('.panelWrapper').each(function(panelWrapper){
+                                panelWrapper.getElement('.panel').removeClass('bottomPanel');
+                            });
+
+                            if (column.getChildren('.panelWrapper').getLast()){
+                                column.getChildren('.panelWrapper').getLast().getElement('.panel').addClass('bottomPanel');
+                            }
+
+                            column.getChildren('.panelWrapper').each(function(panelWrapper){
+                                var panel = panelWrapper.getElement('.panel');
+                                var column = panelWrapper.getParent().id;
+                                instance = MUI.Panels.instances.get(panel.id);
+                                instance.options.column = column;
+                                if(instance) {
+                                    var nextpanel = panel.getParent().getNext('.expanded');
+                                    if(nextpanel) {
+                                        nextpanel=nextpanel.getElement('.panel'); }
+                                    instance.partner = nextpanel;
+                                }
+                            });
+
+                            MUI.panelHeight();
+                        }.bind(this));
+                    }.bind(this)
+                });
+                this.options.container.store('sortables', sortables);
+   			}
 			else {
 				this.options.container.retrieve('sortables').addLists(this.columnEl);
 			}
