@@ -432,7 +432,7 @@ MUI.Column = new Class({
 						}.bind(this));
 					}.bind(this)
 				});
-				this.options.container.store('sortables', sortables);			
+				this.options.container.store('sortables', sortables);
 			}
 			else {
 				this.options.container.retrieve('sortables').addLists(this.columnEl);
@@ -721,11 +721,6 @@ MUI.Panel = new Class({
 		var columnInstances = MUI.Columns.instances;
 		var columnInstance = columnInstances.get(this.options.column);
 		
-		if (columnInstance.options.sortable){
-			this.panelHeaderEl.setStyle('cursor', 'move');		
-			columnInstance.options.container.retrieve('sortables').addItems(this.panelWrapperEl);		
-		}
-		
 		if (this.options.collapsible) {
 			this.collapseToggleInit();
 		}
@@ -737,10 +732,17 @@ MUI.Panel = new Class({
 			}).inject(this.panelHeaderEl);
 		}
 		
-		this.panelHeaderContentEl = new Element('div', {
-			'id': options.id + '_headerContent',
-			'class': 'panel-headerContent'
-		}).inject(this.panelHeaderEl);
+        if (columnInstance.options.sortable) {
+            this.panelHeaderEl.setStyle('cursor', 'move');
+            columnInstance.options.container.retrieve('sortables').addItems(this.panelWrapperEl);
+            if(this.panelHeaderToolboxEl) {
+                this.panelHeaderToolboxEl.addEvent('mousedown',function(e) {
+                    e=new Event(e).stop();
+                    e.target.focus();
+                });
+                this.panelHeaderToolboxEl.setStyle("cursor","default");
+            }
+        }
 		
 		this.titleEl = new Element('h2', {
 			'id': options.id + '_title'
