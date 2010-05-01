@@ -2,16 +2,16 @@
 
 Script: Layout.js
 	Create web application layouts. Enables window maximize.
-	
+
 Copyright:
 	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.
 
 License:
-	MIT-style license.	
+	MIT-style license.
 
 Requires:
 	Core.js
-	
+
 */
 
 MUI.files[MUI.path.source + 'Layout/Layout.js'] = 'loaded';
@@ -28,7 +28,7 @@ MUI.extend({
 });
 
 MUI.Desktop = {
-	
+
 	options: {
 		// Naming options:
 		// If you change the IDs of the MochaUI Desktop containers in your HTML, you need to change them here as well.
@@ -39,7 +39,7 @@ MUI.Desktop = {
 		pageWrapper:         'pageWrapper',
 		page:                'page',
 		desktopFooter:       'desktopFooterWrapper'
-	},	
+	},
 	initialize: function(){
 
 		this.desktop         = $(this.options.desktop);
@@ -48,7 +48,7 @@ MUI.Desktop = {
 		this.pageWrapper     = $(this.options.pageWrapper);
 		this.page            = $(this.options.page);
 		this.desktopFooter   = $(this.options.desktopFooter);
-		
+
 		if (this.desktop) {
 			($$('body')).setStyles({
 				overflow: 'hidden',
@@ -58,24 +58,24 @@ MUI.Desktop = {
 			($$('html')).setStyles({
 				overflow: 'hidden',
 				height: '100%'
-			});			
-		}		
-	
+			});
+		}
+
 		// This is run on dock initialize so no need to do it twice.
 		if (!MUI.Dock){
 			this.setDesktopSize();
 		}
-		this.menuInitialize();		
+		this.menuInitialize();
 
 		// Resize desktop, page wrapper, modal overlay, and maximized windows when browser window is resized
 		window.addEvent('resize', function(e){
 			this.onBrowserResize();
 		}.bind(this));
-		
+
 		if (MUI.myChain){
 			MUI.myChain.callChain();
 		}
-		
+
 	},
 	menuInitialize: function(){
 		// Fix for dropdown menus in IE6
@@ -127,7 +127,7 @@ MUI.Desktop = {
 
 		// var dock = $(MUI.options.dock);
 		var dockWrapper = $(MUI.options.dockWrapper);
-		
+
 		// Setting the desktop height may only be needed by IE7
 		if (this.desktop){
 			this.desktop.setStyle('height', windowDimensions.height);
@@ -151,23 +151,23 @@ MUI.Desktop = {
 
 		if (MUI.Columns.instances.getKeys().length > 0){ // Conditional is a fix for a bug in IE6 in the no toolbars demo.
 			MUI.Desktop.resizePanels();
-		}		
+		}
 	},
 	resizePanels: function(){
 		MUI.panelHeight();
-		MUI.rWidth();	
-	},	
+		MUI.rWidth();
+	},
 	/*
-	
+
 	Function: maximizeWindow
 		Maximize a window.
-	
+
 	Syntax:
 		(start code)
 		MUI.Desktop.maximizeWindow(windowEl);
-		(end)	
+		(end)
 
-	*/	
+	*/
 	maximizeWindow: function(windowEl){
 
 		var instance = MUI.Windows.instances.get(windowEl.id);
@@ -176,13 +176,13 @@ MUI.Desktop = {
 
 		// If window no longer exists or is maximized, stop
 		if (windowEl != $(windowEl) || instance.isMaximized ) return;
-		
+
 		if (instance.isCollapsed){
-			MUI.collapseToggle(windowEl);	
+			MUI.collapseToggle(windowEl);
 		}
 
 		instance.isMaximized = true;
-		
+
 		// If window is restricted to a container, it should not be draggable when maximized.
 		if (instance.options.restrict){
 			windowDrag.detach();
@@ -190,7 +190,7 @@ MUI.Desktop = {
 				instance.detachResizable();
 			}
 			instance.titleBarEl.setStyle('cursor', 'default');
-		}	
+		}
 
 		// If the window has a container that is not the desktop
 		// temporarily move the window to the desktop while it is minimized.
@@ -199,7 +199,7 @@ MUI.Desktop = {
 			if (this.options.restrict){
 			windowDrag.container = this.desktop;
 			}
-		}		
+		}
 
 		// Save original position
 		instance.oldTop = windowEl.getStyle('top');
@@ -221,7 +221,7 @@ MUI.Desktop = {
 				instance.iframeEl.hide();
 			}
 		}
-		
+
 		var windowDimensions = document.getCoordinates();
 		var options = instance.options;
 		var shadowBlur = options.shadowBlur;
@@ -230,7 +230,7 @@ MUI.Desktop = {
 		newHeight -= instance.contentBorderEl.getStyle('border-top').toInt();
 		newHeight -= instance.contentBorderEl.getStyle('border-bottom').toInt();
 		newHeight -= (instance.toolbarWrapperEl ? instance.toolbarWrapperEl.getStyle('height').toInt() + instance.toolbarWrapperEl.getStyle('border-top').toInt() : 0);
-		
+
 		MUI.resizeWindow(windowEl, {
 			width: windowDimensions.width,
 			height: newHeight,
@@ -238,7 +238,7 @@ MUI.Desktop = {
 			left: shadowOffset.x - shadowBlur
 		});
 		instance.fireEvent('onMaximize', windowEl);
-		
+
 		if (instance.maximizeButtonEl) {
 			instance.maximizeButtonEl.setProperty('title', 'Restore');
 		}
@@ -253,27 +253,27 @@ MUI.Desktop = {
 	Syntax:
 		(start code)
 		MUI.Desktop.restoreWindow(windowEl);
-		(end)	
+		(end)
 
-	*/	
-	restoreWindow: function(windowEl){	
-	
+	*/
+	restoreWindow: function(windowEl){
+
 		var instance = windowEl.retrieve('instance');
-		
+
 		// Window exists and is maximized ?
 		if (windowEl != $(windowEl) || !instance.isMaximized) return;
-			
+
 		var options = instance.options;
 		instance.isMaximized = false;
-		
+
 		if (options.restrict){
 			instance.windowDrag.attach();
 			if (options.resizable){
 				instance.reattachResizable();
-			}			
+			}
 			instance.titleBarEl.setStyle('cursor', 'move');
-		}		
-		
+		}
+
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
 		if ( instance.iframeEl ) {
@@ -284,9 +284,9 @@ MUI.Desktop = {
 				instance.iframeEl.hide();
 			}
 		}
-		
-		var contentWrapperEl = instance.contentWrapperEl;	
-		
+
+		var contentWrapperEl = instance.contentWrapperEl;
+
 		MUI.resizeWindow(windowEl,{
 			width: contentWrapperEl.oldWidth,
 			height: contentWrapperEl.oldHeight,
@@ -294,8 +294,8 @@ MUI.Desktop = {
 			left: instance.oldLeft
 		});
 		instance.fireEvent('onRestore', windowEl);
-				
-		if (instance.maximizeButtonEl){		
+
+		if (instance.maximizeButtonEl){
 			instance.maximizeButtonEl.setProperty('title', 'Maximize');
 		}
 	}
@@ -316,7 +316,7 @@ Arguments:
 
 Options:
 	id - The ID of the column. This must be set when creating the column.
-	container - Defaults to MUI.Desktop.pageWrapper. 	
+	container - Defaults to MUI.Desktop.pageWrapper.
 	placement - Can be 'right', 'main', or 'left'. There must be at least one column with the 'main' option.
 	width - 'main' column is fluid and should not be given a width.
 	resizeLimit - resizelimit of a 'right' or 'left' column.
@@ -324,7 +324,7 @@ Options:
 	onResize - (function) Fired when the column is resized.
 	onCollapse - (function) Fired when the column is collapsed.
 	onExpand - (function) Fired when the column is expanded.
-		
+
 */
 MUI.Column = new Class({
 
@@ -333,32 +333,32 @@ MUI.Column = new Class({
 	options: {
 		id:            null,
 		container:     null,
-		placement:     null, 
+		placement:     null,
 		width:         null,
 		resizeLimit:   [],
 		sortable:      true,
         isCollapsed:   false,
-        
+
 		// Events
-		onResize:     $empty, 
+		onResize:     $empty,
 		onCollapse:   $empty,
 		onExpand:     $empty
 
 	},
-	
+
 	initialize: function(options){
 		this.setOptions(options);
-		
+
 		$extend(this, {
 			timestamp: $time(),
 			isCollapsed: false,
 			oldWidth: 0
 		});
-		
+
 		// If column has no ID, give it one.
 		if (this.options.id == null){
 			this.options.id = 'column' + (++MUI.Columns.columnIDCount);
-		}		
+		}
 
 		// Shorten object chain
 		var options = this.options;
@@ -385,20 +385,20 @@ MUI.Column = new Class({
 		if ( this.columnEl ){
 			return;
 		}
-		else {			
+		else {
 			instances.set(options.id, this);
-		}		
-		
+		}
+
 		// If loading columns into a panel, hide the regular content container.
 		if ($(options.container).getElement('.pad') != null) {
 			$(options.container).getElement('.pad').hide();
 		}
-		
+
 		// If loading columns into a window, hide the regular content container.
 		if ($(options.container).getElement('.mochaContent') != null) {
 			$(options.container).getElement('.mochaContent').hide();
 		}
-		
+
 		this.columnEl = new Element('div', {
 			'id': this.options.id,
 			'class': 'column expanded',
@@ -406,30 +406,28 @@ MUI.Column = new Class({
 				'width': options.placement == 'main' ? null : options.width
 			}
 		}).inject($(options.container));
-		
+
 		this.columnEl.store('instance', this);
-		
+
 		var parent = this.columnEl.getParent();
 		var columnHeight = parent.getStyle('height').toInt();
-		this.columnEl.setStyle('height', columnHeight);		
+		this.columnEl.setStyle('height', columnHeight);
 
 		if (this.options.sortable){
-            if (!this.options.container.retrieve('sortables')){
-                var sortables = new Sortables(this.columnEl, {
-                    opacity: 1,
-                    handle: '.panel-header',
-                    constrain: false,
-                    revert: false,
-                    onSort: function(){
-                        $$('.column').each(function(column){
-                            column.getChildren('.panelWrapper').each(function(panelWrapper){
-                                panelWrapper.getElement('.panel').removeClass('bottomPanel');
-                            });
-
-                            if (column.getChildren('.panelWrapper').getLast()){
-                                column.getChildren('.panelWrapper').getLast().getElement('.panel').addClass('bottomPanel');
-                            }
-
+			if (!this.options.container.retrieve('sortables')){
+				var sortables = new Sortables(this.columnEl, {
+					opacity: 1,
+					handle: '.panel-header',
+					constrain: false,
+					revert: false,
+					onSort: function(){
+						$$('.column').each(function(column){
+							column.getChildren('.panelWrapper').each(function(panelWrapper){
+								panelWrapper.getElement('.panel').removeClass('bottomPanel');
+							});
+							if (column.getChildren('.panelWrapper').getLast()){
+								column.getChildren('.panelWrapper').getLast().getElement('.panel').addClass('bottomPanel');
+							}
                             column.getChildren('.panelWrapper').each(function(panelWrapper){
                                 var panel = panelWrapper.getElement('.panel');
                                 var column = panelWrapper.getParent().id;
@@ -442,18 +440,17 @@ MUI.Column = new Class({
                                     instance.partner = nextpanel;
                                 }
                             });
-
-                            MUI.panelHeight();
-                        }.bind(this));
-                    }.bind(this)
-                });
-                this.options.container.store('sortables', sortables);
-   			}
+							MUI.panelHeight();
+						}.bind(this));
+					}.bind(this)
+				});
+				this.options.container.store('sortables', sortables);
+			}
 			else {
 				this.options.container.retrieve('sortables').addLists(this.columnEl);
 			}
-		}		
-		
+		}
+
 		if (options.placement == 'main'){
 			this.columnEl.addClass('rWidth');
 		}
@@ -518,7 +515,7 @@ MUI.Column = new Class({
         column.removeClass('expanded');
         MUI.rWidth();
         this.fireEvent('onCollapse');
-        
+
         return true;
     },
 
@@ -539,7 +536,7 @@ MUI.Column = new Class({
 
         MUI.rWidth();
         this.fireEvent('onExpand');
-        
+
         return true;
     },
 
@@ -575,7 +572,7 @@ Options:
 	evalScripts - (boolean) An xhr loadMethod option. Defaults to true.
 	evalResponse - (boolean) An xhr loadMethod option. Defaults to false.
 	content - (string or element) An html loadMethod option.
-	tabsURL - (url)	
+	tabsURL - (url)
 	tabsData - (hash) Data to send with the URL. Defaults to null.
 	tabsOnload - (function)
 	header - (boolean) Display the panel header or not
@@ -592,12 +589,12 @@ Options:
 	onResize - (function) Fired when the panel is resized.
 	onCollapse - (function) Fired when the panel is collapsed.
 	onExpand - (function) Fired when the panel is expanded.
-		
+
 */
 MUI.Panel = new Class({
-							
+
 	Implements: [Events, Options],
-	
+
 	options: {
 		id:                 null,
 		title:              'New Panel',
@@ -607,35 +604,35 @@ MUI.Panel = new Class({
 			images:         [],
 			js:             [],
 			onload:         null
-		},		
+		},
 		loadMethod:         null,
 		contentURL:         null,
-	
+
 		// xhr options
 		method:             'get',
 		data:               null,
 		evalScripts:        true,
 		evalResponse:       false,
-	
+
 		// html options
 		content:            'Panel content',
-		
+
 		// Tabs
 		tabsURL:            null,
 		tabsData:           null,
 		tabsOnload:         $empty,
 
-		header:             true,		
+		header:             true,
 		headerToolbox:      false,
 		headerToolboxURL:   'pages/lipsum.html',
-		headerToolboxOnload: $empty,		
+		headerToolboxOnload: $empty,
 
 		// Style options:
 		height:             125,
 		addClass:           '',
 		scrollbars:         true,
 		padding:   		    { top: 8, right: 8, bottom: 8, left: 8 },
-		
+
 		// Other:
 		collapsible:	    true,
 
@@ -646,7 +643,7 @@ MUI.Panel = new Class({
 		onCollapse:          $empty,
 		onExpand:            $empty
 
-	},	
+	},
 	initialize: function(options){
 		this.setOptions(options);
 
@@ -666,7 +663,7 @@ MUI.Panel = new Class({
 		var instances = MUI.Panels.instances;
 		var instanceID = instances.get(this.options.id);
 		var options = this.options;
-	
+
 		// Check to see if there is already a class instance for this panel
 		if (instanceID){
 			var instance = instanceID;
@@ -676,12 +673,12 @@ MUI.Panel = new Class({
 		if ( this.panelEl ){
 			return;
 		}
-		else {			
+		else {
 			instances.set(this.options.id, this);
 		}
 
-		this.fireEvent('onBeforeBuild');		
-		
+		this.fireEvent('onBeforeBuild');
+
 		if (options.loadMethod == 'iframe') {
 			// Iframes have their own padding.
 			options.padding = { top: 0, right: 0, bottom: 0, left: 0 };
@@ -691,12 +688,12 @@ MUI.Panel = new Class({
 		if ($(options.column).getChildren().length == 0) {
 			this.showHandle = false;
 		}
-		
+
 		this.panelWrapperEl = new Element('div', {
 			'id': this.options.id + '_wrapper',
-			'class': 'panelWrapper expanded'	
-		}).inject($(options.column));		
-				
+			'class': 'panelWrapper expanded'
+		}).inject($(options.column));
+
 		this.panelEl = new Element('div', {
 			'id': this.options.id,
 			'class': 'panel expanded',
@@ -704,11 +701,11 @@ MUI.Panel = new Class({
 				'height': options.height
 			}
 		}).inject(this.panelWrapperEl);
-		
+
 		this.panelEl.store('instance', this);
-		
+
 		this.panelEl.addClass(options.addClass);
-		
+
 		this.contentEl = new Element('div', {
 			'id': options.id + '_pad',
 			'class': 'pad'
@@ -717,14 +714,14 @@ MUI.Panel = new Class({
 		// This is in order to use the same variable as the windows do in updateContent.
 		// May rethink this.
 		this.contentWrapperEl = this.panelEl;
-		
+
 		this.contentEl.setStyles({
 			'padding-top': options.padding.top,
 			'padding-bottom': options.padding.bottom,
 			'padding-left': options.padding.left,
 			'padding-right': options.padding.right
 		});
-		
+
 		this.panelHeaderEl = new Element('div', {
 			'id': this.options.id + '_header',
 			'class': 'panel-header',
@@ -732,21 +729,26 @@ MUI.Panel = new Class({
 				'display': options.header ? 'block' : 'none'
 			}
 		}).inject(this.panelEl, 'before');
-		
+
 		var columnInstances = MUI.Columns.instances;
 		var columnInstance = columnInstances.get(this.options.column);
-		
+
 		if (this.options.collapsible) {
 			this.collapseToggleInit();
 		}
-		
+
 		if (this.options.headerToolbox) {
 			this.panelHeaderToolboxEl = new Element('div', {
 				'id': options.id + '_headerToolbox',
 				'class': 'panel-header-toolbox'
 			}).inject(this.panelHeaderEl);
 		}
-		
+
+		this.panelHeaderContentEl = new Element('div', {
+			'id': options.id + '_headerContent',
+			'class': 'panel-headerContent'
+		}).inject(this.panelHeaderEl);
+
         if (columnInstance.options.sortable) {
             this.panelHeaderEl.setStyle('cursor', 'move');
             columnInstance.options.container.retrieve('sortables').addItems(this.panelWrapperEl);
@@ -758,11 +760,11 @@ MUI.Panel = new Class({
                 this.panelHeaderToolboxEl.setStyle("cursor","default");
             }
         }
-		
+
 		this.titleEl = new Element('h2', {
 			'id': options.id + '_title'
 		}).inject(this.panelHeaderContentEl);
-		
+
 		this.handleEl = new Element('div', {
 			'id': options.id + '_handle',
 			'class': 'horizontalHandle',
@@ -770,32 +772,32 @@ MUI.Panel = new Class({
 				'display': this.showHandle == true ? 'block' : 'none'
 			}
 		}).inject(this.panelEl, 'after');
-		
+
 		this.handleIconEl = new Element('div', {
 			'id': options.id + '_handle_icon',
 			'class': 'handleIcon'
-		}).inject(this.handleEl);		
-		
+		}).inject(this.handleEl);
+
 		addResizeBottom(options.id);
-		
+
 		if (options.require.css.length || options.require.images.length){
 			new MUI.Require({
 				css: options.require.css,
 				images: options.require.images,
 				onload: function(){
 					this.newPanel();
-				}.bind(this)		
+				}.bind(this)
 			});
-		}		
+		}
 		else {
 			this.newPanel();
 		}
 	},
 	newPanel: function(){
-		
+
 		options = this.options;
-				
-		if (this.options.headerToolbox) {			
+
+		if (this.options.headerToolbox) {
 			MUI.updateContent({
 				'element': this.panelEl,
 				'childElement': this.panelHeaderToolboxEl,
@@ -803,8 +805,8 @@ MUI.Panel = new Class({
 				'url': options.headerToolboxURL,
 				'onContentLoaded': options.headerToolboxOnload
 			});
-		}		
-		
+		}
+
 		if (options.tabsURL == null) {
 			this.titleEl.set('html', options.title);
 		} else {
@@ -817,8 +819,8 @@ MUI.Panel = new Class({
 				'data': options.tabsData,
 				'onContentLoaded': options.tabsOnload
 			});
-		}		
-		
+		}
+
 		// Add content to panel.
 		MUI.updateContent({
 			'element': this.panelEl,
@@ -830,15 +832,15 @@ MUI.Panel = new Class({
 			'require': {
 				js: options.require.js,
 				onload: options.require.onload
-			}			
+			}
 		});
-		
+
 		// Do this when creating and removing panels
 		$(options.column).getChildren('.panelWrapper').each(function(panelWrapper){
 			panelWrapper.getElement('.panel').removeClass('bottomPanel');
 		});
 		$(options.column).getChildren('.panelWrapper').getLast().getElement('.panel').addClass('bottomPanel');
-		
+
 		MUI.panelHeight(options.column, this.panelEl, 'new');
 
 	},
@@ -868,20 +870,20 @@ MUI.Panel = new Class({
 		this.collapseToggleEl.addEvent('click', function(event){
 			var panel = this.panelEl;
 			var panelWrapper = this.panelWrapperEl
-			
+
 			// Get siblings and make sure they are not all collapsed.
 			// If they are all collapsed and the current panel is collapsing
 			// Then collapse the column.
 			var instances = MUI.Panels.instances;
 			var expandedSiblings = [];
-			
+
 			panelWrapper.getAllPrevious('.panelWrapper').each(function(sibling){
 				var instance = instances.get(sibling.getElement('.panel').id);
 				if (instance.isCollapsed == false){
 					expandedSiblings.push(sibling.getElement('.panel').id);
 				}
 			});
-			
+
 			panelWrapper.getAllNext('.panelWrapper').each(function(sibling){
 				var instance = instances.get(sibling.getElement('.panel').id);
 				if (instance.isCollapsed == false){
@@ -903,24 +905,24 @@ MUI.Panel = new Class({
 				}
 				this.oldHeight = panel.getStyle('height').toInt();
 				if (this.oldHeight < 10) this.oldHeight = 20;
-				this.contentEl.setStyle('position', 'absolute'); // This is so IE6 and IE7 will collapse the panel all the way		
-				panel.setStyle('height', 0);								
-				this.isCollapsed = true;				
+				this.contentEl.setStyle('position', 'absolute'); // This is so IE6 and IE7 will collapse the panel all the way
+				panel.setStyle('height', 0);
+				this.isCollapsed = true;
 				panelWrapper.addClass('collapsed');
-				panelWrapper.removeClass('expanded');				
+				panelWrapper.removeClass('expanded');
 				MUI.panelHeight(options.column, panel, 'collapsing');
 				MUI.panelHeight(); // Run this a second time for panels within panels
 				this.collapseToggleEl.removeClass('panel-collapsed');
 				this.collapseToggleEl.addClass('panel-expand');
 				this.collapseToggleEl.setProperty('title','Expand Panel');
-				this.fireEvent('onCollapse');				
+				this.fireEvent('onCollapse');
 			}
-			
+
 			// Expand Panel
 			else {
-				this.contentEl.setStyle('position', null); // This is so IE6 and IE7 will collapse the panel all the way				
+				this.contentEl.setStyle('position', null); // This is so IE6 and IE7 will collapse the panel all the way
 				panel.setStyle('height', this.oldHeight);
-				this.isCollapsed = false;				
+				this.isCollapsed = false;
 				panelWrapper.addClass('expanded');
 				panelWrapper.removeClass('collapsed');
 				MUI.panelHeight(this.options.column, panel, 'expanding');
@@ -930,8 +932,8 @@ MUI.Panel = new Class({
 				this.collapseToggleEl.setProperty('title','Collapse Panel');
 				this.fireEvent('onExpand');
 			}
-		}.bind(this));	
-	}	
+		}.bind(this));
+	}
 });
 MUI.Panel.implement(new Options, new Events);
 
@@ -940,11 +942,11 @@ MUI.Panel.implement(new Options, new Events);
 		column - The column to resize the panels in
 		changing -  The panel that is collapsing, expanding, or new
   		action - collapsing, expanding, or new
-  
+
 */
 
 MUI.extend({
-	// Panel Height	
+	// Panel Height
 	panelHeight: function(column, changing, action){
 		if (column != null) {
 			MUI.panelHeight2($(column), changing, action);
@@ -963,36 +965,36 @@ MUI.extend({
 	panelHeight2: function(column, changing, action){
 
 		var instances = MUI.Panels.instances;
-		
+
 		var parent = column.getParent();
 		var columnHeight = parent.getStyle('height').toInt();
 		if (Browser.Engine.trident4 && parent == MUI.Desktop.pageWrapper) {
 			columnHeight -= 1;
 		}
 		column.setStyle('height', columnHeight);
-		
+
 		// Get column panels
 		var panels = [];
 		column.getChildren('.panelWrapper').each( function(panelWrapper){
 			panels.push(panelWrapper.getElement('.panel'));
 		}.bind(this));
-		
+
 		// Get expanded column panels
 		var panelsExpanded = [];
 		column.getChildren('.expanded').each( function(panelWrapper){
 			panelsExpanded.push(panelWrapper.getElement('.panel'));
-		}.bind(this));				
-		
+		}.bind(this));
+
 		 // All the panels in the column whose height will be effected.
 		var panelsToResize = [];
-		
+
 		// The panel with the greatest height. Remainders will be added to this panel
-		var tallestPanel; 
+		var tallestPanel;
 		var tallestPanelHeight = 0;
-		
-		this.panelsTotalHeight = 0; // Height of all the panels in the column	
+
+		this.panelsTotalHeight = 0; // Height of all the panels in the column
 		this.height = 0; // Height of all the elements in the column
-			
+
 		// Set panel resize partners
 		panels.each(function(panel){
 			instance = instances.get(panel.id);
@@ -1014,12 +1016,12 @@ MUI.extend({
 				instance.handleEl.hide();
 			}
 		}.bind(this));
-			
+
 		// Add panels to panelsToResize
 		// Get the total height of all the resizable panels
 		// Get the total height of all the column's children
 		column.getChildren().each(function(panelWrapper){
-		
+
 		panelWrapper.getChildren().each(function(el){
 
 			if (el.hasClass('panel')){
@@ -1048,17 +1050,17 @@ MUI.extend({
 					}.bind(this));
 					return test;
 				}.bind(this);
-				
+
 				// Is the panel that is collapsing, expanding, or new located after this panel?
-				anyNextContainsChanging = function(el){					
+				anyNextContainsChanging = function(el){
 					var allNext = [];
 					el.getParent().getAllNext('.panelWrapper').each(function(panelWrapper){
-						allNext.push(panelWrapper.getElement('.panel'));							
-					}.bind(this));					
-					var test = allNext.contains(changing);			
-					return test;					
+						allNext.push(panelWrapper.getElement('.panel'));
+					}.bind(this));
+					var test = allNext.contains(changing);
+					return test;
 				}.bind(this);
-				
+
 				nextExpandedChanging = function(el){
 					var test;
 					if (el.getParent().getNext('.expanded')){
@@ -1066,8 +1068,8 @@ MUI.extend({
 					}
 					return test;
 				}
-				
-				// NEW PANEL	
+
+				// NEW PANEL
 				// Resize panels that are "new" or not collapsed
 				if (action == 'new') {
 					if (!instance.isCollapsed && el != changing) {
@@ -1075,9 +1077,9 @@ MUI.extend({
 						this.panelsTotalHeight += el.offsetHeight.toInt();
 					}
 				}
-				
+
 				// COLLAPSING PANELS and CURRENTLY EXPANDED PANELS
-				// Resize panels that are not collapsed. 
+				// Resize panels that are not collapsed.
 				// If a panel is collapsing resize any expanded panels below.
 				// If there are no expanded panels below it, resize the expanded panels above it.
 				else if (action == null || action == 'collapsing' ){
@@ -1086,7 +1088,7 @@ MUI.extend({
 						this.panelsTotalHeight += el.offsetHeight.toInt();
 					}
 				}
-				
+
 				// EXPANDING PANEL
 				// Resize panels that are not collapsed and are not expanding.
 				// Resize any expanded panels below the expanding panel.
@@ -1095,7 +1097,7 @@ MUI.extend({
 					if (!anyNextContainsChanging(el) || (!anyExpandingNextSiblingsExpanded(el) && nextExpandedChanging(el))){
 						panelsToResize.push(el);
 						this.panelsTotalHeight += el.offsetHeight.toInt();
-					}					   					
+					}
 				}
 
 				if (el.style.height){
@@ -1106,19 +1108,19 @@ MUI.extend({
 				this.height += el.offsetHeight.toInt();
 			}
 		}.bind(this));
-		
+
 		}.bind(this));
 
 		// Get the remaining height
 		var remainingHeight = column.offsetHeight.toInt() - this.height;
-		
+
 		this.height = 0;
 
 		// Get height of all the column's children
 		column.getChildren().each(function(el){
 			this.height += el.offsetHeight.toInt();
 		}.bind(this));
-				
+
 		var remainingHeight = column.offsetHeight.toInt() - this.height;
 
 		panelsToResize.each(function(panel){
@@ -1128,12 +1130,12 @@ MUI.extend({
 				newPanelHeight = 0;
 			}
 			panel.setStyle('height', newPanelHeight);
-		}.bind(this));	
+		}.bind(this));
 
 		// Make sure the remaining height is 0. If not add/subtract the
 		// remaining height to the tallest panel. This makes up for browser resizing,
 		// off ratios, and users trying to give panels too much height.
-			
+
 		// Get height of all the column's children
 		this.height = 0;
 		column.getChildren().each(function(panelWrapper){
@@ -1164,11 +1166,11 @@ MUI.extend({
 			}
 			handle.setStyle('height', handleHeight);
 		});
-			
+
 		panelsExpanded.each(function(panel){
 			MUI.resizeChildren(panel);
-		}.bind(this));			
-			
+		}.bind(this));
+
 	},
 	// May rename this resizeIframeEl()
 	resizeChildren: function(panel){
@@ -1192,10 +1194,10 @@ MUI.extend({
 				});
 				instance.iframeEl.setStyles({
 					'width': contentWrapperEl.offsetWidth - contentWrapperEl.getStyle('border-left').toInt() - contentWrapperEl.getStyle('border-right').toInt()
-				});			
-			}			
-		}				
-		
+				});
+			}
+		}
+
 	},
 	// Remaining Width
 	rWidth: function(container){
@@ -1206,17 +1208,17 @@ MUI.extend({
 			var currentWidth = column.offsetWidth.toInt();
 			currentWidth -= column.getStyle('border-left').toInt();
 			currentWidth -= column.getStyle('border-right').toInt();
-			
+
 			var parent = column.getParent();
 			this.width = 0;
-			
+
 			// Get the total width of all the parent element's children
 			parent.getChildren().each(function(el){
 				if (el.hasClass('mocha') != true) {
 					this.width += el.offsetWidth.toInt();
 				}
 			}.bind(this));
-			
+
 			// Add the remaining width to the current element
 			var remainingWidth = parent.offsetWidth.toInt() - this.width;
 			var newWidth = currentWidth + remainingWidth;
@@ -1226,7 +1228,7 @@ MUI.extend({
 				panel.setStyle('width', newWidth - panel.getStyle('border-left').toInt() - panel.getStyle('border-right').toInt());
 				MUI.resizeChildren(panel);
 			}.bind(this));
-			
+
 		});
 	}
 
@@ -1235,10 +1237,10 @@ MUI.extend({
 function addResizeRight(element, min, max){
 	if (!$(element)) return;
 	element = $(element);
-	
+
 	var instances = MUI.Columns.instances;
 	var instance = instances.get(element.id);
-	
+
 	var handle = element.getNext('.columnHandle');
 	handle.setStyle('cursor', Browser.Engine.webkit ? 'col-resize' : 'e-resize');
 	if (!min) min = 50;
@@ -1276,7 +1278,7 @@ function addResizeRight(element, min, max){
 			}
 			MUI.rWidth(element.getParent());
 			if (Browser.Engine.gecko) {
-				$$('.panel').show(); // Fix for a rendering bug in FF			
+				$$('.panel').show(); // Fix for a rendering bug in FF
 			}
 			if (Browser.Engine.trident4) {
 				element.getChildren().each(function(el){
@@ -1310,11 +1312,11 @@ function addResizeLeft(element, min, max){
 	var partner = element.getPrevious('.column');
 	if (!min) min = 50;
 	if (!max) max = 250;
-	if (Browser.Engine.trident){	
+	if (Browser.Engine.trident){
 		handle.addEvents({
 			'mousedown': function(){
 				handle.setCapture();
-			},	
+			},
 			'mouseup': function(){
 				handle.releaseCapture();
 			}
@@ -1336,7 +1338,7 @@ function addResizeLeft(element, min, max){
 			MUI.rWidth(element.getParent());
 			$(element).getElements('iframe').setStyle('visibility','visible');
 			partner.getElements('iframe').setStyle('visibility','visible');
-			instance.fireEvent('onResize');			
+			instance.fireEvent('onResize');
 		}.bind(this)
 	});
 }
@@ -1344,7 +1346,7 @@ function addResizeLeft(element, min, max){
 function addResizeBottom(element){
 	if (!$(element)) return;
 	var element = $(element);
-	
+
 	var instances = MUI.Panels.instances;
 	var instance = instances.get(element.id);
 	var handle = instance.handleEl;
@@ -1354,7 +1356,7 @@ function addResizeBottom(element){
 	max = function(){
 		return element.getStyle('height').toInt() + partner.getStyle('height').toInt();
 	}.bind(this);
-	
+
 	if (Browser.Engine.trident) {
 		handle.addEvents({
 			'mousedown': function(){
@@ -1386,7 +1388,7 @@ function addResizeBottom(element){
 					partner.getElements('iframe').hide();
 				}
 			}
-			
+
 		}.bind(this),
 		onDrag: function(){
 			partnerHeight = partnerOriginalHeight;
@@ -1399,7 +1401,7 @@ function addResizeBottom(element){
 			});
 			partner.getChildren('.column').each( function(column){
 				MUI.panelHeight(column);
-			});						
+			});
 		}.bind(this),
 		onComplete: function(){
 			partnerHeight = partnerOriginalHeight;
@@ -1412,7 +1414,7 @@ function addResizeBottom(element){
 			});
 			partner.getChildren('.column').each( function(column){
 				MUI.panelHeight(column);
-			});			
+			});
 			if (instance.iframeEl) {
 				if (!Browser.Engine.trident) {
 					instance.iframeEl.setStyle('visibility', 'visible');
@@ -1426,9 +1428,9 @@ function addResizeBottom(element){
 					var width = instance.iframeEl.getStyle('width').toInt();
 					instance.iframeEl.setStyle('width', width - 1);
 					MUI.rWidth();
-					instance.iframeEl.setStyle('width', width);									
+					instance.iframeEl.setStyle('width', width);
 				}
-			}		
+			}
 			instance.fireEvent('onResize');
 		}.bind(this)
 	});
@@ -1445,48 +1447,48 @@ MUI.extend({
 		MUI.closeColumn();
 	(end)
 
-	Arguments: 
+	Arguments:
 		columnEl - the ID of the column to be closed
 
 	Returns:
 		true - the column was closed
 		false - the column was not closed
 
-	*/	
+	*/
 	closeColumn: function(columnEl){
 		var instances = MUI.Columns.instances;
 		var instance = instances.get(columnEl.id);
 		if (columnEl != $(columnEl) || instance.isClosing) return;
-			
+
 		instance.isClosing = true;
-		
+
 		if (instance.options.sortable){
 			instance.container.retrieve('sortables').removeLists(this.columnEl);
-		}	
-		
+		}
+
 		// Destroy all the panels in the column.
-		var panels = columnEl.getChildren('.panel');		
+		var panels = columnEl.getChildren('.panel');
 		panels.each(function(panel){
 			MUI.closePanel($(panel.id));
-		}.bind(this));				
-		
+		}.bind(this));
+
 		if (Browser.Engine.trident) {
 			columnEl.dispose();
 			if (instance.handleEl != null) {
 				instance.handleEl.dispose();
-			}			
+			}
 		}
 		else {
 			columnEl.destroy();
 			if (instance.handleEl != null) {
 				instance.handleEl.destroy();
-			}			
+			}
 		}
 		if (MUI.Desktop) {
 			MUI.Desktop.resizePanels();
-		}	
+		}
 		instances.erase(instance.options.id);
-		return true;		
+		return true;
 	},
 	/*
 
@@ -1498,44 +1500,44 @@ MUI.extend({
 		MUI.closePanel();
 	(end)
 
-	Arguments: 
+	Arguments:
 		panelEl - the ID of the panel to be closed
 
 	Returns:
 		true - the panel was closed
 		false - the panel was not closed
 
-	*/	
+	*/
 	closePanel: function(panelEl){
 		var instances = MUI.Panels.instances;
 		var instance = instances.get(panelEl.id);
 		if (panelEl != $(panelEl) || instance.isClosing) return;
-		
+
 		var column = instance.options.column;
-		
+
 		instance.isClosing = true;
-		
+
 		var columnInstances = MUI.Columns.instances;
 		var columnInstance = columnInstances.get(column);
-		
+
 		if (columnInstance.options.sortable){
 			columnInstance.options.container.retrieve('sortables').removeItems(instance.panelWrapperEl);
-		}	
+		}
 
 		instance.panelWrapperEl.destroy();
 
 		if (MUI.Desktop) {
 			MUI.Desktop.resizePanels();
 		}
-		
+
 		// Do this when creating and removing panels
 		$(column).getChildren('.panelWrapper').each(function(panelWrapper){
 			panelWrapper.getElement('.panel').removeClass('bottomPanel');
 		});
 		$(column).getChildren('.panelWrapper').getLast().getElement('.panel').addClass('bottomPanel');
-		
+
 		instances.erase(instance.options.id);
 		return true;
-		
+
 	}
 });
