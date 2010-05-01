@@ -1456,20 +1456,18 @@ MUI.extend({
 
 	*/
 	closeColumn: function(columnEl){
+        columnEl=$(columnEl);
+        if(columnEl==null) return;
 		var instances = MUI.Columns.instances;
 		var instance = instances.get(columnEl.id);
-		if (columnEl != $(columnEl) || instance.isClosing) return;
+		if (instance==null || instance.isClosing) return;
 
 		instance.isClosing = true;
 
-		if (instance.options.sortable){
-			instance.container.retrieve('sortables').removeLists(this.columnEl);
-		}
-
 		// Destroy all the panels in the column.
-		var panels = columnEl.getChildren('.panel');
+		var panels = $(columnEl).getElements('.panel');
 		panels.each(function(panel){
-			MUI.closePanel($(panel.id));
+			MUI.closePanel(panel.id);
 		}.bind(this));
 
 		if (Browser.Engine.trident) {
@@ -1483,10 +1481,15 @@ MUI.extend({
 			if (instance.handleEl != null) {
 				instance.handleEl.destroy();
 			}
-		}
+		}        
+
 		if (MUI.Desktop) {
 			MUI.Desktop.resizePanels();
 		}
+
+        var sortables=instance.container.retrieve('sortables');
+        if(sortables) sortables.removeLists(columnEl);
+
 		instances.erase(instance.options.id);
 		return true;
 	},
@@ -1509,6 +1512,8 @@ MUI.extend({
 
 	*/
 	closePanel: function(panelEl){
+        panelEl=$(panelEl);
+        if(panelEl==null) return;
 		var instances = MUI.Panels.instances;
 		var instance = instances.get(panelEl.id);
 		if (panelEl != $(panelEl) || instance.isClosing) return;
@@ -1531,10 +1536,11 @@ MUI.extend({
 		}
 
 		// Do this when creating and removing panels
-		$(column).getChildren('.panelWrapper').each(function(panelWrapper){
+        var panels=$(column).getElements('.panelWrapper');
+		panels.each(function(panelWrapper){
 			panelWrapper.getElement('.panel').removeClass('bottomPanel');
 		});
-		$(column).getChildren('.panelWrapper').getLast().getElement('.panel').addClass('bottomPanel');
+        if(panels.length>0) panels.getLast().getElement('.panel').addClass('bottomPanel');
 
 		instances.erase(instance.options.id);
 		return true;
