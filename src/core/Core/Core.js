@@ -20,7 +20,7 @@ Note:
 
 var MUI = MochaUI = new Hash({
 	
-	version: '0.9.6 development',
+	version: '0.9.7 development',
 
 	options: new Hash({
 		theme: 'default',				
@@ -201,6 +201,9 @@ MUI.extend({
 			case 'iframe':
 				this.updateContentIframe(instance, options, args);				
 				break;
+            case 'json':
+                this.updateContentJSON(instance, options, args);
+                break;
 			case 'html':
 			default:
 				this.updateContentHTML(instance, options, args);
@@ -208,7 +211,65 @@ MUI.extend({
 		}
 
 	},
-	
+
+    updateContentJSON: function(instance, options, args) {
+        var contentEl = instance.contentEl;
+        var contentContainer = args.contentContainer;
+
+        new Request({
+            url: options.url,
+            update: contentContainer,
+            method: options.method != null ? options.method : 'get',
+            data: options.data != null ? new Hash(options.data).toQueryString() : '',
+            evalScripts: false,
+            evalResponse: false,
+            headers: {'Content-Type':'application/json'},
+            onRequest: function() {
+                if (args.recipient == 'window' && contentContainer == contentEl) {
+                    instance.showSpinner();
+                }
+                else if (args.recipient == 'panel' && contentContainer == contentEl && $('spinner')) {
+                    $('spinner').show();
+                }
+            } .bind(this),
+            onFailure: function() {
+                if (contentContainer == contentEl) {
+                    contentContainer.set('html', '<p><strong>Error Loading XMLHttpRequest</strong></p>');
+                    if (recipient == 'window') {
+                        instance.hideSpinner();
+                    }
+                    else if (recipient == 'panel' && $('spinner')) {
+                        $('spinner').hide();
+                    }
+                }
+
+                if (contentContainer == contentEl) {
+                    contentContainer.set('html', '<p><strong>Error Loading XMLHttpRequest</strong></p>');
+                    if (args.recipient == 'window') {
+                        instance.hideSpinner();
+                    }
+                    else if (args.recipient == 'panel' && $('spinner')) {
+                        $('spinner').hide();
+                    }
+                }
+            } .bind(this),
+            onException: function() { } .bind(this),
+            onSuccess: function(json) {
+                if (contentContainer == contentEl) {
+                    if (contentContainer == contentEl) {
+                        if (args.recipient == 'window') instance.hideSpinner();
+                        else if (args.recipient == 'panel' && $('spinner')) $('spinner').hide();
+                    }
+                    var json = JSON.decode(json);
+                    // calls onLoaded event instead of onContentLoaded
+                    // onLoaded - event should call updateContent again with loadMethod='html'
+                    instance.fireEvent('onLoaded', $A([options.element, json, instance]));
+                }
+            } .bind(this),
+            onComplete: function() { } .bind(this)
+        }).get();
+    },
+    
 	updateContentXHR: function(instance, options, args){
 		var contentEl = instance.contentEl;
 		var contentContainer = args.contentContainer;
