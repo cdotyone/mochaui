@@ -22,7 +22,7 @@ Syntax:
 
 */
 
-MUI.files[MUI.path.source + 'Window/Arrange-tile.js'] = 'loaded';
+MUI.files[MUI.path.plugins + 'mochaui/Window/Arrange-tile.js'] = 'loaded';
  
 MUI.extend({
 	arrangeTile: function(){

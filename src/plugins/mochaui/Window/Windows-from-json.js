@@ -37,7 +37,7 @@ See Also:
 
 */
 
-MUI.files[MUI.path.source + 'Window/Windows-from-json.js'] = 'loaded';
+MUI.files[MUI.path.plugins + 'mochaui/Window/Windows-from-json.js'] = 'loaded';
 
 MUI.extend({	
 	newWindowsFromJSON: function(newWindows){

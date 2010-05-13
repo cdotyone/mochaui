@@ -26,7 +26,7 @@ See Also:
 
 */
 
-MUI.files[MUI.path.source + 'Window/Windows-from-html.js'] = 'loaded';
+MUI.files[MUI.path.plugins + 'mochaui/Window/Windows-from-html.js'] = 'loaded';
 
 MUI.extend({
 	newWindowsFromHTML: function(){

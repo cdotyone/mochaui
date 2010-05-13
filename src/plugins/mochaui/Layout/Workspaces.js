@@ -17,7 +17,7 @@ To do:
 
 */
 
-MUI.files[MUI.path.source + 'Layout/Workspaces.js'] = 'loaded';
+MUI.files[MUI.path.plugins + 'mochaui/Layout/Workspaces.js'] = 'loaded';
 
 MUI.extend({			   
 	/*
