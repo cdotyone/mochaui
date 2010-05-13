@@ -77,7 +77,7 @@ MUI.extend({
 	*/	
 	updateContent: function(options){
 
-		var options = $extend({
+		options = $extend({
 			element:      null,
 			childElement: null,
 			method:       null,
@@ -235,16 +235,6 @@ MUI.extend({
             onFailure: function() {
                 if (contentContainer == contentEl) {
                     contentContainer.set('html', '<p><strong>Error Loading XMLHttpRequest</strong></p>');
-                    if (recipient == 'window') {
-                        instance.hideSpinner();
-                    }
-                    else if (recipient == 'panel' && $('spinner')) {
-                        $('spinner').hide();
-                    }
-                }
-
-                if (contentContainer == contentEl) {
-                    contentContainer.set('html', '<p><strong>Error Loading XMLHttpRequest</strong></p>');
                     if (args.recipient == 'window') {
                         instance.hideSpinner();
                     }
@@ -260,7 +250,7 @@ MUI.extend({
                         if (args.recipient == 'window') instance.hideSpinner();
                         else if (args.recipient == 'panel' && $('spinner')) $('spinner').hide();
                     }
-                    var json = JSON.decode(json);
+                    json = JSON.decode(json);
                     // calls onLoaded event instead of onContentLoaded
                     // onLoaded - event should call updateContent again with loadMethod='html'
                     instance.fireEvent('onLoaded', $A([options.element, json, instance]));
@@ -319,7 +309,7 @@ MUI.extend({
 		var contentEl = instance.contentEl;
 		var contentContainer = args.contentContainer;
 		var contentWrapperEl = instance.contentWrapperEl;
-		var onContentLoaded = args.onContentLoaded;			
+		var onContentLoaded = args.onContentLoaded;
 		if ( instance.options.contentURL == '' || contentContainer != contentEl) {
 			return;
 		}
@@ -341,12 +331,12 @@ MUI.extend({
 		}).injectInside(contentEl);
 
 		// Add onload event to iframe so we can hide the spinner and run onContentLoaded()
-		instance.iframeEl.addEvent('load', function(e) {
-			if (args.recipient == 'window') instance.hideSpinner();					
+		instance.iframeEl.addEvent('load', function() {
+			if (args.recipient == 'window') instance.hideSpinner();
 			else if (args.recipient == 'panel' && contentContainer == contentEl && $('spinner')) $('spinner').hide();
 			Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();
 		}.bind(this));
-		if (args.recipient == 'window') instance.showSpinner();				
+		if (args.recipient == 'window') instance.showSpinner();
 		else if (args.recipient == 'panel' && contentContainer == contentEl && $('spinner')) $('spinner').show();
 	},
 	
@@ -390,7 +380,7 @@ MUI.extend({
 
 	*/
 	reloadIframe: function(iframe){
-		Browser.Engine.gecko ? $(iframe).src = $(iframe).src : top.frames[iframe].location.reload(true);		
+		Browser.Engine.gecko ? $(iframe).src = $(iframe).src : top.frames[iframe].location.reload(true);
 	},
 	
 	roundedRect: function(ctx, x, y, width, height, radius, rgb, a){
@@ -670,11 +660,11 @@ Request.HTML.implement({
 */
 MUI.getCSSRule = function(selector) {
 	for (var ii = 0; ii < document.styleSheets.length; ii++) {
-		var mysheet = document.styleSheets[ii];
-		var myrules = mysheet.cssRules ? mysheet.cssRules : mysheet.rules;
-		for (i = 0; i < myrules.length; i++){
-			if (myrules[i].selectorText == selector){
-				return myrules[i];
+		var mySheet = document.styleSheets[ii];
+		var myRules = mySheet.cssRules ? mySheet.cssRules : mySheet.rules;
+		for (i = 0; i < myRules.length; i++){
+			if (myRules[i].selectorText == selector){
+				return myRules[i];
 			}
 		}
 	}		  
@@ -713,7 +703,7 @@ MUI.Require = new Class({
 	
 	initialize: function(options){
 		this.setOptions(options);
-		var options = this.options;		
+		options = this.options;		
 		
 		this.assetsToLoad = options.css.length + options.images.length + options.js.length;		
 		this.assetsLoaded = 0;
@@ -887,8 +877,8 @@ $extend(Asset, {
 		new Request({
 			method: 'get',
 			url: source,
-			onComplete: function(response) { 
-				var newSheet = new Element('link', {
+			onComplete: function() {
+				newSheet = new Element('link', {
 					'id': properties.id,
 					'rel': 'stylesheet',
 					'media': properties.media,
@@ -897,7 +887,7 @@ $extend(Asset, {
 				}).inject(document.head);						
 				properties.onload();										
 			}.bind(this),
-			onFailure: function(response){						
+			onFailure: function(){						
 			},					
 			onSuccess: function(){						 
 			}.bind(this)

@@ -27,7 +27,7 @@ MUI.extend({
 			var link = listitem.getFirst('a').addEvent('click', function(e){
 				e.preventDefault();
 			});
-			listitem.addEvent('click', function(e){
+			listitem.addEvent('click', function(){
 				MUI.updateContent({
 					'element':  $(target),
 					'url':      link.get('href')
