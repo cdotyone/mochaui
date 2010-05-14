@@ -33,7 +33,8 @@ MUI.extend({
 						return;
 					}
 					// Change corner radius of all active classes and their windows
-					MUI.Windows.instances.each(function(instance) {
+					MUI.each(function(instance) {
+                        if(instance.className!='MUI.Window') return;
 						instance.options.cornerRadius = pos;
 						instance.drawWindow();
 					}.bind(this));
@@ -60,19 +61,21 @@ MUI.extend({
 						return;
 					}
 					// Change shadow width of all active classes and their windows
-					MUI.Windows.instances.each(function(instance) {
-						var oldshadowBlur = instance.options.shadowBlur;
+					MUI.each(function(instance) {
+                        if(instance.className!='MUI.Window') return;
+						var oldShadowBlur = instance.options.shadowBlur;
 						instance.options.shadowBlur = pos;
 						instance.windowEl.setStyles({
-							'top': instance.windowEl.getStyle('top').toInt() - (instance.options.shadowBlur - oldshadowBlur),
-							'left': instance.windowEl.getStyle('left').toInt() - (instance.options.shadowBlur - oldshadowBlur)
+							'top': instance.windowEl.getStyle('top').toInt() - (instance.options.shadowBlur - oldShadowBlur),
+							'left': instance.windowEl.getStyle('left').toInt() - (instance.options.shadowBlur - oldShadowBlur)
 						});
 						instance.drawWindow();
 					}.bind(this));
 				}.bind(this),
 				onComplete: function(){
-					MUI.Windows.instances.each(function(instance) {
-						if (instance.options.resizable){
+					MUI.each(function(instance) {
+                        if(instance.className!='MUI.Window') return;
+						if(instance.options.resizable){
 							instance.adjustHandles();
 						}
 					});

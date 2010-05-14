@@ -37,7 +37,8 @@ MUI.extend({
 	saveWorkspace: function(){
 		this.cookie = new Hash.Cookie('mochaUIworkspaceCookie', {duration: 3600});
 		this.cookie.empty();
-		MUI.Windows.instances.each(function(instance) {
+		MUI.each(function(instance) {
+            if(instance.className!='MUI.Window') return;
 			instance.saveValues();
 			this.cookie.set(instance.options.id, {
 				'id': instance.options.id,

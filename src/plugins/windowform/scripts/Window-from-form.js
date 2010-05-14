@@ -17,8 +17,10 @@ See Also:
 
 */
 
-MochaUI.WindowForm = new Class({
-	options: {
+MUI.WindowForm = new NamedClass('MUI.WindowForm',{
+	Implements: [Events, Options],
+
+    options: {
 		id: null,
 		title: 'New Window',
 		loadMethod: 'html', 
@@ -31,9 +33,10 @@ MochaUI.WindowForm = new Class({
 		x: null,
 		y: null
 	},
+
 	initialize: function(options){
 		this.setOptions(options);
-		this.options.id = 'win' + (++MochaUI.Windows.windowIDCount);
+		this.options.id = 'win' + (++MUI.IDCount);
 		this.options.title = $('newWindowHeaderTitle').value;
 		if ($('htmlLoadMethod').checked){
 			this.options.loadMethod = 'html';
@@ -58,7 +61,6 @@ MochaUI.WindowForm = new Class({
 		this.options.height = $('newWindowHeight').value.toInt();	
 		this.options.x = $('newWindowX').value.toInt();
 		this.options.y = $('newWindowY').value.toInt();
-		new MochaUI.Window(this.options);
+		new MUI.Window(this.options);
 	}
 });
-MochaUI.WindowForm.implement(new Options);

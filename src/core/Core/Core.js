@@ -21,6 +21,9 @@ Note:
 var MUI = MochaUI = new Hash({
 	version: '0.9.7 development',
 
+    instances: new Hash(),  
+    IDCount: 0,
+
 	options: new Hash({
 		theme: 'default',				
 		advancedEffects: false, // Effects that require fast browsers and are cpu intensive.
@@ -38,17 +41,48 @@ var MUI = MochaUI = new Hash({
 		return MUI.path.themes + MUI.options.theme + '/'; 
 	},
 	
-	files: new Hash()
+	files: new Hash(),
+
+    getID: function(el) {
+        if(type=='string') return el;
+        var type=$type(el);
+        if(type=='element') return el.id; else
+        if(type=='object' && el.id) return el.id; else
+        if(type=='object' && el.options && el.options.id) return el.options.id;
+        return el;  
+    },
+    get: function(el) {
+        el=this.getID(el);
+        return this.instances[el];
+    },
+    set: function(el,instance) {
+        el=this.getID(el);
+        this.instances.set(el,instance);
+        return instance;
+    },
+    erase: function(el) {
+        el=this.getID(el);
+        return this.instances.erase(el);
+    },
+    each: function(func) {
+        this.instances.each(func);
+        return this;
+    }
 });
+
+var NamedClass = function(name, members) {
+    members.className = name;
+    members.isTypeOf = function(cName) {
+        if (cName == this.className) return true;
+        if (!this.constructor || !this.constructor.parent) return false;
+        return this.isTypeOf.run(cName,this.constructor.parent.prototype);
+    };
+    return new Class(members);
+};
 
 MUI.files[MUI.path.source + 'Core/Core.js'] = 'loaded';
 
 MUI.extend({
-	
-	Windows: {
-		instances: new Hash()
-	},
-
 	ieSupport: 'excanvas',  // Makes it easier to switch between Excanvas and Moocanvas for testing	
 	
 	/*
@@ -99,7 +133,7 @@ MUI.extend({
 		if (!options.element) return;
 		var element = options.element;		
 
-		if (MUI.Windows.instances.get(element.id)){
+		if (MUI.get(element).isTypeOf('MUI.Window')){
 			args.recipient = 'window';		
 		}
 		else {
@@ -994,7 +1028,6 @@ MUI.extend({
 			});			
 		}
 	}
-	
 });
 
 if (Browser.Engine.webkit) {

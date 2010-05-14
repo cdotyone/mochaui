@@ -33,11 +33,10 @@ MUI.extend({
 		var x = 10;
 		var y = 80;
 	
-		var instances =  MUI.Windows.instances;
-
 		var windowsNum = 0;
 
-		instances.each(function(instance){
+		MUI.each(function(instance){
+            if(instance.className!='MUI.Window') return;
 			if (!instance.isMinimized && !instance.isMaximized){
 				windowsNum++;
 			}
@@ -54,7 +53,8 @@ MUI.extend({
 		var row = 0;
 		var col = 0;
 		
-		instances.each(function(instance){
+		MUI.each(function(instance){
+            if(instance.className!='MUI.Window') return;
 			if (!instance.isMinimized && !instance.isMaximized && instance.options.draggable ){
 				
 				var content = instance.contentWrapperEl;

@@ -19,8 +19,7 @@ See Also:
 
 MUI.files[MUI.path.source + 'Window/Modal.js'] = 'loaded';
 
-MUI.Modal = new Class({
-
+MUI.Modal = new NamedClass('MUI.Modal',{
 	Extends: MUI.Window,
 	
 	options: {
@@ -53,7 +52,7 @@ MUI.Modal = new Class({
 		});
 		
 		modalOverlay.addEvent('click', function(){
-			var instance = MUI.Windows.instances.get(MUI.currentModal.id);
+			var instance = MUI.get(MUI.currentModal.id);
 			if (instance.options.modalOverlayClose == true) {
 				MUI.closeWindow(MUI.currentModal);
 			}

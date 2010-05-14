@@ -162,9 +162,7 @@ Example:
 
 MUI.extend({
 	Windows: {
-		instances:      new Hash(),
 		indexLevel:     100,          // Used for window z-Index
-		windowIDCount:  0,            // Used for windows without an ID defined by the user
 		windowsVisible: true,         // Ctrl-Alt-Q to toggle window visibility
 		focusingWindow: false
 	}
@@ -285,7 +283,7 @@ MUI.Windows.windowOptions = {
 
 MUI.Windows.windowOptionsOriginal = $merge(MUI.Windows.windowOptions);
 
-MUI.Window = new Class({
+MUI.Window = new NamedClass('MUI.Window',{
 
 	Implements: [Events, Options],
 
@@ -365,7 +363,7 @@ MUI.Window = new Class({
 		}
 
 		// If window has no ID, give it one.
-		options.id = options.id || 'win' + (++MUI.Windows.windowIDCount);
+		options.id = options.id || 'win' + (++MUI.IDCount);
 
 		this.windowEl = $(options.id);
 
@@ -401,8 +399,7 @@ MUI.Window = new Class({
 	*/
 	newWindow: function(){ // options is not doing anything
 		// Shorten object chain
-		var instances = MUI.Windows.instances;
-		var instance = MUI.Windows.instances.get(this.options.id);
+		var instance = MUI.get(this);
 		var options = this.options;
 
 		// Check if window already exists and is not in progress of closing
@@ -449,7 +446,7 @@ MUI.Window = new Class({
 			return;
 		}
 		else {
-			instances.set(options.id, this);
+			MUI.set(options.id, this);
 		}
 
 		this.isClosing = false;
@@ -2193,9 +2190,7 @@ MUI.extend({
 
 	},
 	closingJobs: function(windowEl){
-
-		var instances = MUI.Windows.instances;
-		var instance = instances.get(windowEl.id);
+		var instance = MUI.get(windowEl);
 		windowEl.setStyle('visibility', 'hidden');
 		// Destroy throws an error in IE8
 		if (Browser.Engine.trident) {
@@ -2211,7 +2206,7 @@ MUI.extend({
 			this.focusWindow(newFocus);
 		}
 
-		instances.erase(instance.options.id);
+		MUI.erase(instance.options.id);
 		if (this.loadingWorkspace == true) {
 			this.windowUnload();
 		}
@@ -2326,7 +2321,7 @@ MUI.extend({
 
 	*/
 	toggleWindowVisibility: function(){
-		MUI.Windows.instances.each(function(instance){
+		MUI.each(function(instance){
 			if (instance.options.type == 'modal' || instance.options.type == 'modal2' || instance.isMinimized == true) return;
 			var id = $(instance.options.id);
 			if (id.getStyle('visibility') == 'visible'){
@@ -2367,8 +2362,7 @@ MUI.extend({
 		if ($$('.mocha').length == 0) return;
 		if (windowEl != $(windowEl) || windowEl.hasClass('isFocused')) return;
 
-		var instances =  MUI.Windows.instances;
-		var instance = instances.get(windowEl.id);
+		var instance = MUI.get(windowEl.id);
 
 		if (instance.options.type == 'notification'){
 			windowEl.setStyle('zIndex', 11001);
@@ -2382,7 +2376,8 @@ MUI.extend({
 		$('windowUnderlay').setStyle('zIndex', MUI.Windows.indexLevel - 1).inject($(windowEl),'after');
 
 		// Fire onBlur for the window that lost focus.
-		instances.each(function(instance){
+		MUI.each(function(instance) {
+            if(instance.className!='MUI.Window') return;
 			if (instance.windowEl.hasClass('isFocused')){
 				instance.fireEvent('onBlur', instance.windowEl);
 			}
@@ -2427,7 +2422,8 @@ MUI.extend({
 	},
 	centerWindow: function(windowEl){
 		if(!windowEl){
-			MUI.Windows.instances.each(function(instance){
+			MUI.each(function(instance){
+                if(instance.className!='MUI.Window') return;
 				if (instance.windowEl.hasClass('isFocused')){
 					windowEl = instance.windowEl;
 				}

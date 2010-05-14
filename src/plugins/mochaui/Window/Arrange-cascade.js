@@ -33,7 +33,8 @@ MUI.extend({
 		var coordinates = document.getCoordinates();
 		
 		var openWindows = 0;
-		MUI.Windows.instances.each(function(instance){
+		MUI.each(function(instance){
+            if(instance.className!='MUI.Window') return;
 			if (!instance.isMinimized && instance.options.draggable) openWindows ++; 
 		});
 		
