@@ -17,6 +17,58 @@ Note:
 	This documentation is taken directly from the javascript source files. It is built using Natural Docs.
 
 */
+/*
+Hash.implement({
+    findKey: function(key) {
+        var val = this.keyOf(key);
+        if(val && val != 'constructor') return val;
+        for(var prop in this) {
+            if(this.hasOwnProperty(prop) && typeof this[prop] == 'object') {
+                val = $H(this[prop]).findKey(key);
+                if(val) {
+                 return this.findKey(this[prop]) + '.' + val;
+                }
+            }
+        }
+    }
+});
+
+var mooExtender = Class.Mutators.Extends;
+
+Class.Mutators.Extends = function(parent){
+    mooExtender.run(this,parent);
+    if(parent.classNames) {
+        this.classNames.combine(parent.classNames);
+    }
+};
+
+Class.Mutators.ClassName = function(className) {
+    if(!this.classNames) this.classNames = new Array;
+    this.classNames.push(className);
+    this.className = className;
+
+    this.prototype.getClass = function() {
+        return this.constructor.className;
+    };
+    this.prototype.isTypeOf = function(name) {
+        return (this.constructor.classNames.indexOf(name)>=0);
+    };
+};
+
+var Foo = {};
+Foo.Bar = new Class({
+    ClassName: 'Foo.Bar'
+});
+
+Foo.Bar2 = new Class({
+    ClassName: 'Foo.Bar2',
+    Extends: Foo.Bar
+});
+var a = new Foo.Bar();
+var a2 = new Foo.Bar2();
+alert(a.isTypeOf('Foo.Bar2'));
+
+*/
 
 var MUI = MochaUI = new Hash({
 	
