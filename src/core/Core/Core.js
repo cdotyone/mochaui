@@ -17,61 +17,8 @@ Note:
 	This documentation is taken directly from the javascript source files. It is built using Natural Docs.
 
 */
-/*
-Hash.implement({
-    findKey: function(key) {
-        var val = this.keyOf(key);
-        if(val && val != 'constructor') return val;
-        for(var prop in this) {
-            if(this.hasOwnProperty(prop) && typeof this[prop] == 'object') {
-                val = $H(this[prop]).findKey(key);
-                if(val) {
-                 return this.findKey(this[prop]) + '.' + val;
-                }
-            }
-        }
-    }
-});
-
-var mooExtender = Class.Mutators.Extends;
-
-Class.Mutators.Extends = function(parent){
-    mooExtender.run(this,parent);
-    if(parent.classNames) {
-        this.classNames.combine(parent.classNames);
-    }
-};
-
-Class.Mutators.ClassName = function(className) {
-    if(!this.classNames) this.classNames = new Array;
-    this.classNames.push(className);
-    this.className = className;
-
-    this.prototype.getClass = function() {
-        return this.constructor.className;
-    };
-    this.prototype.isTypeOf = function(name) {
-        return (this.constructor.classNames.indexOf(name)>=0);
-    };
-};
-
-var Foo = {};
-Foo.Bar = new Class({
-    ClassName: 'Foo.Bar'
-});
-
-Foo.Bar2 = new Class({
-    ClassName: 'Foo.Bar2',
-    Extends: Foo.Bar
-});
-var a = new Foo.Bar();
-var a2 = new Foo.Bar2();
-alert(a.isTypeOf('Foo.Bar2'));
-
-*/
 
 var MUI = MochaUI = new Hash({
-	
 	version: '0.9.7 development',
 
 	options: new Hash({
@@ -92,7 +39,6 @@ var MUI = MochaUI = new Hash({
 	},
 	
 	files: new Hash()
-	
 });
 
 MUI.files[MUI.path.source + 'Core/Core.js'] = 'loaded';
@@ -431,8 +377,9 @@ MUI.extend({
 		(end)
 
 	*/
-	reloadIframe: function(iframe){
-		Browser.Engine.gecko ? $(iframe).src = $(iframe).src : top.frames[iframe].location.reload(true);
+	reloadIframe: function(iframe) {
+        var src = $(iframe).src;
+		Browser.Engine.gecko ? $(iframe).src = src : top.frames[iframe].location.reload(true);
 	},
 	
 	roundedRect: function(ctx, x, y, width, height, radius, rgb, a){
@@ -572,18 +519,17 @@ function fixPNG(myImage){
 		var imgClass = (myImage.className) ? "class='" + myImage.className + "' " : "";
 		var imgTitle = (myImage.title) ? "title='" + myImage.title  + "' " : "title='" + myImage.alt + "' ";
 		var imgStyle = "display:inline-block;" + myImage.style.cssText;
-		var strNewHTML = "<span " + imgID + imgClass + imgTitle
+		myImage.outerHTML = "<span " + imgID + imgClass + imgTitle
 			+ " style=\"" + "width:" + myImage.width
 			+ "px; height:" + myImage.height
 			+ "px;" + imgStyle + ";"
 			+ "filter:progid:DXImageTransform.Microsoft.AlphaImageLoader"
 			+ "(src=\'" + myImage.src + "\', sizingMethod='scale');\"></span>";
-		myImage.outerHTML = strNewHTML;		
 	}
 }
 
 // Blur all windows if user clicks anywhere else on the page
-document.addEvent('mousedown', function(event){
+document.addEvent('mousedown', function(){
 	MUI.blurAll.delay(50);
 });
 
@@ -653,7 +599,7 @@ Element.implement({
 			morph.cancel();
 			var oldOptions = morph.options;
 		}
-		var morph = this.get('morph',{
+		morph = this.get('morph',{
 			duration:50,
 			link:'chain'
 		});
@@ -721,7 +667,7 @@ MUI.getCSSRule = function(selector) {
 		}
 	}		  
 	return false;
-}
+};
 
 // This makes it so Request will work to some degree locally
 if (location.protocol == "file:"){

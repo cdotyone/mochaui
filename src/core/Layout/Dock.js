@@ -55,7 +55,7 @@ MUI.Dock = {
 		disabledButtonColor:  [170, 170, 170]
 	},
 
-	initialize: function(options){
+	initialize: function(){
 		// Stops if MUI.Desktop is not implemented
 		if (!MUI.Desktop) return;
 
@@ -146,7 +146,7 @@ MUI.Dock = {
 		dockAutoHide.setProperty('title','Turn Auto Hide On');
 
 		// Attach event Auto Hide
-		dockAutoHide.addEvent('click', function(event){
+		dockAutoHide.addEvent('click', function(){
 			if ( this.dockWrapper.getProperty('dockPosition') == 'top' )
 				return false;
 
@@ -161,12 +161,13 @@ MUI.Dock = {
 				this.autoHideEvent = function(event) {
 					if (!this.dockAutoHide)
 						return;
+                    var dockHotspotHeight;
 					if (!MUI.Desktop.desktopFooter) {
-						var dockHotspotHeight = this.dockWrapper.offsetHeight;
+						dockHotspotHeight = this.dockWrapper.offsetHeight;
 						if (dockHotspotHeight < 25) dockHotspotHeight = 25;
 					}
 					else if (MUI.Desktop.desktopFooter) {
-						var dockHotspotHeight = this.dockWrapper.offsetHeight + MUI.Desktop.desktopFooter.offsetHeight;
+						dockHotspotHeight = this.dockWrapper.offsetHeight + MUI.Desktop.desktopFooter.offsetHeight;
 						if (dockHotspotHeight < 25) dockHotspotHeight = 25;
 					}
 					if (!MUI.Desktop.desktopFooter && event.client.y > (document.getCoordinates().height - dockHotspotHeight)){
@@ -296,7 +297,7 @@ MUI.Dock = {
 			this.timeDown = $time();
 		});
 
-		dockTab.addEvent('mouseup', function(e){
+		dockTab.addEvent('mouseup', function(){
 			this.timeUp = $time();
 			if ((this.timeUp - this.timeDown) < 275){
 				// If the visibility of the windows on the page are toggled off, toggle visibility on.
@@ -336,7 +337,7 @@ MUI.Dock = {
 
 		var titleText = instance.titleEl.innerHTML;
 
-		var dockTabText = new Element('div', {
+		new Element('div', {
 			'id': instance.options.id + '_dockTabText',
 			'class': 'dockText'
 		}).set('html', titleText.substring(0,19) + (titleText.length > 19 ? '...' : '')).inject($(dockTab));

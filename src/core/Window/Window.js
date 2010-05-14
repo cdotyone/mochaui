@@ -295,7 +295,7 @@ MUI.Window = new Class({
 		this.setOptions(options);
 
 		// Shorten object chain
-		var options = this.options;
+		options = this.options;
 
 		$extend(this, {
 			mochaControlsWidth: 0,
@@ -321,17 +321,12 @@ MUI.Window = new Class({
 
 		// Set this.options.resizable to default if it was not defined
 		if (options.resizable == null){
-			if (options.type != 'window' || options.shape == 'gauge'){
-				options.resizable = false;
-			}
-			else {
-				options.resizable = true;
-			}
+			options.resizable = !(options.type != 'window' || options.shape == 'gauge');
 		}
 
 		// Set this.options.draggable if it was not defined
 		if (options.draggable == null){
-			options.draggable = options.type != 'window' ? false : true;
+			options.draggable = options.type == 'window';
 		}
 
 		// Gauges are not maximizable or resizable
@@ -350,7 +345,7 @@ MUI.Window = new Class({
 		// Minimizable, dock is required and window cannot be modal
 		if (MUI.Dock && $(MUI.options.dock)){
 			if (MUI.Dock.dock && options.type != 'modal' && options.type != 'modal2'){
-				options.minimizable = options.minimizable;
+				this.options.minimizable = options.minimizable;
 			}
 		}
 		else {
@@ -404,15 +399,11 @@ MUI.Window = new Class({
 		properties
 
 	*/
-	newWindow: function(properties){ // options is not doing anything
-
+	newWindow: function(){ // options is not doing anything
 		// Shorten object chain
 		var instances = MUI.Windows.instances;
-		var instanceID = MUI.Windows.instances.get(this.options.id);
+		var instance = MUI.Windows.instances.get(this.options.id);
 		var options = this.options;
-
-		// Here we check to see if there is already a class instance for this window
-		if (instanceID) var instance = instanceID;
 
 		// Check if window already exists and is not in progress of closing
 		if ( this.windowEl && !this.isClosing ){
@@ -621,13 +612,7 @@ MUI.Window = new Class({
 		}
 
 		// Position window. If position not specified by user then center the window on the page.
-		if (options.container == document.body || options.container == MUI.Desktop.desktop){
-			var dimensions = window.getSize();
-		}
-		else {
-			var dimensions = $(this.options.container).getSize();
-		}
-
+        var dimensions = (options.container == document.body || options.container == MUI.Desktop.desktop) ? window.getSize() : $(this.options.container).getSize();
         var x,y;
 		if (!options.y) {
 			if (MUI.Desktop && MUI.Desktop.desktop) {
@@ -810,10 +795,10 @@ MUI.Window = new Class({
 			}.bind(this));
 
 			if (Browser.Engine.trident) {
-				this.titleBarEl.addEvent('mousedown', function(e) {
+				this.titleBarEl.addEvent('mousedown', function() {
 					this.titleEl.setCapture();
 				}.bind(this));
-				this.titleBarEl.addEvent('mouseup', function(e) {
+				this.titleBarEl.addEvent('mouseup', function() {
 						this.titleEl.releaseCapture();
 				}.bind(this));
 			}
@@ -1531,9 +1516,7 @@ MUI.Window = new Class({
 			return;
 		}
 
-		var windowEl = this.windowEl;
-
-		var options = this.options;
+        var options = this.options;
 		var shadowBlur = options.shadowBlur;
 		var shadowBlur2x = shadowBlur * 2;
 		var shadowOffset = this.options.shadowOffset;
@@ -1645,16 +1628,12 @@ MUI.Window = new Class({
 
 	},
 	drawWindowCollapsed: function(shadows) {
-
-		var windowEl = this.windowEl;
-
 		var options = this.options;
 		var shadowBlur = options.shadowBlur;
 		var shadowBlur2x = shadowBlur * 2;
 		var shadowOffset = options.shadowOffset;
 
-		var headerShadow = options.headerHeight + shadowBlur2x + 2;
-		var height = headerShadow;
+		var height = options.headerHeight + shadowBlur2x + 2;
 		var width = this.contentWrapperEl.getStyle('width').toInt() + shadowBlur2x;
 		this.windowEl.setStyle('height', height);
 
@@ -1703,7 +1682,7 @@ MUI.Window = new Class({
 		return this;
 
 	},
-	drawControls : function(width, height, shadows){
+	drawControls : function(){
 		var options = this.options;
 		var shadowBlur = options.shadowBlur;
 		var shadowOffset = options.shadowOffset;
@@ -1851,7 +1830,6 @@ MUI.Window = new Class({
 	},
 	drawGauge: function(ctx, width, height, shadowBlur, shadowOffset, shadows){
 		var options = this.options;
-		var radius = (width * .5) - (shadowBlur) + 16;
 		if (shadows != false) {
 			for (var x = 0; x <= shadowBlur; x++){
 				MUI.circle(
@@ -1878,7 +1856,7 @@ MUI.Window = new Class({
 			'top': shadowBlur - shadowOffset.y,
 			'left': shadowBlur - shadowOffset.x
 		});
-		var ctx = this.canvasHeaderEl.getContext('2d');
+		ctx = this.canvasHeaderEl.getContext('2d');
 		ctx.clearRect(0, 0, width, 100);
 		ctx.beginPath();
 		ctx.lineWidth = 24;
@@ -2395,7 +2373,7 @@ MUI.extend({
 		if (instance.options.type == 'notification'){
 			windowEl.setStyle('zIndex', 11001);
 			return;
-		};
+		}
 
 		MUI.Windows.indexLevel += 2;
 		windowEl.setStyle('zIndex', MUI.Windows.indexLevel);
@@ -2448,7 +2426,6 @@ MUI.extend({
 		}
 	},
 	centerWindow: function(windowEl){
-
 		if(!windowEl){
 			MUI.Windows.instances.each(function(instance){
 				if (instance.windowEl.hasClass('isFocused')){
@@ -2498,13 +2475,14 @@ MUI.extend({
 		var oldTop = windowEl.getStyle('top').toInt();
 		var oldLeft = windowEl.getStyle('left').toInt();
 
+        var top,left;
 		if (options.centered){
-			var top = typeof(options.top) != 'undefined' ? options.top : oldTop - ((options.height - oldHeight) * .5);
-			var left = typeof(options.left) != 'undefined' ? options.left : oldLeft - ((options.width - oldWidth) * .5);
+			top = typeof(options.top) != 'undefined' ? options.top : oldTop - ((options.height - oldHeight) * .5);
+			left = typeof(options.left) != 'undefined' ? options.left : oldLeft - ((options.width - oldWidth) * .5);
 		}
 		else {
-            var top = typeof(options.top) != 'undefined' ? options.top : oldTop;
-            var left = typeof(options.left) != 'undefined' ? options.left : oldLeft;
+            top = typeof(options.top) != 'undefined' ? options.top : oldTop;
+            left = typeof(options.left) != 'undefined' ? options.left : oldLeft;
 		}
 
 		if (MUI.options.advancedEffects == false){

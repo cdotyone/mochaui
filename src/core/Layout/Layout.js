@@ -38,7 +38,7 @@ MUI.Desktop = {
 		desktopNavBar:       'desktopNavbar',
 		pageWrapper:         'pageWrapper',
 		page:                'page',
-		desktopFooter:       'desktopFooterWrapper'
+		desktopFooterWrapper:'desktopFooterWrapper'
 	},
 	initialize: function(){
 
@@ -68,7 +68,7 @@ MUI.Desktop = {
 		this.menuInitialize();
 
 		// Resize desktop, page wrapper, modal overlay, and maximized windows when browser window is resized
-		window.addEvent('resize', function(e){
+		window.addEvent('resize', function(){
 			this.onBrowserResize();
 		}.bind(this));
 
@@ -88,7 +88,7 @@ MUI.Desktop = {
 					this.removeClass('ieHover');
 				});
 			});
-		};
+		}
 	},
 	onBrowserResize: function(){
 		this.setDesktopSize();
@@ -171,7 +171,7 @@ MUI.Desktop = {
 	maximizeWindow: function(windowEl){
 
 		var instance = MUI.Windows.instances.get(windowEl.id);
-		var options = instance.options;
+		options = instance.options;
 		var windowDrag = instance.windowDrag;
 
 		// If window no longer exists or is maximized, stop
@@ -361,9 +361,9 @@ MUI.Column = new Class({
 		}
 
 		// Shorten object chain
-		var options = this.options;
+		options = this.options;
 		var instances = MUI.Columns.instances;
-		var instanceID = instances.get(options.id);
+		var instance = instances.get(options.id);
 
 		if (options.container == null) {
 			options.container = MUI.Desktop.pageWrapper
@@ -374,11 +374,6 @@ MUI.Column = new Class({
 
 		if (typeof this.options.container == 'string'){
 			this.options.container = $(this.options.container);
-		}
-
-		// Check to see if there is already a class instance for this Column
-		if (instanceID){
-			var instance = instanceID;
 		}
 
 		// Check if column already exists
@@ -661,13 +656,8 @@ MUI.Panel = new Class({
 
 		// Shorten object chain
 		var instances = MUI.Panels.instances;
-		var instanceID = instances.get(this.options.id);
-		var options = this.options;
-
-		// Check to see if there is already a class instance for this panel
-		if (instanceID){
-			var instance = instanceID;
-		}
+		var instance = instances.get(this.options.id);
+		options = this.options;
 
 		// Check if panel already exists
 		if ( this.panelEl ){
@@ -684,10 +674,7 @@ MUI.Panel = new Class({
 			options.padding = { top: 0, right: 0, bottom: 0, left: 0 };
 		}
 
-		this.showHandle = true;
-		if ($(options.column).getChildren().length == 0) {
-			this.showHandle = false;
-		}
+		this.showHandle = $(options.column).getChildren().length != 0;
 
 		this.panelWrapperEl = new Element('div', {
 			'id': this.options.id + '_wrapper',
@@ -845,8 +832,7 @@ MUI.Panel = new Class({
 
 	},
 	collapseToggleInit: function(options){
-
-		var options = this.options;
+		options = this.options;
 
 		this.panelHeaderCollapseBoxEl = new Element('div', {
 			'id': options.id + '_headerCollapseBox',
@@ -867,9 +853,9 @@ MUI.Panel = new Class({
 			'title': 'Collapse Panel'
 		}).inject(this.panelHeaderCollapseBoxEl);
 
-		this.collapseToggleEl.addEvent('click', function(event){
+		this.collapseToggleEl.addEvent('click', function(){
 			var panel = this.panelEl;
-			var panelWrapper = this.panelWrapperEl
+			var panelWrapper = this.panelWrapperEl;
 
 			// Get siblings and make sure they are not all collapsed.
 			// If they are all collapsed and the current panel is collapsing
@@ -896,7 +882,7 @@ MUI.Panel = new Class({
 				var currentColumn = MUI.Columns.instances.get($(options.column).id);
 
 				if (expandedSiblings.length == 0 && currentColumn.options.placement != 'main'){
-					var currentColumn = MUI.Columns.instances.get($(options.column).id);
+					currentColumn = MUI.Columns.instances.get($(options.column).id);
 					currentColumn.columnToggle();
 					return;
 				}
@@ -1040,7 +1026,7 @@ MUI.extend({
 				}.bind(this);
 
 				// If a next sibling is expanding, are any of the nexts siblings of the expanding sibling Expanded?
-				anyExpandingNextSiblingsExpanded = function(el){
+				anyExpandingNextSiblingsExpanded = function(){
 					var test;
 					changing.getParent().getAllNext('.panelWrapper').each(function(sibling){
 						var siblingInstance = instances.get(sibling.getElement('.panel').id);
@@ -1057,8 +1043,7 @@ MUI.extend({
 					el.getParent().getAllNext('.panelWrapper').each(function(panelWrapper){
 						allNext.push(panelWrapper.getElement('.panel'));
 					}.bind(this));
-					var test = allNext.contains(changing);
-					return test;
+					return allNext.contains(changing);
 				}.bind(this);
 
 				nextExpandedChanging = function(el){
@@ -1067,7 +1052,7 @@ MUI.extend({
 						if (el.getParent().getNext('.expanded').getElement('.panel') == changing) test = true;
 					}
 					return test;
-				}
+				};
 
 				// NEW PANEL
 				// Resize panels that are "new" or not collapsed
@@ -1121,7 +1106,7 @@ MUI.extend({
 			this.height += el.offsetHeight.toInt();
 		}.bind(this));
 
-		var remainingHeight = column.offsetHeight.toInt() - this.height;
+		remainingHeight = column.offsetHeight.toInt() - this.height;
 
 		panelsToResize.each(function(panel){
 			var ratio = this.panelsTotalHeight / panel.offsetHeight.toInt();
@@ -1148,7 +1133,7 @@ MUI.extend({
 			}.bind(this));
 		}.bind(this));
 
-		var remainingHeight = column.offsetHeight.toInt() - this.height;
+		remainingHeight = column.offsetHeight.toInt() - this.height;
 
 		if (remainingHeight != 0 && tallestPanelHeight > 0){
 			tallestPanel.setStyle('height', tallestPanel.getStyle('height').toInt() + remainingHeight );
@@ -1202,7 +1187,7 @@ MUI.extend({
 	// Remaining Width
 	rWidth: function(container){
 		if (container == null) {
-			var container = MUI.Desktop.desktop;
+			container = MUI.Desktop.desktop;
 		}
 		container.getElements('.rWidth').each(function(column){
 			var currentWidth = column.offsetWidth.toInt();
@@ -1345,7 +1330,7 @@ function addResizeLeft(element, min, max){
 
 function addResizeBottom(element){
 	if (!$(element)) return;
-	var element = $(element);
+	element = $(element);
 
 	var instances = MUI.Panels.instances;
 	var instance = instances.get(element.id);

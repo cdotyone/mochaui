@@ -52,7 +52,7 @@ MUI.Modal = new Class({
 				'position': Browser.Engine.trident4 ? 'absolute' : 'fixed'
 		});
 		
-		modalOverlay.addEvent('click', function(e){
+		modalOverlay.addEvent('click', function(){
 			var instance = MUI.Windows.instances.get(MUI.currentModal.id);
 			if (instance.options.modalOverlayClose == true) {
 				MUI.closeWindow(MUI.currentModal);
