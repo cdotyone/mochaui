@@ -14,6 +14,7 @@ License:
 MUI.files[MUI.path.plugins + 'MUI/List/List.js'] = 'loaded';
 
 MUI.List = new Class({
+    
     Implements: [Events, Options],
 
     options: {
