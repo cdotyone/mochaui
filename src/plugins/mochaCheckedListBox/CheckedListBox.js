@@ -20,6 +20,7 @@ MUI.CheckedListBox = new NamedClass('MUI.CheckedListBox',{
     options: {
         items: $A([]),
         id: null,
+        createOnInit: true,
         isDropList: true,
         dropCssClass: 'dclb',
         dropText: '{$} Selected',
@@ -45,7 +46,7 @@ MUI.CheckedListBox = new NamedClass('MUI.CheckedListBox',{
         if(!id) { id='checkedListBox' + (++MUI.IDCount); this.options.id=id; }
 
         // create sub items if available
-        if(this.options.items.length>0) this.toDOM();
+        if(this.options.createOnInit && this.options.items.length>0) this.toDOM();
         else if($(id)) this.fromHTML(id);
 
         MUI.set(id,this);
@@ -122,22 +123,22 @@ MUI.CheckedListBox = new NamedClass('MUI.CheckedListBox',{
             else this.buildItem(o.items[i],ul,(i%2));
         }
 
-        if(isNew) {
-            window.addEvent('domready', function() {
-                var container=$(containerEl ? containerEl : o.container);
-                if(drop) {
+        if(!isNew) return this;
 
-                    var selectText=self.options.dropText.replace('{$}',selectCount);
-                    self.textElement.set('text',selectText);
+        window.addEvent('domready', function() {
+            var container=$(containerEl ? containerEl : o.container);
+            if(drop) {
 
-                    container.appendChild(drop);
-                    drop.appendChild(div);
-                    div.addClass('notop');
-                    div.setStyles({'display':'none','position':'absolute','z-index':999});
-                }
-                else container.appendChild(div);
-            });
-        }
+                var selectText=self.options.dropText.replace('{$}',selectCount);
+                self.textElement.set('text',selectText);
+
+                container.appendChild(drop);
+                drop.appendChild(div);
+                div.addClass('notop');
+                div.setStyles({'display':'none','position':'absolute','z-index':999});
+            }
+            else container.appendChild(div);
+        });
 
         return this;
     },

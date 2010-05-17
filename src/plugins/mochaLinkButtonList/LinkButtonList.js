@@ -11,13 +11,13 @@ License:
 
 */
 
-MUI.files[MUI.path.plugins + 'LinkButtonList/LinkButtonList.js'] = 'loaded';
+MUI.files[MUI.path.plugins + 'mochaLinkButtonList/LinkButtonList.js'] = 'loaded';
 
 MUI.LinkButtonList = new Class({
 Implements: [Events, Options],
 options: {
-     ID: null,
-     CssClass: 'formIndexer',
+     id: null,
+     cssClass: 'formIndexer',
      List: null,
      Selected: '',
      onClick: $empty
@@ -35,11 +35,11 @@ toDOM: function() {
     list=list.replace(new RegExp(/,,/g),'%%%%');
     list=list.split(',');
     
-    var div=new Element('div',{'id':o.options.ID});
-    div.set('class',o.options.CssClass);
+    var div=new Element('div',{'id':o.options.id});
+    div.set('class',o.options.cssClass);
     o.DOM = div;
 
-    var ul=new Element('ul',{'id':o.options.ID+'_ul'});    
+    var ul=new Element('ul',{'id':o.options.id+'_ul'});
     div.appendChild(ul);    
     
     var selected=o.options.Selected;

@@ -31,12 +31,12 @@ MUI.ListItem = new Class({
 
     toDOM: function(parent) {
         var o = this;
-        var id = o.Group.List.options.ID;
+        var id = o.Group.List.options.id;
 
         var cl = o.Group.options.Columns;
         var value = '' + PO.GetItem(o.Data, cl[0].Value);
         if (!value) value = '' + parent.childNodes.length;
-        var rid = id + '_' + o.Group.options.ID + '_' + value.replace(/[\s\.]/g, '_');
+        var rid = id + '_' + o.Group.options.id + '_' + value.replace(/[\s\.]/g, '_');
 
         var tr = $(rid);
         if (!tr) {
@@ -55,7 +55,7 @@ MUI.ListItem = new Class({
             else { td = new Element('td', { 'id': tid }); tr.appendChild(td); }
 
             if (col.Align) { td.set('align', col.Align); }
-            if (col.CssClass) td.className = col.CssClass;
+            if (col.cssClass) td.className = col.cssClass;
 
             var txt = document.createTextNode(PO.GetItem(o.Data, col.Name));
 
@@ -144,14 +144,14 @@ MUI.ListItem = new Class({
                 var showEvt = o.Group.List.canShowEvent(o.Value, o.Data, o, cmd.Name);
                 if (showEvt) {
                     a = $(new Element('a'));
-                    a.title = cmd.Text;
+                    a.title = cmd.text;
                     a.href = "#" + cmd.Name;
                     a.addEvent('click', function(e) { o.command(e); return false; });
 
                     td.appendChild(a);
 
                     img = new Element('img');
-                    img.alt = cmd.Text;
+                    img.alt = cmd.text;
                     img.src = o.Group.List.options.IconPath + cmd.Image;
                     a.appendChild(img);
                 }
@@ -215,8 +215,8 @@ MUI.ListGroup = new Class({
     Implements: [Options],
 
     options: {
-        ID: ''
-      , CssClass: 0
+        id: ''
+      , cssClass: 0
       , Value: 'id' 
       , Items: $A([])
       , CanSelect: true
@@ -263,12 +263,12 @@ MUI.ListGroup = new Class({
     toDOM: function(parent) {
         var o = this;
         o.ParentDOM=parent;
-        var gid=o.List.options.ID+'_'+o.options.ID;
+        var gid=o.List.options.id+'_'+o.options.id;
         
         var d = $(gid);
         if(!d) { d=new Element('div',{'id':gid}); parent.appendChild(d); }
-        if (o.options.CssClass) d.className = o.options.CssClass;
-        else if (o.List) d.className = o.List.options.CssClass;
+        if (o.options.cssClass) d.className = o.options.cssClass;
+        else if (o.List) d.className = o.List.options.cssClass;
         d.style.overflow = 'auto';
 
         var t = d.getElement('table');
@@ -286,7 +286,7 @@ MUI.ListGroup = new Class({
             tr = new Element('tr');
             var cl = o.options.Columns;
             for (i = 0; i < cl.length; i++) {
-                var td = new Element('td',{'html':cl[i].Text.replace(new RegExp(/\|/g), '<br/>'),'class':d.className + 'Head','valign':'bottom'});
+                var td = new Element('td',{'html':cl[i].text.replace(new RegExp(/\|/g), '<br/>'),'class':d.className + 'Head','valign':'bottom'});
                 if (i == 0) { td.addClass('First'); }
                 if(cl[i].Align) { td.set('align',cl[i].Align); }
                 tr.appendChild(td);
@@ -327,8 +327,8 @@ MUI.List = new Class({
     Implements: [Events, Options],
 
     options: {
-          ID: ''
-        , CssClass: 'List'
+          id: ''
+        , cssClass: 'List'
         , Value: ''
         , ShowCheckBoxes: 0
         , Checked: 0
@@ -376,17 +376,17 @@ MUI.List = new Class({
         var o = this;
         var options = o.options;
 
-        var d = $(o.ID);
+        var d = $(o.id);
         if (!d) {
             d = new Element('div');
-            d.id = o.ID;
+            d.id = o.id;
         }
-        if (options.CssClass) d.className = options.CssClass;
+        if (options.cssClass) d.className = options.cssClass;
         o.DOM = d;
 
         for (var i = 0; i < options.Groups.length; i++) {
             var g=options.Groups[i];
-            if(!g.options.ID) g.options.ID='g'+i;
+            if(!g.options.id) g.options.id='g'+i;
             g.toDOM(d);
         }
 
@@ -397,7 +397,7 @@ MUI.List = new Class({
         var o = this;
 
         if (o.options.ShowCheckBoxes) {
-            var cb = $(o.ID).getElements('input');
+            var cb = $(o.id).getElements('input');
             var v = new Array();
             for (var i = 0; i < cb.length; i++) {
                 if (cb[i].checked) v.push(cb[i].value);

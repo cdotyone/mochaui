@@ -17,7 +17,7 @@ MUI.TreeItem = new Class({
     Implements: [Options],
     
     options: {
-         Text:          ''
+         text:          ''
         ,Value:         ''        
         ,Expanded:      0
         ,HasChildren:   0
@@ -36,7 +36,7 @@ MUI.TreeItem = new Class({
         this.ParentNode=parentNode;
         if(options) {
             var topt=this.Tree.options;
-            if(!options.Text) this.options.Text=options[topt.TextField];
+            if(!options.text) this.options.text=options[topt.TextField];
             if(!options.Value) this.options.Value=options[topt.ValueField];
             if(!options.Tip) this.options.Tip=options[topt.TipField];        
             this.setNodes(options.Nodes);        
@@ -71,7 +71,7 @@ MUI.TreeItem = new Class({
         chk = o.createField('checkbox',options.Value,'');
         a = new Element('a');
         s = new Element('span');
-        t = document.createTextNode(options.Text);
+        t = document.createTextNode(options.text);
         l.appendChild(a);
         a.appendChild(s);
         s.appendChild(t);
@@ -211,9 +211,9 @@ MUI.TreeItem = new Class({
 MUI.Tree = new Class({
 Implements: [Events, Options],
 options: {
-     CssClass:      'treeView'
+     cssClass:      'treeView'
     ,Nodes:         $A([])
-    ,TextField:     'Text'
+    ,TextField:     'text'
     ,ValueField:    'Value'
     ,TipField:      'Tip'
     ,SelectedValue: ''
@@ -221,7 +221,7 @@ options: {
     ,Expanded:      null
     ,ParentElement: false
     ,Depth:         2
-    ,ID: ''
+    ,id: ''
     
     ,onNodeExpanded:$empty
     ,onNodeChecked: $empty
@@ -255,19 +255,19 @@ toDOM: function()
     var o=this;        
     var options=o.options;
     
-    var d=$(options.ID);    
+    var d=$(options.id);
     var u;
     if(!d) { 
         d=new Element('div');
-        d.id=options.ID;    
+        d.id=options.id;
     } else u=d.getElement('ul');
     if(!u) {
         u=new Element('ul');
         d.appendChild(u);    
     } else u.empty();
-    if(options.CssClass) { 
-        d.className = options.CssClass;
-        u.className = options.CssClass;
+    if(options.cssClass) {
+        d.className = options.cssClass;
+        u.className = options.cssClass;
     }
     o.DOM = d;   
     

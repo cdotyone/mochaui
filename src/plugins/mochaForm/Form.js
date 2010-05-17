@@ -16,8 +16,8 @@ MUI.files[MUI.path.plugins + 'mochaForm/Form.js'] = 'loaded';
 MUI.Form = new Class({
     Implements: [Events, Options],
     options: {
-        ID: ''
-      , Title: false
+        id: ''
+      , title: false
       , Padding: '0'
       , Width: 0
       , Height: 0
@@ -107,7 +107,7 @@ MUI.Form = new Class({
         if ($type(json) == 'string') if (PO.RS['Forms'][json]) json = PO.RS['Forms'][json];
         if (json) { this.fromJSON(json, !json.NoBuild, prefix); }
         else { this.options.Prefix = prefix; }
-        if (this.options.ID) this.DOM.id = this.options.ID;
+        if (this.options.id) this.DOM.id = this.options.id;
     },
 
     fromJSON: function(json, buildIt, prefix) {
@@ -115,7 +115,7 @@ MUI.Form = new Class({
         if (prefix) { this.options.Prefix = prefix; }
         this.parent(json);
         if (this.options.Padding == "0") { this.options.Padding = 0; }
-        PO.RS['Forms'][this.options.ID] = this.options; // register the form
+        PO.RS['Forms'][this.options.id] = this.options; // register the form
         if (buildIt) this.buildForm(this.options);
     },
 
@@ -186,11 +186,11 @@ MUI.Form = new Class({
         if (!o.flds) return;
 
         o.flds.each(function(fld) {
-            if (fld.ID) {
-                var val = PO.GetItem(data, fld.ID);
-                var ctrl = o.DOM.getElementById(fld.ID);
+            if (fld.id) {
+                var val = PO.GetItem(data, fld.id);
+                var ctrl = o.DOM.getElementById(fld.id);
                 if (val == '' || val == null) {
-                    val = o.fdef[fld.ID.toLowerCase()];
+                    val = o.fdef[fld.id.toLowerCase()];
                     if (val != null && val.indexOf('{') > -1) val = PO.GetItem(data, val);
                 }
                 if (ctrl != null && val != null) {
@@ -215,7 +215,7 @@ MUI.Form = new Class({
 
     start: function() {
         var o = this;
-        o.f = new Element('div', { 'id': o.options.ID, 'class': 'form' });
+        o.f = new Element('div', { 'id': o.options.id, 'class': 'form' });
         o.DOM = o.f;
         o.aEvent = $A([]);
         o.Scripts = $A([]);
@@ -259,12 +259,12 @@ MUI.Form = new Class({
         subitems.each(function(item) {
             item = JSON.decode(JSON.encode(item));
 
-            var id = prefix + item.ID;
+            var id = prefix + item.id;
             if (exclude != null && exclude.indexOf(id.toLowerCase()) > -1) { return; }
 
             //            item.AltRequired=o.PrefixFields(item.AltRequired);
             //            item.RequiredIf=o.PrefixFields(item.RequiredIf);                      
-            item.ID = id;
+            item.id = id;
 
             switch ('' + item.Type) {
                 case 'systempanel':
@@ -330,7 +330,7 @@ MUI.Form = new Class({
                 case 'form':
                     if ($type(exclude) == 'array') { if (item.Exclude) { exclude.push(item.Exclude); } }
                     else { exclude = item.Exclude; }
-                    o.addForm(item.ID, item.Prefix, exclude);
+                    o.addForm(item.id, item.Prefix, exclude);
                     break;
             }
             if (processSubItems && item.SubItems != null) o.buildForm(item, prefix, exclude);
@@ -378,17 +378,17 @@ MUI.Form = new Class({
         if (o.DOM == null) { o.start(); }
 
         if (o.DOM.childNodes.length > 0 && o.Panel.length == 0) {
-            o.Panel.push({ "ID": "General", "Form": o.DOM });
+            o.Panel.push({ "id": "General", "Form": o.DOM });
             o.DOM.id += '_General_Content';
             o.DOM.addClass('formContent');
         }
         if (o.options.HasRequired) { o.addRequired(); }
 
-        o.f = new Element('div', { 'id': o.options.ID + '_' + item.ID + '_Content', 'class': 'formContent' });
+        o.f = new Element('div', { 'id': o.options.id + '_' + item.id + '_Content', 'class': 'formContent' });
         o.DOM = o.f;
 
-        if (!o.ActivePanel) o.ActivePanel = item.ID;
-        o.Panel.push({ "ID": item.ID, "Form": o.DOM });
+        if (!o.ActivePanel) o.ActivePanel = item.id;
+        o.Panel.push({ "id": item.id, "Form": o.DOM });
     },
 
     addRequired: function() {
@@ -406,13 +406,13 @@ MUI.Form = new Class({
         if (item.Padding == null) item.Padding = '8px';
 
         var sform = new mochaForm();
-        sform.options.ID = item.ID + '_SubForm';
+        sform.options.id = item.id + '_SubForm';
         sform.options.Padding = item.Padding;
         sform.buildForm(item);
 
         new MochaUI.Panel({
-            id: item.ID,
-            title: item.Title,
+            id: item.id,
+            title: item.title,
             loadMethod: 'html',
             content: '&nbsp',
             column: item.Column,
@@ -423,7 +423,7 @@ MUI.Form = new Class({
             onContentLoaded: function(el) {
                 el.empty();
                 el.appendChild(sform.End());
-                sform.Execute(el, item.ID);
+                sform.Execute(el, item.id);
             }
         });
     },
@@ -492,7 +492,7 @@ MUI.Form = new Class({
 
     addButton: function(item) {
         this.tableCheck();
-        var but = new Element('input', { 'type': 'button', 'id': item.ID, 'value': item.Text, 'class': 'B' });
+        var but = new Element('input', { 'type': 'button', 'id': item.id, 'value': item.text, 'class': 'B' });
         if (item.Width) { but.setStyle('width', item.Width + 'px'); }
         this.f.appendChild(but);
     },
@@ -502,7 +502,7 @@ MUI.Form = new Class({
         o.tableCheck();
         o.addCol();
 
-        o.f.appendChild(new LinkButtonList({ ID: item.ID, List: item.List, Selected: item.Selected }).toDOM());
+        o.f.appendChild(new LinkButtonList({ id: item.id, List: item.List, Selected: item.Selected }).toDOM());
     },
 
     addGrid: function(item) {
@@ -510,29 +510,29 @@ MUI.Form = new Class({
         o.tableCheck();
         o.addCol();
 
-        o.f.appendChild(new mochaList({ ID: item.ID, Groups: item.Groups }).toDOM());
+        o.f.appendChild(new mochaList({ id: item.id, Groups: item.Groups }).toDOM());
 
         var addAutoSize = function(id) {
             return function() { $(id).getParent().addEvent('onResize', function() { o.autoSize(id); }); };
         };
 
-        o.Scripts.push(addAutoSize(item.ID));
+        o.Scripts.push(addAutoSize(item.id));
     },
 
     addText: function(item) {
         this.tableCheck();
         var o = this;
         if (!item.Label) item.Label = '';
-        if (!item.Title) item.Title = item.Label;
+        if (!item.title) item.title = item.Label;
         o.addCol(item.Align);
 
-        var css = o.getRuleClass(item.ID);
+        var css = o.getRuleClass(item.id);
         if (css == '') css = 'L';
 
         if (item.Label) {
-            var p = new Element('label', { 'id': item.ID + 'item.Label', 'for': item.ID, 'class': css, 'text': item.Label });
+            var p = new Element('label', { 'id': item.id + 'item.Label', 'for': item.id, 'class': css, 'text': item.Label });
             o.f.appendChild(p);
-            o.createRuleIcons(item.ID, p);
+            o.createRuleIcons(item.id, p);
         }
         var div = new Element('div', { 'class': 'L' });
         o.f.appendChild(div);
@@ -541,13 +541,13 @@ MUI.Form = new Class({
 
         var w = (('' + item.Width).indexOf('%') > 0) ? item.Width : item.Width + 'px';
         if (item.Type == "text") {
-            dom = new Element('input', { 'type': 'text', 'id': item.ID, 'title': item.Title, 'value': item.Value, 'class': css, 'maxlength': item.Length, styles: { 'width': w} });
+            dom = new Element('input', { 'type': 'text', 'id': item.id, 'title': item.title, 'value': item.Value, 'class': css, 'maxlength': item.Length, styles: { 'width': w} });
         }
 
         if (item.Type == "multiline" || item.Type == "html") {
             var h;
             if (item.ReadOnly) {
-                dom = new Element('div', { 'id': item.ID, 'text': item.Value, 'class': css, styles: { 'width': w} });
+                dom = new Element('div', { 'id': item.id, 'text': item.Value, 'class': css, styles: { 'width': w} });
                 if (!item.Value) dom.set('html', '&nbsp;');
                 if (item.Height) {
                     h = (('' + item.Height).indexOf('%') > 0) ? item.Height : item.Height + 'px';
@@ -558,12 +558,12 @@ MUI.Form = new Class({
                 //                    PO['wysiwyg'] = new Asset.javascript('/OMMS/wysiwyg/scripts/wysiwyg.js', { id: 'wysiwyg' });
                 //                }
                 h = (('' + item.Height).indexOf('%') > 0) ? item.Height : item.Height + 'px';
-                dom = new Element('textarea', { 'id': item.ID, 'title': item.Title, 'value': item.Value, 'class': css, 'maxlength': item.Length, styles: { 'width': w, 'height': h} });
+                dom = new Element('textarea', { 'id': item.id, 'title': item.title, 'value': item.Value, 'class': css, 'maxlength': item.Length, styles: { 'width': w, 'height': h} });
             }
         }
 
         if (item.Type == "date") {
-            dom = new Element('input', { 'type': 'text', 'id': item.ID, 'title': item.Title, 'value': item.Value, 'class': 'calendar', 'maxlength': item.Length, styles: { 'width': w} });
+            dom = new Element('input', { 'type': 'text', 'id': item.id, 'title': item.title, 'value': item.Value, 'class': 'calendar', 'maxlength': item.Length, styles: { 'width': w} });
             dom.addClass(css);
 
             var newCal = function(nam) {
@@ -571,23 +571,23 @@ MUI.Form = new Class({
                 h[nam] = 'm/d/Y';
                 return function() { new Calendar(h, { classes: ['calendar'] }); };
             };
-            o.Scripts.push(newCal(item.ID));
+            o.Scripts.push(newCal(item.id));
         }
 
         if (item.Type == "password") {
-            dom = new Element('input', { 'type': 'password', 'id': item.ID, 'title': item.Title, 'value': item.Value, 'class': css, 'maxlength': item.Length, styles: { 'width': w} });
+            dom = new Element('input', { 'type': 'password', 'id': item.id, 'title': item.title, 'value': item.Value, 'class': css, 'maxlength': item.Length, styles: { 'width': w} });
         }
 
         div.appendChild(dom);
         if (item.Type == "html") {
             //WYSIWYG.attach(item.ID);
-            PO.Intervals['WYSIWYG_' + item.ID] = setInterval("if($('" + item.ID + "')!=null && PO.Intervals['WYSIWYG_" + item.ID + "']!=null) { clearInterval(PO.Intervals['WYSIWYG_" + item.ID + "']); PO.Intervals['WYSIWYG_" + item.ID + "']=null; WYSIWYG.attach('" + item.ID + "',false,'" + item.Height + "'); }", 200);
+            PO.Intervals['WYSIWYG_' + item.id] = setInterval("if($('" + item.id + "')!=null && PO.Intervals['WYSIWYG_" + item.id + "']!=null) { clearInterval(PO.Intervals['WYSIWYG_" + item.id + "']); PO.Intervals['WYSIWYG_" + item.id + "']=null; WYSIWYG.attach('" + item.id + "',false,'" + item.Height + "'); }", 200);
         }
 
         o.flds.push(item);
         o.fldMap.push([item, dom]);
 
-        if (item.Default) { o.fdef[item.ID.toLowerCase()] = item.Default; }
+        if (item.Default) { o.fdef[item.id.toLowerCase()] = item.Default; }
     },
 
     AddCheck: function(item) {
@@ -596,20 +596,20 @@ MUI.Form = new Class({
         if (!item.Value) item.Value = '';
         o.addCol(item.Align);
 
-        var css = o.getRuleClass(item.ID);
+        var css = o.getRuleClass(item.id);
         if (css == '') css = 'L';
 
         var p = o.f;
         if (item.Label) {
-            p = new Element('label', { 'id': item.ID + 'tle', 'for': item.ID, 'class': css });
+            p = new Element('label', { 'id': item.id + 'tle', 'for': item.id, 'class': css });
             o.f.appendChild(p);
-            o.createRuleIcons(item.ID, p);
+            o.createRuleIcons(item.id, p);
         }
         var dom;
         if (item.Type == "check") {
-            dom = new Element('input', { 'type': 'checkbox', 'id': item.ID, 'value': item.Value, 'class': css });
+            dom = new Element('input', { 'type': 'checkbox', 'id': item.id, 'value': item.Value, 'class': css });
         } else {
-            dom = new Element('input', { 'type': 'radio', 'id': item.ID, 'value': item.Value, 'class': css })
+            dom = new Element('input', { 'type': 'radio', 'id': item.id, 'value': item.Value, 'class': css })
         }
         p.appendChild(dom);
         if (item.Label) { p.appendChild(new Element('span', { 'text': item.Label })); }
@@ -617,26 +617,26 @@ MUI.Form = new Class({
         o.flds.push(item);
         o.fldMap.push([item, dom]);
 
-        if (item.Default) { o.fdef[item.ID.toLowerCase()] = item.Default; }
+        if (item.Default) { o.fdef[item.id.toLowerCase()] = item.Default; }
     },
 
     addDrop: function(item) {
         this.tableCheck();
         var o = this;
         if (item.CanAdd == null) { item.CanAdd = true; }
-        if (!item.Title) { item.Title = item.Label; }
+        if (!item.title) { item.title = item.Label; }
         o.addCol(item.Align);
 
-        var css = o.getRuleClass(item.ID);
+        var css = o.getRuleClass(item.id);
         if (css == '') css = 'L';
 
         if (item.Label) {
-            var p = new Element('label', { 'id': item.ID + 'lbl', 'for': item.ID, 'class': css, 'text': item.Label });
+            var p = new Element('label', { 'id': item.id + 'lbl', 'for': item.id, 'class': css, 'text': item.Label });
             o.f.appendChild(p);
-            o.createRuleIcons(item.ID, p);
+            o.createRuleIcons(item.id, p);
         }
         var div = new Element('div', { 'class': 'L' });
-        var sel = new Element('select', { 'id': item.ID, 'title': item.Title, 'class': css, styles: { 'width': item.Width + 'px'} });
+        var sel = new Element('select', { 'id': item.id, 'title': item.title, 'class': css, styles: { 'width': item.Width + 'px'} });
         if (item.Type == 'list') {
             if (item.Size) { sel.set('size', item.Size); }
             else { sel.set('size', 10); }
@@ -659,36 +659,36 @@ MUI.Form = new Class({
         o.flds.push(item);
         o.fldMap.push([item, sel]);
 
-        if (item.Default) { o.fdef[item.ID.toLowerCase()] = item.Default; }
+        if (item.Default) { o.fdef[item.id.toLowerCase()] = item.Default; }
     },
 
     addEvent: function(item) {
         if (!item.IsButton) item.IsButton = false;
-        if (!item.ImageURL && item.ImageURL != 'none') {
-            switch (item.ID) {
+        if (!item.imageURL && item.imageURL != 'none') {
+            switch (item.id) {
                 case 'save':
-                    item.ImageURL = '/images/save.png';
+                    item.imageURL = '/images/save.png';
                     break;
                 case 'cancel':
-                    item.ImageURL = '/images/btn_cancel.png';
+                    item.imageURL = '/images/btn_cancel.png';
                     break;
                 case 'delete':
-                    item.ImageURL = '/images/delete.gif';
+                    item.imageURL = '/images/delete.gif';
                     break;
                 case 'add':
-                    item.ImageURL = '/images/add.gif';
+                    item.imageURL = '/images/add.gif';
                     break;
                 case 'gallery':
-                    item.ImageURL = '/images/btn_gallery.png';
+                    item.imageURL = '/images/btn_gallery.png';
                     break;
                 case 'detail':
-                    item.ImageURL = '/images/btn_detail.png';
+                    item.imageURL = '/images/btn_detail.png';
                     break;
                 case 'edit':
-                    item.ImageURL = '/images/edit.png';
+                    item.imageURL = '/images/edit.png';
                     break;
                 case 'permissions':
-                    item.ImageURL = '/images/permissions.gif';
+                    item.imageURL = '/images/permissions.gif';
                     break;
             }
         }
@@ -700,20 +700,20 @@ MUI.Form = new Class({
 
         if (o.options.HasRequired) { o.addRequired(); }
         if (o.Panel.length > 0) {
-            o.DOM = new Element('div', { 'id': o.options.ID, 'class': 'form' });
+            o.DOM = new Element('div', { 'id': o.options.id, 'class': 'form' });
 
-            var nav = new Element('div', { 'id': o.options.ID + '_nav', 'class': 'formTab' });
+            var nav = new Element('div', { 'id': o.options.id + '_nav', 'class': 'formTab' });
             o.DOM.appendChild(nav);
 
             var ul = new Element('ul', { 'class': 'formTab' });
             nav.appendChild(ul);
 
             o.Panel.each(function(panel) {
-                var id = panel.ID.replace(new RegExp(/\s/g), '_');
+                var id = panel.id.replace(new RegExp(/\s/g), '_');
 
                 var li = new Element('li', { 'id': id + '_tab' });
                 ul.appendChild(li);
-                if (panel.ID == o.ActivePanel) { li.set('class', 'C'); }
+                if (panel.id == o.ActivePanel) { li.set('class', 'C'); }
 
                 var panelClick = function(id) {
                     return function(e) {
@@ -728,14 +728,14 @@ MUI.Form = new Class({
 
                 var a = new Element('a', { 'href': '#' });
                 li.appendChild(a);
-                a.appendChild(new Element('span', { 'text': panel.ID }));
+                a.appendChild(new Element('span', { 'text': panel.id }));
             });
 
             o.Panel.each(function(panel) {
-                var id = panel.ID.replace(new RegExp(/\s/g), '_');
+                var id = panel.id.replace(new RegExp(/\s/g), '_');
 
                 var p = new Element('div', { 'id': id + '_formpanel', 'class': 'formPanel' });
-                if (panel.ID != o.ActivePanel) { p.setStyle('display', 'none'); }
+                if (panel.id != o.ActivePanel) { p.setStyle('display', 'none'); }
 
                 p.appendChild(panel.Form);
                 o.DOM.appendChild(p);
@@ -774,7 +774,7 @@ MUI.Form = new Class({
             var txt = [];
 
             if (prefix) { txt.push(prefix); }
-            if (this.options.Title) { txt.push(this.options.Title); }
+            if (this.options.title) { txt.push(this.options.title); }
             if (suffix) { txt.push(suffix); }
 
             tle.set('text', txt.join(' - '));
@@ -792,11 +792,11 @@ MUI.Form = new Class({
 
         if (empty && $(panelID + '_buttonHolder') != null) $(panelID + '_buttonHolder').empty();
         ev.each(function(evt) {
-            if (done.indexOf(evt.ID) < 0) {
-                done.push(evt.ID);
-                (new ImageButton({ 'ID': panelID + '_' + evt.ID, 'PanelID': panelID, 'Text': evt.Text, 'ImageURL': evt.ImageURL, 'onClick': function(e) {
+            if (done.indexOf(evt.id) < 0) {
+                done.push(evt.id);
+                (new ImageButton({ "id": panelID + '_' + evt.id, "container": panelID, "text": evt.text, "imageURL": evt.imageURL, 'onClick': function(e) {
                     if (evt.NoValidation || o.CheckRequired()) {
-                        var div = $(panelID + '_' + evt.ID);
+                        var div = $(panelID + '_' + evt.id);
                         var img = div.getElement('img');
                         if (img) img.set('src', '/images/spinner.gif');
                         o.fireEvent('onEventHandler', [e, evt, o, img]);
@@ -815,7 +815,7 @@ MUI.Form = new Class({
         o.fldMap.each(function(map) {
             var fld = map[1];
             if (fld) {
-                var rVal = o.validateItem(map[0].ID, fld);
+                var rVal = o.validateItem(map[0].id, fld);
                 if (!rVal[0]) ok = false;
             }
         });
@@ -831,7 +831,7 @@ MUI.Form = new Class({
         o.fldMap.each(function(map) {
             var fld = map[1];
             if (fld) {
-                var id = $A(map[0].ID.split(':'));
+                var id = $A(map[0].id.split(':'));
                 var val = o.getValue(fld);
                 if (id.length == 1) {
                     if (val != '') h[id[0]] = val;
