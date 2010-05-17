@@ -16,69 +16,86 @@ MUI.files[MUI.path.plugins + 'mochaImageButton/ImageButton.js'] = 'loaded';
 MUI.ImageButton = new Class({
 Implements: [Events, Options],
 options: {
-     CssClass:      'imgButton'
-    ,Text:          null
-    ,Title:         null
-    ,ImageURL:      null
-    ,Disabled:      false
-    ,ID:            null
-    ,PanelID:       null
+     id:            null
+    ,createOnInit:  true
+    ,cssClass:      'imgButton'
+    ,text:          null
+    ,title:         null
+    ,imageURL:      null
+    ,isDisabled:    false
+    ,container:     null
     ,onClick:       $empty
 },
 
 initialize: function( options )
 {
     this.setOptions(options);
-//    PO.addControl(this);
+
+    // make sure this controls has an ID
+    var id=this.options.id;
+    if(!id) { id='imageButton' + (++MUI.IDCount); this.options.id=id; }
+
+    if(this.options.createOnInit) this.toDOM();
+    
+    MUI.set(id,this);
 },
 
 // <span class="imgButton"><a class="imgButton"><span><img></span><span>Text</span></a></span>
 toDOM: function() 
 {
-    var o=this;        
-    var options=o.options;
-                        
-    var s1=o.DOM;
-    if(s1==null) s1=new Element('span',{'class':options.CssClass,'id':options.ID});
-    else s1.empty();
+    var self=this;        
+    var o=self.options;
+
+    var isNew=true;
+    var s1=self.element;
+    if(s1==null) s1=new Element('span',{'class':o.cssClass,'id':o.id});
+    else { s1.empty(); isNew=false; }
     
-    if(options.Disabled) s1.setStyle('opacity','0.25');
-    else s1.setStyle('opacity','1.0');
-    
-    var a=new Element('a',{'class':options.CssClass,'title':options.Title});
-    s1.appendChild(a);
+    s1.setStyle('opacity',o.isDisabled ? '0.25' : '1.0');
+
+    var a=new Element('a',{'class':o.cssClass,'title':o.title}).inject(s1);
     
     s1.removeEvents('click');
-    s1.addEvent('click',function() {o.fireEvent("onClick",o)});
+    s1.addEvent('click',function() {self.fireEvent("onClick",self)});
     
-    if(options.ImageURL) {
-        var tle=options.Title;
-        if(!tle) tle=options.Text; 
-        var si=new Element('span');
-        var im=new Element('img',{'src':options.ImageURL,'alt':tle});
-        si.appendChild(im);
-        a.appendChild(si);
+    if(o.imageURL) {
+        var tle=o.title;
+        if(!tle) tle=o.text;
+        var si=new Element('span').inject(a);
+        new Element('img',{'src':o.imageURL,'alt':tle}).inject(si);
     }    
-    if(options.Text) { a.appendChild(new Element('span',{'text':options.Text,'class':'t'})); }
+    if(o.text) { a.appendChild(new Element('span',{'text':o.text,'class':'t'})); }
     
-    o.DOM = s1;
-    
-    var panelID=o.options.PanelID;
-    if(panelID) {
-        var div = $(panelID + '_headerToolbox').getElement('#' + panelID + '_buttonHolder');
-        if(div==null) {
-            div = new Element('div', { 'id': panelID + '_buttonHolder', 'styles': { 'float': 'right'} });
-            $(panelID + '_headerToolbox').appendChild(div);
-        }  
-        div.appendChild(s1);
-    }
-    
-    return s1;
+    self.element = s1;
+
+    if(!isNew) return self;
+
+    window.addEvent('domready', function() {
+        var container=$(self.options.container);
+        if(container!=null && container.options && container.options.id) {
+            var muiControl = MUI.get(container.options.id);
+            if(muiControl && muiControl.isTypeOf('MUI.Panel')) {
+                var panelID=container.options.id;
+                var div = $(panelID + '_headerToolbox').getElement('#' + panelID + '_buttonHolder');
+                if(div==null) {
+                    div = new Element('div', { 'id': panelID + '_buttonHolder', 'styles': { 'float': 'right'} });
+                    $(panelID + '_headerToolbox').appendChild(div);
+                }
+                div.appendChild(s1);
+                return self;
+            }
+        }
+
+        if(container) container.appendChild(s1);
+    });
+
+    return self;
 },
 
 setDisabled: function(disabled) {
-    this.options.Disabled=disabled;
+    this.options.isDisabled=disabled;
     this.toDOM();
+    return disabled;
 }
     
 });

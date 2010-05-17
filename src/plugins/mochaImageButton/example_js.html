@@ -1,0 +1,37 @@
+<html>
+<head>
+<!--MOCHAUI-->
+<script type="text/javascript" src="../../scripts/source/mootools-1.2.4-core-yc.js"></script>
+<script type="text/javascript" src="../../scripts/source/mootools-1.2.4-more-yc.js"></script>
+<script type="text/javascript" src="../../scripts/source/Core/Core.js"></script>
+<script type="text/javascript" src="../../scripts/source/Layout/Layout.js"></script>
+<script type="text/javascript" src="../../scripts/source/Layout/Dock.js"></script>
+<script type="text/javascript" src="../../scripts/source/Window/Window.js"></script>
+<script type="text/javascript" src="../../scripts/source/Window/Modal.js"></script>
+<script type="text/javascript" src="../../scripts/source/Components/Tabs.js"></script>
+<!--MOCHAUI-->
+<script type="text/javascript" src="ImageButton.js"></script>
+<script type="text/javascript">
+
+    new MUI.ImageButton({
+         cssClass:      'imgButton'
+        ,text:          'Cancel'
+        ,title:         'Cancel Order'
+        ,imageURL:      'images/cancel.png'
+        ,id:            'btnCancel'
+        ,container:     'page'
+        ,onClick:       function() { alert('do something'); }
+    });
+    
+</script>
+<link rel="stylesheet" type="text/css" href="style.css" />
+
+</head>
+
+<body>
+
+<div id="page">
+</div>
+
+</body>
+</html>
