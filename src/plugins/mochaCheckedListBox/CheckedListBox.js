@@ -13,281 +13,304 @@ License:
 
 MUI.files[MUI.path.plugins + 'mochaCheckedListBox/CheckedListBox.js'] = 'loaded';
 
-MUI.CheckedListBoxItem = new Class({
-initialize: function(item)
-{   
-    if(item) this.fromJSON(item);    
-    this.Event = {}; 
-},
+MUI.CheckedListBox = new NamedClass('MUI.CheckedListBox',{
 
-toDOM: function() 
-{
-    var o=this;        
-    
-    var tr=new Element('tr');    
-    tr.className=o.List.CssClass;
-    o.Row=$(tr);
-    
-    var td=new Element('td');
-    tr.appendChild(td);
+    Implements: [Events, Options],
 
-    var id=o.List.Name+'$'+o.Value;
-    var input=new Element('INPUT', { 'type': 'checkbox', 'name': id, 'id': id, 'value': o.Value });
-    td.appendChild(input);
-    input.checked = o.Checked;
-    o.CheckBox = input;
-    
-    if(o.List.CanSelect) {
-        td=$(new Element('td'));
-        td.style.width="100%";        
-        o.setEvents(td,input);       
-        tr.appendChild(td);
-    } else o.setEvents(td,input);
+    options: {
+        items: $A([]),
+        id: null,
+        isDropList: true,
+        dropCssClass: 'dclb',
+        dropText: '{$} Selected',
+        canSelect: false,
+        canMultiSelect: false,
+        cssClass: 'clb',
+        barCssClass: 'clb',
+        itemCssClass: 'clb',
+        alternateItems: false,
+        container: null,
+        width:0,
+        height:0,
+        onSelected: $empty,
+        onChecked:  $empty
+    },
 
-    td.appendChild(document.createTextNode(o.Text));
-    
-    return tr;
-},
-
-fromHTML: function(rw) 
-{
-    var o=this;
-    rw=$(rw);
-    o.Row=rw;
-    
-    var inp=rw.getElement('input');                
-    o.ID=inp.id;             
-    o.Name=inp.Name;
-    o.Value=o.ID.split('_').pop();
-    o.CheckBox = inp;
-    
-    var c=rw.getElements('TD');    
-    if(c.length>1) {                    
-        o.Text=c[1].innerText;
-        o.setEvents(c[1],inp);
-        o.List.CanSelect=true;
-    } else {
-        o.Text=c[0].innerText;
-        o.setEvents(c[0],inp);
-    }
-},
-
-setList: function(l) 
-{
-    this.List = l;
-},
-
-addEvent:function(name,func)
-{
-    this.Event[name]=func;
-},
-
-setEvents: function(td,inp)
-{
-    var o=this;
-    if(td) {
-        if(!this.Event['click']) this.Event['click']=function(e) {o.onSelect(e)};
-        if(!this.Event['mouseover']) this.Event['mouseover']=function(e) {o.onOver(e)};
-        if(!this.Event['mouseout']) this.Event['mouseout']=function(e) {o.onOut(e)};
-        
-        td.addEvent('click',this.Event['click']);    
-        td.addEvent('mouseover',this.Event['mouseover']);    
-        td.addEvent('mouseout',this.Event['mouseout']);    
-    } else {
-        if(!this.Event['click']) this.Event['click']=function(e) {o.onChecked(e)};
-    }
-    if(inp) inp.addEvent('click',function(e) {e=new Event(e);e.stopPropagation();o.onChecked(e)});
-},
-
-onSelect: function(e)
-{
-    var o=this;
-    if(o.List.CanSelect) {
-        if(!o.List.MultiSelect) 
-        {
-           for(var i=0;i<o.List.Items.length;i++) 
-           {
-              if(o.List.Items[i].Selected) {
-                o.List.Items[i].Selected=false;
-                o.List.Items[i].onOut();
-              }
-           }
-           o.List.SelectedValue = o.Value;
-        }
-                
-        o.Selected=!o.Selected;
-        o.Row.className = this.List.CssClass+'C';
-        o.List.DoCommand('Selected',o.Value+'#'+o.CheckBox.checked,null);
-    }
-    else { 
-        o.CheckBox.checked = !o.CheckBox.checked; 
-        o.Checked=o.CheckBox.checked;
-        o.onChecked(e);
-    }
-},
-
-onChecked: function(e)
-{
-    e.cancelBubble=true;
-    var o=this;
-    o.List.DoCommand('Checked',o.Value+'#'+o.CheckBox.checked,null);
-    return true;
-},
-
-onOver: function()
-{    
-    this.Row.className = this.List.CssClass+'O';
-},
-
-onOut: function() 
-{
-    var o=this;
-    o.Row.className = o.List.CssClass + (o.Selected?'C':'');
-}
-
-});  
-
-
-MUI.CheckedListBoxBar = new Class({
-initialize: function(item)
-{   
-    if(item) this.fromJSON(item);   
-},
-
-toDOM: function() 
-{
-    var o=this;        
-    
-    var tr=new Element('tr');    
-    tr.className=o.List.CssClass;
-    o.Row=$(tr);
-    
-    var td=new Element('td');
-    tr.appendChild(td);
-    td.set('html','<hr/>');    
-    if(o.List.CanSelect) td.set('colspan',2);       
-   
-    return tr;
-},
-
-setList: function(l) 
-{
-    this.List = l;
-}
-
-});   
-                      
-
-MUI.CheckedListBox = new Class({
-initialize: function( list  )
-{    
-    if(list) this.fromJSON(list);   
-},
-
-fromJSON: function(json) 
-{
-    var o=this;
-
-    var items=json.Items;
-    json.Items=null;
-    o.parent(json);    
-    o.Items=new Array();
-    
-//    o.AttachCommand();    
-
-    if(!items) return;    
-    for(var i=0;i<items.length;i++) 
+    initialize: function( options )
     {
-        var g=new mochaCheckedListBoxItem(items[i]);
-        o.Items[o.Items.length]=g;
-        g.setList(o);
-    }        
-},
+        this.setOptions(options);
 
-fromHTML: function() 
-{
-    var o=this;
-    var d=$(o.ID);
-    if(d) {       
-        o.DOM=d; 
-//        o.AttachCommand();
-        o.Items = new Array();
-                        
-        this.CssClass = d.className;
-        var l=d.getElement('table');
-        if(l) {
-            var rows=l.getElements('TR');
-            for(var i=0;i<rows.length;i++) 
+        // make sure this controls has an ID
+        var id=this.options.id;
+        if(!id) { id='checkedListBox' + (++MUI.IDCount); this.options.id=id; }
+
+        // create sub items if available
+        if(this.options.items.length>0) this.toDOM();
+        else if($(id)) this.fromHTML(id);
+
+        MUI.set(id,this);
+    },
+
+    fromHTML: function(el)
+    {
+        var self=this;
+        var o=self.options;
+        el=$(el);
+        if(el) {
+            var nItems = new Array();
+
+            o.cssClass = el.class;
+            var list=el.getElement('table');
+            if(list) {
+                var rows=list.getElements('TR');
+                for(var i=0;i<rows.length;i++)
+                {
+                    self.itemFromHTML(rows[i]);
+                }
+            }
+
+            o.items = nItems;
+            el.style.visibility='visible';
+        }
+        return this;
+    },
+
+    toDOM: function(containerEl)
+    {
+        var o=this.options;
+        var self=this;
+
+        var id=o.id;
+        var drop;
+        if(o.isDropList) {
+            var panel=$(id);
+            if(!panel) {
+                panel=new Element('div',{id:id});
+                if(o.width) panel.setStyle('width',parseInt(''+o.width)+'px');
+            }
+            panel.empty();
+
+            drop=new Element('div',{id:id+'_droplist',class:o.dropCssClass,styles:{'width':parseInt(''+o.width)+'px'}}).inject(panel);
+            self.dropElement=drop;
+            
+            self.textElement=new Element('div',{id:id+'_text','class':'text','text':'1 selected',styles:{'width':(parseInt(''+o.width)-24)+'px'}}).inject(drop);
+            self.buttonElement = new Element('div',{id:id+'_button',class:'button','html':'&nbsp;'}).inject(drop).addEvent('click',function(e) { self.onOpen(e); });
+
+            o.id+='_list';
+            o.isOpen = false;
+        }
+
+        var div=$(id);
+        var isNew=false;
+        if(!div) {
+            div=new Element('div',{id:id,class:o.cssClass});
+            if(o.width) div.setStyle('width',(parseInt(''+o.width)-2)+'px');
+            if(o.height) div.setStyle('height',parseInt(''+o.height)+'px');
+            isNew = true;
+        }
+        if(o.cssClass) div.class = o.cssClass;
+        this.element = div;
+
+        div.empty();
+
+        var ul=new Element('ul').inject(div);
+
+        var selectCount=0;
+        for(var i=0;i<o.items.length;i++) {
+            if(o.items[i].isChecked) selectCount++;
+            if(o.items[i].isBar) this.buildBar(o.items[i],ul);
+            else this.buildItem(o.items[i],ul,(i%2));
+        }
+
+        if(isNew) {
+            window.addEvent('domready', function() {
+                var container=$(containerEl ? containerEl : o.container);
+                if(drop) {
+
+                    var selectText=self.options.dropText.replace('{$}',selectCount);
+                    self.textElement.set('text',selectText);
+
+                    container.appendChild(drop);
+                    drop.appendChild(div);
+                    div.addClass('notop');
+                    div.setStyles({'display':'none','position':'absolute','z-index':999});
+                }
+                else container.appendChild(div);
+            });
+        }
+
+        return this;
+    },
+
+    getSelectedCount: function() {
+        var o=this.options;
+        var selectCount=0;
+        for(var i=0;i<o.items.length;i++) {
+            if(o.items[i].isChecked) selectCount++;
+        }
+        return selectCount;
+    },
+
+    addItem: function(item)
+    {
+        if(!item.isSelected) item.isSelected=false;
+        if(!item.isChecked) item.isChecked=false;
+        this.options.items.push(item);
+        return item;
+    },
+
+    addBar: function()
+    {
+        var bar={isBar:true};
+        this.options.items.push(bar);
+        return bar;
+    },
+
+    update: function(items)
+    {
+        var self=this;
+        self.options.items = items;
+        self.toDOM();
+    },
+
+    onSelected: function(e,item)
+    {
+        var self=this;
+        var o=self.options;
+        if(o.canSelect) {
+            if(!o.canMultiSelect)
             {
-                var itm=new MUI.CheckedListBoxItem();
-                itm.setList(o);
-                itm.fromHTML(rows[i]);
-            }            
-        }    
-        
-        d.style.visibility='visible';
+               var items=this.options.items;
+               for(var i=0;i<items.length;i++)
+               {
+                  if(items[i].isSelected && item!=items[i]) {
+                    items[i].isSelected=false;
+                    items[i]._element.removeClass('C');
+                  }
+               }
+               o.selectedValue = item.value;
+            }
+
+            item.isSelected=!item.isSelected;
+            if(item.isSelected) item._element.addClass('C');
+            else item._element.removeClass('C');
+
+            if(o.onSelected) o.onSelected(item);
+            //o.List.DoCommand('selected',o.Value+'#'+item.isSelected,null);
+        }
+        else {
+            item._checkBox.checked = !item._checkBox.checked;
+            item.isChecked=item._checkBox.checked;
+            if(o.onChecked) o.onChecked(item);
+            if(item.isChecked) item._element.addClass('C');
+            else item._element.removeClass('C');
+
+            if(self.textElement) {
+                var selectText=o.dropText.replace('{$}',self.getSelectedCount());
+                self.textElement.set('text',selectText);
+            }
+            //o.List.DoCommand('checked',o.Value+'#'+item.isChecked,null);
+        }
+    },
+
+    onChecked: function(e)
+    {
+        e.cancelBubble=true;
+        // o.List.DoCommand('Checked',o.Value+'#'+o.CheckBox.checked,null);
+        return true;
+    },
+
+    onOver: function(e,item)
+    {
+        item._element.addClass('O');
+    },
+
+    onOut: function(e,item)
+    {
+        item._element.removeClass('O');
+    },
+
+    onOpen: function() 
+    {
+        var self=this;
+        var pos=self.dropElement.getCoordinates();
+        var element=self.element;
+        var button=self.buttonElement;
+        element.setStyles({'display':'','top':pos.bottom+2,'left':pos.left});
+        var close=function() {
+            element.setStyles({'display':'none'});
+            element.removeEvent('mouseleave');
+            button.removeEvent('click');
+            button.addEvent('click',function(e) { self.onOpen(e); });
+        };
+        element.addEvent('mouseleave',close);
+        button.removeEvent('click');
+        button.addEvent('click',close);
+    },
+
+    buildItem: function(item,ul,alt)
+    {
+        var self=this;
+        var o=self.options;
+
+        var li=new Element('li',{class:this.options.itemCssClass}).inject(ul);
+        if(alt && o.alternateItems) li.addClass('alt');
+        if(item.isSelected && o.canSelect) li.addClass('C');
+        li.addEvent('click',function(e) { self.onSelected(e,item); });
+        li.addEvent('mouseover',function(e) { self.onOver(e,item); } );
+        li.addEvent('mouseout',function(e) { self.onOut(e,item); } );
+        item._element=li;
+
+        var id=o.id+'$'+item.value;
+        var input=new Element('input', { 'type': 'checkbox', 'name': id, 'id': id, 'value': item.value }).inject(li);
+        input.checked = item.isChecked;
+        input.addEvent('click',function(e) { self.fireEvent('checked',[e,item]); });
+        item._checkBox = input;
+
+        if(!o.canSelect) {
+            if(item.isChecked) item._element.addClass('C');
+            else item._element.removeClass('C');
+        }
+
+        new Element('span',{'text':item.text}).inject(li);
+
+        return li;
+    },
+
+    buildBar: function(item,ul)
+    {
+        var li=new Element('li',{class:this.options.barCssClass}).inject(ul);
+        item._element=$(li);
+        new Element('hr').inject(li);
+        return li;
+    },
+
+    itemFromHTML: function(rw)
+    {
+        var item=new Hash;
+        rw=$(rw);
+        item._element=rw;
+
+        var inp=rw.getElement('input');
+        if(inp) {
+            item.id=inp.id;
+            item.name=inp.name;
+            item.value=inp.value;
+            item.isChecked=inp.checked;
+            item._checkBox = inp;
+        }
+
+        if(rw.getElement('hr')) item.isBar=true;
+        else {
+            var c=rw.getElements('TD');
+            if(c.length>1) {
+                item.text=c[1].innerText;
+                item.canSelect=true;
+            } else {
+                item.text=c[0].innerText;
+            }
+        }
+
+        this.options.items.push(item);
     }
-    
-    o.saveState();
-},
-
-toDOM: function() 
-{
-    var o=this;        
-    
-    var d=$(o.ID);
-    if(!d) { 
-        d=new Element('div');
-        d.className = o.CssClass;
-        if(o.Width) o.style.width=parseInt(o.Width)+'px';
-        if(o.Height) o.style.height=parseInt(o.Height)+'px';        
-        d.id=o.ID;    
-    }
-    if(o.CssClass) d.className = o.CssClass;
-    o.DOM = d;
-    
-    while(d.getElement('table'))
-        d.removeChild(d.getElement('table'));
-    
-    var t=new Element('table');
-    t.cellSpacing=0;
-    t.cellPadding=0;
-    t.style.width='100%';
-    d.appendChild(t);
-    
-    var tb=new Element('tbody');
-    t.appendChild(tb);
-    
-    for(var i=0;i<o.Items.length;i++) {
-        tb.appendChild(o.Items[i].toDOM());
-    }
-    
-    return $(d);
-},
-
-addItem: function(value,text,checked,selected)
-{
-    if(!selected) selected=false;
-    if(!checked) checked=false;
-    var itm=new MUI.CheckedListBoxItem({'Value':value,'Text':text,'Checked':checked,'Selected':selected});
-    this.Items.push(itm);
-    itm.setList(this);
-    return itm;
-},
-
-addBar: function()
-{
-    var bar=new MUI.CheckedListBoxBar();
-    this.Items.push(bar);
-    bar.setList(this);
-    return bar;
-},
-
-update: function(json)
-{
-    var o=this;
-    if(json) o.fromJSON(json);
-    o.toDOM();
-}
-
 });                        
