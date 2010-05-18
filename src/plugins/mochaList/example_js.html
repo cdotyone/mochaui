@@ -1,0 +1,51 @@
+<html>
+<head>
+<!--MOCHAUI-->
+<script type="text/javascript" src="../../scripts/source/mootools-1.2.4-core-yc.js"></script>
+<script type="text/javascript" src="../../scripts/source/mootools-1.2.4-more-yc.js"></script>
+<script type="text/javascript" src="../../scripts/source/Core/Core.js"></script>
+<script type="text/javascript" src="../../scripts/source/Layout/Layout.js"></script>
+<script type="text/javascript" src="../../scripts/source/Layout/Dock.js"></script>
+<script type="text/javascript" src="../../scripts/source/Window/Window.js"></script>
+<script type="text/javascript" src="../../scripts/source/Window/Modal.js"></script>
+<script type="text/javascript" src="../../scripts/source/Components/Tabs.js"></script>
+<!--MOCHAUI-->
+<script type="text/javascript" src="List.js"></script>
+<script type="text/javascript">
+
+    new MUI.List({
+        container:'page',
+        width:250,
+        height:100,
+        id:'list1',
+        items:[
+            {value:'item1',text:"Item 1",isChecked: false,isSelected: false},
+            {value:'item2',text:"Item 2",isChecked: true,isSelected: false},
+            {value:'item3',text:"Item 3",isChecked: false,isSelected: false},
+            {value:'item4',text:"Item 4",isChecked: true,isSelected: true},
+            {value:'item5',text:"Item 5",isChecked: false,isSelected: false},
+            {value:'item6',text:"Item 6",isChecked: false,isSelected: false},
+            {value:'item7',text:"Item 7",isChecked: false,isSelected: false},
+            {value:'item8',text:"Item 8",isChecked: false,isSelected: false},
+            {value:'item9',text:"Item 9",isChecked: false,isSelected: false},
+            {value:'item10',text:"Item 10",isChecked: false,isSelected: false}
+        ],
+        columns:[
+            {text:'value',name:'value','value':'value'},
+            {text:'text',name:'value'},
+            {text:'isChecked',name:'isChecked'},
+            {text:'isSelected',name:'isSelected'}
+        ]
+    });
+</script>
+<link rel="stylesheet" type="text/css" href="style.css" />
+
+</head>
+
+<body>
+
+<div id="page">
+</div>
+
+</body>
+</html>

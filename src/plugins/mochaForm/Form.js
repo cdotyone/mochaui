@@ -510,7 +510,7 @@ MUI.Form = new Class({
         o.tableCheck();
         o.addCol();
 
-        o.f.appendChild(new mochaList({ id: item.id, Groups: item.Groups }).toDOM());
+        o.f.appendChild(new mochaList({ id: item.id, groups: item.groups }).toDOM());
 
         var addAutoSize = function(id) {
             return function() { $(id).getParent().addEvent('onResize', function() { o.autoSize(id); }); };
@@ -541,14 +541,14 @@ MUI.Form = new Class({
 
         var w = (('' + item.Width).indexOf('%') > 0) ? item.Width : item.Width + 'px';
         if (item.Type == "text") {
-            dom = new Element('input', { 'type': 'text', 'id': item.id, 'title': item.title, 'value': item.Value, 'class': css, 'maxlength': item.Length, styles: { 'width': w} });
+            dom = new Element('input', { 'type': 'text', 'id': item.id, 'title': item.title, 'value': item.value, 'class': css, 'maxlength': item.Length, styles: { 'width': w} });
         }
 
         if (item.Type == "multiline" || item.Type == "html") {
             var h;
             if (item.ReadOnly) {
-                dom = new Element('div', { 'id': item.id, 'text': item.Value, 'class': css, styles: { 'width': w} });
-                if (!item.Value) dom.set('html', '&nbsp;');
+                dom = new Element('div', { 'id': item.id, 'text': item.value, 'class': css, styles: { 'width': w} });
+                if (!item.value) dom.set('html', '&nbsp;');
                 if (item.Height) {
                     h = (('' + item.Height).indexOf('%') > 0) ? item.Height : item.Height + 'px';
                     dom.setStyles({ 'overflow': 'auto', 'height': h });
@@ -558,12 +558,12 @@ MUI.Form = new Class({
                 //                    PO['wysiwyg'] = new Asset.javascript('/OMMS/wysiwyg/scripts/wysiwyg.js', { id: 'wysiwyg' });
                 //                }
                 h = (('' + item.Height).indexOf('%') > 0) ? item.Height : item.Height + 'px';
-                dom = new Element('textarea', { 'id': item.id, 'title': item.title, 'value': item.Value, 'class': css, 'maxlength': item.Length, styles: { 'width': w, 'height': h} });
+                dom = new Element('textarea', { 'id': item.id, 'title': item.title, 'value': item.value, 'class': css, 'maxlength': item.Length, styles: { 'width': w, 'height': h} });
             }
         }
 
         if (item.Type == "date") {
-            dom = new Element('input', { 'type': 'text', 'id': item.id, 'title': item.title, 'value': item.Value, 'class': 'calendar', 'maxlength': item.Length, styles: { 'width': w} });
+            dom = new Element('input', { 'type': 'text', 'id': item.id, 'title': item.title, 'value': item.value, 'class': 'calendar', 'maxlength': item.Length, styles: { 'width': w} });
             dom.addClass(css);
 
             var newCal = function(nam) {
@@ -575,7 +575,7 @@ MUI.Form = new Class({
         }
 
         if (item.Type == "password") {
-            dom = new Element('input', { 'type': 'password', 'id': item.id, 'title': item.title, 'value': item.Value, 'class': css, 'maxlength': item.Length, styles: { 'width': w} });
+            dom = new Element('input', { 'type': 'password', 'id': item.id, 'title': item.title, 'value': item.value, 'class': css, 'maxlength': item.Length, styles: { 'width': w} });
         }
 
         div.appendChild(dom);
@@ -593,7 +593,7 @@ MUI.Form = new Class({
     AddCheck: function(item) {
         this.tableCheck();
         var o = this;
-        if (!item.Value) item.Value = '';
+        if (!item.value) item.value = '';
         o.addCol(item.Align);
 
         var css = o.getRuleClass(item.id);
@@ -607,9 +607,9 @@ MUI.Form = new Class({
         }
         var dom;
         if (item.Type == "check") {
-            dom = new Element('input', { 'type': 'checkbox', 'id': item.id, 'value': item.Value, 'class': css });
+            dom = new Element('input', { 'type': 'checkbox', 'id': item.id, 'value': item.value, 'class': css });
         } else {
-            dom = new Element('input', { 'type': 'radio', 'id': item.id, 'value': item.Value, 'class': css })
+            dom = new Element('input', { 'type': 'radio', 'id': item.id, 'value': item.value, 'class': css })
         }
         p.appendChild(dom);
         if (item.Label) { p.appendChild(new Element('span', { 'text': item.Label })); }

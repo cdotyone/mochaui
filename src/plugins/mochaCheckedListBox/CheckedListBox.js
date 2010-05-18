@@ -60,7 +60,7 @@ MUI.CheckedListBox = new NamedClass('MUI.CheckedListBox',{
         if(el) {
             var nItems = new Array();
 
-            o.cssClass = el.class;
+            o.cssClass = el.get('class');
             var list=el.getElement('table');
             if(list) {
                 var rows=list.getElements('TR');
@@ -91,11 +91,11 @@ MUI.CheckedListBox = new NamedClass('MUI.CheckedListBox',{
             }
             panel.empty();
 
-            drop=new Element('div',{id:id+'_droplist',class:o.dropCssClass,styles:{'width':parseInt(''+o.width)+'px'}}).inject(panel);
+            drop=new Element('div',{id:id+'_droplist','class':o.dropCssClass,styles:{'width':parseInt(''+o.width)+'px'}}).inject(panel);
             self.dropElement=drop;
             
             self.textElement=new Element('div',{id:id+'_text','class':'text','text':'1 selected',styles:{'width':(parseInt(''+o.width)-24)+'px'}}).inject(drop);
-            self.buttonElement = new Element('div',{id:id+'_button',class:'button','html':'&nbsp;'}).inject(drop).addEvent('click',function(e) { self.onOpen(e); });
+            self.buttonElement = new Element('div',{id:id+'_button','class':'button','html':'&nbsp;'}).inject(drop).addEvent('click',function(e) { self.onOpen(e); });
 
             o.id+='_list';
             o.isOpen = false;
@@ -104,12 +104,12 @@ MUI.CheckedListBox = new NamedClass('MUI.CheckedListBox',{
         var div=$(id);
         var isNew=false;
         if(!div) {
-            div=new Element('div',{id:id,class:o.cssClass});
+            div=new Element('div',{'id':id,'class':o.cssClass});
             if(o.width) div.setStyle('width',(parseInt(''+o.width)-2)+'px');
             if(o.height) div.setStyle('height',parseInt(''+o.height)+'px');
             isNew = true;
         }
-        if(o.cssClass) div.class = o.cssClass;
+        if(o.cssClass) div.set('class',o.cssClass);
         this.element = div;
 
         div.empty();
@@ -254,7 +254,7 @@ MUI.CheckedListBox = new NamedClass('MUI.CheckedListBox',{
         var self=this;
         var o=self.options;
 
-        var li=new Element('li',{class:this.options.itemCssClass}).inject(ul);
+        var li=new Element('li',{'class':this.options.itemCssClass}).inject(ul);
         if(alt && o.alternateItems) li.addClass('alt');
         if(item.isSelected && o.canSelect) li.addClass('C');
         li.addEvent('click',function(e) { self.onSelected(e,item); });
@@ -280,7 +280,7 @@ MUI.CheckedListBox = new NamedClass('MUI.CheckedListBox',{
 
     buildBar: function(item,ul)
     {
-        var li=new Element('li',{class:this.options.barCssClass}).inject(ul);
+        var li=new Element('li',{'class':this.options.barCssClass}).inject(ul);
         item._element=$(li);
         new Element('hr').inject(li);
         return li;
