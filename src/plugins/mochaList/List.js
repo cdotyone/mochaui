@@ -27,6 +27,7 @@ MUI.List = new Class({
         , showCommand:      true
         , items:            $A([])
         , columns:          $A([])
+        , commands:         $A([])         
         , groups:           $A([])
         , navigateURL:      ''
         , iconPath:         ''
@@ -67,7 +68,7 @@ MUI.List = new Class({
 
         if(o.groups.length==0) {
             if(o.columns.length==0) return self;
-            self.buildGroup({'columns':o.columns,'items':o.items,'id':'g0'},div);
+            self.buildGroup({'columns':o.columns,'items':o.items,'commands':o.commands,'id':'g0'},div);
         } else {
             for (var i = 0; i < o.groups.length; i++) {
                 var g=o.groups[i];
@@ -141,7 +142,7 @@ MUI.List = new Class({
         var id = self.options.id;
 
         var cl = group.columns;
-        var value = '' + self._getItem(self.Data, cl[0].value);
+        var value = '' + self._getItem(item, cl[0].value);
         if (!value) value = '' + parent.childNodes.length;
         var rid = id + '_' + group.id + '_' + value.replace(/[\s\.]/g, '_');
 
@@ -172,7 +173,7 @@ MUI.List = new Class({
                 } else if (!self.value) td.addEvent('click', function(event) { event.stopPropagation(); });
 
                 if (col.Image) {
-                    var cImage = self._getItem(self.Data, col.image);
+                    var cImage = self._getItem(item, col.image);
                     cImage.replace(/~/g, o.iconPath);
                     if (cImage) img = new Element('img',{'alt':'','src':cImage});
                 }
@@ -181,14 +182,14 @@ MUI.List = new Class({
                     a = new Element('a', { 'styles': { 'text-decoration': 'underline'} });
 
                     if (col.tipTitle) {
-                        tip = self._getItem(self.Data, col.tipTitle);
+                        tip = self._getItem(item, col.tipTitle);
                         if (tip) {
                             a.store('tip:title', tip);
                             a.set('class', 'Tips');
                         }
                     }
                     if (col.tipText) {
-                        tip = self._getItem(self.Data, col.tipText);
+                        tip = self._getItem(item, col.tipText);
                         if (tip) {
                             a.store('tip:text', tip);
                             a.set('class', 'Tips');
@@ -196,15 +197,15 @@ MUI.List = new Class({
                     }
                     if (col.URL) {
                         if (col.Target) {
-                            var tgt = self._getItem(self.Data, col.target);
+                            var tgt = self._getItem(item, col.target);
                             if (tgt) { a.target = tgt; }
                         }
                         if (col.urlCssClass) {
-                            var cls = self._getItem(self.Data, col.Target, col.urlCssClass);
+                            var cls = self._getItem(item, col.Target, col.urlCssClass);
                             if (cls) { a.set('class', tgt); }
                         }
 
-                        var url = self._getItem(self.Data, col.Target, col.urlCssClass);
+                        var url = self._getItem(item, col.Target, col.urlCssClass);
                         if (url) {
                             url = url.replace(/~/, o.navigateURL);
                             a.set('href', url);
@@ -223,12 +224,16 @@ MUI.List = new Class({
                     if (col.tipTitle) var tip = new Tips(new Array(a), { maxTitleChars: 50 });
                 } else { if (img) td.appendChild(img); td.appendChild(txt); }
             } else {
-                td.appendChild(txt);
+                if(col.type == "checkbox") {
+
+                    var chk=new Element('input', { 'type': 'checkbox', 'name': id + '_' + col.name, id:id + '_' + col.name + i ,'value':value }).inject(td);
+                    if((''+self._getItem(item, col.name))=='true') chk.set('checked','true');
+                } else td.appendChild(txt);
             }
-            self.fireEvent('onItemColumnBound', [self,item,group] );
+            self.fireEvent('itemColumnBound', [item,group,self,col,td] );
         }
 
-        var cm = o.commands;
+        var cm = group.commands;
         if (cm && cm.length > 0 && o.showCommand) {
             tid = rid + '_commands';
 
@@ -244,18 +249,22 @@ MUI.List = new Class({
                     a = $(new Element('a'));
                     a.title = cmd.text;
                     a.href = "#" + cmd.name;
-                    a.addEvent('click', function(e) { self.onItemClick(e,item,group,parent); return false; });
+                    a.addEvent('click', function(e) { self.onItemCommand(e,item,group,parent,cmd); return false; });
 
                     td.appendChild(a);
 
-                    img = new Element('img');
-                    img.alt = cmd.text;
-                    img.src = o.iconPath + cmd.Image;
-                    a.appendChild(img);
+                    if(cmd.image) {
+                        img = new Element('img');
+                        img.alt = cmd.text;
+                        img.src = o.iconPath + cmd.image;
+                        a.appendChild(img);
+                    } else {
+                        a.set('html',cmd.text);
+                    }
                 }
             }
         } else {
-            if (o.commands && o.commands.length > 0) {
+            if (group.commands && group.commands.length > 0) {
                 tr.appendChild(new Element('td', { 'html': '&nbsp;' }));
             }
         }
@@ -285,17 +294,18 @@ MUI.List = new Class({
         var t = $(e.target);
         if (t.nodeName != 'A') t = t.getParent('a');
         var img = t.getElement('img');
-        self.fireEvent('onCommand', [item,group,self,cmd,img]);
+        self.fireEvent('command', [item,group,self,cmd,img]);
     },
     
     onItemClick: function(e,item,group,parent) {
         var self = this;
         self.value = item.value;
-        self.fireEvent('onItemSelected', [e,item,group,parent]);
+
+        self.fireEvent('itemSelected', [item,group,self,parent]);
         if (item._element || parent) {
             if(!parent) parent=item._element.getParent();
             parent.getElements('.C').removeClass('C');
-            parent.addClass('C');
+            item._element.addClass('C');
         }
         return this;
     },

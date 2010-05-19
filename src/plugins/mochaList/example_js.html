@@ -33,10 +33,21 @@
         columns:[
             {text:'value',name:'value','value':'value'},
             {text:'text',name:'value'},
-            {text:'isChecked',name:'isChecked'},
-            {text:'isSelected',name:'isSelected'}
-        ]
-    });
+            {text:'isChecked',name:'isChecked','type':'checkbox'},
+            {text:'isSelected',name:'isSelected','type':'checkbox'}
+        ],
+        commands:[
+            {'text':'Cancel','name':'Cancel','image':'images/cancel.png'}
+        ],
+        onCommand: function(item,group,self,cmd,img) {
+            alert('receieved ' + cmd.name + ' command on item ' + item.value)            
+        },
+        onItemSelected: function(item,group,self,cmd,img) {
+            alert('receieved onItemSelected command on item ' + item.value)
+        },
+        onItemColumnBound: function(item,group,self,col,td) {
+        }
+});
 </script>
 <link rel="stylesheet" type="text/css" href="style.css" />
 

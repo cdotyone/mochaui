@@ -212,6 +212,8 @@ MUI.CheckedListBox = new NamedClass('MUI.CheckedListBox',{
             }
             //o.List.DoCommand('checked',o.Value+'#'+item.isChecked,null);
         }
+
+        self.fireEvent('selected',[item,e] );
     },
 
     onChecked: function(e)
@@ -265,7 +267,7 @@ MUI.CheckedListBox = new NamedClass('MUI.CheckedListBox',{
         var id=o.id+'$'+item.value;
         var input=new Element('input', { 'type': 'checkbox', 'name': id, 'id': id, 'value': item.value }).inject(li);
         input.checked = item.isChecked;
-        input.addEvent('click',function(e) { self.fireEvent('checked',[e,item]); });
+        input.addEvent('click',function(e) { self.fireEvent('checked',[item,e]); });
         item._checkBox = input;
 
         if(!o.canSelect) {
