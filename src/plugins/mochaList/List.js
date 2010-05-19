@@ -38,7 +38,6 @@ MUI.List = new Class({
     },
 
     initialize: function(options) {
-
         this.setOptions(options);
 
         // make sure this controls has an ID
@@ -127,7 +126,7 @@ MUI.List = new Class({
                 tr = item._element;
 
                 var sel = (item.value == value && value!='');
-                item.Selected = sel;
+                item.selected = sel;
                 if (sel) tr.addClass('C');
                 else if(i % 2) tr.addClass('alt');
             }
@@ -172,7 +171,7 @@ MUI.List = new Class({
                     td.addEvent('click', function(event) { event.stopPropagation(); if (!o.canSelect) cb.checked = !cb.checked });
                 } else if (!self.value) td.addEvent('click', function(event) { event.stopPropagation(); });
 
-                if (col.Image) {
+                if (col.image) {
                     var cImage = self._getItem(item, col.image);
                     cImage.replace(/~/g, o.iconPath);
                     if (cImage) img = new Element('img',{'alt':'','src':cImage});

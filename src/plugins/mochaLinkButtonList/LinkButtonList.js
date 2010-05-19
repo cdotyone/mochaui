@@ -19,7 +19,7 @@ options: {
      id: null,
      cssClass: 'formIndexer',
      List: null,
-     Selected: '',
+     selected: '',
      onClick: $empty
 },
 
@@ -42,7 +42,7 @@ toDOM: function() {
     var ul=new Element('ul',{'id':o.options.id+'_ul'});
     div.appendChild(ul);    
     
-    var selected=o.options.Selected;
+    var selected=o.options.selected;
     list.each(function(itm) {
         itm=itm.replace(new RegExp(/\%\%\%\%/g),',');
         var li=new Element('li',{'text':itm});

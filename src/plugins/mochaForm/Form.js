@@ -502,7 +502,7 @@ MUI.Form = new Class({
         o.tableCheck();
         o.addCol();
 
-        o.f.appendChild(new LinkButtonList({ id: item.id, List: item.List, Selected: item.Selected }).toDOM());
+        o.f.appendChild(new LinkButtonList({ id: item.id, List: item.List, selected: item.selected }).toDOM());
     },
 
     addGrid: function(item) {
@@ -650,7 +650,7 @@ MUI.Form = new Class({
         if ($type(items) == 'array') {
             $A(items).each(function(row) {
                 if (item.CanAdd) {
-                    var opt = new Element('option', { 'value': row[item.ValueField], 'text': row[item.TextField] });
+                    var opt = new Element('option', { 'value': row[item.valueField], 'text': row[item.textField] });
                     sel.appendChild(opt);
                 }
             });
