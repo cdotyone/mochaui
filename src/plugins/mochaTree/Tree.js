@@ -30,6 +30,7 @@ options: {
     ,container:     null
     ,depth:         2
     ,id: ''
+    ,createOnInit:  true
     
     ,onNodeExpanded:$empty
     ,onNodeChecked: $empty
@@ -64,8 +65,7 @@ toDOM: function(containerEl)
         isNew=true;
     } else ul=div.getElement('ul');
     if(!ul) {
-        ul=new Element('ul');
-        div.appendChild(ul);    
+        ul=new Element('ul').inject(div);
     } else ul.empty();
     if(o.cssClass) {
         div.set('class',o.cssClass);
@@ -78,7 +78,9 @@ toDOM: function(containerEl)
         var li=new Element('li',{styles:{'border':'solid 1px white;'}}).inject(ul);
         ul=new Element('ul').inject(li);
     }
-    nodes.each(function(node) { self.buildNode(node,self,ul); });
+    nodes.each(function(node) {
+        self.buildNode(node,ul,o.depth);
+    });
     var last=ul.getChildren().getLast();
     if(last) last.addClass('last');
       
@@ -161,7 +163,10 @@ buildNode: function(node, parent, depth) {
 
     if (node.nodes && node.nodes.length > 0) {
         if (!ul) ul = new Element('ul').inject(li);
-        if (node.expanded == 0 && o.depth<=depth) ul.style.display = 'none';
+        if (!node.isExpanded && o.depth<=depth) {
+            ul.style.display = 'none';
+            node.isExpanded=true;
+        }
         node._ul =ul;
         
         for (var i = 0; i < node.nodes.length; i++) {
@@ -169,7 +174,7 @@ buildNode: function(node, parent, depth) {
         }
         ul.childNodes[ul.childNodes.length - 1].addClass('last');
     }
-    if (node.expanded != 0) li.set('class','O');
+    if (node.isExpanded) li.set('class','O');
     else li.set('class','C');
     if ((!node.nodes || node.nodes.length == 0) && node.hasChildren == 0) li.set('class','nochild');
 
@@ -180,9 +185,9 @@ buildNode: function(node, parent, depth) {
         chk.addEvent('click', function(e) { self.onNodeCheck(node,e); });
     }
     li.removeEvents('click');
-    li.addEvent('click', function(e) { o.onNodeExpand(node,e); });
+    li.addEvent('click', function(e) { self.onNodeExpand(node,e); });
     a.removeEvents('click');
-    a.addEvent('click', function(e) { o.onNodeClick(node,e); });
+    a.addEvent('click', function(e) { self.onNodeClick(node,e); });
 
     return self;
 },
@@ -246,18 +251,18 @@ onNodeExpand: function(node,e) {
     if (mX < 20 && mY < 20) {
         itm.addClass('last');
         var ul = itm.getElement('ul');
-        if (ul && o.expanded == 1) {
+        if (ul && node.isExpanded) {
             ul.style.display = 'none';
             itm.removeClass('O');
             itm.addClass('C');
-            node.expanded = 0;
+            node.isExpanded = false;
             return;
         }
-        else if (ul && o.expanded == 0) {
+        else if (ul && !node.isExpanded) {
             ul.style.display = '';
             itm.removeClass('C');
             itm.addClass('O');
-            node.expanded = 1;
+            node.isExpanded = true;
             if (node.nodes.length > 0) return;
         }
     }
