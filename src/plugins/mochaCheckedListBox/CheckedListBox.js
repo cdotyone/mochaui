@@ -189,7 +189,7 @@ MUI.CheckedListBox = new NamedClass('MUI.CheckedListBox',{
                     items[i]._element.removeClass('C');
                   }
                }
-               o.selectedValue = item.value;
+               o.value = item.value;
             }
 
             item.isSelected=!item.isSelected;

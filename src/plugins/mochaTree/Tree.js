@@ -18,23 +18,23 @@ MUI.Tree = new Class({
 Implements: [Events, Options],
 
 options: {
-     cssClass:      'tree'
-    ,nodes:         $A([])
-    ,showCheckBox:  true
-    ,textField:     'text'
-    ,valueField:    'value'
-    ,tipField:      'tip'
-    ,selectedValue: ''
-    ,selectedNode:  null
-    ,expanded:      null
-    ,container:     null
-    ,depth:         2
-    ,id: ''
-    ,createOnInit:  true
-    
-    ,onNodeExpanded:$empty
-    ,onNodeChecked: $empty
-    ,onNodeSelected:$empty
+     id: ''
+    ,container:     null        // the parent control in the document to add the control to
+    ,createOnInit:  true        // true to add tree to container when control is initialized
+    ,cssClass:      'tree'      // the primary css tag
+    ,nodes:         $A([])      // the hierarchical list of nodes
+    ,showCheckBox:  false       // true to show checkBoxes
+    ,textField:     'text'      // the name of the field that has the node's text
+    ,valueField:    'value'     // the name of the field that has the node's value
+    ,tipField:      'tip'       // the name of the field that has the node's tip text
+    ,canSelect:     true        // can the user select a node by clicking it             //TODO
+    ,value:         ''          // the currently selected node's value
+    ,selectedNode:  null        // the currently selected node
+    ,depth:         2           // how deep to expand the nodes to
+
+    ,onNodeExpanded:$empty      // event: called when node is expanded
+    ,onNodeChecked: $empty      // event: called when node's checkbox is checked
+    ,onNodeSelected:$empty      // event: when a node is checked
 },
 
 initialize: function( options )
@@ -79,7 +79,7 @@ toDOM: function(containerEl)
         ul=new Element('ul').inject(li);
     }
     nodes.each(function(node) {
-        self.buildNode(node,ul,o.depth);
+        self.buildNode(node,ul,1);
     });
     var last=ul.getChildren().getLast();
     if(last) last.addClass('last');
@@ -106,7 +106,7 @@ selectValue: function(val,e)
         self.selectedNode = node;
         node._element.getElement('a').addClass('sel');
     }
-    self.selectedValue = val;
+    self.value = val;
     if(node) this.fireEvent('onNodeSelected',[e,node]);
 },
 
@@ -141,16 +141,16 @@ buildNode: function(node, parent, depth) {
         else li.inject(parent); 
     }
 
-    if(o.showCheckBox) chk = new Element('INPUT', { 'type':'checkbox', 'value': node.value });
+    if(o.showCheckBox) chk = new Element('INPUT', { 'type':'checkbox', 'value': node.value }).inject(li);
     a = new Element('a',{'href':'#' + node.value}).inject(li);
     span = new Element('span',{'text':node.text}).inject(a);
 
-    self._element = li;
+    node._element = li;
     if (node.tip) a.title = node.tip;
 
     if (chk) chk.checked = node.checked;
 
-    if (o.selectedValue == node.value) {
+    if (o.value == node.value) {
         self.element.getElements('.sel').removeClass('sel');
         a.className = 'sel';
         o.selectedNode = self;
@@ -165,19 +165,17 @@ buildNode: function(node, parent, depth) {
         if (!ul) ul = new Element('ul').inject(li);
         if (!node.isExpanded && o.depth<=depth) {
             ul.style.display = 'none';
-            node.isExpanded=true;
-        }
+            node.isExpanded=false;
+        } else node.isExpanded=true;
         node._ul =ul;
         
         for (var i = 0; i < node.nodes.length; i++) {
             self.buildNode(node.nodes[i],node,ul,depth+1);
         }
         ul.childNodes[ul.childNodes.length - 1].addClass('last');
-    }
+    } else li.addClass('nochild');
     if (node.isExpanded) li.set('class','O');
-    else li.set('class','C');
-    if ((!node.nodes || node.nodes.length == 0) && node.hasChildren == 0) li.set('class','nochild');
-
+    if ((!node.nodes || node.nodes.length == 0) && !node.hasChildren) li.addClass('nochild');
 
     // set events
     if (chk) {
@@ -238,7 +236,7 @@ onNodeExpand: function(node,e) {
     var self = this;
     var o=self.options;
 
-    var itm=self._element;
+    var itm=node._element;
     var mY=0;
     var mX=0;
     if(e) {
@@ -249,7 +247,6 @@ onNodeExpand: function(node,e) {
     }
 
     if (mX < 20 && mY < 20) {
-        itm.addClass('last');
         var ul = itm.getElement('ul');
         if (ul && node.isExpanded) {
             ul.style.display = 'none';
