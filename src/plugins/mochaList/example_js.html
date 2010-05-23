@@ -14,12 +14,7 @@
 <script type="text/javascript" src="List.js"></script>
 <script type="text/javascript">
 
-    new MUI.List({
-        container:'page',
-        width:250,
-        height:100,
-        id:'list1',
-        items:[
+    var items = [
             {value:'item1',text:"Item 1",isChecked: false,isSelected: false},
             {value:'item2',text:"Item 2",isChecked: true,isSelected: false},
             {value:'item3',text:"Item 3",isChecked: false,isSelected: false},
@@ -30,9 +25,16 @@
             {value:'item8',text:"Item 8",isChecked: false,isSelected: false},
             {value:'item9',text:"Item 9",isChecked: false,isSelected: false},
             {value:'item10',text:"Item 10",isChecked: false,isSelected: false}
-        ],
+        ];
+
+    new MUI.List({
+        container:'page',
+        width:250,
+        height:100,
+        id:'list1',
+        items:items,
         columns:[
-            {text:'value',name:'value','valueField':'value'},
+            {text:'value',name:'value','value':'value'},
             {text:'text',name:'value'},
             {text:'isChecked',name:'isChecked','type':'checkbox'},
             {text:'isSelected',name:'isSelected','type':'checkbox'}
@@ -40,16 +42,40 @@
         commands:[
             {'text':'Cancel','name':'Cancel','image':'images/cancel.png'}
         ],
-        onCommand: function(item,group,self,cmd,img) {
+        onItemCommand: function(item,self,cmd,img) {
             alert('receieved ' + cmd.name + ' command on item ' + item.value)
         },
-        onItemSelected: function(item,group,self,cmd,img) {
+        onItemSelected: function(item,self,cmd,img) {
             alert('receieved onItemSelected command on item ' + item.value)
         },
-        onItemColumnBound: function(item,group,self,col,td) {
+        onItemColumnBound: function(item,self,col,td) {
         }
-});
-</script>
+    });
+
+    new MUI.List({
+        container:'page',
+        width:250,
+        height:100,
+        id:'list2',
+        items:items,
+        columns2:[
+            {text:'value',name:'value','value':'value'},
+            {text:'text',name:'value'},
+            {text:'isChecked',name:'isChecked','type':'checkbox'},
+            {text:'isSelected',name:'isSelected','type':'checkbox'}
+        ],
+        commands:[
+            {'text':'Cancel','name':'Cancel','image':'images/cancel.png'}
+        ],
+        onItemCommand: function(item,self,cmd,img) {
+            alert('receieved ' + cmd.name + ' command on item ' + item.value)
+        },
+        onItemSelected: function(item,self,cmd,img) {
+            alert('receieved onItemSelected command on item ' + item.value)
+        },
+        onItemColumnBound: function(item,self,col,td) {
+        }
+    });</script>
 <link rel="stylesheet" type="text/css" href="style.css" />
 
 </head>

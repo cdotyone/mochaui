@@ -20,15 +20,14 @@ MUI.List = new Class({
         id: ''
        ,container:     null        // the parent control in the document to add the control to
        ,createOnInit:  true        // true to add tree to container when control is initialized
-       ,cssClass:      'tree'      // the primary css tag
+       ,cssClass:      'list'      // the primary css tag
 
        ,showCommand:   true        // turns row commands on or off
-       ,commands:      $A([])      // commands to be used when no groups are specified
+       ,commands:      $A([])      // commands to be used 
        ,iconPath:      ''          // parent path to command icons
 
        ,items:         $A([])      // the array list of nodes
-       ,columns:       $A([])      // the list of columns to be used when no groups are specified
-       ,groups:        $A([])      // groups of items to display
+       ,columns:       $A([])      // the list of columns to be used
 
        ,showCheckBox:  false       // true to show checkBoxes
        ,navigateURL:   ''          // the base url to navigate from
@@ -49,7 +48,7 @@ MUI.List = new Class({
         if(!id) { id='list' + (++MUI.IDCount); this.options.id=id; }
 
         // create sub items if available
-        if(this.options.createOnInit && (this.options.items.length>0 || this.options.groups.length>0)) this.toDOM();
+        if(this.options.createOnInit && this.options.items.length>0) this.toDOM();
         else if($(id)) this.fromHTML(id);
 
         MUI.set(id,this);        
@@ -58,6 +57,20 @@ MUI.List = new Class({
     toDOM: function(containerEl) {
         var self = this;
         var o = self.options;
+
+        // see if we need build columns automagically
+        if(o.columns==null || o.columns.length==0) {
+            var ii=0;
+            o.columns=[];
+            var first=$H(o.items[0]);
+            first.each(function(value,key) {
+                var h={'text':key,'name':key};
+                if($type(value)=='boolean') h.type='checkbox';
+                if(ii==0) h['value'] = key;
+                o.columns.push(h);
+                i++;
+            });
+        }
 
         // build control's wrapper div
         var div = $(self.id);
@@ -70,18 +83,51 @@ MUI.List = new Class({
         if (o.cssClass) div.set('class',o.cssClass);
         self.element = div;
 
-        if(o.groups.length==0) {
-            // build control without groups
-            if(o.columns.length==0) return self;
-            self.buildGroup({'columns':o.columns,'items':o.items,'commands':o.commands,'id':'g0'},div);
-        } else {
-            // build control with multiple groups
-            for (var i = 0; i < o.groups.length; i++) {
-                var g=o.groups[i];
-                if(!g.id) g.id='g'+i;
-                self.buildGroup(g,div);
+        //-------------------------
+        // build table
+        var table = div.getElement('table');
+        if(!table) { table=new Element('table',{'cellSpacing':0,'cellPadding':0,'styles':{'width':'100%'}}).inject(div); }
+
+        // build column headers
+        var tbody = table.getElement('tbody');
+        var i,tr;
+        if(!tbody) {
+            tbody=new Element('tbody').inject(table);
+
+            tr = new Element('tr',{'class':'head'}).inject(tbody);
+            var cl = o.columns;
+            for (i = 0; i < cl.length; i++) {
+                var td = new Element('td',{'html':cl[i].text.replace(new RegExp(/\|/g), '<br/>'),'valign':'bottom'}).inject(tr);
+                if (i == 0) { td.addClass('First'); }
+                if(cl[i].align) { td.set('align',cl[i].align); }
+            }
+
+            // add command headers if they have commands
+            if (o.commands && o.commands.length > 0) {
+                tr.appendChild(new Element('td',{'class':'head','html':'&nbsp;'}));
             }
         }
+
+        // determine currently selected item
+        var value = o.value;
+
+        // build rows
+        var items = o.items;
+        if(items) {
+            for (i = 0; i < items.length; i++) {
+                // build the row
+                var item=items[i];
+                self.buildItem(item,tbody);
+                tr = item._element;
+
+                // select row if it needs to selected
+                var sel = (item.value == value && value!='');
+                item.selected = sel;
+                if (sel) tr.addClass('C');
+                else if(i % 2) tr.addClass('alt');
+            }
+        }
+        //-------------------------
 
         if(!isNew) return this;
 
@@ -94,74 +140,15 @@ MUI.List = new Class({
         return self;
     },
 
-    buildGroup: function(group,parent) {
+    buildItem: function(item,parent) {
         var self = this;
         var o=self.options;
-        var gid=o.id+'_'+group.id;
+        var id = o.id;
 
-        // build group container
-        var div = $(gid);
-        if(!div) { div=new Element('div',{'id':gid,'styles':{'overflow':'auto'}}).inject(parent); }
-        if (group.cssClass) div.set('class',group.cssClass);
-        else if (o.cssClass) div.set('class',o.cssClass);
-
-        // build group table
-        var table = div.getElement('table');
-        if(!table) { table=new Element('table',{'cellSpacing':0,'cellPadding':0,'styles':{'width':'100%'}}).inject(div); }
-
-        // build group column headers
-        var tbody = table.getElement('tbody');
-        var i,tr;
-        if(!tbody) {
-            tbody=new Element('tbody').inject(table);
-
-            tr = new Element('tr',{'class':'head'}).inject(tbody);
-            var cl = group.columns;
-            for (i = 0; i < cl.length; i++) {
-                var td = new Element('td',{'html':cl[i].text.replace(new RegExp(/\|/g), '<br/>'),'valign':'bottom'}).inject(tr);
-                if (i == 0) { td.addClass('First'); }
-                if(cl[i].align) { td.set('align',cl[i].align); }
-            }
-
-            // add command headers if they have commands
-            if (group.commands && group.commands.length > 0) {
-                tr.appendChild(new Element('td',{'class':div.className + 'Head','html':'&nbsp;'}));
-            }
-        }
-
-        // determine currently selected item
-        var value = group.value;
-        if(!value && o.value) value=o.value;
-
-        // build group's rows
-        var items = group.items;
-        if(items) {
-            for (i = 0; i < items.length; i++) {
-                // build the row
-                var item=items[i];
-                self.buildItem(item,group,tbody);
-                tr = item._element;
-
-                // select row if it needs to selected
-                var sel = (item.value == value && value!='');
-                item.selected = sel;
-                if (sel) tr.addClass('C');
-                else if(i % 2) tr.addClass('alt');
-            }
-        }
-
-        return div;
-    },
-
-    buildItem: function(item,group,parent) {
-        var self = this;
-        var o=self.options;
-        var id = self.options.id;
-
-        var cl = group.columns;
+        var cl = o.columns;
         var value = '' + self._getItem(item, cl[0].value);
         if (!value) value = '' + parent.childNodes.length;
-        var rid = id + '_' + group.id + '_' + value.replace(/[\s\.]/g, '_');
+        var rid = id + '_' + value.replace(/[\s\.]/g, '_');
 
         var tr = $(rid);
         if (!tr) tr = $(new Element('tr', { 'id': rid })).inject(parent);
@@ -255,11 +242,10 @@ MUI.List = new Class({
                     if((''+self._getItem(item, col.name))=='true') chk.set('checked','true');
                 } else td.appendChild(txt);
             }
-            self.fireEvent('itemColumnBound', [item,group,self,col,td] );
+            self.fireEvent('itemColumnBound', [item,self,col,td] );
         }
 
-        var cm = group.commands;
-        if(!cm && o.commands) cm=o.commands;
+        var cm=o.commands;
         if (cm && cm.length > 0 && o.showCommand) {
             tid = rid + '_commands';
 
@@ -272,12 +258,12 @@ MUI.List = new Class({
                 var cmd = cm[i];
 
                 // show event is used to determine if commands should be displayed
-                var showEvt = self.canShowEvent(self,item,group,cmd.name);
+                var showEvt = self.canShowEvent(self,item,cmd.name);
                 if (showEvt) {
                     a = $(new Element('a'));
                     a.title = cmd.text;
                     a.href = "#" + cmd.name;
-                    a.addEvent('click', function(e) { self.onItemCommand(e,item,group,parent,cmd); return false; });
+                    a.addEvent('click', function(e) { self.onItemCommand(e,item,parent,cmd); return false; });
 
                     td.appendChild(a);
 
@@ -298,9 +284,9 @@ MUI.List = new Class({
             tr.removeEvents('mouseover');
             tr.removeEvents('mouseout');
             tr.removeEvents('click');
-            tr.addEvent('mouseover', function(e) { self.onItemOver(e,item,group,parent); });
-            tr.addEvent('mouseout', function(e) { self.onItemOut(e,item,group,parent); });
-            tr.addEvent('click', function(e) { self.onItemClick(e,item,group,parent); });
+            tr.addEvent('mouseover', function(e) { self.onItemOver(e,item,parent); });
+            tr.addEvent('mouseout', function(e) { self.onItemOut(e,item,parent); });
+            tr.addEvent('click', function(e) { self.onItemClick(e,item,parent); });
         }
 
         return tr;
@@ -312,31 +298,25 @@ MUI.List = new Class({
         return item[property]; 
     },
 
-    onItemCommand: function(e,item,group,parent,cmd) {
+    onItemCommand: function(e,item,parent,cmd) {
         var self = this;
         e = new Event(e);
         e.stop();
         var t = $(e.target);
         if (t.nodeName != 'A') t = t.getParent('a');
         var img = t.getElement('img');
-        self.fireEvent('itemCommand', [item,group,self,cmd,img]);
+        self.fireEvent('itemCommand', [item,self,cmd,img]);
     },
     
-    onItemClick: function(e,item,group,parent) {
+    onItemClick: function(e,item,parent) {
         var self = this;
         var o=options;
-
-        // set last selected for group
-        if(o.options.groups.length>0) {
-            group.value = item.value;
-            group.selectedItem = item;
-        }
 
         // set last selected for entire control
         o.value = item.value;
         o.selectedItem = item;
 
-        self.fireEvent('itemSelected', [item,group,self,parent]);
+        self.fireEvent('itemSelected', [item,self,parent]);
         if (item._element || parent) {
             if(!parent) parent=item._element.getParent();
             parent.getElements('.C').removeClass('C');
@@ -357,14 +337,7 @@ MUI.List = new Class({
 
     canShowEvent: function() { return true; },
 
-    update: function(groups)
-    {
-        var self=this;
-        self.options.groups = groups;
-        self.toDOM();
-    },
-
-    updateItems: function(items)
+    update: function(items)
     {
         var self=this;
         self.options.items = items;
