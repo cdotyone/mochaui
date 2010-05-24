@@ -29,6 +29,7 @@
 
     new MUI.List({
         container:'page',
+        showCheckBox:true,
         width:250,
         height:100,
         id:'list1',
@@ -44,6 +45,9 @@
         ],
         onItemCommand: function(item,self,cmd,img) {
             alert('receieved ' + cmd.name + ' command on item ' + item.value)
+        },
+        onItemChecked: function(item,self,cmd,img) {
+            alert('receieved onItemChecked command on item ' + item.value)
         },
         onItemSelected: function(item,self,cmd,img) {
             alert('receieved onItemSelected command on item ' + item.value)

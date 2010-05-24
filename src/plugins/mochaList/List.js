@@ -36,7 +36,8 @@ MUI.List = new Class({
        ,selectedItem:  null        // the currently selected item
 
        ,onItemCommand:    $empty   // event: when a command is performed
-       ,onItemSelected:   $empty   // event: when a node is checked
+       ,onItemSelected:   $empty   // event: when a node is selected
+       ,onItemChecked:    $empty   // event: when a node is selected
        ,onItemColumnBound:$empty   // event: when a node's column is bound to the data
     },
 
@@ -173,9 +174,7 @@ MUI.List = new Class({
                 // special handling of first column
                 if (o.showCheckBox) {
                     var cb = new Element('input', { 'type': 'checkbox', 'name': id + '$checked', 'value': value }).inject(td);
-                    cb.addEvent('click', function(event) { event.stopPropagation(); });
-                    td.removeEvents('click');
-                    td.addEvent('click', function(event) { event.stopPropagation(); if (!o.canSelect) cb.checked = !cb.checked });
+                    cb.addEvent('click', function(event) { event.stopPropagation(); self.fireEvent('itemChecked', [item,self,parent]); });
                 } else if (!self.value) td.addEvent('click', function(event) { event.stopPropagation(); });
 
                 // create image if needed
@@ -307,10 +306,10 @@ MUI.List = new Class({
         var img = t.getElement('img');
         self.fireEvent('itemCommand', [item,self,cmd,img]);
     },
-    
+
     onItemClick: function(e,item,parent) {
         var self = this;
-        var o=options;
+        var o=self.options;
 
         // set last selected for entire control
         o.value = item.value;
