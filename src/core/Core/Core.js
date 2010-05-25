@@ -199,12 +199,12 @@ MUI.extend({
 						else {
 							options.require.onload();
 						}
-						options.onContentLoaded ? options.onContentLoaded() : instance.fireEvent('onContentLoaded', element);
+						(options.onContentLoaded && options.onContentLoaded!=$empty) ? options.onContentLoaded() : instance.fireEvent('contentLoaded', element);
 					}.bind(this)		
 				});
 			}		
 			else {
-				options.onContentLoaded ? options.onContentLoaded() : instance.fireEvent('onContentLoaded', element);
+                (options.onContentLoaded && options.onContentLoaded!=$empty) ? options.onContentLoaded() : instance.fireEvent('contentLoaded', element);
 			}			
 		
 		};
@@ -285,7 +285,7 @@ MUI.extend({
                     json = JSON.decode(json);
                     // calls onLoaded event instead of onContentLoaded
                     // onLoaded - event should call updateContent again with loadMethod='html'
-                    instance.fireEvent('onLoaded', $A([options.element, json, instance]));
+                    instance.fireEvent('loaded', $A([options.element, json, instance]));
                 }
             } .bind(this),
             onComplete: function() { } .bind(this)

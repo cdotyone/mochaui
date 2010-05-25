@@ -49,6 +49,7 @@ MUI.Dock = {
 	options: {
 		useControls:          true,      // Toggles autohide and dock placement controls.
 		dockPosition:         'bottom',  // Position the dock starts in, top or bottom.
+        dockVisible:          true,      // is the dock visible
 		// Style options
 		trueButtonColor:      [70, 245, 70],     // Color for autohide on
 		enabledButtonColor:   [115, 153, 191],
