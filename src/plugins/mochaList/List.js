@@ -17,28 +17,28 @@ MUI.List = new Class({
     Implements: [Events, Options],
 
     options: {
-        id: ''
-       ,container:     null        // the parent control in the document to add the control to
-       ,createOnInit:  true        // true to add tree to container when control is initialized
-       ,cssClass:      'list'      // the primary css tag
+        id:                 ''          // id of the primary element, and id os control that is registered with mocha
+       ,container:          null        // the parent control in the document to add the control to
+       ,createOnInit:       true        // true to add tree to container when control is initialized
+       ,cssClass:           'list'      // the primary css tag
 
-       ,showCommand:   true        // turns row commands on or off
-       ,commands:      $A([])      // commands to be used 
-       ,iconPath:      ''          // parent path to command icons
+       ,showCommand:        true        // turns row commands on or off
+       ,commands:           $A([])      // commands to be used
+       ,iconPath:           ''          // parent path to command icons
 
-       ,items:         $A([])      // the array list of nodes
-       ,columns:       $A([])      // the list of columns to be used
+       ,items:              $A([])      // the array list of nodes
+       ,columns:            $A([])      // the list of columns to be used
 
-       ,showCheckBox:  false       // true to show checkBoxes
-       ,navigateURL:   ''          // the base url to navigate from
-       ,canSelect:     true        // can the user select a row by clicking it
-       ,value:         ''          // the currently selected item's value
-       ,selectedItem:  null        // the currently selected item
+       ,showCheckBox:       false       // true to show checkBoxes
+       ,navigateURL:        ''          // the base url to navigate from
+       ,canSelect:          true        // can the user select a row by clicking it
+       ,value:              ''          // the currently selected item's value
+       ,selectedItem:       null        // the currently selected item
 
-       ,onItemCommand:    $empty   // event: when a command is performed
-       ,onItemSelected:   $empty   // event: when a node is selected
-       ,onItemChecked:    $empty   // event: when a node is selected
-       ,onItemColumnBound:$empty   // event: when a node's column is bound to the data
+       ,onItemCommand:      $empty      // event: when a command is performed
+       ,onItemSelected:     $empty      // event: when a node is selected
+       ,onItemChecked:      $empty      // event: when a node is selected
+       ,onItemColumnBound:  $empty      // event: when a node's column is bound to the data
     },
 
     initialize: function(options) {

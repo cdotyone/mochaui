@@ -18,15 +18,18 @@ MUI.Tree = new Class({
 Implements: [Events, Options],
 
 options: {
-     id: ''
+     id:            ''          // id of the primary element, and id os control that is registered with mocha
     ,container:     null        // the parent control in the document to add the control to
     ,createOnInit:  true        // true to add tree to container when control is initialized
     ,cssClass:      'tree'      // the primary css tag
+
     ,nodes:         $A([])      // the hierarchical list of nodes
-    ,showCheckBox:  false       // true to show checkBoxes
+
     ,textField:     'text'      // the name of the field that has the node's text
     ,valueField:    'value'     // the name of the field that has the node's value
     ,tipField:      'tip'       // the name of the field that has the node's tip text
+
+    ,showCheckBox:  false       // true to show checkBoxes
     ,canSelect:     true        // can the user select a node by clicking it             //TODO
     ,value:         ''          // the currently selected node's value
     ,selectedNode:  null        // the currently selected node

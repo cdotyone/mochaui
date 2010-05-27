@@ -14,17 +14,21 @@ License:
 MUI.files[MUI.path.plugins + 'mochaImageButton/ImageButton.js'] = 'loaded';
 
 MUI.ImageButton = new Class({
+
 Implements: [Events, Options],
+
 options: {
-     id:            null
-    ,createOnInit:  true
-    ,cssClass:      'imgButton'
-    ,text:          null
-    ,title:         null
-    ,imageURL:      null
-    ,isDisabled:    false
-    ,container:     null
-    ,onClick:       $empty
+    id:            ''          // id of the primary element, and id os control that is registered with mocha
+   ,container:     null        // the parent control in the document to add the control to
+   ,createOnInit:  true        // true to add tree to container when control is initialized
+   ,cssClass:      'imgButton' // the primary css tag
+
+   ,text:          null        // the text displayed on the button
+   ,title:         null        // tool top text
+   ,imageURL:      null        // the url to the image that will be displayed
+   ,isDisabled:    false       // is the button disabled
+
+   ,onClick:       $empty      // event: called when button is clicked
 },
 
 initialize: function( options )
@@ -56,7 +60,7 @@ toDOM: function()
     var a=new Element('a',{'class':o.cssClass,'title':o.title}).inject(s1);
     
     s1.removeEvents('click');
-    s1.addEvent('click',function() {self.fireEvent("onClick",self)});
+    s1.addEvent('click',function() {self.fireEvent("click",self)});
     
     if(o.imageURL) {
         var tle=o.title;

@@ -13,12 +13,7 @@
 <script type="text/javascript" src="CheckedListBox.js"></script>
 <script type="text/javascript">
 
-    new MUI.CheckedListBox({
-        container:'page',
-        width:250,
-        height:100,
-        id:'clb1',
-        items:[
+    var items = [
             {value:'item1',text:"Item 1",isChecked: false,isSelected: false},
             {value:'item2',text:"Item 2",isChecked: true,isSelected: false},
             {value:'item3',text:"Item 3",isChecked: false,isSelected: false},
@@ -29,8 +24,23 @@
             {value:'item8',text:"Item 8",isChecked: false,isSelected: false},
             {value:'item9',text:"Item 9",isChecked: false,isSelected: false},
             {value:'item10',text:"Item 10",isChecked: false,isSelected: false}
-        ]
+        ];
+    new MUI.CheckedListBox({
+        container:'page',
+        width:250,
+        height:100,
+        id:'clb1',
+        items:items
     });
+    new MUI.CheckedListBox({
+        container:'page2',
+        width:250,
+        height:100,
+        id:'clb2',
+        items:items,
+        isDropList: false
+    });
+
 </script>
 <link rel="stylesheet" type="text/css" href="style.css" />
 
@@ -39,6 +49,9 @@
 <body>
 
 <div id="page">
+</div>
+       <br/><br/>
+<div id="page2">
 </div>
 
 </body>
