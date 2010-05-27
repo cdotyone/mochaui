@@ -1443,7 +1443,7 @@ MUI.extend({
 
 		if (MUI.Desktop) MUI.Desktop.resizePanels();
 
-        var sortables=instance.container.retrieve('sortables');
+        var sortables=instance.options.container.retrieve('sortables');
         if(sortables) sortables.removeLists(columnEl);
 
 		MUI.erase(instance.options.id);
