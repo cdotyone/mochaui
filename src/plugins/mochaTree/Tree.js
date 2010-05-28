@@ -18,26 +18,28 @@ MUI.Tree = new Class({
 Implements: [Events, Options],
 
 options: {
-     id:            ''          // id of the primary element, and id os control that is registered with mocha
-    ,container:     null        // the parent control in the document to add the control to
-    ,createOnInit:  true        // true to add tree to container when control is initialized
-    ,cssClass:      'tree'      // the primary css tag
+     id:            ''              // id of the primary element, and id os control that is registered with mocha
+    ,container:     null            // the parent control in the document to add the control to
+    ,createOnInit:  true            // true to add tree to container when control is initialized
+    ,cssClass:      'tree'          // the primary css tag
 
-    ,nodes:         $A([])      // the hierarchical list of nodes
+    ,nodes:         $A([])          // the hierarchical list of nodes
 
-    ,textField:     'text'      // the name of the field that has the node's text
-    ,valueField:    'value'     // the name of the field that has the node's value
-    ,tipField:      'tip'       // the name of the field that has the node's tip text
+    ,textField:     'text'          // the name of the field that has the node's text
+    ,valueField:    'value'         // the name of the field that has the node's value
+    ,titleField:    'title'         // the name of the field that has the node's tip text
+    ,isCheckedField:'checked'       // the name of the field that has the node's isChecked state
+    ,hasChildrenField:'hasChildren' // the name of the field that has the node's hasChildren flag
 
-    ,showCheckBox:  false       // true to show checkBoxes
-    ,canSelect:     true        // can the user select a node by clicking it             //TODO
-    ,value:         ''          // the currently selected node's value
-    ,selectedNode:  null        // the currently selected node
-    ,depth:         2           // how deep to expand the nodes to
+    ,showCheckBox:  false           // true to show checkBoxes
+    ,canSelect:     true            // can the user select a node by clicking it
+    ,value:         ''              // the currently selected node's value
+    ,selectedNode:  null            // the currently selected node
+    ,depth:         2               // how deep to expand the nodes to
 
-    ,onNodeExpanded:$empty      // event: called when node is expanded
-    ,onNodeChecked: $empty      // event: called when node's checkbox is checked
-    ,onNodeSelected:$empty      // event: when a node is checked
+    ,onNodeExpanded:$empty          // event: called when node is expanded
+    ,onNodeChecked: $empty          // event: called when node's checkbox is checked
+    ,onNodeSelected:$empty          // event: when a node is checked
 },
 
 initialize: function( options )
@@ -52,6 +54,12 @@ initialize: function( options )
     if(this.options.createOnInit && this.options.nodes.length>0) this.toDOM();
 
     MUI.set(id,this);    
+},
+
+_getData: function(item,property){
+    if(!item || !property) return '';
+    if(!item[property]) return '';
+    return item[property];
 },
 
 toDOM: function(containerEl)
@@ -99,18 +107,28 @@ toDOM: function(containerEl)
     return div;
 },
 
-selectValue: function(val,e) 
+selectValue: function(val,e,suppressEvent)
 {
     var self=this;
+    var o=self.options;    
     var node=self.nodeFind(val);
-    self=self.options;
-    if(node && node.DOM) {
-        if(self.selectedNode && self.selectedNode._element) self.selectedNode._element.getElement('a').removeClass('sel');
-        self.selectedNode = node;
+    if(!node) return;
+    
+    if(!o.canSelect) {
+        if(o.showCheckBox) {
+            node._checkbox.checked=!node._checkbox.checked;
+            self.onNodeCheck(node,e);
+        } else if(!suppressEvent) this.fireEvent('nodeSelected',[node,self,e]);
+        return;
+    }
+
+    if(node._element) {
+        if(o.selectedNode && o.selectedNode._element) o.selectedNode._element.getElement('a').removeClass('sel');
+        o.selectedNode = node;
         node._element.getElement('a').addClass('sel');
     }
-    self.value = val;
-    if(node) this.fireEvent('onNodeSelected',[e,node]);
+    o.value = val;
+    if(!suppressEvent) this.fireEvent('nodeSelected',[node,self,e]);
 },
 
 updateNode: function(node) 
@@ -118,7 +136,8 @@ updateNode: function(node)
     if(!node) return;
     
     var self=this;
-    var n=self.nodeFind(node.value);
+    var o=self.options;
+    var n=self.nodeFind( self._getData(node,o.valueField) );
     if(n) {    
         var el = node._element;
         n.fromJSON(node);
@@ -134,7 +153,7 @@ buildNode: function(node, parent, depth) {
     var o=this.options;
     if(!depth) depth=1;
 
-    var a, span, t, ul, chk, li;
+    var a, span, t, ul, li;
     if(node._element!=null) {li=node._element;}
     if(!li) li = new Element('li');
     else li.empty();
@@ -144,16 +163,17 @@ buildNode: function(node, parent, depth) {
         else li.inject(parent); 
     }
 
-    if(o.showCheckBox) chk = new Element('INPUT', { 'type':'checkbox', 'value': node.value }).inject(li);
-    a = new Element('a',{'href':'#' + node.value}).inject(li);
-    span = new Element('span',{'text':node.text}).inject(a);
+    var value=self._getData(node,o.valueField);
+    var text=self._getData(node,o.textField);
+    if(o.showCheckBox) node._checkbox = new Element('INPUT', { 'type':'checkbox', 'value': value }).inject(li);
+    a = new Element('a',{'href':'#' + value}).inject(li);
+    span = new Element('span',{'text':text}).inject(a);
 
     node._element = li;
-    if (node.tip) a.title = node.tip;
+    var title=self._getData(node,o.titleField);
+    if (title) a.title = title;
 
-    if (chk) chk.checked = node.checked;
-
-    if (o.value == node.value) {
+    if (o.value == value) {
         self.element.getElements('.sel').removeClass('sel');
         a.className = 'sel';
         o.selectedNode = self;
@@ -178,12 +198,16 @@ buildNode: function(node, parent, depth) {
         ul.childNodes[ul.childNodes.length - 1].addClass('last');
     } else li.addClass('nochild');
     if (node.isExpanded) li.set('class','O');
-    if ((!node.nodes || node.nodes.length == 0) && !node.hasChildren) li.addClass('nochild');
+
+    var hasChildren=self._getData(node,o.hasChildrenField);
+    if ((!node.nodes || node.nodes.length == 0) && !hasChildren) li.addClass('nochild');
 
     // set events
-    if (chk) {
-        chk.removeEvents('click');
-        chk.addEvent('click', function(e) { self.onNodeCheck(node,e); });
+    if (node._checkbox) {
+        var isChecked=self._getData(node,o.isCheckedField);
+        if (isChecked!=null) node._checkbox.checked = isChecked;
+        node._checkbox.removeEvents('click');
+        node._checkbox.addEvent('click', function(e) { self.onNodeCheck(node,e); });
     }
     li.removeEvents('click');
     li.addEvent('click', function(e) { self.onNodeExpand(node,e); });
@@ -194,7 +218,12 @@ buildNode: function(node, parent, depth) {
 },
 
 nodeFind: function(val,node) {
-    if (node!=null && node.options!=null && node.value && node.value + '' == val + '') { return node; }
+    var self=this;
+    var o=self.options;
+    if (node!=null) {
+        var value=self._getData(node,o.valueField);
+        if(value && value + '' == val + '') { return node; }
+    } else node=self;
     var nodes;
     if(node.options) nodes=node.options.nodes;
     if(nodes==null) nodes=node.nodes;
@@ -215,8 +244,12 @@ nodeRefresh: function(node) {
 },
 
 nodeGetPath: function(node) {
-    if(!node._parent) return node.value;
-    return this.getPath(node._parent)+'/'+node.value;
+    var self=this;
+    var o=self.options;
+    var value=self._getData(node,o.valueField);
+
+    if(!node._parent) return value;
+    return this.getPath(node._parent)+'/'+value;
 },
 
 setLast: function(node) 
@@ -256,33 +289,31 @@ onNodeExpand: function(node,e) {
             itm.removeClass('O');
             itm.addClass('C');
             node.isExpanded = false;
-            return;
+            //return;
         }
         else if (ul && !node.isExpanded) {
             ul.style.display = '';
             itm.removeClass('C');
             itm.addClass('O');
             node.isExpanded = true;
-            if (node.nodes.length > 0) return;
+            //if (node.nodes.length > 0) return;
         }
     }
 
-    if(o.hasChildren == 1 && o.nodes.length == 0) {
-        self.fireEvent('nodeExpanded',[e,self]);
-    }
-    self.selectValue(node.value,e);
+    self.fireEvent('nodeExpanded',[node,node.isExpanded,self,e]);
 },
 
 onNodeClick: function(node,e) {
     var self = this;
+    var o=self.options;
     e=new Event(e).stop();
-    self.selectValue(node.value,e);
+    self.selectValue(self._getData(node,o.valueField),e);
 },
 
 onNodeCheck: function(node,e) {
     var self = this;
-    e=new Event(e).stop();
-    self.fireEvent('nodeChecked',[node,self,e]);
+    e=new Event(e).stopPropagation();
+    self.fireEvent('nodeChecked',[node,node._checkbox.checked,self,e]);
 }
 
 });
