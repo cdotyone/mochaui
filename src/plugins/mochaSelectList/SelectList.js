@@ -1,6 +1,6 @@
 /*
 
-Script: CheckListBox.js
+Script: SelectList.js
 	Create a list with check boxes next to each item
 
 Copyright:
@@ -11,9 +11,9 @@ License:
 
 */
 
-MUI.files[MUI.path.plugins + 'mochaCheckedListBox/CheckedListBox.js'] = 'loaded';
+MUI.files[MUI.path.plugins + 'mochaSelectList/SelectList.js'] = 'loaded';
 
-MUI.CheckedListBox = new NamedClass('MUI.CheckedListBox',{
+MUI.SelectList = new NamedClass('MUI.SelectList',{
 
     Implements: [Events, Options],
 

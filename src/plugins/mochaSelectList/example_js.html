@@ -10,7 +10,7 @@
 <script type="text/javascript" src="../../scripts/source/Window/Modal.js"></script>
 <script type="text/javascript" src="../../scripts/source/Components/Tabs.js"></script>
 <!--MOCHAUI-->
-<script type="text/javascript" src="CheckedListBox.js"></script>
+<script type="text/javascript" src="SelectList.js"></script>
 <script type="text/javascript">
 
     var items = [
@@ -25,7 +25,7 @@
             {value:'item9',text:"Item 9",  selected: false},
             {value:'item10',text:"Item 10",selected: false}
         ];
-    new MUI.CheckedListBox({
+    new MUI.SelectList({
         container:'page',
         width:250,
         height:100,
@@ -39,7 +39,7 @@
             alert('receieved onItemSelected command on item ' + item.value +', selected=' + selected)
         }
     });
-    new MUI.CheckedListBox({
+    new MUI.SelectList({
         container:'page2',
         width:250,
         height:100,
