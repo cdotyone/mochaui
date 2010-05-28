@@ -147,7 +147,7 @@ MUI.List = new Class({
         var id = o.id;
 
         var cl = o.columns;
-        var value = '' + self._getItem(item, cl[0].value);
+        var value = '' + self._getData(item, cl[0].value);
         if (!value) value = '' + parent.childNodes.length;
         var rid = id + '_' + value.replace(/[\s\.]/g, '_');
 
@@ -168,7 +168,7 @@ MUI.List = new Class({
             if (col.cssClass) td.set('class',col.cssClass);
 
             // create items text node
-            var txt = document.createTextNode(self._getItem(item, col.name));
+            var txt = document.createTextNode(self._getData(item, col.name));
 
             if (i == 0) {
                 // special handling of first column
@@ -179,7 +179,7 @@ MUI.List = new Class({
 
                 // create image if needed
                 if (col.image) {
-                    var cImage = self._getItem(item, col.image);
+                    var cImage = self._getData(item, col.image);
                     cImage.replace(/~/g, o.iconPath);
                     if (cImage) img = new Element('img',{'alt':'','src':cImage});
                 }
@@ -189,14 +189,14 @@ MUI.List = new Class({
 
                     // add tip
                     if (col.tipTitle) {
-                        tip = self._getItem(item, col.tipTitle);
+                        tip = self._getData(item, col.tipTitle);
                         if (tip) {
                             a.store('tip:title', tip);
                             a.set('class', 'Tips');
                         }
                     }
                     if (col.tipText) {
-                        tip = self._getItem(item, col.tipText);
+                        tip = self._getData(item, col.tipText);
                         if (tip) {
                             a.store('tip:text', tip);
                             a.set('class', 'Tips');
@@ -206,15 +206,15 @@ MUI.List = new Class({
                     // add navigational link
                     if (col.URL) {
                         if (col.Target) {
-                            var tgt = self._getItem(item, col.target);
+                            var tgt = self._getData(item, col.target);
                             if (tgt) { a.target = tgt; }
                         }
                         if (col.urlCssClass) {
-                            var cls = self._getItem(item, col.Target, col.urlCssClass);
+                            var cls = self._getData(item, col.Target, col.urlCssClass);
                             if (cls) { a.set('class', tgt); }
                         }
 
-                        var url = self._getItem(item, col.Target, col.urlCssClass);
+                        var url = self._getData(item, col.Target, col.urlCssClass);
                         if (url) {
                             url = url.replace(/~/, o.navigateURL);
                             a.set('href', url);
@@ -238,7 +238,7 @@ MUI.List = new Class({
                 // add columns
                 if(col.type == "checkbox") {
                     var chk=new Element('input', { 'type': 'checkbox', 'name': id + '_' + col.name, id:id + '_' + col.name + i ,'value':value }).inject(td);
-                    if((''+self._getItem(item, col.name))=='true') chk.set('checked','true');
+                    if((''+self._getData(item, col.name))=='true') chk.set('checked','true');
                 } else td.appendChild(txt);
             }
             self.fireEvent('itemColumnBound', [item,self,col,td] );
@@ -291,7 +291,7 @@ MUI.List = new Class({
         return tr;
     },
 
-    _getItem: function(item,property){
+    _getData: function(item,property){
         if(!item || !property) return '';
         if(!item[property]) return '';
         return item[property]; 
