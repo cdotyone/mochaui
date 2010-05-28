@@ -19,27 +19,32 @@ MUI.CheckedListBox = new NamedClass('MUI.CheckedListBox',{
 
     options: {
         id:                 ''              // id of the primary element, and id os control that is registered with mocha
-       ,container:          null            // the parent control in the document to add the control to
-       ,createOnInit:       true            // true to add tree to container when control is initialized
-       ,cssClass:           'clb'           // the primary css tag
+        ,container:         null           // the parent control in the document to add the control to
+        ,createOnInit:      true           // true to add tree to container when control is initialized
+        ,cssClass:          'clb'          // the primary css tag
 
-       ,items:              $A([])          // the array list of nodes
+        ,items:             $A([])         // the array list of nodes
 
-       ,isDropList:         true            // show this control as a drop list
-       ,dropCssClass:       'dclb'          // the class to use when displaying the drop list parent control
-       ,dropText:           '{$} Selected'  // the text to show on the drop list when items are selected
+        ,textField:         'text'          // the name of the field that has the item's text
+        ,valueField:        'value'         // the name of the field that has the item's value
+        ,titleField:        'title'         // the name of the field that has the item's tip text
+        ,isCheckedField:    'checked'       // the name of the field that has the item's isChecked state
+        ,isSelectedField:   'selected'      // the name of the field that has the item's isSelected state
 
-       ,alternateItems:     false           // show the items with alternating background color
-       ,width:              0               // width of the control
-       ,height:             0               // height of the control when not in drop list mode
-       ,showCheckBox:       false           // true to show checkBoxes          // TODO
-       ,canSelect:          false           // can the user select a row by clicking it
-       ,canMultiSelect:     false           // can the user select multiple items
-       ,value:              ''              // the currently selected item's value
-       ,selectedItem:       null            // the currently selected item
+        ,isDropList:        true            // show this control as a drop list
+        ,dropCssClass:      'dclb'          // the class to use when displaying the drop list parent control
+        ,dropText:          '{$} Selected'  // the text to show on the drop list when items are selected
 
-       ,onItemSelected:     $empty          // event: when a node is selected
-       ,onItemChecked:      $empty          // event: when a node is selected        
+        ,alternateItems:    false           // show the items with alternating background color
+        ,width:             0               // width of the control
+        ,height:            0               // height of the control when not in drop list mode, or height of drop
+        ,canSelect:         false           // can the user select a row by clicking it
+        ,canMultiSelect:    true            // can the user select multiple items
+        ,value:             ''              // the currently selected item's value
+        ,selectedItem:      null            // the currently selected item
+
+        ,onItemSelected:    $empty          // event: when a node is selected
+        ,onItemChecked:     $empty          // event: when a node is selected
     },
 
     initialize: function( options )
@@ -81,6 +86,12 @@ MUI.CheckedListBox = new NamedClass('MUI.CheckedListBox',{
         return this;
     },
 
+    _getData: function(item,property){
+        if(!item || !property) return '';
+        if(item[property]==null) return '';
+        return item[property];
+    },
+    
     toDOM: function(containerEl)
     {
         var o=this.options;
@@ -98,9 +109,10 @@ MUI.CheckedListBox = new NamedClass('MUI.CheckedListBox',{
 
             drop=new Element('div',{id:id+'_droplist','class':o.dropCssClass,styles:{'width':parseInt(''+o.width)+'px'}}).inject(panel);
             self.dropElement=drop;
+            drop.addEvent('click',function(e) { self.onOpen(e); });
             
             self.textElement=new Element('div',{id:id+'_text','class':'text','text':'1 selected',styles:{'width':(parseInt(''+o.width)-24)+'px'}}).inject(drop);
-            self.buttonElement = new Element('div',{id:id+'_button','class':'button','html':'&nbsp;'}).inject(drop).addEvent('click',function(e) { self.onOpen(e); });
+            self.buttonElement = new Element('div',{id:id+'_button','class':'button','html':'&nbsp;'}).inject(drop);
 
             o.id+='_list';
             o.isOpen = false;
@@ -123,7 +135,6 @@ MUI.CheckedListBox = new NamedClass('MUI.CheckedListBox',{
 
         var selectCount=0;
         for(var i=0;i<o.items.length;i++) {
-            if(o.items[i].isChecked) selectCount++;
             if(o.items[i].isBar) this.buildBar(o.items[i],ul);
             else this.buildItem(o.items[i],ul,(i%2));
         }
@@ -134,9 +145,9 @@ MUI.CheckedListBox = new NamedClass('MUI.CheckedListBox',{
             var container=$(containerEl ? containerEl : o.container);
             if(drop) {
 
-                var selectText=self.options.dropText.replace('{$}',selectCount);
+                var selectText=self.options.dropText.replace('{$}',self.getSelectedCount());
                 self.textElement.set('text',selectText);
-
+                div.addEvent('click',function(e) { e.stop(); });
                 container.appendChild(drop);
                 drop.appendChild(div);
                 div.addClass('notop');
@@ -149,18 +160,31 @@ MUI.CheckedListBox = new NamedClass('MUI.CheckedListBox',{
     },
 
     getSelectedCount: function() {
-        var o=this.options;
+        var self=this;
+        var o=self.options;
         var selectCount=0;
         for(var i=0;i<o.items.length;i++) {
-            if(o.items[i].isChecked) selectCount++;
+            if(o.canSelect){
+                var isSelected=self._getData(o.items[i],o.isSelectedField);
+                if(isSelected) selectCount++;
+            } else {
+                var isChecked=self._getData(o.items[i],o.isCheckedField);
+                if(isChecked) selectCount++;
+            }
         }
         return selectCount;
     },
 
     addItem: function(item)
     {
-        if(!item.isSelected) item.isSelected=false;
-        if(!item.isChecked) item.isChecked=false;
+        var self=this;
+        var o=self.options;
+
+        var isSelected=self._getData(item,o.isSelectedField);
+        var isChecked=self._getData(item,o.isCheckedField);
+        
+        if(!isSelected) item[o.isSelectedField]=false;
+        if(!isChecked) item[o.isCheckedField]=false;
         this.options.items.push(item);
         return item;
     },
@@ -190,45 +214,52 @@ MUI.CheckedListBox = new NamedClass('MUI.CheckedListBox',{
                var items=this.options.items;
                for(var i=0;i<items.length;i++)
                {
-                  if(items[i].isSelected && item!=items[i]) {
-                    items[i].isSelected=false;
+                  var isSelected=self._getData(items[i],o.isSelectedField);
+                  if(isSelected && item!=items[i]) {
+                    items[i][o.isSelectedField] = false;
                     items[i]._element.removeClass('C');
                   }
                }
                o.value = item.value;
             }
 
-            item.isSelected=!item.isSelected;
-            if(item.isSelected) item._element.addClass('C');
+            item[o.isSelectedField] = !item[o.isSelectedField];
+            if(item[o.isSelectedField]) item._element.addClass('C');
             else item._element.removeClass('C');
 
             //o.List.DoCommand('selected',o.Value+'#'+item.isSelected,null);
+            self.fireEvent('itemSelected',[item,item[o.isSelectedField],e] );
         }
         else {
             item._checkBox.checked = !item._checkBox.checked;
-            item.isChecked=item._checkBox.checked;
-            if(o.onChecked) o.onChecked(item);
-            if(item.isChecked) item._element.addClass('C');
+            item[o.isCheckedField]=item._checkBox.checked;
+            if(item[o.isCheckedField]) item._element.addClass('C');
             else item._element.removeClass('C');
 
-            if(self.textElement) {
-                var selectText=o.dropText.replace('{$}',self.getSelectedCount());
-                self.textElement.set('text',selectText);
-            }
             //o.List.DoCommand('checked',o.Value+'#'+item.isChecked,null);
+            self.fireEvent('itemChecked',[item,item[o.isCheckedField],e] );
         }
 
-        self.fireEvent('itemSelected',[item,e] );
+        if(self.textElement) {
+            var selectText=o.dropText.replace('{$}',self.getSelectedCount());
+            self.textElement.set('text',selectText);
+        }
     },
 
     onChecked: function(e,item)
     {
-        item.isChecked = item._checkBox.checked;
-        if(item.isChecked) item._element.addClass('C');
-        else item._element.removeClass('C');
+        e.stopPropagation();
+        var self=this;
+        var o=self.options;
+        var checked = item._checkBox.checked;
+        item[o.isCheckedField] = checked;
 
-        //new Event(e).preventDefault();
-        self.fireEvent('itemChecked',[item,e] );
+        if(o.canSelect) {
+            if(checked) item._element.addClass('C');
+            else item._element.removeClass('C');
+        }
+
+        self.fireEvent('itemChecked',[item,checked,e] );
         // o.List.DoCommand('Checked',o.Value+'#'+o.CheckBox.checked,null);
         return true;
     },
@@ -248,7 +279,7 @@ MUI.CheckedListBox = new NamedClass('MUI.CheckedListBox',{
         var self=this;
         var pos=self.dropElement.getCoordinates();
         var element=self.element;
-        var button=self.buttonElement;
+        var button=self.dropElement;
         element.setStyles({'display':'','top':pos.bottom+2,'left':pos.left});
         var close=function() {
             element.setStyles({'display':'none'});
@@ -267,25 +298,31 @@ MUI.CheckedListBox = new NamedClass('MUI.CheckedListBox',{
         var o=self.options;
 
         var li=new Element('li',{'class':'item'}).inject(ul);
+        var title=self._getData(item,o.titleField);
+        if(title) li.set('title',title);
         if(alt && o.alternateItems) li.addClass('alt');
-        if(item.isSelected && o.canSelect) li.addClass('C');
+        var isSelected=self._getData(item,o.isSelectedField);
+        if(isSelected && o.canSelect) li.addClass('C');
         li.addEvent('click',function(e) { self.onSelected(e,item); });
         li.addEvent('mouseover',function(e) { self.onOver(e,item); } );
         li.addEvent('mouseout',function(e) { self.onOut(e,item); } );
         item._element=li;
 
-        var id=o.id+'$'+item.value;
-        var input=new Element('input', { 'type': 'checkbox', 'name': id, 'id': id, 'value': item.value }).inject(li);
-        input.checked = item.isChecked;
+        var value=self._getData(item,o.valueField);
+        var isChecked=self._getData(item,o.isCheckedField);
+        var id=o.id+'$'+value;
+        var input=new Element('input', { 'type': 'checkbox', 'name': id, 'id': id, 'value':value }).inject(li);
+        if(isChecked) input.checked = true;
         input.addEvent('click', function(e) { self.onChecked(e,item); });
         item._checkBox = input;
 
         if(!o.canSelect) {
-            if(item.isChecked) item._element.addClass('C');
+            if(isChecked) item._element.addClass('C');
             else item._element.removeClass('C');
         }
 
-        new Element('span',{'text':item.text}).inject(li);
+        var text=self._getData(item,o.textField);
+        new Element('span',{'text':text}).inject(li);
 
         return li;
     },

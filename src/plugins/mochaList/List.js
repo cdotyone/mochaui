@@ -293,7 +293,7 @@ MUI.List = new Class({
 
     _getData: function(item,property){
         if(!item || !property) return '';
-        if(!item[property]) return '';
+        if(item[property]==null) return '';
         return item[property]; 
     },
 
