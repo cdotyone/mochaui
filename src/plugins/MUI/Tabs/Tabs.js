@@ -1,7 +1,7 @@
 /*
 
-Script: Tree.js
-	Creates a generic tree control
+Script: Tabs.js
+	Creates a tab list control
 
 Copyright:
 	Copyright (c) 2010 Chris Doty, <http://polaropposite.com/>.
@@ -11,7 +11,7 @@ License:
 
 */
 
-MUI.files[MUI.path.plugins + 'mochaTabs/Tabs.js'] = 'loaded';
+MUI.files[MUI.path.plugins + 'MUI/Tabs/Tabs.js'] = 'loaded';
 
 MUI.Tabs = new Class({
 
