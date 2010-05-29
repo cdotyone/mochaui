@@ -55,7 +55,7 @@ INITIALIZE WINDOWS
  
 -------------------------------------------------------------------- */
 
-initializeWindows = function(){
+var initializeWindows = function(){
 
 	// Examples
 	
@@ -66,7 +66,7 @@ initializeWindows = function(){
 			width: 340,
 			height: 150
 		});
-	}	
+	};
 	
 	MUI.ajaxpageWindow = function(){
 		new MUI.Window({
@@ -81,7 +81,7 @@ initializeWindows = function(){
 			new Event(e).stop();
 			MUI.ajaxpageWindow();
 		});
-	}	
+	}
 	
 	MUI.jsonWindows = function(){
 		var request = new Request.JSON({
@@ -289,28 +289,28 @@ initializeWindows = function(){
 			contentURL: 'pages/events.html',
 			width: 340,
 			height: 250,			
-			onContentLoaded: function(windowEl){
+			onContentLoaded: function(){
 				MUI.notification('Window content was loaded.');
 			},
 			onCloseComplete: function(){
 				MUI.notification('The window is closed.');
 			},
-			onMinimize: function(windowEl){
+			onMinimize: function(){
 				MUI.notification('Window was minimized.');
 			},
-			onMaximize: function(windowEl){
+			onMaximize: function(){
 				MUI.notification('Window was maximized.');
 			},
-			onRestore: function(windowEl){
+			onRestore: function(){
 				MUI.notification('Window was restored.');
 			},
-			onResize: function(windowEl){
+			onResize: function(){
 				MUI.notification('Window was resized.');
 			},
-			onFocus: function(windowEl){
+			onFocus: function(){
 				MUI.notification('Window was focused.');
 			},
-			onBlur: function(windowEl){
+			onBlur: function(){
 				MUI.notification('Window lost focus.');
 			}
 		});
@@ -322,7 +322,7 @@ initializeWindows = function(){
 		});
 	}
 	
-	MUI.containertestWindow = function(){ 
+	MUI.containerTestWindow = function(){
 		new MUI.Window({
 			id: 'containertest',
 			title: 'Container Test',
@@ -337,11 +337,11 @@ initializeWindows = function(){
 	if ($('containertestLinkCheck')) { 
 		$('containertestLinkCheck').addEvent('click', function(e){
 			new Event(e).stop();
-			MUI.containertestWindow();
+			MUI.containerTestWindow();
 		});
 	}
 	
-	MUI.iframetestsWindow = function() {
+	MUI.iframeTestsWindow = function() {
 		new MUI.Window({
 			id: 'iframetests',
 			title: 'Iframe Tests',
@@ -352,11 +352,11 @@ initializeWindows = function(){
 	if ($('iframetestsLinkCheck')) {
 		$('iframetestsLinkCheck').addEvent('click', function(e){
 		new Event(e).stop();
-			MUI.iframetestsWindow();
+			MUI.iframeTestsWindow();
 		});
 	}
 	
-	MUI.formtestsWindow = function() {
+	MUI.formTestsWindow = function() {
 		new MUI.Window({
 			id: 'formtests',
 			title: 'Form Tests',			
@@ -369,11 +369,11 @@ initializeWindows = function(){
 	if ($('formtestsLinkCheck')) {
 		$('formtestsLinkCheck').addEvent('click', function(e){
 		new Event(e).stop();
-			MUI.formtestsWindow();
+			MUI.formTestsWindow();
 		});
 	}	
 
-	MUI.accordiantestWindow = function() {
+	MUI.accordianTestWindow = function() {
 		var id = 'accordiantest';
 		new MUI.Window({
 			id: id,
@@ -392,21 +392,21 @@ initializeWindows = function(){
 					new Accordion('#' + id + ' h3.accordianToggler', "#" + id + ' div.accordianElement',{
 						opacity: false,
 						alwaysHide: true,
-						onActive: function(toggler, element){
+						onActive: function(toggler){
 							toggler.addClass('open');
 						},
-						onBackground: function(toggler, element){
+						onBackground: function(toggler){
 							toggler.removeClass('open');
 						},							
-						onStart: function(toggler, element){
+						onStart: function(){
 							this.windowEl.accordianResize = function(){
 								MUI.dynamicResize($(id));
-							}
+							};
 							this.windowEl.accordianTimer = this.windowEl.accordianResize.periodical(10);
 						}.bind(this),
 						onComplete: function(){
 							this.windowEl.accordianTimer = $clear(this.windowEl.accordianTimer);
-							MUI.dynamicResize($(id)) // once more for good measure
+							MUI.dynamicResize($(id)); // once more for good measure
 						}.bind(this)
 					}, $(id));
 				}	
@@ -416,7 +416,7 @@ initializeWindows = function(){
 	if ($('accordiantestLinkCheck')) { 
 		$('accordiantestLinkCheck').addEvent('click', function(e){	
 			new Event(e).stop();
-			MUI.accordiantestWindow();
+			MUI.accordianTestWindow();
 		});
 	}
 
@@ -512,7 +512,7 @@ initializeWindows = function(){
 			new Event(e).stop();
 			MUI.toggleStandardEffects($('toggleStandardEffectsLinkCheck'));			
 		});
-		if (MUI.options.standardEffects == true) {
+		if (MUI.options.standardEffects) {
 			MUI.toggleStandardEffectsLink = new Element('div', {
 				'class': 'check',
 				'id': 'toggleStandardEffects_check'
@@ -525,7 +525,7 @@ initializeWindows = function(){
 			new Event(e).stop();
 			MUI.toggleAdvancedEffects($('toggleAdvancedEffectsLinkCheck'));			
 		});
-		if (MUI.options.advancedEffects == true) {
+		if (MUI.options.advancedEffects) {
 			MUI.toggleAdvancedEffectsLink = new Element('div', {
 				'class': 'check',
 				'id': 'toggleAdvancedEffects_check'
@@ -566,21 +566,21 @@ initializeWindows = function(){
 			toolbarOnload: function(){
 				MUI.initializeTabs('featuresTabs');
 
-				$('featuresLayoutLink').addEvent('click', function(e){
+				$('featuresLayoutLink').addEvent('click', function(){
 					MUI.updateContent({
 						'element':  $('features'),
 						'url':       'pages/features-layout.html'
 					});
 				});
 
-				$('featuresWindowsLink').addEvent('click', function(e){
+				$('featuresWindowsLink').addEvent('click', function(){
 					MUI.updateContent({
 						'element':  $('features'),
 						'url':       'pages/features-windows.html'
 					});
 				});
 
-				$('featuresGeneralLink').addEvent('click', function(e){
+				$('featuresGeneralLink').addEvent('click', function(){
 					MUI.updateContent({
 						'element':  $('features'),
 						'url':       'pages/features-general.html'
@@ -665,7 +665,7 @@ INITIALIZE COLUMNS AND PANELS
 -------------------------------------------------------------------- */
 
 
-initializeColumns = function() {
+var initializeColumns = function() {
 
 	new MUI.Column({
 		id: 'sideColumn1',
@@ -701,7 +701,7 @@ initializeColumns = function() {
 			}	
 		},
 		onContentLoaded: function(){		
-			$('notesLink').addEvent('click', function(e){
+			$('notesLink').addEvent('click', function(){
 				MUI.updateContent({
 					element: $('mainPanel'),					
 					url: 'pages/notes.html',
@@ -709,7 +709,7 @@ initializeColumns = function() {
 					padding: { top: 8, right: 8, bottom: 8, left: 8 }
 				});
 			});
-			$('xhrLink').addEvent('click', function(e){
+			$('xhrLink').addEvent('click', function(){
 				MUI.updateContent({
 					element: $('mainPanel'),
 					url: 'pages/lipsum.html',
@@ -717,7 +717,7 @@ initializeColumns = function() {
 					padding: { top: 8, right: 8, bottom: 8, left: 8 }
 				});
 			});
-			$('youtube4Link').addEvent('click', function(e){
+			$('youtube4Link').addEvent('click', function(){
 				MUI.updateContent({
 					element: $('mainPanel'),
 					loadMethod: 'iframe',
@@ -726,7 +726,7 @@ initializeColumns = function() {
 					padding: { top: 0, right: 0, bottom: 0, left: 0 }
 				});
 			});	
-			$('splitPanelLink').addEvent('click', function(e){
+			$('splitPanelLink').addEvent('click', function(){
 				MUI.updateContent({
 					element: $('mainPanel'),
 					title: 'Split Panel',
@@ -734,25 +734,25 @@ initializeColumns = function() {
 				});
 				MUI.splitPanelPanel(); // This is initialized in mocha-init.js just like the windows.	
 			});	
-			$('splitWindowLink').addEvent('click', function(e){
+			$('splitWindowLink').addEvent('click', function(){
 				MUI.splitWindow();
 			});		
-			$('ajaxpageLink').addEvent('click', function(e){
+			$('ajaxpageLink').addEvent('click', function(){
 				MUI.ajaxpageWindow();
 			});	
-			$('jsonLink').addEvent('click', function(e){
+			$('jsonLink').addEvent('click', function(){
 				MUI.jsonWindows();
 			});	
-			$('youtubeLink').addEvent('click', function(e){
+			$('youtubeLink').addEvent('click', function(){
 				MUI.youtubeWindow();
 			});	
-			$('accordiantestLink').addEvent('click', function(e){
-				MUI.accordiantestWindow();
+			$('accordiantestLink').addEvent('click', function(){
+				MUI.accordianTestWindow();
 			});	
-			$('clockLink').addEvent('click', function(e){
+			$('clockLink').addEvent('click', function(){
 				MUI.clockWindow();
 			});
-			$('parametricsLink').addEvent('click', function(e){
+			$('parametricsLink').addEvent('click', function(){
 				MUI.parametricsWindow();
 			});
 			$('calendarLink').addEvent('click', function(e){
@@ -765,12 +765,12 @@ initializeColumns = function() {
 						css: [MUI.path.plugins + 'calendar/css/calendar.css'],			
 						js: [MUI.path.plugins + 'calendar/scripts/calendar.js'],
 						onload: function(){
-							myCal1 = new Calendar({ date1: 'd/m/Y' }, { direction: 1, tweak: { x: 6, y: 0 }});;
+							new Calendar({ date1: 'd/m/Y' }, { direction: 1, tweak: { x: 6, y: 0 }});
 						}	
 					}										
 				});
 			});			
-			$('fxmorpherLink').addEvent('click', function(e){
+			$('fxmorpherLink').addEvent('click', function(){
 				MUI.updateContent({
 					element: $('mainPanel'),
 					url: MUI.path.plugins + 'Fx.Morpher/',
@@ -793,7 +793,7 @@ initializeColumns = function() {
 				e.stop();
 
 				$('spinner').show();
-				if ($('postContent') && MUI.options.standardEffects == true) {
+				if ($('postContent') && MUI.options.standardEffects) {
 					$('postContent').setStyle('opacity', 0);	
 				}
 				else {
@@ -810,7 +810,7 @@ initializeColumns = function() {
 						});			
 					},
 					onSuccess: function(){
-						if (MUI.options.standardEffects == true) {
+						if (MUI.options.standardEffects) {
 							$('postContent').setStyle('opacity', 0).get('morph').start({'opacity': 1});
 						}
 					}
@@ -833,7 +833,7 @@ initializeColumns = function() {
 				$('demoSearch').addEvent('submit', function(e){
 					e.stop();
 					$('spinner').setStyle('visibility', 'visible');
-					if ($('postContent') && MUI.options.standardEffects == true) {
+					if ($('postContent') && MUI.options.standardEffects) {
 						$('postContent').setStyle('opacity', 0);
 					}
 					else {
@@ -854,7 +854,7 @@ initializeColumns = function() {
 							});
 						},
 						onSuccess: function(){
-							if ($('postContent') && MUI.options.standardEffects == true) {								
+							if ($('postContent') && MUI.options.standardEffects) {
 								$('postContent').setStyle('opacity', 0).get('morph').start({'opacity': 1});
 							}
 						}
@@ -877,7 +877,7 @@ initializeColumns = function() {
 		headerToolboxOnload: function(){
 			$$('.demoAction').each(function(element){
 				element.removeEvents();
-				element.addEvent('click', function(e){
+				element.addEvent('click', function(){
 					MUI.notification('Do Something');
 				});
 			});
