@@ -11,7 +11,7 @@ License:
 
 */
 
-MUI.files[MUI.path.plugins + 'mochaImageButton/ImageButton.js'] = 'loaded';
+MUI.files[MUI.path.plugins + 'MUI/ImageButton/ImageButton.js'] = 'loaded';
 
 MUI.ImageButton = new Class({
 

@@ -30,7 +30,7 @@ Arguments:
 
 */
 
-MUI.files[MUI.path.plugins + 'mochaui/Utilities/Themes.js'] = 1;
+MUI.files[MUI.path.plugins + 'MUI/Utilities/Themes.js'] = 1;
 	
 MUI.Themes = {
 

@@ -11,7 +11,7 @@ License:
 
 */
 
-MUI.files[MUI.path.plugins + 'mochaForm/Form.js'] = 'loaded';
+MUI.files[MUI.path.plugins + 'MUI/Form/Form.js'] = 'loaded';
 
 MUI.Form = new Class({
     Implements: [Events, Options],

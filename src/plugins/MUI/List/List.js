@@ -11,7 +11,7 @@ License:
 
 */
 
-MUI.files[MUI.path.plugins + 'mochaList/List.js'] = 'loaded';
+MUI.files[MUI.path.plugins + 'MUI/List.js'] = 'loaded';
 
 MUI.List = new Class({
     Implements: [Events, Options],

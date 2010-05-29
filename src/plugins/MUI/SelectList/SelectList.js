@@ -11,7 +11,7 @@ License:
 
 */
 
-MUI.files[MUI.path.plugins + 'mochaSelectList/SelectList.js'] = 'loaded';
+MUI.files[MUI.path.plugins + 'MUI/SelectList.js'] = 'loaded';
 
 MUI.SelectList = new NamedClass('MUI.SelectList',{
 
