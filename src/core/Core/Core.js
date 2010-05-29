@@ -33,7 +33,8 @@ var MUI = MochaUI = new Hash({
 	path: {			
 		source:  'scripts/source/', // Path to MochaUI source JavaScript
 		themes:  'themes/',         // Path to MochaUI Themes
-		plugins: 'plugins/'         // Path to Plugins
+		plugins: 'plugins/',        // Path to Plugins
+        muiplugins: 'plugins/MUI/'  // Path to Mocha Owned Plugins
 	},
 	
 	// Returns the path to the current theme directory
@@ -966,7 +967,7 @@ MUI.extend({
 
     newWindowsFromHTML: function(arg){
         new MUI.Require({
-            js: [MUI.path.plugins + 'mochaui/Window/Windows-from-html.js'],
+            js: [MUI.path.muiplugins + 'Window/Windows-from-html.js'],
             onload: function(){
                 new MUI.newWindowsFromHTML(arg);
             }
@@ -975,7 +976,7 @@ MUI.extend({
     
 	newWindowsFromJSON: function(arg){
 		new MUI.Require({
-			js: [MUI.path.plugins + 'mochaui/Window/Windows-from-json.js'],
+			js: [MUI.path.muiplugins + 'Window/Windows-from-json.js'],
 			onload: function(){
 				new MUI.newWindowsFromJSON(arg);
 			}
@@ -984,7 +985,7 @@ MUI.extend({
 
 	arrangeCascade: function(){
 		new MUI.Require({
-			js: [MUI.path.plugins + 'mochaui/Window/Arrange-cascade.js'],
+			js: [MUI.path.muiplugins + 'Window/Arrange-cascade.js'],
 			onload: function(){
 				new MUI.arrangeCascade();
 			}		
@@ -993,7 +994,7 @@ MUI.extend({
 	
 	arrangeTile: function(){
 		new MUI.Require({
-			js: [MUI.path.plugins + 'mochaui/Window/Arrange-tile.js'],
+			js: [MUI.path.muiplugins + 'Window/Arrange-tile.js'],
 			onload: function(){
 				new MUI.arrangeTile();
 			}		
@@ -1002,7 +1003,7 @@ MUI.extend({
 	
 	saveWorkspace: function(){
 		new MUI.Require({
-			js: [MUI.path.plugins + 'mochaui/Layout/Workspaces.js'],
+			js: [MUI.path.muiplugins + 'Layout/Workspaces.js'],
 			onload: function(){
 				new MUI.saveWorkspace();
 			}		
@@ -1011,7 +1012,7 @@ MUI.extend({
 	
 	loadWorkspace: function(){
 		new MUI.Require({
-			js: [MUI.path.plugins + 'mochaui/Layout/Workspaces.js'],
+			js: [MUI.path.muiplugins + 'Layout/Workspaces.js'],
 			onload: function(){
 				new MUI.loadWorkspace();
 			}		
@@ -1021,7 +1022,7 @@ MUI.extend({
 	Themes: {
 		init: function(arg){			
 			new MUI.Require({
-				js: [MUI.path.plugins + 'mochaui/Utilities/Themes.js'],
+				js: [MUI.path.muiplugins + 'Utilities/Themes.js'],
 				onload: function(){
 					MUI.Themes.init(arg);
 				}		
@@ -1032,6 +1033,6 @@ MUI.extend({
 
 if (Browser.Engine.webkit) {
     new MUI.Require({
-        js: [MUI.path.plugins + 'mochaui/Window/WebKitShadower.js']
+        js: [MUI.path.muiplugins + 'Window/WebKitShadower.js']
     });
 }
