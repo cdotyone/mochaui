@@ -9,9 +9,9 @@
 <script type="text/javascript" src="../../../scripts/source/Window/Window.js"></script>
 <script type="text/javascript" src="../../../scripts/source/Window/Modal.js"></script>
 <!--MOCHAUI-->
-<script type="text/javascript" src="Accordian.js"></script>
+<script type="text/javascript" src="Accordion.js"></script>
 <script type="text/javascript">
-    new MUI.Accordian({
+    new MUI.Accordion({
         container:'page',
         id:'accordian1',
         panels:[
@@ -20,7 +20,7 @@
             {text:'Amet','html':'<h3>Lorem Ipsum Dolor Sit Amet</h3><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean consequat dignissim pede. Aliquam erat volutpat. In ac nulla. Phasellus sapien.</p>'}
         ]
     });
-    new MUI.Accordian({
+    new MUI.Accordion({
         id:'accordian2',
         onTabSelected: function(tab,value,self,e) {
             alert('receieved onTabSelected command on tab ' + value);

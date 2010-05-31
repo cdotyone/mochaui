@@ -11,9 +11,9 @@ License:
 
 */
 
-MUI.files[MUI.path.plugins + 'MUI/Accordian/Accordian.js'] = 'loaded';
+MUI.files[MUI.path.plugins + 'MUI/Accordion/Accordion.js'] = 'loaded';
 
-MUI.Accordian = new Class({
+MUI.Accordion = new Class({
 
 Implements: [Events, Options],
 
