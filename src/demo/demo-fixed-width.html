@@ -6,14 +6,14 @@
 
 <title>Mootools MochaUI - Fixed Width with Dock</title>
 
-<link rel="stylesheet" type="text/css" id="cssContent" href="themes/default/css/Content.css" />
-<link rel="stylesheet" type="text/css" id="cssCore" href="themes/default/css/Core.css" />
-<link rel="stylesheet" type="text/css" id="cssLayout" href="themes/default/css/Layout.css" />
-<link rel="stylesheet" type="text/css" id="cssDock" href="themes/default/css/Dock.css" />
-<link rel="stylesheet" type="text/css" id="cssTabs" href="themes/default/css/Tabs.css" />
-<link rel="stylesheet" type="text/css" id="cssWindow" href="themes/default/css/Window.css" />
-	
-<style>	
+<link rel="stylesheet" type="text/css" id="cssContent" href="../themes/default/css/Content.css" />
+<link rel="stylesheet" type="text/css" id="cssCore" href="../themes/default/css/Core.css" />
+<link rel="stylesheet" type="text/css" id="cssLayout" href="../themes/default/css/Layout.css" />
+<link rel="stylesheet" type="text/css" id="cssDock" href="../themes/default/css/Dock.css" />
+<link rel="stylesheet" type="text/css" id="cssTabs" href="../themes/default/css/Tabs.css" />
+<link rel="stylesheet" type="text/css" id="cssWindow" href="../themes/default/css/Window.css" />
+
+<style type="text/css">	
 
 #desktop {
 	visibility: visible;
@@ -90,14 +90,14 @@
 	<![endif]-->
 
     <!--MOCHAUI-->
-    <script type="text/javascript" src="scripts/source/mootools-1.2.4-core-yc.js"></script>
-    <script type="text/javascript" src="scripts/source/mootools-1.2.4-more-yc.js"></script>
-    <script type="text/javascript" src="scripts/source/Core/Core.js"></script>
-    <script type="text/javascript" src="scripts/source/Window/Window.js"></script>
-    <script type="text/javascript" src="scripts/source/Window/Modal.js"></script>
-    <script type="text/javascript" src="scripts/source/Window/Windows-from-html.js"></script>
-    <script type="text/javascript" src="scripts/source/Layout/Layout.js"></script>
-    <script type="text/javascript" src="scripts/source/Layout/Dock.js"></script>
+    <script type="text/javascript" src="../core/mootools-1.2.4-core-yc.js"></script>
+    <script type="text/javascript" src="../core/mootools-1.2.4-more-yc.js"></script>
+    <script type="text/javascript" src="../core/Core/Core.js"></script>
+    <script type="text/javascript" src="../core/Layout/Layout.js"></script>
+    <script type="text/javascript" src="../core/Layout/Dock.js"></script>
+    <script type="text/javascript" src="../core/Window/Window.js"></script>
+    <script type="text/javascript" src="../core/Window/Modal.js"></script>
+    <script type="text/javascript" src="../plugins/MUI/Window/Windows-from-html.js"></script>
     <!--MOCHAUI-->
     
 	<script type="text/javascript">
@@ -115,7 +115,7 @@
 			padding: { top: 43, right: 12, bottom: 10, left: 12 },
 			scrollbars:  false
 		});
-	}
+	};
 
 	window.addEvent('load', function(){
 		MUI.Desktop.initialize();

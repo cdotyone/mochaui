@@ -13,7 +13,7 @@ License:
 
 function buildTree(treeID){
 	
-	var iconPath = "plugins/tree/images/"
+	var iconPath = MUI.path.plugins + "tree/images/";
 
 	$$('#'+treeID+' li.folder').each(function(folder){
 		var folderContents = folder.getChildren('ul');
@@ -26,21 +26,21 @@ function buildTree(treeID){
 		// Determine which open and close graphic each folder gets
 		
 		if (folder.hasClass('root')) {
-			folder.minus = iconPath + 'Rminus.gif'
-			folder.plus = iconPath + 'Rplus.gif'
+			folder.minus = iconPath + 'Rminus.gif';
+			folder.plus = iconPath + 'Rplus.gif';
 		}
 		else if (folder.hasClass('first')) {
-			folder.minus = iconPath + 'Fminus.gif'
-			folder.plus = iconPath + 'Fplus.gif'
+			folder.minus = iconPath + 'Fminus.gif';
+			folder.plus = iconPath + 'Fplus.gif';
 		}		
 		else 
 			if (folder.getNext()) {
-				folder.minus = iconPath + 'Tminus.gif'
-				folder.plus = iconPath + 'Tplus.gif'
+				folder.minus = iconPath + 'Tminus.gif';
+				folder.plus = iconPath + 'Tplus.gif';
 			}
 			else {
-				folder.minus = iconPath + 'Lminus.gif'
-				folder.plus = iconPath + 'Lplus.gif'
+				folder.minus = iconPath + 'Lminus.gif';
+				folder.plus = iconPath + 'Lplus.gif';
 			}
 		
 		var image = new Element('img', {

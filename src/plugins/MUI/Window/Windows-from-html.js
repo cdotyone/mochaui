@@ -29,7 +29,7 @@ See Also:
 MUI.files[MUI.path.plugins + 'MUI/Window/Windows-from-html.js'] = 'loaded';
 
 MUI.extend({
-	newWindowsFromHTML: function(){
+	NewWindowsFromHTML: function(){
 		$$('.mocha').each(function(el) {
 			// Get the window title and destroy that element, so it does not end up in window content
 			if ( Browser.Engine.presto || Browser.Engine.trident5 ){

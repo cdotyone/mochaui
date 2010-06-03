@@ -141,7 +141,7 @@ initializeWindows = function(){
 			title: 'Canvas Clock',
 			addClass: 'transparent',
 			loadMethod: 'xhr',
-			contentURL: 'plugins/coolclock/index.html',
+			contentURL: MUI.path.plugins + 'coolclock/index.html',
 			shape: 'gauge',
 			headerHeight: 30,
 			width: 160,
@@ -169,7 +169,7 @@ initializeWindows = function(){
 			id: 'parametrics',
 			title: 'Window Parametrics',
 			loadMethod: 'xhr',
-			contentURL: 'plugins/parametrics/index.html',
+			contentURL: MUI.path.plugins + 'parametrics/index.html',
 			width: 305,
 			height: 110,
 			x: 230,
@@ -383,7 +383,7 @@ initializeWindows = function(){
 			title: 'Window Builder',
 			icon: 'images/icons/page.gif',
 			loadMethod: 'xhr',
-			contentURL: 'plugins/windowform/',
+			contentURL: MUI.path.plugins + 'windowform/',
 			width: 370,
 			height: 410,
 			maximizable: false,
@@ -391,10 +391,10 @@ initializeWindows = function(){
 			scrollbars: false,
 			onBeforeBuild: function(){
 				if ($('builderStyle')) return;
-				new Asset.css('plugins/windowform/css/style.css', {id: 'builderStyle'});
+				new Asset.css(MUI.path.plugins + 'windowform/css/style.css', {id: 'builderStyle'});
 			},			
 			onContentLoaded: function(){
-				new Asset.javascript('plugins/windowform/scripts/Window-from-form.js', {
+				new Asset.javascript(MUI.path.plugins + 'windowform/scripts/Window-from-form.js', {
 					id: 'builderScript',
 					onload: function(){
 						$('newWindowSubmit').addEvent('click', function(e){

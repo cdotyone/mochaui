@@ -40,7 +40,7 @@ See Also:
 MUI.files[MUI.path.plugins + 'MUI/Window/Windows-from-json.js'] = 'loaded';
 
 MUI.extend({	
-	newWindowsFromJSON: function(newWindows){
+	NewWindowsFromJSON: function(newWindows){
 		newWindows.each(function(options) {
 			var temp = new Hash(options);
 			temp.each( function(value, key, hash) {
