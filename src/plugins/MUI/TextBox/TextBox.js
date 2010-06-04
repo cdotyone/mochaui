@@ -65,28 +65,33 @@ checkForMask: function() {
     var o=self.options;
 
     if(o.maskType!='none' && (!MUI.Mask || !MUI.Mask[o.maskType]) && self.element ) {
-        o.maskType=self.upperCamelize(o.maskType);
+        o.maskType=o.maskType.camelCase().capitalize();
 
-        new MUI.Require({
-            js: ['Mask.js','Mask.'+o.maskType.split('.')[0]+'.js'],
-            onload: function(){
-                var options=$H({});
-                options.extend(o.maskOptions);
-                var klass=self.getMaskClassOptions(o.maskType);
-                new klass(self.element,options);
+        new MUI.Require({js: ['Mask.js'],
+            onload: function() {
+                new MUI.Require({
+                    js: ['Mask.'+o.maskType.split('.')[0]+'.js'],
+                    onload: function(){
+                        var o=self.options;
+                        var options=$H({});
+                        options.extend(o.maskOptions);
+                        var klass=self.getMaskClassOptions(o.maskType);
+                        if(!klass) return;
+                        new klass(self.element,options);
+                    }
+                });
             }
-        });                                
+        });
     }
-},
-
-upperCamelize: function(str){
-    return str.camelCase().capitalize();
 },
 	
 getMaskClassOptions: function(maskType) {
     var classNames = [];
     if (maskType) classNames = maskType.split('.');
-    return (classNames[1] ? MUI.Mask[this.upperCamelize(classNames[0])][this.upperCamelize(classNames[1])] : MUI.Mask[this.upperCamelize(classNames[0])]);
+    else return false;
+    var name=classNames[0].camelCase().capitalize();
+    var submask=classNames[1].camelCase().capitalize();
+    return (classNames[1] ? MUI.Mask[name][submask] : MUI.Mask[name]);
 },
 
 _getData: function(item,property){
@@ -128,25 +133,33 @@ toDOM: function(containerEl)
     var isNew = false;
     var inp=$(o.id);
     if(!inp) {
-        inp=new Element('input',{'id':o.id,'type':o.type});
+        self._wrapper=new Element('fieldset',{'id':o.id});
+
+        var tle=self._getData(o.formData,o.formTitleField);
+        if(!tle) tle=o.id;
+        self._label=new Element('label',{'text':tle}).inject(self._wrapper);
+
+        inp=new Element('input',{'id':o.id,'type':o.type}).inject(self._wrapper);
         isNew=true;
     }
     if(o.cssClass) {
+        if(self._wrapper) self._wrapper.set('class',o.cssClass);
         inp.set('class',o.cssClass);
     }
+
     self.element = inp;
 
     var value=o.value;
-    if(o.formTitleField) value=self._getData(o.formData,o.valueField);
+    if(o.valueField) value=self._getData(o.formData,o.valueField);
     else if(o.formData) value=self._getData(o.formData,o.id);
     inp.set('value',value);
 
+    self.checkForMask();
     if(!isNew) return inp;
 
     window.addEvent('domready', function() {
         var container=$(containerEl ? containerEl : o.container);
-        inp.inject(container);
-        self.checkForMask();
+        self._wrapper.inject(container);
     });
 
     return inp;

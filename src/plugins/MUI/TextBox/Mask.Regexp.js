@@ -16,7 +16,7 @@ provides: [Meio.Mask.Regexp]
 ...
 */
 
-MUI.Mask.MUI = new Class({
+MUI.Mask.Regexp = new Class({
 
 	Extends : MUI.Mask,
 
