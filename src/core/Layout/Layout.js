@@ -1,17 +1,22 @@
 /*
+---
 
-Script: Layout.js
-	Create web application layouts. Enables window maximize.
+name: Layout
 
-Copyright:
-	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.
+script: Layout.js
 
-License:
-	MIT-style license.
+description: Create web application layouts. Enables window maximize.
 
-Requires:
-	Core.js
+copyright: (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.
 
+license: MIT-style license.
+
+requires:
+  - MochaUI/MUI
+
+provides: [MUI.Desktop, MUI.Column, MUI.Panel]
+
+...
 */
 
 MUI.files[MUI.path.source + 'Layout/Layout.js'] = 'loaded';
