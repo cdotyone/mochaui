@@ -1,17 +1,25 @@
 /*
+---
 
-Script: Tabs.js
-	Functionality for window tabs.
+name: Tabs
 
-Copyright:
-	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
+script: Tabs.js
 
-License:
-	MIT-style license.
+description: Functionality for window tabs.
 
-Requires:
-	Core.js, Window.js (for tabbed windows) or Layout.js (for tabbed panels)
+copyright: (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
 
+license: MIT-style license.
+
+requires:
+  - MochaUI/MUI
+  - MochaUI/MUI.Windows
+  - MochaUI/MUI.Column
+  - MochaUI/MUI.Panel
+
+provides: [MUI.initializeTabs]
+
+...
 */
 
 MUI.extend({
