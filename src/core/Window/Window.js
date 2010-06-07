@@ -107,6 +107,8 @@ Options:
 	onRestore - (function) Fired when a window is restored from minimized or maximized.
 	onClose - (function) Fired just before the window is closed.
 	onCloseComplete - (function) Fired after the window is closed.
+	onDragStart - (function) Fired when the user starts to drag (on mousedown). Receives the dragged window as an argument.
+	onDragComplete - (function) Fired when the user completes the drag. Receives the dragged window as arguments.
 
 Returns:
 	Window object.
@@ -839,6 +841,7 @@ MUI.Window = new NamedClass('MUI.Window',{
 						this.iframeEl.hide();
 					}
 				}
+				this.fireEvent('onDragStart', windowEl);
 			}.bind(this),
 			onComplete: function() {
 				if (this.options.type != 'modal' && this.options.type != 'modal2') {
@@ -854,6 +857,7 @@ MUI.Window = new NamedClass('MUI.Window',{
 				}
 				// Store new position in options.
 				this.saveValues();
+				this.fireEvent('onDragComplete', windowEl);
 			}.bind(this)
 		});
 	},
