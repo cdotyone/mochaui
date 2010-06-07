@@ -44,12 +44,12 @@ MUI.Desktop = {
 		this.desktopFooter   = $(this.options.desktopFooter);
 
 		if (this.desktop) {
-			($$('body')).setStyles({
+			$$('body').setStyles({
 				overflow: 'hidden',
 				height: '100%',
 				margin: 0
 			});
-			($$('html')).setStyles({
+			$$('html').setStyles({
 				overflow: 'hidden',
 				height: '100%'
 			});
