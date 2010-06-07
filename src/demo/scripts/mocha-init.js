@@ -176,7 +176,7 @@ var initializeWindows = function(){
 			title: 'Window Parametrics',			
 			contentURL: MUI.path.plugins + 'parametrics/index.html',
 			width: 305,
-			height: 110,
+			height: 210,
 			x: 570,
 			y: 160,
 			padding: { top: 12, right: 12, bottom: 10, left: 12 },
@@ -188,6 +188,8 @@ var initializeWindows = function(){
 				onload: function(){	
 					if (MUI.addRadiusSlider) MUI.addRadiusSlider();
 					if (MUI.addShadowSlider) MUI.addShadowSlider();
+					if (MUI.addOffsetXSlider) MUI.addOffsetXSlider();
+					if (MUI.addOffsetYSlider) MUI.addOffsetYSlider();
 				}		
 			}				
 		});
