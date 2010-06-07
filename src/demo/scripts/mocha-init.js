@@ -314,6 +314,12 @@ var initializeWindows = function(){
 			},
 			onBlur: function(){
 				MUI.notification('Window lost focus.');
+			},
+			onDragStart: function(){
+				MUI.notification('Window is beeing dragged.');
+			},
+			onDragComplete: function(){
+				MUI.notification('Window drag complete.');
 			}
 		});
 	};
