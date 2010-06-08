@@ -16,6 +16,8 @@
  ...
  */
 
+MUI.files[MUI.path.muiplugins + 'TextBox/Mask.Regexp.js'] = 'loaded';
+
 MUI.Mask.Regexp = new Class({
 
     Extends : MUI.Mask,

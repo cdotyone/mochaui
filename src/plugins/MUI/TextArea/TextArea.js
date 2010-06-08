@@ -16,21 +16,20 @@
  ...
  */
 
-MUI.files[MUI.path.muiplugins + 'TextBox/TextBox.js'] = 'loaded';
+MUI.files[MUI.path.muiplugins + 'TextArea/TextArea.js'] = 'loaded';
 
-MUI.TextBox = new Class({
+MUI.TextArea = new Class({
 
     Implements: [Events, Options],
 
     options: {
-        id:            ''              // id of the primary element, and id os control that is registered with mocha
+        id:            ''               // id of the primary element, and id os control that is registered with mocha
         ,container:     null            // the parent control in the document to add the control to
         ,createOnInit:  true            // true to add textbox to container when control is initialized
         ,cssClass:      'form'          // the primary css tag
         ,type:          'text'          // this is a text field
 
-        ,maskType:      'none'          // type of mask to apply  ['Fixed','Regexp','Reverse']
-        ,maskOptions:   {}              // the field mask
+        ,isDynamic:     false           // true if this textarea can automatically resize
 
         ,valueField:    false           // defaults to the id on this field
         ,formTitleField:false           // defaults to the id of this field
@@ -53,66 +52,20 @@ MUI.TextBox = new Class({
             o.id = id;
         }
 
-        if (o.maskType.capitalize() == 'Password') o.type = 'password';
-
         // create sub items if available
         if (o.createOnInit && o.container != null) this.toDOM();
-        else {
-            window.addEvent('domready', function() {
-                var el = $(id);
-                if (el != null) {
-                    self.fromHTML();
-                    self.checkForMask();
+
+        if(o.isDynamic) {
+            new MUI.Require({js: ['DynamicTextArea.js'],
+                onload: function() {
+                    var options = $H({});
+                    options.extend(o);
+                    new MUI.DynamicTextArea(self.element,options);
                 }
             });
         }
-
+        
         MUI.set(id, this);
-    },
-
-    checkForMask: function() {
-        var self = this;
-        var o = self.options;
-
-        if (o.maskType != 'none' && (!MUI.Mask || !MUI.Mask[o.maskType]) && self.element) {
-            o.maskType = o.maskType.camelCase().capitalize();
-
-            if (o.maskType = 'Password') {
-                new MUI.Require({js: ['PassShark.js'],
-                    onload: function() {
-                        var options = $H({});
-                        options.extend(o.maskOptions);
-                        options.maskType = o.maskType.toLowerCase();
-                        new PassShark(self.element,options);
-                    }
-                });
-            } else {
-                new MUI.Require({js: ['Mask.js'],
-                    onload: function() {
-                        new MUI.Require({
-                            js: ['Mask.' + o.maskType.split('.')[0] + '.js'],
-                            onload: function() {
-                                var o = self.options;
-                                var options = $H({});
-                                options.extend(o.maskOptions);
-                                options.maskType = o.maskType.toLowerCase();
-                                var klass = self.getMaskClassOptions(o.maskType);
-                                if (!klass) return;
-                                new klass(self.element, options);
-                            }
-                        });
-                    }
-                });
-            }
-        }
-    },
-
-    getMaskClassOptions: function(maskType) {
-        var classNames = [];
-        if (maskType) classNames = maskType.split('.');
-        else return false;
-        var name = classNames[0].camelCase().capitalize();
-        return (classNames[1] ? MUI.Mask[name][classNames[1].camelCase().capitalize()] : MUI.Mask[name]);
     },
 
     _getData: function(item, property) {

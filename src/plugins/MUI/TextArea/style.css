@@ -1,0 +1,4 @@
+/* textbox settings */
+fieldset.form { display: block; padding: 0 0 0 10px; border:none; }
+fieldset.form label{ float: left; width: 200px; }
+/* textbox settings */

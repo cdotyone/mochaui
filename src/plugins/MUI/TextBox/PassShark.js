@@ -19,7 +19,9 @@
  ...
  */
 
-var PassShark = new Class({
+MUI.files[MUI.path.muiplugins + 'TextBox/PassShark.js'] = 'loaded';
+
+MUI.PassShark = new Class({
 
     Implements: [Options, Events, Log, Class.Occlude],
 

@@ -7,8 +7,8 @@
  - Fábio Miranda Costa
 
  requires:
- - core/1.2.3: [Class.Extras, Element.Event, Element.Style]
- - more/1.2.3.1: Element.Forms
+ - core/1.2.4: [Class.Extras, Element.Event, Element.Style]
+ - more/1.2.4: [Element.Forms]
 
  license: MIT-style license
 
@@ -17,11 +17,12 @@
  ...
  */
 
-if (typeof MUI == 'undefined') var MUI = {};
+MUI.files[MUI.path.muiplugins + 'TextBox/Mask.js'] = 'loaded';
 
 $extend(Element.NativeEvents, {
     'paste': 2, 'input': 2
 });
+
 // thanks Jan Kassens
 Element.Events.paste = {
     base : (Browser.Engine.presto || (Browser.Engine.gecko && Browser.Engine.version < 19)) ? 'input' : 'paste',
