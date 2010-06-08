@@ -1,21 +1,35 @@
-/* 
+/*
+---
 
-Script: Core.js
-	MUI - A Web Applications User Interface Framework.
+name: Core
 
-Copyright:
-	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.
+script: Core.js
 
-License:
-	MIT-style license.
+description: MUI - A Web Applications User Interface Framework.
 
-Contributors:
-	- Scott F. Frederick
-	- Joel Lindau
+copyright: (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.
 
-Note:
+license: MIT-style license.
+
+authors:
+  - Scott F. Frederick
+  - Joel Lindau
+
+note:
 	This documentation is taken directly from the javascript source files. It is built using Natural Docs.
 
+requires:
+  - Core:1.2.4/Array
+  - Core:1.2.4/Element
+  - Core:1.2.4/Browser
+  - Core:1.2.4/Request
+  - Core:1.2.4/Request.HTML
+  - Hash
+  - More:1.2.4/Assets
+
+provides: [MUI, MochaUI, MUI.Require]
+
+...
 */
 
 var MUI = MochaUI = new Hash({

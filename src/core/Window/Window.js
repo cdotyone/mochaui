@@ -1,17 +1,21 @@
 /*
+---
 
-Script: Window.js
-	Build windows.
+name: Window
 
-Copyright:
-	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.
+script: Window.js
 
-License:
-	MIT-style license.
+description: Build windows.
 
-Requires:
-	Core.js
+copyright: (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.
 
+license: MIT-style license.
+
+requires: [MochaUI/MUI]
+
+provides: [MUI.Windows]
+
+...
 */
 
 MUI.files[MUI.path.source + 'Window/Window.js'] = 'loading';

@@ -1,20 +1,25 @@
 /*
+---
 
-Script: Modal.js
-	Create modal dialog windows.
+name: Modal
 
-Copyright:
-	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.	
+script: Modal.js
 
-License:
-	MIT-style license.	
+description: Create modal dialog windows.
 
-Requires:
-	Core.js, Window.js
+copyright: (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.	
 
-See Also:
-	<Window>	
-	
+license: MIT-style license.	
+
+See Also: <Window>
+
+requires:
+  - MochaUI/MUI
+  - MochaUI/MUI.Windows
+
+provides: [MUI.Modal]
+
+...
 */
 
 MUI.files[MUI.path.source + 'Window/Modal.js'] = 'loaded';

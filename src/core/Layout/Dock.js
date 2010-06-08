@@ -1,20 +1,28 @@
 /*
+---
 
-Script: Dock.js
-	Implements the dock/taskbar. Enables window minimize.
+name: Dock
 
-Copyright:
-	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.
+script: Dock.js
 
-License:
-	MIT-style license.
+description: Implements the dock/taskbar. Enables window minimize.
 
-Requires:
-	Core.js, Window.js, Layout.js
+copyright: (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.
 
-Todo:
-	- Make it so the dock requires no initial html markup.
+license: MIT-style license.
 
+todo:
+  - Make it so the dock requires no initial html markup.
+
+requires:
+  - MochaUI/MUI
+  - MochaUI/MUI.Windows
+  - MochaUI/MUI.Column
+  - MochaUI/MUI.Panel
+
+provides: [MUI.Dock]
+
+...
 */
 
 MUI.files[MUI.path.source + 'Layout/Dock.js'] = 'loaded';
