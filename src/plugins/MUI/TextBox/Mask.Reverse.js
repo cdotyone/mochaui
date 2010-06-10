@@ -167,9 +167,9 @@ MUI.Mask.Reverse = new Class({
 });
 
 MUI.Mask.createMasks('Reverse', {
-    'Integer'        : {precision: 0, maxLength: 18},
-    'Decimal'        : { },
-    'DecimalUs'        : {thousands: ',', decimal: '.'},
-    'Reais'            : {symbol: 'R$ ' },
+    'Integer'       : {precision: 0, maxLength: 18},
+    'Decimal'       : { },
+    'DecimalUs'     : {thousands: ',', decimal: '.'},
+    'Reais'         : {symbol: 'R$ ' },
     'Dollar'        : {symbol: 'US$ ', thousands: ',', decimal: '.'}
 });

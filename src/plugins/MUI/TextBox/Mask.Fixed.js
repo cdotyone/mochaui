@@ -32,7 +32,7 @@ MUI.Mask.Fixed = new Class({
     initialize: function(element, options) {
         this.parent(element, options);
         this.maskArray = this.options.mask.split('');
-        this.maskMold = this.element.get('value') || this.options.mask.replace(MUI.Mask.rulesRegex, this.options.placeholder);
+        this.maskMold = this.options.mask.replace(MUI.Mask.rulesRegex, this.options.placeholder);
         this.maskMoldArray = this.maskMold.split('');
         this.validIndexes = [];
         if (this.options.autoSetSize) this.setSize();
@@ -88,7 +88,7 @@ MUI.Mask.Fixed = new Class({
 
             i = this.validIndexes[start];
             if (!(returnFromTestEntry = this.testEvents(i, c, e.code, o.isRemoveKey))) return true;
-            if ($type(returnFromTestEntry) === 'string') c = returnFromTestEntry;
+            if (typeof returnFromTestEntry == 'string') c = returnFromTestEntry;
             this.maskMoldArray[i] = (o.isRemoveKey) ? this.options.placeholder : c;
 
             var newCarretPosition = $pick(finalRangePosition, this.maskMoldArray.length);
@@ -120,7 +120,7 @@ MUI.Mask.Fixed = new Class({
             if (!o.isRemoveKey) {
                 i = this.validIndexes[start];
                 if (!(returnFromTestEntry = this.testEvents(i, c, e.code, o.isRemoveKey))) return true;
-                if ($type(returnFromTestEntry) === 'string') c = returnFromTestEntry;
+                if (typeof returnFromTestEntry == 'string') c = returnFromTestEntry;
                 this.maskMoldArray[i] = c;
                 start++;
             }
@@ -147,16 +147,10 @@ MUI.Mask.Fixed = new Class({
         return this.unmaskRegex ? str.replace(this.unmaskRegex, '') : str;
     },
 
-    createUnmaskRegex: function() {
-        var fixedCharsArray = [].combine(this.options.mask.replace(MUI.Mask.rulesRegex, '').split(''));
-        var chars = (fixedCharsArray.join('') + this.options.placeholder).escapeRegExp();
-        this.unmaskRegex = chars ? new RegExp('[' + chars + ']', 'g') : null;
-    },
-
     applyMask: function(elementValue, newRangeStart) {
         var elementValueArray = elementValue.split(''),
                 maskArray = this.maskArray,
-                maskMold = this.maskMold,
+                maskMold = this.maskMoldArray,
                 eli = 0,
                 returnFromTestEntry;
 
@@ -168,7 +162,7 @@ MUI.Mask.Fixed = new Class({
                     elementValueArray.splice(eli, 1);
                     continue;
                 } else {
-                    if ($type(returnFromTestEntry) === 'string') elementValueArray[eli] = returnFromTestEntry;
+                    if (typeof returnFromTestEntry == 'string') elementValueArray[eli] = returnFromTestEntry;
                 }
                 newStartRange = eli;
             } else if (maskArray[eli] != elementValueArray[eli]) {
@@ -229,18 +223,25 @@ MUI.Mask.Fixed = new Class({
 
     shouldFocusNext: function() {
         return this.unmask(this.element.get('value')).length >= this.validIndexes.length;
+    },
+
+    createUnmaskRegex: function() {
+        var fixedCharsArray = [].combine(this.options.mask.replace(Meio.Mask.rulesRegex, '').split(''));
+        var chars = (fixedCharsArray.join('') + this.options.placeholder).escapeRegExp();
+        this.unmaskRegex = chars ? new RegExp('[' + chars + ']', 'g') : null;
     }
+
 });
 
 
 MUI.Mask.createMasks('Fixed', {
-    'Phone'        : {mask: '(99) 9999-9999'},
-    'PhoneUs'    : {mask: '(999) 999-9999'},
-    'Cpf'        : {mask: '999.999.999-99'},
-    'Cnpj'        : {mask: '99.999.999/9999-99'},
-    'Date'        : {mask: '3d/1m/9999'},
+    'Phone'     : {mask: '(99) 9999-9999'},
+    'PhoneUs'   : {mask: '(999) 999-9999'},
+    'Cpf'       : {mask: '999.999.999-99'},
+    'Cnpj'      : {mask: '99.999.999/9999-99'},
+    'Date'      : {mask: '3d/1m/9999'},
     'DateUs'    : {mask: '1m/3d/9999'},
-    'Cep'        : {mask: '99999-999'},
-    'Time'        : {mask: '2h:59'},
+    'Cep'       : {mask: '99999-999'},
+    'Time'      : {mask: '2h:59'},
     'Cc'        : {mask: '9999 9999 9999 9999'}
 });

@@ -77,13 +77,13 @@ MUI.TextBox = new Class({
         if (o.maskType != 'none' && (!MUI.Mask || !MUI.Mask[o.maskType]) && self.element) {
             o.maskType = o.maskType.camelCase().capitalize();
 
-            if (o.maskType = 'Password') {
+            if (o.maskType == 'Password') {
                 new MUI.Require({js: ['PassShark.js'],
                     onload: function() {
                         var options = $H({});
                         options.extend(o.maskOptions);
                         options.maskType = o.maskType.toLowerCase();
-                        new PassShark(self.element,options);
+                        new MUI.PassShark(self.element,options);
                     }
                 });
             } else {
