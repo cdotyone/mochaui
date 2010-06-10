@@ -226,7 +226,7 @@ MUI.Mask.Fixed = new Class({
     },
 
     createUnmaskRegex: function() {
-        var fixedCharsArray = [].combine(this.options.mask.replace(Meio.Mask.rulesRegex, '').split(''));
+        var fixedCharsArray = [].combine(this.options.mask.replace(MUI.Mask.rulesRegex, '').split(''));
         var chars = (fixedCharsArray.join('') + this.options.placeholder).escapeRegExp();
         this.unmaskRegex = chars ? new RegExp('[' + chars + ']', 'g') : null;
     }

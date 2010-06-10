@@ -1,7 +1,7 @@
 /*
  ---
 
- description: The base component for the Meio.Mask plugin.
+ description: The base component for the MUI.Mask plugin.
 
  authors:
  - Fábio Miranda Costa
@@ -12,7 +12,7 @@
 
  license: MIT-style license
 
- provides: [Meio.Mask]
+ provides: [MUI.Mask]
 
  ...
  */
