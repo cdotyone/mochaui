@@ -1,0 +1,56 @@
+<html>
+<head>
+<!--MOCHAUI-->
+<script type="text/javascript" src="../../../core/mootools-1.2.4-core-yc.js"></script>
+<script type="text/javascript" src="../../../core/mootools-1.2.4-more-yc.js"></script>
+<script type="text/javascript" src="../../../core/Core/Core.js"></script>
+<script type="text/javascript" src="../../../core/Layout/Layout.js"></script>
+<script type="text/javascript" src="../../../core/Layout/Dock.js"></script>
+<script type="text/javascript" src="../../../core/Window/Window.js"></script>
+<script type="text/javascript" src="../../../core/Window/Modal.js"></script>
+<script type="text/javascript" src="../../../core/Components/Tabs.js"></script>
+<!--MOCHAUI-->
+<script type="text/javascript" src="CheckBoxGrid.js"></script>
+<script type="text/javascript">
+
+    var items = [
+            {value:'item1',text:"Item 1",  checked: false},
+            {value:'item2',text:"Item 2",  checked: false},
+            {value:'item3',text:"Item 3",  checked: false},
+            {value:'item4',text:"Item 4",  checked: true},
+            {value:'item5',text:"Item 5",  checked: false},
+            {value:'item6',text:"Item 6",  checked: false},
+            {value:'item7',text:"Item 7",  checked: false},
+            {value:'item8',text:"Item 8",  checked: false},
+            {value:'item9',text:"Item 9",  checked: false},
+            {value:'item10',text:"Item 10",checked: false}
+        ];
+
+    new MUI.CheckBoxGrid({
+        container:'page',
+        width:250,
+        height:100,
+        id:'cbg1',
+        items:items
+    });
+    
+    new MUI.CheckBoxGrid({
+        container:'page',
+        width:250,
+        height:100,
+        id:'cbg2',
+        items:items
+    });
+
+</script>
+<link rel="stylesheet" type="text/css" href="style.css" />
+
+</head>
+
+<body>
+
+<div id="page">
+</div>
+
+</body>
+</html>
