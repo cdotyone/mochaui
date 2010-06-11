@@ -1,7 +1,7 @@
 /*
  ---
 
- description: The base component for the Meio.Mask plugin.
+ description: The base component for the MUI.Mask plugin.
 
  authors:
  - Fábio Miranda Costa
@@ -12,18 +12,18 @@
 
  license: MIT-style license
 
- provides: [Meio.Mask]
+ provides: [MUI.Mask]
 
  ...
  */
 
 MUI.files[MUI.path.muiplugins + 'TextBox/Mask.js'] = 'loaded';
 
+// credits to Jan Kassens
 $extend(Element.NativeEvents, {
     'paste': 2, 'input': 2
 });
 
-// thanks Jan Kassens
 Element.Events.paste = {
     base : (Browser.Engine.presto || (Browser.Engine.gecko && Browser.Engine.version < 19)) ? 'input' : 'paste',
     condition: function(e) {
@@ -46,8 +46,20 @@ MUI.Mask = new Class({
         //onValid: $empty,
 
         //REVERSE MASK OPTIONS
-        //signal: false,
-        //setSize: false
+        //autoSetSize: false,
+        //autoEmpty: false,
+        //alignText: true,
+        //symbol: '',
+        //precision: 2,
+        //decimal: ',',
+        //thousands: '.',
+        //maxLength: 18
+        //REPEAT MASK OPTIONS
+        //mask: '',
+        //maxLength: 0 // 0 for infinite
+
+        //REGEXP MASK OPTIONS
+        //regex: null
     },
 
     initialize: function(el, options) {
@@ -66,7 +78,7 @@ MUI.Mask = new Class({
         }, this);
         this.element.store('meiomask', this).erase('maxlength');
         var elementValue = this.element.get('value');
-        if (elementValue !== '') {
+        if (elementValue != '') {
             this.element.set('value', elementValue.meiomask(this.constructor, this.options));
         }
         return this;
@@ -90,7 +102,7 @@ MUI.Mask = new Class({
         var o = {}, keyCode = (e.type == 'paste') ? null : e.event.keyCode;
         o.range = this.element.getSelectedRange();
         o.isSelection = (o.range.start !== o.range.end);
-        // 8 == backspace && 46 == delete && 127 == iphone's delete (i mean backspace)
+        // 8 == backspace && 46 == delete && 127 == iphone's delete
         o.isDelKey = (keyCode == 46 && !(Browser.Engine.trident && e.event.type == 'keypress'));
         o.isBksKey = (keyCode == 8 || (Browser.Platform.ipod && e.code == 127));
         o.isRemoveKey = (o.isBksKey || o.isDelKey);
@@ -120,15 +132,15 @@ MUI.Mask = new Class({
         return true;
     },
 
-    shouldFocusNext: function() {
-        var maxLength = this.options.maxLength;
-        return maxLength && this.element.get('value').length >= maxLength;
-    },
-
     focus: function(e, o) {
         var element = this.element;
         element.store('meiomask:focusvalue', element.get('value'));
     },
+
+    shouldFocusNext: function(){
+        var maxLength = this.options.maxLength;
+        return maxLength && this.element.get('value').length >= maxLength;
+    },    
 
     blur: function(e, o) {
         var element = this.element;
@@ -223,8 +235,7 @@ MUI.Mask.extend({
         }
     },
 
-    // Christoph Pojer's (zilenCe) idea http://cpojer.net/
-    // adapted to MeioMask
+    // credits to Christoph Pojer's (cpojer) http://cpojer.net/
     upTo: function(number) {
         number = '' + number;
         return function(value, index, _char) {
