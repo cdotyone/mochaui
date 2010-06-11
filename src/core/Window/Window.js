@@ -284,7 +284,9 @@ MUI.Windows.windowOptions = {
 	onMaximize:        $empty,
 	onRestore:         $empty,
 	onClose:           $empty,
-	onCloseComplete:   $empty
+	onCloseComplete:   $empty,
+	onDragStart:       $empty,
+	onDragComplete:    $empty
 };
 
 MUI.Windows.windowOptionsOriginal = $merge(MUI.Windows.windowOptions);
