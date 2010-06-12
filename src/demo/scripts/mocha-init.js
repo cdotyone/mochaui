@@ -323,7 +323,7 @@ var initializeWindows = function(){
 				MUI.notification('Window lost focus.');
 			},
 			onDragStart: function(){
-				MUI.notification('Window is beeing dragged.');
+				MUI.notification('Window is being dragged.');
 			},
 			onDragComplete: function(){
 				MUI.notification('Window drag complete.');
