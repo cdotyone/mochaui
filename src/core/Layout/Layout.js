@@ -44,12 +44,12 @@ MUI.Desktop = {
 		this.desktopFooter   = $(this.options.desktopFooter);
 
 		if (this.desktop) {
-			($$('body')).setStyles({
+			$$('body').setStyles({
 				overflow: 'hidden',
 				height: '100%',
 				margin: 0
 			});
-			($$('html')).setStyles({
+			$$('html').setStyles({
 				overflow: 'hidden',
 				height: '100%'
 			});
@@ -315,6 +315,7 @@ Options:
 	width - 'main' column is fluid and should not be given a width.
 	resizeLimit - resizelimit of a 'right' or 'left' column.
 	sortable - (boolean) Whether the panels can be reordered via drag and drop.
+	isCollapsed - (boolean) Whether the column is collapsed
 	onResize - (function) Fired when the column is resized.
 	onCollapse - (function) Fired when the column is collapsed.
 	onExpand - (function) Fired when the column is expanded.
@@ -551,6 +552,7 @@ Arguments:
 Options:
 	id - The ID of the panel. This must be set when creating the panel.
 	column - Where to inject the panel. This must be set when creating the panel.
+	require - (object) assets additional css, images and js resource, provides onload callback
 	loadMethod - ('html', 'xhr', or 'iframe') Defaults to 'html' if there is no contentURL. Defaults to 'xhr' if there is a contentURL. You only really need to set this if using the 'iframe' method. May create a 'panel' loadMethod in the future.
 	contentURL - Used if loadMethod is set to 'xhr' or 'iframe'.
 	method - ('get', or 'post') The method used to get the data. Defaults to 'get'.
@@ -562,6 +564,7 @@ Options:
 	tabsData - (hash) Data to send with the URL. Defaults to null.
 	tabsOnload - (function)
 	header - (boolean) Display the panel header or not
+	title - (string)
 	headerToolbox: (boolean)
 	headerToolboxURL: (url)
 	headerToolboxOnload: (function)
@@ -583,7 +586,6 @@ MUI.Panel = new NamedClass('MUI.Panel',{
 
 	options: {
 		id:                 null,
-		title:              'New Panel',
 		column:             null,
 		require:            {
 			css:            [],
@@ -609,6 +611,7 @@ MUI.Panel = new NamedClass('MUI.Panel',{
 		tabsOnload:         $empty,
 
 		header:             true,
+		title:              'New Panel',
 		headerToolbox:      false,
 		headerToolboxURL:   'pages/lipsum.html',
 		headerToolboxOnload: $empty,

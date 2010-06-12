@@ -176,7 +176,7 @@ var initializeWindows = function(){
 			title: 'Window Parametrics',			
 			contentURL: MUI.path.plugins + 'parametrics/index.html',
 			width: 305,
-			height: 110,
+			height: 210,
 			x: 570,
 			y: 160,
 			padding: { top: 12, right: 12, bottom: 10, left: 12 },
@@ -185,15 +185,24 @@ var initializeWindows = function(){
 			require: {
 				css: [MUI.path.plugins + 'parametrics/css/style.css'],
 				js: [MUI.path.plugins + 'parametrics/scripts/parametrics.js'],
-				onload: function(){	
+				onload: function(){
 					if (MUI.addRadiusSlider) MUI.addRadiusSlider();
 					if (MUI.addShadowSlider) MUI.addShadowSlider();
-				}		
-			}				
+					if (MUI.addOffsetXSlider) MUI.addOffsetXSlider();
+					if (MUI.addOffsetYSlider) MUI.addOffsetYSlider();
+				}
+			},
+			onDragStart: function(win){
+				if (!Browser.Engine.trident) win.setStyle('opacity', 0.5);
+				// VML doesn't render opacity nicely on the shadow
+			},
+			onDragComplete: function(win){
+				if (!Browser.Engine.trident) win.setStyle('opacity', 1);
+			}
 		});
 	};
 	if ($('parametricsLinkCheck')){
-		$('parametricsLinkCheck').addEvent('click', function(e){	
+		$('parametricsLinkCheck').addEvent('click', function(e){
 			new Event(e).stop();
 			MUI.parametricsWindow();
 		});
@@ -312,6 +321,12 @@ var initializeWindows = function(){
 			},
 			onBlur: function(){
 				MUI.notification('Window lost focus.');
+			},
+			onDragStart: function(){
+				MUI.notification('Window is beeing dragged.');
+			},
+			onDragComplete: function(){
+				MUI.notification('Window drag complete.');
 			}
 		});
 	};
