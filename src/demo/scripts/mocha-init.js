@@ -297,7 +297,7 @@ var initializeWindows = function(){
 			title: 'Window Events',			
 			contentURL: 'pages/events.html',
 			width: 340,
-			height: 250,			
+			height: 255,			
 			onContentLoaded: function(){
 				MUI.notification('Window content was loaded.');
 			},
