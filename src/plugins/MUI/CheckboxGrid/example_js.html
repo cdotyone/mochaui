@@ -20,14 +20,14 @@
             {value:'item4',text:"Item 4",  checked: true},
             {value:'item5',text:"Item 5",  checked: false},
             {value:'item6',text:"Item 6",  checked: false},
-            {value:'item7',text:"Item 7",  checked: false},
-            {value:'item8',text:"Item 8",  checked: false},
-            {value:'item9',text:"Item 9",  checked: false},
+            {value:'item7',text:"Item Long 7",  checked: false},
+            {value:'item8',text:"Item Longer 8",  checked: false},
+            {value:'item9',text:"Item Longest 9",  checked: false},
             {value:'item10',text:"Item 10",checked: false}
         ];
 
     new MUI.CheckBoxGrid({
-        container:'page',
+        container:'example1',
         width:250,
         height:100,
         id:'cbg1',
@@ -35,11 +35,12 @@
     });
     
     new MUI.CheckBoxGrid({
-        container:'page',
+        container:'example2',
         width:250,
         height:100,
         id:'cbg2',
-        items:items
+        items:items,
+        labelPlacement:'left'
     });
 
 </script>
@@ -49,8 +50,13 @@
 
 <body>
 
-<div id="page">
+<div id="example1" style="width:400px;float:left">
 </div>
-
+<div id="info" style="float:right">
+</div>
+<div style="clear:both"></div>
+<br/><br/>
+<div id="example2" style="width:400px;">
+</div>
 </body>
 </html>

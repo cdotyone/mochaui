@@ -15,7 +15,7 @@ MUI.files[MUI.path.plugins + 'MUI/CheckBoxGrid/CheckBoxGrid.js'] = 'loaded';
 
 MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 
-    Implements: [Events, Options],
+    Implements: [Events, Options, Log],
 
     options: {
         id:                 ''              // id of the primary element, and id os control that is registered with mocha
@@ -33,7 +33,7 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
         ,width:             0               // width of the control
         ,height:            0               // height of the control when not in drop list mode, or height of drop
         ,type:              'checkbox'      // can be 'checkbox' or 'radio'
-        ,textPlacement:     'after'
+        ,labelPlacement:    'right'         // can be 'left' or 'right'
         ,value:             ''              // the currently selected item's value
     },
 
@@ -46,6 +46,8 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
             id = 'checkBoxGrid' + (++MUI.IDCount);
             this.options.id = id;
         }
+        
+        this.enableLog().log('cbg:'+id+':init');
 
         // create sub items if available
         if (this.options.createOnInit && this.options.items.length > 0) this.toDOM(); else if ($(id)) this.fromHTML(id);
@@ -81,9 +83,82 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
             self.buildItem(o.items[i],fs,i);
         }
 
+        var reinject = function(pair,tr,colspan) {
+            pair[1]=colspan;
+            pair[0]._td=new Element('td',{'colspan':colspan}).inject(tr);
+            pair[0]._span.getChildren().each(function(el) { el.dispose().inject(pair[0]._td); } );
+            pair[0]._span.dispose();
+            pair[0]._span=null;
+            if(o.labelPlacement=='left') pair[0]._td.setStyle('text-align','right');
+        };
+
         if (!isNew) return this;
         window.addEvent('domready', function() {
             fs.inject($(containerEl ? containerEl : o.container));
+            (function() {
+                var rows=$H({});
+                o.items.each(function(item) {
+                    var c=item._span.getCoordinates();
+                    if(!rows['row'+c.top]) rows['row'+c.top]=[];
+                    rows['row'+c.top].push([item,c.width]);
+                });
+
+                // find the row with the most columns
+                var lv=0,lk;
+                rows.each(function(row,k) { 
+                    if(lv<row.length) { lk=k; lv=row.length; }
+                });
+
+                // now get widths of the columns
+                var cols=$A([]);
+                $A(rows[lk]).each(function(pair) {
+                    cols.push(pair[1]);
+                });
+
+                // build table to hold newly arranged controls
+                self._table=new Element('table',{'cellspacing':'0','cellpadding':'0','border':'0'}).inject(fs);
+                self._tbody=new Element('tbody').inject(self._table);
+
+                // determine colspan for other columns in other rows
+                var clen=cols.length;
+                rows.each(function(row,k) {
+                    // create table row for this row
+                    var tr=new Element('tr').inject(self._tbody); 
+
+                    // rows with the same length as the largest rows do not need colspan determination
+                    if(row.length==clen) {
+                        for(var j=0;j<clen;j++) {
+                            row[j][1]=reinject(row[j],tr,1);
+                        }
+                        return;
+                    }
+
+                    // determine colspan for this row
+                    var i=0,tspan=0;
+                    $A(row).each(function(col){
+                        var cwidth=col[1]
+                            ,twidth=0
+                            ,colspan=1;
+
+                        // keep increasing colspan until we have enough support this column
+                        for(var j=i; j<clen && i<clen; j++,i++,colspan++) {
+                            twidth+=cols[j];
+                            if(twidth>=cwidth) break;
+                        }
+
+                        // convert span to table cell
+                        reinject(col,tr,colspan);
+                        tspan+=colspan;
+                    });
+
+                    // make sure the total colspans in this row is at least the same as our largest row
+                    while(tspan<clen) {
+                        row[row.length-1][1]++;
+                        row[row.length-1][0]._td.set('colspan',row[row.length-1][1]);
+                        tspan++;
+                    }
+                });
+            }).delay(1);
         });
 
         return this;
@@ -93,14 +168,16 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
     {
         var self = this,o = this.options;
 
-        var inp=new Element('input',{'id':o.id+num,'name':o.id,'type':o.type}).inject(fs);
+        item._span=new Element('span',{'id':o.id+num+'_field',styles:{'textAlign':o.labelPlacement=='left'?'right':'left'}}).inject(fs);
+
+        var inp=new Element('input',{'id':o.id+num,'name':o.id,'type':o.type}).inject(item._span);
         var isSelected=self._getData(item,o.isSelectedField);
         if(isSelected) inp.set('checked','true');
-        item._element=inp;
+        item._input=inp;
 
         var text=self._getData(item,o.textField);
-        new Element('label',{'text':text,'for':o.id+num}).inject(fs,o.textPlacement);
+        item._label = new Element('label',{'text':text,'for':o.id+num}).inject(item._span,o.labelPlacement=='left'?'top':'bottom');
 
         return inp;
-    }    
+    }
 });
