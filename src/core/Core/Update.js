@@ -1,3 +1,24 @@
+/*
+---
+
+name: Update
+
+script: Update.js
+
+description: core content update routines
+
+copyright: (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.
+
+license: MIT-style license.
+
+requires:
+  - MochaUI/MUI
+
+provides: [MUI.updateContent]
+
+...
+*/
+
 MUI.extend({
     /*
 
