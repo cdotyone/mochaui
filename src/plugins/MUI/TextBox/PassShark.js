@@ -38,17 +38,17 @@ MUI.PassShark = new Class({
          */
     },
 
-    initialize: function(element, options) {
+    initialize: function(element, options){
         this.origElement = this.element = document.id(element);
         if (this.occlude()) return this.occluded;
         this.setOptions(options);
-        this.$E = function(selector) {
+        this.$E = function(selector){
             return document.getElement(selector);
         };
         this._setup();
     },
 
-    _setup: function() {
+    _setup: function(){
         if (this.options.debug) this.enableLog();
         var attributes = this.origElement.getProperties(
                 'name',
@@ -67,7 +67,7 @@ MUI.PassShark = new Class({
         this._cloakInput(attributes);
     }.protect(),
 
-    _cloakInput: function(params) {
+    _cloakInput: function(params){
         // Display none the original element.
         this.origElement.hide();
         var standardMaxLength = 255;
@@ -98,27 +98,27 @@ MUI.PassShark = new Class({
         this._check.delay(opts.interval, this, ['', true]);
     }.protect(),
 
-    start: function(event) {
+    start: function(event){
         if (this.options.debug) this.log('Event:', event.type);
         this.element.store('focus', 1);
         $clear(this.checker);
         this.checker = this._check.delay(this.options.interval, this, '');
     },
 
-    stop: function(event) {
+    stop: function(event){
         if (this.options.debug) this.log('Event:', event.type);
         this.element.store('focus', 0);
         this.checker = $clear(this.checker);
     },
 
-    _onDeletion: function(caret, diff) {
+    _onDeletion: function(caret, diff){
         var value = this.origElement.get('value');
         var split = caret;
-        if ((typeof caret == 'number') && (this.element.getCaretPosition() < caret)) {
+        if ((typeof caret == 'number') && (this.element.getCaretPosition() < caret)){
             // Need for cheking if the key 'backspace' was hit, since it changes the caret position whereas 'delete/supr' does not.
             split = caret - diff;
         }
-        else if (typeof caret != 'object') {
+        else if (typeof caret != 'object'){
             // Apply if 'delete' key was hit and the deletion didn't happen from a textSeletion.
             caret = caret + diff;
         }
@@ -127,16 +127,16 @@ MUI.PassShark = new Class({
         this.origElement.set('value', str1 + str2);
     }.protect(),
 
-    _setPassword: function(str) {
+    _setPassword: function(str){
         if (this.options.debug) this.log('_setPassword:', str);
         var tmp = '';
         var add = 0;
-        for (var i = 0; i < str.length; i++) {
-            if (str.charAt(i) == unescape(this.options.replacement)) {
+        for (var i = 0; i < str.length; i++){
+            if (str.charAt(i) == unescape(this.options.replacement)){
                 tmp += this.origElement.get('value').charAt(i - add);
             } else {
                 tmp += str.charAt(i);
-                if (this.element.getCaretPosition() !== str.length) {
+                if (this.element.getCaretPosition() !== str.length){
                     add++;
                 }
             }
@@ -145,10 +145,10 @@ MUI.PassShark = new Class({
         this.origElement.set('value', tmp);
     }.protect(),
 
-    _convertLastChar: function() {
-        if (this.element.get('value') != '') {
+    _convertLastChar: function(){
+        if (this.element.get('value') != ''){
             var tmp = '';
-            for (var i = 0; i < this.element.get('value').length; i++) {
+            for (var i = 0; i < this.element.get('value').length; i++){
                 tmp += unescape(this.options.replacement);
             }
             var caret = this._getCaretRange();
@@ -157,20 +157,20 @@ MUI.PassShark = new Class({
         }
     },
 
-    _check: function(oldValue, initialCall, posCaret) {
+    _check: function(oldValue, initialCall, posCaret){
         if (this.options.debug) this.log('_check:', oldValue);
         var bullets = this.element.get('value');
         // Check if there is an inferior number of characters AND it's not the last char, hence, deletion...
-        if (bullets.length < oldValue.length) {
+        if (bullets.length < oldValue.length){
             // Calculate difference, since the keyboard can act faster than the interval time set.
             var subtract = oldValue.length - bullets.length;
             this._onDeletion(posCaret, subtract);
         }
-        if (oldValue != bullets) {
+        if (oldValue != bullets){
             this._setPassword(bullets);
-            if (bullets.length > 1) {
+            if (bullets.length > 1){
                 var tmp = '';
-                for (i = 0; i < bullets.length - 1; i++) {
+                for (i = 0; i < bullets.length - 1; i++){
                     tmp += unescape(this.options.replacement);
                 }
                 tmp += bullets.charAt(bullets.length - 1);
@@ -181,20 +181,20 @@ MUI.PassShark = new Class({
             $clear(this.timer);
             this.timer = this._convertLastChar.delay(this.options.duration, this);
         }
-        if (!initialCall) {
+        if (!initialCall){
             $clear(this.checker);
             this.checker = this._check.delay(this.options.interval, this, [this.element.get('value'), false, caret || this._getCaretRange()]);
         }
     },
 
-    _correctCaret: function(caret) {
-        switch (typeof caret) {
+    _correctCaret: function(caret){
+        switch (typeof caret){
             case 'number': return this.element.setCaretPosition(caret);
             case 'object': return this.element.selectRange(caret.start, caret.end);
         }
     }.protect(),
 
-    _getCaretRange: function() {
+    _getCaretRange: function(){
         // check if caret is equal to 0, therefore a text range has been selected and
         // it should not be placed at the the beginning, but the end of it.
         return (this.element.getSelectedRange().start === this.element.getSelectedRange().end) ? this.element.getCaretPosition() : this.element.getSelectedRange();

@@ -1,17 +1,30 @@
 /*
+ ---
 
- Script: Parametrics.js
- Initializes the GUI property sliders.
+ name: Parametrics
 
- Copyright:
- Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.
+ script: Parametrics.js
 
- License:
- MIT-style license.
+ description: MUI - Initializes the GUI Parametrics property sliders.
 
- Requires:
- Core.js, Window.js
+ copyright: (c) 2010 Contributors in (/AUTHORS.txt).
 
+ license: MIT-style license in (/MIT-LICENSE.txt).
+
+ note:
+ This documentation is taken directly from the javascript source files. It is built using Natural Docs.
+
+ requires:
+ - Core/Element
+ - Core/Class
+ - Core/Options
+ - Core/Events
+ - MUI
+ - MUI.Core
+
+ provides: [MUI.Parametrics]
+
+ ...
  */
 
 MUI.extend({

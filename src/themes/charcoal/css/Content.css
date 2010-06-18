@@ -1,53 +1,51 @@
 /*
+ ---
 
-CSS for Mocha UI
+ file: Content.css
 
-Theme: Charcoal
+ description: MUI - Create a window from a form.
 
-Copyright:
-	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.
+ copyright: (c) 2010 Contributors in (/AUTHORS.txt).
 
-License:
-	MIT-style license.
+ license: MIT-style license in (/MIT-LICENSE.txt).
 
-Note:	
-	If you are adding MochaUI to an existing site, this CSS file may not be necessary.
+ note:
+ This documentation is taken directly from the javascript source files. It is built using Natural Docs.
 
-*/
+ provides: css for charcoal theme
 
+ ...
+ */
 
 /* Reset */
-
 ul,ol,dl,li,dt,dd,h1,h2,h3,h4,h5,h6,form,body,html,p,blockquote,fieldset,input,object,iframe { margin: 0; padding: 0; }
 a img,:link img,:visited img { border: none; }
 table { border-collapse: collapse; border-spacing: 0; }
 :focus { outline: none; }
 
 /* Structure */
-
 body {
 	text-align: left;
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
 	line-height: 18px;
-	color: #cfcfcf;	
+	color: #cfcfcf;
 }
 
 /* Typography */
-	
 h2, h3, h4 {
 	margin: 0;
 	padding: 0 0 5px 0;
 	font-size: 12px;
 	font-weight: bold;
-	color: #fff;		
+	color: #fff;
 }
-	
+
 h2 {
 	font-size: 14px;
 	font-weight: bold;
 }
-	
+
 h3 {
 	font-size: 13px;
 	font-weight: bold;
@@ -93,15 +91,13 @@ dd {
 }
 
 /* Menus */
-
 .menu-right li {
 	list-style-type: none;
-	display: inline;	
+	display: inline;
 	margin: 0 0 0 15px;
 }
 
 /* Forms */
-
 form fieldset {
 	border: 2px solid #454545;
 	clear: both;
@@ -126,21 +122,21 @@ form label {
 textarea, input, select {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
-	vertical-align: middle;				
+	vertical-align: middle;
 }
 
 textarea, input {
 	color: #ddd;
-	background: #282828;			
+	background: #282828;
 }
 
 .input {
 	padding: 2px 0 2px 3px;
-	border: 1px solid #181818;	
+	border: 1px solid #181818;
 }
 
 form button {
-	vertical-align: middle;	
+	vertical-align: middle;
 }
 
 .button {
@@ -154,47 +150,47 @@ form button {
 	cursor: pointer;
 	vertical-align: middle;
 	border: 1px solid #181818;
-	-moz-border-radius: 3px;		
+	-moz-border-radius: 3px;
 }
 
 * html .button {
-	padding: 3px 1px;		
+	padding: 3px 1px;
 }
 
 .searchField {
 	width: 150px;
 	overflow: hidden;
-	line-height: 15px; 
+	line-height: 15px;
 	margin: 0;
 	padding: 4px 0 3px 5px;
-	border: 1px solid #181818;	
+	border: 1px solid #181818;
 	border-right: 0;
-	vertical-align: middle;		
+	vertical-align: middle;
 	-moz-border-radius-topleft: 3px;
 	-moz-border-radius-bottomleft: 3px;
 }
 
 .searchButton {
 	-moz-border-radius-topleft: 0;
-	-moz-border-radius-bottomleft: 0;		
+	-moz-border-radius-bottomleft: 0;
 }
 
 * html .toolbox .searchField, * html .toolbox .searchButton { /* IE6 Hack */
-	margin-top: -1px;		
+	margin-top: -1px;
 }
 
 * html .toolbox .button { /* IE6 Hack */
 	vertical-align: top;
-	margin-top: 0;			
+	margin-top: 0;
 }
 
 *:first-child+html .toolbox .searchField, *:first-child+html .toolbox .searchButton { /* IE7 Hack */
-	margin-top: -1px;	
+	margin-top: -1px;
 }
 
 *:first-child+html .toolbox .button { /* IE7 Hack */
 	vertical-align: top;
-	margin-top: 0;	
+	margin-top: 0;
 }
 
 .formRow {
@@ -202,11 +198,10 @@ form button {
 }
 
 .buttonRow {
-	margin-bottom: 10px;	
+	margin-bottom: 10px;
 }
 
 /* Code */
-
 pre {
 	background-color: #282828;
 	color: #17998E;
@@ -215,12 +210,12 @@ pre {
 	font-size: 11px;
 	margin: 0 0 10px 0;
 	padding: 10px;
-	border: 1px solid #222;	
+	border: 1px solid #222;
 }
 
 /* Status Messages */
 .error,
-.notice, 
+.notice,
 .success    { padding: 8px; margin-bottom: 10px; border: 2px solid #ddd; }
 .error      { background: #FBE3E4; color: #D12F19; border-color: #FBC2C4; }
 .notice     { background: #FFF6BF; color: #817134; border-color: #FFD324; }
@@ -230,7 +225,6 @@ pre {
 .success a  { color: #529214; }
 
 /* Dividers */
-
 hr {
 	background-color: #262626;
 	height: 1px;
@@ -238,11 +232,10 @@ hr {
 }
 
 /* Misc */
-
 .nobr {
 	white-space: nowrap;
 }
 
 .textBox {
-	max-width: 650px;	
-}	
+	max-width: 650px;
+}

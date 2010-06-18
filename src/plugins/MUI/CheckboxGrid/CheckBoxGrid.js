@@ -1,14 +1,30 @@
 /*
+ ---
 
- Script: CheckBoxGrid.js
- Create a columns and rows of checkbox/radio buttons
+ name: CheckBoxGrid
 
- Copyright:
- Copyright (c) 2010 Chris Doty, <http://polaropposite.com/>.
+ script: CheckBoxGrid.js
 
- License:
- MIT-style license.
+ description: MUI - Create a control with columns and rows of checkbox/radio buttons.
 
+ copyright: (c) 2010 Contributors in (/AUTHORS.txt).
+
+ license: MIT-style license in (/MIT-LICENSE.txt).
+
+ note:
+ This documentation is taken directly from the javascript source files. It is built using Natural Docs.
+
+ requires:
+ - Core/Element
+ - Core/Class
+ - Core/Options
+ - Core/Events
+ - MUI
+ - MUI.Core
+
+ provides: [MUI.CheckBoxGrid]
+
+ ...
  */
 
 MUI.files[MUI.path.plugins + 'MUI/CheckBoxGrid/CheckBoxGrid.js'] = 'loaded';
@@ -40,17 +56,17 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
         ,onValueChanged:    $empty
     },
 
-    initialize: function(options) {
+    initialize: function(options){
         this.setOptions(options);
 
         // make sure this controls has an ID
         var id = this.options.id;
-        if (!id) {
+        if (!id){
             id = 'checkBoxGrid' + (++MUI.IDCount);
             this.options.id = id;
         }
-        
-        this.enableLog().log('cbg:'+id+':init');
+
+        this.enableLog().log('cbg:' + id + ':init');
 
         // create sub items if available
         if (this.options.createOnInit && this.options.items.length > 0) this.toDOM(); else if ($(id)) this.fromHTML(id);
@@ -58,20 +74,20 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
         MUI.set(id, this);
     },
 
-    _getData: function(item,property){
-        if(!item || !property) return '';
-        if(item[property]==null) return '';
+    _getData: function(item, property){
+        if (!item || !property) return '';
+        if (item[property] == null) return '';
         return item[property];
     },
-    
-    toDOM: function(containerEl) {
+
+    toDOM: function(containerEl){
         var self = this,o = this.options;
 
         // create main wrapper control
         var fs = $(o.id);
         var isNew = false;
-        if (!fs) {
-            fs = new Element('fieldset', {'id':o.id+'_field','class':o.cssClass});
+        if (!fs){
+            fs = new Element('fieldset', {'id':o.id + '_field','class':o.cssClass});
             if (o.width) fs.setStyle('width', (parseInt('' + o.width) - 2));
             if (o.height) fs.setStyle('height', parseInt('' + o.height));
             isNew = true;
@@ -80,145 +96,154 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
         self.element = fs;
 
         // add title if given
-        if(o.title)  new Element('div',{'id':o.id+'_tle','text':o.title}).inject(fs);
-        
-        for(var i=0;i<o.items.length;i++) {
-            self.buildItem(o.items[i],fs,i);
+        if (o.title)  new Element('div', {'id':o.id + '_tle','text':o.title}).inject(fs);
+
+        for (var i = 0; i < o.items.length; i++){
+            self.buildItem(o.items[i], fs, i);
         }
 
         if (!isNew) return this;
-        window.addEvent('domready', function() {
+        window.addEvent('domready', function(){
             fs.inject($(containerEl ? containerEl : o.container));
-            self.convertToGrid.delay(1,self,[fs]);
+            self.convertToGrid.delay(1, self, [fs]);
         });
 
         return this;
     },
 
-    buildItem: function(item,fs,num)
-    {
+    buildItem: function(item, fs, num){
         var self = this,o = this.options;
 
-        item._span=new Element('span',{'id':o.id+num+'_field',styles:{'textAlign':o.labelPlacement=='left'?'right':'left'}}).inject(fs);
+        item._span = new Element('span', {'id':o.id + num + '_field',styles:{'textAlign':o.labelPlacement == 'left' ? 'right' : 'left'}}).inject(fs);
 
-        var inp=new Element('input',{'id':o.id+num,'name':o.id,'type':o.type}).inject(item._span);
-        var value=self._getData(item,o.valueField);
-        if(value) inp.set('value',value);
-        var isSelected=self._getData(item,o.isSelectedField);
-        if(isSelected) inp.set('checked','true');
-        item._input=inp;
-        inp.addEvent('click',function(e) { self.click(inp,self,e); });
+        var inp = new Element('input', {'id':o.id + num,'name':o.id,'type':o.type}).inject(item._span);
+        var value = self._getData(item, o.valueField);
+        if (value) inp.set('value', value);
+        var isSelected = self._getData(item, o.isSelectedField);
+        if (isSelected) inp.set('checked', 'true');
+        item._input = inp;
+        inp.addEvent('click', function(e){
+            self.click(inp, self, e);
+        });
 
-        var text=self._getData(item,o.textField);
-        item._label = new Element('label',{'text':text,'for':o.id+num}).inject(item._span,o.labelPlacement=='left'?'top':'bottom');
+        var text = self._getData(item, o.textField);
+        item._label = new Element('label', {'text':text,'for':o.id + num}).inject(item._span, o.labelPlacement == 'left' ? 'top' : 'bottom');
 
         return inp;
     },
 
-    click: function(inp,self,e) {
-        self.fireEvent('itemClick',[inp.checked,inp,self,e]);
+    click: function(inp, self, e){
+        self.fireEvent('itemClick', [inp.checked,inp,self,e]);
 
         var o = self.options;
-        var values=[];
+        var values = [];
         $A(o.items).each(function(item){
-            if(item._input.checked) values.push(item._input.value);
+            if (item._input.checked) values.push(item._input.value);
         });
         o.value = values.join(',');
-        self.fireEvent('valueChanged',[o.value,self,e]);
+        self.fireEvent('valueChanged', [o.value,self,e]);
     },
-    
-    convertToGrid: function(fs) {
-        var self = this,o = this.options;
-        if(!fs) fs = $(o.id);
 
-        var reinject = function(pair,tr,colspan) {
-            pair[1]=colspan;
-            pair[0]._td=new Element('td',{'colspan':colspan}).inject(tr);
-            pair[0]._span.getChildren().each(function(el) { el.dispose().inject(pair[0]._td); } );
+    convertToGrid: function(fs){
+        var self = this,o = this.options;
+        if (!fs) fs = $(o.id);
+
+        var reinject = function(pair, tr, colspan){
+            pair[1] = colspan;
+            pair[0]._td = new Element('td', {'colspan':colspan}).inject(tr);
+            pair[0]._span.getChildren().each(function(el){
+                el.dispose().inject(pair[0]._td);
+            });
             pair[0]._span.dispose();
-            pair[0]._span=null;
-            if(o.labelPlacement=='left') pair[0]._td.setStyle('text-align','right');
+            pair[0]._span = null;
+            if (o.labelPlacement == 'left') pair[0]._td.setStyle('text-align', 'right');
         };
-        
-        var rows=$H({});
-        o.items.each(function(item) {
-            var c=item._span.getCoordinates();
-            if(!rows['row'+c.top]) rows['row'+c.top]=[];
-            rows['row'+c.top].push([item,c.width]);
+
+        var rows = $H({});
+        o.items.each(function(item){
+            var c = item._span.getCoordinates();
+            if (!rows['row' + c.top]) rows['row' + c.top] = [];
+            rows['row' + c.top].push([item,c.width]);
         });
 
         // find the row with the most columns
-        var lv=0,lk;
-        rows.each(function(row,k) {
-            if(lv<row.length) { lk=k; lv=row.length; }
+        var lv = 0,lk;
+        rows.each(function(row, k){
+            if (lv < row.length){
+                lk = k;
+                lv = row.length;
+            }
         });
 
         // now get widths of the columns
-        var cols=$A([]),twidth=0;
-        $A(rows[lk]).each(function(pair) {
+        var cols = $A([]),twidth = 0;
+        $A(rows[lk]).each(function(pair){
             cols.push(pair[1]);
-            twidth+=pair[1];
+            twidth += pair[1];
         });
 
         // check to make sure total width is used
-        if(twidth<o.width) {
-            for(var i=0;i<cols.length;i++) {
-                cols[i]=Math.round((cols[i]/twidth)*o.width);
+        if (twidth < o.width){
+            for (var i = 0; i < cols.length; i++){
+                cols[i] = Math.round((cols[i] / twidth) * o.width);
             }
         }
 
         // build table to hold newly arranged controls
-        self._table=new Element('table',{'cellspacing':'0','cellpadding':'0','border':'0'}).inject(fs);
-        self._tbody=new Element('tbody').inject(self._table);
+        self._table = new Element('table', {'cellspacing':'0','cellpadding':'0','border':'0'}).inject(fs);
+        self._tbody = new Element('tbody').inject(self._table);
 
         // determine colspan for other columns in other rows
-        var clen=cols.length;
-        rows.each(function(row) {
+        var clen = cols.length;
+        rows.each(function(row){
             // create table row for this row
-            var tr=new Element('tr').inject(self._tbody);
+            var tr = new Element('tr').inject(self._tbody);
 
             // rows with the same length as the largest rows do not need colspan determination
-            if(row.length==clen) {
-                for(var j=0;j<clen;j++) {
-                    row[j][1]=reinject(row[j],tr,1);
+            if (row.length == clen){
+                for (var j = 0; j < clen; j++){
+                    row[j][1] = reinject(row[j], tr, 1);
                 }
                 return;
             }
 
             // determine colspan for this row
-            var i=0,tspan=0;
+            var i = 0,tspan = 0;
             $A(row).each(function(col){
-                var cwidth=col[1]
-                    ,twidth=0
-                    ,colspan=1;
+                var cwidth = col[1]
+                        ,twidth = 0
+                        ,colspan = 1;
 
                 // keep increasing colspan until we have enough support this column
-                for(var j=i; j<clen && i<clen; j++,i++,colspan++) {
-                    twidth+=cols[j];
-                    if(twidth>=cwidth) break;
+                for (var j = i; j < clen && i < clen; j++,i++,colspan++){
+                    twidth += cols[j];
+                    if (twidth >= cwidth) break;
                 }
 
                 // convert span to table cell
-                reinject(col,tr,colspan);
-                tspan+=colspan;
+                reinject(col, tr, colspan);
+                tspan += colspan;
             });
 
             // make sure the total colspans in this row is at least the same as our largest row
-            while(tspan<clen) {
-                row[row.length-1][1]++;
-                row[row.length-1][0]._td.set('colspan',row[row.length-1][1]);
+            while (tspan < clen){
+                row[row.length - 1][1]++;
+                row[row.length - 1][0]._td.set('colspan', row[row.length - 1][1]);
                 tspan++;
             }
 
-            if(tspan>clen) {
+            if (tspan > clen){
                 // went past the end of the longest row, so move all items to same cell
-                row[0][0]._td.set('colspan',clen);
-                for(i=1;i<row.length;i++) {
-                    row[i][0]._td.getChildren().each(function(el) { el.dispose().inject(row[0][0]._td); } );
+                row[0][0]._td.set('colspan', clen);
+                for (i = 1; i < row.length; i++){
+                    row[i][0]._td.getChildren().each(function(el){
+                        el.dispose().inject(row[0][0]._td);
+                    });
                     row[i][0]._td.dispose();
-                    row[i][0]._td=null;
+                    row[i][0]._td = null;
                 }
             }
         });
     }
+
 });

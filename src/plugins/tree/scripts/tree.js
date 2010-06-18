@@ -1,14 +1,32 @@
 /*
+ ---
 
- Script: Tree.js
- Create folder trees.
+ name: Tree
 
- Copyright:
- Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.
+ script: Tree.js
 
- License:
- MIT-style license.
+ description: MUI - Create folder trees.
 
+ copyright: (c) 2010 Contributors in (/AUTHORS.txt).
+
+ license: MIT-style license in (/MIT-LICENSE.txt).
+
+ note:
+ This documentation is taken directly from the javascript source files. It is built using Natural Docs.
+
+ depreciated: 0.9.8
+
+ requires:
+ - Core/Element
+ - Core/Class
+ - Core/Options
+ - Core/Events
+ - MUI
+ - MUI.Core
+
+ provides: [buildTree]
+
+ ...
  */
 
 function buildTree(treeID){

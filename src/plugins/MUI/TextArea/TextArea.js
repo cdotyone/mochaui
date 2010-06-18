@@ -1,23 +1,37 @@
 /*
  ---
 
- description: Creates a textbox control control
+ name: TextArea
 
- copyright: (c) 2010 Chris Doty, <http://polaropposite.com/>.
+ script: TextArea.js
+
+ description: MUI - Creates a textarea that can dynamically size itself control.
+
+ copyright: (c) 2010 Contributors in (/AUTHORS.txt).
+
+ license: MIT-style license in (/MIT-LICENSE.txt).
 
  authors:
  - Chris Doty (http://polaropposite.com/)
  - Amadeus Demarzi (http://enmassellc.com/)
 
- license:
- - MIT-style license
-
- provides: [MUI, MochaUI, MUI.TextBox]
+ note:
+ This documentation is taken directly from the javascript source files. It is built using Natural Docs.
 
  credits:
  All of the textarea scroll detection and sizing code came from DynamicTextArea by Amadeus Demarzi
  the code is marked as such as best as I could, and any copyrights to those sections of code belong
  to him.
+
+ requires:
+ - Core/Element
+ - Core/Class
+ - Core/Options
+ - Core/Events
+ - MUI
+ - MUI.Core
+
+ provides: [MUI.TextArea]
  ...
  */
 
@@ -48,15 +62,14 @@ MUI.TextArea = new Class({
         ,onValueChanged:    $empty
     },
 
-    initialize: function(options)
-    {
+    initialize: function(options){
         // handle options
         this.setOptions(options);
-        var o=this.options;
+        var o = this.options;
 
         // make sure this controls has an ID
         var id = o.id;
-        if (!id) {
+        if (!id){
             id = 'textbox' + (++MUI.IDCount);
             o.id = id;
         }
@@ -67,22 +80,22 @@ MUI.TextArea = new Class({
         MUI.set(id, this);
     },
 
-    _getData: function(item, property) {
+    _getData: function(item, property){
         if (!item || !property) return '';
         if (item[property] == null) return '';
         return item[property];
     },
 
-    getFieldTitle: function() {
-        var self=this,o=this.options;
+    getFieldTitle: function(){
+        var self = this,o = this.options;
 
         if (o.formTitleField) return self._getData(o.formData, o.formTitleField);
         if (o.formData) return self._getData(o.formData, o.id);
         return o.id;
     },
 
-    fromHTML: function() {
-        var self=this,o=this.options;
+    fromHTML: function(){
+        var self = this,o = this.options;
 
         var inp = $(o.id);
         if (!inp) return self;
@@ -96,12 +109,12 @@ MUI.TextArea = new Class({
         return self;
     },
 
-    toDOM: function(containerEl) {
-        var self=this,o=this.options;
+    toDOM: function(containerEl){
+        var self = this,o = this.options;
 
         var isNew = false;
         var inp = $(o.id);
-        if (!inp) {
+        if (!inp){
             self._wrapper = new Element('fieldset', {'id':o.id + '_field',
                 'styles':
                 {
@@ -122,7 +135,7 @@ MUI.TextArea = new Class({
             if (o.height && !o.hasDynamicSize) inp.setStyle('height', o.height + 'px');
             isNew = true;
         }
-        if (o.cssClass) {
+        if (o.cssClass){
             if (self._wrapper) self._wrapper.set('class', o.cssClass);
             inp.set('class', o.cssClass);
         }
@@ -135,15 +148,15 @@ MUI.TextArea = new Class({
         else if (o.formData) value = self._getData(o.formData, o.id);
         inp.set('value', value);
         o._prevValue = value;
-        
+
         if (!isNew) return inp;
 
-        window.addEvent('domready', function() {
+        window.addEvent('domready', function(){
             var container = $(containerEl ? containerEl : o.container);
             self._wrapper.inject(container);
 
-            if(!o.width) o.width = inp.getSize().x;
-            if(!o.hasDynamicSize) return;
+            if (!o.width) o.width = inp.getSize().x;
+            if (!o.hasDynamicSize) return;
             inp.setStyle('overflow', 'hidden');
 
             // Firefox handles scroll heights differently than all other browsers -- from Amadeus Demarzi
@@ -159,10 +172,10 @@ MUI.TextArea = new Class({
             // This is the only crossbrowser method to determine scrollheight of a single line in a textarea -- from Amadeus Demarzi
             var backupString = inp.value;
             inp.value = 'M';
-            inp.set("rows",1);
-            o._lineHeight = (inp.measure(function() {
+            inp.set("rows", 1);
+            o._lineHeight = (inp.measure(function(){
                 return this.getScrollSize().y;
-            })) + o.offset - o.padding ;
+            })) + o.offset - o.padding;
             inp.value = backupString;
             o._minHeight = o._lineHeight * o.rows;
             inp.setStyle('height', o._minHeight);
@@ -174,20 +187,20 @@ MUI.TextArea = new Class({
         return inp;
     },
 
-    keypress: function(e) {
-        var self=this,o=this.options;
+    keypress: function(e){
+        var self = this,o = this.options;
 
         // check to se if value has changed
         o.value = self.element.get('value');
-        if(o.value!=o._prevValue) {
+        if (o.value != o._prevValue){
             o._prevValue = o.value;
-            o.fireEvent('valueChanged',[o.value,self]);
+            o.fireEvent('valueChanged', [o.value,self]);
         }
 
-        if (e.key == 'backspace' || e.key == 'delete') {
+        if (e.key == 'backspace' || e.key == 'delete'){
             // shrink on backspace and delete
-            var height=self.element.getSize().y - 15;
-            if(height<o._minHeight) height=o._minHeight;
+            var height = self.element.getSize().y - 15;
+            if (height < o._minHeight) height = o._minHeight;
             self.element.setStyle('overflow', 'hidden');
             self.element.setStyle('height', height);
             self.element.scrollTo(0, 0);
@@ -197,9 +210,9 @@ MUI.TextArea = new Class({
         } else self.adjustSize.bind(self).delay(1);  // delayed resize
     },
 
-    focus: function() {
+    focus: function(){
         var self = this;
-        if(!self.options.hasDynamicSize) return;
+        if (!self.options.hasDynamicSize) return;
         self.element.addEvents({
             'keydown':self.keypress.bind(self),
             'keypress':self.keypress.bind(self),
@@ -208,9 +221,9 @@ MUI.TextArea = new Class({
         });
     },
 
-    blur: function() {
+    blur: function(){
         var self = this;
-        if(!self.options.hasDynamicSize) return;
+        if (!self.options.hasDynamicSize) return;
         self.element.removeEvents({
             'keydown':self.keypress.bind(self),
             'keypress':self.keypress.bind(self),
@@ -219,18 +232,18 @@ MUI.TextArea = new Class({
         });
     },
 
-    scroll: function() {
+    scroll: function(){
         var self = this;
-        if(!self.options.hasDynamicSize) return;
+        if (!self.options.hasDynamicSize) return;
         self.element.setStyle('overflow', 'hidden');
         self.element.scrollTo(0, 0);
     },
 
-    adjustSize: function() {
+    adjustSize: function(){
         var self = this;
         // expand text box based on scroll bar -- from Amadeus Demarzi
-        var height = self.element.getScrollSize().y,
-            tempHeight = self.element.getScrollSize().y;
+        var height = self.element.getScrollSize().y;
+        var tempHeight = self.element.getScrollSize().y;
         var cssHeight = tempHeight - self.options.padding;
         var scrollHeight = tempHeight + self.options.offset;
         if (scrollHeight != self.element.offsetHeight) self.element.setStyle('height', scrollHeight);

@@ -7,13 +7,9 @@
 
  description: MUI - A Web Applications User Interface Framework.
 
- copyright: (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.
+ copyright: (c) 2010 Contributors in (/AUTHORS.txt).
 
- license: MIT-style license.
-
- authors:
- - Scott F. Frederick
- - Joel Lindau
+ license: MIT-style license in (/MIT-LICENSE.txt).
 
  note:
  This documentation is taken directly from the javascript source files. It is built using Natural Docs.
@@ -33,7 +29,7 @@
  */
 
 var MUI = MochaUI = new Hash({
-    version: '0.9.7 development',
+    version: '0.9.8',
 
     instances: new Hash(),
     IDCount: 0,

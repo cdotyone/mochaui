@@ -1,14 +1,30 @@
 /*
+ ---
 
- Script: Accordian.js
- Creates a generic accordian control
+ name: Accordion
 
- Copyright:
- Copyright (c) 2010 Chris Doty, <http://polaropposite.com/>.
+ script: Accordion.js
 
- License:
- MIT-style license.
+ description: MUI - Creates a generic accordian control.
 
+ copyright: (c) 2010 Contributors in (/AUTHORS.txt).
+
+ license: MIT-style license in (/MIT-LICENSE.txt).
+
+ note:
+ This documentation is taken directly from the javascript source files. It is built using Natural Docs.
+
+ requires:
+ - Core/Element
+ - Core/Class
+ - Core/Options
+ - Core/Events
+ - MUI
+ - MUI.Core
+
+ provides: [MUI.Accordion]
+
+ ...
  */
 
 MUI.files[MUI.path.plugins + 'MUI/Accordion/Accordion.js'] = 'loaded';
@@ -75,8 +91,7 @@ MUI.Accordion = new Class({
         return item[property];
     },
 
-    fromHTML: function(el)
-    {
+    fromHTML: function(el){
         var self = this;
         var o = self.options;
         if (!el) el = $(o.id);
@@ -113,8 +128,7 @@ MUI.Accordion = new Class({
         self.toDOM();
     },
 
-    toDOM: function(containerEl)
-    {
+    toDOM: function(containerEl){
         var self = this;
         var o = self.options;
 

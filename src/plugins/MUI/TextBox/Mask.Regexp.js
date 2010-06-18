@@ -26,19 +26,19 @@ MUI.Mask.Regexp = new Class({
         regex: null
     },
 
-    initialize : function(element, options) {
+    initialize : function(element, options){
         this.parent(element, options);
         this.regex = new RegExp(this.options.regex);
     },
 
-    keypress: function(e, o) {
+    keypress: function(e, o){
         if (this.ignore) return true;
         e.preventDefault();
 
         var state = this.getCurrentState(e, o);
         var args = [this.element, state._char, e.code];
 
-        if (!this.regex.test(state.value)) {
+        if (!this.regex.test(state.value)){
             this.fireEvent('invalid', args);
         } else {
             this.element.set('value', state.value).setCaretPosition(state.start + (o.isRemoveKey ? 0 : 1));
@@ -48,16 +48,16 @@ MUI.Mask.Regexp = new Class({
         return true;
     },
 
-    paste: function(e, o) {
+    paste: function(e, o){
         var masked = this.applyMask(this.element.get('value'), true);
         this.element.set('value', masked.value).setCaretPosition(masked.index);
     },
 
-    applyMask: function(str, fireEvent) {
+    applyMask: function(str, fireEvent){
         var oldValue = '', curValue;
-        for (var i = 1; i <= str.length; i++) {
+        for (var i = 1; i <= str.length; i++){
             curValue = str.substring(0, i);
-            if (!this.regex.test(curValue)) {
+            if (!this.regex.test(curValue)){
                 if (fireEvent) this.fireEvent('invalid', [this.element, str.charAt(i), str.charCodeAt(i)]);
                 break;
             }
@@ -66,7 +66,7 @@ MUI.Mask.Regexp = new Class({
         return {value: oldValue, index: i};
     },
 
-    mask: function(str) {
+    mask: function(str){
         return this.applyMask(str).value;
     }
 

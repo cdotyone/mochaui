@@ -29,30 +29,30 @@ MUI.Mask.Fixed = new Class({
         removeInvalidTrailingChars: true
     },
 
-    initialize: function(element, options) {
+    initialize: function(element, options){
         this.parent(element, options);
         this.maskArray = this.options.mask.split('');
         this.maskMold = this.options.mask.replace(MUI.Mask.rulesRegex, this.options.placeholder);
         this.maskMoldArray = this.maskMold.split('');
         this.validIndexes = [];
         if (this.options.autoSetSize) this.setSize();
-        this.maskArray.each(function(c, i) {
+        this.maskArray.each(function(c, i){
             if (!this.isFixedChar(c)) this.validIndexes.push(i);
         }, this);
         this.createUnmaskRegex();
     },
 
-    focus: function(e, o) {
+    focus: function(e, o){
         this.element.set('value', this.maskMoldArray.join(''));
         if (this.options.selectOnFocus && this.element.select) this.element.select();
         this.parent(e, o);
     },
 
-    blur: function(e, o) {
+    blur: function(e, o){
         this.parent(e, o);
         var elementValue = this.element.get('value');
-        if (this.options.removeIfInvalid) {
-            if (elementValue.contains(this.options.placeholder)) {
+        if (this.options.removeIfInvalid){
+            if (elementValue.contains(this.options.placeholder)){
                 this.maskMoldArray = this.maskMold.split('');
                 this.element.set('value', '');
             }
@@ -62,7 +62,7 @@ MUI.Mask.Fixed = new Class({
         return true;
     },
 
-    keypress: function(e, o) {
+    keypress: function(e, o){
         if (this.ignore) return true;
         e.preventDefault();
 
@@ -70,10 +70,10 @@ MUI.Mask.Fixed = new Class({
                 maskArray = this.maskArray,
                 start, i, returnFromTestEntry;
 
-        if (!o.isSelection) {
+        if (!o.isSelection){
             // no text selected
             var finalRangePosition;
-            if (o.isBksKey) {
+            if (o.isBksKey){
                 do {
                     start = this.validIndexes.indexOf(--o.range.start);
                 } while (start === -1 && o.range.start >= 0);
@@ -113,11 +113,11 @@ MUI.Mask.Fixed = new Class({
             if (!(end - start)) return true;
 
             // removes all the chars into the range
-            for (i = rstart; i < rend; i++) {
+            for (i = rstart; i < rend; i++){
                 this.maskMoldArray[i] = this.maskMold.charAt(i);
             }
 
-            if (!o.isRemoveKey) {
+            if (!o.isRemoveKey){
                 i = this.validIndexes[start];
                 if (!(returnFromTestEntry = this.testEvents(i, c, e.code, o.isRemoveKey))) return true;
                 if (typeof returnFromTestEntry == 'string') c = returnFromTestEntry;
@@ -131,7 +131,7 @@ MUI.Mask.Fixed = new Class({
         return this.parent();
     },
 
-    paste: function(e, o) {
+    paste: function(e, o){
         var retApply = this.applyMask(this.element.get('value'), o.range.start);
         this.maskMoldArray = retApply.value;
         this.element.set('value', this.maskMoldArray.join(''))
@@ -139,33 +139,33 @@ MUI.Mask.Fixed = new Class({
         return true;
     },
 
-    mask: function(str) {
+    mask: function(str){
         return this.applyMask(str).value.join('');
     },
 
-    unmask: function(str) {
+    unmask: function(str){
         return this.unmaskRegex ? str.replace(this.unmaskRegex, '') : str;
     },
 
-    applyMask: function(elementValue, newRangeStart) {
+    applyMask: function(elementValue, newRangeStart){
         var elementValueArray = elementValue.split(''),
                 maskArray = this.maskArray,
                 maskMold = this.maskMoldArray,
                 eli = 0,
                 returnFromTestEntry;
 
-        while (eli < maskMold.length) {
-            if (!elementValueArray[eli]) {
+        while (eli < maskMold.length){
+            if (!elementValueArray[eli]){
                 elementValueArray[eli] = maskMold[eli];
-            } else if (MUI.Mask.rules[maskArray[eli]]) {
-                if (!(returnFromTestEntry = this.testEntry(eli, elementValueArray[eli]))) {
+            } else if (MUI.Mask.rules[maskArray[eli]]){
+                if (!(returnFromTestEntry = this.testEntry(eli, elementValueArray[eli]))){
                     elementValueArray.splice(eli, 1);
                     continue;
                 } else {
                     if (typeof returnFromTestEntry == 'string') elementValueArray[eli] = returnFromTestEntry;
                 }
                 newStartRange = eli;
-            } else if (maskArray[eli] != elementValueArray[eli]) {
+            } else if (maskArray[eli] != elementValueArray[eli]){
                 elementValueArray.splice(eli, 0, maskMold[eli]);
             } else {
                 elementValueArray[eli] = maskMold[eli];
@@ -177,19 +177,19 @@ MUI.Mask.Fixed = new Class({
         return {value: elementValueArray.slice(0, this.maskMold.length), rangeStart: newRangeStart + 1};
     },
 
-    removeInvalidTrailingChars: function(elementValue) {
+    removeInvalidTrailingChars: function(elementValue){
         var truncateIndex = elementValue.length,
                 placeholder = this.options.placeholder,
                 i = elementValue.length - 1,
                 cont;
-        while (i >= 0) {
+        while (i >= 0){
             cont = false;
-            while (this.isFixedChar(elementValue.charAt(i)) && elementValue.charAt(i) !== placeholder) {
+            while (this.isFixedChar(elementValue.charAt(i)) && elementValue.charAt(i) !== placeholder){
                 if (i === 0) truncateIndex = 0;
                 cont = true;
                 i--;
             }
-            while (elementValue.charAt(i) === placeholder) {
+            while (elementValue.charAt(i) === placeholder){
                 truncateIndex = i;
                 cont = true;
                 i--;
@@ -199,20 +199,20 @@ MUI.Mask.Fixed = new Class({
         this.element.set('value', elementValue.substring(0, truncateIndex));
     },
 
-    testEntry: function(index, _char) {
+    testEntry: function(index, _char){
         var maskArray = this.maskArray,
                 rule = MUI.Mask.rules[maskArray[index]],
                 ret = (rule && rule.regex.test(_char));
         return (rule.check && ret) ? rule.check(this.element.get('value'), index, _char) : ret;
     },
 
-    testEvents: function(index, _char, code, isRemoveKey) {
+    testEvents: function(index, _char, code, isRemoveKey){
         var maskArray = this.maskArray,
                 rule = MUI.Mask.rules[maskArray[index]],
                 returnFromTestEntry;
-        if (!isRemoveKey) {
+        if (!isRemoveKey){
             var args = [this.element, code, _char];
-            if (!rule || !(returnFromTestEntry = this.testEntry(index, _char))) {
+            if (!rule || !(returnFromTestEntry = this.testEntry(index, _char))){
                 this.fireEvent('invalid', args);
                 return false;
             }
@@ -221,11 +221,11 @@ MUI.Mask.Fixed = new Class({
         return returnFromTestEntry || true;
     },
 
-    shouldFocusNext: function() {
+    shouldFocusNext: function(){
         return this.unmask(this.element.get('value')).length >= this.validIndexes.length;
     },
 
-    createUnmaskRegex: function() {
+    createUnmaskRegex: function(){
         var fixedCharsArray = [].combine(this.options.mask.replace(MUI.Mask.rulesRegex, '').split(''));
         var chars = (fixedCharsArray.join('') + this.options.placeholder).escapeRegExp();
         this.unmaskRegex = chars ? new RegExp('[' + chars + ']', 'g') : null;

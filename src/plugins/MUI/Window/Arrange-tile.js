@@ -1,26 +1,30 @@
 /*
+ ---
 
-Script: Arrange-tile.js
-	Cascade windows.
-	
-Copyright:
-	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.	
+ name: Arrange-tile
 
-Authors:
-	Harry Roberts and Greg Houston
+ script: Arrange-tile.js
 
-License:
-	MIT-style license.	
+ description: MUI - Tile windows.
 
-Requires:
-	Core.js, Window.js
+ copyright: (c) 2010 Contributors in (/AUTHORS.txt).
 
-Syntax:
-	(start code)
-	MUI.arrangeTile();
-	(end)
+ license: MIT-style license in (/MIT-LICENSE.txt).
 
-*/
+ note:
+ This documentation is taken directly from the javascript source files. It is built using Natural Docs.
+
+ requires:
+ - Core/Element
+ - Core/Class
+ - Core/Options
+ - Core/Events
+ - MUI
+ - MUI.Core
+
+ provides: [MUI.arrangeTile]
+ ...
+ */
 
 MUI.files[MUI.path.plugins + 'MUI/Window/Arrange-tile.js'] = 'loaded';
  

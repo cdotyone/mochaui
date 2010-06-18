@@ -1,26 +1,21 @@
 /*
+ ---
 
-Core.css for Mocha UI
+ file: Core.css
 
-Theme: Charcoal
+ description: MUI - Create a window from a form.
 
-Copyright:
-	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.
-	
-License:
-	MIT-style license.
+ copyright: (c) 2010 Contributors in (/AUTHORS.txt).
 
-Notes:
-	CSS rules in this file:
-	
-	1. Rules required by all MochaUI components or are shared by more than one.
-	2. Theme specific ajustments to default plugin styles.
-	3. Rules that have no better place to go.
- 
-*/
+ license: MIT-style license in (/MIT-LICENSE.txt).
 
-/* Required By All
----------------------------------------------------------------- */
+ note:
+ This documentation is taken directly from the javascript source files. It is built using Natural Docs.
+
+ provides: css for charcoal theme
+
+ ...
+ */
 
 /* Clears */
 

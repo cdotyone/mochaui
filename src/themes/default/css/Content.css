@@ -1,19 +1,22 @@
 /*
+ ---
 
-CSS for Mocha UI
+ file: Content.css
 
-Theme: Default
+ description: MUI - Create a window from a form.
 
-Copyright:
-	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.
+ copyright: (c) 2010 Contributors in (/AUTHORS.txt).
 
-License:
-	MIT-style license.
+ license: MIT-style license in (/MIT-LICENSE.txt).
 
-Note:	
-	If you are adding MochaUI to an existing site, this CSS file may not be necessary.
+ note:
+ This documentation is taken directly from the javascript source files. It is built using Natural Docs.
 
-*/
+ provides: css for default theme
+
+ ...
+ */
+
 
 /* Reset */
 

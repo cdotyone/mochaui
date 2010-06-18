@@ -1,23 +1,34 @@
 /*
+ ---
 
- Script: Window-from-form.js
- Create a window from a form.
+ name: WindowForm
 
- Copyright:
- Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.
+ script: Window-from-form.js
 
- License:
- MIT-style license.
+ description: MUI - Create a window from a form.
 
- Requires:
- Core.js, Window.js
+ copyright: (c) 2010 Contributors in (/AUTHORS.txt).
 
- See Also:
- <Window>
+ license: MIT-style license in (/MIT-LICENSE.txt).
 
+ note:
+ This documentation is taken directly from the javascript source files. It is built using Natural Docs.
+
+ requires:
+ - Core/Element
+ - Core/Class
+ - Core/Options
+ - Core/Events
+ - MUI
+ - MUI.Core
+
+ provides: [MUI.WindowForm]
+
+ ...
  */
 
 MUI.WindowForm = new NamedClass('MUI.WindowForm', {
+
     Implements: [Events, Options],
 
     options: {
@@ -38,6 +49,7 @@ MUI.WindowForm = new NamedClass('MUI.WindowForm', {
         this.setOptions(options);
         this.options.id = 'win' + (++MUI.IDCount);
         this.options.title = $('newWindowHeaderTitle').value;
+
         if ($('htmlLoadMethod').checked){
             this.options.loadMethod = 'html';
         }
@@ -54,13 +66,16 @@ MUI.WindowForm = new NamedClass('MUI.WindowForm', {
         if ($('newWindowContentURL').value){
             this.options.contentURL = $('newWindowContentURL').value;
         }
+
         if ($('newWindowModal').checked){
             this.options.type = 'modal';
         }
+
         this.options.width = $('newWindowWidth').value.toInt();
         this.options.height = $('newWindowHeight').value.toInt();
         this.options.x = $('newWindowX').value.toInt();
         this.options.y = $('newWindowY').value.toInt();
         new MUI.Window(this.options);
     }
+
 });

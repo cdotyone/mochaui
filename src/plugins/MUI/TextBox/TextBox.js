@@ -1,18 +1,28 @@
 /*
  ---
 
- description: Creates a textbox control control
+ name: TextBox
 
- copyright: (c) 2010 Chris Doty, <http://polaropposite.com/>.
+ script: TextBox.js
 
- authors:
- - Chris Doty
+ description: MUI - Creates a maskable textbox control.
 
- license:
- - MIT-style license
+ copyright: (c) 2010 Contributors in (/AUTHORS.txt).
 
- provides: [MUI, MochaUI, MUI.TextBox]
+ license: MIT-style license in (/MIT-LICENSE.txt).
 
+ note:
+ This documentation is taken directly from the javascript source files. It is built using Natural Docs.
+
+ requires:
+ - Core/Element
+ - Core/Class
+ - Core/Options
+ - Core/Events
+ - MUI
+ - MUI.Core
+
+ provides: [MUI.TextBox]
  ...
  */
 
@@ -40,15 +50,14 @@ MUI.TextBox = new Class({
         ,value:         ''              // the currently textbox's value
     },
 
-    initialize: function(options)
-    {
+    initialize: function(options){
         var self = this;
         self.setOptions(options);
         var o = self.options;
 
         // make sure this controls has an ID
         var id = o.id;
-        if (!id) {
+        if (!id){
             id = 'textbox' + (++MUI.IDCount);
             o.id = id;
         }
@@ -58,9 +67,9 @@ MUI.TextBox = new Class({
         // create sub items if available
         if (o.createOnInit && o.container != null) this.toDOM();
         else {
-            window.addEvent('domready', function() {
+            window.addEvent('domready', function(){
                 var el = $(id);
-                if (el != null) {
+                if (el != null){
                     self.fromHTML();
                     self.checkForMask();
                 }
@@ -70,28 +79,28 @@ MUI.TextBox = new Class({
         MUI.set(id, this);
     },
 
-    checkForMask: function() {
+    checkForMask: function(){
         var self = this;
         var o = self.options;
 
-        if (o.maskType != 'none' && (!MUI.Mask || !MUI.Mask[o.maskType]) && self.element) {
+        if (o.maskType != 'none' && (!MUI.Mask || !MUI.Mask[o.maskType]) && self.element){
             o.maskType = o.maskType.camelCase().capitalize();
 
-            if (o.maskType == 'Password') {
+            if (o.maskType == 'Password'){
                 new MUI.Require({js: ['PassShark.js'],
-                    onload: function() {
+                    onload: function(){
                         var options = $H({});
                         options.extend(o.maskOptions);
                         options.maskType = o.maskType.toLowerCase();
-                        new MUI.PassShark(self.element,options);
+                        new MUI.PassShark(self.element, options);
                     }
                 });
             } else {
                 new MUI.Require({js: ['Mask.js'],
-                    onload: function() {
+                    onload: function(){
                         new MUI.Require({
                             js: ['Mask.' + o.maskType.split('.')[0] + '.js'],
-                            onload: function() {
+                            onload: function(){
                                 var o = self.options;
                                 var options = $H({});
                                 options.extend(o.maskOptions);
@@ -107,7 +116,7 @@ MUI.TextBox = new Class({
         }
     },
 
-    getMaskClassOptions: function(maskType) {
+    getMaskClassOptions: function(maskType){
         var classNames = [];
         if (maskType) classNames = maskType.split('.');
         else return false;
@@ -115,13 +124,13 @@ MUI.TextBox = new Class({
         return (classNames[1] ? MUI.Mask[name][classNames[1].camelCase().capitalize()] : MUI.Mask[name]);
     },
 
-    _getData: function(item, property) {
+    _getData: function(item, property){
         if (!item || !property) return '';
         if (item[property] == null) return '';
         return item[property];
     },
 
-    getFieldTitle: function() {
+    getFieldTitle: function(){
         var self = this;
         var o = self.options;
 
@@ -130,7 +139,7 @@ MUI.TextBox = new Class({
         return o.id;
     },
 
-    fromHTML: function() {
+    fromHTML: function(){
         var self = this;
         var o = self.options;
 
@@ -146,14 +155,13 @@ MUI.TextBox = new Class({
         return self;
     },
 
-    toDOM: function(containerEl)
-    {
+    toDOM: function(containerEl){
         var self = this;
         var o = self.options;
 
         var isNew = false;
         var inp = $(o.id);
-        if (!inp) {
+        if (!inp){
             self._wrapper = new Element('fieldset', {'id':o.id});
 
             var tle = self._getData(o.formData, o.formTitleField);
@@ -163,7 +171,7 @@ MUI.TextBox = new Class({
             inp = new Element('input', {'id':o.id,'type':o.type}).inject(self._wrapper);
             isNew = true;
         }
-        if (o.cssClass) {
+        if (o.cssClass){
             if (self._wrapper) self._wrapper.set('class', o.cssClass);
             inp.set('class', o.cssClass);
         }
@@ -178,7 +186,7 @@ MUI.TextBox = new Class({
         self.checkForMask();
         if (!isNew) return inp;
 
-        window.addEvent('domready', function() {
+        window.addEvent('domready', function(){
             var container = $(containerEl ? containerEl : o.container);
             self._wrapper.inject(container);
         });

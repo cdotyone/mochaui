@@ -1,19 +1,22 @@
 /*
+ ---
 
-Core.css for Mocha UI
+ file: Layout.css
 
-Theme: Charcoal
+ description: MUI - Create a window from a form.
 
-Copyright:
-	Copyright (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.
-	
-License:
-	MIT-style license.
+ copyright: (c) 2010 Contributors in (/AUTHORS.txt).
 
-Required by:
-	Layout.js
- 
-*/
+ license: MIT-style license in (/MIT-LICENSE.txt).
+
+ note:
+ This documentation is taken directly from the javascript source files. It is built using Natural Docs.
+
+ provides: css for charcoal theme
+
+ ...
+ */
+
 
 /* Layout
 ---------------------------------------------------------------- */
