@@ -568,6 +568,10 @@ Options:
 	headerToolbox: (boolean)
 	headerToolboxURL: (url)
 	headerToolboxOnload: (function)
+	footer - (boolean) Add a panel footer or not
+	footerURL - (url)
+	footerData - (hash) Data to send with the URL. Defaults to null.
+	footerOnload - (function)
 	height - (number) Height of content area.
 	addClass - (string) Add a class to the panel.
 	scrollbars - (boolean)
@@ -615,6 +619,11 @@ MUI.Panel = new NamedClass('MUI.Panel',{
 		headerToolbox:      false,
 		headerToolboxURL:   'pages/lipsum.html',
 		headerToolboxOnload: $empty,
+		
+		footer:             false,
+		footerURL:          'pages/lipsum.html',
+		footerData:         null,
+		footerOnload:       $empty,
 
 		// Style options:
 		height:             125,
@@ -690,6 +699,18 @@ MUI.Panel = new NamedClass('MUI.Panel',{
 			'id': options.id + '_pad',
 			'class': 'pad'
 		}).inject(this.panelEl);
+
+		if (options.footer) {
+			this.footerWrapperEl = new Element('div', {
+				'id': options.id + '_panelFooterWrapper',
+				'class': 'panel-footerWrapper'
+			}).inject(this.panelEl);
+			
+			this.footerEl = new Element('div', {
+				'id': options.id + '_panelFooter',
+				'class': 'panel-footer'
+			}).inject(this.footerWrapperEl);
+		}
 
 		// This is in order to use the same variable as the windows do in updateContent.
 		// May rethink this.
@@ -773,7 +794,19 @@ MUI.Panel = new NamedClass('MUI.Panel',{
 		}
 	},
 	newPanel: function(){
+
 		var options = this.options;
+
+		if (options.footer) {
+			MUI.updateContent({
+				'element': this.panelEl,
+				'childElement': this.footerEl,
+				'loadMethod': 'xhr',
+				'data': options.footerData,
+				'url': options.footerURL,
+				'onContentLoaded': options.footerOnload
+			});
+		}
 
 		if (this.options.headerToolbox) {
 			MUI.updateContent({

@@ -925,7 +925,8 @@ var initializeColumns = function(){
         contentURL: 'pages/tips.html',
         column: 'sideColumn2',
         height: 140,
-        footer: true
+		footer: true,
+		footerURL: 'pages/toolbox-demo.html'
     });
 
     MUI.splitPanelPanel = function(){

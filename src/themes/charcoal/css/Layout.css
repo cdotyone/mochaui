@@ -305,6 +305,25 @@ li.divider {
 	cursor: pointer;
 }
 
+.panel-footerWrapper {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	background: #404040;
+	height: 30px;
+	overflow: hidden;
+	border-top: 1px solid #222;
+}
+
+.panel-footer {
+	padding: 1px 0 0 8px;
+}
+	
+.panel-footerContent {
+	margin-top: 5px;
+}
+
 /* Column and Panel Handles */	
 
 .horizontalHandle {
