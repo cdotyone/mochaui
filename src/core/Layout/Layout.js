@@ -411,10 +411,10 @@ MUI.Column = new NamedClass('MUI.Column',{
 					onSort: function(){
 						$$('.column').each(function(column){
 							column.getChildren('.panelWrapper').each(function(panelWrapper){
-								panelWrapper.removeClass('bottomPanel').getElement('.panel').removeClass('bottomPanel');
+								panelWrapper.removeClass('bottomPanel');
 							});
 							if (column.getChildren('.panelWrapper').getLast()){
-								column.getChildren('.panelWrapper').getLast().addClass('bottomPanel').getElement('.panel').addClass('bottomPanel');
+								column.getChildren('.panelWrapper').getLast().addClass('bottomPanel');
 							}
                             column.getChildren('.panelWrapper').each(function(panelWrapper){
                                 var panel = panelWrapper.getElement('.panel');
@@ -850,7 +850,7 @@ MUI.Panel = new NamedClass('MUI.Panel',{
 		$(options.column).getChildren('.panelWrapper').each(function(panelWrapper){
 			panelWrapper.getElement('.panel').removeClass('bottomPanel');
 		});
-		$(options.column).getChildren('.panelWrapper').getLast().addClass('bottomPanel').getElement('.panel').addClass('bottomPanel');
+		$(options.column).getChildren('.panelWrapper').getLast().addClass('bottomPanel');
 
 		MUI.panelHeight(options.column, this.panelEl, 'new');
 
@@ -1533,9 +1533,9 @@ MUI.extend({
 		// Do this when creating and removing panels
         var panels=$(column).getElements('.panelWrapper');
 		panels.each(function(panelWrapper){
-			panelWrapper.removeClass('bottomPanel').getElement('.panel').removeClass('bottomPanel');
+			panelWrapper.removeClass('bottomPanel');
 		});
-        if(panels.length>0) panels.getLast().addClass('bottomPanel').getElement('.panel').addClass('bottomPanel');
+        if (panels.length > 0) panels.getLast().addClass('bottomPanel');
 
 		MUI.erase(instance.options.id);
 		return true;

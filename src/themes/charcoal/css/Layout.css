@@ -254,7 +254,7 @@ li.divider {
 	background: #353535;	
 }	
 
-.bottomPanel {
+.bottomPanel .panel {
 	border-bottom: 0;	
 }
 
