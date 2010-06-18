@@ -256,7 +256,7 @@ li.divider {
 
 .bottomPanel {
 	border-bottom: 0;	
-}	
+}
 
 .pad {
 	padding: 8px;
@@ -306,14 +306,21 @@ li.divider {
 }
 
 .panel-footerWrapper {
-	position: absolute;
-	left: 0;
-	bottom: 0;
+	position: relative;
 	width: 100%;
 	background: #404040;
 	height: 30px;
 	overflow: hidden;
+	border-bottom: 1px solid #222;
+}
+
+.bottomPanel .panel-footerWrapper {
 	border-top: 1px solid #222;
+	border-bottom: 0;
+}
+
+.collapsed .panel-footerWrapper {
+	display: none;
 }
 
 .panel-footer {
