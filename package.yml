@@ -1,6 +1,6 @@
 name: "MochaUI"
 
-version: "0.9.7-dev"
+version: "0.9.8-dev"
 
 exports: "mochaui.js"
 
@@ -10,19 +10,20 @@ description: "MochaUI, A web applications user interface library"
 
 license: "[MIT License](http://mochaui.com/demo/license.txt)"
 
-copyright: "&copy; [Greg Houston](http://greghoustondesign.com/)"
+copyright: "&copy; [AUTHORS.txt]"
 
 authors:
+  - "[Chris Doty](http://polaropposite.com/)"
   - "[Greg Houston](http://greghoustondesign.com/)"
-  - "Chris Doty"
   - "Scott F. Frederick"
   - "Joel Lindau"
   - "Harry Roberts"
 
 sources:
-  - "src/core/Core/Core.js"
-  - "src/core/Window/Window.js"
-  - "src/core/Window/Modal.js"
-  - "src/core/Layout/Layout.js"
-  - "src/core/Layout/Dock.js"
-  - "src/core/Components/Tabs.js"
+  - "src/mui/core.js"
+  - "src/mui/update.js"
+  - "src/mui/window.js"
+  - "src/mui/modal.js"
+  - "src/mui/layout.js"
+  - "src/mui/dock.js"
+  - "src/mui/tabs.js"
