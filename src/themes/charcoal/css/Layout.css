@@ -257,9 +257,9 @@ li.divider {
 	background: #353535;	
 }	
 
-.bottomPanel {
+.bottomPanel .panel {
 	border-bottom: 0;	
-}	
+}
 
 .pad {
 	padding: 8px;
@@ -306,6 +306,32 @@ li.divider {
 .icon16 {
 	margin: 4px 0 0 2px;
 	cursor: pointer;
+}
+
+.panel-footerWrapper {
+	position: relative;
+	width: 100%;
+	background: #404040;
+	height: 30px;
+	overflow: hidden;
+	border-bottom: 1px solid #222;
+}
+
+.bottomPanel .panel-footerWrapper {
+	border-top: 1px solid #222;
+	border-bottom: 0;
+}
+
+.collapsed .panel-footerWrapper {
+	display: none;
+}
+
+.panel-footer {
+	padding: 1px 0 0 8px;
+}
+	
+.panel-footerContent {
+	margin-top: 5px;
 }
 
 /* Column and Panel Handles */	

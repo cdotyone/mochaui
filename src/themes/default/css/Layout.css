@@ -266,7 +266,7 @@ li.divider {
 	background: #f2f2f2;	
 }
 
-.bottomPanel {
+.bottomPanel .panel {
 	border-bottom: 0;	
 }	
 
@@ -316,6 +316,32 @@ li.divider {
 .icon16 {
 	margin: 4px 0 0 2px;
 	cursor: pointer;
+}
+
+.panel-footerWrapper {
+	position: relative;
+	width: 100%;
+	background: #f9f9f9;
+	height: 30px;
+	overflow: hidden;
+	border-bottom: 1px solid #b9b9b9;
+}
+
+.bottomPanel .panel-footerWrapper {
+	border-top: 1px solid #b9b9b9;
+	border-bottom: 0;
+}
+
+.collapsed .panel-footerWrapper {
+	display: none;
+}
+
+.panel-footer {
+	padding: 1px 0 0 8px;
+}
+	
+.panel-footerContent {
+	margin-top: 5px;
 }
 
 /* Column and Panel Handles */	
