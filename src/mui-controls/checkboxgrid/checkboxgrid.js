@@ -3,7 +3,7 @@
 
  name: CheckBoxGrid
 
- script: CheckBoxGrid.js
+ script: checkboxgrid.js
 
  description: MUI - Create a control with columns and rows of checkbox/radio buttons.
 

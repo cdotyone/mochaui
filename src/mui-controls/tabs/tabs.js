@@ -3,7 +3,7 @@
 
  name: Tabs
 
- script: Tabs.js
+ script: tabs.js
 
  description: MUI - Creates a tab list control.
 

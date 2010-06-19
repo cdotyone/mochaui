@@ -3,7 +3,7 @@
 
  name: List
 
- script: List.js
+ script: list.js
 
  description: MUI - Creates a generic list.
 

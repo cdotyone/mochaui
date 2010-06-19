@@ -3,7 +3,7 @@
 
  name: Dock
 
- script: Dock.js
+ script: dock.js
 
  description: Implements the dock/taskbar. Enables window minimize.
 
@@ -25,7 +25,7 @@
  ...
  */
 
-MUI.files[MUI.path.source + 'Layout/Dock.js'] = 'loaded';
+MUI.files[MUI.path.source + 'dock.js'] = 'loaded';
 
 MUI.options.extend({
     // Naming options:

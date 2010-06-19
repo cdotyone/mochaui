@@ -3,7 +3,7 @@
 
  name: SelectList
 
- script: SelectList.js
+ script: selectlist.js
 
  description: MUI - Create a list with check boxes next to each item.
 

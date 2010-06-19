@@ -3,7 +3,7 @@
 
  name: TextArea
 
- script: TextArea.js
+ script: textarea.js
 
  description: MUI - Creates a textarea that can dynamically size itself control.
 

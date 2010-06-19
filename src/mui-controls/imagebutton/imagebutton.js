@@ -3,7 +3,7 @@
 
  name: ImageButton
 
- script: ImageButton.js
+ script: imagebutton.js
 
  description: MUI - Creates a button with an image on it.
 

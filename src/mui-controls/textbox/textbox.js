@@ -3,7 +3,7 @@
 
  name: TextBox
 
- script: TextBox.js
+ script: textbox.js
 
  description: MUI - Creates a maskable textbox control.
 

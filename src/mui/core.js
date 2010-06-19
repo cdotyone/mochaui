@@ -3,7 +3,7 @@
 
  name: Core
 
- script: Core.js
+ script: core.js
 
  description: MUI - A Web Applications User Interface Framework.
 
@@ -41,10 +41,10 @@ var MUI = MochaUI = new Hash({
     }),
 
     path: {
-        //source:  'scripts/source/',    // Path to MochaUI source JavaScript
-        themes:  '../themes/',         // Path to MochaUI Themes
-        plugins: '../plugins/',        // Path to Plugins
-        muiplugins: '../plugins/MUI/'  // Path to Mocha Owned Plugins
+        source:  '../mui/',           // Path to MochaUI source JavaScript
+        themes:  '../themes/',        // Path to MochaUI Themes
+        plugins: '../plugins/',       // Path to Plugins
+        controls: '../mui-controls/'  // Path to Mocha Owned Plugins
     },
 
     // Returns the path to the current theme directory

@@ -3,7 +3,7 @@
 
  name: Modal
 
- script: Modal.js
+ script: modal.js
 
  description: Create modal dialog windows.
 
@@ -22,7 +22,7 @@
  ...
  */
 
-MUI.files[MUI.path.source + 'Window/Modal.js'] = 'loaded';
+MUI.files[MUI.path.source + 'modal.js'] = 'loaded';
 
 MUI.Modal = new NamedClass('MUI.Modal', {
     Extends: MUI.Window,

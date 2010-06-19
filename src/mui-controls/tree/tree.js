@@ -3,7 +3,7 @@
 
  name: Tree
 
- script: Tree.js
+ script: tree.js
 
  description: MUI - Creates a generic tree control.
 

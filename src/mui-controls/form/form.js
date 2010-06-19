@@ -3,7 +3,7 @@
 
  name: Form
 
- script: Form.js
+ script: form.js
 
  description: MUI - Builds a standard method to working with forms.
 

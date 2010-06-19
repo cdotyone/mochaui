@@ -3,7 +3,7 @@
 
  name: Update
 
- script: Update.js
+ script: update.js
 
  description: core content update routines
 
@@ -18,6 +18,8 @@
 
  ...
  */
+
+MUI.files[MUI.path.source + 'update.js'] = "loaded";
 
 MUI.extend({
     /*

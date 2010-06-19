@@ -3,7 +3,7 @@
 
  name: Layout
 
- script: Layout.js
+ script: layout.js
 
  description: Create web application layouts. Enables window maximize.
 
@@ -19,7 +19,7 @@
  ...
  */
 
-MUI.files[MUI.path.source + 'Layout/Layout.js'] = 'loaded';
+MUI.files[MUI.path.source + 'layout.js'] = 'loaded';
 
 MUI.Desktop = {
 

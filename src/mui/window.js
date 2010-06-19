@@ -3,7 +3,7 @@
 
  name: Window
 
- script: Window.js
+ script: window.js
 
  description: Build windows.
 
@@ -18,7 +18,7 @@
  ...
  */
 
-MUI.files[MUI.path.source + 'Window/Window.js'] = 'loading';
+MUI.files[MUI.path.source + 'window.js'] = 'loading';
 //$require(MUI.themePath() + '/css/Dock.css');
 
 /*

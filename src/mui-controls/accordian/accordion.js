@@ -3,7 +3,7 @@
 
  name: Accordion
 
- script: Accordion.js
+ script: accordion.js
 
  description: MUI - Creates a generic accordian control.
 
