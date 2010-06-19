@@ -1,0 +1,50 @@
+<html>
+<head>
+<script type="text/javascript" src="scripts/mootools-1.2.4-core-yc.js"></script>
+<script type="text/javascript" src="scripts/mootools-1.2.4-more-yc.js"></script>
+<script type="text/javascript" src="scripts/mocha.js"></script>
+<script type="text/javascript" src="Tabs.js"></script>
+<script type="text/javascript">
+    new MUI.Tabs({
+        container:'page',
+        id:'tabs1',
+        element:'page2',
+        tabs:[
+            {text:'Overview',value:'Overview','element':'page2',url:'../../pages/overview.html'},
+            {text:'Download',value:'Download','element':'page2',url:'../../pages/download.html'}
+        ],
+        onTabSelected: function(tab,value,self,e) {
+            alert('receieved onTabSelected command on tab ' + value);
+        }
+    });
+    new MUI.Tabs({
+        container:'page2',
+        id:'tabs2',
+        onTabSelected: function(tab,value,self,e) {
+            alert('receieved onTabSelected command on tab ' + value);
+        }
+    });
+</script>
+<link rel="stylesheet" type="text/css" href="style.css" />
+
+</head>
+
+<body>
+
+<div id="page">
+   <div>load from json</div>
+</div>
+       <br/><br/>
+<div id="page2">
+    <div>load from html</div>
+    <div class="tabs" id="tabs2">
+        <ul class="tabs">
+            <li class="selected"><a href="pages/overview.html" title="Overview">Overview</a></li>
+            <li><a hreF="pages/download.html" title="Download">Download</a></li>
+        </ul>
+        <div class="clear"></div>
+    </div>
+</div>
+
+</body>
+</html>

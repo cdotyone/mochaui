@@ -1,0 +1,67 @@
+<html>
+<head>
+<script type="text/javascript" src="scripts/mootools-1.2.4-core-yc.js"></script>
+<script type="text/javascript" src="scripts/mootools-1.2.4-more-yc.js"></script>
+<script type="text/javascript" src="scripts/mocha.js"></script>
+<script type="text/javascript" src="Accordion.js"></script>
+<script type="text/javascript">
+    new MUI.Accordion({
+        container:'page',
+        id:'accordian1',
+        panels:[
+            {text:'Lorem Ipsum',value:'panel0','html':'<h3>Lorem Ipsum Dolor Sit Amet</h3><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean consequat dignissim pede. Aliquam erat volutpat. In ac nulla. Phasellus sapien.</p>'},
+            {text:'Dolor Sit','html':'<h3>Lorem Ipsum Dolor Sit Amet</h3><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean consequat dignissim pede. Aliquam erat volutpat. In ac nulla. Phasellus sapien.</p>'},
+            {text:'Amet','html':'<h3>Lorem Ipsum Dolor Sit Amet</h3><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean consequat dignissim pede. Aliquam erat volutpat. In ac nulla. Phasellus sapien.</p>'}
+        ]
+    });
+    new MUI.Accordion({
+        id:'accordian2',
+        onTabSelected: function(tab,value,self,e) {
+            alert('receieved onTabSelected command on tab ' + value);
+        }
+    });
+</script>
+<link rel="stylesheet" type="text/css" href="style.css" />
+
+</head>
+
+<body>
+
+<div id="page">
+   <div>load from json</div>
+</div>
+       <br/><br/>
+<div id="page2">
+<div>load from html</div>
+
+<div class="accordian" id="accordian2">
+<div>
+	<h3 class="toggler first">Lorem Ipsum</h3>
+	<div class="element">
+		<div class="content">
+			<h3>Lorem Ipsum Dolor Sit Amet</h3>
+			<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean consequat dignissim pede. Aliquam erat volutpat. In ac nulla. Phasellus sapien.</p>
+		</div>
+	</div>
+
+	<h3 class="toggler">Dolor Sit</h3>
+	<div class="element">
+		<div class="content">
+			<h3>Lorem Ipsum Dolor Sit Amet</h3>
+			<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean consequat dignissim pede. Aliquam erat volutpat. In ac nulla. Phasellus sapien.</p>
+		</div>
+	</div>
+
+	<h3 class="toggler last">Amet</h3>
+	<div class="element">
+		<div class="content">
+			<h3>Lorem Ipsum Dolor Sit Amet</h3>
+			<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean consequat dignissim pede. Aliquam erat volutpat. In ac nulla. Phasellus sapien.</p>
+		</div>
+	</div>
+</div>
+</div>
+</div>
+
+</body>
+</html>

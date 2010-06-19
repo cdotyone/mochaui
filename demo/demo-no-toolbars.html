@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
+
+<title>Mootools MochaUI - Fixed Width and No Toolbars</title>
+
+<link rel="stylesheet" type="text/css" id="cssContent" href="themes/default/css/Content.css" />
+<link rel="stylesheet" type="text/css" id="cssCore" href="themes/default/css/Core.css" />
+<link rel="stylesheet" type="text/css" id="cssWindow" href="themes/default/css/Window.css" />
+
+<!--[if IE]>
+	<script type="text/javascript" src="scripts/excanvas_r43.js"></script>
+<![endif]-->
+	
+<script type="text/javascript" src="scripts/mootools-1.2.4-core-yc.js"></script>
+<script type="text/javascript" src="scripts/mootools-1.2.4-more-yc.js"></script>
+<script type="text/javascript" src="scripts/mocha.js"></script>
+
+<script type="text/javascript">
+
+MUI.aboutWindow = function(){
+	new MUI.Modal({
+		id: 'about',
+		title: 'MochaUI',
+		loadMethod: 'xhr',
+		contentURL: 'pages/about.html',
+		type: 'modal2',
+		width: 350,
+		height: 195,
+		contentBgColor: '#e5e5e5 url(images/logo2.gif) left 3px no-repeat',
+		padding: { top: 43, right: 12, bottom: 10, left: 12 },
+		scrollbars:  false
+	});
+}
+
+window.addEvent('load', function(){
+	MUI.Desktop.initialize();
+	MUI.NewWindowsFromHTML = new MUI.NewWindowsFromHTML();
+
+	$('aboutLink').addEvent('click', function(e){
+		new Event(e).stop();
+		MUI.aboutWindow();
+	});
+
+});
+</script>
+
+<style>
+
+#desktop {
+	visibility: visible;
+}
+
+#pageWrapper {
+	overflow: auto;
+}
+
+#page {
+	margin: 0 auto 0;
+	width: 800px;
+	background: #fff;
+}
+
+#header {
+	padding: 10px;
+	background: #fafafa;
+}
+
+#content {
+	padding: 10px;
+}
+
+#footer {
+	background: #f0f0f0;
+	padding: 10px 20px;
+}
+
+</style>
+
+</head>
+<body>
+
+<div id="desktop">
+
+<div id="pageWrapper">
+	<div id="page">
+	
+		<!-- PAGE CONTENT BEGINS HERE -->
+
+		<div id="header">
+			<h1>My Site</h1>
+		</div>
+		<div id="content">	
+			<h3>My Page Content</h3>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+			<p><a id="aboutLink" href="pages/about.html">Modal Test</a></p>
+
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+		</div><!-- content end -->
+
+		<div id="footer">
+			Footer text
+		</div>
+
+	<!-- PAGE CONTENT ENDS HERE -->
+	</div><!-- page end -->
+</div><!-- pageWrapper end -->
+
+<div class="mocha" id="myWindow01" style="width:300px;height:255px;top:50px;left:350px">
+	<h3 class="mochaTitle">My Window 01</h3>
+	<p>My Window Content</p>
+</div>
+
+<div class="mocha" id="myWindow02" style="width:300px;height:275px;top:120px;left:420px">
+	<h3 class="mochaTitle">My Window 02</h3>
+	<p>My Window Content</p>
+</div>
+
+<div class="mocha" id="myWindow03" style="width:300px;height:105px;top:190px;left:490px">
+	<h3 class="mochaTitle">My Window 03</h3>
+	<p>My Window Content</p>
+</div>
+
+</div><!-- desktop end -->
+
+</body>
+</html>

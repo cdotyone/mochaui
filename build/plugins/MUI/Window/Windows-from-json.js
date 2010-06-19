@@ -1,0 +1,1 @@
+MUI.files[MUI.path.plugins+"MUI/Window/Windows-from-json.js"]="loaded";MUI.extend({NewWindowsFromJSON:function(newWindows){newWindows.each(function(options){var temp=new Hash(options);temp.each(function(value,key,hash){if($type(value)!="string"){return}if(value.substring(0,8)=="function"){eval("options."+key+" = "+value)}});new MUI.Window(options)})}});

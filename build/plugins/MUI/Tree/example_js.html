@@ -1,0 +1,74 @@
+<html>
+<head>
+<script type="text/javascript" src="scripts/mootools-1.2.4-core-yc.js"></script>
+<script type="text/javascript" src="scripts/mootools-1.2.4-more-yc.js"></script>
+<script type="text/javascript" src="scripts/mocha.js"></script>
+<script type="text/javascript" src="Tree.js"></script>
+<script type="text/javascript">
+    var nodes = [
+            {value:'item1',text:"Item 1",isChecked: false,isSelected: false,nodes:[
+                {value:'item4',text:"Item 4",isChecked: true,isSelected: true},
+                {value:'item5',text:"Item 5",isChecked: false,isSelected: false},
+                {value:'item6',text:"Item 6",isChecked: false,isSelected: false}
+            ]},
+            {value:'item2',text:"Item 2",isChecked: true,isSelected: false,nodes:[
+                {value:'item7',text:"Item 7",isChecked: false,isSelected: false},
+                {value:'item8',text:"Item 8",isChecked: false,isSelected: false},
+                {value:'item9',text:"Item 9",isChecked: false,isSelected: false}
+            ]},
+            {value:'item3',text:"Item 3",isChecked: false,isSelected: false,nodes:[
+                {value:'item10',text:"Item 10",isChecked: false,isSelected: false}
+            ]},
+            {value:'item11',text:"Item 11",isChecked: false,isSelected: false}
+        ];
+
+    new MUI.Tree({
+        container:'page',
+        width:250,
+        height:100,
+        id:'tree1',
+        nodes:nodes,
+        onNodeExpanded: function(node,isExpanded,self,e) {
+            alert('receieved onNodeExpanded command on node ' + node.value + ', isExpanded=' + isExpanded)
+        },
+        onNodeChecked: function(node,checked,self,e) {
+            alert('receieved onNodeChecked command on node ' + node.value + ', checked=' + checked);
+        },
+        onNodeSelected: function(node,self,e) {
+            alert('receieved onNodeSelected command on node ' + node.value)
+        }
+    });
+
+    new MUI.Tree({
+        container:'page2',
+        width:250,
+        height:100,
+        id:'tree2',
+        nodes:nodes,
+        showCheckBox: true,
+        canSelect: false,
+        onNodeExpanded: function(node,isExpanded,self,e) {
+            alert('receieved onNodeExpanded command on node ' + node.value + ', isExpanded=' + isExpanded)
+        },
+        onNodeChecked: function(node,checked,self,e) {
+            alert('receieved onNodeChecked command on node ' + node.value + ', checked=' + checked);
+        },
+        onNodeSelected: function(node,self,e) {
+            alert('receieved onNodeSelected command on node ' + node.value)
+        }
+    });
+</script>
+<link rel="stylesheet" type="text/css" href="style.css" />
+
+</head>
+
+<body>
+
+<div id="page">
+</div>
+       <br/><br/>
+<div id="page2">
+</div>
+
+</body>
+</html>

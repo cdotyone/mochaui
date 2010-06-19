@@ -1,0 +1,8 @@
+/* tabs settings */
+div.tabs { padding:0 5px 2px 2px; background: url(images/tabs.gif) repeat-x left -70px; overflow: visible; }
+div.tabs ul { padding: 0; list-style:none;margin: 0; line-height: 16px; font-size: 11px; }
+div.tabs ul li { display: block; float: left; margin: 0 0 5px 0; cursor: pointer; background: url(images/tabs.gif) repeat-x left -35px;}
+div.tabs ul li.sel { background: url(images/tabs.gif) repeat-x left 0; }
+div.tabs ul li a { display: block; margin-left: 8px; padding: 6px 15px 5px 9px; text-align: center; font-weight: normal; color: #181818; background: url(images/tabs.gif) repeat-x right -35px; }
+div.tabs ul li.sel a { color: #181818; font-weight: bold; background: url(images/tabs.gif) repeat-x right 0; }
+/* tabs settings */

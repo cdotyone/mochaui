@@ -1,0 +1,7 @@
+/* Accordion */
+div.accordian { padding: 0;} /* background: #f00; Uncomment this if you want to change the background of the accordian sections. */
+div.accordian div h3.toggler { margin: 0; padding: 6px 10px; background: #f1f1f1 url(images/bg-panel-header.gif) repeat-x; font-size: 12px; cursor: pointer; border-top: 1px solid #e3e3e3; }
+div.accordian div h3.first { border-top: none; }
+div.accordian div h3.open {	} /* background: #f00; Uncomment this if you want to change the background of the open section's header */
+div.accordian div div.element div.content { padding: 10px 10px 5px 10px; }
+/* Accordion */

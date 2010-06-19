@@ -1,0 +1,65 @@
+<html>
+<head>
+<script type="text/javascript" src="scripts/mootools-1.2.4-core-yc.js"></script>
+<script type="text/javascript" src="scripts/mootools-1.2.4-more-yc.js"></script>
+<script type="text/javascript" src="scripts/mocha.js"></script>
+<script type="text/javascript" src="CheckedListBox.js"></script>
+<script type="text/javascript">
+
+    var items = [
+            {value:'item1',text:"Item 1",checked: false,selected: false},
+            {value:'item2',text:"Item 2",checked: true,selected: false},
+            {value:'item3',text:"Item 3",checked: false,selected: false},
+            {value:'item4',text:"Item 4",checked: true,selected: true},
+            {value:'item5',text:"Item 5",checked: false,selected: false},
+            {value:'item6',text:"Item 6",checked: false,selected: false},
+            {value:'item7',text:"Item 7",checked: false,selected: false},
+            {value:'item8',text:"Item 8",checked: false,selected: false},
+            {value:'item9',text:"Item 9",checked: false,selected: false},
+            {value:'item10',text:"Item 10",checked: false,selected: false}
+        ];
+    new MUI.CheckedListBox({
+        container:'page',
+        width:250,
+        height:100,
+        id:'clb1',
+        items:items,
+        canSelect:true,
+        onItemChecked: function(node,checked,self,e) {
+            alert('receieved onItemChecked command on item ' + node.value + ', checked=' + checked);
+        },
+        onItemSelected: function(item,selected,self,cmd,img) {
+            alert('receieved onItemSelected command on item ' + item.value +', selected=' + selected)
+        }
+    });
+    new MUI.CheckedListBox({
+        container:'page2',
+        width:250,
+        height:100,
+        id:'clb2',
+        items:items,
+        isDropList: false,
+        alternateItems: true,
+        onItemChecked: function(node,checked,self,e) {
+            alert('receieved onItemChecked command on item ' + node.value + ', checked=' + checked);
+        },
+        onItemSelected: function(item,selected,self,cmd,img) {
+            alert('receieved onItemSelected command on item ' + item.value +', selected=' + selected)
+        }
+    });
+
+</script>
+<link rel="stylesheet" type="text/css" href="style.css" />
+
+</head>
+
+<body>
+
+<div id="page">
+</div>
+       <br/><br/>
+<div id="page2">
+</div>
+
+</body>
+</html>

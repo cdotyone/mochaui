@@ -1,0 +1,86 @@
+
+<html>
+<head>
+<script type="text/javascript" src="scripts/mootools-1.2.4-core-yc.js"></script>
+<script type="text/javascript" src="scripts/mootools-1.2.4-more-yc.js"></script>
+<script type="text/javascript" src="scripts/mocha.js"></script>
+<script type="text/javascript" src="List.js"></script>
+<script type="text/javascript">
+
+    var items = [
+            {value:'item1',text:"Item 1",isChecked: false,isSelected: false},
+            {value:'item2',text:"Item 2",isChecked: true,isSelected: false},
+            {value:'item3',text:"Item 3",isChecked: false,isSelected: false},
+            {value:'item4',text:"Item 4",isChecked: true,isSelected: true},
+            {value:'item5',text:"Item 5",isChecked: false,isSelected: false},
+            {value:'item6',text:"Item 6",isChecked: false,isSelected: false},
+            {value:'item7',text:"Item 7",isChecked: false,isSelected: false},
+            {value:'item8',text:"Item 8",isChecked: false,isSelected: false},
+            {value:'item9',text:"Item 9",isChecked: false,isSelected: false},
+            {value:'item10',text:"Item 10",isChecked: false,isSelected: false}
+        ];
+
+    new MUI.List({
+        container:'page',
+        showCheckBox:true,
+        width:250,
+        height:100,
+        id:'list1',
+        items:items,
+        columns:[
+            {text:'value',name:'value','value':'value'},
+            {text:'text',name:'value'},
+            {text:'isChecked',name:'isChecked','type':'checkbox'},
+            {text:'isSelected',name:'isSelected','type':'checkbox'}
+        ],
+        commands:[
+            {'text':'Cancel','name':'Cancel','image':'images/cancel.png'}
+        ],
+        onItemCommand: function(item,self,cmd,img) {
+            alert('receieved ' + cmd.name + ' command on item ' + item.value)
+        },
+        onItemChecked: function(item,self,cmd,img) {
+            alert('receieved onItemChecked command on item ' + item.value)
+        },
+        onItemSelected: function(item,self,cmd,img) {
+            alert('receieved onItemSelected command on item ' + item.value)
+        },
+        onItemColumnBound: function(item,self,col,td) {
+        }
+    });
+
+    new MUI.List({
+        container:'page',
+        width:250,
+        height:100,
+        id:'list2',
+        items:items,
+        columns2:[
+            {text:'value',name:'value','value':'value'},
+            {text:'text',name:'value'},
+            {text:'isChecked',name:'isChecked','type':'checkbox'},
+            {text:'isSelected',name:'isSelected','type':'checkbox'}
+        ],
+        commands:[
+            {'text':'Cancel','name':'Cancel','image':'images/cancel.png'}
+        ],
+        onItemCommand: function(item,self,cmd,img) {
+            alert('receieved ' + cmd.name + ' command on item ' + item.value)
+        },
+        onItemSelected: function(item,self,cmd,img) {
+            alert('receieved onItemSelected command on item ' + item.value)
+        },
+        onItemColumnBound: function(item,self,col,td) {
+        }
+    });</script>
+<link rel="stylesheet" type="text/css" href="style.css" />
+
+</head>
+
+<body>
+
+<div id="page">
+</div>
+
+</body>
+</html>

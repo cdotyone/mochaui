@@ -1,0 +1,15 @@
+/* CheckedListBox */
+div.dclb { margin:0; height:20px;  }
+div.dclb div.text { height:20px;background-color:#eeeeee; border:solid 1px #bbbbbb; -moz-border-radius-bottomleft:.5em; -moz-border-radius-topleft:.5em; font: normal 9pt Sans-Serif, Arial; float:left; margin:0;padding:0;line-height:21px; padding-left:3px; }
+div.dclb div.button { width:17px;float:right;background:#bbbbbb url(images/down-arrow.gif) no-repeat top left; border:solid 1px #bbbbbb; margin:0; height:20px; border-radius:.5em; -webkit-border-radius:.5em; -moz-border-radius:.5em; -moz-border-radius-topleft:0;-moz-border-radius-bottomleft:0; cursor:pointer }
+div.clb { clear: both; overflow:auto; background-color:white; border:solid 1px black; border-left-style:outset;border-top-style:outset; margin:0;  }
+div.notop { border-top-style:none; }
+div.clb ul { list-style:none; padding:0; margin:0 }
+div.clb ul li { margin:0; padding:0 }
+div.clb ul li input { margin-top:4px; }
+div.clb ul li span { line-height:20px; padding:0; margin-top:4px; vertical-align:top; }
+div.clb ul li { padding: 0 5px 0 5px; background-color: white; font: normal 9pt Sans-Serif, Arial;  }
+div.clb ul li.alt { background-color: #eeeeee; }
+div.clb ul li.C { color:#FFFFFF; background-color:#0099cc; cursor: pointer; }
+div.clb ul li.O { color:#FFFFFF; background-color:#2f227e; cursor: pointer; }
+/* CheckedListBox */

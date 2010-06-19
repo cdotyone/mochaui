@@ -1,0 +1,30 @@
+<html>
+<head>
+<script type="text/javascript" src="scripts/mootools-1.2.4-core-yc.js"></script>
+<script type="text/javascript" src="scripts/mootools-1.2.4-more-yc.js"></script>
+<script type="text/javascript" src="scripts/mocha.js"></script>
+<script type="text/javascript" src="ImageButton.js"></script>
+<script type="text/javascript">
+
+    new MUI.ImageButton({
+         cssClass:      'imgButton'
+        ,text:          'Cancel'
+        ,title:         'Cancel Order'
+        ,imageURL:      'images/cancel.png'
+        ,id:            'btnCancel'
+        ,container:     'page'
+        ,onClick:       function() { alert('do something'); }
+    });
+    
+</script>
+<link rel="stylesheet" type="text/css" href="style.css" />
+
+</head>
+
+<body>
+
+<div id="page">
+</div>
+
+</body>
+</html>

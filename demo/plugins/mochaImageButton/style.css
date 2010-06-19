@@ -1,0 +1,16 @@
+/* Image Buttons */
+span.imgButton { margin-right:2px; }
+span.imgButton .imgButton { display:table-cell; display:inline-block; background-color:white;border: solid 1px #DDDDDD; cursor: pointer; padding:0px 2px 0px 4px; margin:0; vertical-align:middle; font-family: Sans-Serif; font-size: 11px;}
+span.imgButton .imgButton span span { background-color:Transparent; border:none; color: #AAAAAA; position:relative; top:-6px; padding:0 2px 0 2px;   }
+span.imgButton .imgButton:hover { border:solid 1px #790000;text-decoration: none; color: #790000; }
+span.imgButton .imgButton:hover span { text-decoration: none; color: #790000; }
+span.imgButton .imgButton:visited,.imgButton:active,.imgButton:link,.imgButton:hover { text-decoration: none; }
+span.imgButton .imgButton:visited span,span.imgButton .imgButton:active span,span.imgButton .imgButton:link span,span.imgButton .imgButton:hover span { text-decoration: none; }
+span.imgButton .imgButton:link span span,span.imgButton .imgButton:active span span,span.imgButton .imgButton:hover span span,span.imgButton .imgButton:visited span span { border:none;text-decoration: none; }
+span.imgButton .imgButton span img { padding:0 0 4px 0;position:relative; top:7px }
+span.imgButton .imgButton span { padding:0 4px 0 2px; color: #AAAAAA; position:relative; top:-3px;}
+
+span.imgButton .imgButton.imgOnly { background-color:Transparent; border:none; padding:0; }
+span.imgButton .imgButton.imgOnly span { padding:0 0 0 2px; }
+span.imgButton .imgButton.imgOnly:hover { background-color:Transparent; border:none;  }
+/* Image Buttons */

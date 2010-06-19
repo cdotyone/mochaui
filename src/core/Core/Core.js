@@ -34,7 +34,7 @@ provides: [MUI, MochaUI, MUI.Require]
 
 var MUI = MochaUI = new Hash({
 	
-	version: '0.9.7 development',
+	version: '0.9.7',
 
 	options: new Hash({
 		theme: 'default',				

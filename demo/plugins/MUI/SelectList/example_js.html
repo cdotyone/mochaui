@@ -1,0 +1,65 @@
+<html>
+<head>
+<script type="text/javascript" src="scripts/mootools-1.2.4-core-yc.js"></script>
+<script type="text/javascript" src="scripts/mootools-1.2.4-more-yc.js"></script>
+<script type="text/javascript" src="scripts/mocha.js"></script>
+<script type="text/javascript" src="SelectList.js"></script>
+<script type="text/javascript">
+
+    var items = [
+            {value:'item1',text:"Item 1",  selected: false},
+            {value:'item2',text:"Item 2",  selected: false},
+            {value:'item3',text:"Item 3",  selected: false},
+            {value:'item4',text:"Item 4",  selected: true},
+            {value:'item5',text:"Item 5",  selected: false},
+            {value:'item6',text:"Item 6",  selected: false},
+            {value:'item7',text:"Item 7",  selected: false},
+            {value:'item8',text:"Item 8",  selected: false},
+            {value:'item9',text:"Item 9",  selected: false},
+            {value:'item10',text:"Item 10",selected: false}
+        ];
+    new MUI.SelectList({
+        container:'page',
+        width:250,
+        height:100,
+        id:'clb1',
+        items:items,
+        canSelect:true,
+        onItemChecked: function(node,checked,self,e) {
+            alert('receieved onItemChecked command on item ' + node.value + ', checked=' + checked);
+        },
+        onItemSelected: function(item,selected,self,cmd,img) {
+            alert('receieved onItemSelected command on item ' + item.value +', selected=' + selected)
+        }
+    });
+    new MUI.SelectList({
+        container:'page2',
+        width:250,
+        height:100,
+        id:'clb2',
+        items:items,
+        isDropList: false,
+        alternateItems: true,
+        onItemChecked: function(node,checked,self,e) {
+            alert('receieved onItemChecked command on item ' + node.value + ', checked=' + checked);
+        },
+        onItemSelected: function(item,selected,self,cmd,img) {
+            alert('receieved onItemSelected command on item ' + item.value +', selected=' + selected)
+        }
+    });
+
+</script>
+<link rel="stylesheet" type="text/css" href="style.css" />
+
+</head>
+
+<body>
+
+<div id="page">
+</div>
+       <br/><br/>
+<div id="page2">
+</div>
+
+</body>
+</html>

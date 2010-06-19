@@ -1,0 +1,44 @@
+<html>
+<head>
+<script type="text/javascript" src="scripts/mootools-1.2.4-core-yc.js"></script>
+<script type="text/javascript" src="scripts/mootools-1.2.4-more-yc.js"></script>
+<script type="text/javascript" src="scripts/mocha.js"></script>
+<script type="text/javascript" src="TextBox.js"></script>
+<script type="text/javascript">
+    new MUI.TextBox({
+        container:'page',
+        id:'txt1',
+        value:'test value 1'
+    });
+    new MUI.TextBox({
+        container:'page2',
+        id:'txt2',
+        createOnInit:false
+    });
+    new MUI.TextBox({
+        container:'page3',
+        id:'txt3',
+        maskType:'fixed.phoneUs',
+    });
+</script>
+<link rel="stylesheet" type="text/css" href="style.css" />
+
+</head>
+
+<body>
+
+<div id="page">
+   <div>load from json</div>
+</div>
+       <br/><br/>
+<div>load from html</div>
+<div id="page2">
+    <input type="text" id="txt2" value="test value 2" />
+</div>
+
+<div id="page3">
+   <div>with masks</div>
+</div>
+
+</body>
+</html>

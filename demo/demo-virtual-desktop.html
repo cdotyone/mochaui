@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=8" />
+
+	<title>MochaUI - A Web Applications User Interface Library</title>
+	<meta name="description" content="A web applications user interface library built on the Mootools javascript framework" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<link rel="stylesheet" type="text/css" href="themes/default/css/Content.css" />
+	<link rel="stylesheet" type="text/css" href="themes/default/css/Core.css" />
+	<link rel="stylesheet" type="text/css" href="themes/default/css/Layout.css" />
+	<link rel="stylesheet" type="text/css" href="themes/default/css/Dock.css" />
+	<link rel="stylesheet" type="text/css" href="themes/default/css/Tabs.css" />
+	<link rel="stylesheet" type="text/css" href="themes/default/css/Window.css" />
+
+	<!--[if IE]>
+		<script type="text/javascript" src="scripts/excanvas_r43.js"></script>
+	<![endif]-->
+
+    <script type="text/javascript" src="scripts/mootools-1.2.4-core-yc.js"></script>
+    <script type="text/javascript" src="scripts/mootools-1.2.4-more-yc.js"></script>
+    <script type="text/javascript" src="scripts/mocha.js"></script>    
+	<script type="text/javascript" src="scripts/demo-virtual-desktop-init.js"></script>
+
+	<style>	
+
+	/* This CSS should be placed in a style sheet. It is only here in order to not conflict with the other demos. */
+
+	#pageWrapper {
+		background: #777;
+	}
+
+	.desktopIcon {
+		margin: 15px 0 0 15px;
+		cursor: pointer;	
+	}	
+
+	</style>
+
+</head>
+<body>
+
+<div id="desktop">
+
+	<div id="desktopHeader">
+		<div id="desktopTitlebarWrapper">
+			<div id="desktopTitlebar">
+				<h1 class="applicationTitle">Mocha UI</h1>
+				<h2 class="tagline">A Web Applications <span class="taglineEm">User Interface Library</span></h2>
+				<div id="topNav">
+					<ul class="menu-right">
+						<li>Welcome <a href="#" onclick="MUI.notification('Do Something');return false;">Demo User</a>.</li>
+						<li><a href="#" onclick="MUI.notification('Do Something');return false;">Sign Out</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	
+		<div id="desktopNavbar">
+			<ul>
+				<li><a class="returnFalse" href="">Examples</a>	
+					<ul>
+						<li><a id="ajaxpageLinkCheck" href="pages/lipsum.html">Ajax/XHR Demo</a></li>
+						<li><a id="jsonLink" href="data/json-windows-data.js">Json Demo</a></li>
+						<li><a id="youtubeLinkCheck" href="pages/youtube.html">Iframe: YouTube</a></li>
+						<li><a id="accordiantestLinkCheck" href="pages/accordian-demo.html">Accordian</a></li>
+						<li><a id="clockLinkCheck" href="plugins/coolclock/">Widget: Clock</a></li>
+						<li><a id="parametricsLinkCheck" href="plugins/parametrics/">Window Parametrics</a></li>
+						<li class="divider"><a class="returnFalse arrow-right" href="">Tests</a>
+							<ul>								
+								<li><a id="windoweventsLinkCheck" href="pages/events.html">Window Events</a></li>
+								<li><a id="containertestLinkCheck" href="pages/lipsum.html">Container Test</a></li>
+								<li><a id="iframetestLinkCheck" href="pages/iframetests.html">Iframe Tests</a></li>
+								<li><a id="noCanvasLinkCheck" href="pages/lipsum.html">No Canvas Body</a></li>
+							</ul>
+						</li>
+						<li class="divider"><a class="returnFalse arrow-right" href="">Starters</a>
+							<ul>
+								<li><a target="_blank" href="index.html">Web Application</a></li>
+								<li><a target="_blank" href="demo-fixed-width.html">Fixed Width</a></li>
+								<li><a target="_blank" href="demo-no-toolbars.html">No Toolbars</a></li>
+								<li><a target="_blank" href="demo-no-desktop.html">No Desktop</a></li>
+								<li><a target="_blank" href="demo-modal-only.html">Modal Only</a></li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li><a class="returnFalse" href="">View</a>
+					<ul>		
+						<li><a id="cascadeLink" href="">Cascade Windows</a></li>
+						<li><a id="tileLink" href="">Tile Windows</a></li>
+						<li class="divider"><a id="minimizeLink" href="">Minimize All Windows</a></li>
+						<li><a id="closeLink" href="">Close All Windows</a></li>
+					</ul>
+				</li>
+				<li><a class="returnFalse" href="">Tools</a>
+					<ul>
+						<li><a id="builderLinkCheck" href="plugins/windowform/">Window Builder</a></li>
+					</ul>
+				</li>
+				<li>
+					<a class="returnFalse" href="">Workspace</a>
+					<ul>
+						<li><a id="saveWorkspaceLink" href="">Save Workspace</a></li>
+						<li><a id="loadWorkspaceLink" href="">Load Workspace</a></li>
+						<li class="divider"><a id="toggleEffectsLinkCheck" href="#">Use Effects</a></li>				
+					</ul>
+				</li>
+				<li><a class="returnFalse" href="">Help</a>
+					<ul>
+						<li><a id="featuresLinkCheck" href="pages/features.html">Features</a></li>
+						<li class="divider"><a target="_blank" href="http://mochaui.com/docs/">Documentation</a></li>
+						<li class="divider"><a id="aboutLink" href="pages/about.html">About</a></li>
+					</ul>
+				</li>
+			</ul>
+
+		</div><!-- desktopNavbar end -->
+	</div><!-- desktopHeader end -->
+
+	<div id="dockWrapper">
+		<div id="dock">
+			<div id="dockPlacement"></div>
+			<div id="dockAutoHide"></div>
+			<div id="dockSort"><div id="dockClear" class="clear"></div></div>
+		</div>
+	</div>
+
+	<div id="pageWrapper">
+		<div id="page">
+			<img class="desktopIcon" src="images/icons/48x48/globe.png" alt="Camera" width="48" height="48" onload="fixPNG(this)" /><br />
+			<img class="desktopIcon" src="images/icons/48x48/speaker.png" alt="Camera" width="48" height="48" onload="fixPNG(this)" /><br />
+			<img class="desktopIcon" src="images/icons/48x48/view.png" alt="Camera" width="48" height="48" onload="fixPNG(this)" /><br />
+			<img class="desktopIcon" src="images/icons/48x48/headset.png" alt="Camera" width="48" height="48" onload="fixPNG(this)" /><br />
+			<img class="desktopIcon" src="images/icons/48x48/camera.png" alt="Camera" width="48" height="48" onload="fixPNG(this)" /><br />
+		</div>
+	</div>
+
+	<div id="desktopFooterWrapper">
+		<div id="desktopFooter">
+			&copy; 2007-2009 <a target="_blank" href="http://greghoustondesign.com/">Greg Houston</a> - MIT License
+		</div>
+	</div>
+
+</div><!-- desktop end -->
+
+</body>
+</html>
