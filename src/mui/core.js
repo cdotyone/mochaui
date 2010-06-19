@@ -656,13 +656,13 @@ $extend(Asset, {
 
  MyGadget: function(arg){
  new MUI.Require({
- css: [MUI.path.plugins + 'myGadget/css/style.css'],
- images: [MUI.path.plugins + 'myGadget/images/background.gif']
- js: [MUI.path.plugins + 'myGadget/scripts/myGadget.js'],
- onload: function(){
- new MyPlguins.MyGadget(arg);
- }
- });
+     css: [MUI.path.plugins + 'myGadget/css/style.css'],
+  images: [MUI.path.plugins + 'myGadget/images/background.gif']
+      js: [MUI.path.plugins + 'myGadget/scripts/myGadget.js'],
+  onload: function(){
+             new MyPlguins.MyGadget(arg);
+          }
+   });
  }
 
  });
@@ -673,7 +673,7 @@ MUI.extend({
 
     newWindowsFromHTML: function(arg){
         new MUI.Require({
-            js: [MUI.path.muiplugins + 'Window/Windows-from-html.js'],
+            js: [MUI.path.plugins + 'window/windows-from-html.js'],
             onload: function(){
                 new MUI.newWindowsFromHTML(arg);
             }
@@ -682,7 +682,7 @@ MUI.extend({
 
     newWindowsFromJSON: function(arg){
         new MUI.Require({
-            js: [MUI.path.muiplugins + 'Window/Windows-from-json.js'],
+            js: [MUI.path.plugins + 'window/windows-from-json.js'],
             onload: function(){
                 new MUI.newWindowsFromJSON(arg);
             }
@@ -691,7 +691,7 @@ MUI.extend({
 
     arrangeCascade: function(){
         new MUI.Require({
-            js: [MUI.path.muiplugins + 'Window/Arrange-cascade.js'],
+            js: [MUI.path.plugins + 'window/arrange-cascade.js'],
             onload: function(){
                 new MUI.arrangeCascade();
             }
@@ -700,7 +700,7 @@ MUI.extend({
 
     arrangeTile: function(){
         new MUI.Require({
-            js: [MUI.path.muiplugins + 'Window/Arrange-tile.js'],
+            js: [MUI.path.plugins + 'window/arrange-tile.js'],
             onload: function(){
                 new MUI.arrangeTile();
             }
@@ -709,7 +709,7 @@ MUI.extend({
 
     saveWorkspace: function(){
         new MUI.Require({
-            js: [MUI.path.muiplugins + 'Layout/Workspaces.js'],
+            js: [MUI.path.plugins + 'layout/workspaces.js'],
             onload: function(){
                 new MUI.saveWorkspace();
             }
@@ -718,27 +718,17 @@ MUI.extend({
 
     loadWorkspace: function(){
         new MUI.Require({
-            js: [MUI.path.muiplugins + 'Layout/Workspaces.js'],
+            js: [MUI.path.plugins + 'layout/workspaces.js'],
             onload: function(){
                 new MUI.loadWorkspace();
             }
         });
-    },
-
-    Themes: {
-        init: function(arg){
-            new MUI.Require({
-                js: [MUI.path.muiplugins + 'Utilities/Themes.js'],
-                onload: function(){
-                    MUI.Themes.init(arg);
-                }
-            });
-        }
     }
+
 });
 
 if (Browser.Engine.webkit){
     new MUI.Require({
-        js: [MUI.path.muiplugins + 'Window/WebKitShadower.js']
+        js: [MUI.path.plugins + 'window/webkitshadower.js']
     });
 }

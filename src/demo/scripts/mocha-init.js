@@ -505,7 +505,7 @@ var initializeWindows = function(){
             scrollbars: false,
             require: {
                 css: [MUI.path.plugins + 'windowform/css/style.css'],
-                js: [MUI.path.plugins + 'windowform/scripts/Window-from-form.js'],
+                js: [MUI.path.plugins + 'windowform/scripts/window-from-form.js'],
                 onload: function(){
                     $('newWindowSubmit').addEvent('click', function(e){
                         new Event(e).stop();

@@ -394,7 +394,7 @@ initializeWindows = function(){
                 new Asset.css(MUI.path.plugins + 'windowform/css/style.css', {id: 'builderStyle'});
             },
             onContentLoaded: function(){
-                new Asset.javascript(MUI.path.plugins + 'windowform/scripts/Window-from-form.js', {
+                new Asset.javascript(MUI.path.plugins + 'windowform/scripts/window-from-form.js', {
                     id: 'builderScript',
                     onload: function(){
                         $('newWindowSubmit').addEvent('click', function(e){

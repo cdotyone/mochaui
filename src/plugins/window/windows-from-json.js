@@ -42,7 +42,7 @@
  */
 
 
-MUI.files[MUI.path.plugins + 'MUI/Window/Windows-from-json.js'] = 'loaded';
+MUI.files[MUI.path.plugins + 'MUI/Window/windows-from-json.js'] = 'loaded';
 
 MUI.extend({
     

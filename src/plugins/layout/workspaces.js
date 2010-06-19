@@ -27,7 +27,7 @@
  ...
  */
 
-MUI.files[MUI.path.plugins + 'MUI/Layout/Workspaces.js'] = 'loaded';
+MUI.files[MUI.path.plugins + 'MUI/Layout/workspaces.js'] = 'loaded';
 
 MUI.extend({
     /*

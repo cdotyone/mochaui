@@ -26,7 +26,7 @@
  ...
  */
 
-MUI.files[MUI.path.plugins + 'MUI/Window/Arrange-cascade.js'] = 'loaded';
+MUI.files[MUI.path.plugins + 'MUI/Window/arrange-cascade.js'] = 'loaded';
 
 MUI.extend({
 
