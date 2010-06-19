@@ -44,7 +44,8 @@ var MUI = MochaUI = new Hash({
         source:  '../mui/',           // Path to MochaUI source JavaScript
         themes:  '../themes/',        // Path to MochaUI Themes
         plugins: '../plugins/',       // Path to Plugins
-        controls: '../mui-controls/'  // Path to Mocha Owned Plugins
+        controls:'../mui-controls/',  // Path to Mocha Owned Plugins
+        utils:   '../mui-utils/'      // Path to Mocha On Demand Functionality
     },
 
     // Returns the path to the current theme directory
@@ -62,19 +63,23 @@ var MUI = MochaUI = new Hash({
         if (type == 'object' && el.options && el.options.id) return el.options.id;
         return el;
     },
+
     get: function(el){
         el = this.getID(el);
         return this.instances[el];
     },
+
     set: function(el, instance){
         el = this.getID(el);
         this.instances.set(el, instance);
         return instance;
     },
+
     erase: function(el){
         el = this.getID(el);
         return this.instances.erase(el);
     },
+
     each: function(func){
         this.instances.each(func);
         return this;
@@ -655,13 +660,13 @@ $extend(Asset, {
 
  MyGadget: function(arg){
  new MUI.Require({
-     css: [MUI.path.plugins + 'myGadget/css/style.css'],
-  images: [MUI.path.plugins + 'myGadget/images/background.gif']
-      js: [MUI.path.plugins + 'myGadget/scripts/myGadget.js'],
-  onload: function(){
-             new MyPlguins.MyGadget(arg);
-          }
-   });
+ css: [MUI.path.plugins + 'myGadget/css/style.css'],
+ images: [MUI.path.plugins + 'myGadget/images/background.gif']
+ js: [MUI.path.plugins + 'myGadget/scripts/myGadget.js'],
+ onload: function(){
+ new MyPlguins.MyGadget(arg);
+ }
+ });
  }
 
  });
@@ -672,7 +677,7 @@ MUI.extend({
 
     newWindowsFromHTML: function(arg){
         new MUI.Require({
-            js: [MUI.path.plugins + 'window/windows-from-html.js'],
+            js: [MUI.path.utils + 'window-from-html.js'],
             onload: function(){
                 new MUI.newWindowsFromHTML(arg);
             }
@@ -681,7 +686,7 @@ MUI.extend({
 
     newWindowsFromJSON: function(arg){
         new MUI.Require({
-            js: [MUI.path.plugins + 'window/windows-from-json.js'],
+            js: [MUI.path.utils + 'window-from-json.js'],
             onload: function(){
                 new MUI.newWindowsFromJSON(arg);
             }
@@ -690,7 +695,7 @@ MUI.extend({
 
     arrangeCascade: function(){
         new MUI.Require({
-            js: [MUI.path.plugins + 'window/arrange-cascade.js'],
+            js: [MUI.path.utils + 'window-cascade.js'],
             onload: function(){
                 new MUI.arrangeCascade();
             }
@@ -699,7 +704,7 @@ MUI.extend({
 
     arrangeTile: function(){
         new MUI.Require({
-            js: [MUI.path.plugins + 'window/arrange-tile.js'],
+            js: [MUI.path.utils + 'window-tile.js'],
             onload: function(){
                 new MUI.arrangeTile();
             }
@@ -708,7 +713,7 @@ MUI.extend({
 
     saveWorkspace: function(){
         new MUI.Require({
-            js: [MUI.path.plugins + 'layout/workspaces.js'],
+            js: [MUI.path.utils + 'workspace.js'],
             onload: function(){
                 new MUI.saveWorkspace();
             }
@@ -717,7 +722,7 @@ MUI.extend({
 
     loadWorkspace: function(){
         new MUI.Require({
-            js: [MUI.path.plugins + 'layout/workspaces.js'],
+            js: [MUI.path.utils + 'workspace.js'],
             onload: function(){
                 new MUI.loadWorkspace();
             }
@@ -728,6 +733,6 @@ MUI.extend({
 
 if (Browser.Engine.webkit){
     new MUI.Require({
-        js: [MUI.path.plugins + 'window/webkitshadower.js']
+        js: [MUI.path.utils + 'window-webkit-shadow.js']
     });
 }
