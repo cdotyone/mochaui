@@ -19,7 +19,7 @@
  ...
  */
 
-MUI.files[MUI.path.source + 'update.js'] = "loaded";
+MUI.files[MUI.path.source + 'update.js'] = 'loaded';
 
 MUI.extend({
     /*
@@ -252,7 +252,7 @@ MUI.extend({
             }.bind(this),
             onFailure: function(response){
                 if (contentContainer == contentEl){
-                    var getTitle = new RegExp("<title>[\n\r\s]*(.*)[\n\r\s]*</title>", "gmi");
+                    var getTitle = new RegExp('<title>[\n\r\s]*(.*)[\n\r\s]*</title>', 'gmi');
                     var error = getTitle.exec(response.responseText);
                     if (!error) error = 'Unknown';
                     contentContainer.set('html', '<h3>Error: ' + error[1] + '</h3>');
@@ -265,7 +265,7 @@ MUI.extend({
                 }
             }.bind(this),
             onSuccess: function(){
-                contentEl.addClass("pad");
+                contentEl.addClass('pad');
                 if (contentContainer == contentEl){
                     if (args.recipient == 'window') instance.hideSpinner();
                     else if (args.recipient == 'panel' && $('spinner')) $('spinner').hide();
@@ -285,8 +285,8 @@ MUI.extend({
         if (instance.options.contentURL == '' || contentContainer != contentEl){
             return;
         }
-        contentEl.removeClass("pad");
-        contentEl.setStyle("padding", "0px");
+        contentEl.removeClass('pad');
+        contentEl.setStyle('padding', '0px');
         instance.iframeEl = new Element('iframe', {
             'id': instance.options.id + '_iframe',
             'name': instance.options.id + '_iframe',
@@ -318,7 +318,7 @@ MUI.extend({
         var onContentLoaded = args.onContentLoaded;
         var elementTypes = new Array('element', 'textnode', 'whitespace', 'collection');
 
-        contentEl.addClass("pad");
+        contentEl.addClass('pad');
         if (elementTypes.contains($type(options.content))){
             options.content.inject(contentContainer);
         } else {

@@ -404,7 +404,7 @@ var initializeWindows = function(){
                 css: [MUI.path.plugins + 'accordian/css/style.css'],
                 onload: function(){
                     this.windowEl = $(id);
-                    new Accordion('#' + id + ' h3.accordianToggler', "#" + id + ' div.accordianElement', {
+                    new Accordion('#' + id + ' h3.accordianToggler', '#' + id + ' div.accordianElement', {
                         opacity: false,
                         alwaysHide: true,
                         onActive: function(toggler){

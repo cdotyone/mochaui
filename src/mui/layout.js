@@ -57,9 +57,7 @@ MUI.Desktop = {
         }
 
         // This is run on dock initialize so no need to do it twice.
-        if (!MUI.Dock){
-            this.setDesktopSize();
-        }
+        if (!MUI.Dock) this.setDesktopSize();
         this.menuInitialize();
 
         // Resize desktop, page wrapper, modal overlay, and maximized windows when browser window is resized
@@ -67,9 +65,7 @@ MUI.Desktop = {
             this.onBrowserResize();
         }.bind(this));
 
-        if (MUI.myChain){
-            MUI.myChain.callChain();
-        }
+        if (MUI.myChain) MUI.myChain.callChain();
 
     },
 
@@ -96,9 +92,7 @@ MUI.Desktop = {
                 if (instance.isMaximized){
 
                     // Hide iframe while resize for better performance
-                    if (instance.iframeEl){
-                        instance.iframeEl.setStyle('visibility', 'hidden');
-                    }
+                    if (instance.iframeEl) instance.iframeEl.setStyle('visibility', 'hidden');
 
                     var coordinates = document.getCoordinates();
                     var borderHeight = instance.contentBorderEl.getStyle('border-top').toInt() + instance.contentBorderEl.getStyle('border-bottom').toInt();
@@ -128,9 +122,7 @@ MUI.Desktop = {
         var dockWrapper = $(MUI.options.dockWrapper);
 
         // Setting the desktop height may only be needed by IE7
-        if (this.desktop){
-            this.desktop.setStyle('height', windowDimensions.height);
-        }
+        if (this.desktop) this.desktop.setStyle('height', windowDimensions.height);
 
         // Set pageWrapper height so the dock doesn't cover the pageWrapper scrollbars.
         if (this.pageWrapper){
@@ -138,17 +130,12 @@ MUI.Desktop = {
             var pageWrapperHeight = windowDimensions.height;
             pageWrapperHeight -= this.pageWrapper.getStyle('border-top').toInt();
             pageWrapperHeight -= this.pageWrapper.getStyle('border-bottom').toInt();
-            if (this.desktopHeader){
-                pageWrapperHeight -= this.desktopHeader.offsetHeight;
-            }
-            if (this.desktopFooter){
-                pageWrapperHeight -= this.desktopFooter.offsetHeight;
-            }
+            if (this.desktopHeader) pageWrapperHeight -= this.desktopHeader.offsetHeight;
+            if (this.desktopFooter) pageWrapperHeight -= this.desktopFooter.offsetHeight;
             pageWrapperHeight -= dockOffset;
 
-            if (pageWrapperHeight < 0){
-                pageWrapperHeight = 0;
-            }
+            if (pageWrapperHeight < 0) pageWrapperHeight = 0;
+
             this.pageWrapper.setStyle('height', pageWrapperHeight);
         }
 
@@ -181,18 +168,14 @@ MUI.Desktop = {
         // If window no longer exists or is maximized, stop
         if (windowEl != $(windowEl) || instance.isMaximized) return;
 
-        if (instance.isCollapsed){
-            MUI.collapseToggle(windowEl);
-        }
+        if (instance.isCollapsed) MUI.collapseToggle(windowEl);
 
         instance.isMaximized = true;
 
         // If window is restricted to a container, it should not be draggable when maximized.
         if (instance.options.restrict){
             windowDrag.detach();
-            if (options.resizable){
-                instance.detachResizable();
-            }
+            if (options.resizable) instance.detachResizable();
             instance.titleBarEl.setStyle('cursor', 'default');
         }
 
@@ -379,11 +362,8 @@ MUI.Column = new NamedClass('MUI.Column', {
         }
 
         // Check if column already exists
-        if (this.columnEl){
-            return;
-        } else {
-            MUI.set(options.id, this);
-        }
+        if (this.columnEl) return;
+        else MUI.set(options.id, this);
 
         // If loading columns into a panel, hide the regular content container.
         if ($(options.container).getElement('.pad') != null){
@@ -445,9 +425,7 @@ MUI.Column = new NamedClass('MUI.Column', {
             }
         }
 
-        if (options.placement == 'main'){
-            this.columnEl.addClass('rWidth');
-        }
+        if (options.placement == 'main') this.columnEl.addClass('rWidth');
 
         switch (this.options.placement){
             case 'left':
@@ -535,9 +513,8 @@ MUI.Column = new NamedClass('MUI.Column', {
     },
 
     columnToggle: function(){
-        if (this.isCollapsed == false)
-            this.columnCollapse(); else
-            this.columnExpand();
+        if (this.isCollapsed == false) this.columnCollapse();
+		else this.columnExpand();
     }
 
 });
@@ -739,9 +716,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
         var columnInstance = MUI.get(this.options.column);
 
-        if (this.options.collapsible){
-            this.collapseToggleInit();
-        }
+        if (this.options.collapsible) this.collapseToggleInit();
 
         if (this.options.headerToolbox){
             this.panelHeaderToolboxEl = new Element('div', {
@@ -763,7 +738,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
                     e = new Event(e).stop();
                     e.target.focus();
                 });
-                this.panelHeaderToolboxEl.setStyle("cursor", "default");
+                this.panelHeaderToolboxEl.setStyle('cursor', 'default');
             }
         }
 
@@ -1472,14 +1447,10 @@ MUI.extend({
 
         if (Browser.Engine.trident){
             columnEl.dispose();
-            if (instance.handleEl != null){
-                instance.handleEl.dispose();
-            }
+            if (instance.handleEl != null) instance.handleEl.dispose();
         } else {
             columnEl.destroy();
-            if (instance.handleEl != null){
-                instance.handleEl.destroy();
-            }
+            if (instance.handleEl != null) instance.handleEl.destroy();
         }
 
         if (MUI.Desktop) MUI.Desktop.resizePanels();
@@ -1527,9 +1498,7 @@ MUI.extend({
 
         instance.panelWrapperEl.destroy();
 
-        if (MUI.Desktop){
-            MUI.Desktop.resizePanels();
-        }
+        if (MUI.Desktop) MUI.Desktop.resizePanels();
 
         // Do this when creating and removing panels
         var panels = $(column).getElements('.panelWrapper');

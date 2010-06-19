@@ -39,7 +39,7 @@
  ...
  */
 
-MUI.files[MUI.path.source + 'themes.js'] = "loaded";
+MUI.files[MUI.path.source + 'themes.js'] = 'loaded';
 
 MUI.Themes = {
     /*
@@ -72,7 +72,7 @@ MUI.Themes = {
          */
 
         this.newSheetURLs = this.oldURIs.map(function(item, index){
-            return item.replace("/" + MUI.options.theme + "/", "/" + MUI.Themes.newTheme + "/");
+            return item.replace('/' + MUI.options.theme + '/', '/' + MUI.Themes.newTheme + '/');
         }.bind(this));
 
         this.sheetsToLoad = this.oldURIs.length;
