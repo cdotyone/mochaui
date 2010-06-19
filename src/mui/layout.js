@@ -107,7 +107,7 @@ MUI.Desktop = {
                         instance.iframeEl.setStyles({
                             'height': instance.contentWrapperEl.getStyle('height')
                         });
-                        instance.iframeEl.setStyle();
+                        instance.iframeEl.setStyle('visibility', 'visible');
                     }
 
                 }
