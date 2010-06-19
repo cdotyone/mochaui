@@ -41,11 +41,11 @@ var MUI = MochaUI = new Hash({
     }),
 
     path: {
-        source:  '../mui/',           // Path to MochaUI source JavaScript
-        themes:  '../themes/',        // Path to MochaUI Themes
-        plugins: '../plugins/',       // Path to Plugins
-        controls:'../mui-controls/',  // Path to Mocha Owned Plugins
-        utils:   '../mui-utils/'      // Path to Mocha On Demand Functionality
+        source:  '../mui/',             // Path to MochaUI source JavaScript
+        themes:  '../themes/',          // Path to MochaUI Themes
+        plugins: '../plugins/',         // Path to Plugins
+        controls:'../mui-controls/',    // Path to Mocha Owned Plugins
+        utils:   '../mui-util/'         // Path to Mocha On Demand Functionality
     },
 
     // Returns the path to the current theme directory

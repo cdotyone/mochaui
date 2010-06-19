@@ -431,17 +431,18 @@ initializeWindows = function(){
         });
     }
 
-    if ($('toggleEffectsLinkCheck')){
-        $('toggleEffectsLinkCheck').addEvent('click', function(e){
+    if ($('toggleStdEffectsLinkCheck')){
+        $('toggleStdEffectsLinkCheck').addEvent('click', function(e){
             new Event(e).stop();
-            MUI.toggleEffects($('toggleEffectsLinkCheck'));
+            MUI.toggleStandardEffects($('toggleStdEffectsLinkCheck'));
         });
-        if (MUI.options.useEffects){
-            MUI.toggleEffectsLink = new Element('div', {
-                'class': 'check',
-                'id': 'toggleEffects_check'
-            }).inject($('toggleEffectsLinkCheck'));
-        }
+    }
+
+    if ($('toggleAdvEffectsLinkCheck')){
+        $('toggleAdvEffectsLinkCheck').addEvent('click', function(e){
+            new Event(e).stop();
+            MUI.toggleAdvancedEffects($('toggleAdvEffectsLinkCheck'));
+        });
     }
 
     // Help
@@ -520,9 +521,7 @@ initializeWindows = function(){
     // Build windows onLoad
     MUI.parametricsWindow();
     MUI.clockWindow();
-
     MUI.myChain.callChain();
-
 };
 
 // Initialize MochaUI when the DOM is ready
@@ -538,6 +537,15 @@ window.addEvent('load', function(){
             },
             function(){
                 initializeWindows();
+            },
+            function() {                
+                // force checkbox on menu to be in correct state
+                MUI.options.standardEffects = !MUI.options.standardEffects;
+                MUI.toggleStandardEffects($('toggleStdEffectsLinkCheck'));
+
+                // force checkbox on menu to be in correct state
+                MUI.options.advancedEffects = !MUI.options.advancedEffects;
+                MUI.toggleAdvancedEffects($('toggleAdvEffectsLinkCheck'));
             }
             ).callChain();
 

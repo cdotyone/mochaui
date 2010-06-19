@@ -773,12 +773,12 @@ var initializeColumns = function(){
             $('calendarLink').addEvent('click', function(e){
                 MUI.updateContent({
                     element: $('mainPanel'),
-                    url: MUI.path.plugins + 'calendar/example.html',
+                    url: MUI.path.controls + 'calendar/example.html',
                     title: 'Calendar Component',
                     padding: { top: 8, right: 8, bottom: 8, left: 8 },
                     require: {
-                        css: [MUI.path.plugins + 'calendar/css/calendar.css'],
-                        js: [MUI.path.plugins + 'calendar/scripts/calendar.js'],
+                        css: [MUI.path.controls + 'calendar/css/calendar.css'],
+                        js: [MUI.path.controls + 'calendar/scripts/calendar.js'],
                         onload: function(){
                             new Calendar({ date1: 'd/m/Y' }, { direction: 1, tweak: { x: 6, y: 0 }});
                         }
