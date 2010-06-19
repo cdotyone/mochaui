@@ -409,7 +409,7 @@ MUI.getCSSRule = function(selector){
 };
 
 // This makes it so Request will work to some degree locally
-if (location.protocol == "file:"){
+if (location.protocol == 'file:'){
 
     Request.implement({
         isSuccess : function(status){
@@ -592,8 +592,7 @@ $extend(Asset, {
                         load();
                 }
             }).setProperties(properties);
-        }
-        else {
+        } else {
             var checker = (function(){
                 if (!$try(check)) return;
                 $clear(checker);

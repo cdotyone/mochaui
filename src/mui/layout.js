@@ -763,7 +763,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
                     e = new Event(e).stop();
                     e.target.focus();
                 });
-                this.panelHeaderToolboxEl.setStyle("cursor", "default");
+                this.panelHeaderToolboxEl.setStyle('cursor', 'default');
             }
         }
 
