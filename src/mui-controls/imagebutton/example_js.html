@@ -1,29 +1,33 @@
 <html>
 <head>
-<!--MOCHAUI-->
-<script type="text/javascript" src="../../mootools/mootools-1.2.4-core-yc.js"></script>
-<script type="text/javascript" src="../../mootools/mootools-1.2.4-more-yc.js"></script>
-<script type="text/javascript" src="../../mui/core.js"></script>
-<script type="text/javascript" src="../../mui/layout.js"></script>
-<script type="text/javascript" src="../../mui/dock.js"></script>
-<script type="text/javascript" src="../../mui/window.js"></script>
-<script type="text/javascript" src="../../mui/modal.js"></script>
-<!--MOCHAUI-->
-<script type="text/javascript" src="imagebutton.js"></script>
-<script type="text/javascript">
+    <!--MOCHAUI-->
+    <script type="text/javascript" src="../../mootools/mootools-1.2.4-core-yc.js"></script>
+    <script type="text/javascript" src="../../mootools/mootools-1.2.4-more-yc.js"></script>
+    <script type="text/javascript" src="../../mui/core.js"></script>
+    <script type="text/javascript" src="../../mui/desktop.js"></script>
+    <script type="text/javascript" src="../../mui/column.js"></script>
+    <script type="text/javascript" src="../../mui/panel.js"></script>
+    <script type="text/javascript" src="../../mui/dock.js"></script>
+    <script type="text/javascript" src="../../mui/window.js"></script>
+    <script type="text/javascript" src="../../mui/modal.js"></script>
+    <!--MOCHAUI-->
+    <script type="text/javascript" src="imagebutton.js"></script>
+    <script type="text/javascript">
 
-    new MUI.ImageButton({
-         cssClass:      'imgButton'
-        ,text:          'Cancel'
-        ,title:         'Cancel Order'
-        ,imageURL:      'images/cancel.png'
-        ,id:            'btnCancel'
-        ,container:     'page'
-        ,onClick:       function() { alert('do something'); }
-    });
-    
-</script>
-<link rel="stylesheet" type="text/css" href="style.css" />
+        new MUI.ImageButton({
+            cssClass:      'imgButton'
+            ,text:          'Cancel'
+            ,title:         'Cancel Order'
+            ,imageURL:      'images/cancel.png'
+            ,id:            'btnCancel'
+            ,container:     'page'
+            ,onClick:       function(){
+                alert('do something');
+            }
+        });
+
+    </script>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
 
 </head>
 

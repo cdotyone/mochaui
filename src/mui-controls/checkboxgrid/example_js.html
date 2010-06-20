@@ -1,18 +1,20 @@
 <html>
 <head>
-<!--MOCHAUI-->
-<script type="text/javascript" src="../../mootools/mootools-1.2.4-core-yc.js"></script>
-<script type="text/javascript" src="../../mootools/mootools-1.2.4-more-yc.js"></script>
-<script type="text/javascript" src="../../mui/core.js"></script>
-<script type="text/javascript" src="../../mui/layout.js"></script>
-<script type="text/javascript" src="../../mui/dock.js"></script>
-<script type="text/javascript" src="../../mui/window.js"></script>
-<script type="text/javascript" src="../../mui/modal.js"></script>    
-<!--MOCHAUI-->
-<script type="text/javascript" src="checkboxgrid.js"></script>
-<script type="text/javascript">
+    <!--MOCHAUI-->
+    <script type="text/javascript" src="../../mootools/mootools-1.2.4-core-yc.js"></script>
+    <script type="text/javascript" src="../../mootools/mootools-1.2.4-more-yc.js"></script>
+    <script type="text/javascript" src="../../mui/core.js"></script>
+    <script type="text/javascript" src="../../mui/desktop.js"></script>
+    <script type="text/javascript" src="../../mui/column.js"></script>
+    <script type="text/javascript" src="../../mui/panel.js"></script>
+    <script type="text/javascript" src="../../mui/dock.js"></script>
+    <script type="text/javascript" src="../../mui/window.js"></script>
+    <script type="text/javascript" src="../../mui/modal.js"></script>
+    <!--MOCHAUI-->
+    <script type="text/javascript" src="checkboxgrid.js"></script>
+    <script type="text/javascript">
 
-    var items = [
+        var items = [
             {value:'item1',text:"Item 1",  checked: false},
             {value:'item2',text:"Item 2",  checked: false},
             {value:'item3',text:"Item 3",  checked: false},
@@ -25,31 +27,31 @@
             {value:'item10',text:"Item 10",checked: false}
         ];
 
-    new MUI.CheckBoxGrid({
-        container:'example1',
-        width:260,
-        height:100,
-        id:'cbg1',
-        items:items,
-        onItemClick: function(checked,inp,self,e) {
-            alert('receieved onItemClick command on item ' + inp.value);
-        },
-        onValueChanged: function(value,self,e) {
-            alert('receieved onValueChanged command, value = ' + self.options.value);
-        }
-    });
-    
-    new MUI.CheckBoxGrid({
-        container:'example2',
-        width:280,
-        height:100,
-        id:'cbg2',
-        items:items,
-        labelPlacement:'left'
-    });
+        new MUI.CheckBoxGrid({
+            container:'example1',
+            width:260,
+            height:100,
+            id:'cbg1',
+            items:items,
+            onItemClick: function(checked, inp, self, e){
+                alert('receieved onItemClick command on item ' + inp.value);
+            },
+            onValueChanged: function(value, self, e){
+                alert('receieved onValueChanged command, value = ' + self.options.value);
+            }
+        });
 
-</script>
-<link rel="stylesheet" type="text/css" href="style.css" />
+        new MUI.CheckBoxGrid({
+            container:'example2',
+            width:280,
+            height:100,
+            id:'cbg2',
+            items:items,
+            labelPlacement:'left'
+        });
+
+    </script>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
 
 </head>
 
@@ -61,6 +63,7 @@
 </div>
 <div style="clear:both"></div>
 <br/><br/>
+
 <div id="example2" style="width:400px;">
 </div>
 </body>
