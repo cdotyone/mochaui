@@ -76,57 +76,57 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 	Implements: [Events, Options],
 
 	options: {
-		id:				 null,
-		column:			 null,
-		require:			{
-			css:			[],
-			images:		 [],
-			js:			 [],
-			onload:		 null
+		id:						null,
+		column:					null,
+		require:{
+			css:				[],
+			images:				[],
+			js:					[],
+			onload:				null
 		},
-		loadMethod:		 null,
-		contentURL:		 null,
+		loadMethod:				null,
+		contentURL:				null,
 
 		// xhr options
-		method:			 'get',
-		data:			   null,
-		evalScripts:		true,
-		evalResponse:	   false,
+		method:					'get',
+		data:					null,
+		evalScripts:			true,
+		evalResponse:			false,
 
 		// html options
-		content:			'Panel content',
+		content:				'Panel content',
 
 		// Tabs
-		tabsURL:			null,
-		tabsData:		   null,
-		tabsOnload:		 $empty,
+		tabsURL:				null,
+		tabsData:				null,
+		tabsOnload:				$empty,
 
-		header:			 true,
-		title:			  'New Panel',
-		headerToolbox:	  false,
-		headerToolboxURL:   'pages/lipsum.html',
-		headerToolboxOnload: $empty,
+		header:					true,
+		title:					'New Panel',
+		headerToolbox:			false,
+		headerToolboxURL:		'pages/lipsum.html',
+		headerToolboxOnload:	$empty,
 
-		footer:			 false,
-		footerURL:		  'pages/lipsum.html',
-		footerData:		 null,
-		footerOnload:	   $empty,
+		footer:					false,
+		footerURL:				'pages/lipsum.html',
+		footerData:				null,
+		footerOnload:			$empty,
 
 		// Style options:
-		height:			 125,
-		addClass:		   '',
-		scrollbars:		 true,
-		padding:			   { top: 8, right: 8, bottom: 8, left: 8 },
+		height:					125,
+		addClass:				'',
+		scrollbars:		 		true,
+		padding:				{ top: 8, right: 8, bottom: 8, left: 8 },
 
 		// Other:
-		collapsible:		true,
+		collapsible:			true,
 
 		// Events
-		onBeforeBuild:	   $empty,
-		onContentLoaded:	 $empty,
-		onResize:			$empty,
-		onCollapse:		  $empty,
-		onExpand:			$empty
+		onBeforeBuild:			$empty,
+		onContentLoaded:		$empty,
+		onResize:				$empty,
+		onCollapse:				$empty,
+		onExpand:				$empty
 
 	},
 
@@ -514,7 +514,9 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 						instance.iframeEl.setStyle('width', width);
 					}
 				}
-				instance.fireEvent('onResize');
+
+				instance.fireEvent('resize');
+				MUI.get(partner).fireEvent('resize');
 			}.bind(this)
 		});
 	},

@@ -204,6 +204,15 @@ MUI.Column = new NamedClass('MUI.Column', {
 
 	},
 
+	getPanels: function(){
+		var panels=[];
+		$(this.columnEl).getElements('.panel').each(function(panelEl) {
+			var panel=MUI.get(panelEl.id);
+			if(panel) panels.push(panel);
+		});
+		return panels;
+	},
+
 	columnCollapse: function(){
 		var column = this.columnEl;
 
@@ -310,10 +319,21 @@ MUI.Column = new NamedClass('MUI.Column', {
 				}
 			}.bind(this),
 			onComplete: function(){
+				var partner = element.getNext('.column');
+				var partnerInstance = MUI.get(partner);
+
 				MUI.rWidth(element.getParent());
 				element.getElements('iframe').setStyle('visibility', 'visible');
-				element.getNext('.column').getElements('iframe').setStyle('visibility', 'visible');
-				instance.fireEvent('onResize');
+				partner.getElements('iframe').setStyle('visibility', 'visible');
+
+				[].include(instance)
+				  .combine(instance.getPanels())
+				  .include(partnerInstance)
+				  .combine(partnerInstance.getPanels())
+				  .each(function(panel){
+						panel.fireEvent('resize')
+				  });
+
 			}.bind(this)
 		});
 	},
@@ -327,6 +347,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 		var handle = element.getPrevious('.columnHandle');
 		handle.setStyle('cursor', Browser.Engine.webkit ? 'col-resize' : 'e-resize');
 		var partner = element.getPrevious('.column');
+		var partnerInstance = MUI.get(partner);
 		if (!min) min = 50;
 		if (!max) max = 250;
 		if (Browser.Engine.trident){
@@ -355,7 +376,14 @@ MUI.Column = new NamedClass('MUI.Column', {
 				MUI.rWidth(element.getParent());
 				$(element).getElements('iframe').setStyle('visibility', 'visible');
 				partner.getElements('iframe').setStyle('visibility', 'visible');
-				instance.fireEvent('onResize');
+
+				[].include(partnerInstance)
+				  .combine(partnerInstance.getPanels())
+				  .include(instance)
+				  .combine(instance.getPanels())
+				  .each(function(panel){
+						panel.fireEvent('resize')
+				  });				
 			}.bind(this)
 		});
 	},
@@ -365,7 +393,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 		self.isClosing = true;
 
 		// Destroy all the panels in the column.
-		var panels = $(self.columnEl).getElements('.panel');
+		var panels = self.getPanels(); 
 		panels.each(function(panel){
 			panel.close();
 		}.bind(this));
