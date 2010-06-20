@@ -1,9 +1,9 @@
 /*
  ---
 
- name: WindowsFromHtml
+ name: window-from-html
 
- script: Windows-from-html.js
+ script: window-from-html.js
 
  description: MUI - Create windows from html markup in page.
 
@@ -32,15 +32,15 @@
  - MUI.Core
  - MUI.Window
 
- provides: [NewWindowsFromHTML]
+ provides: [newWindowsFromHTML]
  ...
  */
 
-MUI.files[MUI.path.plugins + 'MUI/Window/windows-from-html.js'] = 'loaded';
+MUI.files[MUI.path.utils + 'window-from-html.js'] = 'loaded';
 
 MUI.extend({
 
-	NewWindowsFromHTML: function(){
+	newWindowsFromHTML: function(){
 
 		$$('.mocha').each(function(el){
 			// Get the window title and destroy that element, so it does not end up in window content

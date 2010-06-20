@@ -1,9 +1,9 @@
 /*
  ---
 
- name: NewWindowsFromJSON
+ name: window-from-json
 
- script: Windows-from-json.js
+ script: window-from-json.js
 
  description: MUI - Create one or more windows from JSON data. You can define all the same properties as you can for new MUI.Window(). Undefined properties are set to their defaults.
 
@@ -17,14 +17,14 @@
  example:
  (start code)
  MUI.jsonWindows = function(){
- var url = 'data/json-windows-data.js';
- var request = new Request.JSON({
- url: url,
- method: 'get',
- onComplete: function(properties) {
- MUI.newWindowsFromJSON(properties.windows);
- }
- }).send();
+	var url = 'data/json-windows-data.js';
+ 	var request = new Request.JSON({
+		url: url,
+		method: 'get',
+		onComplete: function(properties) {
+			MUI.newWindowsFromJSON(properties.windows);
+ 		}
+	}).send();
  }
  (end)
 
@@ -37,16 +37,15 @@
  - MUI.Core
  - MUI.Window
 
- provides: [NewWindowsFromJSON]
+ provides: [newWindowsFromJSON]
  ...
  */
 
-
-MUI.files[MUI.path.plugins + 'MUI/Window/windows-from-json.js'] = 'loaded';
+MUI.files[MUI.path.utils + 'window-from-json.js'] = 'loaded';
 
 MUI.extend({
 
-	NewWindowsFromJSON: function(newWindows){
+	newWindowsFromJSON: function(newWindows){
 
 		newWindows.each(function(options){
 			var temp = new Hash(options);
