@@ -17,14 +17,14 @@
  example:
  (start code)
  MUI.jsonWindows = function(){
-     var url = 'data/json-windows-data.js';
-     var request = new Request.JSON({
-         url: url,
-         method: 'get',
-         onComplete: function(properties) {
-         MUI.newWindowsFromJSON(properties.windows);
-         }
-    }).send();
+ var url = 'data/json-windows-data.js';
+ var request = new Request.JSON({
+ url: url,
+ method: 'get',
+ onComplete: function(properties) {
+ MUI.newWindowsFromJSON(properties.windows);
+ }
+ }).send();
  }
  (end)
 
@@ -45,22 +45,22 @@
 MUI.files[MUI.path.plugins + 'MUI/Window/windows-from-json.js'] = 'loaded';
 
 MUI.extend({
-    
-    NewWindowsFromJSON: function(newWindows){
 
-        newWindows.each(function(options){
-            var temp = new Hash(options);
+	NewWindowsFromJSON: function(newWindows){
 
-            temp.each(function(value, key){
-                if ($type(value) != 'string') return;
-                if (value.substring(0, 8) == 'function'){
-                    eval("options." + key + " = " + value);
-                }
-            });
+		newWindows.each(function(options){
+			var temp = new Hash(options);
 
-            new MUI.Window(options);
-        });
+			temp.each(function(value, key){
+				if ($type(value) != 'string') return;
+				if (value.substring(0, 8) == 'function'){
+					eval("options." + key + " = " + value);
+				}
+			});
 
-    }
-    
+			new MUI.Window(options);
+		});
+
+	}
+
 });

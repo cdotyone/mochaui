@@ -25,75 +25,78 @@
 MUI.files[MUI.path.source + 'modal.js'] = 'loaded';
 
 MUI.Modal = new NamedClass('MUI.Modal', {
-    Extends: MUI.Window,
 
-    options: {
-        type: 'modal'
-    },
+	Extends: MUI.Window,
 
-    initialize: function(options){
+	options: {
+		type: 'modal'
+	},
 
-        if (!$('modalOverlay')){
-            this.modalInitialize();
+	initialize: function(options){
 
-            window.addEvent('resize', function(){
-                this.setModalSize();
-            }.bind(this));
-        }
-        this.parent(options);
+		if (!$('modalOverlay')){
+			this.modalInitialize();
 
-    },
-    modalInitialize: function(){
-        var modalOverlay = new Element('div', {
-            'id': 'modalOverlay',
-            'styles': {
-                'height': document.getCoordinates().height,
-                'opacity': .6
-            }
-        }).inject(document.body);
+			window.addEvent('resize', function(){
+				this.setModalSize();
+			}.bind(this));
+		}
+		this.parent(options);
 
-        modalOverlay.setStyles({
-            'position': Browser.Engine.trident4 ? 'absolute' : 'fixed'
-        });
+	},
 
-        modalOverlay.addEvent('click', function(){
-            var instance = MUI.get(MUI.currentModal.id);
-            if (instance.options.modalOverlayClose == true){
-                MUI.closeWindow(MUI.currentModal);
-            }
-        });
+	modalInitialize: function(){
+		var modalOverlay = new Element('div', {
+			'id': 'modalOverlay',
+			'styles': {
+				'height': document.getCoordinates().height,
+				'opacity': .6
+			}
+		}).inject(document.body);
 
-        if (Browser.Engine.trident4){
-            var modalFix = new Element('iframe', {
-                'id': 'modalFix',
-                'scrolling': 'no',
-                'marginWidth': 0,
-                'marginHeight': 0,
-                'src': '',
-                'styles': {
-                    'height': document.getCoordinates().height
-                }
-            }).inject(document.body);
-        }
+		modalOverlay.setStyles({
+			'position': Browser.Engine.trident4 ? 'absolute' : 'fixed'
+		});
 
-        MUI.Modal.modalOverlayOpenMorph = new Fx.Morph($('modalOverlay'), {
-            'duration': 150
-        });
-        MUI.Modal.modalOverlayCloseMorph = new Fx.Morph($('modalOverlay'), {
-            'duration': 150,
-            onComplete: function(){
-                $('modalOverlay').hide();
-                if (Browser.Engine.trident4){
-                    $('modalFix').hide();
-                }
-            }.bind(this)
-        });
-    },
-    setModalSize: function(){
-        $('modalOverlay').setStyle('height', document.getCoordinates().height);
-        if (Browser.Engine.trident4){
-            $('modalFix').setStyle('height', document.getCoordinates().height);
-        }
-    }
+		modalOverlay.addEvent('click', function(){
+			var instance = MUI.get(MUI.currentModal.id);
+			if (instance.options.modalOverlayClose == true){
+				MUI.closeWindow(MUI.currentModal);
+			}
+		});
+
+		if (Browser.Engine.trident4){
+			var modalFix = new Element('iframe', {
+				'id': 'modalFix',
+				'scrolling': 'no',
+				'marginWidth': 0,
+				'marginHeight': 0,
+				'src': '',
+				'styles': {
+					'height': document.getCoordinates().height
+				}
+			}).inject(document.body);
+		}
+
+		MUI.Modal.modalOverlayOpenMorph = new Fx.Morph($('modalOverlay'), {
+			'duration': 150
+		});
+		MUI.Modal.modalOverlayCloseMorph = new Fx.Morph($('modalOverlay'), {
+			'duration': 150,
+			onComplete: function(){
+				$('modalOverlay').hide();
+				if (Browser.Engine.trident4){
+					$('modalFix').hide();
+				}
+			}.bind(this)
+		});
+	},
+
+	setModalSize: function(){
+		$('modalOverlay').setStyle('height', document.getCoordinates().height);
+		if (Browser.Engine.trident4){
+			$('modalFix').setStyle('height', document.getCoordinates().height);
+		}
+	}
 
 });

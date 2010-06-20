@@ -40,39 +40,39 @@ MUI.files[MUI.path.plugins + 'MUI/Window/windows-from-html.js'] = 'loaded';
 
 MUI.extend({
 
-    NewWindowsFromHTML: function(){
+	NewWindowsFromHTML: function(){
 
-        $$('.mocha').each(function(el){
-            // Get the window title and destroy that element, so it does not end up in window content
-            if (Browser.Engine.presto || Browser.Engine.trident5){
-                el.hide(); // Required by Opera, and probably IE7
-            }
-            var title = el.getElement('h3.mochaTitle');
+		$$('.mocha').each(function(el){
+			// Get the window title and destroy that element, so it does not end up in window content
+			if (Browser.Engine.presto || Browser.Engine.trident5){
+				el.hide(); // Required by Opera, and probably IE7
+			}
+			var title = el.getElement('h3.mochaTitle');
 
-            if (Browser.Engine.presto) el.show();
+			if (Browser.Engine.presto) el.show();
 
-            var elDimensions = el.getStyles('height', 'width');
-            var properties = {
-                id: el.getProperty('id'),
-                height: elDimensions.height.toInt(),
-                width: elDimensions.width.toInt(),
-                x: el.getStyle('left').toInt(),
-                y: el.getStyle('top').toInt()
-            };
+			var elDimensions = el.getStyles('height', 'width');
+			var properties = {
+				id: el.getProperty('id'),
+				height: elDimensions.height.toInt(),
+				width: elDimensions.width.toInt(),
+				x: el.getStyle('left').toInt(),
+				y: el.getStyle('top').toInt()
+			};
 
-            // If there is a title element, set title and destroy the element so it does not end up in window content
-            if (title){
-                properties.title = title.innerHTML;
-                title.destroy();
-            }
+			// If there is a title element, set title and destroy the element so it does not end up in window content
+			if (title){
+				properties.title = title.innerHTML;
+				title.destroy();
+			}
 
-            // Get content and destroy the element
-            properties.content = el.innerHTML;
-            el.destroy();
+			// Get content and destroy the element
+			properties.content = el.innerHTML;
+			el.destroy();
 
-            // Create window
-            new MUI.Window(properties, true);
-        }.bind(this));
-    }
+			// Create window
+			new MUI.Window(properties, true);
+		}.bind(this));
+	}
 
 });

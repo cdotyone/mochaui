@@ -529,25 +529,25 @@ window.addEvent('load', function(){
 
     MUI.myChain = new Chain();
     MUI.myChain.chain(
-            function(){
-                MUI.Desktop.initialize();
-            },
-            function(){
-                MUI.Dock.initialize();
-            },
-            function(){
-                initializeWindows();
-            },
-            function() {                
-                // force checkbox on menu to be in correct state
-                MUI.options.standardEffects = !MUI.options.standardEffects;
-                MUI.toggleStandardEffects($('toggleStdEffectsLinkCheck'));
+        function(){
+            MUI.Desktop.initialize();
+        },
+        function(){
+            MUI.Dock.initialize();
+        },
+        function(){
+            initializeWindows();
+        },
+        function() {
+            // force checkbox on menu to be in correct state
+            MUI.options.standardEffects = !MUI.options.standardEffects;
+            MUI.toggleStandardEffects($('toggleStdEffectsLinkCheck'));
 
-                // force checkbox on menu to be in correct state
-                MUI.options.advancedEffects = !MUI.options.advancedEffects;
-                MUI.toggleAdvancedEffects($('toggleAdvEffectsLinkCheck'));
-            }
-            ).callChain();
+            // force checkbox on menu to be in correct state
+            MUI.options.advancedEffects = !MUI.options.advancedEffects;
+            MUI.toggleAdvancedEffects($('toggleAdvEffectsLinkCheck'));
+        x}
+    ).callChain();
 
     // This is just for the demo. Running it onload gives pngFix time to replace the pngs in IE6.
     $$('.desktopIcon').addEvent('click', function(){

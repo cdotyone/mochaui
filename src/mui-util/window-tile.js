@@ -27,20 +27,21 @@
  */
 
 MUI.files[MUI.path.plugins + 'MUI/Window/arrange-tile.js'] = 'loaded';
- 
+
 MUI.extend({
+
 	arrangeTile: function(){
 
-		var	viewportTopOffset = 30;    // Use a negative number if neccessary to place first window where you want it
+		var viewportTopOffset = 30;    // Use a negative number if neccessary to place first window where you want it
 		var viewportLeftOffset = 20;
 
 		var x = 10;
 		var y = 80;
-	
+
 		var windowsNum = 0;
 
 		MUI.each(function(instance){
-            if(instance.className!='MUI.Window') return;
+			if (instance.className != 'MUI.Window') return;
 			if (!instance.isMinimized && !instance.isMaximized){
 				windowsNum++;
 			}
@@ -48,23 +49,23 @@ MUI.extend({
 
 		var cols = 3;
 		var rows = Math.ceil(windowsNum / cols);
-		
+
 		var coordinates = document.getCoordinates();
-	
+
 		var col_width = ((coordinates.width - viewportLeftOffset) / cols);
 		var col_height = ((coordinates.height - viewportTopOffset) / rows);
-		
+
 		var row = 0;
 		var col = 0;
-		
+
 		MUI.each(function(instance){
-            if(instance.className!='MUI.Window') return;
-			if (!instance.isMinimized && !instance.isMaximized && instance.options.draggable ){
-				
+			if (instance.className != 'MUI.Window') return;
+			if (!instance.isMinimized && !instance.isMaximized && instance.options.draggable){
+
 				var content = instance.contentWrapperEl;
 				var content_coords = content.getCoordinates();
 				var window_coords = instance.windowEl.getCoordinates();
-				
+
 				// Calculate the amount of padding around the content window
 				var padding_top = content_coords.top - window_coords.top;
 				var padding_bottom = window_coords.height - content_coords.height - padding_top;
@@ -73,27 +74,27 @@ MUI.extend({
 
 				/*
 
-				// This resizes the windows
-				if (instance.options.shape != 'gauge' && instance.options.resizable == true){
-					var width = (col_width - 3 - padding_left - padding_right);
-					var height = (col_height - 3 - padding_top - padding_bottom);
+				 // This resizes the windows
+				 if (instance.options.shape != 'gauge' && instance.options.resizable == true){
+				 var width = (col_width - 3 - padding_left - padding_right);
+				 var height = (col_height - 3 - padding_top - padding_bottom);
 
-					if (width > instance.options.resizeLimit.x[0] && width < instance.options.resizeLimit.x[1]){
-						content.setStyle('width', width);
-					}
-					if (height > instance.options.resizeLimit.y[0] && height < instance.options.resizeLimit.y[1]){
-						content.setStyle('height', height);
-					}
+				 if (width > instance.options.resizeLimit.x[0] && width < instance.options.resizeLimit.x[1]){
+				 content.setStyle('width', width);
+				 }
+				 if (height > instance.options.resizeLimit.y[0] && height < instance.options.resizeLimit.y[1]){
+				 content.setStyle('height', height);
+				 }
 
-				}*/
+				 }*/
 
 				var left = (x + (col * col_width));
 				var top = (y + (row * col_height));
 
 				instance.drawWindow();
-				
+
 				MUI.focusWindow(instance.windowEl);
-				
+
 				if (MUI.options.advancedEffects == false){
 					instance.windowEl.setStyles({
 						'top': top,
@@ -108,13 +109,14 @@ MUI.extend({
 						'top': top,
 						'left': left
 					});
-				}				
+				}
 
-				if (++col === cols) {
+				if (++col === cols){
 					row++;
 					col = 0;
 				}
 			}
 		}.bind(this));
 	}
+	
 });
