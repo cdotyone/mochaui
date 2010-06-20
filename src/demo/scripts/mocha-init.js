@@ -111,27 +111,6 @@ var initializeWindows = function(){
             toolbarURL: 'pages/youtube-tabs.html',
             toolbarOnload: function(){
                 MUI.initializeTabs('youtubeTabs');
-
-                $('youtube1Link').addEvent('click', function(){
-                    MUI.updateContent({
-                        'element':  $('youtube'),
-                        'url':      'pages/youtube.html'
-                    });
-                });
-
-                $('youtube2Link').addEvent('click', function(){
-                    MUI.updateContent({
-                        'element':  $('youtube'),
-                        'url':      'pages/youtube2.html'
-                    });
-                });
-
-                $('youtube3Link').addEvent('click', function(){
-                    MUI.updateContent({
-                        'element':  $('youtube'),
-                        'url':      'pages/youtube3.html'
-                    });
-                });
             }
         });
     };
