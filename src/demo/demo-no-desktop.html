@@ -35,10 +35,10 @@
         };
 
         window.addEvent('load', function(){
-            MUI.NewWindowsFromHTML = new MUI.NewWindowsFromHTML();
+            MUI.NewWindowsFromHTML = new MUI.newWindowsFromHTML();
 
             $('testLink').addEvent('click', function(e){
-                new Event(e).stop();
+                e.stop();
                 MUI.testWindow();
             });
 

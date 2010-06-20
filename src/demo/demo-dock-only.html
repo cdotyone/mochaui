@@ -100,10 +100,10 @@
         window.addEvent('load', function(){
             MUI.Desktop.initialize();
             MUI.Dock.initialize();
-            MUI.NewWindowsFromHTML = new MUI.NewWindowsFromHTML();
+            MUI.NewWindowsFromHTML = new MUI.newWindowsFromHTML();
 
             $('aboutLink').addEvent('click', function(e){
-                new Event(e).stop();
+                e.stop();
                 MUI.aboutWindow();
             });
 

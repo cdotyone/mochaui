@@ -69,7 +69,7 @@ initializeWindows = function(){
     };
     if ($('ajaxpageLinkCheck')){
         $('ajaxpageLinkCheck').addEvent('click', function(e){
-            new Event(e).stop();
+            e.stop();
             MUI.ajaxpageWindow();
         });
     }
@@ -86,7 +86,7 @@ initializeWindows = function(){
     };
     if ($('jsonLink')){
         $('jsonLink').addEvent('click', function(e){
-            new Event(e).stop();
+			e.stop();
             MUI.jsonWindows();
         });
     }
@@ -109,7 +109,7 @@ initializeWindows = function(){
     };
     if ($('youtubeLinkCheck')){
         $('youtubeLinkCheck').addEvent('click', function(e){
-            new Event(e).stop();
+            e.stop();
             MUI.youtubeWindow();
         });
     }
@@ -138,7 +138,7 @@ initializeWindows = function(){
     };
     if ($('clockLinkCheck')){
         $('clockLinkCheck').addEvent('click', function(e){
-            new Event(e).stop();
+            e.stop();
             MUI.clockWindow();
         });
     }
@@ -168,7 +168,7 @@ initializeWindows = function(){
     };
     if ($('parametricsLinkCheck')){
         $('parametricsLinkCheck').addEvent('click', function(e){
-            new Event(e).stop();
+			e.stop();
             MUI.parametricsWindow();
         });
     }
@@ -210,7 +210,7 @@ initializeWindows = function(){
     };
     if ($('windoweventsLinkCheck')){
         $('windoweventsLinkCheck').addEvent('click', function(e){
-            new Event(e).stop();
+            e.stop();
             MUI.eventsWindow();
         });
     }
@@ -230,7 +230,7 @@ initializeWindows = function(){
     };
     if ($('containertestLinkCheck')){
         $('containertestLinkCheck').addEvent('click', function(e){
-            new Event(e).stop();
+            e.stop();
             MUI.containerTestWindow();
         });
     }
@@ -245,7 +245,7 @@ initializeWindows = function(){
     };
     if ($('iframetestsLinkCheck')){
         $('iframetestsLinkCheck').addEvent('click', function(e){
-            new Event(e).stop();
+            e.stop();
             MUI.iframeTestsWindow();
         });
     }
@@ -293,7 +293,7 @@ initializeWindows = function(){
     };
     if ($('accordiantestLinkCheck')){
         $('accordiantestLinkCheck').addEvent('click', function(e){
-            new Event(e).stop();
+            e.stop();
             MUI.accordianTestWindow();
         });
     }
@@ -314,7 +314,7 @@ initializeWindows = function(){
     };
     if ($('noCanvasLinkCheck')){
         $('noCanvasLinkCheck').addEvent('click', function(e){
-            new Event(e).stop();
+            e.stop();
             MUI.noCanvasWindow();
         });
     }
@@ -322,35 +322,35 @@ initializeWindows = function(){
     // View
     if ($('sidebarLinkCheck')){
         $('sidebarLinkCheck').addEvent('click', function(e){
-            new Event(e).stop();
+            e.stop();
             MUI.Desktop.sidebarToggle();
         });
     }
 
     if ($('cascadeLink')){
         $('cascadeLink').addEvent('click', function(e){
-            new Event(e).stop();
+            e.stop();
             MUI.arrangeCascade();
         });
     }
 
     if ($('tileLink')){
         $('tileLink').addEvent('click', function(e){
-            new Event(e).stop();
+            e.stop();
             MUI.arrangeTile();
         });
     }
 
     if ($('closeLink')){
         $('closeLink').addEvent('click', function(e){
-            new Event(e).stop();
+            e.stop();
             MUI.closeAll();
         });
     }
 
     if ($('minimizeLink')){
         $('minimizeLink').addEvent('click', function(e){
-            new Event(e).stop();
+            e.stop();
             MUI.minimizeAll();
         });
     }
@@ -387,7 +387,7 @@ initializeWindows = function(){
     };
     if ($('builderLinkCheck')){
         $('builderLinkCheck').addEvent('click', function(e){
-            new Event(e).stop();
+            e.stop();
             MUI.builderWindow();
         });
     }
@@ -398,28 +398,28 @@ initializeWindows = function(){
 
     if ($('saveWorkspaceLink')){
         $('saveWorkspaceLink').addEvent('click', function(e){
-            new Event(e).stop();
+            e.stop();
             MUI.saveWorkspace();
         });
     }
 
     if ($('loadWorkspaceLink')){
         $('loadWorkspaceLink').addEvent('click', function(e){
-            new Event(e).stop();
+            e.stop();
             MUI.loadWorkspace();
         });
     }
 
     if ($('toggleStdEffectsLinkCheck')){
         $('toggleStdEffectsLinkCheck').addEvent('click', function(e){
-            new Event(e).stop();
+            e.stop();
             MUI.toggleStandardEffects($('toggleStdEffectsLinkCheck'));
         });
     }
 
     if ($('toggleAdvEffectsLinkCheck')){
         $('toggleAdvEffectsLinkCheck').addEvent('click', function(e){
-            new Event(e).stop();
+            e.stop();
             MUI.toggleAdvancedEffects($('toggleAdvEffectsLinkCheck'));
         });
     }
@@ -464,7 +464,7 @@ initializeWindows = function(){
     };
     if ($('featuresLinkCheck')){
         $('featuresLinkCheck').addEvent('click', function(e){
-            new Event(e).stop();
+            e.stop();
             MUI.featuresWindow();
         });
     }
@@ -485,16 +485,14 @@ initializeWindows = function(){
     };
     if ($('aboutLink')){
         $('aboutLink').addEvent('click', function(e){
-            new Event(e).stop();
+            e.stop();
             MUI.aboutWindow();
         });
     }
 
     // Deactivate menu header links
-    $$('a.returnFalse').each(function(el){
-        el.addEvent('click', function(e){
-            new Event(e).stop();
-        });
+    $$('a.returnFalse').addEvent('click', function(e){
+		e.stop();
     });
 
     // Build windows onLoad
