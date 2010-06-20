@@ -83,15 +83,8 @@ var MUI = MochaUI = new Hash({
 	each: function(func){
 		this.instances.each(func);
 		return this;
-	},
-
-	close: function(columnEl){
-		columnEl = $(columnEl);
-		if (columnEl == null) return;
-		var instance = MUI.get(columnEl.id);
-		if (instance == null || instance.isClosing || instance.close == null) return;
-		instance.close(columnEl);
 	}
+
 });
 
 var NamedClass = function(name, members){
@@ -104,7 +97,7 @@ var NamedClass = function(name, members){
 	return new Class(members);
 };
 
-MUI.files[MUI.path.source + 'Core/Core.js'] = 'loaded';
+MUI.files[MUI.path.source + 'core.js'] = 'loaded';
 
 MUI.extend({
 	ieSupport: 'excanvas',  // Makes it easier to switch between Excanvas and Moocanvas for testing
@@ -293,30 +286,19 @@ window.addEvent('resize', function(){
 });
 
 Element.implement({
-	hide: function(){
-		this.setStyle('display', 'none');
-		return this;
-	},
-	show: function(){
-		this.setStyle('display', 'block');
-		return this;
-	}
-});
 
-/*
- Shake effect by Uvumi Tools
- http://tools.uvumi.com/element-shake.html
+	/*
+	 Shake effect by Uvumi Tools
+	 http://tools.uvumi.com/element-shake.html
 
- Function: shake
+	 Function: shake
 
- Example:
- Shake a window.
- (start code)
- $('parametrics').shake()
- (end)
- */
-Element.implement({
-
+	 Example:
+	 Shake a window.
+	 (start code)
+	 $('parametrics').shake()
+	 (end)
+	 */
 	shake: function(radius, duration){
 		radius = radius || 3;
 		duration = duration || 500;
@@ -361,6 +343,89 @@ Element.implement({
 				this.set('morph', oldOptions);
 			}
 		}.bind(this));
+		return this;
+	},		
+
+	hide: function(){
+		var instance = MUI.get(this.id);
+		if (instance != null && instance.hide != null) {
+			instance.hide();
+			return;
+		}
+
+		this.setStyle('display', 'none');
+		return this;
+	},
+
+	show: function(element){
+		var instance = MUI.get(this.id);
+		if (instance != null && instance.show != null) {
+			instance.show();
+			return;
+		}
+
+		this.setStyle('display', 'block');
+		return this;
+	},
+
+	close: function(){
+		var instance = MUI.get(this.id);
+		if (instance == null || instance.isClosing || instance.close == null) return;
+		instance.close();
+	},
+
+	/*
+	 Function: hideSpinner
+	 Hides the spinner.
+
+	 Example:
+	 (start code)
+	 $('id').hideSpinner(element);
+	 (end)
+	 */
+	hideSpinner: function(){
+		var instance = MUI.get(this.id);
+		if (instance == null) return;
+		if (instance != null && instance.hideSpinner == null)
+		{
+			if (instance.spinnerEl)	instance.spinnerEl.hide();
+		} else instance.hideSpinner();
+		return this;
+	},
+
+	/*
+	 Function: showSpinner
+	 Shows the spinner.
+
+	 Example:
+	 (start code)
+	 $('id').showSpinner(element);
+	 (end)
+	 */
+	showSpinner: function(){
+		var instance = MUI.get(this.id);
+		if (instance == null) return;
+		if (instance != null && instance.showSpinner == null)
+		{
+			if (instance.spinnerEl)	instance.spinnerEl.show();
+		} else instance.showSpinner();
+		return this;
+	},
+
+	/*
+	 Function: resize a control
+
+	 Example:
+	 (start code)
+	 MUI.resize(element,{width:500,height:300,centered:true});
+	 (end)
+	 */
+	resize: function(options){
+		var instance = MUI.get(this.id);
+		if (instance == null || instance.resize == null) {
+			if(options.width!=null) this.setStyle('width',options.width);
+			if(options.height!=null) this.setStyle('height',options.height);
+		} else instance.resize(options);
 		return this;
 	}
 

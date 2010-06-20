@@ -60,9 +60,7 @@ MUI.Modal = new NamedClass('MUI.Modal', {
 
 		modalOverlay.addEvent('click', function(){
 			var instance = MUI.get(MUI.currentModal.id);
-			if (instance.options.modalOverlayClose){
-				MUI.close(MUI.currentModal);
-			}
+			if (instance.options.modalOverlayClose) MUI.currentModal.close();
 		});
 
 		if (Browser.Engine.trident4){

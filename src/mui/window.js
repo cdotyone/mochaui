@@ -671,7 +671,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 		}
 
 		if (this.options.closeAfter != false){
-			MUI.close.delay(this.options.closeAfter, this, this.windowEl);
+			this.windowEl.close.delay(this.options.closeAfter, this);
 		}
 
 		if (MUI.Dock && $(MUI.options.dock) && this.options.type == 'window'){
@@ -738,7 +738,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 		if (this.closeButtonEl){
 			this.closeButtonEl.addEvent('click', function(e){
 				new Event(e).stop();
-				MUI.close(windowEl);
+				windowEl.close();
 			}.bind(this));
 		}
 
@@ -1984,34 +1984,6 @@ MUI.Window = new NamedClass('MUI.Window', {
 	},
 
 	/*
-	 Function: hideSpinner
-	 Hides the spinner.
-
-	 Example:
-	 (start code)
-	 $('myWindow').retrieve('instance').hideSpinner();
-	 (end)
-	 */
-	hideSpinner: function(){
-		if (this.spinnerEl)	this.spinnerEl.hide();
-		return this;
-	},
-
-	/*
-	 Function: showSpinner
-	 Shows the spinner.
-
-	 Example:
-	 (start code)
-	 $('myWindow').retrieve('instance').showSpinner();
-	 (end)
-	 */
-	showSpinner: function(){
-		if (this.spinnerEl) this.spinnerEl.show();
-		return this;
-	},
-
-	/*
 	 Function: minimize
 	 Minimizes the window.
 
@@ -2060,6 +2032,19 @@ MUI.Window = new NamedClass('MUI.Window', {
 	},
 
 	/*
+	 Function: center
+	 Center a window.
+	 Example:
+	 (start code)
+	 $('myWindow').retrieve('instance').center();
+	 (end)
+	 */
+	center: function(){
+		MUI.centerWindow(this.windowEl);
+		return this;
+	},
+
+	/*
 	 Function: resize
 	 Resize a window.
 
@@ -2076,19 +2061,6 @@ MUI.Window = new NamedClass('MUI.Window', {
 		return this;
 	},
 
-	/*
-	 Function: center
-	 Center a window.
-	 Example:
-	 (start code)
-	 $('myWindow').retrieve('instance').center();
-	 (end)
-	 */
-	center: function(){
-		MUI.centerWindow(this.windowEl);
-		return this;
-	},
-
 	hide: function(){
 		this.windowEl.setStyle('display', 'none');
 		return this;
@@ -2096,6 +2068,34 @@ MUI.Window = new NamedClass('MUI.Window', {
 
 	show: function(){
 		this.windowEl.setStyle('display', 'block');
+		return this;
+	},
+
+	/*
+	 Function: hideSpinner
+	 Hides the spinner.
+
+	 Example:
+	 (start code)
+	 $('myWindow').retrieve('instance').hideSpinner();
+	 (end)
+	 */
+	hideSpinner: function(){
+		if (this.spinnerEl)	this.spinnerEl.hide();
+		return this;
+	},
+
+	/*
+	 Function: showSpinner
+	 Shows the spinner.
+
+	 Example:
+	 (start code)
+	 $('myWindow').retrieve('instance').showSpinner();
+	 (end)
+	 */
+	showSpinner: function(){
+		if (this.spinnerEl) this.spinnerEl.show();
 		return this;
 	},
 
@@ -2228,7 +2228,7 @@ MUI.extend({
 	 */
 	closeAll: function(){
 		$$('.mocha').each(function(windowEl){
-			this.close(windowEl);
+			windowEl.close();
 		}.bind(this));
 	},
 
@@ -2507,9 +2507,77 @@ MUI.extend({
 
 });
 
+Element.implement({
+	
+	/*
+	 Function: minimize
+	 Minimizes the window.
+
+	 Example:
+	 (start code)
+	 $('myWindow').minimize();
+	 (end)
+	 */
+	minimize: function(){
+		var instance = MUI.get(this.id);
+		if (instance == null || instance.minimize==null) return this;
+		instance.minimize();
+		return this;
+	},
+
+	/*
+	 Function: maximize
+	 Maximizes the window.
+
+	 Example:
+	 (start code)
+	 $('myWindow').maximize();
+	 (end)
+	 */
+	maximize: function(){
+		var instance = MUI.get(this.id);
+		if (instance == null || instance.maximize==null) return this;
+		instance.maximize();
+		return this;
+	},
+
+	/*
+	 Function: restore
+	 Restores a minimized/maximized window to its original size.
+
+	 Example:
+	 (start code)
+	 $('myWindow').restore();
+	 (end)
+	 */
+	restore: function(){
+		var instance = MUI.get(this.id);
+		if (instance == null || instance.restore==null) return this;
+		instance.restore();
+		return this;
+	},
+
+	/*
+	 Function: center
+	 Center a window.
+	 Example:
+	 (start code)
+	 $('myWindow').center();
+	 (end)
+	 */
+	center: function(){
+		var instance = MUI.get(this.id);
+		if (instance == null || instance.center==null) return this;
+		instance.center();
+		return this;
+	}
+	
+});
+
 // Toggle window visibility with Ctrl-Alt-Q
 document.addEvent('keydown', function(event){
 	if (event.key == 'q' && event.control && event.alt){
 		MUI.toggleWindowVisibility();
 	}
 });
+

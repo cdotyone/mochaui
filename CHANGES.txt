@@ -1,5 +1,0 @@
-This document attempts to define known possible breaking changes from previous versions.
-
-MUI.closeColumn has been removed use MUI.close
-MUI.closePanel has been removed use MUI.close
-MUI.closeWindow has been removed use MUI.close

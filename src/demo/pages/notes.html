@@ -1,25 +1,7 @@
 <div>
-	<h3>Modals</h3>
-	
-	<p>Modals should now be created with new MUI.Modal() rather than new MUI.Window({type:'modal'}).</p>
-	
-	<h3>Themes</h3>
-
-	<p>Themes are new and experimental. As they are developed their implementation may change a great deal, though their file structure will probably remain basically the same.</p>
-
-	<p>Themes go in individual folders in the themes directory. Each theme needs a css folder, and images folder.</p>
-
-	<p>The CSS has been separated into style sheets that correspond with the various JavaScript files. Desktop.css goes with Desktop.js for instance. The style sheets that were in the css folder are now in themes/default/css/.</p>
-
-	<p>Each theme should have the same number of stylesheets and corresponding names. So if Theme 1 has a Desktop.css, Themes 2 and 3 should also have a Desktop.css.</p>
-	
-	<p>You can change the themes directory path in Core.js.</p>	
-
 	<h3>Color Options</h3>
 
-	<p>The contentBgColor option has been removed from the Window Class, and the panelBackground option has been removed from the Panel Class. You should now use CSS for changing these colors. The addClass option in both the Window Class and Panel Class is helpful when styling some windows or panels differently than others.</p>  
-
-	<p>As a matter of fact, all of the color options in Window.js are deprecated. They should now be defined in the CSS.</p>
+	<p>All of the color options in Window.js are deprecated. They should now be defined in the CSS.</p>
 	
 	<ul>
 		<li><strong>headerStartColor: </strong>.mochaTitlebar background-color (See notes below.)</li>
@@ -49,28 +31,32 @@
 }		
 </pre>	
 	
-	<h3>Split Panels and Windows</h3>
-	<p>Split panels and windows are new as well, though they should be production ready. If you find any bugs with them let me know.</p>
+<h3>Window methods</h3>
+<p>It is now even easier to fire window methods and some new methods have been added.</p>
 
-	<h3>Window methods</h3>
-	<p>It is now considerably easier to fire window methods and some new methods have been added. It is possible I will shorten the chain further before the next release and make "retrieve('instance')" unnecessary.</p>
+<pre>
 
-<pre>// Returns the window's Class instance	
-$('myWindow').retrieve('instance').close();
-$('myWindow').retrieve('instance').minimize();
-$('myWindow').retrieve('instance').maximize();
-$('myWindow').retrieve('instance').restore();
-$('myWindow').retrieve('instance').center();
-$('myWindow').retrieve('instance').showSpinner();
-$('myWindow').retrieve('instance').hideSpinner();
-$('myWindow').retrieve('instance').hide();
-$('myWindow').retrieve('instance').show();
-$('myWindow').retrieve('instance').resize({width:500,height:300});
-
-// Returns the window element
+// Element Class methods that get mapped into Mocha controls, panels, and windows
+$('myWindow').close();
+$('myWindow').showSpinner();
+$('myWindow').hideSpinner();
 $('myWindow').hide();
 $('myWindow').show();
-$('myWindow').shake();</pre>
+$('myWindow').shake();
+$('myWindow').resize({width:500,height:300});
+
+// Additional Window methods that are extended to the element Class instance
+$('myWindow').minimize();
+$('myWindow').maximize();
+$('myWindow').restore();
+$('myWindow').center();
+
+// depreciated methods
+MUI.closeColumn('myColumn') - use $('myColumn').close()
+MUI.closePanel('myPanel') - use $('myPanel').close()
+MUI.closeWindow('myWindow') - use $('myWindow').close()
+
+</pre>
 
 </div>
 

@@ -367,7 +367,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 		// Destroy all the panels in the column.
 		var panels = $(self.columnEl).getElements('.panel');
 		panels.each(function(panel){
-			MUI.close(panel.id);
+			panel.close();
 		}.bind(this));
 
 		if (Browser.Engine.trident){

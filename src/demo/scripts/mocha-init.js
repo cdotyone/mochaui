@@ -462,7 +462,7 @@ var initializeWindows = function(){
 			var stop=false;
 			MUI.each(function(instance) {
 				if(!stop && instance.className=='MUI.Panel') {
-					MUI.close(instance.options.id);
+					instance.close();
 					stop=true;
 				}
 			});
@@ -474,7 +474,7 @@ var initializeWindows = function(){
 			var stop=false;
 			MUI.each(function(instance) {
 				if(!stop && instance.className=='MUI.Column') {
-					MUI.close(instance.options.id);
+					instance.close();
 					stop=true;
 				}
 			});
