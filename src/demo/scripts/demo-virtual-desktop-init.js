@@ -3,7 +3,7 @@
  In this file we setup our Windows, Columns and Panels,
  and then inititialize MUI.
 
- At the bottom of Core.js you can setup lazy loading for your
+ At the bottom of Core.js you can see how to setup lazy loading for your
  own plugins.
 
  */
@@ -546,7 +546,7 @@ window.addEvent('load', function(){
             // force checkbox on menu to be in correct state
             MUI.options.advancedEffects = !MUI.options.advancedEffects;
             MUI.toggleAdvancedEffects($('toggleAdvEffectsLinkCheck'));
-        x}
+        }
     ).callChain();
 
     // This is just for the demo. Running it onload gives pngFix time to replace the pngs in IE6.
