@@ -1,9 +1,9 @@
 /*
  ---
 
- name: webkitShadower
+ name: window-webkit-shadow
 
- script: WebkitShadower.js
+ script: window-webkit-shadow.js
 
  description: MUI - uses native shadowing for webkit compatible browsers.
 
@@ -27,6 +27,8 @@
  */
 
 if (Browser.Engine.webkit){
+
+	MUI.files[MUI.path.utils + 'window-webkit-shadow.js'] = 'loaded';
 
 	MUI.Window.implement({
 

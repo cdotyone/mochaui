@@ -1,9 +1,9 @@
 /*
  ---
 
- name: Workspace
+ name: workspace
 
- script: Workspace.js
+ script: workspace.js
 
  description: MUI - Save and load workspaces. The Workspaces emulate Adobe Illustrator functionality
  remembering what windows are open and where they are positioned.
@@ -27,7 +27,7 @@
  ...
  */
 
-MUI.files[MUI.path.plugins + 'MUI/Layout/workspaces.js'] = 'loaded';
+MUI.files[MUI.path.utils + 'workspace.js'] = 'loaded';
 
 MUI.extend({
 

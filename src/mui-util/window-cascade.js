@@ -1,9 +1,9 @@
 /*
  ---
 
- name: Arrange-cascade
+ name: window-cascade
 
- script: Arrange-cascade.js
+ script: window-cascade.js
 
  description: MUI - Cascade windows.
 
@@ -26,7 +26,7 @@
  ...
  */
 
-MUI.files[MUI.path.plugins + 'MUI/Window/arrange-cascade.js'] = 'loaded';
+MUI.files[MUI.path.utils + 'window-cascade.js'] = 'loaded';
 
 MUI.extend({
 

@@ -1,9 +1,9 @@
 /*
  ---
 
- name: Arrange-tile
+ name: Window-tile
 
- script: Arrange-tile.js
+ script: window-tile.js
 
  description: MUI - Tile windows.
 
@@ -26,7 +26,7 @@
  ...
  */
 
-MUI.files[MUI.path.plugins + 'MUI/Window/arrange-tile.js'] = 'loaded';
+MUI.files[MUI.path.utils + 'window-tile.js'] = 'loaded';
 
 MUI.extend({
 
