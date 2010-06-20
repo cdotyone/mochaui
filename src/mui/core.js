@@ -392,26 +392,6 @@ Request.HTML.implement({
 
 });
 
-/*
- Examples:
- (start code)
- getCSSRule('.myRule');
- getCSSRule('#myRule');
- (end)
- */
-MUI.getCSSRule = function(selector){
-	for (var ii = 0; ii < document.styleSheets.length; ii++){
-		var mySheet = document.styleSheets[ii];
-		var myRules = mySheet.cssRules ? mySheet.cssRules : mySheet.rules;
-		for (i = 0; i < myRules.length; i++){
-			if (myRules[i].selectorText == selector){
-				return myRules[i];
-			}
-		}
-	}
-	return false;
-};
-
 // This makes it so Request will work to some degree locally
 if (location.protocol == 'file:'){
 
@@ -568,45 +548,6 @@ MUI.Require = new Class({
 
 $extend(Asset, {
 
-	/* Fix an Opera bug in Mootools 1.2 */
-	javascript: function(source, properties){
-		properties = $extend({
-			onload: $empty,
-			document: document,
-			check: $lambda(true)
-		}, properties);
-
-		if ($(properties.id)){
-			properties.onload();
-			return $(properties.id);
-		}
-
-		var script = new Element('script', {'src': source, 'type': 'text/javascript'});
-
-		var load = properties.onload.bind(script), check = properties.check, doc = properties.document;
-		delete properties.onload;
-		delete properties.check;
-		delete properties.document;
-
-		if (!Browser.Engine.webkit419 && !Browser.Engine.presto){
-			script.addEvents({
-				load: load,
-				readystatechange: function(){
-					if (Browser.Engine.trident && ['loaded', 'complete'].contains(this.readyState))
-						load();
-				}
-			}).setProperties(properties);
-		} else {
-			var checker = (function(){
-				if (!$try(check)) return;
-				$clear(checker);
-				// Opera has difficulty with multiple scripts being injected into the head simultaneously. We need to give it time to catch up.
-				Browser.Engine.presto ? load.delay(500) : load();
-			}).periodical(50);
-		}
-		return script.inject(doc.head);
-	},
-
 	// Get the CSS with XHR before appending it to document.head so that we can have an onload callback.
 	css: function(source, properties){
 
@@ -634,6 +575,26 @@ $extend(Asset, {
 			onSuccess: function(){
 			}.bind(this)
 		}).send();
+	},
+
+	/*
+	 Examples:
+	 (start code)
+	 getCSSRule('.myRule');
+	 getCSSRule('#myRule');
+	 (end)
+	 */
+	getCSSRule: function(selector){
+		for (var ii = 0; ii < document.styleSheets.length; ii++){
+			var mySheet = document.styleSheets[ii];
+			var myRules = mySheet.cssRules ? mySheet.cssRules : mySheet.rules;
+			for (var i = 0; i < myRules.length; i++){
+				if (myRules[i].selectorText == selector){
+					return myRules[i];
+				}
+			}
+		}
+		return false;
 	}
 
 });

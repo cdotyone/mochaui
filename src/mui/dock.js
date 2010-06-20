@@ -225,17 +225,17 @@ MUI.Dock = {
 	},
 
 	setDockColors: function(){
-		var dockButtonEnabled = MUI.getCSSRule('.dockButtonEnabled');
+		var dockButtonEnabled = Asset.getCSSRule('.dockButtonEnabled');
 		if (dockButtonEnabled && dockButtonEnabled.style.backgroundColor){
 			this.options.enabledButtonColor = new Color(dockButtonEnabled.style.backgroundColor);
 		}
 
-		var dockButtonDisabled = MUI.getCSSRule('.dockButtonDisabled');
+		var dockButtonDisabled = Asset.getCSSRule('.dockButtonDisabled');
 		if (dockButtonDisabled && dockButtonDisabled.style.backgroundColor){
 			this.options.disabledButtonColor = new Color(dockButtonDisabled.style.backgroundColor);
 		}
 
-		var trueButtonColor = MUI.getCSSRule('.dockButtonTrue');
+		var trueButtonColor = Asset.getCSSRule('.dockButtonTrue');
 		if (trueButtonColor && trueButtonColor.style.backgroundColor){
 			this.options.trueButtonColor = new Color(trueButtonColor.style.backgroundColor);
 		}
