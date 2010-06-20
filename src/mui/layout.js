@@ -7,9 +7,9 @@
 
  description: Create web application layouts. Enables window maximize.
 
- copyright: (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.
+ copyright: (c) 2010 Contributors in (/AUTHORS.txt).
 
- license: MIT-style license.
+ license: MIT-style license in (/MIT-LICENSE.txt).
 
  requires:
  - MochaUI/MUI
@@ -435,7 +435,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 					'class': 'handleIcon'
 				}).inject(this.handleEl);
 
-				addResizeRight(this.columnEl, options.resizeLimit[0], options.resizeLimit[1]);
+				this.addResizeRight(this.columnEl, options.resizeLimit[0], options.resizeLimit[1]);
 				break;
 			case 'right':
 				this.handleEl = new Element('div', {
@@ -447,7 +447,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 					'id': options.id + '_handle_icon',
 					'class': 'handleIcon'
 				}).inject(this.handleEl);
-				addResizeLeft(this.columnEl, options.resizeLimit[0], options.resizeLimit[1]);
+				this.addResizeLeft(this.columnEl, options.resizeLimit[0], options.resizeLimit[1]);
 				break;
 		}
 
@@ -509,8 +509,143 @@ MUI.Column = new NamedClass('MUI.Column', {
 	},
 
 	columnToggle: function(){
-		if (this.isCollapsed == false) this.columnCollapse();
+		if (!this.isCollapsed) this.columnCollapse();
 		else this.columnExpand();
+	},
+
+	addResizeRight: function(element, min, max){
+		if (!$(element)) return;
+		element = $(element);
+
+		var instance = MUI.get(element.id);
+
+		var handle = element.getNext('.columnHandle');
+		handle.setStyle('cursor', Browser.Engine.webkit ? 'col-resize' : 'e-resize');
+		if (!min) min = 50;
+		if (!max) max = 250;
+		if (Browser.Engine.trident){
+			handle.addEvents({
+				'mousedown': function(){
+					handle.setCapture();
+				},
+				'mouseup': function(){
+					handle.releaseCapture();
+				}
+			});
+		}
+
+		instance.resize = element.makeResizable({
+			handle: handle,
+			modifiers: {
+				x: 'width',
+				y: false
+			},
+			limit: {
+				x: [min, max]
+			},
+			onStart: function(){
+				element.getElements('iframe').setStyle('visibility', 'hidden');
+				element.getNext('.column').getElements('iframe').setStyle('visibility', 'hidden');
+			}.bind(this),
+			onDrag: function(){
+				if (Browser.Engine.gecko){
+					$$('.panel').each(function(panel){
+						if (panel.getElements('.mochaIframe').length == 0){
+							panel.hide(); // Fix for a rendering bug in FF
+						}
+					});
+				}
+				MUI.rWidth(element.getParent());
+				if (Browser.Engine.gecko){
+					$$('.panel').show(); // Fix for a rendering bug in FF
+				}
+				if (Browser.Engine.trident4){
+					element.getChildren().each(function(el){
+						var width = $(element).getStyle('width').toInt();
+						width -= el.getStyle('border-right').toInt();
+						width -= el.getStyle('border-left').toInt();
+						width -= el.getStyle('padding-right').toInt();
+						width -= el.getStyle('padding-left').toInt();
+						el.setStyle('width', width);
+					}.bind(this));
+				}
+			}.bind(this),
+			onComplete: function(){
+				MUI.rWidth(element.getParent());
+				element.getElements('iframe').setStyle('visibility', 'visible');
+				element.getNext('.column').getElements('iframe').setStyle('visibility', 'visible');
+				instance.fireEvent('onResize');
+			}.bind(this)
+		});
+	},
+
+	addResizeLeft: function(element, min, max){
+		if (!$(element)) return;
+		element = $(element);
+
+		var instance = MUI.get(element.id);
+
+		var handle = element.getPrevious('.columnHandle');
+		handle.setStyle('cursor', Browser.Engine.webkit ? 'col-resize' : 'e-resize');
+		var partner = element.getPrevious('.column');
+		if (!min) min = 50;
+		if (!max) max = 250;
+		if (Browser.Engine.trident){
+			handle.addEvents({
+				'mousedown': function(){
+					handle.setCapture();
+				},
+				'mouseup': function(){
+					handle.releaseCapture();
+				}
+			});
+		}
+		instance.resize = element.makeResizable({
+			handle: handle,
+			modifiers: {x: 'width' , y: false},
+			invert: true,
+			limit: { x: [min, max] },
+			onStart: function(){
+				$(element).getElements('iframe').setStyle('visibility', 'hidden');
+				partner.getElements('iframe').setStyle('visibility', 'hidden');
+			}.bind(this),
+			onDrag: function(){
+				MUI.rWidth(element.getParent());
+			}.bind(this),
+			onComplete: function(){
+				MUI.rWidth(element.getParent());
+				$(element).getElements('iframe').setStyle('visibility', 'visible');
+				partner.getElements('iframe').setStyle('visibility', 'visible');
+				instance.fireEvent('onResize');
+			}.bind(this)
+		});
+	},
+
+	close: function(){
+		var self = this;
+		self.isClosing = true;
+
+		// Destroy all the panels in the column.
+		var panels = $(self.columnEl).getElements('.panel');
+		panels.each(function(panel){
+			MUI.close(panel.id);
+		}.bind(this));
+
+		if (Browser.Engine.trident){
+			self.columnEl.dispose();
+			if (self.handleEl != null) self.handleEl.dispose();
+		} else {
+			self.columnEl.destroy();
+			if (self.handleEl != null) self.handleEl.destroy();
+		}
+
+		if (MUI.Desktop) MUI.Desktop.resizePanels();
+
+		var sortables = self.options.container.retrieve('sortables');
+		if (sortables) sortables.removeLists(this.columnEl);
+
+		MUI.erase(self.options.id);
+		return true;
 	}
 
 });
@@ -746,7 +881,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 			'id': options.id + '_handle',
 			'class': 'horizontalHandle',
 			'styles': {
-				'display': this.showHandle == true ? 'block' : 'none'
+				'display': this.showHandle ? 'block' : 'none'
 			}
 		}).inject(this.panelWrapperEl);
 
@@ -755,7 +890,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 			'class': 'handleIcon'
 		}).inject(this.handleEl);
 
-		addResizeBottom(options.id);
+		this.addResizeBottom(options.id);
 
 		if (options.require.css.length || options.require.images.length){
 			new MUI.Require({
@@ -863,20 +998,20 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 			panelWrapper.getAllPrevious('.panelWrapper').each(function(sibling){
 				var instance = MUI.get(sibling.getElement('.panel').id);
-				if (instance.isCollapsed == false){
+				if (!instance.isCollapsed){
 					expandedSiblings.push(sibling.getElement('.panel').id);
 				}
 			});
 
 			panelWrapper.getAllNext('.panelWrapper').each(function(sibling){
 				var instance = MUI.get(sibling.getElement('.panel').id);
-				if (instance.isCollapsed == false){
+				if (!instance.isCollapsed){
 					expandedSiblings.push(sibling.getElement('.panel').id);
 				}
 			});
 
 			// Collapse Panel
-			if (this.isCollapsed == false){
+			if (!this.isCollapsed){
 				var currentColumn = MUI.get($(options.column).id);
 
 				if (expandedSiblings.length == 0 && currentColumn.options.placement != 'main'){
@@ -916,6 +1051,123 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				this.fireEvent('onExpand');
 			}
 		}.bind(this));
+	},
+
+	addResizeBottom: function(element){
+		if (!$(element)) return;
+		element = $(element);
+
+		var instance = MUI.get(element.id);
+		var handle = instance.handleEl;
+		handle.setStyle('cursor', Browser.Engine.webkit ? 'row-resize' : 'n-resize');
+		var partner = instance.partner;
+		var min = 0;
+		var max = function(){
+			return element.getStyle('height').toInt() + partner.getStyle('height').toInt();
+		}.bind(this);
+
+		if (Browser.Engine.trident){
+			handle.addEvents({
+				'mousedown': function(){
+					handle.setCapture();
+				},
+				'mouseup': function(){
+					handle.releaseCapture();
+				}
+			});
+		}
+		instance.resize = element.makeResizable({
+			handle: handle,
+			modifiers: {x: false, y: 'height'},
+			limit: { y: [min, max] },
+			invert: false,
+
+			onBeforeStart: function(){
+				partner = instance.partner;
+				this.originalHeight = element.getStyle('height').toInt();
+				this.partnerOriginalHeight = partner.getStyle('height').toInt();
+			}.bind(this),
+
+			onStart: function(){
+				if (instance.iframeEl){
+					if (!Browser.Engine.trident){
+						instance.iframeEl.setStyle('visibility', 'hidden');
+						partner.getElements('iframe').setStyle('visibility', 'hidden');
+					} else {
+						instance.iframeEl.hide();
+						partner.getElements('iframe').hide();
+					}
+				}
+			}.bind(this),
+
+			onDrag: function(){
+				var partnerHeight = this.partnerOriginalHeight;
+				partnerHeight += (this.originalHeight - element.getStyle('height').toInt());
+				partner.setStyle('height', partnerHeight);
+				MUI.resizeChildren(element, element.getStyle('height').toInt());
+				MUI.resizeChildren(partner, partnerHeight);
+				element.getChildren('.column').each(function(column){
+					MUI.panelHeight(column);
+				});
+				partner.getChildren('.column').each(function(column){
+					MUI.panelHeight(column);
+				});
+			}.bind(this),
+
+			onComplete: function(){
+				var partnerHeight = this.partnerOriginalHeight;
+				partnerHeight += (this.originalHeight - element.getStyle('height').toInt());
+				partner.setStyle('height', partnerHeight);
+				MUI.resizeChildren(element, element.getStyle('height').toInt());
+				MUI.resizeChildren(partner, partnerHeight);
+				element.getChildren('.column').each(function(column){
+					MUI.panelHeight(column);
+				});
+				partner.getChildren('.column').each(function(column){
+					MUI.panelHeight(column);
+				});
+				if (instance.iframeEl){
+					if (!Browser.Engine.trident){
+						instance.iframeEl.setStyle('visibility', 'visible');
+						partner.getElements('iframe').setStyle('visibility', 'visible');
+					} else {
+						instance.iframeEl.show();
+						partner.getElements('iframe').show();
+						// The following hack is to get IE8 Standards Mode to properly resize an iframe
+						// when only the vertical dimension is changed.
+						var width = instance.iframeEl.getStyle('width').toInt();
+						instance.iframeEl.setStyle('width', width - 1);
+						MUI.rWidth();
+						instance.iframeEl.setStyle('width', width);
+					}
+				}
+				instance.fireEvent('onResize');
+			}.bind(this)
+		});
+	},	
+
+	close: function(){
+		var instance = this;
+		var column = instance.options.column;
+		instance.isClosing = true;
+
+		var columnInstance = MUI.get(column);
+
+		if (columnInstance.options.sortable)
+			columnInstance.options.container.retrieve('sortables').removeItems(instance.panelWrapperEl);
+
+		instance.panelWrapperEl.destroy();
+
+		if (MUI.Desktop) MUI.Desktop.resizePanels();
+
+		// Do this when creating and removing panels
+		var panels = $(column).getElements('.panelWrapper');
+		panels.removeClass('bottomPanel');
+		if (panels.length > 0) panels.getLast().addClass('bottomPanel');
+
+		MUI.erase(instance.options.id);
+		return true;
+
 	}
 
 });
@@ -1008,7 +1260,7 @@ MUI.extend({
 						var test;
 						el.getParent().getAllNext('.panelWrapper').each(function(sibling){
 							var siblingInstance = MUI.get(sibling.getElement('.panel').id);
-							if (siblingInstance.isCollapsed == false){
+							if (!siblingInstance.isCollapsed){
 								test = true;
 							}
 						}.bind(this));
@@ -1016,11 +1268,11 @@ MUI.extend({
 					}.bind(this);
 
 					// If a next sibling is expanding, are any of the nexts siblings of the expanding sibling Expanded?
-					anyExpandingNextSiblingsExpanded = function(){
+					var anyExpandingNextSiblingsExpanded = function(){
 						var test;
 						changing.getParent().getAllNext('.panelWrapper').each(function(sibling){
 							var siblingInstance = MUI.get(sibling.getElement('.panel').id);
-							if (siblingInstance.isCollapsed == false){
+							if (!siblingInstance.isCollapsed){
 								test = true;
 							}
 						}.bind(this));
@@ -1028,7 +1280,7 @@ MUI.extend({
 					}.bind(this);
 
 					// Is the panel that is collapsing, expanding, or new located after this panel?
-					anyNextContainsChanging = function(el){
+					var anyNextContainsChanging = function(el){
 						var allNext = [];
 						el.getParent().getAllNext('.panelWrapper').each(function(panelWrapper){
 							allNext.push(panelWrapper.getElement('.panel'));
@@ -1036,7 +1288,7 @@ MUI.extend({
 						return allNext.contains(changing);
 					}.bind(this);
 
-					nextExpandedChanging = function(el){
+					var nextExpandedChanging = function(el){
 						var test;
 						if (el.getParent().getNext('.expanded')){
 							if (el.getParent().getNext('.expanded').getElement('.panel') == changing) test = true;
@@ -1204,301 +1456,6 @@ MUI.extend({
 			}.bind(this));
 
 		});
-	}
-
-});
-
-function addResizeRight(element, min, max){
-	if (!$(element)) return;
-	element = $(element);
-
-	var instance = MUI.get(element.id);
-
-	var handle = element.getNext('.columnHandle');
-	handle.setStyle('cursor', Browser.Engine.webkit ? 'col-resize' : 'e-resize');
-	if (!min) min = 50;
-	if (!max) max = 250;
-	if (Browser.Engine.trident){
-		handle.addEvents({
-			'mousedown': function(){
-				handle.setCapture();
-			},
-			'mouseup': function(){
-				handle.releaseCapture();
-			}
-		});
-	}
-
-	instance.resize = element.makeResizable({
-		handle: handle,
-		modifiers: {
-			x: 'width',
-			y: false
-		},
-		limit: {
-			x: [min, max]
-		},
-		onStart: function(){
-			element.getElements('iframe').setStyle('visibility', 'hidden');
-			element.getNext('.column').getElements('iframe').setStyle('visibility', 'hidden');
-		}.bind(this),
-		onDrag: function(){
-			if (Browser.Engine.gecko){
-				$$('.panel').each(function(panel){
-					if (panel.getElements('.mochaIframe').length == 0){
-						panel.hide(); // Fix for a rendering bug in FF
-					}
-				});
-			}
-			MUI.rWidth(element.getParent());
-			if (Browser.Engine.gecko){
-				$$('.panel').show(); // Fix for a rendering bug in FF
-			}
-			if (Browser.Engine.trident4){
-				element.getChildren().each(function(el){
-					var width = $(element).getStyle('width').toInt();
-					width -= el.getStyle('border-right').toInt();
-					width -= el.getStyle('border-left').toInt();
-					width -= el.getStyle('padding-right').toInt();
-					width -= el.getStyle('padding-left').toInt();
-					el.setStyle('width', width);
-				}.bind(this));
-			}
-		}.bind(this),
-		onComplete: function(){
-			MUI.rWidth(element.getParent());
-			element.getElements('iframe').setStyle('visibility', 'visible');
-			element.getNext('.column').getElements('iframe').setStyle('visibility', 'visible');
-			instance.fireEvent('onResize');
-		}.bind(this)
-	});
-}
-
-function addResizeLeft(element, min, max){
-	if (!$(element)) return;
-	element = $(element);
-
-	var instance = MUI.get(element.id);
-
-	var handle = element.getPrevious('.columnHandle');
-	handle.setStyle('cursor', Browser.Engine.webkit ? 'col-resize' : 'e-resize');
-	var partner = element.getPrevious('.column');
-	if (!min) min = 50;
-	if (!max) max = 250;
-	if (Browser.Engine.trident){
-		handle.addEvents({
-			'mousedown': function(){
-				handle.setCapture();
-			},
-			'mouseup': function(){
-				handle.releaseCapture();
-			}
-		});
-	}
-	instance.resize = element.makeResizable({
-		handle: handle,
-		modifiers: {x: 'width' , y: false},
-		invert: true,
-		limit: { x: [min, max] },
-		onStart: function(){
-			$(element).getElements('iframe').setStyle('visibility', 'hidden');
-			partner.getElements('iframe').setStyle('visibility', 'hidden');
-		}.bind(this),
-		onDrag: function(){
-			MUI.rWidth(element.getParent());
-		}.bind(this),
-		onComplete: function(){
-			MUI.rWidth(element.getParent());
-			$(element).getElements('iframe').setStyle('visibility', 'visible');
-			partner.getElements('iframe').setStyle('visibility', 'visible');
-			instance.fireEvent('onResize');
-		}.bind(this)
-	});
-}
-
-function addResizeBottom(element){
-	if (!$(element)) return;
-	element = $(element);
-
-	var instance = MUI.get(element.id);
-	var handle = instance.handleEl;
-	handle.setStyle('cursor', Browser.Engine.webkit ? 'row-resize' : 'n-resize');
-	var partner = instance.partner;
-	var min = 0;
-	var max = function(){
-		return element.getStyle('height').toInt() + partner.getStyle('height').toInt();
-	}.bind(this);
-
-	if (Browser.Engine.trident){
-		handle.addEvents({
-			'mousedown': function(){
-				handle.setCapture();
-			},
-			'mouseup': function(){
-				handle.releaseCapture();
-			}
-		});
-	}
-	instance.resize = element.makeResizable({
-		handle: handle,
-		modifiers: {x: false, y: 'height'},
-		limit: { y: [min, max] },
-		invert: false,
-		onBeforeStart: function(){
-			partner = instance.partner;
-			this.originalHeight = element.getStyle('height').toInt();
-			this.partnerOriginalHeight = partner.getStyle('height').toInt();
-		}.bind(this),
-		onStart: function(){
-			if (instance.iframeEl){
-				if (!Browser.Engine.trident){
-					instance.iframeEl.setStyle('visibility', 'hidden');
-					partner.getElements('iframe').setStyle('visibility', 'hidden');
-				} else {
-					instance.iframeEl.hide();
-					partner.getElements('iframe').hide();
-				}
-			}
-
-		}.bind(this),
-		onDrag: function(){
-			partnerHeight = partnerOriginalHeight;
-			partnerHeight += (this.originalHeight - element.getStyle('height').toInt());
-			partner.setStyle('height', partnerHeight);
-			MUI.resizeChildren(element, element.getStyle('height').toInt());
-			MUI.resizeChildren(partner, partnerHeight);
-			element.getChildren('.column').each(function(column){
-				MUI.panelHeight(column);
-			});
-			partner.getChildren('.column').each(function(column){
-				MUI.panelHeight(column);
-			});
-		}.bind(this),
-		onComplete: function(){
-			partnerHeight = partnerOriginalHeight;
-			partnerHeight += (this.originalHeight - element.getStyle('height').toInt());
-			partner.setStyle('height', partnerHeight);
-			MUI.resizeChildren(element, element.getStyle('height').toInt());
-			MUI.resizeChildren(partner, partnerHeight);
-			element.getChildren('.column').each(function(column){
-				MUI.panelHeight(column);
-			});
-			partner.getChildren('.column').each(function(column){
-				MUI.panelHeight(column);
-			});
-			if (instance.iframeEl){
-				if (!Browser.Engine.trident){
-					instance.iframeEl.setStyle('visibility', 'visible');
-					partner.getElements('iframe').setStyle('visibility', 'visible');
-				} else {
-					instance.iframeEl.show();
-					partner.getElements('iframe').show();
-					// The following hack is to get IE8 Standards Mode to properly resize an iframe
-					// when only the vertical dimension is changed.
-					var width = instance.iframeEl.getStyle('width').toInt();
-					instance.iframeEl.setStyle('width', width - 1);
-					MUI.rWidth();
-					instance.iframeEl.setStyle('width', width);
-				}
-			}
-			instance.fireEvent('onResize');
-		}.bind(this)
-	});
-}
-
-MUI.extend({
-
-	/*
-	 Function: closeColumn
-	 Destroys/removes a column.
-
-	 Syntax:
-	 (start code)
-	 MUI.closeColumn();
-	 (end)
-
-	 Arguments:
-	 columnEl - the ID of the column to be closed
-
-	 Returns:
-	 true - the column was closed
-	 false - the column was not closed
-	 */
-	closeColumn: function(columnEl){
-		columnEl = $(columnEl);
-		if (columnEl == null) return;
-		var instance = MUI.get(columnEl.id);
-		if (instance == null || instance.isClosing) return;
-
-		instance.isClosing = true;
-
-		// Destroy all the panels in the column.
-		var panels = $(columnEl).getElements('.panel');
-		panels.each(function(panel){
-			MUI.closePanel(panel.id);
-		}.bind(this));
-
-		if (Browser.Engine.trident){
-			columnEl.dispose();
-			if (instance.handleEl != null) instance.handleEl.dispose();
-		} else {
-			columnEl.destroy();
-			if (instance.handleEl != null) instance.handleEl.destroy();
-		}
-
-		if (MUI.Desktop) MUI.Desktop.resizePanels();
-
-		var sortables = instance.options.container.retrieve('sortables');
-		if (sortables) sortables.removeLists(columnEl);
-
-		MUI.erase(instance.options.id);
-		return true;
-	},
-
-	/*
-	 Function: closePanel
-	 Destroys/removes a panel.
-
-	 Syntax:
-	 (start code)
-	 MUI.closePanel();
-	 (end)
-
-	 Arguments:
-	 panelEl - the ID of the panel to be closed
-
-	 Returns:
-	 true - the panel was closed
-	 false - the panel was not closed
-	 */
-	closePanel: function(panelEl){
-		panelEl = $(panelEl);
-		if (panelEl == null) return;
-		var instance = MUI.get(panelEl.id);
-		if (panelEl != $(panelEl) || instance.isClosing) return;
-
-		var column = instance.options.column;
-
-		instance.isClosing = true;
-
-		var columnInstance = MUI.get(column);
-
-		if (columnInstance.options.sortable){
-			columnInstance.options.container.retrieve('sortables').removeItems(instance.panelWrapperEl);
-		}
-
-		instance.panelWrapperEl.destroy();
-
-		if (MUI.Desktop) MUI.Desktop.resizePanels();
-
-		// Do this when creating and removing panels
-		var panels = $(column).getElements('.panelWrapper');
-		panels.removeClass('bottomPanel');
-		if (panels.length > 0) panels.getLast().addClass('bottomPanel');
-
-		MUI.erase(instance.options.id);
-		return true;
-
 	}
 
 });

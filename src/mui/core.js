@@ -83,8 +83,15 @@ var MUI = MochaUI = new Hash({
 	each: function(func){
 		this.instances.each(func);
 		return this;
-	}
+	},
 
+	close: function(columnEl){
+		columnEl = $(columnEl);
+		if (columnEl == null) return;
+		var instance = MUI.get(columnEl.id);
+		if (instance == null || instance.isClosing || instance.close == null) return;
+		instance.close(columnEl);
+	}
 });
 
 var NamedClass = function(name, members){

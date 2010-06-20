@@ -693,7 +693,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 		}
 
 		if (this.options.closeAfter != false){
-			MUI.closeWindow.delay(this.options.closeAfter, this, this.windowEl);
+			MUI.close.delay(this.options.closeAfter, this, this.windowEl);
 		}
 
 		if (MUI.Dock && $(MUI.options.dock) && this.options.type == 'window'){
@@ -760,7 +760,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 		if (this.closeButtonEl){
 			this.closeButtonEl.addEvent('click', function(e){
 				new Event(e).stop();
-				MUI.closeWindow(windowEl);
+				MUI.close(windowEl);
 			}.bind(this));
 		}
 
@@ -2034,20 +2034,6 @@ MUI.Window = new NamedClass('MUI.Window', {
 	},
 
 	/*
-	 Function: close
-	 Closes the window. This is an alternative to using MUI.Core.closeWindow().
-
-	 Example:
-	 (start code)
-	 $('myWindow').retrieve('instance').close();
-	 (end)
-	 */
-	close: function(){
-		if (!this.isClosing) MUI.closeWindow(this.windowEl);
-		return this;
-	},
-
-	/*
 	 Function: minimize
 	 Minimizes the window.
 
@@ -2133,66 +2119,56 @@ MUI.Window = new NamedClass('MUI.Window', {
 	show: function(){
 		this.windowEl.setStyle('display', 'block');
 		return this;
-	}
+	},
 
-});
-
-MUI.extend({
 	/*
-	 Function: closeWindow
+	 Function: close
 	 Closes a window.
 
-	 Syntax:
+	 Example:
 	 (start code)
-	 MUI.closeWindow();
+	 $('myWindow').retrieve('instance').close();
 	 (end)
 
-	 Arguments:
-	 windowEl - the ID of the window to be closed
-
-	 Returns:
-	 true - the window was closed
-	 false - the window was not closed
 	 */
-	closeWindow: function(windowEl){
-
-		var instance = windowEl.retrieve('instance');
+	close: function(){
+		var self = this;
 
 		// Does window exist and is not already in process of closing ?
-		if (windowEl != $(windowEl) || instance.isClosing) return;
+		if (self.isClosing) return;
 
-		instance.isClosing = true;
-		instance.fireEvent('onClose', windowEl);
+		self.isClosing = true;
+		self.fireEvent('onClose', self.windowEl);
 
-		if (instance.options.storeOnClose){
-			this.storeOnClose(instance, windowEl);
+		if (self.options.storeOnClose){
+			this.storeOnClose(self, self.windowEl);
 			return;
 		}
-		if (instance.check) instance.check.destroy();
+		if (self.check) self.check.destroy();
 
-		if ((instance.options.type == 'modal' || instance.options.type == 'modal2') && Browser.Engine.trident4){
+		if ((self.options.type == 'modal' || self.options.type == 'modal2') && Browser.Engine.trident4){
 			$('modalFix').hide();
 		}
 
-		if (MUI.options.advancedEffects == false){
-			if (instance.options.type == 'modal' || instance.options.type == 'modal2'){
+		if (MUI.options.advancedEffects !=true ){
+			if (self.options.type == 'modal' || self.options.type == 'modal2'){
 				$('modalOverlay').setStyle('opacity', 0);
 			}
-			MUI.closingJobs(windowEl);
+			MUI.closingJobs(self.windowEl);
 			return true;
 		}
 		else {
 			// Redraws IE windows without shadows since IE messes up canvas alpha when you change element opacity
-			if (Browser.Engine.trident) instance.drawWindow(false);
-			if (instance.options.type == 'modal' || instance.options.type == 'modal2'){
+			if (Browser.Engine.trident) self.drawWindow(false);
+			if (self.options.type == 'modal' || self.options.type == 'modal2'){
 				MUI.Modal.modalOverlayCloseMorph.start({
 					'opacity': 0
 				});
 			}
-			var closeMorph = new Fx.Morph(windowEl, {
+			var closeMorph = new Fx.Morph(self.windowEl, {
 				duration: 120,
 				onComplete: function(){
-					MUI.closingJobs(windowEl);
+					MUI.closingJobs(self.windowEl);
 					return true;
 				}.bind(this)
 			});
@@ -2201,7 +2177,11 @@ MUI.extend({
 			});
 		}
 
-	},
+	}
+
+});
+
+MUI.extend({
 
 	closingJobs: function(windowEl){
 		var instance = MUI.get(windowEl);
@@ -2270,7 +2250,7 @@ MUI.extend({
 	 */
 	closeAll: function(){
 		$$('.mocha').each(function(windowEl){
-			this.closeWindow(windowEl);
+			this.close(windowEl);
 		}.bind(this));
 	},
 

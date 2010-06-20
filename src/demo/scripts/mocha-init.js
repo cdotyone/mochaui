@@ -455,6 +455,32 @@ var initializeWindows = function(){
         });
     }
 
+	// add ability to test column and panel closing
+	if ($('closePanelCheck')){
+        $('closePanelCheck').addEvent('click', function(e){
+            new Event(e).stop();
+			var stop=false;
+			MUI.each(function(instance) {
+				if(!stop && instance.className=='MUI.Panel') {
+					MUI.close(instance.options.id);
+					stop=true;
+				}
+			});
+        });
+    }
+	if ($('closeColumnCheck')){
+        $('closeColumnCheck').addEvent('click', function(e){
+            new Event(e).stop();
+			var stop=false;
+			MUI.each(function(instance) {
+				if(!stop && instance.className=='MUI.Column') {
+					MUI.close(instance.options.id);
+					stop=true;
+				}
+			});
+        });
+    }
+
     // View
     if ($('sidebarLinkCheck')){
         $('sidebarLinkCheck').addEvent('click', function(e){

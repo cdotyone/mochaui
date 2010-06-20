@@ -141,7 +141,7 @@ MUI.extend({
 			this.myChain.chain(
 					function(){
 						$$('.mocha').each(function(el){
-							this.closeWindow(el);
+							this.close(el);
 						}.bind(this));
 					}.bind(this),
 					function(){
