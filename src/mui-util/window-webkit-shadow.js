@@ -62,7 +62,7 @@ if (Browser.Engine.webkit){
 					width - shadowBlur2x, // width
 					height - shadowBlur2x, // height
 					cornerRadius, // corner radius
-					this.options.bodyBgColor	  // Footer color
+					this.bodyBgColor	  // Footer color
 					);
 
 			this.shadowStop(ctx); // stop the shadowing
@@ -76,8 +76,8 @@ if (Browser.Engine.webkit){
 						width - shadowBlur2x, // width
 						this.options.headerHeight, // height
 						cornerRadius, // corner radius
-						this.options.headerStartColor, // Header gradient's top color
-						this.options.headerStopColor	// Header gradient's bottom color
+						this.headerStartColor, // Header gradient's top color
+						this.headerStopColor	// Header gradient's bottom color
 						);
 			}
 		},
@@ -100,8 +100,8 @@ if (Browser.Engine.webkit){
 					width - shadowBlur2x, // width
 					options.headerHeight + 2, // height
 					cornerRadius, // corner radius
-					options.headerStartColor, // Header gradient's top color
-					options.headerStopColor	   // Header gradient's bottom color
+					this.headerStartColor, // Header gradient's top color
+					this.headerStopColor	   // Header gradient's bottom color
 					);
 			this.shadowStop(ctx);
 		},
@@ -118,7 +118,7 @@ if (Browser.Engine.webkit){
 					width * .5 - shadowOffset.x,
 					(height + options.headerHeight) * .5 - shadowOffset.y,
 					(width * .5) - shadowBlur,
-					options.bodyBgColor,
+					this.bodyBgColor,
 					1
 					);
 			this.shadowStop(ctx);

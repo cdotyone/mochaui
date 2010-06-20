@@ -87,16 +87,6 @@ MUI.files[MUI.path.source + 'window.js'] = 'loading';
  useCanvas - (boolean) Set this to false if you don't want a canvas body.
  useCanvasControls - (boolean) Set this to false if you wish to use images for the buttons.
  useSpinner - (boolean) Toggles whether or not the ajax spinners are displayed in window footers. Defaults to true.
- headerStartColor - ([r,g,b,]) Titlebar gradient's top color
- headerStopColor - ([r,g,b,]) Titlebar gradient's bottom color
- bodyBgColor - ([r,g,b,]) Background color of the main canvas shape
- minimizeBgColor - ([r,g,b,]) Minimize button background color
- minimizeColor - ([r,g,b,]) Minimize button color
- maximizeBgColor - ([r,g,b,]) Maximize button background color
- maximizeColor - ([r,g,b,]) Maximize button color
- closeBgColor - ([r,g,b,]) Close button background color
- closeColor - ([r,g,b,]) Close button color
- resizableColor - ([r,g,b,]) Resizable icon color
  onBeforeBuild - (function) Fired just before the window is built.
  onContentLoaded - (function) Fired when content is successfully loaded via XHR or Iframe.
  onFocus - (function)  Fired when the window is focused.
@@ -175,118 +165,106 @@ MUI.extend({
 });
 
 MUI.Windows.windowOptions = {
-	id:				null,
-	title:			 'New Window',
-	icon:			  false,
-	type:			  'window',
-	require:		   {
-		css:		   [],
-		images:		[],
-		js:			[],
-		onload:		null
+	id:					null,
+	title:				'New Window',
+	icon:				false,
+	type:				'window',
+	require: {
+		css:			[],
+		images:			[],
+		js:				[],
+		onload:			null
 	},
-	loadMethod:		null,
-	method:			   'get',
-	contentURL:		null,
-	data:			  null,
+	loadMethod:			null,
+	method:				'get',
+	contentURL:			null,
+	data:				null,
 
-	closeAfter:		false,
+	closeAfter:			false,
 
 	// xhr options
-	evalScripts:	   true,
-	evalResponse:	  false,
+	evalScripts:		true,
+	evalResponse:		false,
 
 	// html options
-	content:		   'Window content',
+	content:			'Window content',
 
 	// Toolbar
-	toolbar:		   false,
-	toolbarPosition:   'top',
-	toolbarHeight:	 29,
-	toolbarURL:		'pages/lipsum.html',
-	toolbarData:	   null,
-	toolbarContent:	'',
-	toolbarOnload:	 $empty,
+	toolbar:			false,
+	toolbarPosition:	'top',
+	toolbarHeight:		29,
+	toolbarURL:			'pages/lipsum.html',
+	toolbarData:		null,
+	toolbarContent:		'',
+	toolbarOnload:		$empty,
 
 	// Toolbar
-	toolbar2:		   false,
-	toolbar2Position:   'bottom',
-	toolbar2Height:	 29,
+	toolbar2:			false,
+	toolbar2Position:	'bottom',
+	toolbar2Height:		29,
 	toolbar2URL:		'pages/lipsum.html',
 	toolbar2Data:		null,
 	toolbar2Content:	'',
-	toolbar2Onload:	 $empty,
+	toolbar2Onload:		$empty,
 
 	// Container options
-	container:		 null,
-	restrict:		  true,
-	shape:			 'box',
+	container:			null,
+	restrict:			true,
+	shape:				'box',
 
 	// Window Controls
-	collapsible:	   true,
-	minimizable:	   true,
-	maximizable:	   true,
-	closable:		  true,
+	collapsible:		true,
+	minimizable:		true,
+	maximizable:		true,
+	closable:			true,
 
 	// Close options
-	storeOnClose:	   false,
+	storeOnClose:		false,
 
 	// Modal options
-	modalOverlayClose: true,
+	modalOverlayClose:	true,
 
 	// Draggable
-	draggable:		 null,
-	draggableGrid:	 false,
-	draggableLimit:	false,
-	draggableSnap:	 false,
+	draggable:			null,
+	draggableGrid:		false,
+	draggableLimit:		false,
+	draggableSnap:		false,
 
 	// Resizable
-	resizable:		 null,
-	resizeLimit:	   {'x': [250, 2500], 'y': [125, 2000]},
+	resizable:			null,
+	resizeLimit:		{'x': [250, 2500], 'y': [125, 2000]},
 
 	// Style options:
-	addClass:		  '',
-	width:			 300,
-	height:			125,
-	headerHeight:	  25,
-	footerHeight:	  25,
-	cornerRadius:	  8,
-	x:				 null,
-	y:				 null,
-	scrollbars:		true,
-	padding:			  { top: 10, right: 12, bottom: 10, left: 12 },
-	shadowBlur:		5,
-	shadowOffset:	  {'x': 0, 'y': 1},
-	controlsOffset:	{'right': 6, 'top': 6},
-	useCanvas:		 true,
-	useCanvasControls: true,
-	useSpinner:		true,
-
-	// Color options:
-	headerStartColor:  [250, 250, 250],
-	headerStopColor:   [229, 229, 229],
-	bodyBgColor:	   [229, 229, 229],
-	minimizeBgColor:   [255, 255, 255],
-	minimizeColor:	 [0, 0, 0],
-	maximizeBgColor:   [255, 255, 255],
-	maximizeColor:	 [0, 0, 0],
-	closeBgColor:	  [255, 255, 255],
-	closeColor:		[0, 0, 0],
-	resizableColor:	[254, 254, 254],
+	addClass:			'',
+	width:				300,
+	height:				125,
+	headerHeight:		25,
+	footerHeight:		25,
+	cornerRadius:		8,
+	x:					null,
+	y:					null,
+	scrollbars:			true,
+	padding:			{ top: 10, right: 12, bottom: 10, left: 12 },
+	shadowBlur:			5,
+	shadowOffset:		{'x': 0, 'y': 1},
+	controlsOffset:		{'right': 6, 'top': 6},
+	useCanvas:			true,
+	useCanvasControls:	true,
+	useSpinner:			true,
 
 	// Events
-	onBeforeBuild:	 $empty,
-	onContentLoaded:   $empty,
-	onFocus:		   $empty,
-	onBlur:			$empty,
-	onResize:		  $empty,
-	onMinimize:		$empty,
-	onMaximize:		$empty,
-	onRestore:		 $empty,
-	onClose:		   $empty,
-	onCloseComplete:   $empty,
-	onDragStart:	   $empty,
-	onDragComplete:	$empty
+	onBeforeBuild:		$empty,
+	onContentLoaded:	$empty,
+	onFocus:			$empty,
+	onBlur:				$empty,
+	onResize:			$empty,
+	onMinimize:			$empty,
+	onMaximize:			$empty,
+	onRestore:			$empty,
+	onClose:			$empty,
+	onCloseComplete:	$empty,
+	onDragStart:		$empty,
+	onDragComplete:		$empty
 };
 
 MUI.Windows.windowOptionsOriginal = $merge(MUI.Windows.windowOptions);
@@ -1434,25 +1412,25 @@ MUI.Window = new NamedClass('MUI.Window', {
 				var gradientFrom = gradient.from;
 				var gradientTo = gradient.to.replace(/\"/, ''); // IE7 was adding a quotation mark in. No idea why.
 
-				this.options.headerStartColor = new Color(gradientFrom);
-				this.options.headerStopColor = new Color(gradientTo);
+				this.headerStartColor = new Color(gradientFrom);
+				this.headerStopColor = new Color(gradientTo);
 				this.titleBarEl.addClass('replaced');
 			}
 			else if (this.titleBarEl.getStyle('background-color') !== '' && this.titleBarEl.getStyle('background-color') !== 'transparent'){
-				this.options.headerStartColor = new Color(this.titleBarEl.getStyle('background-color')).mix('#fff', 20);
-				this.options.headerStopColor = new Color(this.titleBarEl.getStyle('background-color')).mix('#000', 20);
+				this.headerStartColor = new Color(this.titleBarEl.getStyle('background-color')).mix('#fff', 20);
+				this.headerStopColor = new Color(this.titleBarEl.getStyle('background-color')).mix('#000', 20);
 				this.titleBarEl.addClass('replaced');
 			}
 
 			// Set BodyBGColor
 			if (this.windowEl.getStyle('background-color') !== '' && this.windowEl.getStyle('background-color') !== 'transparent'){
-				this.options.bodyBgColor = new Color(this.windowEl.getStyle('background-color'));
+				this.bodyBgColor = new Color(this.windowEl.getStyle('background-color'));
 				this.windowEl.addClass('replaced');
 			}
 
 			// Set resizableColor, the color of the SE corner resize handle
 			if (this.options.resizable && this.se.getStyle('background-color') !== '' && this.se.getStyle('background-color') !== 'transparent'){
-				this.options.resizableColor = new Color(this.se.getStyle('background-color'));
+				this.resizableColor = new Color(this.se.getStyle('background-color'));
 				this.se.addClass('replaced');
 			}
 
@@ -1464,12 +1442,12 @@ MUI.Window = new NamedClass('MUI.Window', {
 
 				// Set Minimize Button Foreground Color
 				if (this.minimizeButtonEl.getStyle('color') !== '' && this.minimizeButtonEl.getStyle('color') !== 'transparent'){
-					this.options.minimizeColor = new Color(this.minimizeButtonEl.getStyle('color'));
+					this.minimizeColor = new Color(this.minimizeButtonEl.getStyle('color'));
 				}
 
 				// Set Minimize Button Background Color
 				if (this.minimizeButtonEl.getStyle('background-color') !== '' && this.minimizeButtonEl.getStyle('background-color') !== 'transparent'){
-					this.options.minimizeBgColor = new Color(this.minimizeButtonEl.getStyle('background-color'));
+					this.minimizeBgColor = new Color(this.minimizeButtonEl.getStyle('background-color'));
 					this.minimizeButtonEl.addClass('replaced');
 				}
 
@@ -1479,12 +1457,12 @@ MUI.Window = new NamedClass('MUI.Window', {
 
 				// Set Maximize Button Foreground Color
 				if (this.maximizeButtonEl.getStyle('color') !== '' && this.maximizeButtonEl.getStyle('color') !== 'transparent'){
-					this.options.maximizeColor = new Color(this.maximizeButtonEl.getStyle('color'));
+					this.maximizeColor = new Color(this.maximizeButtonEl.getStyle('color'));
 				}
 
 				// Set Maximize Button Background Color
 				if (this.maximizeButtonEl.getStyle('background-color') !== '' && this.maximizeButtonEl.getStyle('background-color') !== 'transparent'){
-					this.options.maximizeBgColor = new Color(this.maximizeButtonEl.getStyle('background-color'));
+					this.maximizeBgColor = new Color(this.maximizeButtonEl.getStyle('background-color'));
 					this.maximizeButtonEl.addClass('replaced');
 				}
 
@@ -1494,12 +1472,12 @@ MUI.Window = new NamedClass('MUI.Window', {
 
 				// Set Close Button Foreground Color
 				if (this.closeButtonEl.getStyle('color') !== '' && this.closeButtonEl.getStyle('color') !== 'transparent'){
-					this.options.closeColor = new Color(this.closeButtonEl.getStyle('color'));
+					this.closeColor = new Color(this.closeButtonEl.getStyle('color'));
 				}
 
 				// Set Close Button Background Color
 				if (this.closeButtonEl.getStyle('background-color') !== '' && this.closeButtonEl.getStyle('background-color') !== 'transparent'){
-					this.options.closeBgColor = new Color(this.closeButtonEl.getStyle('background-color'));
+					this.closeBgColor = new Color(this.closeButtonEl.getStyle('background-color'));
 					this.closeButtonEl.addClass('replaced');
 				}
 
@@ -1609,14 +1587,14 @@ MUI.Window = new NamedClass('MUI.Window', {
 						height - (shadowBlur + shadowOffset.y + 18),
 						11,
 						11,
-						options.resizableColor,
+						this.resizableColor,
 						1.0
 						);
 			}
 
 			// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
 			if (Browser.Engine.trident){
-				MUI.triangle(ctx, 0, 0, 10, 10, options.resizableColor, 0);
+				MUI.triangle(ctx, 0, 0, 10, 10, this.resizableColor, 0);
 			}
 		}
 
@@ -1684,7 +1662,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 
 			// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
 			if (Browser.Engine.trident){
-				MUI.triangle(ctx, 0, 0, 10, 10, options.resizableColor, 0);
+				MUI.triangle(ctx, 0, 0, 10, 10, this.resizableColor, 0);
 			}
 		}
 
@@ -1724,9 +1702,9 @@ MUI.Window = new NamedClass('MUI.Window', {
 					ctx2,
 					this.closebuttonX,
 					7,
-					options.closeBgColor,
+					this.closeBgColor,
 					1.0,
-					options.closeColor,
+					this.closeColor,
 					1.0
 					);
 		}
@@ -1735,9 +1713,9 @@ MUI.Window = new NamedClass('MUI.Window', {
 					ctx2,
 					this.maximizebuttonX,
 					7,
-					options.maximizeBgColor,
+					this.maximizeBgColor,
 					1.0,
-					options.maximizeColor,
+					this.maximizeColor,
 					1.0
 					);
 		}
@@ -1746,15 +1724,15 @@ MUI.Window = new NamedClass('MUI.Window', {
 					ctx2,
 					this.minimizebuttonX,
 					7,
-					options.minimizeBgColor,
+					this.minimizeBgColor,
 					1.0,
-					options.minimizeColor,
+					this.minimizeColor,
 					1.0
 					);
 		}
 		// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
 		if (Browser.Engine.trident){
-			MUI.circle(ctx2, 0, 0, 3, this.options.resizableColor, 0);
+			MUI.circle(ctx2, 0, 0, 3, this.resizableColor, 0);
 		}
 
 	},
@@ -1788,7 +1766,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 				width - shadowBlur2x, // width
 				height - shadowBlur2x, // height
 				cornerRadius, // corner radius
-				options.bodyBgColor	  // Footer color
+				this.bodyBgColor	  // Footer color
 				);
 
 		if (this.options.type != 'notification'){
@@ -1800,8 +1778,8 @@ MUI.Window = new NamedClass('MUI.Window', {
 					width - shadowBlur2x, // width
 					options.headerHeight, // height
 					cornerRadius, // corner radius
-					options.headerStartColor, // Header gradient's top color
-					options.headerStopColor	   // Header gradient's bottom color
+					this.headerStartColor, // Header gradient's top color
+					this.headerStopColor	   // Header gradient's bottom color
 					);
 		}
 	},
@@ -1836,8 +1814,8 @@ MUI.Window = new NamedClass('MUI.Window', {
 				width - shadowBlur2x, // width
 				options.headerHeight + 2, // height
 				cornerRadius, // corner radius
-				options.headerStartColor, // Header gradient's top color
-				options.headerStopColor	   // Header gradient's bottom color
+				this.headerStartColor, // Header gradient's top color
+				this.headerStopColor	   // Header gradient's bottom color
 				);
 
 	},
@@ -1861,7 +1839,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 				width * .5 - shadowOffset.x,
 				(height + options.headerHeight) * .5 - shadowOffset.y,
 				(width * .5) - shadowBlur,
-				options.bodyBgColor,
+				this.bodyBgColor,
 				1
 				);
 
@@ -2150,7 +2128,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 			$('modalFix').hide();
 		}
 
-		if (MUI.options.advancedEffects !=true ){
+		if (MUI.options.advancedEffects != true){
 			if (self.options.type == 'modal' || self.options.type == 'modal2'){
 				$('modalOverlay').setStyle('opacity', 0);
 			}

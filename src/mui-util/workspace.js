@@ -72,8 +72,7 @@ MUI.extend({
 			height: 40,
 			y: 53,
 			padding:  { top: 10, right: 12, bottom: 10, left: 12 },
-			shadowBlur: 5,
-			bodyBgColor: [255, 255, 255]
+			shadowBlur: 5
 		});
 
 	},
@@ -129,8 +128,7 @@ MUI.extend({
 				height: 40,
 				y: 25,
 				padding:  { top: 10, right: 12, bottom: 10, left: 12 },
-				shadowBlur: 5,
-				bodyBgColor: [255, 255, 255]
+				shadowBlur: 5
 			});
 			return;
 		}
