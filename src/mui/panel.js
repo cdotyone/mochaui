@@ -545,7 +545,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 	},
 
-	/// intercepts workflow from updateContent
+	/// intercepts workflow from MUI.updateContent
 	/// sets title and scroll bars of this window
 	updateStart:function(options) {
 
@@ -574,5 +574,11 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		}
 
 		return false;  // not used but expected
+	},
+
+	/// intercepts workflow from MUI.updateContent
+	updateContent:function(options) {
+		if(options.loadMethod=='html') instance.contentEl.addClass('pad');
+		return true;	// tells MUI.updateContent to update the content
 	}
 });

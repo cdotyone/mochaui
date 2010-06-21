@@ -315,12 +315,17 @@ MUI.Content.Providers.html = function(instance, options){
 	var fireContentLoaded = options.fireContentLoaded;
 	var elementTypes = new Array('element', 'textnode', 'whitespace', 'collection');
 
-	contentEl.addClass('pad');
-	if (elementTypes.contains($type(options.content))){
-		options.content.inject(contentContainer);
-	} else {
-		contentContainer.set('html', options.content);
+	var updateContent = true;
+	if(instance!=null && instance.updateContent!=null) updateContent=instance.updateContent(options);
+
+	if(updateContent) {
+		if (elementTypes.contains($type(options.content))){
+			options.content.inject(contentContainer);
+		} else {
+			contentContainer.set('html', options.content);
+		}
 	}
+
 	if (contentContainer == contentEl){
 		if (options.recipient == 'window') instance.hideSpinner();
 		else if (options.recipient == 'panel' && $('spinner')) $('spinner').hide();

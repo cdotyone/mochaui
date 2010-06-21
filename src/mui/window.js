@@ -2601,6 +2601,12 @@ Element.implement({
 		if (instance == null || instance.center==null) return this;
 		instance.center();
 		return this;
+	},
+
+	/// intercepts workflow from MUI.updateContent
+	updateContent:function(options) {
+		if(options.loadMethod=='html') instance.contentEl.addClass('pad');
+		return true;	// tells MUI.updateContent to update the content
 	}
 	
 });
