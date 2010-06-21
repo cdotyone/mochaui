@@ -33,7 +33,7 @@ MUI.extend({
 
 	 updateOptions:
 	 element - The parent window or panel.
-	 childElement - The child element of the window or panel recieving the content.
+	 childElement - The child element of the window or panel receiving the content.
 	 method - ('get', or 'post') The way data is transmitted.
 	 data - (hash) Data to be transmitted
 	 title - (string) Change this if you want to change the title of the window or panel.
@@ -48,18 +48,18 @@ MUI.extend({
 	updateContent: function(options){
 
 		options = $extend({
-			element:	  null,
-			childElement: null,
-			method:	   null,
-			data:		 null,
-			title:		null,
-			content:	  null,
-			loadMethod:   null,
-			url:		  null,
-			scrollbars:   null,
-			padding:	  null,
-			require:	  {},
-			onContentLoaded: $empty
+			element:		null,
+			childElement:	null,
+			method:			null,
+			data:			null,
+			title:			null,
+			content:		null,
+			loadMethod:		null,
+			url:			null,
+			scrollbars:	 	null,
+			padding:		null,
+			require:		{},
+			onContentLoaded:$empty
 		}, options);
 
 		options.require = $extend({
@@ -105,15 +105,6 @@ MUI.extend({
 		if (args.contentContainer == instance.contentEl){
 			contentWrapperEl.setStyles({
 				'overflow': scrollbars != false && options.loadMethod != 'iframe' ? 'auto' : 'hidden'
-			});
-		}
-
-		if (options.padding != null){
-			contentEl.setStyles({
-				'padding-top': options.padding.top,
-				'padding-bottom': options.padding.bottom,
-				'padding-left': options.padding.left,
-				'padding-right': options.padding.right
 			});
 		}
 
