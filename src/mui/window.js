@@ -2508,6 +2508,17 @@ MUI.extend({
 	/// intercepts workflow from updateContent
 	/// sets title and scroll bars of this window
 	updateStart:function(options) {
+
+		// update padding if requested
+		if(options.padding) {
+			this.contentEl.setStyles({
+				'padding-top': options.padding.top,
+				'padding-bottom': options.padding.bottom,
+				'padding-left': options.padding.left,
+				'padding-right': options.padding.right
+			});
+		}
+
 		// set title if given option to do so
 		if (options.title) {
 			this.options.title = options.title;

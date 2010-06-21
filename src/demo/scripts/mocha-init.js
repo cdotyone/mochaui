@@ -776,6 +776,7 @@ var initializeColumns = function(){
                     element: $('mainPanel'),
                     url: MUI.path.controls + 'calendar/example.html',
                     title: 'Calendar Component',
+                    padding: { top: 8, right: 8, bottom: 8, left: 8 },
                     require: {
                         css: [MUI.path.controls + 'calendar/css/calendar.css'],
                         js: [MUI.path.controls + 'calendar/scripts/calendar.js'],
@@ -789,7 +790,8 @@ var initializeColumns = function(){
                 MUI.updateContent({
                     element: $('mainPanel'),
                     url: MUI.path.plugins + 'Fx.Morpher/',
-                    title: 'Fx.Morpher Path Animation'
+                    title: 'Fx.Morpher Path Animation',
+                    padding: { top: 8, right: 8, bottom: 8, left: 8 }
                 });
                 MUI.fxmorpherWindow();
             });
@@ -819,7 +821,8 @@ var initializeColumns = function(){
                         MUI.updateContent({
                             'element': $('mainPanel'),
                             'content': response,
-                            'title': 'Ajax Response'
+                            'title': 'Ajax Response',
+                            'padding': { top: 8, right: 8, bottom: 8, left: 8 }
                         });
                     },
                     onSuccess: function(){
@@ -857,7 +860,8 @@ var initializeColumns = function(){
                             MUI.updateContent({
                                 'element': $('mainPanel'),
                                 'content': response,
-                                'title': 'Ajax Response'
+                                'title': 'Ajax Response',
+                                'padding': { top: 8, right: 8, bottom: 8, left: 8 }
                             });
                         },
                         onSuccess: function(){
