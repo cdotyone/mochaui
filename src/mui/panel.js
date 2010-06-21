@@ -547,7 +547,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 	/// intercepts workflow from updateContent
 	/// sets title and scroll bars of this window
-	updateStart:function(options,args) {
+	updateStart:function(options) {
 		// set title if given option to do so
 		if (options.title) {
 			this.options.title = options.title;
@@ -556,7 +556,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 		// Set scrollbars if loading content in main content container.
 		// Always use 'hidden' for iframe windows
-		if (args.contentContainer == this.contentEl){
+		if (options.contentContainer == this.contentEl){
 			this.contentWrapperEl.setStyles({
 				'overflow': this.options.scrollbars != false && options.loadMethod != 'iframe' ? 'auto' : 'hidden'
 			});
