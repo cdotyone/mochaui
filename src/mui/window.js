@@ -2508,6 +2508,12 @@ MUI.extend({
 	/// intercepts workflow from updateContent
 	/// sets title and scroll bars of this window
 	updateStart:function(options,args) {
+		// set title if given option to do so
+		if (options.title) {
+			this.options.title = options.title;
+			this.titleEl.set('html', options.title);
+		}	
+
 		// Set scrollbars if loading content in main content container.
 		// Always use 'hidden' for iframe windows
 		if (args.contentContainer == this.contentEl){

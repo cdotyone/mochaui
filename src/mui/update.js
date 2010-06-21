@@ -67,7 +67,6 @@ MUI.extend({
 	 childElement - The child element of the window or panel receiving the content.
 	 method - ('get', or 'post') The way data is transmitted.
 	 data - (hash) Data to be transmitted
-	 title - (string) Change this if you want to change the title of the window or panel.
 	 content - (string or element) An html loadMethod option.
 	 loadMethod - ('html', 'xhr', or 'iframe')
 	 url - Used if loadMethod is set to 'xhr' or 'iframe'.
@@ -81,7 +80,6 @@ MUI.extend({
 			childElement:	null,
 			method:			null,
 			data:			null,
-			title:			null,
 			content:		null,
 			loadMethod:		null,
 			url:			null,
@@ -106,7 +104,6 @@ MUI.extend({
 		}
 
 		var instance = element.retrieve('instance');
-		if (options.title) instance.titleEl.set('html', options.title);
 
 		var contentEl = instance.contentEl;
 		args.contentContainer = options.childElement != null ? options.childElement : instance.contentEl;
