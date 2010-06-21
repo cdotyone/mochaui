@@ -543,6 +543,19 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		MUI.erase(instance.options.id);
 		return true;
 
-	}
+	},
 
+	/// intercepts workflow from updateContent
+	/// sets title and scroll bars of this window
+	updateStart:function(options,args) {
+		// Set scrollbars if loading content in main content container.
+		// Always use 'hidden' for iframe windows
+		if (args.contentContainer == this.contentEl){
+			this.contentWrapperEl.setStyles({
+				'overflow': this.options.scrollbars != false && options.loadMethod != 'iframe' ? 'auto' : 'hidden'
+			});
+		}
+
+		return false;  // not used but expected
+	}
 });

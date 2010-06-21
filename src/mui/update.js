@@ -71,7 +71,6 @@ MUI.extend({
 	 content - (string or element) An html loadMethod option.
 	 loadMethod - ('html', 'xhr', or 'iframe')
 	 url - Used if loadMethod is set to 'xhr' or 'iframe'.
-	 scrollbars - (boolean)
 	 onContentLoaded - (function)
 
 	 */
@@ -86,8 +85,6 @@ MUI.extend({
 			content:		null,
 			loadMethod:		null,
 			url:			null,
-			scrollbars:	 	null,
-			padding:		null,
 			require:		{},
 			onContentLoaded:$empty
 		}, options);
@@ -113,7 +110,6 @@ MUI.extend({
 
 		var contentEl = instance.contentEl;
 		args.contentContainer = options.childElement != null ? options.childElement : instance.contentEl;
-		var contentWrapperEl = instance.contentWrapperEl;
 
 		if (!options.loadMethod){
 			if (!instance.options.loadMethod){
@@ -129,14 +125,8 @@ MUI.extend({
 			}
 		}
 
-		// Set scrollbars if loading content in main content container.
-		// Always use 'hidden' for iframe windows
-		var scrollbars = options.scrollbars || instance.options.scrollbars;
-		if (args.contentContainer == instance.contentEl){
-			contentWrapperEl.setStyles({
-				'overflow': scrollbars != false && options.loadMethod != 'iframe' ? 'auto' : 'hidden'
-			});
-		}
+		if(instance!=null && instance.updateStart!=null) instance.updateStart(options,args);
+
 
 		// Remove old content.
 		if (args.contentContainer == contentEl){
