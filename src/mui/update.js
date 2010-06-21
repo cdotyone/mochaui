@@ -41,7 +41,6 @@ MUI.extend({
 	 loadMethod - ('html', 'xhr', or 'iframe')
 	 url - Used if loadMethod is set to 'xhr' or 'iframe'.
 	 scrollbars - (boolean)
-	 padding - (object)
 	 onContentLoaded - (function)
 
 	 */
