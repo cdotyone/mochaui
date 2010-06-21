@@ -725,16 +725,14 @@ var initializeColumns = function(){
                 MUI.updateContent({
                     element: $('mainPanel'),
                     url: 'pages/notes.html',
-                    title: 'Development Notes',
-                    padding: { top: 8, right: 8, bottom: 8, left: 8 }
+                    title: 'Development Notes'
                 });
             });
             $('xhrLink').addEvent('click', function(){
                 MUI.updateContent({
                     element: $('mainPanel'),
                     url: 'pages/lipsum.html',
-                    title: 'Lorem Ipsum',
-                    padding: { top: 8, right: 8, bottom: 8, left: 8 }
+                    title: 'Lorem Ipsum'
                 });
             });
             $('youtube4Link').addEvent('click', function(){
@@ -742,15 +740,13 @@ var initializeColumns = function(){
                     element: $('mainPanel'),
                     loadMethod: 'iframe',
                     url: 'pages/youtube.html',
-                    title: 'Iframe: YouTube',
-                    padding: { top: 0, right: 0, bottom: 0, left: 0 }
+                    title: 'Iframe: YouTube'
                 });
             });
             $('splitPanelLink').addEvent('click', function(){
                 MUI.updateContent({
                     element: $('mainPanel'),
-                    title: 'Split Panel',
-                    padding: { top: 0, right: 0, bottom: 0, left: 0 }
+                    title: 'Split Panel'
                 });
                 MUI.splitPanelPanel(); // This is initialized in mocha-init.js just like the windows.
             });
@@ -780,7 +776,6 @@ var initializeColumns = function(){
                     element: $('mainPanel'),
                     url: MUI.path.controls + 'calendar/example.html',
                     title: 'Calendar Component',
-                    padding: { top: 8, right: 8, bottom: 8, left: 8 },
                     require: {
                         css: [MUI.path.controls + 'calendar/css/calendar.css'],
                         js: [MUI.path.controls + 'calendar/scripts/calendar.js'],
@@ -794,8 +789,7 @@ var initializeColumns = function(){
                 MUI.updateContent({
                     element: $('mainPanel'),
                     url: MUI.path.plugins + 'Fx.Morpher/',
-                    title: 'Fx.Morpher Path Animation',
-                    padding: { top: 8, right: 8, bottom: 8, left: 8 }
+                    title: 'Fx.Morpher Path Animation'
                 });
                 MUI.fxmorpherWindow();
             });
@@ -825,8 +819,7 @@ var initializeColumns = function(){
                         MUI.updateContent({
                             'element': $('mainPanel'),
                             'content': response,
-                            'title': 'Ajax Response',
-                            'padding': { top: 8, right: 8, bottom: 8, left: 8 }
+                            'title': 'Ajax Response'
                         });
                     },
                     onSuccess: function(){
@@ -864,13 +857,7 @@ var initializeColumns = function(){
                             MUI.updateContent({
                                 'element': $('mainPanel'),
                                 'content': response,
-                                'title': 'Ajax Response',
-                                'padding': {
-                                    top: 8,
-                                    right: 8,
-                                    bottom: 8,
-                                    left: 8
-                                }
+                                'title': 'Ajax Response'
                             });
                         },
                         onSuccess: function(){
