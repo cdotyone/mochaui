@@ -103,7 +103,7 @@ initializeWindows = function(){
             toolbar: true,
             toolbarURL: 'pages/youtube-tabs.html',
             toolbarOnload: function(){
-                MUI.initializeTabs('youtubeTabs');
+                MUI.initializeTabs('youtubeTabs','youtube');
             }
         });
     };
@@ -437,7 +437,7 @@ initializeWindows = function(){
             toolbar: true,
             toolbarURL: 'pages/features-tabs.html',
             toolbarOnload: function(){
-                MUI.initializeTabs('featuresTabs');
+                MUI.initializeTabs('featuresTabs','features');
 
                 $('featuresLayoutLink').addEvent('click', function(){
                     MUI.updateContent({

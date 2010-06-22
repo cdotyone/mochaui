@@ -110,7 +110,7 @@ var initializeWindows = function(){
             toolbar: true,
             toolbarURL: 'pages/youtube-tabs.html',
             toolbarOnload: function(){
-                MUI.initializeTabs('youtubeTabs');
+                MUI.initializeTabs('youtubeTabs','youtube');
             }
         });
     };
