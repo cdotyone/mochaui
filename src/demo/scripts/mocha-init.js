@@ -107,11 +107,13 @@ var initializeWindows = function(){
             width: 340,
             height: 280,
             resizeLimit: {'x': [330, 2500], 'y': [250, 2000]},
-            toolbar: true,
-            toolbarURL: 'pages/youtube-tabs.html',
-            toolbarOnload: function(){
-                MUI.initializeTabs('youtubeTabs','youtube');
-            }
+            sections:[{'position':'top',
+                        section:'toolbar',
+                        url:'pages/youtube-tabs.html',
+                        onContentLoaded:function(){
+                            MUI.initializeTabs('youtubeTabs','youtube');
+                        }
+                      }]
         });
     };
     if ($('youtubeLinkCheck')){
@@ -581,11 +583,13 @@ var initializeWindows = function(){
             require: {
                 css: [MUI.themePath() + 'css/Tabs.css']
             },
-            toolbar: true,
-            toolbarURL: 'pages/features-tabs.html',
-            toolbarOnload: function(){
-                MUI.initializeTabs('featuresTabs','features');
-            }
+            sections:[{'position':'top',
+                        section:'toolbar',
+                        url:'pages/features-tabs.html',
+                        onContentLoaded:function(){
+                            MUI.initializeTabs('featuresTabs','features');
+                        }
+                      }]
         });
     };
     if ($('featuresLinkCheck')){
