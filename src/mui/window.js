@@ -2290,28 +2290,20 @@ MUI.extend({
 	 */
 	toggleWindowVisibility: function(){
 		MUI.each(function(instance){
-			if (instance.options.type == 'modal' || instance.options.type == 'modal2' || instance.isMinimized == true) return;
+			if (!instance.isTypeOf('MUI.Window') || instance.isMinimized == true) return;
 			var id = $(instance.options.id);
 			if (id.getStyle('visibility') == 'visible'){
-				if (instance.iframe){
-					instance.iframeEl.setStyle('visibility', 'hidden');
-				}
-				if (instance.toolbarEl){
-					instance.toolbarWrapperEl.setStyle('visibility', 'hidden');
-				}
-				instance.contentBorderEl.setStyle('visibility', 'hidden');
+				if (instance.iframe) instance.iframeEl.setStyle('visibility', 'hidden');
+				if (instance.toolbarEl) instance.toolbarWrapperEl.setStyle('visibility', 'hidden');
+                if (instance.contentBorderEl) instance.contentBorderEl.setStyle('visibility', 'hidden');
 				id.setStyle('visibility', 'hidden');
 				MUI.Windows.windowsVisible = false;
 			}
 			else {
 				id.setStyle('visibility', 'visible');
-				instance.contentBorderEl.setStyle('visibility', 'visible');
-				if (instance.iframe){
-					instance.iframeEl.setStyle('visibility', 'visible');
-				}
-				if (instance.toolbarEl){
-					instance.toolbarWrapperEl.setStyle('visibility', 'visible');
-				}
+                if (instance.contentBorderEl) instance.contentBorderEl.setStyle('visibility', 'visible');
+				if (instance.iframe) instance.iframeEl.setStyle('visibility', 'visible');
+				if (instance.toolbarEl) instance.toolbarWrapperEl.setStyle('visibility', 'visible');
 				MUI.Windows.windowsVisible = true;
 			}
 		}.bind(this));
