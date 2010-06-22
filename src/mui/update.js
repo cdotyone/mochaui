@@ -185,7 +185,7 @@ MUI.extend({
 MUI.Content.Providers.xhr = function(instance, options){
 	var contentContainer = options.contentContainer;
 	var fireContentLoaded = options.fireContentLoaded;
-	new Request.HTML({
+	var request=new Request.HTML({
 		url: options.url,
 		method: options.method != null ? options.method : 'get',
 		data: options.data != null ? new Hash(options.data).toQueryString() : '',
@@ -209,6 +209,9 @@ MUI.Content.Providers.xhr = function(instance, options){
 		}.bind(this),
 		onSuccess: function(tree,elements,html,js){
 			contentContainer.hideSpinner(instance);
+
+            // convert text files to html
+            if(request.getHeader('Content-Type')=='text/plain') html=html.replace(/\n/g,'<br>');  
 
 			var updateSetContent = true;
 			options.content=html;
