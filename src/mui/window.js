@@ -2155,7 +2155,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 
 });
 
-MUI.Window.extend(MUI.WindowPanelShared);
+MUI.Window.implement(MUI.WindowPanelShared);
 
 MUI.extend({
 
