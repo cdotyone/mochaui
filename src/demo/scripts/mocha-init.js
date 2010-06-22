@@ -584,28 +584,7 @@ var initializeWindows = function(){
             toolbar: true,
             toolbarURL: 'pages/features-tabs.html',
             toolbarOnload: function(){
-                MUI.initializeTabs('featuresTabs');
-
-                $('featuresLayoutLink').addEvent('click', function(){
-                    MUI.updateContent({
-                        'element':  $('features'),
-                        'url':       'pages/features-layout.html'
-                    });
-                });
-
-                $('featuresWindowsLink').addEvent('click', function(){
-                    MUI.updateContent({
-                        'element':  $('features'),
-                        'url':       'pages/features-windows.html'
-                    });
-                });
-
-                $('featuresGeneralLink').addEvent('click', function(){
-                    MUI.updateContent({
-                        'element':  $('features'),
-                        'url':       'pages/features-general.html'
-                    });
-                });
+                MUI.initializeTabs('featuresTabs','features');
             }
         });
     };

@@ -383,13 +383,16 @@ Element.implement({
 	 $('id').hideSpinner(element);
 	 (end)
 	 */
-	hideSpinner: function(){
-		var instance = MUI.get(this.id);
-		if (instance == null) return;
-		if (instance != null && instance.hideSpinner == null)
-		{
+	hideSpinner: function(instance){
+		if(instance == null) instance = MUI.get(this.id);
+		if(instance == null){
+			if($('spinner')) $('spinner').hide();
+			return;
+		}
+		if (instance != null && instance.hideSpinner == null){
 			if (instance.spinnerEl)	instance.spinnerEl.hide();
 		} else instance.hideSpinner();
+
 		return this;
 	},
 
@@ -402,11 +405,13 @@ Element.implement({
 	 $('id').showSpinner(element);
 	 (end)
 	 */
-	showSpinner: function(){
-		var instance = MUI.get(this.id);
-		if (instance == null) return;
-		if (instance != null && instance.showSpinner == null)
-		{
+	showSpinner: function(instance){
+		if(instance == null) instance = MUI.get(this.id);
+		if(instance == null){
+			if($('spinner')) $('spinner').show();
+			return;
+		}
+		if (instance != null && instance.showSpinner == null){
 			if (instance.spinnerEl)	instance.spinnerEl.show();
 		} else instance.showSpinner();
 		return this;

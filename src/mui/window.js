@@ -551,7 +551,8 @@ MUI.Window = new NamedClass('MUI.Window', {
 			'require': {
 				js: options.require.js,
 				onload: options.require.onload
-			}
+			},
+            'section':'content'
 		});
 
 		// Add content to window toolbar.
@@ -564,7 +565,8 @@ MUI.Window = new NamedClass('MUI.Window', {
 				'method': options.method,
 				'url': options.toolbarURL,
 				'data':	options.toolbarData,
-				'onContentLoaded': options.toolbarOnload
+				'onContentLoaded': options.toolbarOnload,
+                'section':'toolbar1'
 			});
 		}
 
@@ -578,7 +580,8 @@ MUI.Window = new NamedClass('MUI.Window', {
 				'method': options.method,
 				'url': options.toolbar2URL,
 				'data':	options.toolbar2Data,
-				'onContentLoaded': options.toolbar2Onload
+				'onContentLoaded': options.toolbar2Onload,
+                'section':'toolbar2'
 			});
 		}
 
@@ -2155,7 +2158,64 @@ MUI.Window = new NamedClass('MUI.Window', {
 			});
 		}
 
-	}
+	},
+
+	/// intercepts workflow from updateContent
+	/// sets title and scroll bars of this window
+	updateStart:function(options) {
+        if(options.section=='content') {
+            // copy padding from main options if not passed in
+            if(!options.padding && this.options.padding)
+                options.padding = $extend(options,this.options.padding);
+            
+            // update padding if requested
+            if(options.padding) {
+                this.contentEl.setStyles({
+                    'padding-top': options.padding.top,
+                    'padding-bottom': options.padding.bottom,
+                    'padding-left': options.padding.left,
+                    'padding-right': options.padding.right
+                });
+            }
+
+            // set title if given option to do so
+            if (options.title) {
+                this.options.title = options.title;
+                this.titleEl.set('html', options.title);
+            }
+
+            // Set scrollbars if loading content in main content container.
+            // Always use 'hidden' for iframe windows
+            this.contentWrapperEl.setStyles({
+                'overflow': this.options.scrollbars != false && options.loadMethod != 'iframe' ? 'auto' : 'hidden'
+            });
+        }
+		return false;  // not used but expected
+	},
+
+    /// intercepts workflow from MUI.updateContent
+    updateClear:function(options) {
+        if(options.section=='content') {
+            this.contentEl.show();
+            var iframes=this.contentWrapperEl.getElements('.mochaIframe');
+            if(iframes) iframes.destroy();
+        }
+        return true;
+    },
+
+	/// intercepts workflow from MUI.updateContent
+	updateSetContent:function(options) {
+        if(options.section=='content') {
+            if(options.loadMethod=='html') this.contentEl.addClass('pad');
+            if(options.loadMethod=='iframe') {
+                this.contentEl.removeClass('pad');
+                this.contentEl.setStyle('padding', '0px');
+                this.contentEl.hide();
+                options.contentContainer = this.contentWrapperEl;
+            }
+        }
+		return true;	// tells MUI.updateContent to update the content
+	}    
 
 });
 
@@ -2503,37 +2563,6 @@ MUI.extend({
 			'width': contentEl.offsetWidth
 		});
 		instance.drawWindow();
-	},
-
-	/// intercepts workflow from updateContent
-	/// sets title and scroll bars of this window
-	updateStart:function(options) {
-
-		// update padding if requested
-		if(options.padding) {
-			this.contentEl.setStyles({
-				'padding-top': options.padding.top,
-				'padding-bottom': options.padding.bottom,
-				'padding-left': options.padding.left,
-				'padding-right': options.padding.right
-			});
-		}
-
-		// set title if given option to do so
-		if (options.title) {
-			this.options.title = options.title;
-			this.titleEl.set('html', options.title);
-		}	
-
-		// Set scrollbars if loading content in main content container.
-		// Always use 'hidden' for iframe windows
-		if (options.contentContainer == this.contentEl){
-			this.contentWrapperEl.setStyles({
-				'overflow': this.options.scrollbars != false && options.loadMethod != 'iframe' ? 'auto' : 'hidden'
-			});
-		}
-
-		return false;  // not used but expected
 	}
 
 });
@@ -2601,12 +2630,6 @@ Element.implement({
 		if (instance == null || instance.center==null) return this;
 		instance.center();
 		return this;
-	},
-
-	/// intercepts workflow from MUI.updateContent
-	updateContent:function(options) {
-		if(options.loadMethod=='html') instance.contentEl.addClass('pad');
-		return true;	// tells MUI.updateContent to update the content
 	}
 	
 });
