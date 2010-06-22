@@ -490,6 +490,41 @@ initializeWindows = function(){
         });
     }
 
+    // Misc
+    MUI.authorsWindow = function(){
+        new MUI.Modal({
+            id: 'authorsWindow',
+            title: 'AUTHORS.txt',
+            contentURL: 'scripts/AUTHORS.txt',
+            width: 400,
+            height: 250,
+            scrollbars:true
+        });
+    };
+    if ($('authorsLink')){
+        $('authorsLink').addEvent('click', function(e){
+            new Event(e).stop();
+            MUI.authorsWindow();
+        });
+    }
+
+    MUI.licenseWindow = function(){
+        new MUI.Modal({
+            id: 'License',
+            title: 'MIT-LICENSE.txt',
+            contentURL: 'scripts/MIT-LICENSE.txt',
+            width: 580,
+            height: 350,
+            scrollbars:true
+        });
+    };
+    if ($('licenseLink')){
+        $('licenseLink').addEvent('click', function(e){
+            new Event(e).stop();
+            MUI.licenseWindow();
+        });
+    }
+    
     // Deactivate menu header links
     $$('a.returnFalse').addEvent('click', function(e){
 		e.stop();
