@@ -486,13 +486,6 @@ MUI.Window = new NamedClass('MUI.Window', {
 
 		this.contentWrapperEl.setStyle('overflow', 'hidden');
 
-		this.contentEl.setStyles({
-			'padding-top': options.padding.top,
-			'padding-bottom': options.padding.bottom,
-			'padding-left': options.padding.left,
-			'padding-right': options.padding.right
-		});
-
 		if (options.shape == 'gauge'){
 			if (options.useCanvasControls){
 				this.canvasControlsEl.setStyle('visibility', 'hidden');

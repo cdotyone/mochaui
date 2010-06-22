@@ -203,13 +203,6 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		// May rethink this.
 		this.contentWrapperEl = this.panelEl;
 
-		this.contentEl.setStyles({
-			'padding-top': options.padding.top,
-			'padding-bottom': options.padding.bottom,
-			'padding-left': options.padding.left,
-			'padding-right': options.padding.right
-		});
-
 		this.panelHeaderEl = new Element('div', {
 			'id': this.options.id + '_header',
 			'class': 'panel-header',
