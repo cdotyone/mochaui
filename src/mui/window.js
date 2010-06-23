@@ -1542,19 +1542,19 @@ MUI.Window = new NamedClass('MUI.Window', {
 
 			if (options.resizable){
 				MUI.triangle(
-						ctx,
-						width - (shadowBlur + shadowOffset.x + 17),
-						height - (shadowBlur + shadowOffset.y + 18),
-						11,
-						11,
-						this.resizableColor,
-						1.0
-						);
-			}
+					ctx,
+					width - (shadowBlur + shadowOffset.x + 17),
+					height - (shadowBlur + shadowOffset.y + 18),
+					11,
+					11,
+					this.resizableColor,
+					1.0
+				);
 
-			// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
-			if (Browser.Engine.trident){
-				MUI.triangle(ctx, 0, 0, 10, 10, this.resizableColor, 0);
+				// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
+				if (Browser.Engine.trident){
+					MUI.triangle(ctx, 0, 0, 10, 10, this.resizableColor, 0);
+				}
 			}
 		}
 
@@ -1679,6 +1679,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 					1.0
 					);
 		}
+
 		if (this.options.minimizable){
 			this.minimizebutton(
 					ctx2,
@@ -1688,11 +1689,12 @@ MUI.Window = new NamedClass('MUI.Window', {
 					1.0,
 					this.minimizeColor,
 					1.0
-					);
-		}
-		// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
-		if (Browser.Engine.trident){
-			MUI.circle(ctx2, 0, 0, 3, this.resizableColor, 0);
+				);
+			
+			// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
+			if (Browser.Engine.trident){
+				MUI.circle(ctx2, 0, 0, 3, this.minimizeBgColor, 0);
+			}
 		}
 
 	},
