@@ -107,11 +107,13 @@ var initializeWindows = function(){
             width: 340,
             height: 280,
             resizeLimit: {'x': [330, 2500], 'y': [250, 2000]},
-            toolbar: true,
-            toolbarURL: 'pages/youtube-tabs.html',
-            toolbarOnload: function(){
-                MUI.initializeTabs('youtubeTabs');
-            }
+            sections:[{'position':'top',
+                        section:'toolbar',
+                        url:'pages/youtube-tabs.html',
+                        onContentLoaded:function(){
+                            MUI.initializeTabs('youtubeTabs','youtube');
+                        }
+                      }]
         });
     };
     if ($('youtubeLinkCheck')){
@@ -581,32 +583,13 @@ var initializeWindows = function(){
             require: {
                 css: [MUI.themePath() + 'css/Tabs.css']
             },
-            toolbar: true,
-            toolbarURL: 'pages/features-tabs.html',
-            toolbarOnload: function(){
-                MUI.initializeTabs('featuresTabs');
-
-                $('featuresLayoutLink').addEvent('click', function(){
-                    MUI.updateContent({
-                        'element':  $('features'),
-                        'url':       'pages/features-layout.html'
-                    });
-                });
-
-                $('featuresWindowsLink').addEvent('click', function(){
-                    MUI.updateContent({
-                        'element':  $('features'),
-                        'url':       'pages/features-windows.html'
-                    });
-                });
-
-                $('featuresGeneralLink').addEvent('click', function(){
-                    MUI.updateContent({
-                        'element':  $('features'),
-                        'url':       'pages/features-general.html'
-                    });
-                });
-            }
+            sections:[{'position':'top',
+                        section:'toolbar',
+                        url:'pages/features-tabs.html',
+                        onContentLoaded:function(){
+                            MUI.initializeTabs('featuresTabs','features');
+                        }
+                      }]
         });
     };
     if ($('featuresLinkCheck')){
@@ -636,13 +619,31 @@ var initializeWindows = function(){
     }
 
     // Misc
+    MUI.authorsWindow = function(){
+        new MUI.Modal({
+            id: 'authorsWindow',
+            title: 'AUTHORS.txt',
+            contentURL: 'scripts/AUTHORS.txt',
+            width: 400,
+            height: 250,
+            scrollbars:true
+        });
+    };
+    if ($('authorsLink')){
+        $('authorsLink').addEvent('click', function(e){
+            new Event(e).stop();
+            MUI.authorsWindow();
+        });
+    }
+
     MUI.licenseWindow = function(){
-        new MUI.Window({
+        new MUI.Modal({
             id: 'License',
-            title: 'License',
-            contentURL: 'license.html',
-            width: 375,
-            height: 340
+            title: 'MIT-LICENSE.txt',
+            contentURL: 'scripts/MIT-LICENSE.txt',
+            width: 580,
+            height: 350,
+            scrollbars:true
         });
     };
     if ($('licenseLink')){
@@ -776,6 +777,7 @@ var initializeColumns = function(){
                     element: $('mainPanel'),
                     url: MUI.path.controls + 'calendar/example.html',
                     title: 'Calendar Component',
+                    padding: { top: 8, right: 8, bottom: 8, left: 8 },
                     require: {
                         css: [MUI.path.controls + 'calendar/css/calendar.css'],
                         js: [MUI.path.controls + 'calendar/scripts/calendar.js'],
@@ -789,7 +791,8 @@ var initializeColumns = function(){
                 MUI.updateContent({
                     element: $('mainPanel'),
                     url: MUI.path.plugins + 'Fx.Morpher/',
-                    title: 'Fx.Morpher Path Animation'
+                    title: 'Fx.Morpher Path Animation',
+                    padding: { top: 8, right: 8, bottom: 8, left: 8 }
                 });
                 MUI.fxmorpherWindow();
             });
@@ -819,7 +822,8 @@ var initializeColumns = function(){
                         MUI.updateContent({
                             'element': $('mainPanel'),
                             'content': response,
-                            'title': 'Ajax Response'
+                            'title': 'Ajax Response',
+                            'padding': { top: 8, right: 8, bottom: 8, left: 8 }
                         });
                     },
                     onSuccess: function(){
@@ -857,7 +861,8 @@ var initializeColumns = function(){
                             MUI.updateContent({
                                 'element': $('mainPanel'),
                                 'content': response,
-                                'title': 'Ajax Response'
+                                'title': 'Ajax Response',
+                                'padding': { top: 8, right: 8, bottom: 8, left: 8 }
                             });
                         },
                         onSuccess: function(){

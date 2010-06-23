@@ -203,13 +203,6 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		// May rethink this.
 		this.contentWrapperEl = this.panelEl;
 
-		this.contentEl.setStyles({
-			'padding-top': options.padding.top,
-			'padding-bottom': options.padding.bottom,
-			'padding-left': options.padding.left,
-			'padding-right': options.padding.right
-		});
-
 		this.panelHeaderEl = new Element('div', {
 			'id': this.options.id + '_header',
 			'class': 'panel-header',
@@ -289,7 +282,8 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				'loadMethod': 'xhr',
 				'data': options.footerData,
 				'url': options.footerURL,
-				'onContentLoaded': options.footerOnload
+				'onContentLoaded': options.footerOnload,
+                'section':'footer'
 			});
 		}
 
@@ -299,7 +293,8 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				'childElement': this.panelHeaderToolboxEl,
 				'loadMethod': 'xhr',
 				'url': options.headerToolboxURL,
-				'onContentLoaded': options.headerToolboxOnload
+				'onContentLoaded': options.headerToolboxOnload,
+                'section':'header'
 			});
 		}
 
@@ -313,7 +308,8 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				'loadMethod': 'xhr',
 				'url': options.tabsURL,
 				'data': options.tabsData,
-				'onContentLoaded': options.tabsOnload
+				'onContentLoaded': options.tabsOnload,
+                'section':'tabs'
 			});
 		}
 
@@ -328,7 +324,8 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 			'require': {
 				js: options.require.js,
 				onload: options.require.onload
-			}
+			},
+            section:'content'
 		});
 
 		// Do this when creating and removing panels
@@ -546,3 +543,5 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 	}
 
 });
+
+MUI.Panel.implement(MUI.WindowPanelShared);

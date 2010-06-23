@@ -100,11 +100,13 @@ initializeWindows = function(){
             width: 340,
             height: 280,
             resizeLimit:  {'x': [330, 2500], 'y': [250, 2000]},
-            toolbar: true,
-            toolbarURL: 'pages/youtube-tabs.html',
-            toolbarOnload: function(){
-                MUI.initializeTabs('youtubeTabs');
-            }
+            sections:[{'position':'top',
+                        section:'toolbar',
+                        url:'pages/youtube-tabs.html',
+                        onContentLoaded:function(){
+                            MUI.initializeTabs('youtubeTabs','youtube');
+                        }
+                      }]
         });
     };
     if ($('youtubeLinkCheck')){
@@ -434,32 +436,14 @@ initializeWindows = function(){
             width: 305,
             height: 175,
             resizeLimit: {'x': [275, 2500], 'y': [125, 2000]},
-            toolbar: true,
-            toolbarURL: 'pages/features-tabs.html',
-            toolbarOnload: function(){
-                MUI.initializeTabs('featuresTabs');
 
-                $('featuresLayoutLink').addEvent('click', function(){
-                    MUI.updateContent({
-                        'element':  $('features'),
-                        'url':       'pages/features-layout.html'
-                    });
-                });
-
-                $('featuresWindowsLink').addEvent('click', function(){
-                    MUI.updateContent({
-                        'element':  $('features'),
-                        'url':       'pages/features-windows.html'
-                    });
-                });
-
-                $('featuresGeneralLink').addEvent('click', function(){
-                    MUI.updateContent({
-                        'element':  $('features'),
-                        'url':       'pages/features-general.html'
-                    });
-                });
-            }
+            sections:[{'position':'top',
+                        section:'toolbar',
+                        url:'pages/features-tabs.html',
+                        onContentLoaded:function(){
+                            MUI.initializeTabs('featuresTabs','features');
+                        }
+                      }]
         });
     };
     if ($('featuresLinkCheck')){
@@ -490,6 +474,41 @@ initializeWindows = function(){
         });
     }
 
+    // Misc
+    MUI.authorsWindow = function(){
+        new MUI.Modal({
+            id: 'authorsWindow',
+            title: 'AUTHORS.txt',
+            contentURL: 'scripts/AUTHORS.txt',
+            width: 400,
+            height: 250,
+            scrollbars:true
+        });
+    };
+    if ($('authorsLink')){
+        $('authorsLink').addEvent('click', function(e){
+            new Event(e).stop();
+            MUI.authorsWindow();
+        });
+    }
+
+    MUI.licenseWindow = function(){
+        new MUI.Modal({
+            id: 'License',
+            title: 'MIT-LICENSE.txt',
+            contentURL: 'scripts/MIT-LICENSE.txt',
+            width: 580,
+            height: 350,
+            scrollbars:true
+        });
+    };
+    if ($('licenseLink')){
+        $('licenseLink').addEvent('click', function(e){
+            new Event(e).stop();
+            MUI.licenseWindow();
+        });
+    }
+    
     // Deactivate menu header links
     $$('a.returnFalse').addEvent('click', function(e){
 		e.stop();

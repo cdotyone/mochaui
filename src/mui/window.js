@@ -44,18 +44,7 @@ MUI.files[MUI.path.source + 'window.js'] = 'loading';
  evalScripts - (boolean) An xhr loadMethod option. Defaults to true.
  evalResponse - (boolean) An xhr loadMethod option. Defaults to false.
  content - (string or element) An html loadMethod option.
- toolbar - (boolean) Create window toolbar. Defaults to false. This can be used for tabs, media controls, and so forth.
- toolbarPosition - ('top' or 'bottom') Defaults to top.
- toolbarHeight - (number)
- toolbarURL - (url) Defaults to 'pages/lipsum.html'.
- toolbarContent - (string)
- toolbarOnload - (function)
- toolbar2 - (boolean) Create window toolbar. Defaults to false. This can be used for tabs, media controls, and so forth.
- toolbar2Position - ('top' or 'bottom') Defaults to top.
- toolbar2Height - (number)
- toolbar2URL - (url) Defaults to 'pages/lipsum.html'.
- toolbar2Content - (string)
- toolbar2Onload - (function)
+ sections - (array of hashes) - list of additional sections to insert content into
  container - (element ID) Element the window is injected in. The container defaults to 'desktop'. If no desktop then to document.body. Use 'pageWrapper' if you don't want the windows to overlap the toolbars.
  restrict - (boolean) Restrict window to container when dragging.
  shape - ('box' or 'gauge') Shape of window. Defaults to 'box'.
@@ -189,23 +178,8 @@ MUI.Windows.windowOptions = {
 	// html options
 	content:			'Window content',
 
-	// Toolbar
-	toolbar:			false,
-	toolbarPosition:	'top',
-	toolbarHeight:		29,
-	toolbarURL:			'pages/lipsum.html',
-	toolbarData:		null,
-	toolbarContent:		'',
-	toolbarOnload:		$empty,
-
-	// Toolbar
-	toolbar2:			false,
-	toolbar2Position:	'bottom',
-	toolbar2Height:		29,
-	toolbar2URL:		'pages/lipsum.html',
-	toolbar2Data:		null,
-	toolbar2Content:	'',
-	toolbar2Onload:		$empty,
+    // additional content sections
+    sections:           false,
 
 	// Container options
 	container:			null,
@@ -486,13 +460,6 @@ MUI.Window = new NamedClass('MUI.Window', {
 
 		this.contentWrapperEl.setStyle('overflow', 'hidden');
 
-		this.contentEl.setStyles({
-			'padding-top': options.padding.top,
-			'padding-bottom': options.padding.bottom,
-			'padding-left': options.padding.left,
-			'padding-right': options.padding.right
-		});
-
 		if (options.shape == 'gauge'){
 			if (options.useCanvasControls){
 				this.canvasControlsEl.setStyle('visibility', 'hidden');
@@ -551,36 +518,16 @@ MUI.Window = new NamedClass('MUI.Window', {
 			'require': {
 				js: options.require.js,
 				onload: options.require.onload
-			}
+			},
+            'section':'content'
 		});
 
-		// Add content to window toolbar.
-		if (this.options.toolbar == true){
-			MUI.updateContent({
-				'element': this.windowEl,
-				'childElement': this.toolbarEl,
-				'content': options.toolbarContent,
-				'loadMethod': 'xhr',
-				'method': options.method,
-				'url': options.toolbarURL,
-				'data':	options.toolbarData,
-				'onContentLoaded': options.toolbarOnload
-			});
-		}
-
-		// Add content to window toolbar.
-		if (this.options.toolbar2 == true){
-			MUI.updateContent({
-				'element': this.windowEl,
-				'childElement': this.toolbar2El,
-				'content': options.toolbar2Content,
-				'loadMethod': 'xhr',
-				'method': options.method,
-				'url': options.toolbar2URL,
-				'data':	options.toolbar2Data,
-				'onContentLoaded': options.toolbar2Onload
-			});
-		}
+        // load/build all of the additional  content sections        
+        if (options.sections){
+            options.sections.each(function(section){
+            	MUI.updateContent(section);
+            });
+        }
 
 		this.drawWindow();
 
@@ -1094,8 +1041,8 @@ MUI.Window = new NamedClass('MUI.Window', {
 	 windowEl
 	 */
 	insertWindowElements: function(){
-
-		var options = this.options;
+        var self = this;
+		var options = self.options;
 		var height = options.height;
 		var width = options.width;
 		var id = options.id;
@@ -1113,7 +1060,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 				'styles': {
 					'position': 'absolute' // This is set here to make theme transitions smoother
 				}
-			}).inject(this.windowEl);
+			}).inject(self.windowEl);
 		}
 
 		cache.overlayEl = new Element('div', {
@@ -1124,7 +1071,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 				'top': 0,
 				'left': 0
 			}
-		}).inject(this.windowEl);
+		}).inject(self.windowEl);
 
 		cache.titleBarEl = new Element('div', {
 			'id': id + '_titleBar',
@@ -1151,39 +1098,48 @@ MUI.Window = new NamedClass('MUI.Window', {
 			'class': 'mochaContentBorder'
 		}).inject(cache.overlayEl);
 
-		if (options.toolbar){
-			cache.toolbarWrapperEl = new Element('div', {
-				'id': id + '_toolbarWrapper',
-				'class': 'mochaToolbarWrapper',
-				'styles': { 'height': options.toolbarHeight }
-			}).inject(cache.contentBorderEl, options.toolbarPosition == 'bottom' ? 'after' : 'before');
+        if (options.sections){
+            var snum=0;
+            options.sections.each(function(section){
+                section.element = self.windowEl;
+                snum++;
+                var id=self.options.id + '_' + (section.section || 'section'+snum);
 
-			if (options.toolbarPosition == 'bottom'){
-				cache.toolbarWrapperEl.addClass('bottom');
-			}
-			cache.toolbarEl = new Element('div', {
-				'id': id + '_toolbar',
-				'class': 'mochaToolbar',
-				'styles': { 'height': options.toolbarHeight }
-			}).inject(cache.toolbarWrapperEl);
-		}
+                $extend(section,{
+                        'wrap':true,
+                        'position':'top',
+                        'height':29,
+                        'id':id,
+                        'css':'mochaToolbar',
+                        'section':'section'+snum,
+                        'loadMethod': 'xhr',
+                        'method': self.options.method
+                       });
+                var where = section.position == 'bottom' ? 'after' : 'before';
 
-		if (options.toolbar2){
-			cache.toolbar2WrapperEl = new Element('div', {
-				'id': id + '_toolbar2Wrapper',
-				'class': 'mochaToolbarWrapper',
-				'styles': { 'height': options.toolbar2Height }
-			}).inject(cache.contentBorderEl, options.toolbar2Position == 'bottom' ? 'after' : 'before');
+                if(section.wrap){
+             		section.wrapperEl = new Element('div', {
+                        'id': section.id + '_wrapper',
+                        'class': section.css+'Wrapper',
+                        'styles': { 'height': section.height }
+                    }).inject(cache.contentBorderEl, where);
 
-			if (options.toolbar2Position == 'bottom'){
-				cache.toolbar2WrapperEl.addClass('bottom');
-			}
-			cache.toolbar2El = new Element('div', {
-				'id': id + '_toolbar2',
-				'class': 'mochaToolbar',
-				'styles': { 'height': options.toolbar2Height }
-			}).inject(cache.toolbar2WrapperEl);
-		}
+                    if (section.position == 'bottom') section.wrapperEl.addClass('bottom');
+                }
+                
+                section.childElement = new Element('div', {
+                    'id': section.id,
+                    'class': section.css,
+                    'styles': { 'height': section.height }
+                });
+
+                if(section.wrap) section.childElement.inject(section.wrapperEl);
+                else {
+                    section.childElement.inject( cache.contentBorderEl );
+                    if(section.position == 'bottom') section.childElement.addClass('bottom');
+                }  
+            });
+        }
 
 		cache.contentWrapperEl = new Element('div', {
 			'id': id + '_contentWrapper',
@@ -1194,7 +1150,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 			}
 		}).inject(cache.contentBorderEl);
 
-		if (this.options.shape == 'gauge'){
+		if (self.options.shape == 'gauge'){
 			cache.contentBorderEl.setStyle('borderWidth', 0);
 		}
 
@@ -1203,16 +1159,16 @@ MUI.Window = new NamedClass('MUI.Window', {
 			'class': 'mochaContent'
 		}).inject(cache.contentWrapperEl);
 
-		if (this.options.useCanvas == true && Browser.Engine.trident != true){
+		if (self.options.useCanvas == true && Browser.Engine.trident != true){
 			cache.canvasEl = new Element('canvas', {
 				'id': id + '_canvas',
 				'class': 'mochaCanvas',
 				'width': 10,
 				'height': 10
-			}).inject(this.windowEl);
+			}).inject(self.windowEl);
 		}
 
-		if (this.options.useCanvas == true && Browser.Engine.trident){
+		if (self.options.useCanvas == true && Browser.Engine.trident){
 			cache.canvasEl = new Element('canvas', {
 				'id': id + '_canvas',
 				'class': 'mochaCanvas',
@@ -1223,11 +1179,11 @@ MUI.Window = new NamedClass('MUI.Window', {
 					'top': 0,
 					'left': 0
 				}
-			}).inject(this.windowEl);
+			}).inject(self.windowEl);
 
 			if (MUI.ieSupport == 'excanvas'){
 				G_vmlCanvasManager.initElement(cache.canvasEl);
-				cache.canvasEl = this.windowEl.getElement('.mochaCanvas');
+				cache.canvasEl = self.windowEl.getElement('.mochaCanvas');
 			}
 		}
 
@@ -1242,11 +1198,11 @@ MUI.Window = new NamedClass('MUI.Window', {
 				'class': 'mochaCanvasControls',
 				'width': 14,
 				'height': 14
-			}).inject(this.windowEl);
+			}).inject(self.windowEl);
 
 			if (Browser.Engine.trident && MUI.ieSupport == 'excanvas'){
 				G_vmlCanvasManager.initElement(cache.canvasControlsEl);
-				cache.canvasControlsEl = this.windowEl.getElement('.mochaCanvasControls');
+				cache.canvasControlsEl = self.windowEl.getElement('.mochaCanvasControls');
 			}
 		}
 
@@ -1280,20 +1236,20 @@ MUI.Window = new NamedClass('MUI.Window', {
 				'class': 'mochaSpinner',
 				'width': 16,
 				'height': 16
-			}).inject(this.windowEl, 'bottom');
+			}).inject(self.windowEl, 'bottom');
 		}
 
-		if (this.options.shape == 'gauge'){
+		if (self.options.shape == 'gauge'){
 			cache.canvasHeaderEl = new Element('canvas', {
 				'id': id + '_canvasHeader',
 				'class': 'mochaCanvasHeader',
-				'width': this.options.width,
+				'width': self.options.width,
 				'height': 26
-			}).inject(this.windowEl, 'bottom');
+			}).inject(self.windowEl, 'bottom');
 
 			if (Browser.Engine.trident && MUI.ieSupport == 'excanvas'){
 				G_vmlCanvasManager.initElement(cache.canvasHeaderEl);
-				cache.canvasHeaderEl = this.windowEl.getElement('.mochaCanvasHeader');
+				cache.canvasHeaderEl = self.windowEl.getElement('.mochaCanvasHeader');
 			}
 		}
 
@@ -1392,7 +1348,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 				}
 			}).inject(cache.overlayEl, 'after');
 		}
-		$extend(this, cache);
+		$extend(self, cache);
 
 	},
 
@@ -1518,12 +1474,16 @@ MUI.Window = new NamedClass('MUI.Window', {
 		}
 
 		var borderHeight = this.contentBorderEl.getStyle('border-top').toInt() + this.contentBorderEl.getStyle('border-bottom').toInt();
-		var toolbarHeight = this.toolbarWrapperEl ? this.toolbarWrapperEl.getStyle('height').toInt() + this.toolbarWrapperEl.getStyle('border-top').toInt() : 0;
-		var toolbar2Height = this.toolbar2WrapperEl ? this.toolbar2WrapperEl.getStyle('height').toInt() + this.toolbar2WrapperEl.getStyle('border-top').toInt() : 0;
 
 		this.headerFooterShadow = options.headerHeight + options.footerHeight + shadowBlur2x;
-		var height = this.contentWrapperEl.getStyle('height').toInt() + this.headerFooterShadow + toolbarHeight + toolbar2Height + borderHeight;
-		var width = this.contentWrapperEl.getStyle('width').toInt() + shadowBlur2x;
+
+        var width = this.contentWrapperEl.getStyle('width').toInt() + shadowBlur2x;
+		var height = this.contentWrapperEl.getStyle('height').toInt() + this.headerFooterShadow + borderHeight;
+        if(options.sections) options.sections.each(function(section) {
+            var el=section.wrap ? section.wrapperEl : section.childElement;
+            height+=el.getStyle('height').toInt() + el.getStyle('border-top').toInt();
+        } );
+
 		this.windowEl.setStyles({
 			'height': height,
 			'width': width
@@ -2159,6 +2119,8 @@ MUI.Window = new NamedClass('MUI.Window', {
 
 });
 
+MUI.Window.implement(MUI.WindowPanelShared);
+
 MUI.extend({
 
 	closingJobs: function(windowEl){
@@ -2252,14 +2214,17 @@ MUI.extend({
 				top: -10000,
 				left: -10000
 			});
-			if (instance.toolbarWrapperEl){
-				instance.toolbarWrapperEl.setStyles({
-					visibility: 'hidden',
-					position: 'absolute',
-					top: -10000,
-					left: -10000
-				});
-			}
+            if (instance.sections){
+                instance.sections.each(function(section){
+                    var el=section.wrap ? section.wrapperEl : section.childElement;
+                    if(el) el.setStyles({
+					    visibility: 'hidden',
+					    position: 'absolute',
+					    top: -10000,
+					    left: -10000
+				    });
+                });
+            }
 			instance.drawWindowCollapsed();
 		}
 		else {
@@ -2271,14 +2236,17 @@ MUI.extend({
 				top: null,
 				left: null
 			});
-			if (instance.toolbarWrapperEl){
-				instance.toolbarWrapperEl.setStyles({
-					visibility: 'visible',
-					position: null,
-					top: null,
-					left: null
-				});
-			}
+            if (instance.sections){
+                instance.sections.each(function(section){
+                    var el=section.wrap ? section.wrapperEl : section.childElement;
+                    if(el) el.setStyles({
+                        visibility: 'visible',
+                        position: null,
+                        top: null,
+                        left: null
+				    });
+                });
+            }
 			if (instance.iframeEl){
 				instance.iframeEl.setStyle('visibility', 'visible');
 			}
@@ -2292,28 +2260,30 @@ MUI.extend({
 	 */
 	toggleWindowVisibility: function(){
 		MUI.each(function(instance){
-			if (instance.options.type == 'modal' || instance.options.type == 'modal2' || instance.isMinimized == true) return;
+			if (!instance.isTypeOf('MUI.Window') || instance.isMinimized == true) return;
 			var id = $(instance.options.id);
 			if (id.getStyle('visibility') == 'visible'){
-				if (instance.iframe){
-					instance.iframeEl.setStyle('visibility', 'hidden');
-				}
-				if (instance.toolbarEl){
-					instance.toolbarWrapperEl.setStyle('visibility', 'hidden');
-				}
-				instance.contentBorderEl.setStyle('visibility', 'hidden');
+				if (instance.iframe) instance.iframeEl.setStyle('visibility', 'hidden');
+                if (instance.sections) {
+                    instance.sections.each(function(section){
+                        var el=section.wrap ? section.wrapperEl : section.childElement;
+                        if(el) el.setStyle('visibility', 'hidden');
+                    });
+                }   
+                if (instance.contentBorderEl) instance.contentBorderEl.setStyle('visibility', 'hidden');
 				id.setStyle('visibility', 'hidden');
 				MUI.Windows.windowsVisible = false;
 			}
 			else {
 				id.setStyle('visibility', 'visible');
-				instance.contentBorderEl.setStyle('visibility', 'visible');
-				if (instance.iframe){
-					instance.iframeEl.setStyle('visibility', 'visible');
-				}
-				if (instance.toolbarEl){
-					instance.toolbarWrapperEl.setStyle('visibility', 'visible');
-				}
+                if (instance.contentBorderEl) instance.contentBorderEl.setStyle('visibility', 'visible');
+				if (instance.iframe) instance.iframeEl.setStyle('visibility', 'visible');
+                if (instance.sections) {
+                    instance.sections.each(function(section){
+                        var el=section.wrap ? section.wrapperEl : section.childElement;
+                        if(el) el.setStyle('visibility', 'visible');
+                    });
+                }
 				MUI.Windows.windowsVisible = true;
 			}
 		}.bind(this));

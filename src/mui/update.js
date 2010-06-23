@@ -40,7 +40,7 @@ instance.updateClear - this is called when updateContent needs to clear the cont
 	the childElement.  The return result true/false will determine if the childElement is
 	cleared by updateContent.
 
-instance.updateContent - this is called after a response has been received and the content of the
+instance.updateSetContent - this is called after a response has been received and the content of the
 	childElement needs to be updated.  The return result true/false will determine if the
 	childElement is updated by updateContent.
 
@@ -67,11 +67,10 @@ MUI.extend({
 	 childElement - The child element of the window or panel receiving the content.
 	 method - ('get', or 'post') The way data is transmitted.
 	 data - (hash) Data to be transmitted
-	 title - (string) Change this if you want to change the title of the window or panel.
 	 content - (string or element) An html loadMethod option.
 	 loadMethod - ('html', 'xhr', or 'iframe')
 	 url - Used if loadMethod is set to 'xhr' or 'iframe'.
-	 scrollbars - (boolean)
+     section - used to name the section being update, such as 'content,'toolbar','header','footer'
 	 onContentLoaded - (function)
 
 	 */
@@ -82,12 +81,10 @@ MUI.extend({
 			childElement:	null,
 			method:			null,
 			data:			null,
-			title:			null,
 			content:		null,
 			loadMethod:		null,
 			url:			null,
-			scrollbars:	 	null,
-			padding:		null,
+            section:        null,
 			require:		{},
 			onContentLoaded:$empty
 		}, options);
@@ -96,27 +93,15 @@ MUI.extend({
 			css: [], images: [], js: [], onload: null
 		}, options.require);
 
-		var args = {};
-
 		if (!options.element) return;
-		var element = options.element;
-
-		if (MUI.get(element).isTypeOf('MUI.Window')){
-			args.recipient = 'window';
-		}
-		else {
-			args.recipient = 'panel';
-		}
-
+		var element = $(options.element);
 		var instance = element.retrieve('instance');
-		if (options.title) instance.titleEl.set('html', options.title);
 
-		var contentEl = instance.contentEl;
-		args.contentContainer = options.childElement != null ? options.childElement : instance.contentEl;
-		var contentWrapperEl = instance.contentWrapperEl;
+		var contentEl = instance==null ? element : instance.contentEl;
+		options.contentContainer = options.childElement != null ? options.childElement : contentEl;
 
 		if (!options.loadMethod){
-			if (!instance.options.loadMethod){
+			if (instance==null || instance.options==null || !instance.options.loadMethod){
 				if (!options.url){
 					options.loadMethod = 'html';
 				}
@@ -129,108 +114,124 @@ MUI.extend({
 			}
 		}
 
-		// Set scrollbars if loading content in main content container.
-		// Always use 'hidden' for iframe windows
-		var scrollbars = options.scrollbars || instance.options.scrollbars;
-		if (args.contentContainer == instance.contentEl){
-			contentWrapperEl.setStyles({
-				'overflow': scrollbars != false && options.loadMethod != 'iframe' ? 'auto' : 'hidden'
-			});
-		}
+        if(!options.section) options.section = 'content';
+
+		// -- argument pre-processing override --
+		// allow controls to process any custom arguments, titles, scrollbars, etc..
+		if(instance!=null && instance.updateStart!=null) instance.updateStart(options);
+
+		// -- content removal --
+		// allow controls option to clear their own content
+		var removeContent = (options.contentContainer == contentEl);
+		if(instance!=null && instance.updateClear!=null) removeContent = instance.updateClear(options);
 
 		// Remove old content.
-		if (args.contentContainer == contentEl){
+		if (removeContent){
 			contentEl.empty().show();
 			// Panels are not loaded into the padding div, so we remove them separately.
 			contentEl.getAllNext('.column').destroy();
 			contentEl.getAllNext('.columnHandle').destroy();
 		}
 
-		args.onContentLoaded = function(){
-
-			if (options.require.js.length || typeof options.require.onload == 'function'){
-				new MUI.Require({
-					js: options.require.js,
-					onload: function(){
-						if (Browser.Engine.presto){
-							options.require.onload.delay(100);
-						}
-						else {
-							options.require.onload();
-						}
-						(options.onContentLoaded && options.onContentLoaded != $empty) ? options.onContentLoaded() : instance.fireEvent('contentLoaded', element);
-					}.bind(this)
-				});
+		// prepare function to fire onContentLoaded event
+		options.fireContentLoaded = function(event,instance,options){
+			var fireEvent = true;
+			if(instance!=null && instance.updateEnd!=null) fireEvent=instance.updateEnd(options);
+			if(fireEvent) {
+				if (options.require.js.length || typeof options.require.onload == 'function'){
+					new MUI.Require({
+						js: options.require.js,
+						onload: function(){
+							if (Browser.Engine.presto){
+								options.require.onload.delay(100);
+							}
+							else {
+								options.require.onload();
+							}
+							if(options.onContentLoaded && options.onContentLoaded != $empty) {
+								options.onContentLoaded()
+							} else {
+								if(instance) instance.fireEvent(event, element);
+							}
+						}.bind(this)
+					});
+				}
+				else {
+					if(options.onContentLoaded && options.onContentLoaded != $empty) {
+						options.onContentLoaded()
+					} else {
+						if(instance) instance.fireEvent(event, element);
+					}
+				}
 			}
-			else {
-				(options.onContentLoaded && options.onContentLoaded != $empty) ? options.onContentLoaded() : instance.fireEvent('contentLoaded', element);
-			}
-
 		};
 
+		// now perform requests
 		if (options.require.css.length || options.require.images.length){
 			new MUI.Require({
 				css: options.require.css,
 				images: options.require.images,
 				onload: function(){
-					MUI.Content.Providers[options.loadMethod](instance, options, args);
+					MUI.Content.Providers[options.loadMethod](instance, options);
 				}.bind(this)
 			});
 		} else {
-			MUI.Content.Providers[options.loadMethod](instance, options, args);
+			MUI.Content.Providers[options.loadMethod](instance, options);
 		}
 	}
+			
 });
 
-MUI.Content.Providers.xhr = function(instance, options, args){
-	var contentEl = instance.contentEl;
-	var contentContainer = args.contentContainer;
-	var onContentLoaded = args.onContentLoaded;
-	new Request.HTML({
+MUI.Content.Providers.xhr = function(instance, options){
+	var contentContainer = options.contentContainer;
+	var fireContentLoaded = options.fireContentLoaded;
+	var request=new Request.HTML({
 		url: options.url,
-		update: contentContainer,
 		method: options.method != null ? options.method : 'get',
 		data: options.data != null ? new Hash(options.data).toQueryString() : '',
-		evalScripts: instance.options.evalScripts,
-		evalResponse: instance.options.evalResponse,
+		evalScripts: false,
+		evalResponse: false,
 		onRequest: function(){
-			if (args.recipient == 'window' && contentContainer == contentEl){
-				instance.showSpinner();
-			}
-			else if (args.recipient == 'panel' && contentContainer == contentEl && $('spinner')){
-				$('spinner').show();
-			}
+			contentContainer.showSpinner(instance);
 		}.bind(this),
 		onFailure: function(response){
-			if (contentContainer == contentEl){
-				var getTitle = new RegExp('<title>[\n\r\s]*(.*)[\n\r\s]*</title>', 'gmi');
-				var error = getTitle.exec(response.responseText);
-				if (!error) error = 'Unknown';
-				contentContainer.set('html', '<h3>Error: ' + error[1] + '</h3>');
-				if (args.recipient == 'window'){
-					instance.hideSpinner();
-				}
-				else if (args.recipient == 'panel' && $('spinner')){
-					$('spinner').hide();
-				}
-			}
+			var getTitle = new RegExp('<title>[\n\r\s]*(.*)[\n\r\s]*</title>', 'gmi');
+			var error = getTitle.exec(response.responseText);
+			if (!error) error = [500,'Unknown'];
+
+			var updateSetContent = true;
+			options.error=error;
+			options.errorMessage='<h3>Error: ' + error[1] + '</h3>';
+			if(instance!=null && instance.updateSetContent!=null) updateSetContent=instance.updateSetContent(options);
+			if(updateSetContent) contentContainer.set('html', options.errorMessage);
+
+			contentContainer.hideSpinner(instance);
 		}.bind(this),
-		onSuccess: function(){
-			contentEl.addClass('pad');
-			if (contentContainer == contentEl){
-				if (args.recipient == 'window') instance.hideSpinner();
-				else if (args.recipient == 'panel' && $('spinner')) $('spinner').hide();
+		onSuccess: function(tree,elements,html,js){
+			contentContainer.hideSpinner(instance);
+
+            // convert text files to html
+            if(request.getHeader('Content-Type')=='text/plain') html=html.replace(/\n/g,'<br>');  
+
+			var updateSetContent = true;
+			options.content=html;
+			if(instance!=null && instance.updateSetContent!=null) updateSetContent=instance.updateSetContent(options);
+			if(updateSetContent) {
+				contentContainer.set('html', options.content);
+				var evalJS = true;
+				if(instance!=null && instance.options && instance.options.evalScripts!=null) evalJS=instance.options.evalScripts;
+				if(evalJS && js) eval(js);
 			}
-			Browser.Engine.trident4 ? onContentLoaded.delay(750) : onContentLoaded();
+			
+			Browser.Engine.trident4 ? fireContentLoaded.delay(50,this,['contentLoaded',instance,options]) : fireContentLoaded('contentLoaded',instance,options);
 		}.bind(this),
 		onComplete: function(){
 		}.bind(this)
 	}).send();
 };
 
-MUI.Content.Providers.json = function(instance, options, args){
-	var contentEl = instance.contentEl;
-	var contentContainer = args.contentContainer;
+MUI.Content.Providers.json = function(instance, options){
+	var contentContainer = options.contentContainer;
 
 	new Request({
 		url: options.url,
@@ -241,93 +242,146 @@ MUI.Content.Providers.json = function(instance, options, args){
 		evalResponse: false,
 		headers: {'Content-Type':'application/json'},
 		onRequest: function(){
-			if (args.recipient == 'window' && contentContainer == contentEl){
-				instance.showSpinner();
-			}
-			else if (args.recipient == 'panel' && contentContainer == contentEl && $('spinner')){
-				$('spinner').show();
-			}
+			contentContainer.showSpinner(instance);
 		}.bind(this),
 		onFailure: function(){
-			if (contentContainer == contentEl){
-				contentContainer.set('html', '<p><strong>Error Loading XMLHttpRequest</strong></p>');
-				if (args.recipient == 'window'){
-					instance.hideSpinner();
-				}
-				else if (args.recipient == 'panel' && $('spinner')){
-					$('spinner').hide();
-				}
-			}
+			var updateSetContent = true;
+			options.error=[500,'Error Loading XMLHttpRequest'];
+			options.errorMessage='<p><strong>Error Loading XMLHttpRequest</strong></p>';
+			if(instance!=null && instance.updateSetContent!=null) updateSetContent=instance.updateSetContent(options);
+			if(updateSetContent) contentContainer.set('html', options.errorMessage);
+
+			contentContainer.hideSpinner(instance);
 		}.bind(this),
 		onException: function(){
 		}.bind(this),
 		onSuccess: function(json){
-			if (contentContainer == contentEl){
-				if (contentContainer == contentEl){
-					if (args.recipient == 'window') instance.hideSpinner();
-					else if (args.recipient == 'panel' && $('spinner')) $('spinner').hide();
-				}
-				json = JSON.decode(json);
-				// calls onLoaded event instead of onContentLoaded
-				// onLoaded - event should call updateContent again with loadMethod='html'
-				instance.fireEvent('loaded', $A([options.element, json, instance]));
-			}
+			json = JSON.decode(json);
+			// calls onLoaded event instead of onContentLoaded
+			// onLoaded - event should call updateContent again with loadMethod='html'
+
+			contentContainer.hideSpinner(instance);
+			Browser.Engine.trident4 ? fireContentLoaded.delay(50,this,['loaded',instance,options]) : fireContentLoaded('loaded',instance,options);
 		}.bind(this),
 		onComplete: function(){
 		}.bind(this)
 	}).get();
 };
 
-MUI.Content.Providers.iframe = function(instance, options, args){
-	var contentEl = instance.contentEl;
-	var contentContainer = args.contentContainer;
-	var contentWrapperEl = instance.contentWrapperEl;
-	var onContentLoaded = args.onContentLoaded;
-	if (instance.options.contentURL == '' || contentContainer != contentEl){
-		return;
-	}
-	contentEl.removeClass('pad');
-	contentEl.setStyle('padding', '0px');
-	instance.iframeEl = new Element('iframe', {
-		'id': instance.options.id + '_iframe',
-		'name': instance.options.id + '_iframe',
-		'class': 'mochaIframe',
-		'src': options.url,
-		'marginwidth': 0,
-		'marginheight': 0,
-		'frameBorder': 0,
-		'scrolling': 'auto',
-		'styles': {
-			'height': contentWrapperEl.offsetHeight - contentWrapperEl.getStyle('border-top').toInt() - contentWrapperEl.getStyle('border-bottom').toInt(),
-			'width': instance.panelEl ? contentWrapperEl.offsetWidth - contentWrapperEl.getStyle('border-left').toInt() - contentWrapperEl.getStyle('border-right').toInt() : '100%'
-		}
-	}).injectInside(contentEl);
+MUI.Content.Providers.iframe = function(instance, options){
+	var fireContentLoaded = options.fireContentLoaded;
 
-	// Add onload event to iframe so we can hide the spinner and run onContentLoaded()
-	instance.iframeEl.addEvent('load', function(){
-		if (args.recipient == 'window') instance.hideSpinner();
-		else if (args.recipient == 'panel' && contentContainer == contentEl && $('spinner')) $('spinner').hide();
-		Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();
-	}.bind(this));
-	if (args.recipient == 'window') instance.showSpinner();
-	else if (args.recipient == 'panel' && contentContainer == contentEl && $('spinner')) $('spinner').show();
+	var updateSetContent = true;
+	if(instance!=null && instance.updateSetContent!=null) updateSetContent=instance.updateSetContent(options);
+	var contentContainer = options.contentContainer;
+	
+	if(updateSetContent) {
+		var iframeEl = new Element('iframe', {
+			'id': options.element.id + '_iframe',
+			'name': options.element.id + '_iframe',
+			'class': 'mochaIframe',
+			'src': options.url,
+			'marginwidth': 0,
+			'marginheight': 0,
+			'frameBorder': 0,
+			'scrolling': 'auto',
+			'styles': {
+				'height': contentContainer.offsetHeight - contentContainer.getStyle('border-top').toInt() - contentContainer.getStyle('border-bottom').toInt(),
+				'width': instance!=null && instance.panelEl ? contentContainer.offsetWidth - contentContainer.getStyle('border-left').toInt() - contentContainer.getStyle('border-right').toInt() : '100%'
+			}
+		}).inject(contentContainer);
+		if(instance) instance.iframeEl = iframeEl;
+
+		// Add onload event to iframe so we can hide the spinner and run fireContentLoaded()
+		iframeEl.addEvent('load', function(){
+			contentContainer.hideSpinner(instance);
+			Browser.Engine.trident4 ? fireContentLoaded.delay(50,this,['contentLoaded',instance,options]) : fireContentLoaded('contentLoaded',instance,options);
+		}.bind(this));
+	}
+
+	contentContainer.showSpinner(instance);
 };
 
-MUI.Content.Providers.html = function(instance, options, args){
-	var contentEl = instance.contentEl;
-	var contentContainer = args.contentContainer;
-	var onContentLoaded = args.onContentLoaded;
+MUI.Content.Providers.html = function(instance, options){
+	var fireContentLoaded = options.fireContentLoaded;
 	var elementTypes = new Array('element', 'textnode', 'whitespace', 'collection');
 
-	contentEl.addClass('pad');
-	if (elementTypes.contains($type(options.content))){
-		options.content.inject(contentContainer);
-	} else {
-		contentContainer.set('html', options.content);
+	var updateSetContent = true;
+	if(instance!=null && instance.updateSetContent!=null) updateSetContent=instance.updateSetContent(options);
+	var contentContainer = options.contentContainer;
+	if(updateSetContent) {
+		if (elementTypes.contains($type(options.content))){
+			options.content.inject(contentContainer);
+		} else {
+			contentContainer.set('html', options.content);
+		}
 	}
-	if (contentContainer == contentEl){
-		if (args.recipient == 'window') instance.hideSpinner();
-		else if (args.recipient == 'panel' && $('spinner')) $('spinner').hide();
-	}
-	Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();
+
+	contentContainer.hideSpinner(instance);
+	Browser.Engine.trident4 ? fireContentLoaded.delay(50,this,['contentLoaded',instance,options]) : fireContentLoaded('contentLoaded',instance,options);
 };
+
+MUI.extend({
+
+    WindowPanelShared: {
+
+        /// intercepts workflow from updateContent
+        /// sets title and scroll bars of this window
+        updateStart:function(options) {
+            if(options.section=='content') {
+                // copy padding from main options if not passed in
+                if(!options.padding && this.options.padding)
+                    options.padding = $extend(options,this.options.padding);
+
+                // update padding if requested
+                if(options.padding) {
+                    this.contentEl.setStyles({
+                        'padding-top': options.padding.top,
+                        'padding-bottom': options.padding.bottom,
+                        'padding-left': options.padding.left,
+                        'padding-right': options.padding.right
+                    });
+                }
+
+                // set title if given option to do so
+                if (options.title) {
+                    this.options.title = options.title;
+                    this.titleEl.set('html', options.title);
+                }
+
+                // Set scrollbars if loading content in main content container.
+                // Always use 'hidden' for iframe windows
+                this.contentWrapperEl.setStyles({
+                    'overflow': this.options.scrollbars != false && options.loadMethod != 'iframe' ? 'auto' : 'hidden'
+                });
+            }
+            return false;  // not used but expected
+        },
+
+        /// intercepts workflow from MUI.updateContent
+        updateClear:function(options) {
+            if(options.section=='content') {
+                this.contentEl.show();
+                var iframes=this.contentWrapperEl.getElements('.mochaIframe');
+                if(iframes) iframes.destroy();
+            }
+            return true;
+        },
+
+        /// intercepts workflow from MUI.updateContent
+        updateSetContent:function(options) {
+            if(options.section=='content') {
+                if(options.loadMethod=='html') this.contentEl.addClass('pad');
+                if(options.loadMethod=='iframe') {
+                    this.contentEl.removeClass('pad');
+                    this.contentEl.setStyle('padding', '0px');
+                    this.contentEl.hide();
+                    options.contentContainer = this.contentWrapperEl;
+                }
+            }
+            return true;	// tells MUI.updateContent to update the content
+        }
+
+    }
+
+});

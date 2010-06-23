@@ -1,7 +1,23 @@
 <div>
+	<h3>updateContent</h3>
+    <p>MUI.updateContent function has had some enhancements made to it.</p>
+    <ul>
+        <li>Content loadMethods can be added without modifying the MochaUI code base.</li>
+        <li>The updateContent process now allows a window, panel, and control to intercept the update process at four different points.  See Update.js for more detail.</li>
+        <li>updateContent can now be executed against an element that is not a MochaUI a window, panel, or control instance</li>
+        <li>The <b>scrollbars</b> and <b>padding</b> options have been removed from updateContent.  The new flow interception mention above allows this to be done by the instance itself.  This allowed updateContent to be more generic.</li>
+        <li><b>section</b> option has been added to make it easier to process events on controls that have multiple sections being updated during control construction.</li>
+    </ul>
+
+    <h3>Columns</h3>
+    <p>Columns now fire resize events to their neighbor column and all of their child columns</p>
+
+    <h3>Panels</h3>
+    <p>Panels now fire resize events to their neighbor panel.  Panel footer have also made a come back and are available again.  They also will scroll without scrolling the footer,</p>
+    
 	<h3>Color Options</h3>
 
-	<p>All of the color options in Window.js are deprecated. They should now be defined in the CSS.</p>
+	<p>All of the color options in Window.js are depreciated. They should now be defined in the CSS.</p>
 	
 	<ul>
 		<li><strong>headerStartColor: </strong>.mochaTitlebar background-color (See notes below.)</li>
