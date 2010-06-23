@@ -162,6 +162,7 @@ var initializeWindows = function(){
             y: 160,
             padding: { top: 12, right: 12, bottom: 10, left: 12 },
             resizable: false,
+            minimizable: true,
             maximizable: false,
             require: {
                 css: [MUI.path.plugins + 'parametrics/css/style.css'],
