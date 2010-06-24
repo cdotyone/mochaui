@@ -45,6 +45,28 @@ MUI.files[MUI.path.source + 'window.js'] = 'loading';
  evalResponse - (boolean) An xhr loadMethod option. Defaults to false.
  content - (string or element) An html loadMethod option.
  sections - (array of hashes) - list of additional sections to insert content into
+        [{
+             position - identifies where to insert the content
+                        'header' - in the window title header
+                        'top' - below the window title right above the content, good for tabs - DEFAULT
+                        'bottom' - below the content, abovw the window's footer
+                        'footer' - in the footer of the window
+             wrap - used to wrap content div, good for things like tabs
+                    ignored when position = 'header' or 'footer'
+             empty - true to empty the section before inserted, defaults to false
+                     ignored when position = 'top' or 'bottom'
+             height - the height of the content div being added
+             id - the name of the content div being added
+             css - root css name for content div being added
+
+             method - ('get', or 'post') The way data is transmitted. Defaults to get
+             data - (hash) Data to be transmitted
+             content - (string or element) An html loadMethod option.
+             loadMethod - ('html', 'xhr', or 'iframe') defaults to xhr
+             url - Used if loadMethod is set to 'xhr' or 'iframe'.
+             [section] - used to name the section being update, such as 'content,'toolbar','header','footer'
+             onContentLoaded - (function)
+        }]
  container - (element ID) Element the window is injected in. The container defaults to 'desktop'. If no desktop then to document.body. Use 'pageWrapper' if you don't want the windows to overlap the toolbars.
  restrict - (boolean) Restrict window to container when dragging.
  shape - ('box' or 'gauge') Shape of window. Defaults to 'box'.
@@ -398,7 +420,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 					MUI.centerWindow(this.windowEl);
 				}
 				setTimeout(MUI.focusWindow.pass(this.windowEl, this), 10);
-				if (MUI.options.standardEffects == true){
+				if (MUI.options.standardEffects){
 					this.windowEl.shake();
 				}
 			}
@@ -610,45 +632,45 @@ MUI.Window = new NamedClass('MUI.Window', {
 
 	displayNewWindow: function(){
 
-		options = this.options;
-		if (options.type == 'modal' || options.type == 'modal2'){
-			MUI.currentModal = this.windowEl;
-			if (Browser.Engine.trident4) $('modalFix').show();
-			$('modalOverlay').show();
-			if (MUI.options.advancedEffects == false){
-				$('modalOverlay').setStyle('opacity', .6);
-				this.windowEl.setStyles({
-					'zIndex': 11000,
-					'opacity': 1
-				});
-			} else {
-				MUI.Modal.modalOverlayCloseMorph.cancel();
-				MUI.Modal.modalOverlayOpenMorph.start({
-					'opacity': .6
-				});
-				this.windowEl.setStyles({
-					'zIndex': 11000
-				});
-				this.opacityMorph.start({
-					'opacity': 1
-				});
-			}
+		var options = this.options;
+        if (options.type == 'modal' || options.type == 'modal2') {
+            MUI.currentModal = this.windowEl;
+            if (Browser.Engine.trident4) $('modalFix').show();
+            $('modalOverlay').show();
+            if (MUI.options.advancedEffects) {
+                MUI.Modal.modalOverlayCloseMorph.cancel();
+                MUI.Modal.modalOverlayOpenMorph.start({
+                    'opacity': .6
+                });
+                this.windowEl.setStyles({
+                    'zIndex': 11000
+                });
+                this.opacityMorph.start({
+                    'opacity': 1
+                });
+            } else {
+                $('modalOverlay').setStyle('opacity', .6);
+                this.windowEl.setStyles({
+                    'zIndex': 11000,
+                    'opacity': 1
+                });
+            }
 
-			$$('.dockTab').removeClass('activeDockTab');
-			$$('.mocha').removeClass('isFocused');
-			this.windowEl.addClass('isFocused');
+            $$('.dockTab').removeClass('activeDockTab');
+            $$('.mocha').removeClass('isFocused');
+            this.windowEl.addClass('isFocused');
 
-		} else if (MUI.options.advancedEffects == false){
-			this.windowEl.setStyle('opacity', 1);
-			setTimeout(MUI.focusWindow.pass(this.windowEl, this), 10);
-		} else {
-			// IE cannot handle both element opacity and VML alpha at the same time.
-			if (Browser.Engine.trident) this.drawWindow(false);
-			this.opacityMorph.start({
-				'opacity': 1
-			});
-			setTimeout(MUI.focusWindow.pass(this.windowEl, this), 10);
-		}
+        } else if (MUI.options.advancedEffects) {
+            // IE cannot handle both element opacity and VML alpha at the same time.
+            if (Browser.Engine.trident) this.drawWindow(false);
+            this.opacityMorph.start({
+                'opacity': 1
+            });
+            setTimeout(MUI.focusWindow.pass(this.windowEl, this), 10);
+        } else {
+            this.windowEl.setStyle('opacity', 1);
+            setTimeout(MUI.focusWindow.pass(this.windowEl, this), 10);
+        }
 
 	},
 
@@ -685,7 +707,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 			}
 		}.bind(this));
 
-		if (this.options.collapsible == true){
+		if (this.options.collapsible){
 			// Keep titlebar text from being selected on double click in Safari.
 			this.titleEl.addEvent('selectstart', function(e){
 				e.stop();
@@ -717,7 +739,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 		if (!this.options.draggable) return;
 		this.windowDrag = new Drag.Move(windowEl, {
 			handle: this.titleBarEl,
-			container: this.options.restrict == true ? $(this.options.container) : false,
+			container: this.options.restrict ? $(this.options.container) : false,
 			grid: this.options.draggableGrid,
 			limit: this.options.draggableLimit,
 			snap: this.options.draggableSnap,
@@ -806,7 +828,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 		});
 
 		this.resizable3 = this.contentWrapperEl.makeResizable({
-			container: this.options.restrict == true ? $(this.options.container) : false,
+			container: this.options.restrict ? $(this.options.container) : false,
 			handle: this.se,
 			limit: {
 				x: [this.options.resizeLimit.x[0] - (this.options.shadowBlur * 2), this.options.resizeLimit.x[1] - (this.options.shadowBlur * 2) ],
@@ -1057,49 +1079,6 @@ MUI.Window = new NamedClass('MUI.Window', {
 			'class': 'mochaContentBorder'
 		}).inject(cache.overlayEl);
 
-        if (options.sections){
-            var snum=0;
-            options.sections.each(function(section){
-                section.element = self.windowEl;
-                snum++;
-                var id=self.options.id + '_' + (section.section || 'section'+snum);
-
-                $extend(section,{
-                        'wrap':true,
-                        'position':'top',
-                        'height':29,
-                        'id':id,
-                        'css':'mochaToolbar',
-                        'section':'section'+snum,
-                        'loadMethod': 'xhr',
-                        'method': self.options.method
-                       });
-                var where = section.position == 'bottom' ? 'after' : 'before';
-
-                if (section.wrap){
-             		section.wrapperEl = new Element('div', {
-                        'id': section.id + '_wrapper',
-                        'class': section.css+'Wrapper',
-                        'styles': { 'height': section.height }
-                    }).inject(cache.contentBorderEl, where);
-
-                    if (section.position == 'bottom') section.wrapperEl.addClass('bottom');
-                }
-                
-                section.childElement = new Element('div', {
-                    'id': section.id,
-                    'class': section.css,
-                    'styles': { 'height': section.height }
-                });
-
-                if (section.wrap) section.childElement.inject(section.wrapperEl);
-                else {
-                    section.childElement.inject( cache.contentBorderEl );
-                    if (section.position == 'bottom') section.childElement.addClass('bottom');
-                }  
-            });
-        }
-
 		cache.contentWrapperEl = new Element('div', {
 			'id': id + '_contentWrapper',
 			'class': 'mochaContentWrapper',
@@ -1118,7 +1097,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 			'class': 'mochaContent'
 		}).inject(cache.contentWrapperEl);
 
-		if (self.options.useCanvas == true && Browser.Engine.trident != true){
+		if (self.options.useCanvas && Browser.Engine.trident != true){
 			cache.canvasEl = new Element('canvas', {
 				'id': id + '_canvas',
 				'class': 'mochaCanvas',
@@ -1127,7 +1106,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 			}).inject(self.windowEl);
 		}
 
-		if (self.options.useCanvas == true && Browser.Engine.trident){
+		if (self.options.useCanvas && Browser.Engine.trident){
 			cache.canvasEl = new Element('canvas', {
 				'id': id + '_canvas',
 				'class': 'mochaCanvas',
@@ -1151,7 +1130,64 @@ MUI.Window = new NamedClass('MUI.Window', {
 			'class': 'mochaControls'
 		}).inject(cache.overlayEl, 'after');
 
-		if (options.useCanvasControls == true){
+        cache.footerEl = new Element('div', {
+            'id': id + '_footer',
+            'class': 'mochaWindowFooter',
+            'styles':{ 'width': width-30 }
+        }).inject(cache.overlayEl, 'bottom');
+
+        if (options.sections){
+            var snum=0;
+            options.sections.each(function(section){
+                var intoEl = cache.contentBorderEl;
+
+                section.element = self.windowEl;
+                snum++;
+                var id=self.options.id + '_' + (section.section || 'section'+snum);
+
+                $extend(section,{
+                        'wrap':true,
+                        'position':'top',
+                        'empty':false,
+                        'height':29,
+                        'id':id,
+                        'css':'mochaToolbar',
+                        'section':'section'+snum,
+                        'loadMethod': 'xhr',
+                        'method': self.options.method
+                       });
+
+                var wrap = section.wrap;
+                var where = section.position == 'bottom' ? 'after' : 'before';
+                if(section.position=='header' || section.position=='footer'){
+                    intoEl=section.position=='header' ? cache.titleBarEl : cache.footerEl;
+                    where='bottom';
+                    wrap=false;
+                } else empty=false; // can't empty in content border area
+
+                if(section.wrap){
+             		section.wrapperEl = new Element('div', {
+                        'id': section.id + '_wrapper',
+                        'class': section.css+'Wrapper',
+                        'styles': { 'height': section.height }
+                    }).inject(intoEl, where);
+
+                    if (section.position == 'bottom') section.wrapperEl.addClass('bottom');
+                    intoEl = section.wrapperEl;
+                }
+
+                if(section.empty) intoEl.empty();
+                section.childElement = new Element('div', {
+                    'id': section.id,
+                    'class': section.css,
+                    'styles': { 'height': section.height }
+                }).inject( intoEl );
+
+                if(section.wrap && section.position == 'bottom') section.childElement.addClass('bottom');
+            });
+        }
+
+		if (options.useCanvasControls){
 			cache.canvasControlsEl = new Element('canvas', {
 				'id': id + '_canvasControls',
 				'class': 'mochaCanvasControls',
@@ -1189,13 +1225,13 @@ MUI.Window = new NamedClass('MUI.Window', {
 			}).inject(cache.controlsEl);
 		}
 
-		if (options.useSpinner == true && options.shape != 'gauge' && options.type != 'notification'){
+		if (options.useSpinner && options.shape != 'gauge' && options.type != 'notification'){
 			cache.spinnerEl = new Element('div', {
 				'id': id + '_spinner',
 				'class': 'mochaSpinner',
-				'width': 16,
-				'height': 16
-			}).inject(self.windowEl, 'bottom');
+                'styles':{  'width': 16,
+				            'height': 16  }
+			}).inject(cache.footerEl, 'bottom');
 		}
 
 		if (self.options.shape == 'gauge'){
@@ -1316,7 +1352,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 	 */
 	setColors: function(){
 
-		if (this.options.useCanvas == true){
+		if (this.options.useCanvas){
 
 			// Set TitlebarColor
 			var pattern = /\?(.*?)\)/;
@@ -1351,7 +1387,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 
 		}
 
-		if (this.options.useCanvasControls == true){
+		if (this.options.useCanvasControls){
 
 			if (this.minimizeButtonEl){
 
@@ -1410,7 +1446,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 	 */
 	drawWindow: function(shadows){
 
-		if (this.drawingWindow == true) return;
+		if (this.drawingWindow) return;
 		this.drawingWindow = true;
 
 		if (this.isCollapsed){
@@ -1454,7 +1490,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 			'left': shadowBlur - shadowOffset.x
 		});
 
-		if (this.options.useCanvas == true){
+		if (this.options.useCanvas){
 			if (Browser.Engine.trident){
 				this.canvasEl.height = 20000;
 				this.canvasEl.width = 50000;
@@ -1477,10 +1513,10 @@ MUI.Window = new NamedClass('MUI.Window', {
 		});
 
 		// Make sure loading icon is placed correctly.
-		if (options.useSpinner == true && options.shape != 'gauge' && options.type != 'notification'){
+		if (options.useSpinner && options.shape != 'gauge' && options.type != 'notification'){
 			this.spinnerEl.setStyles({
-				'left': shadowBlur - shadowOffset.x + 3,
-				'bottom': shadowBlur + shadowOffset.y + 4
+				'left': shadowBlur - shadowOffset.x,
+				'bottom': shadowBlur + shadowOffset.y + 8
 			});
 		}
 
@@ -1517,7 +1553,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 			}
 		}
 
-		if (options.type != 'notification' && options.useCanvasControls == true){
+		if (options.type != 'notification' && options.useCanvasControls){
 			this.drawControls(width, height, shadows);
 		}
 
@@ -1575,7 +1611,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 			ctx.clearRect(0, 0, width, height);
 
 			this.drawBoxCollapsed(ctx, width, height, shadowBlur, shadowOffset, shadows);
-			if (options.useCanvasControls == true){
+			if (options.useCanvasControls){
 				this.drawControls(width, height, shadows);
 			}
 
@@ -1898,7 +1934,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 			this.mochaControlsWidth += (this.closeButtonEl.getStyle('margin-left').toInt() + this.closeButtonEl.getStyle('width').toInt());
 		}
 		this.controlsEl.setStyle('width', this.mochaControlsWidth);
-		if (options.useCanvasControls == true){
+		if (options.useCanvasControls){
 			this.canvasControlsEl.setProperty('width', this.mochaControlsWidth);
 		}
 	},
@@ -2100,7 +2136,7 @@ MUI.extend({
 		}
 
 		MUI.erase(instance.options.id);
-		if (this.loadingWorkspace == true){
+		if (this.loadingWorkspace){
 			this.windowUnload();
 		}
 
@@ -2157,60 +2193,60 @@ MUI.extend({
 	 Function: collapseToggle
 	 Collapses an expanded window. Expands a collapsed window.
 	 */
-	collapseToggle: function(windowEl){
-		var instance = windowEl.retrieve('instance');
-		var handles = windowEl.getElements('.handle');
-		if (instance.isMaximized == true) return;
-		if (instance.isCollapsed == false){
-			instance.isCollapsed = true;
-			handles.hide();
-			if (instance.iframeEl){
-				instance.iframeEl.setStyle('visibility', 'hidden');
-			}
-			instance.contentBorderEl.setStyles({
-				visibility: 'hidden',
-				position: 'absolute',
-				top: -10000,
-				left: -10000
-			});
-            if (instance.sections){
-                instance.sections.each(function(section){
-                    var el=section.wrap ? section.wrapperEl : section.childElement;
-                    if (el) el.setStyles({
-					    visibility: 'hidden',
-					    position: 'absolute',
-					    top: -10000,
-					    left: -10000
-				    });
-                });
-            }
-			instance.drawWindowCollapsed();
-		} else {
-			instance.isCollapsed = false;
-			instance.drawWindow();
-			instance.contentBorderEl.setStyles({
-				visibility: 'visible',
-				position: null,
-				top: null,
-				left: null
-			});
-            if (instance.sections){
-                instance.sections.each(function(section){
-                    var el=section.wrap ? section.wrapperEl : section.childElement;
+	collapseToggle: function(windowEl) {
+        var instance = windowEl.retrieve('instance');
+        var handles = windowEl.getElements('.handle');
+        if (instance.isMaximized) return;
+        if (instance.isCollapsed) {
+            instance.isCollapsed = false;
+            instance.drawWindow();
+            instance.contentBorderEl.setStyles({
+                visibility: 'visible',
+                position: null,
+                top: null,
+                left: null
+            });
+            if (instance.sections) {
+                instance.sections.each(function(section) {
+                    var el = section.wrap ? section.wrapperEl : section.childElement;
                     if (el) el.setStyles({
                         visibility: 'visible',
                         position: null,
                         top: null,
                         left: null
-				    });
+                    });
                 });
             }
-			if (instance.iframeEl){
-				instance.iframeEl.setStyle('visibility', 'visible');
-			}
-			handles.show();
-		}
-	},
+            if (instance.iframeEl) {
+                instance.iframeEl.setStyle('visibility', 'visible');
+            }
+            handles.show();
+        } else {
+            instance.isCollapsed = true;
+            handles.hide();
+            if (instance.iframeEl) {
+                instance.iframeEl.setStyle('visibility', 'hidden');
+            }
+            instance.contentBorderEl.setStyles({
+                visibility: 'hidden',
+                position: 'absolute',
+                top: -10000,
+                left: -10000
+            });
+            if (instance.sections) {
+                instance.sections.each(function(section) {
+                    var el = section.wrap ? section.wrapperEl : section.childElement;
+                    if (el) el.setStyles({
+                        visibility: 'hidden',
+                        position: 'absolute',
+                        top: -10000,
+                        left: -10000
+                    });
+                });
+            }
+            instance.drawWindowCollapsed();
+        }
+    },
 
 	/*
 	 Function: toggleWindowVisibility
@@ -2218,7 +2254,7 @@ MUI.extend({
 	 */
 	toggleWindowVisibility: function(){
 		MUI.each(function(instance){
-			if (!instance.isTypeOf('MUI.Window') || instance.isMinimized == true) return;
+			if (!instance.isTypeOf('MUI.Window') || instance.isMinimized) return;
 			var id = $(instance.options.id);
 			if (id.getStyle('visibility') == 'visible'){
 				if (instance.iframe) instance.iframeEl.setStyle('visibility', 'hidden');
@@ -2310,7 +2346,7 @@ MUI.extend({
 	},
 
 	blurAll: function(){
-		if (MUI.Windows.focusingWindow == false){
+		if (!MUI.Windows.focusingWindow){
 			$$('.mocha').each(function(windowEl){
 				var instance = windowEl.retrieve('instance');
 				if (instance.options.type != 'modal' && instance.options.type != 'modal2'){
@@ -2343,7 +2379,7 @@ MUI.extend({
 		if (windowPosLeft < -instance.options.shadowBlur){
 			windowPosLeft = -instance.options.shadowBlur;
 		}
-		if (MUI.options.advancedEffects == true){
+		if (MUI.options.advancedEffects){
 			instance.morph.start({
 				'top': windowPosTop,
 				'left': windowPosLeft
@@ -2356,62 +2392,62 @@ MUI.extend({
 		}
 	},
 
-	resizeWindow: function(windowEl, options){
-		var instance = windowEl.retrieve('instance');
+	resizeWindow: function(windowEl, options) {
+        var instance = windowEl.retrieve('instance');
 
-		$extend({
-			width: null,
-			height: null,
-			top: null,
-			left: null,
-			centered: true
-		}, options);
+        $extend({
+            width: null,
+            height: null,
+            top: null,
+            left: null,
+            centered: true
+        }, options);
 
-		var oldWidth = windowEl.getStyle('width').toInt();
-		var oldHeight = windowEl.getStyle('height').toInt();
-		var oldTop = windowEl.getStyle('top').toInt();
-		var oldLeft = windowEl.getStyle('left').toInt();
+        var oldWidth = windowEl.getStyle('width').toInt();
+        var oldHeight = windowEl.getStyle('height').toInt();
+        var oldTop = windowEl.getStyle('top').toInt();
+        var oldLeft = windowEl.getStyle('left').toInt();
 
-		var top,left;
-		if (options.centered){
-			top = typeof(options.top) != 'undefined' ? options.top : oldTop - ((options.height - oldHeight) * .5);
-			left = typeof(options.left) != 'undefined' ? options.left : oldLeft - ((options.width - oldWidth) * .5);
-		} else {
-			top = typeof(options.top) != 'undefined' ? options.top : oldTop;
-			left = typeof(options.left) != 'undefined' ? options.left : oldLeft;
-		}
+        var top,left;
+        if (options.centered) {
+            top = typeof(options.top) != 'undefined' ? options.top : oldTop - ((options.height - oldHeight) * .5);
+            left = typeof(options.left) != 'undefined' ? options.left : oldLeft - ((options.width - oldWidth) * .5);
+        } else {
+            top = typeof(options.top) != 'undefined' ? options.top : oldTop;
+            left = typeof(options.left) != 'undefined' ? options.left : oldLeft;
+        }
 
-		if (MUI.options.advancedEffects == false){
-			windowEl.setStyles({
-				'top': top,
-				'left': left
-			});
-			instance.contentWrapperEl.setStyles({
-				'height': options.height,
-				'width':  options.width
-			});
-			instance.drawWindow();
-			// Show iframe
-			if (instance.iframeEl){
-				if (!Browser.Engine.trident){
-					instance.iframeEl.setStyle('visibility', 'visible');
-				}
-				else {
-					instance.iframeEl.show();
-				}
-			}
-		} else {
-			windowEl.retrieve('resizeMorph').start({
-				'0': {	'height': options.height,
-					'width':  options.width
-				},
-				'1': {	'top': top,
-					'left': left
-				}
-			});
-		}
-		return instance;
-	},
+        if (!MUI.options.advancedEffects) {
+            windowEl.retrieve('resizeMorph').start({
+                '0': {    'height': options.height,
+                    'width':  options.width
+                },
+                '1': {    'top': top,
+                    'left': left
+                }
+            });
+        } else {
+            windowEl.setStyles({
+                'top': top,
+                'left': left
+            });
+            instance.contentWrapperEl.setStyles({
+                'height': options.height,
+                'width':  options.width
+            });
+            instance.drawWindow();
+            // Show iframe
+            if (instance.iframeEl) {
+                if (!Browser.Engine.trident) {
+                    instance.iframeEl.setStyle('visibility', 'visible');
+                }
+                else {
+                    instance.iframeEl.show();
+                }
+            }
+        }
+        return instance;
+    },
 
 	/*
 	 Internal Function: dynamicResize
@@ -2504,4 +2540,3 @@ document.addEvent('keydown', function(event){
 		MUI.toggleWindowVisibility();
 	}
 });
-

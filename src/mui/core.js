@@ -178,45 +178,43 @@ MUI.extend({
 	 Function: toggleEffects
 	 Turn effects on and off
 	 */
-	toggleAdvancedEffects: function(link){
-		if (MUI.options.advancedEffects == false){
-			MUI.options.advancedEffects = true;
-			if (link){
-				this.toggleAdvancedEffectsLink = new Element('div', {
-					'class': 'check',
-					'id': 'toggleAdvancedEffects_check'
-				}).inject(link);
-			}
-		}
-		else {
-			MUI.options.advancedEffects = false;
-			if (this.toggleAdvancedEffectsLink){
-				this.toggleAdvancedEffectsLink.destroy();
-			}
-		}
-	},
+	toggleAdvancedEffects: function(link) {
+        if (MUI.options.advancedEffects) {
+            MUI.options.advancedEffects = false;
+            if (this.toggleAdvancedEffectsLink) {
+                this.toggleAdvancedEffectsLink.destroy();
+            }
+        } else {
+            MUI.options.advancedEffects = true;
+            if (link) {
+                this.toggleAdvancedEffectsLink = new Element('div', {
+                    'class': 'check',
+                    'id': 'toggleAdvancedEffects_check'
+                }).inject(link);
+            }
+        }
+    },
 
 	/*
 	 Function: toggleStandardEffects
 	 Turn standard effects on and off
 	 */
-	toggleStandardEffects: function(link){
-		if (MUI.options.standardEffects == false){
-			MUI.options.standardEffects = true;
-			if (link){
-				this.toggleStandardEffectsLink = new Element('div', {
-					'class': 'check',
-					'id': 'toggleStandardEffects_check'
-				}).inject(link);
-			}
-		}
-		else {
-			MUI.options.standardEffects = false;
-			if (this.toggleStandardEffectsLink){
-				this.toggleStandardEffectsLink.destroy();
-			}
-		}
-	},
+	toggleStandardEffects: function(link) {
+        if (MUI.options.standardEffects) {
+            MUI.options.standardEffects = false;
+            if (this.toggleStandardEffectsLink) {
+                this.toggleStandardEffectsLink.destroy();
+            }
+        } else {
+            MUI.options.standardEffects = true;
+            if (link) {
+                this.toggleStandardEffectsLink = new Element('div', {
+                    'class': 'check',
+                    'id': 'toggleStandardEffects_check'
+                }).inject(link);
+            }
+        }
+    },
 
 	/*
 	 The underlay is inserted directly under windows when they are being dragged or resized
@@ -357,7 +355,7 @@ Element.implement({
 		return this;
 	},
 
-	show: function(element){
+	show: function(){
 		var instance = MUI.get(this.id);
 		if (instance != null && instance.show != null) {
 			instance.show();

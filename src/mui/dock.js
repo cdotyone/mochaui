@@ -44,7 +44,7 @@ MUI.extend({
 	minimizeAll: function(){
 		$$('.mocha').each(function(windowEl){
 			var instance = windowEl.retrieve('instance');
-			if (!instance.isMinimized && instance.options.minimizable == true){
+			if (!instance.isMinimized && instance.options.minimizable){
 				MUI.Dock.minimizeWindow(windowEl);
 			}
 		}.bind(this));
@@ -312,9 +312,9 @@ MUI.Dock = {
 			this.timeUp = $time();
 			if ((this.timeUp - this.timeDown) < 275){
 				// If the visibility of the windows on the page are toggled off, toggle visibility on.
-				if (MUI.Windows.windowsVisible == false){
+				if (!MUI.Windows.windowsVisible){
 					MUI.toggleWindowVisibility();
-					if (instance.isMinimized == true){
+					if (instance.isMinimized){
 						MUI.Dock.restoreMinimized.delay(25, MUI.Dock, windowEl);
 					}
 					else {
@@ -323,12 +323,12 @@ MUI.Dock = {
 					return;
 				}
 				// If window is minimized, restore window.
-				if (instance.isMinimized == true){
+				if (instance.isMinimized){
 					MUI.Dock.restoreMinimized.delay(25, MUI.Dock, windowEl);
 				}
 				else {
 					// If window is not minimized and is focused, minimize window.
-					if (instance.windowEl.hasClass('isFocused') && instance.options.minimizable == true){
+					if (instance.windowEl.hasClass('isFocused') && instance.options.minimizable){
 						MUI.Dock.minimizeWindow(windowEl)
 					}
 					// If window is not minimized and is not focused, focus window.
@@ -437,16 +437,16 @@ MUI.Dock = {
 
 		var instance = windowEl.retrieve('instance');
 
-		if (instance.isMinimized == false) return;
+		if (!instance.isMinimized) return;
 
-		if (MUI.Windows.windowsVisible == false){
+		if (!MUI.Windows.windowsVisible){
 			MUI.toggleWindowVisibility();
 		}
 
 		MUI.Desktop.setDesktopSize();
 
 		// Part of Mac FF2 scrollbar fix
-		if (instance.options.scrollbars == true && !instance.iframeEl){
+		if (instance.options.scrollbars && !instance.iframeEl){
 			instance.contentWrapperEl.setStyle('overflow', 'auto');
 		}
 
