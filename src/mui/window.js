@@ -2084,7 +2084,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 			$('modalFix').hide();
 		}
 
-		if (MUI.options.advancedEffects != true){
+		if (!MUI.options.advancedEffects){
 			if (self.options.type == 'modal' || self.options.type == 'modal2'){
 				$('modalOverlay').setStyle('opacity', 0);
 			}
@@ -2417,12 +2417,14 @@ MUI.extend({
             left = typeof(options.left) != 'undefined' ? options.left : oldLeft;
         }
 
-        if (!MUI.options.advancedEffects) {
+        if (MUI.options.advancedEffects) {
             windowEl.retrieve('resizeMorph').start({
-                '0': {    'height': options.height,
+                '0': {
+					'height': options.height,
                     'width':  options.width
                 },
-                '1': {    'top': top,
+                '1': {
+					'top': top,
                     'left': left
                 }
             });
@@ -2440,8 +2442,7 @@ MUI.extend({
             if (instance.iframeEl) {
                 if (!Browser.Engine.trident) {
                     instance.iframeEl.setStyle('visibility', 'visible');
-                }
-                else {
+                } else {
                     instance.iframeEl.show();
                 }
             }
