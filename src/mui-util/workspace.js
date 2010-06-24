@@ -86,7 +86,9 @@ MUI.extend({
 	loadWorkspace2: function(workspaceWindows){
 		workspaceWindows.each(function(workspaceWindow){
 			windowFunction = MUI[workspaceWindow.id + 'Window'];
-			if (windowFunction){
+			if (windowFunction) windowFunction();
+			// currently disabled positioning of windows, that would need to be passed to the MUI.Window call
+			/*if (windowFunction){
 				windowFunction({
 					width: workspaceWindow.width,
 					height: workspaceWindow.height
@@ -102,7 +104,7 @@ MUI.extend({
 					'height': workspaceWindow.height
 				});
 				instance.drawWindow();
-			}
+			}*/
 		}.bind(this));
 		this.loadingWorkspace = false;
 	},
