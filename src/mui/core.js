@@ -434,20 +434,6 @@ Element.implement({
 
 });
 
-String.implement({
-
-	parseQueryString: function(){
-		var vars = this.split(/[&;]/);
-		var rs = {};
-		if (vars.length) vars.each(function(val){
-			var keys = val.split('=');
-			if (keys.length && keys.length == 2) rs[decodeURIComponent(keys[0])] = decodeURIComponent(keys[1]);
-		});
-		return rs;
-	}
-
-});
-
 // Mootools Patch: Fixes issues in Safari, Chrome, and Internet Explorer caused by processing text as XML. 
 Request.HTML.implement({
 
