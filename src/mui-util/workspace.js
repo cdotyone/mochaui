@@ -71,7 +71,7 @@ MUI.extend({
 			width: 200,
 			height: 40,
 			y: 53,
-			padding:  { top: 10, right: 12, bottom: 10, left: 12 },
+			padding: { top: 10, right: 12, bottom: 10, left: 12 },
 			shadowBlur: 5
 		});
 
@@ -85,9 +85,12 @@ MUI.extend({
 
 	loadWorkspace2: function(workspaceWindows){
 		workspaceWindows.each(function(workspaceWindow){
-			windowFunction = eval('MUI.' + workspaceWindow.id + 'Window');
+			windowFunction = MUI[workspaceWindow.id + 'Window'];
 			if (windowFunction){
-				eval('MUI.' + workspaceWindow.id + 'Window({width:' + workspaceWindow.width + ',height:' + workspaceWindow.height + '});');
+				windowFunction({
+					width: workspaceWindow.width,
+					height: workspaceWindow.height
+				});
 				var windowEl = $(workspaceWindow.id);
 				windowEl.setStyles({
 					'top': workspaceWindow.top,
@@ -127,7 +130,7 @@ MUI.extend({
 				width: 220,
 				height: 40,
 				y: 25,
-				padding:  { top: 10, right: 12, bottom: 10, left: 12 },
+				padding: { top: 10, right: 12, bottom: 10, left: 12 },
 				shadowBlur: 5
 			});
 			return;
@@ -137,19 +140,19 @@ MUI.extend({
 			this.loadingWorkspace = true;
 			this.myChain = new Chain();
 			this.myChain.chain(
-					function(){
-						$$('.mocha').each(function(el){
-							this.close(el);
-						}.bind(this));
-					}.bind(this),
-					function(){
-						this.loadWorkspace2(workspaceWindows);
-					}.bind(this)
-					);
+				function(){
+					$$('.mocha').each(function(el){
+						el.close();
+					});
+					this.myChain.callChain();
+				}.bind(this),
+				function(){
+					MUI.loadWorkspace2(workspaceWindows);
+				}.bind(this)
+			);
 			this.myChain.callChain();
-		}
-		else {
-			this.loadWorkspace2(workspaceWindows);
+		} else {
+			MUI.loadWorkspace2(workspaceWindows);
 		}
 
 	}
