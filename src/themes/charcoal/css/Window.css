@@ -88,6 +88,11 @@ div.mochaToolbarWrapper.bottom {
 	padding: 10px 12px;
 }
 
+.mochaWindowFooter {
+    height: 26px;
+    padding-left: 30px
+}
+
 .mocha .handle {
 	position: absolute;
 	background: #0f0;

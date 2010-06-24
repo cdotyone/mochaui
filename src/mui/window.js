@@ -45,6 +45,28 @@ MUI.files[MUI.path.source + 'window.js'] = 'loading';
  evalResponse - (boolean) An xhr loadMethod option. Defaults to false.
  content - (string or element) An html loadMethod option.
  sections - (array of hashes) - list of additional sections to insert content into
+        [{
+             position - identifies where to insert the content
+                        'header' - in the window title header
+                        'top' - below the window title right above the content, good for tabs - DEFAULT
+                        'bottom' - below the content, abovw the window's footer
+                        'footer' - in the footer of the window
+             wrap - used to wrap content div, good for things like tabs
+                    ignored when position = 'header' or 'footer'
+             empty - true to empty the section before inserted, defaults to false
+                     ignored when position = 'top' or 'bottom'
+             height - the height of the content div being added
+             id - the name of the content div being added
+             css - root css name for content div being added
+
+             method - ('get', or 'post') The way data is transmitted. Defaults to get
+             data - (hash) Data to be transmitted
+             content - (string or element) An html loadMethod option.
+             loadMethod - ('html', 'xhr', or 'iframe') defaults to xhr
+             url - Used if loadMethod is set to 'xhr' or 'iframe'.
+             [section] - used to name the section being update, such as 'content,'toolbar','header','footer'
+             onContentLoaded - (function)
+        }]
  container - (element ID) Element the window is injected in. The container defaults to 'desktop'. If no desktop then to document.body. Use 'pageWrapper' if you don't want the windows to overlap the toolbars.
  restrict - (boolean) Restrict window to container when dragging.
  shape - ('box' or 'gauge') Shape of window. Defaults to 'box'.
@@ -1096,49 +1118,6 @@ MUI.Window = new NamedClass('MUI.Window', {
 			'class': 'mochaContentBorder'
 		}).inject(cache.overlayEl);
 
-        if (options.sections){
-            var snum=0;
-            options.sections.each(function(section){
-                section.element = self.windowEl;
-                snum++;
-                var id=self.options.id + '_' + (section.section || 'section'+snum);
-
-                $extend(section,{
-                        'wrap':true,
-                        'position':'top',
-                        'height':29,
-                        'id':id,
-                        'css':'mochaToolbar',
-                        'section':'section'+snum,
-                        'loadMethod': 'xhr',
-                        'method': self.options.method
-                       });
-                var where = section.position == 'bottom' ? 'after' : 'before';
-
-                if(section.wrap){
-             		section.wrapperEl = new Element('div', {
-                        'id': section.id + '_wrapper',
-                        'class': section.css+'Wrapper',
-                        'styles': { 'height': section.height }
-                    }).inject(cache.contentBorderEl, where);
-
-                    if (section.position == 'bottom') section.wrapperEl.addClass('bottom');
-                }
-
-                section.childElement = new Element('div', {
-                    'id': section.id,
-                    'class': section.css,
-                    'styles': { 'height': section.height }
-                });
-
-                if(section.wrap) section.childElement.inject(section.wrapperEl);
-                else {
-                    section.childElement.inject( cache.contentBorderEl );
-                    if(section.position == 'bottom') section.childElement.addClass('bottom');
-                }
-            });
-        }
-
 		cache.contentWrapperEl = new Element('div', {
 			'id': id + '_contentWrapper',
 			'class': 'mochaContentWrapper',
@@ -1190,6 +1169,63 @@ MUI.Window = new NamedClass('MUI.Window', {
 			'class': 'mochaControls'
 		}).inject(cache.overlayEl, 'after');
 
+        cache.footerEl = new Element('div', {
+            'id': id + '_footer',
+            'class': 'mochaWindowFooter',
+            'styles':{ 'width': width-30 }
+        }).inject(cache.overlayEl, 'bottom');
+
+        if (options.sections){
+            var snum=0;
+            options.sections.each(function(section){
+                var intoEl = cache.contentBorderEl;
+
+                section.element = self.windowEl;
+                snum++;
+                var id=self.options.id + '_' + (section.section || 'section'+snum);
+
+                $extend(section,{
+                        'wrap':true,
+                        'position':'top',
+                        'empty':false,
+                        'height':29,
+                        'id':id,
+                        'css':'mochaToolbar',
+                        'section':'section'+snum,
+                        'loadMethod': 'xhr',
+                        'method': self.options.method
+                       });
+
+                var wrap = section.wrap;
+                var where = section.position == 'bottom' ? 'after' : 'before';
+                if(section.position=='header' || section.position=='footer'){
+                    intoEl=section.position=='header' ? cache.titleBarEl : cache.footerEl;
+                    where='bottom';
+                    wrap=false;
+                } else empty=false; // can't empty in content border area
+
+                if(section.wrap){
+             		section.wrapperEl = new Element('div', {
+                        'id': section.id + '_wrapper',
+                        'class': section.css+'Wrapper',
+                        'styles': { 'height': section.height }
+                    }).inject(intoEl, where);
+
+                    if (section.position == 'bottom') section.wrapperEl.addClass('bottom');
+                    intoEl = section.wrapperEl;
+                }
+
+                if(section.empty) intoEl.empty();
+                section.childElement = new Element('div', {
+                    'id': section.id,
+                    'class': section.css,
+                    'styles': { 'height': section.height }
+                }).inject( intoEl );
+
+                if(section.wrap && section.position == 'bottom') section.childElement.addClass('bottom');
+            });
+        }        
+
 		if (options.useCanvasControls){
 			cache.canvasControlsEl = new Element('canvas', {
 				'id': id + '_canvasControls',
@@ -1232,9 +1268,9 @@ MUI.Window = new NamedClass('MUI.Window', {
 			cache.spinnerEl = new Element('div', {
 				'id': id + '_spinner',
 				'class': 'mochaSpinner',
-				'width': 16,
-				'height': 16
-			}).inject(self.windowEl, 'bottom');
+                'styles':{  'width': 16,
+				            'height': 16  }
+			}).inject(cache.footerEl, 'bottom');
 		}
 
 		if (self.options.shape == 'gauge'){
@@ -1518,8 +1554,8 @@ MUI.Window = new NamedClass('MUI.Window', {
 		// Make sure loading icon is placed correctly.
 		if (options.useSpinner && options.shape != 'gauge' && options.type != 'notification'){
 			this.spinnerEl.setStyles({
-				'left': shadowBlur - shadowOffset.x + 3,
-				'bottom': shadowBlur + shadowOffset.y + 4
+				'left': shadowBlur - shadowOffset.x,
+				'bottom': shadowBlur + shadowOffset.y + 8
 			});
 		}
 
