@@ -892,7 +892,25 @@ var initializeColumns = function(){
                     MUI.notification('Do Something');
                 });
             });
-        }
+        },
+		onContentLoaded: function(){
+			var panel = this.contentWrapperEl;
+			var pad = panel.getElement('.pad');
+			pad.appendText('Width: ');
+			pad.displayWidth = new Element('span', {
+				'text': panel.getStyle('width')
+			}).inject(pad);
+			pad.appendText(' Height: ');
+			pad.displayHeight = new Element('span', {
+				'text': panel.getStyle('height')
+			}).inject(pad);
+		},
+		onResize: function(){
+			var newSize = this.contentWrapperEl.getStyles(['width', 'height']);
+			var pad = this.contentEl;
+			pad.displayWidth.set('text', newSize['width']);
+			pad.displayHeight.set('text', newSize['height']);
+		}
     });
 
     // Add panels to second side column
