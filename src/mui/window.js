@@ -415,9 +415,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 
 				if (MUI.Dock && $(MUI.options.dock) && instance.options.type == 'window'){
 					var currentButton = $(instance.options.id + '_dockTab');
-					if (currentButton != null){
-						currentButton.show();
-					}
+					if (currentButton) currentButton.show();
 					MUI.Desktop.setDesktopSize();
 				}
 
@@ -431,9 +429,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 					MUI.centerWindow(this.windowEl);
 				}
 				setTimeout(MUI.focusWindow.pass(this.windowEl, this), 10);
-				if (MUI.options.standardEffects){
-					this.windowEl.shake();
-				}
+				if (MUI.options.standardEffects) this.windowEl.shake();
 			}
 			return;
 		} else {
@@ -472,9 +468,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 		if ((this.options.type == 'modal' || options.type == 'modal2' ) && Browser.Platform.mac && Browser.Engine.gecko){
 			if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent)){
 				var ffversion = new Number(RegExp.$1);
-				if (ffversion < 3){
-					this.windowEl.setStyle('position', 'fixed');
-				}
+				if (ffversion < 3) this.windowEl.setStyle('position', 'fixed');
 			}
 		}
 
@@ -1447,14 +1441,10 @@ MUI.Window = new NamedClass('MUI.Window', {
 		var shadowBlur2x = this.useCSS3 ? 0 : shadowBlur * 2;
 		var shadowOffset = this.options.shadowOffset;
 
-		this.overlayEl.setStyles({
-			'width': this.contentWrapperEl.offsetWidth
-		});
+		this.overlayEl.setStyle('width', this.contentWrapperEl.offsetWidth);
 
 		// Resize iframe when window is resized
-		if (this.iframeEl){
-			this.iframeEl.setStyle('height', this.contentWrapperEl.offsetHeight);
-		}
+		if (this.iframeEl) this.iframeEl.setStyle('height', this.contentWrapperEl.offsetHeight);
 
 		var borderHeight = this.contentBorderEl.getStyle('border-top').toInt() + this.contentBorderEl.getStyle('border-bottom').toInt();
 
@@ -1488,12 +1478,10 @@ MUI.Window = new NamedClass('MUI.Window', {
 		}
 
 		// Part of the fix for IE6 select z-index bug
-		if (Browser.Engine.trident4){
-			this.zIndexFixEl.setStyles({
-				'width': width,
-				'height': height
-			})
-		}
+		if (Browser.Engine.trident4) this.zIndexFixEl.setStyles({
+			'width': width,
+			'height': height
+		});
 
 		this.titleBarEl.setStyles({
 			'width': width - shadowBlur2x,
@@ -1575,12 +1563,10 @@ MUI.Window = new NamedClass('MUI.Window', {
 		});
 
 		// Part of the fix for IE6 select z-index bug
-		if (Browser.Engine.trident4){
-			this.zIndexFixEl.setStyles({
-				'width': width,
-				'height': height
-			});
-		}
+		if (Browser.Engine.trident4) this.zIndexFixEl.setStyles({
+			'width': width,
+			'height': height
+		});
 
 		// Set width
 		this.windowEl.setStyle('width', width);
@@ -1599,9 +1585,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 			ctx.clearRect(0, 0, width, height);
 
 			this.drawBoxCollapsed(ctx, width, height, shadowBlur, shadowOffset, shadows);
-			if (options.useCanvasControls){
-				this.drawControls(width, height, shadows);
-			}
+			if (options.useCanvasControls) this.drawControls(width, height, shadows);
 
 			// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
 			if (Browser.Engine.trident){
@@ -1689,7 +1673,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 		var cornerRadius = this.options.cornerRadius;
 
 		// This is the drop shadow. It is created onion style.
-		if (shadows != false){
+		if (shadows){
 			for (var x = 0; x <= shadowBlur; x++){
 				MUI.roundedRect(
 					ctx,
@@ -2328,14 +2312,12 @@ MUI.extend({
 	},
 
 	centerWindow: function(windowEl){
-		if (!windowEl){
-			MUI.each(function(instance){
-				if (instance.className != 'MUI.Window') return;
-				if (instance.windowEl.hasClass('isFocused')){
-					windowEl = instance.windowEl;
-				}
-			});
-		}
+		if (!windowEl) MUI.each(function(instance){
+			if (instance.className != 'MUI.Window') return;
+			if (instance.windowEl.hasClass('isFocused')){
+				windowEl = instance.windowEl;
+			}
+		});
 
 		var instance = windowEl.retrieve('instance');
 		var options = instance.options;
@@ -2410,11 +2392,8 @@ MUI.extend({
             instance.drawWindow();
             // Show iframe
             if (instance.iframeEl) {
-                if (!Browser.Engine.trident) {
-                    instance.iframeEl.setStyle('visibility', 'visible');
-                } else {
-                    instance.iframeEl.show();
-                }
+                if (!Browser.Engine.trident) instance.iframeEl.setStyle('visibility', 'visible');
+                else instance.iframeEl.show();
             }
         }
         return instance;
