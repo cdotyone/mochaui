@@ -26,6 +26,10 @@
 	background-color: #e5e5e5;	
 }
 
+.mocha.css3 {
+	overflow: visible;
+}
+
 .mocha.isFocused {	
 }	
 
@@ -143,7 +147,7 @@ div.mochaToolbarWrapper.bottom {
 .mochaControls {
 	position: absolute;
 	width: 52px;
-	top: 8px;
+	top: 6px;
 	right: 8px;
 	height: 14px;
 	z-index: 4;
@@ -152,7 +156,7 @@ div.mochaToolbarWrapper.bottom {
 
 .mochaCanvasControls {
 	position: absolute;	
-	top: 8px;
+	top: 6px;
 	right: 8px;	
 	z-index: 3;
 	background: transparent;
@@ -191,7 +195,7 @@ div.mochaToolbarWrapper.bottom {
 .mochaSpinner{
 	display: none;	
 	position: absolute;
-	bottom: 7px;
+	bottom: 5px;
 	left: 6px;
 	width: 16px;
 	height: 16px;
@@ -300,11 +304,30 @@ div.mochaToolbarWrapper.bottom {
 
 .mocha.no-canvas {
 	background: #e5e5e5;
-	border: 1px solid #555;	
+	border: 1px solid #555;
+}
+
+.mocha.css3 {
+	box-shadow: 0px 0px 5px #333; /* Opera 10.5, IE 9.0 */
+	-moz-box-shadow: 0px 0px 5px #333; /* FF3.5+ */
+	-webkit-box-shadow: 0px 0px 5px #333; /* Saf3+ */
+	border: none;
+	border-radius: 8px; /* Opera 10.5, IE 9.0 */
+	-moz-border-radius: 8px; /* FF1+ */
+	-webkit-border-radius: 8px; /* Saf3+ */
 }
 
 .mocha.no-canvas .mochaTitlebar {
 	background: #e5e5e5;	
+}
+
+.mocha.css3 .mochaTitlebar {
+	border-radius: 8px; /* Opera 10.5, IE 9.0 */
+	-moz-border-radius: 8px; /* FF1+ */
+	-webkit-border-radius: 8px; /* Saf3+ */
+	background-image: -moz-linear-gradient(top, #fafafa, #e5e5e5); /* FF3.6+ */
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fafafa), color-stop(1, #e5e5e5)); /* Saf4+ */
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#fafafa', EndColorStr='#e5e5e5')"; /* IE8, IE9? */
 }
 
 .mocha.transparent .mochaTitlebar h3 {

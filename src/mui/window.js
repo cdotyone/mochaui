@@ -97,6 +97,7 @@ MUI.files[MUI.path.source + 'window.js'] = 'loading';
  controlsOffset - Change this if you want to reposition the window controls.
  useCanvas - (boolean) Set this to false if you don't want a canvas body. Defaults to true.
  useCanvasControls - (boolean) Set this to false if you wish to use images for the buttons.
+ useCSS3 - (boolean) Tries to use CSS3 for shadow, gradient and radius. Defaults to true. Fallback to canvas if useCanvas is set to true. 
  useSpinner - (boolean) Toggles whether or not the ajax spinners are displayed in window footers. Defaults to true.
  onBeforeBuild - (function) Fired just before the window is built.
  onContentLoaded - (function) Fired when content is successfully loaded via XHR or Iframe.
@@ -246,6 +247,7 @@ MUI.Windows.windowOptions = {
 	controlsOffset:		{'right': 6, 'top': 6},
 	useCanvas:			true,
 	useCanvasControls:	true,
+	useCSS3:			true,
 	useSpinner:			true,
 
 	// Events
@@ -327,8 +329,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 			if (MUI.Dock.dock && options.type != 'modal' && options.type != 'modal2'){
 				this.options.minimizable = options.minimizable;
 			}
-		}
-		else {
+		} else {
 			options.minimizable = false;
 		}
 
@@ -348,6 +349,17 @@ MUI.Window = new NamedClass('MUI.Window', {
 		options.id = options.id || 'win' + (++MUI.IDCount);
 
 		this.windowEl = $(options.id);
+		
+		// Condition under which to use CSS3, needs shadow, border-radius and gradient support
+		if (!options.useCSS3) this.useCSS3 = false;
+		else if (Browser.Engine.gecko && Browser.Engine.version >= 19) this.useCSS3 = true; // FF3.6
+		else if (Browser.Engine.webkit && Browser.Engine.version >= 525) this.useCSS3 = true; // S4
+		else if (Browser.Engine.trident && Browser.Engine.version > 6) this.useCSS3 = true; // IE9
+		else this.useCSS3 = false;
+		
+		// if somebody wants CSS3 but not canvas and condition are false for css3
+		// i.e. IE8 Test CSS3 Body
+		if (options.useCSS3 && !this.useCSS3 && !this.options.useCanvas) options.shadowBlur = 0;
 
 		if (options.require.css.length || options.require.images.length){
 			new MUI.Require({
@@ -357,8 +369,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 					this.newWindow();
 				}.bind(this)
 			});
-		}
-		else {
+		} else {
 			this.newWindow();
 		}
 
@@ -435,7 +446,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 		// Create window div
 		MUI.Windows.indexLevel++;
 		this.windowEl = new Element('div', {
-			'class': 'mocha',
+			'class': this.useCSS3 ? 'mocha css3' : 'mocha',
 			'id': options.id,
 			'styles': {
 				'position': 'absolute',
@@ -506,7 +517,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 
 		// Inject window into DOM
 		this.windowEl.inject(options.container);
-
+		
 		// Convert CSS colors to Canvas colors.
 		this.setColors();
 
@@ -1077,31 +1088,31 @@ MUI.Window = new NamedClass('MUI.Window', {
 			'class': 'mochaContent'
 		}).inject(cache.contentWrapperEl);
 
-		if (self.options.useCanvas && Browser.Engine.trident != true){
-			cache.canvasEl = new Element('canvas', {
-				'id': id + '_canvas',
-				'class': 'mochaCanvas',
-				'width': 10,
-				'height': 10
-			}).inject(self.windowEl);
-		}
+		if (self.options.useCanvas && !this.useCSS3){
+			if (!Browser.Engine.trident){
+				cache.canvasEl = new Element('canvas', {
+					'id': id + '_canvas',
+					'class': 'mochaCanvas',
+					'width': 10,
+					'height': 10
+				}).inject(self.windowEl);
+			} else if (Browser.Engine.trident){
+				cache.canvasEl = new Element('canvas', {
+					'id': id + '_canvas',
+					'class': 'mochaCanvas',
+					'width': 50000, // IE8 excanvas requires these large numbers
+					'height': 20000,
+					'styles': {
+						'position': 'absolute',
+						'top': 0,
+						'left': 0
+					}
+				}).inject(self.windowEl);
 
-		if (self.options.useCanvas && Browser.Engine.trident){
-			cache.canvasEl = new Element('canvas', {
-				'id': id + '_canvas',
-				'class': 'mochaCanvas',
-				'width': 50000, // IE8 excanvas requires these large numbers
-				'height': 20000,
-				'styles': {
-					'position': 'absolute',
-					'top': 0,
-					'left': 0
+				if (MUI.ieSupport == 'excanvas'){
+					G_vmlCanvasManager.initElement(cache.canvasEl);
+					cache.canvasEl = self.windowEl.getElement('.mochaCanvas');
 				}
-			}).inject(self.windowEl);
-
-			if (MUI.ieSupport == 'excanvas'){
-				G_vmlCanvasManager.initElement(cache.canvasEl);
-				cache.canvasEl = self.windowEl.getElement('.mochaCanvas');
 			}
 		}
 
@@ -1330,8 +1341,8 @@ MUI.Window = new NamedClass('MUI.Window', {
 	 */
 	setColors: function(){
 
-		if (this.options.useCanvas){
-
+		if (this.options.useCanvas && !this.useCSS3){
+			
 			// Set TitlebarColor
 			var pattern = /\?(.*?)\)/;
 			if (this.titleBarEl.getStyle('backgroundImage') != 'none'){
@@ -1432,8 +1443,8 @@ MUI.Window = new NamedClass('MUI.Window', {
 		}
 
 		var options = this.options;
-		var shadowBlur = options.shadowBlur;
-		var shadowBlur2x = shadowBlur * 2;
+		var shadowBlur = this.useCSS3 ? 0 : options.shadowBlur;
+		var shadowBlur2x = this.useCSS3 ? 0 : shadowBlur * 2;
 		var shadowOffset = this.options.shadowOffset;
 
 		this.overlayEl.setStyles({
@@ -1452,8 +1463,8 @@ MUI.Window = new NamedClass('MUI.Window', {
         var width = this.contentWrapperEl.getStyle('width').toInt() + shadowBlur2x;
 		var height = this.contentWrapperEl.getStyle('height').toInt() + this.headerFooterShadow + borderHeight;
         if (options.sections) options.sections.each(function(section){
-            var el=section.wrap ? section.wrapperEl : section.childElement;
-            height+=el.getStyle('height').toInt() + el.getStyle('border-top').toInt();
+            var el = section.wrap ? section.wrapperEl : section.childElement;
+            height += el.getStyle('height').toInt() + el.getStyle('border-top').toInt();
         } );
 
 		this.windowEl.setStyles({
@@ -1467,7 +1478,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 			'left': shadowBlur - shadowOffset.x
 		});
 
-		if (this.options.useCanvas){
+		if (this.options.useCanvas && !this.useCSS3){
 			if (Browser.Engine.trident){
 				this.canvasEl.height = 20000;
 				this.canvasEl.width = 50000;
@@ -1490,14 +1501,14 @@ MUI.Window = new NamedClass('MUI.Window', {
 		});
 
 		// Make sure loading icon is placed correctly.
-		if (options.useSpinner && options.shape != 'gauge' && options.type != 'notification'){
+		if (options.useSpinner && !this.useCSS3 && options.shape != 'gauge' && options.type != 'notification'){
 			this.spinnerEl.setStyles({
 				'left': shadowBlur - shadowOffset.x,
 				'bottom': shadowBlur + shadowOffset.y + 8
 			});
 		}
 
-		if (this.options.useCanvas != false){
+		if (this.options.useCanvas && !this.useCSS3){
 
 			// Draw Window
 			var ctx = this.canvasEl.getContext('2d');
@@ -1549,9 +1560,9 @@ MUI.Window = new NamedClass('MUI.Window', {
 
 	drawWindowCollapsed: function(shadows){
 		var options = this.options;
-		var shadowBlur = options.shadowBlur;
-		var shadowBlur2x = shadowBlur * 2;
-		var shadowOffset = options.shadowOffset;
+		var shadowBlur = this.useCSS3 ? 0 : options.shadowBlur;
+		var shadowBlur2x = this.useCSS3 ? 0 : shadowBlur * 2;
+		var shadowOffset = this.useCSS3 ? 0 : options.shadowOffset;
 
 		var height = options.headerHeight + shadowBlur2x + 2;
 		var width = this.contentWrapperEl.getStyle('width').toInt() + shadowBlur2x;
@@ -1580,7 +1591,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 		});
 
 		// Draw Window
-		if (this.options.useCanvas != false){
+		if (this.options.useCanvas && !this.useCSS3){
 			this.canvasEl.height = height;
 			this.canvasEl.width = width;
 
@@ -1605,8 +1616,8 @@ MUI.Window = new NamedClass('MUI.Window', {
 
 	drawControls : function(){
 		var options = this.options;
-		var shadowBlur = options.shadowBlur;
-		var shadowOffset = options.shadowOffset;
+		var shadowBlur = this.useCSS3 ? 0 : options.shadowBlur;
+		var shadowOffset = this.useCSS3 ? 0 : options.shadowOffset;
 		var controlsOffset = options.controlsOffset;
 
 		// Make sure controls are placed correctly.
