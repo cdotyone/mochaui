@@ -1594,7 +1594,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 
 			// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
 			if (Browser.Engine.trident){
-				MUI.triangle(ctx, 0, 0, 10, 10, this.resizableColor, 0);
+				MUI.triangle(ctx, 0, 0, 10, 10, [0, 0, 0], 0);
 			}
 		}
 
