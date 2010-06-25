@@ -1154,7 +1154,7 @@ MUI.Window = new NamedClass('MUI.Window', {
                     intoEl = section.position == 'header' ? cache.titleBarEl : cache.footerEl;
                     where = 'bottom';
                     wrap = false;
-                } else empty = false; // can't empty in content border area
+                } else section.empty = false; // can't empty in content border area
 
                 if (section.wrap){
              		section.wrapperEl = new Element('div', {
