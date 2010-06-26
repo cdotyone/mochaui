@@ -192,6 +192,17 @@ MUI.Desktop = {
 		instance.oldTop = windowEl.getStyle('top');
 		instance.oldLeft = windowEl.getStyle('left');
 
+		// save original corner radius
+		if (!options.radiusOnMaximize){
+			instance.oldRadius = instance.options.cornerRadius;
+			instance.oldShadowBlur = instance.options.shadowBlur;
+			instance.oldShadowOffset = instance.options.shadowOffset;
+
+			instance.options.cornerRadius = 0;
+			instance.options.shadowBlur=0;
+			instance.options.shadowOffset={'x': 0, 'y': 0};
+		}
+
 		var contentWrapperEl = instance.contentWrapperEl;
 
 		// Save original dimensions
@@ -250,6 +261,12 @@ MUI.Desktop = {
 
 		var options = instance.options;
 		instance.isMaximized = false;
+
+		if (!options.radiusOnMaximize){
+			instance.options.cornerRadius = instance.oldRadius;
+			instance.options.shadowBlur = instance.oldShadowBlur;
+			instance.options.shadowOffset = instance.oldShadowOffset;
+		}
 
 		if (options.restrict){
 			instance.windowDrag.attach();

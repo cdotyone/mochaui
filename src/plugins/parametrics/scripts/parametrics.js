@@ -42,7 +42,7 @@ MUI.extend({
 					windowOptions.cornerRadius = pos;
 					MUI.Window.implement({ options: windowOptions });
 					// Don't redraw windows the first time the slider is initialized
-					if (sliderFirst == true){
+					if (sliderFirst){
 						sliderFirst = false;
 						return;
 					}
@@ -70,8 +70,7 @@ MUI.extend({
 					windowOptions.shadowBlur = pos;
 					MUI.Window.implement({ options: windowOptions });
 					// Don't redraw windows the first time the slider is initialized
-					// !!! Probably need to make this separate from the corner radius slider
-					if (sliderFirst == true){
+					if (sliderFirst){
 						sliderFirst = false;
 						return;
 					}
@@ -111,7 +110,7 @@ MUI.extend({
 					windowOptions.shadowOffset.x = pos;
 					MUI.Window.implement({ options: windowOptions });
 					// Don't redraw windows the first time the slider is initialized
-					if (sliderFirst == true){
+					if (sliderFirst){
 						sliderFirst = false;
 						return;
 					}
@@ -148,7 +147,7 @@ MUI.extend({
 					windowOptions.shadowOffset.y = pos;
 					MUI.Window.implement({ options: windowOptions });
 					// Don't redraw windows the first time the slider is initialized
-					if (sliderFirst == true){
+					if (sliderFirst){
 						sliderFirst = false;
 						return;
 					}
