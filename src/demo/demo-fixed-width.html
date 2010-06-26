@@ -104,7 +104,7 @@
     <!--MOCHAUI-->
     
 	<script type="text/javascript">
-
+   
 	MUI.aboutWindow = function(){
 		new MUI.Modal({
 			id: 'about',
@@ -121,7 +121,8 @@
 	};
 
 	window.addEvent('load', function(){
-		MUI.Desktop.initialize();
+        MUI.Windows.windowOptions.maximizeTo = 'pageWrapper';
+        MUI.Desktop.initialize();
 		MUI.Dock.initialize();
 		MUI.NewWindowsFromHTML = new MUI.newWindowsFromHTML();
 

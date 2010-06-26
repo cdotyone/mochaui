@@ -219,20 +219,21 @@ MUI.Desktop = {
 			}
 		}
 
-		var windowDimensions = document.getCoordinates();
-		var options = instance.options;
+		var resizeDimensions;
+        if(options.maximizeTo) resizeDimensions=$(options.maximizeTo).getCoordinates();
+        else resizeDimensions=document.getCoordinates();
 		var shadowBlur = options.shadowBlur;
 		var shadowOffset = options.shadowOffset;
-		var newHeight = windowDimensions.height - options.headerHeight - options.footerHeight;
+		var newHeight = resizeDimensions.height - options.headerHeight - options.footerHeight;
 		newHeight -= instance.contentBorderEl.getStyle('border-top').toInt();
 		newHeight -= instance.contentBorderEl.getStyle('border-bottom').toInt();
 		newHeight -= (instance.toolbarWrapperEl ? instance.toolbarWrapperEl.getStyle('height').toInt() + instance.toolbarWrapperEl.getStyle('border-top').toInt() : 0);
 
 		MUI.resizeWindow(windowEl, {
-			width: windowDimensions.width,
+			width: resizeDimensions.width,
 			height: newHeight,
-			top: shadowOffset.y - shadowBlur,
-			left: shadowOffset.x - shadowBlur
+			top: resizeDimensions.top + shadowOffset.y - shadowBlur,
+			left: resizeDimensions.left + shadowOffset.x - shadowBlur
 		});
 		instance.fireEvent('onMaximize', windowEl);
 

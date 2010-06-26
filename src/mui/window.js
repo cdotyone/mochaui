@@ -73,6 +73,7 @@ MUI.files[MUI.path.source + 'window.js'] = 'loading';
  collapsible - (boolean) Defaults to true.
  minimizable - (boolean) Requires MUI.Desktop and MUI.Dock. Defaults to true if dependenices are met.
  maximizable - (boolean) Requires MUI.Desktop. Defaults to true if dependenices are met.
+ maximizeTo - (element ID) Element to maximize windows to. Defaults to client area.
  closable - (boolean) Defaults to true.
  storeOnClose - (boolean) Hides a window and it's dock tab rather than destroying them on close. If you try to create the window again it will unhide the window and dock tab.
  modalOverlayClose - (boolean) Whether or not you can close a modal by clicking on the modal overlay. Defaults to true.
@@ -213,6 +214,8 @@ MUI.Windows.windowOptions = {
 	minimizable:		true,
 	maximizable:		true,
 	closable:			true,
+
+	maximizeTo:			null,
 
 	// Close options
 	storeOnClose:		false,

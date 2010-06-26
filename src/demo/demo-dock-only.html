@@ -98,6 +98,7 @@
 		};
 		
 		window.addEvent('load', function(){
+			MUI.Windows.windowOptions.maximizeTo = 'pageWrapper';
 			MUI.Desktop.initialize();
 			MUI.Dock.initialize();
 			MUI.NewWindowsFromHTML = new MUI.newWindowsFromHTML();
