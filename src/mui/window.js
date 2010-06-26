@@ -89,6 +89,7 @@ MUI.files[MUI.path.source + 'window.js'] = 'loading';
  headerHeight - (number) Height of window titlebar.
  footerHeight - (number) Height of window footer.
  cornerRadius - (number)
+ radiusOnMaximize - (boolean) show radius corners and shadows when maximized. Defaults to false;
  x - (number) If x and y are left undefined the window is centered on the page.
  y - (number)
  scrollbars - (boolean)
@@ -240,6 +241,7 @@ MUI.Windows.windowOptions = {
 	headerHeight:		25,
 	footerHeight:		25,
 	cornerRadius:		8,
+	radiusOnMaximize:	false,
 	x:					null,
 	y:					null,
 	scrollbars:			true,
