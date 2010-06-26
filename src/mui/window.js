@@ -1403,7 +1403,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 	 shadows: (boolean) false will draw a window without shadows
 	 */
 	drawWindow: function(shadows){
-
+		if(shadows==null) shadows = true;
 		if (this.drawingWindow) return;
 		this.drawingWindow = true;
 
