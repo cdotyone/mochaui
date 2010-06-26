@@ -57,8 +57,10 @@
 
 var initializeWindows = function() {
 
-	// Examples
+	// change default setting - keep window within inside the main area.
+	MUI.Windows.windowOptions.maximizeTo = 'pageWrapper';
 
+	// Examples
 	MUI.htmlWindow = function() {
 		new MUI.Window({
 			id: 'htmlpage',
@@ -559,7 +561,6 @@ var initializeWindows = function() {
 	}
 
 	// Workspaces
-
 	if ($('saveWorkspaceLink')) {
 		$('saveWorkspaceLink').addEvent('click', function(e) {
 			e.stop();

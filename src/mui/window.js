@@ -275,6 +275,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 	options: MUI.Windows.windowOptions,
 
 	initialize: function(options){
+		this.setOptions(MUI.Windows.windowOptions); // looks strange, but is here to allow global options to be set externally to window.js
 		this.setOptions(options);
 
 		// Shorten object chain
