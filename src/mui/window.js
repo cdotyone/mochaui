@@ -1166,6 +1166,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 					'styles': { 'height': section.height }
 				}).inject(intoEl);
 
+				section.wrapperEl = intoEl;
 				if (section.wrap && section.position == 'bottom') section.childElement.addClass('bottom');
 			});
 		}
@@ -2088,6 +2089,19 @@ MUI.Window = new NamedClass('MUI.Window', {
 			});
 		}
 
+	},
+
+	/*
+	 Get the total height of all of the custom sections in the content area.
+	*/
+	getAllSectionsHeight: function() {
+		var height=0;
+		if(this.options.sections) {
+			this.options.sections.each(function(section){
+				height+=section.wrapperEl.getStyle('height').toInt() + section.wrapperEl.getStyle('border-top').toInt();
+			});
+		}
+		return height;
 	}
 
 });

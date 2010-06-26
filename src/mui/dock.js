@@ -405,11 +405,7 @@ MUI.Dock = {
 		}
 
 		// Hide window and add to dock
-		instance.contentBorderEl.setStyle('visibility', 'hidden');
-		if (instance.toolbarWrapperEl){
-			instance.toolbarWrapperEl.hide();
-		}
-		windowEl.setStyle('visibility', 'hidden');
+        instance.hide();
 
 		// Fixes a scrollbar issue in Mac FF2
 		if (Browser.Platform.mac && Browser.Engine.gecko){
@@ -454,11 +450,8 @@ MUI.Dock = {
 			MUI.collapseToggle(windowEl);
 		}
 
-		windowEl.setStyle('visibility', 'visible');
-		instance.contentBorderEl.setStyle('visibility', 'visible');
-		if (instance.toolbarWrapperEl){
-			instance.toolbarWrapperEl.show();
-		}
+        // show the window 
+        instance.show();
 
 		// Show iframe
 		if (instance.iframeEl){

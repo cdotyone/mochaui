@@ -96,12 +96,21 @@ MUI.Desktop = {
 					// Hide iframe while resize for better performance
 					if (instance.iframeEl) instance.iframeEl.setStyle('visibility', 'hidden');
 
-					var coordinates = document.getCoordinates();
-					var borderHeight = instance.contentBorderEl.getStyle('border-top').toInt() + instance.contentBorderEl.getStyle('border-bottom').toInt();
-					var toolbarHeight = instance.toolbarWrapperEl ? instance.toolbarWrapperEl.getStyle('height').toInt() + instance.toolbarWrapperEl.getStyle('border-top').toInt() : 0;
-					instance.contentWrapperEl.setStyles({
-						'height': coordinates.height - instance.options.headerHeight - instance.options.footerHeight - borderHeight - toolbarHeight,
-						'width': coordinates.width
+					var resizeDimensions;
+					if(options.maximizeTo) resizeDimensions=$(options.maximizeTo).getCoordinates();
+					else resizeDimensions=document.getCoordinates();
+					var shadowBlur = options.shadowBlur;
+					var shadowOffset = options.shadowOffset;
+					var newHeight = resizeDimensions.height - options.headerHeight - options.footerHeight;
+					newHeight -= instance.contentBorderEl.getStyle('border-top').toInt();
+					newHeight -= instance.contentBorderEl.getStyle('border-bottom').toInt();
+					newHeight -= instance.getAllSectionsHeight();
+
+					MUI.resizeWindow(instance.windowEl, {
+						width: resizeDimensions.width,
+						height: newHeight,
+						top: resizeDimensions.top + shadowOffset.y - shadowBlur,
+						left: resizeDimensions.left + shadowOffset.x - shadowBlur
 					});
 
 					instance.drawWindow();
@@ -227,7 +236,7 @@ MUI.Desktop = {
 		var newHeight = resizeDimensions.height - options.headerHeight - options.footerHeight;
 		newHeight -= instance.contentBorderEl.getStyle('border-top').toInt();
 		newHeight -= instance.contentBorderEl.getStyle('border-bottom').toInt();
-		newHeight -= (instance.toolbarWrapperEl ? instance.toolbarWrapperEl.getStyle('height').toInt() + instance.toolbarWrapperEl.getStyle('border-top').toInt() : 0);
+		newHeight -= instance.getAllSectionsHeight();
 
 		MUI.resizeWindow(windowEl, {
 			width: resizeDimensions.width,
