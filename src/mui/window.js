@@ -103,7 +103,7 @@ MUI.files[MUI.path.source + 'window.js'] = 'loading';
  useSpinner - (boolean) Toggles whether or not the ajax spinners are displayed in window footers. Defaults to true.
  onBeforeBuild - (function) Fired just before the window is built.
  onContentLoaded - (function) Fired when content is successfully loaded via XHR or Iframe.
- onFocus - (function)  Fired when the window is focused.
+ onFocus - (function) Fired when the window is focused.
  onBlur - (function) Fired when window loses focus.
  onResize - (function) Fired when the window is resized.
  onMinimize - (function) Fired when the window is minimized.
@@ -287,7 +287,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 
 		$extend(this, {
 			mochaControlsWidth: 0,
-			minimizebuttonX:  0,  // Minimize button horizontal position
+			minimizebuttonX: 0,  // Minimize button horizontal position
 			maximizebuttonX: 0,  // Maximize button horizontal position
 			closebuttonX: 0,  // Close button horizontal position
 			headerFooterShadow: options.headerHeight + options.footerHeight + (options.shadowBlur * 2),
@@ -1115,7 +1115,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 		cache.footerEl = new Element('div', {
 			'id': id + '_footer',
 			'class': 'mochaWindowFooter',
-            'styles':{ 'width': width - 30 }
+			'styles':{ 'width': width - 30 }
 		}).inject(cache.overlayEl, 'bottom');
 
 		if (options.sections){
@@ -1137,7 +1137,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 						'section': 'section' + snum,
 						'loadMethod': 'xhr',
 						'method': self.options.method
-					   },section);
+				},section);
 
 				var wrap = section.wrap;
 				var where = section.position == 'bottom' ? 'after' : 'before';
@@ -1216,7 +1216,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 				'id': id + '_spinner',
 				'class': 'mochaSpinner',
 				'styles':{	'width': 16,
-							'height': 16  }
+							'height': 16 }
 			}).inject(cache.footerEl, 'bottom');
 		}
 
@@ -1443,8 +1443,8 @@ MUI.Window = new NamedClass('MUI.Window', {
 		var width = this.contentWrapperEl.getStyle('width').toInt() + shadowBlur2x;
 		var height = this.contentWrapperEl.getStyle('height').toInt() + this.headerFooterShadow + borderHeight;
 		if (options.sections) options.sections.each(function(section){
-            var el = section.wrap ? section.wrapperEl : section.childElement;
-            height += el.getStyle('height').toInt() + el.getStyle('border-top').toInt();
+			var el = section.wrap ? section.wrapperEl : section.childElement;
+			height += el.getStyle('height').toInt() + el.getStyle('border-top').toInt();
 		} );
 
 		this.windowEl.setStyles({

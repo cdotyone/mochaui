@@ -431,7 +431,7 @@ var initializeWindows = function() {
 			height: 175,
 			shadowBlur: 0,
 			resizeLimit: {'x': [275, 2500], 'y': [125, 2000]},
-            useCanvas: false,
+			useCanvas: false,
 			useCSS3: false
 		});
 	};
@@ -442,63 +442,63 @@ var initializeWindows = function() {
 		});
 	}
 
-    MUI.css3Window = function(){
-        new MUI.Window({
-            id: 'css3',
-            title: 'CSS3',
-            contentURL: 'pages/lipsum.html',
-            addClass: 'no-canvas',
-            width: 305,
-            height: 175,
-            resizable: false,
-            useCanvas: false,
-            useCSS3: true
-        });
-    };
-    if ($('CSS3LinkCheck')){
-        $('CSS3LinkCheck').addEvent('click', function(e){
-            e.stop();
-            MUI.css3Window();
-        });
-    }
+	MUI.css3Window = function(){
+		new MUI.Window({
+			id: 'css3',
+			title: 'CSS3',
+			contentURL: 'pages/lipsum.html',
+			addClass: 'no-canvas',
+			width: 305,
+			height: 175,
+			resizable: false,
+			useCanvas: false,
+			useCSS3: true
+		});
+	};
+	if ($('CSS3LinkCheck')){
+		$('CSS3LinkCheck').addEvent('click', function(e){
+			e.stop();
+			MUI.css3Window();
+		});
+	}
 
-    MUI.css3fallbackWindow = function(){
-        new MUI.Window({
-            id: 'css3fallback',
-            title: 'CSS3 with Fallback to Canvas',
-            contentURL: 'pages/lipsum.html',
-            width: 305,
-            height: 175,
-            resizable: false,
-            useCanvas: true,
-            useCSS3: true
-        });
-    };
-    if ($('CSS3fallbackLinkCheck')){
-        $('CSS3fallbackLinkCheck').addEvent('click', function(e){
-            e.stop();
-            MUI.css3fallbackWindow();
-        });
-    }
+	MUI.css3fallbackWindow = function(){
+		new MUI.Window({
+			id: 'css3fallback',
+			title: 'CSS3 with Fallback to Canvas',
+			contentURL: 'pages/lipsum.html',
+			width: 305,
+			height: 175,
+			resizable: false,
+			useCanvas: true,
+			useCSS3: true
+		});
+	};
+	if ($('CSS3fallbackLinkCheck')){
+		$('CSS3fallbackLinkCheck').addEvent('click', function(e){
+			e.stop();
+			MUI.css3fallbackWindow();
+		});
+	}
 
-    MUI.forceCanvasWindow = function(){
-        new MUI.Window({
-            id: 'forceCanvas',
-            title: 'Force Canvas',
-            contentURL: 'pages/lipsum.html',
-            width: 305,
-            height: 175,
-            resizable: false,
-            useCanvas: true,
-            useCSS3: false
-        });
-    };
-    if ($('forceCanvasLinkCheck')){
-        $('forceCanvasLinkCheck').addEvent('click', function(e){
-            e.stop();
-            MUI.forceCanvasWindow();
-        });
-    }
+	MUI.forceCanvasWindow = function(){
+		new MUI.Window({
+			id: 'forceCanvas',
+			title: 'Force Canvas',
+			contentURL: 'pages/lipsum.html',
+			width: 305,
+			height: 175,
+			resizable: false,
+			useCanvas: true,
+			useCSS3: false
+		});
+	};
+	if ($('forceCanvasLinkCheck')){
+		$('forceCanvasLinkCheck').addEvent('click', function(e){
+			e.stop();
+			MUI.forceCanvasWindow();
+		});
+	}
 
 	// add ability to test column and panel closing
 	if ($('closePanelCheck')) {
@@ -947,34 +947,16 @@ var initializeColumns = function() {
 		contentURL: 'pages/lipsum.html',
 		column: 'mainColumn',
 		height: 200,
-		sections: [
-			{	position:'headertool',
+		sections: [ {
+				position:'headertool',
 				section:'tool',
 				url:'pages/console.toolbox.html',
 				onContentLoaded: function(){
 					this.childElement.getElements('.demoAction').removeEvents().addEvent('click', function(){
 						MUI.notification('Do Something');
 					});
-        },
-		onContentLoaded: function(){
-			var panel = this.contentWrapperEl;
-			var pad = panel.getElement('.pad');
-			pad.appendText('Width: ');
-			pad.displayWidth = new Element('span', {
-				'text': panel.getStyle('width')
-			}).inject(pad);
-			pad.appendText(' Height: ');
-			pad.displayHeight = new Element('span', {
-				'text': panel.getStyle('height')
-			}).inject(pad);
-		},
-		onResize: function(){
-			var newSize = this.contentWrapperEl.getStyles(['width', 'height']);
-			var pad = this.contentEl;
-			pad.displayWidth.set('text', newSize['width']);
-			pad.displayHeight.set('text', newSize['height']);
 				}
-			}],
+		}],
 		onContentLoaded: function() {
 			var panel = this.contentWrapperEl;
 			var pad = panel.getElement('.pad');
