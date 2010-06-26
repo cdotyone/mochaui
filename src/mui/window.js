@@ -1483,7 +1483,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 					break;
 			}
 
-			if (options.resizable){
+			if (options.resizable && !this.isMaximized){
 				MUI.triangle(
 					ctx,
 					width - (shadowBlur + shadowOffset.x + 17),
