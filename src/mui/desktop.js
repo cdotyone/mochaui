@@ -476,6 +476,9 @@ MUI.extend({
 				}
 			}.bind(this));
 
+			panelsToResize.each(function(panel){
+				MUI.get(panel.id).fireEvent('resize');
+			});
 		}.bind(this));
 
 		// Get the remaining height
@@ -591,6 +594,15 @@ MUI.extend({
 			var newWidth = currentWidth + remainingWidth;
 			if (newWidth < 1) newWidth = 0;
 			column.setStyle('width', newWidth);
+
+			// fire all panel resize events and the column resize event
+			var instance = MUI.get(column.id);
+			[].include(instance)
+			  .combine(instance.getPanels())
+			  .each(function(panel){
+					panel.fireEvent('resize')
+			  });
+
 			column.getChildren('.panel').each(function(panel){
 				panel.setStyle('width', newWidth - panel.getStyle('border-left').toInt() - panel.getStyle('border-right').toInt());
 				MUI.resizeChildren(panel);

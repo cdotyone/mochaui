@@ -940,6 +940,26 @@ var initializeColumns = function() {
 			}]
 	});
 
+var addResizeElements = function() {
+	var panel = this.contentWrapperEl;
+	var pad = panel.getElement('.pad');
+	pad.appendText('Width: ');
+	this.displayWidthEl = new Element('span', {
+		'text': panel.getStyle('width')
+	}).inject(pad);
+	pad.appendText(' Height: ');
+	this.displayHeightEl =new Element('span', {
+		'text': panel.getStyle('height')
+	}).inject(pad);
+};
+
+var updateResizeElements = function() {
+	var newSize = this.contentWrapperEl.getStyles(['width', 'height']);
+	var pad = this.contentEl;
+	if(this.displayWidthEl) this.displayWidthEl.set('text', newSize['width']);
+	if(this.displayHeightEl) this.displayHeightEl.set('text', newSize['height']);
+};
+
 	new MUI.Panel({
 		id: 'mochaConsole',
 		addClass: 'mochaConsole',
@@ -957,24 +977,8 @@ var initializeColumns = function() {
 					});
 				}
 		}],
-		onContentLoaded: function() {
-			var panel = this.contentWrapperEl;
-			var pad = panel.getElement('.pad');
-			pad.appendText('Width: ');
-			pad.displayWidth = new Element('span', {
-				'text': panel.getStyle('width')
-			}).inject(pad);
-			pad.appendText(' Height: ');
-			pad.displayHeight = new Element('span', {
-				'text': panel.getStyle('height')
-			}).inject(pad);
-		},
-		onResize: function() {
-			var newSize = this.contentWrapperEl.getStyles(['width', 'height']);
-			var pad = this.contentEl;
-			pad.displayWidth.set('text', newSize['width']);
-			pad.displayHeight.set('text', newSize['height']);
-		}
+		onContentLoaded: addResizeElements,
+		onResize: updateResizeElements
 	});
 
 	// Add panels to second side column
@@ -991,12 +995,14 @@ var initializeColumns = function() {
 			}]
 	});
 
-	new MUI.Panel({
+	var panel3=new MUI.Panel({
 		id: 'panel3',
 		title: 'Panel',
 		contentURL: 'pages/lipsum.html',
 		column: 'sideColumn2',
-		height: 120
+		height: 120,
+		onContentLoaded: addResizeElements,
+		onResize: updateResizeElements
 	});
 
 	new MUI.Panel({
