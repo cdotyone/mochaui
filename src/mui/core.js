@@ -83,6 +83,11 @@ var MUI = MochaUI = new Hash({
 	each: function(func){
 		this.instances.each(func);
 		return this;
+	},
+	
+	close: function(el){
+		document.id(el).close();
+		return this;
 	}
 
 });
