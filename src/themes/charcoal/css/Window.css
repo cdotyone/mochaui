@@ -22,32 +22,32 @@
 
 .mocha {
 	display: none;
-	overflow: hidden;	
-	background-color: #404040;	
+	overflow: hidden;
+	background-color: #404040;
 }
 
 .mocha.css3 {
 	overflow: visible;
 }
 
-.mocha.isFocused {	
-}	
+.mocha.isFocused {
+}
 
 .mochaOverlay {
 	position: absolute; /* This is also set in theme.js in order to make theme transitions smoother */
 	top: 0;
-	left: 0;	
+	left: 0;
 }
-	
+
 .mochaTitlebar {
 	width: 100%;
 	overflow: hidden;
-	background: url(../images/spacer.gif?from=494949&to=393939); 	
+	background: url(../images/spacer.gif?from=494949&to=393939);
 }
 
 .mochaTitlebar h3 {
 	font-size: 12px;
-	line-height: 15px;	
+	line-height: 15px;
 	font-weight: bold;
 	margin: 0;
 	padding: 5px 10px 4px 12px;
@@ -62,7 +62,7 @@
 	width: 100%; /* For IE */
 	position: relative;
 	height: 29px;
-	background: #4c4c4c;	
+	background: #4c4c4c;
 	overflow: hidden;
 	border-top: 1px solid #4c4c4c;
 }
@@ -82,19 +82,20 @@ div.mochaToolbarWrapper.bottom {
 	border-bottom: 1px solid #282828;
 }
 
-.mochaContentWrapper { /* Has a fixed height and scrollbars if required. */
+.mochaContentWrapper {
+/* Has a fixed height and scrollbars if required. */
 	font-size: 12px;
 	overflow: auto;
 	background: #303030;
 }
-	
+
 .mochaContent {
 	padding: 10px 12px;
 }
 
 .mochaWindowFooter {
-    height: 26px;
-    padding-left: 30px
+	height: 26px;
+	padding-left: 30px
 }
 
 .mocha .handle {
@@ -103,24 +104,26 @@ div.mochaToolbarWrapper.bottom {
 	width: 3px;
 	height: 3px;
 	z-index: 2;
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */		
-	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0); /* IE6 and 7*/
-	opacity: .0;	
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity = 0); /* IE6 and 7*/
+	opacity: .0;
 	-moz-opacity: .0;
 	overflow: hidden;
 	font-size: 1px; /* For IE6 */
 }
 
-.mocha .corner { /* Corner resize handles */
+.mocha .corner {
+/* Corner resize handles */
 	width: 10px;
 	height: 10px;
-	background: #f00;	
+	background: #f00;
 }
 
-.mocha .cornerSE { /* Bottom right resize handle */
+.mocha .cornerSE {
+/* Bottom right resize handle */
 	width: 20px;
 	height: 20px;
-	background: #646464; /* This is the color of the visible resize handle */	
+	background: #646464; /* This is the color of the visible resize handle */
 }
 
 .mochaCanvasHeader {
@@ -144,9 +147,9 @@ div.mochaToolbarWrapper.bottom {
 }
 
 .mochaCanvasControls {
-	position: absolute;	
+	position: absolute;
 	top: 6px;
-	right: 8px;	
+	right: 8px;
 	z-index: 3;
 	background: transparent;
 }
@@ -155,7 +158,7 @@ div.mochaToolbarWrapper.bottom {
 	To use images for these buttons:
 	1. Set the useCanvasControls window option to false.
 	2. If you use a different button size you may need to reposition the controls.
-	   Modify the controlsOffset window option.		
+	   Modify the controlsOffset window option.
 	2. Add background images to each button.
 
 */
@@ -181,7 +184,7 @@ div.mochaToolbarWrapper.bottom {
 .mochaCloseButton {
 }
 
-.mochaSpinner{
+.mochaSpinner {
 	display: none;
 	position: absolute;
 	bottom: 5px;
@@ -193,8 +196,8 @@ div.mochaToolbarWrapper.bottom {
 
 .mochaIframe {
 	width: 100%;
-}  
-		
+}
+
 /* Fix for IE6 select z-index issue */
 .zIndexFix {
 	display: block;
@@ -218,8 +221,8 @@ div.mochaToolbarWrapper.bottom {
 	left: 0;
 	width: 100%;
 	background: #000;
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */		
-	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0); /* IE6 and 7*/	
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity = 0); /* IE6 and 7*/
 	opacity: 0;
 	-moz-opacity: 0;
 	z-index: 10000;
@@ -232,8 +235,8 @@ div.mochaToolbarWrapper.bottom {
 	top: 0;
 	left: 0;
 	width: 100%;
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */		
-	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0); /* IE6 and 7*/	
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity = 0); /* IE6 and 7*/
 	opacity: 0;
 	-moz-opacity: 0;
 	z-index: 9999;
@@ -241,15 +244,15 @@ div.mochaToolbarWrapper.bottom {
 
 /* Underlay */
 
-#windowUnderlay { 
+#windowUnderlay {
 	position: fixed;
 	top: 0;
 	left: 0;
 	width: 100%;
-	background: #000;	
+	background: #000;
 }
 
-* html #windowUnderlay { 
+* html #windowUnderlay {
 	position: absolute;
 }
 
@@ -262,41 +265,32 @@ div.mochaToolbarWrapper.bottom {
 /* Modals */
 
 .modal2 {
-	border: 8px solid #fff;		
+	border: 8px solid #fff;
 }
 
 .modal2 .mochaContentBorder {
 	border-width: 0px;
 }
-	
-/* Window Themes */
 
+/* Window Themes */
 .mocha.no-canvas {
-	background: #4c4c4c;	
-	border: 1px solid #666;	
+	background: #4c4c4c;
+	border: 1px solid #666;
 }
 
-.mocha.css3 {
-	box-shadow: 0px 0px 5px #333; /* Opera 10.5, IE 9.0 */
-	-moz-box-shadow: 0px 0px 5px #333; /* FF3.5+ */
-	-webkit-box-shadow: 0px 0px 5px #333; /* Saf3+ */
-	border: none;
-	border-radius: 8px; /* Opera 10.5, IE 9.0 */
-	-moz-border-radius: 8px; /* FF1+ */
-	-webkit-border-radius: 8px; /* Saf3+ */
+.mocha.css3Shadow {
+	background-color: #CCC;
 }
 
 .mocha.no-canvas .mochaTitlebar {
-	background: #4c4c4c;	
+	background: #4c4c4c;
 }
 
 .mocha.css3 .mochaTitlebar {
-	border-radius: 8px; /* Opera 10.5, IE 9.0 */
-	-moz-border-radius: 8px; /* FF1+ */
-	-webkit-border-radius: 8px; /* Saf3+ */
 	background-image: -moz-linear-gradient(top, #494949, #393939); /* FF3.6+ */
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #494949), color-stop(1, #393939)); /* Saf4+ */
 	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#494949', EndColorStr='#393939')"; /* IE8, IE9? */
+	background: #4c4c4c;
 }
 
 .mocha.transparent .mochaTitlebar h3 {
@@ -305,17 +299,17 @@ div.mochaToolbarWrapper.bottom {
 }
 
 .mocha.transparent .mochaContentWrapper {
-	background: transparent;	
+	background: transparent;
 }
 
 .mocha.notification {
 	background: #fff;
-	color: #222;	
+	color: #222;
 }
 
 .mocha.notification .mochaTitlebar {
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */		
-	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0); /* IE6 and 7*/	
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity = 0); /* IE6 and 7*/
 	opacity: .0;
 	-moz-opacity: 0;
 }
@@ -328,20 +322,20 @@ div.mochaToolbarWrapper.bottom {
 	text-align: center;
 	font-size: 12px;
 	font-weight: bold;
-	background: transparent;	
+	background: transparent;
 }
 
 /* Example Window Themes */
 
 #about {
-	border: 6px solid #333;	
+	border: 6px solid #333;
 }
 
 #about_contentWrapper {
-	background: #191919 url(../images/logo2.gif) 3px 3px no-repeat;		
+	background: #191919 url(../images/logo2.gif) 3px 3px no-repeat;
 }
 
-.jsonExample .mochaTitlebar {	
+.jsonExample .mochaTitlebar {
 	background: #6db6db;
 }
 
@@ -351,9 +345,9 @@ div.mochaToolbarWrapper.bottom {
 }
 
 #fxmorpherExample .mochaContentWrapper {
-	background: #577a9e;	
+	background: #577a9e;
 }
 
 #clock {
-	background: #393939;	
+	background: #393939;
 }

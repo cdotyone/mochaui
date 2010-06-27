@@ -629,8 +629,9 @@ MUI.Window = new NamedClass('MUI.Window', {
 	css3SetStyles: function() {
 		var self=this;
 		var options=this.options;
+		var color=Asset.getCSSRule('.mocha.css3Shadow').style.backgroundColor;
 		['','-o-','-webkit-','-moz-'].each(function(pre) {
-			self.windowEl.setStyle(pre + 'box-shadow', options.shadowOffset.x + 'px ' + options.shadowOffset.y + 'px ' + options.shadowBlur + 'px #333');
+			self.windowEl.setStyle(pre + 'box-shadow', options.shadowOffset.x + 'px ' + options.shadowOffset.y + 'px ' + options.shadowBlur + 'px ' + color);
 			self.windowEl.setStyle(pre + 'border-radius', options.cornerRadius + 'px');
 			self.titleBarEl.setStyle(pre + 'border-radius', options.cornerRadius + 'px');
 		});
