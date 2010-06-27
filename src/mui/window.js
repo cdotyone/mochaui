@@ -629,8 +629,9 @@ MUI.Window = new NamedClass('MUI.Window', {
 	css3SetStyles: function() {
 		var self=this;
 		var options=this.options;
+		var color=Asset.getCSSRule('.mochaCss3Shadow').style.backgroundColor;
 		['','-o-','-webkit-','-moz-'].each(function(pre) {
-			self.windowEl.setStyle(pre + 'box-shadow', options.shadowOffset.x + 'px ' + options.shadowOffset.y + 'px ' + options.shadowBlur + 'px #333');
+			self.windowEl.setStyle(pre + 'box-shadow', options.shadowOffset.x + 'px ' + options.shadowOffset.y + 'px ' + options.shadowBlur + 'px ' + color);
 			self.windowEl.setStyle(pre + 'border-radius', options.cornerRadius + 'px');
 			self.titleBarEl.setStyle(pre + 'border-radius', options.cornerRadius + 'px');
 		});
@@ -1467,7 +1468,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 			'height': options.headerHeight
 		});
 
-		if(options.useCSS3) this.css3SetStyles();
+		if(this.useCSS3) this.css3SetStyles();
 		else {
 			this.overlayEl.setStyles({
 				'height': height,
@@ -1560,7 +1561,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 			'height': options.headerHeight
 		});
 
-		if(options.useCSS3) this.css3SetStyles();
+		if(this.useCSS3) this.css3SetStyles();
 		else {
 			this.overlayEl.setStyles({
 				'height': height,
@@ -1748,7 +1749,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 
 	drawGauge: function(ctx, width, height, shadowBlur, shadowOffset, shadows){
 		var options = this.options;
-		if (shadows && !options.useCSS3){
+		if (shadows && !this.useCSS3){
 			for (var x = 0; x <= shadowBlur; x++){
 				MUI.circle(
 					ctx,

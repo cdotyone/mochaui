@@ -23,20 +23,20 @@
 .mocha {
 	display: none;
 	overflow: hidden;
-	background-color: #e5e5e5;	
+	background-color: #e5e5e5;
 }
 
 .mocha.css3 {
 	overflow: visible;
 }
 
-.mocha.isFocused {	
-}	
+.mocha.isFocused {
+}
 
 .mochaOverlay {
 	position: absolute; /* This is also set in theme.js in order to make theme transitions smoother */
 	top: 0;
-	left: 0;	
+	left: 0;
 }
 
 /*
@@ -48,17 +48,17 @@
 	
 	Both must be hex values without the leading # sign.
   
-*/	
+*/
 
 .mochaTitlebar {
 	width: 100%;
 	overflow: hidden;
-	background: url(../images/spacer.gif?from=fafafa&to=e5e5e5); 
+	background: url(../images/spacer.gif?from=fafafa&to=e5e5e5);
 }
 
 .mochaTitlebar h3 {
 	font-size: 12px;
-	line-height: 15px;	
+	line-height: 15px;
 	font-weight: bold;
 	margin: 0;
 	padding: 5px 10px 4px 12px;
@@ -73,7 +73,7 @@
 	width: 100%; /* For IE */
 	position: relative;
 	height: 29px;
-	background: #f1f1f1;	
+	background: #f1f1f1;
 	overflow: hidden;
 	border-top: 1px solid #d9d9d9;
 }
@@ -93,19 +93,20 @@ div.mochaToolbarWrapper.bottom {
 	border-bottom: 1px solid #dadada;
 }
 
-.mochaContentWrapper { /* Has a fixed height and scrollbars if required. */
+.mochaContentWrapper {
+/* Has a fixed height and scrollbars if required. */
 	font-size: 12px;
 	overflow: auto;
-	background: #fff;	
+	background: #fff;
 }
-	
+
 .mochaContent {
 	padding: 10px 12px;
 }
 
 .mochaWindowFooter {
-    height: 26px;
-    padding-left: 30px
+	height: 26px;
+	padding-left: 30px
 }
 
 .mocha .handle {
@@ -114,24 +115,26 @@ div.mochaToolbarWrapper.bottom {
 	width: 3px;
 	height: 3px;
 	z-index: 2;
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */		
-	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0); /* IE6 and 7*/
-	opacity: .0;	
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity = 0); /* IE6 and 7*/
+	opacity: .0;
 	-moz-opacity: .0;
 	overflow: hidden;
 	font-size: 1px; /* For IE6 */
 }
 
-.mocha .corner { /* Corner resize handles */
+.mocha .corner {
+/* Corner resize handles */
 	width: 10px;
 	height: 10px;
-	background: #f00;	
+	background: #f00;
 }
 
-.mocha .cornerSE { /* Bottom right resize handle */
+.mocha .cornerSE {
+/* Bottom right resize handle */
 	width: 20px;
 	height: 20px;
-	background: #fefefe; /* This is the color of the visible resize handle */	
+	background: #fefefe; /* This is the color of the visible resize handle */
 }
 
 .mochaCanvasHeader {
@@ -155,9 +158,9 @@ div.mochaToolbarWrapper.bottom {
 }
 
 .mochaCanvasControls {
-	position: absolute;	
+	position: absolute;
 	top: 6px;
-	right: 8px;	
+	right: 8px;
 	z-index: 3;
 	background: transparent;
 }
@@ -174,7 +177,7 @@ div.mochaToolbarWrapper.bottom {
 	float: right;
 	width: 14px;
 	height: 14px;
-	font-size: 1px;	
+	font-size: 1px;
 	cursor: pointer;
 	z-index: 4;
 	color: #666;
@@ -192,8 +195,8 @@ div.mochaToolbarWrapper.bottom {
 .mochaCloseButton {
 }
 
-.mochaSpinner{
-	display: none;	
+.mochaSpinner {
+	display: none;
 	position: absolute;
 	bottom: 5px;
 	left: 6px;
@@ -204,8 +207,8 @@ div.mochaToolbarWrapper.bottom {
 
 .mochaIframe {
 	width: 100%;
-}  
-		
+}
+
 /* Fix for IE6 select z-index issue */
 .zIndexFix {
 	display: block;
@@ -229,8 +232,8 @@ div.mochaToolbarWrapper.bottom {
 	left: 0;
 	width: 100%;
 	background: #000;
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */		
-	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0); /* IE6 and 7*/	
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity = 0); /* IE6 and 7*/
 	opacity: 0;
 	-moz-opacity: 0;
 	z-index: 10000;
@@ -243,8 +246,8 @@ div.mochaToolbarWrapper.bottom {
 	top: 0;
 	left: 0;
 	width: 100%;
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */		
-	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0); /* IE6 and 7*/	
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity = 0); /* IE6 and 7*/
 	opacity: 0;
 	-moz-opacity: 0;
 	z-index: 9999;
@@ -252,16 +255,16 @@ div.mochaToolbarWrapper.bottom {
 
 /* Underlay */
 
-#windowUnderlay { 
+#windowUnderlay {
 	position: fixed;
 	top: 0;
 	left: 0;
 	width: 100%;
-	background: #fff;	
+	background: #fff;
 }
 
-* html #windowUnderlay { 
-	position: absolute; 
+* html #windowUnderlay {
+	position: absolute;
 }
 
 /* The replaced class is used internally when converting CSS values to Canvas. These classes should not be removed. */
@@ -271,13 +274,13 @@ div.mochaToolbarWrapper.bottom {
 }
 
 .windowClosed {
-	visibility: hidden;	
+	visibility: hidden;
 	display: none;
 	position: absolute;
 	top: -20000px;
 	left: -20000px;
 	z-index: -1;
-	overflow: hidden;		
+	overflow: hidden;
 }
 
 .windowClosed .mochaContentBorder, .windowClosed .mochaToolbarWrapper, .windowClosed .mochaTitlebar, .windowClosed .mochaControls,
@@ -285,21 +288,21 @@ div.mochaToolbarWrapper.bottom {
 	position: absolute;
 	top: 0;
 	left: 0;
-	visibility: hidden;	
+	visibility: hidden;
 	display: none;
-	z-index: -1;	
-}		
+	z-index: -1;
+}
 
 /* Modals */
 
 .modal2 {
-	border: 8px solid #fff;		
+	border: 8px solid #fff;
 }
 
 .modal2 .mochaContentBorder {
 	border-width: 0px;
 }
-	
+
 /* Window Themes */
 
 .mocha.no-canvas {
@@ -307,24 +310,15 @@ div.mochaToolbarWrapper.bottom {
 	border: 1px solid #555;
 }
 
-.mocha.css3 {
-	box-shadow: 0px 0px 5px #333; /* Opera 10.5, IE 9.0 */
-	-moz-box-shadow: 0px 0px 5px #333; /* FF3.5+ */
-	-webkit-box-shadow: 0px 0px 5px #333; /* Saf3+ */
-	border: none;
-	border-radius: 8px; /* Opera 10.5, IE 9.0 */
-	-moz-border-radius: 8px; /* FF1+ */
-	-webkit-border-radius: 8px; /* Saf3+ */
+.mochaCss3Shadow {
+	background-color: #333;
 }
 
 .mocha.no-canvas .mochaTitlebar {
-	background: #e5e5e5;	
+	background: #e5e5e5;
 }
 
 .mocha.css3 .mochaTitlebar {
-	border-radius: 8px; /* Opera 10.5, IE 9.0 */
-	-moz-border-radius: 8px; /* FF1+ */
-	-webkit-border-radius: 8px; /* Saf3+ */
 	background-image: -moz-linear-gradient(top, #fafafa, #e5e5e5); /* FF3.6+ */
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fafafa), color-stop(1, #e5e5e5)); /* Saf4+ */
 	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#fafafa', EndColorStr='#e5e5e5')"; /* IE8, IE9? */
@@ -336,16 +330,16 @@ div.mochaToolbarWrapper.bottom {
 }
 
 .mocha.transparent .mochaContentWrapper {
-	background: transparent;	
+	background: transparent;
 }
 
 .mocha.notification {
-	background: #cedff2;	
+	background: #cedff2;
 }
 
 .mocha.notification .mochaTitlebar {
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */		
-	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0); /* IE6 and 7*/	
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity = 0); /* IE6 and 7*/
 	opacity: .0;
 	-moz-opacity: 0;
 }
@@ -385,7 +379,7 @@ div.mochaToolbarWrapper.bottom {
 
 .jsonExample .mochaTitlebar h3 {
 	color: #ddd;
-}	
+}
 
 /* This does not work in IE6. */
 .isFocused.jsonExample .mochaTitlebar h3 {
@@ -393,9 +387,9 @@ div.mochaToolbarWrapper.bottom {
 }
 
 #fxmorpherExample .mochaContentWrapper {
-	background: #577a9e;	
+	background: #577a9e;
 }
 
 #clock {
-	background: #fff;	
+	background: #fff;
 }
