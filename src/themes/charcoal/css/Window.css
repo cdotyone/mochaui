@@ -278,8 +278,8 @@ div.mochaToolbarWrapper.bottom {
 	border: 1px solid #666;
 }
 
-.mocha.css3Shadow {
-	background-color: #CCC;
+.mochaCss3Shadow {
+	background-color: #000;
 }
 
 .mocha.no-canvas .mochaTitlebar {
