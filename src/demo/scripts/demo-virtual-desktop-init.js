@@ -169,6 +169,8 @@ initializeWindows = function() {
 				onload: function() {
 					if (MUI.addRadiusSlider) MUI.addRadiusSlider();
 					if (MUI.addShadowSlider) MUI.addShadowSlider();
+					if (MUI.addOffsetXSlider) MUI.addOffsetXSlider();
+					if (MUI.addOffsetYSlider) MUI.addOffsetYSlider();
 				}
 			}
 		});

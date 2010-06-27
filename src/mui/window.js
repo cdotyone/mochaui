@@ -321,6 +321,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 			options.contentBgColor = 'transparent';
 			options.scrollbars = false;
 			options.footerHeight = 0;
+			options.useCSS3 = false;
 		}
 		if (options.type == 'notification'){
 			options.closable = false;
@@ -356,7 +357,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 		else if (Browser.Engine.webkit && Browser.Engine.version >= 525) this.useCSS3 = true; // S4
 		else if (Browser.Engine.trident && Browser.Engine.version > 6) this.useCSS3 = true; // IE9
 		else this.useCSS3 = false;
-		
+
 		// if somebody wants CSS3 but not canvas and condition are false for css3
 		// i.e. IE8 Test CSS3 Body
 		if (options.useCSS3 && !this.useCSS3 && !this.options.useCanvas) options.shadowBlur = 0;
@@ -623,6 +624,16 @@ MUI.Window = new NamedClass('MUI.Window', {
 		if (MUI.Dock && $(MUI.options.dock) && this.options.type == 'window')
 			MUI.Dock.createDockTab(this.windowEl);
 
+	},
+
+	css3SetStyles: function() {
+		var self=this;
+		var options=this.options;
+		['','-o-','-webkit-','-moz-'].each(function(pre) {
+			self.windowEl.setStyle(pre + 'box-shadow', options.shadowOffset.x + 'px ' + options.shadowOffset.y + 'px ' + options.shadowBlur + 'px #333');
+			self.windowEl.setStyle(pre + 'border-radius', options.cornerRadius + 'px');
+			self.titleBarEl.setStyle(pre + 'border-radius', options.cornerRadius + 'px');
+		});
 	},
 
 	displayNewWindow: function(){
@@ -1081,30 +1092,30 @@ MUI.Window = new NamedClass('MUI.Window', {
 
 		if (self.options.useCanvas && !this.useCSS3){
 			if (!Browser.Engine.trident){
-			cache.canvasEl = new Element('canvas', {
-				'id': id + '_canvas',
-				'class': 'mochaCanvas',
-				'width': 10,
-				'height': 10
-			}).inject(self.windowEl);
+				cache.canvasEl = new Element('canvas', {
+					'id': id + '_canvas',
+					'class': 'mochaCanvas',
+					'width': 10,
+					'height': 10
+				}).inject(self.windowEl);
 			} else if (Browser.Engine.trident){
-			cache.canvasEl = new Element('canvas', {
-				'id': id + '_canvas',
-				'class': 'mochaCanvas',
-				'width': 50000, // IE8 excanvas requires these large numbers
-				'height': 20000,
-				'styles': {
-					'position': 'absolute',
-					'top': 0,
-					'left': 0
-				}
-			}).inject(self.windowEl);
+				cache.canvasEl = new Element('canvas', {
+					'id': id + '_canvas',
+					'class': 'mochaCanvas',
+					'width': 50000, // IE8 excanvas requires these large numbers
+					'height': 20000,
+					'styles': {
+						'position': 'absolute',
+						'top': 0,
+						'left': 0
+					}
+				}).inject(self.windowEl);
 
-			if (MUI.ieSupport == 'excanvas'){
-				G_vmlCanvasManager.initElement(cache.canvasEl);
-				cache.canvasEl = self.windowEl.getElement('.mochaCanvas');
+				if (MUI.ieSupport == 'excanvas'){
+					G_vmlCanvasManager.initElement(cache.canvasEl);
+					cache.canvasEl = self.windowEl.getElement('.mochaCanvas');
+				}
 			}
-		}
 		}
 
 		cache.controlsEl = new Element('div', {
@@ -1451,65 +1462,67 @@ MUI.Window = new NamedClass('MUI.Window', {
 			'height': height,
 			'width': width
 		});
-
-		this.overlayEl.setStyles({
-			'height': height,
-			'top': shadowBlur - shadowOffset.y,
-			'left': shadowBlur - shadowOffset.x
-		});
-
-		if (this.options.useCanvas && !this.useCSS3){
-			if (Browser.Engine.trident){
-				this.canvasEl.height = 20000;
-				this.canvasEl.width = 50000;
-			}
-			this.canvasEl.height = height;
-			this.canvasEl.width = width;
-		}
-
-		// Part of the fix for IE6 select z-index bug
-		if (Browser.Engine.trident4) this.zIndexFixEl.setStyles({ 'width': width, 'height': height });
-
 		this.titleBarEl.setStyles({
 			'width': width - shadowBlur2x,
 			'height': options.headerHeight
 		});
 
-		// Make sure loading icon is placed correctly.
-		if (options.useSpinner && !this.useCSS3 && options.shape != 'gauge' && options.type != 'notification'){
-			this.spinnerEl.setStyles({
-				'left': shadowBlur - shadowOffset.x,
-				'bottom': shadowBlur + shadowOffset.y + 8
+		if(options.useCSS3) this.css3SetStyles();
+		else {
+			this.overlayEl.setStyles({
+				'height': height,
+				'top': shadowBlur - shadowOffset.y,
+				'left': shadowBlur - shadowOffset.x
 			});
-		}
 
-		if (this.options.useCanvas && !this.useCSS3){
-			// Draw Window
-			var ctx = this.canvasEl.getContext('2d');
-			ctx.clearRect(0, 0, width, height);
-
-			switch (options.shape){
-				case 'box':
-					this.drawBox(ctx, width, height, shadowBlur, shadowOffset, shadows);
-					break;
-				case 'gauge':
-					this.drawGauge(ctx, width, height, shadowBlur, shadowOffset, shadows);
-					break;
+			if (this.options.useCanvas){
+				if (Browser.Engine.trident){
+					this.canvasEl.height = 20000;
+					this.canvasEl.width = 50000;
+				}
+				this.canvasEl.height = height;
+				this.canvasEl.width = width;
 			}
 
-			if (options.resizable && !this.isMaximized){
-				MUI.triangle(
-					ctx,
-					width - (shadowBlur + shadowOffset.x + 17),
-					height - (shadowBlur + shadowOffset.y + 18),
-					11,
-					11,
-					this.resizableColor,
-					1.0
-				);
+			// Part of the fix for IE6 select z-index bug
+			if (Browser.Engine.trident4) this.zIndexFixEl.setStyles({ 'width': width, 'height': height });
 
-				// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
-				if (Browser.Engine.trident) MUI.triangle(ctx, 0, 0, 10, 10, this.resizableColor, 0);
+			// Make sure loading icon is placed correctly.
+			if (options.useSpinner && options.shape != 'gauge' && options.type != 'notification'){
+				this.spinnerEl.setStyles({
+					'left': shadowBlur - shadowOffset.x,
+					'bottom': shadowBlur + shadowOffset.y + 8
+				});
+			}
+
+			if (this.options.useCanvas){
+				// Draw Window
+				var ctx = this.canvasEl.getContext('2d');
+				ctx.clearRect(0, 0, width, height);
+
+				switch (options.shape){
+					case 'box':
+						this.drawBox(ctx, width, height, shadowBlur, shadowOffset, shadows);
+						break;
+					case 'gauge':
+						this.drawGauge(ctx, width, height, shadowBlur, shadowOffset, shadows);
+						break;
+				}
+
+				if (options.resizable && !this.isMaximized){
+					MUI.triangle(
+						ctx,
+						width - (shadowBlur + shadowOffset.x + 17),
+						height - (shadowBlur + shadowOffset.y + 18),
+						11,
+						11,
+						this.resizableColor,
+						1.0
+					);
+
+					// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
+					if (Browser.Engine.trident) MUI.triangle(ctx, 0, 0, 10, 10, this.resizableColor, 0);
+				}
 			}
 		}
 
@@ -1539,18 +1552,6 @@ MUI.Window = new NamedClass('MUI.Window', {
 		var width = this.contentWrapperEl.getStyle('width').toInt() + shadowBlur2x;
 		this.windowEl.setStyle('height', height);
 
-		this.overlayEl.setStyles({
-			'height': height,
-			'top': shadowBlur - shadowOffset.y,
-			'left': shadowBlur - shadowOffset.x
-		});
-
-		// Part of the fix for IE6 select z-index bug
-		if (Browser.Engine.trident4) this.zIndexFixEl.setStyles({
-				'width': width,
-				'height': height
-			});
-
 		// Set width
 		this.windowEl.setStyle('width', width);
 		this.overlayEl.setStyle('width', width);
@@ -1559,19 +1560,34 @@ MUI.Window = new NamedClass('MUI.Window', {
 			'height': options.headerHeight
 		});
 
-		// Draw Window
-		if (this.options.useCanvas && !this.useCSS3){
-			this.canvasEl.height = height;
-			this.canvasEl.width = width;
+		if(options.useCSS3) this.css3SetStyles();
+		else {
+			this.overlayEl.setStyles({
+				'height': height,
+				'top': shadowBlur - shadowOffset.y,
+				'left': shadowBlur - shadowOffset.x
+			});
 
-			var ctx = this.canvasEl.getContext('2d');
-			ctx.clearRect(0, 0, width, height);
+			// Part of the fix for IE6 select z-index bug
+			if (Browser.Engine.trident4) this.zIndexFixEl.setStyles({
+					'width': width,
+					'height': height
+				});
 
-			this.drawBoxCollapsed(ctx, width, height, shadowBlur, shadowOffset, shadows);
-			if (options.useCanvasControls) this.drawControls(width, height, shadows);
+			// Draw Window
+			if (this.options.useCanvas){
+				this.canvasEl.height = height;
+				this.canvasEl.width = width;
 
-			// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
-			if (Browser.Engine.trident) MUI.triangle(ctx, 0, 0, 10, 10, [0, 0, 0], 0);
+				var ctx = this.canvasEl.getContext('2d');
+				ctx.clearRect(0, 0, width, height);
+
+				this.drawBoxCollapsed(ctx, width, height, shadowBlur, shadowOffset, shadows);
+				if (options.useCanvasControls) this.drawControls(width, height, shadows);
+
+				// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
+				if (Browser.Engine.trident) MUI.triangle(ctx, 0, 0, 10, 10, [0, 0, 0], 0);
+			}
 		}
 
 		this.drawingWindow = false;
@@ -1638,7 +1654,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 				this.minimizeColor,
 				1.0
 			);
-			
+
 			// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
 			if (Browser.Engine.trident){
 				MUI.circle(ctx2, 0, 0, 3, this.minimizeBgColor, 0);
@@ -1732,7 +1748,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 
 	drawGauge: function(ctx, width, height, shadowBlur, shadowOffset, shadows){
 		var options = this.options;
-		if (shadows){
+		if (shadows && !options.useCSS3){
 			for (var x = 0; x <= shadowBlur; x++){
 				MUI.circle(
 					ctx,
