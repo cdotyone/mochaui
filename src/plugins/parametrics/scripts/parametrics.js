@@ -42,7 +42,7 @@ MUI.extend({
 					windowOptions.cornerRadius = pos;
 					MUI.Window.implement({ options: windowOptions });
 					// Don't redraw windows the first time the slider is initialized
-					if (sliderFirst == true){
+					if (sliderFirst){
 						sliderFirst = false;
 						return;
 					}
@@ -70,8 +70,7 @@ MUI.extend({
 					windowOptions.shadowBlur = pos;
 					MUI.Window.implement({ options: windowOptions });
 					// Don't redraw windows the first time the slider is initialized
-					// !!! Probably need to make this separate from the corner radius slider
-					if (sliderFirst == true){
+					if (sliderFirst){
 						sliderFirst = false;
 						return;
 					}
@@ -80,10 +79,14 @@ MUI.extend({
 						if (instance.className != 'MUI.Window') return;
 						var oldShadowBlur = instance.options.shadowBlur;
 						instance.options.shadowBlur = pos;
-						instance.windowEl.setStyles({
-							'top': instance.windowEl.getStyle('top').toInt() - (instance.options.shadowBlur - oldShadowBlur),
-							'left': instance.windowEl.getStyle('left').toInt() - (instance.options.shadowBlur - oldShadowBlur)
-						});
+
+						if (!instance.useCSS3){
+							instance.windowEl.setStyles({
+								'top': instance.windowEl.getStyle('top').toInt() - (instance.options.shadowBlur - oldShadowBlur),
+								'left': instance.windowEl.getStyle('left').toInt() - (instance.options.shadowBlur - oldShadowBlur)
+							});
+						}
+
 						instance.drawWindow();
 					}.bind(this));
 				}.bind(this),
@@ -111,7 +114,7 @@ MUI.extend({
 					windowOptions.shadowOffset.x = pos;
 					MUI.Window.implement({ options: windowOptions });
 					// Don't redraw windows the first time the slider is initialized
-					if (sliderFirst == true){
+					if (sliderFirst){
 						sliderFirst = false;
 						return;
 					}
@@ -120,7 +123,7 @@ MUI.extend({
 						if (instance.className != 'MUI.Window') return;
 						var oldOffsetX = instance.options.shadowOffset.x;
 						instance.options.shadowOffset.x = pos;
-						instance.windowEl.setStyle('left', instance.windowEl.getStyle('left').toInt() - (oldOffsetX - pos));
+						if (!instance.useCSS3) instance.windowEl.setStyle('left', instance.windowEl.getStyle('left').toInt() - (oldOffsetX - pos));
 						instance.drawWindow();
 					}.bind(this));
 				}.bind(this),
@@ -148,7 +151,7 @@ MUI.extend({
 					windowOptions.shadowOffset.y = pos;
 					MUI.Window.implement({ options: windowOptions });
 					// Don't redraw windows the first time the slider is initialized
-					if (sliderFirst == true){
+					if (sliderFirst){
 						sliderFirst = false;
 						return;
 					}
@@ -157,7 +160,7 @@ MUI.extend({
 						if (instance.className != 'MUI.Window') return;
 						var oldOffsetY = instance.options.shadowOffset.y;
 						instance.options.shadowOffset.y = pos;
-						instance.windowEl.setStyle('top', instance.windowEl.getStyle('top').toInt() - (oldOffsetY - pos));
+						if (!instance.useCSS3) instance.windowEl.setStyle('top', instance.windowEl.getStyle('top').toInt() - (oldOffsetY - pos));
 						instance.drawWindow();
 					}.bind(this));
 				}.bind(this),

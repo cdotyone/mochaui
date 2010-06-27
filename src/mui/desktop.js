@@ -96,12 +96,21 @@ MUI.Desktop = {
 					// Hide iframe while resize for better performance
 					if (instance.iframeEl) instance.iframeEl.setStyle('visibility', 'hidden');
 
-					var coordinates = document.getCoordinates();
-					var borderHeight = instance.contentBorderEl.getStyle('border-top').toInt() + instance.contentBorderEl.getStyle('border-bottom').toInt();
-					var toolbarHeight = instance.toolbarWrapperEl ? instance.toolbarWrapperEl.getStyle('height').toInt() + instance.toolbarWrapperEl.getStyle('border-top').toInt() : 0;
-					instance.contentWrapperEl.setStyles({
-						'height': coordinates.height - instance.options.headerHeight - instance.options.footerHeight - borderHeight - toolbarHeight,
-						'width': coordinates.width
+					var resizeDimensions;
+					if(options.maximizeTo) resizeDimensions=$(options.maximizeTo).getCoordinates();
+					else resizeDimensions=document.getCoordinates();
+					var shadowBlur = options.shadowBlur;
+					var shadowOffset = options.shadowOffset;
+					var newHeight = resizeDimensions.height - options.headerHeight - options.footerHeight;
+					newHeight -= instance.contentBorderEl.getStyle('border-top').toInt();
+					newHeight -= instance.contentBorderEl.getStyle('border-bottom').toInt();
+					newHeight -= instance.getAllSectionsHeight();
+
+					MUI.resizeWindow(instance.windowEl, {
+						width: resizeDimensions.width,
+						height: newHeight,
+						top: resizeDimensions.top + shadowOffset.y - shadowBlur,
+						left: resizeDimensions.left + shadowOffset.x - shadowBlur
 					});
 
 					instance.drawWindow();
@@ -192,6 +201,17 @@ MUI.Desktop = {
 		instance.oldTop = windowEl.getStyle('top');
 		instance.oldLeft = windowEl.getStyle('left');
 
+		// save original corner radius
+		if (!options.radiusOnMaximize){
+			instance.oldRadius = instance.options.cornerRadius;
+			instance.oldShadowBlur = instance.options.shadowBlur;
+			instance.oldShadowOffset = instance.options.shadowOffset;
+
+			instance.options.cornerRadius = 0;
+			instance.options.shadowBlur=0;
+			instance.options.shadowOffset={'x': 0, 'y': 0};
+		}
+
 		var contentWrapperEl = instance.contentWrapperEl;
 
 		// Save original dimensions
@@ -208,20 +228,21 @@ MUI.Desktop = {
 			}
 		}
 
-		var windowDimensions = document.getCoordinates();
-		var options = instance.options;
+		var resizeDimensions;
+        if(options.maximizeTo) resizeDimensions=$(options.maximizeTo).getCoordinates();
+        else resizeDimensions=document.getCoordinates();
 		var shadowBlur = options.shadowBlur;
 		var shadowOffset = options.shadowOffset;
-		var newHeight = windowDimensions.height - options.headerHeight - options.footerHeight;
+		var newHeight = resizeDimensions.height - options.headerHeight - options.footerHeight;
 		newHeight -= instance.contentBorderEl.getStyle('border-top').toInt();
 		newHeight -= instance.contentBorderEl.getStyle('border-bottom').toInt();
-		newHeight -= (instance.toolbarWrapperEl ? instance.toolbarWrapperEl.getStyle('height').toInt() + instance.toolbarWrapperEl.getStyle('border-top').toInt() : 0);
+		newHeight -= instance.getAllSectionsHeight();
 
 		MUI.resizeWindow(windowEl, {
-			width: windowDimensions.width,
+			width: resizeDimensions.width,
 			height: newHeight,
-			top: shadowOffset.y - shadowBlur,
-			left: shadowOffset.x - shadowBlur
+			top: resizeDimensions.top + shadowOffset.y - shadowBlur,
+			left: resizeDimensions.left + shadowOffset.x - shadowBlur
 		});
 		instance.fireEvent('onMaximize', windowEl);
 
@@ -250,6 +271,12 @@ MUI.Desktop = {
 
 		var options = instance.options;
 		instance.isMaximized = false;
+
+		if (!options.radiusOnMaximize){
+			instance.options.cornerRadius = instance.oldRadius;
+			instance.options.shadowBlur = instance.oldShadowBlur;
+			instance.options.shadowOffset = instance.oldShadowOffset;
+		}
 
 		if (options.restrict){
 			instance.windowDrag.attach();
@@ -449,6 +476,9 @@ MUI.extend({
 				}
 			}.bind(this));
 
+			panelsToResize.each(function(panel){
+				MUI.get(panel.id).fireEvent('resize');
+			});
 		}.bind(this));
 
 		// Get the remaining height
@@ -564,6 +594,15 @@ MUI.extend({
 			var newWidth = currentWidth + remainingWidth;
 			if (newWidth < 1) newWidth = 0;
 			column.setStyle('width', newWidth);
+
+			// fire all panel resize events and the column resize event
+			var instance = MUI.get(column.id);
+			[].include(instance)
+			  .combine(instance.getPanels())
+			  .each(function(panel){
+					panel.fireEvent('resize')
+			  });
+
 			column.getChildren('.panel').each(function(panel){
 				panel.setStyle('width', newWidth - panel.getStyle('border-left').toInt() - panel.getStyle('border-right').toInt());
 				MUI.resizeChildren(panel);
