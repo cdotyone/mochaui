@@ -529,6 +529,9 @@ initializeWindows = function() {
 	MUI.myChain.callChain();
 };
 
+// Initialize MochaUI options
+MUI.initialize();
+
 // Initialize MochaUI when the DOM is ready
 window.addEvent('load', function() {
 

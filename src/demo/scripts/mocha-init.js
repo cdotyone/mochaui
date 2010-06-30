@@ -1061,9 +1061,10 @@ var updateResizeElements = function() {
 	MUI.myChain.callChain();
 };
 
-// Initialize MochaUI when the DOM is ready
+// Initialize MochaUI options
 MUI.initialize();
 
+// Initialize MochaUI when the DOM is ready
 window.addEvent('load', function() { //using load instead of domready for IE8
 	MUI.myChain = new Chain();
 	MUI.myChain.chain(
