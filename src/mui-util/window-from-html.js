@@ -36,7 +36,7 @@
  ...
  */
 
-MUI.files[MUI.path.utils + 'window-from-html.js'] = 'loaded';
+MUI.files['utils|window-from-html.js'] = 'loaded';
 
 MUI.extend({
 

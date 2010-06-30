@@ -19,7 +19,7 @@
  ...
  */
 
-MUI.files[MUI.path.source + 'update.js'] = 'loaded';
+MUI.files['source|update.js'] = 'loaded';
 
 /*
 
@@ -96,6 +96,8 @@ MUI.extend({
 		if (!options.element) return;
 		var element = $(options.element);
 		var instance = element.retrieve('instance');
+
+		if(options.url) options.url = MUI.replacePaths(options.url);
 
 		var contentEl = instance==null ? element : instance.contentEl;
 		options.contentContainer = options.childElement != null ? options.childElement : contentEl;

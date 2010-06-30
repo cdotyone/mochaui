@@ -26,7 +26,7 @@
  ...
  */
 
-MUI.files[MUI.path.plugins + 'MUI/SelectList/SelectList.js'] = 'loaded';
+MUI.files['controls|SelectList/SelectList.js'] = 'loaded';
 
 MUI.SelectList = new NamedClass('MUI.SelectList', {
 

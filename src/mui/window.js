@@ -18,8 +18,7 @@
  ...
  */
 
-MUI.files[MUI.path.source + 'window.js'] = 'loading';
-//$require(MUI.themePath() + '/css/Dock.css');
+MUI.files['source|window.js'] = 'loaded';
 
 /*
  Class: Window
@@ -1750,7 +1749,13 @@ MUI.Window = new NamedClass('MUI.Window', {
 	drawGauge: function(ctx, width, height, shadowBlur, shadowOffset, shadows){
 		var options = this.options;
 		if (shadows && !this.useCSS3){
-			for (var x = 0; x <= shadowBlur; x++){
+			if(Browser.Engine.webkit) {
+				var color=Asset.getCSSRule('.mochaCss3Shadow').style.backgroundColor;
+				ctx.shadowColor = color.replace(/rgb/g,'rgba');
+				ctx.shadowOffsetX = shadowOffset.x;
+				ctx.shadowOffsetY = shadowOffset.y;
+				ctx.shadowBlur = shadowBlur;
+			} else for (var x = 0; x <= shadowBlur; x++){
 				MUI.circle(
 					ctx,
 					width * .5 + shadowOffset.x,
@@ -1769,6 +1774,13 @@ MUI.Window = new NamedClass('MUI.Window', {
 			this.bodyBgColor,
 			1
 		);
+
+		if(Browser.Engine.webkit) {
+			ctx.shadowColor = "rgba(0,0,0,0)";
+			ctx.shadowOffsetX = 0;
+			ctx.shadowOffsetY = 0;
+			ctx.shadowBlur = 0;
+		}
 
 		// Draw gauge header
 		this.canvasHeaderEl.setStyles({

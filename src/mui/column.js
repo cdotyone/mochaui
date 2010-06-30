@@ -21,7 +21,7 @@
  ...
  */
 
-MUI.files[MUI.path.source + 'column.js'] = 'loaded';
+MUI.files['source|column.js'] = 'loaded';
 
 /*
 

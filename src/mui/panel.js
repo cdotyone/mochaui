@@ -21,7 +21,7 @@
  ...
  */
 
-MUI.files[MUI.path.source + 'panel.js'] = 'loaded';
+MUI.files['source|panel.js'] = 'loaded';
 
 /*
  Class: Panel

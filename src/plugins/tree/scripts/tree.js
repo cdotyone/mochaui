@@ -31,7 +31,7 @@
 
 function buildTree(treeID){
 
-	var iconPath = MUI.path.plugins + "tree/images/";
+	var iconPath = MUI.replacePaths('plugins|tree/images/');
 
 	$$('#' + treeID + ' li.folder').each(function(folder){
 		var folderContents = folder.getChildren('ul');

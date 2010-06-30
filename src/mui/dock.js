@@ -25,7 +25,7 @@
  ...
  */
 
-MUI.files[MUI.path.source + 'dock.js'] = 'loaded';
+MUI.files['source|dock.js'] = 'loaded';
 
 MUI.options.extend({
 	// Naming options:

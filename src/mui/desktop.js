@@ -21,7 +21,7 @@
  ...
  */
 
-MUI.files[MUI.path.source + 'desktop.js'] = 'loaded';
+MUI.files['source|desktop.js'] = 'loaded';
 
 MUI.Desktop = {
 

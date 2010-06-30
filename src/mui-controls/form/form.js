@@ -27,7 +27,7 @@
  ...
  */
 
-MUI.files[MUI.path.plugins + 'MUI/Form/Form.js'] = 'loaded';
+MUI.files['controls|Form/Form.js'] = 'loaded';
 
 MUI.Form = new Class({
     Implements: [Events, Options],
@@ -643,9 +643,6 @@ MUI.Form = new Class({
                     dom.setStyles({ 'overflow': 'auto', 'height': h });
                 }
             } else {
-                //                if (!PO['wysiwyg'] && item.Type == "html") {
-                //                    PO['wysiwyg'] = new Asset.javascript('/OMMS/wysiwyg/scripts/wysiwyg.js', { id: 'wysiwyg' });
-                //                }
                 h = (('' + item.Height).indexOf('%') > 0) ? item.Height : item.Height + 'px';
                 dom = new Element('textarea', { 'id': item.id, 'title': item.title, 'value': item.value, 'class': css, 'maxlength': item.Length, styles: { 'width': w, 'height': h} });
             }

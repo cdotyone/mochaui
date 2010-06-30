@@ -26,7 +26,7 @@
  ...
  */
 
-MUI.files[MUI.path.plugins + 'MUI/Tabs/Tabs.js'] = 'loaded';
+MUI.files['controls|Tabs/Tabs.js'] = 'loaded';
 
 MUI.Tabs = new Class({
 

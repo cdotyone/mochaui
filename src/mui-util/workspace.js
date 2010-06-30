@@ -27,7 +27,7 @@
  ...
  */
 
-MUI.files[MUI.path.utils + 'workspace.js'] = 'loaded';
+MUI.files['utils|workspace.js'] = 'loaded';
 
 MUI.extend({
 

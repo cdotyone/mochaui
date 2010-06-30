@@ -132,7 +132,7 @@ var initializeWindows = function() {
 			id: 'clock',
 			title: 'Canvas Clock',
 			addClass: 'transparent',
-			contentURL: MUI.path.plugins + 'coolclock/index.html',
+			contentURL: 'plugins|coolclock/index.html',
 			shape: 'gauge',
 			headerHeight: 30,
 			width: 160,
@@ -141,7 +141,7 @@ var initializeWindows = function() {
 			y: 140,
 			padding: { top: 0, right: 0, bottom: 0, left: 0 },
 			require: {
-				js: [MUI.path.plugins + 'coolclock/scripts/coolclock.js'],
+				js: ['plugins|coolclock/scripts/coolclock.js'],
 				onload: function() {
 					if (CoolClock) new CoolClock();
 				}
@@ -159,7 +159,7 @@ var initializeWindows = function() {
 		new MUI.Window({
 			id: 'parametrics',
 			title: 'Window Parametrics',
-			contentURL: MUI.path.plugins + 'parametrics/index.html',
+			contentURL: 'plugins|parametrics/index.html',
 			width: 305,
 			height: 210,
 			x: 570,
@@ -169,8 +169,8 @@ var initializeWindows = function() {
 			minimizable: true,
 			maximizable: false,
 			require: {
-				css: [MUI.path.plugins + 'parametrics/css/style.css'],
-				js: [MUI.path.plugins + 'parametrics/scripts/parametrics.js'],
+				css: ['plugins|parametrics/css/style.css'],
+				js: ['plugins|parametrics/scripts/parametrics.js'],
 				onload: function() {
 					if (MUI.addRadiusSlider) MUI.addRadiusSlider();
 					if (MUI.addShadowSlider) MUI.addShadowSlider();
@@ -250,15 +250,15 @@ var initializeWindows = function() {
 		new MUI.Window({
 			id: 'fxmorpherExample',
 			title: 'Path Animation Example',
-			contentURL: MUI.path.plugins + 'Fx.Morpher/example.html',
+			contentURL: 'plugins|Fx.Morpher/example.html',
 			width: 330,
 			height: 330,
 			padding: { top: 0, right: 0, bottom: 0, left: 0 },
 			scrollbars: false,
 			resizable: false,
 			require: {
-				css: [MUI.path.plugins + 'Fx.Morpher/css/style.css'],
-				js: [MUI.path.plugins + 'Fx.Morpher/scripts/cbox.js', MUI.path.plugins + 'Fx.Morpher/scripts/example.js'],
+				css: ['plugins|Fx.Morpher/css/style.css'],
+				js: ['plugins|Fx.Morpher/scripts/cbox.js', 'plugins|Fx.Morpher/scripts/example.js'],
 				onload: function() {
 					createCanvas();
 					myAnim.delay(250);
@@ -387,7 +387,7 @@ var initializeWindows = function() {
 			maximizable: false,
 			padding: { top: 0, right: 0, bottom: 0, left: 0 },
 			require: {
-				css: [MUI.path.plugins + 'accordian/css/style.css'],
+				css: ['plugins|accordian/css/style.css'],
 				onload: function() {
 					this.windowEl = $(id);
 					new Accordion('#' + id + ' h3.accordianToggler', '#' + id + ' div.accordianElement', {
@@ -568,15 +568,15 @@ var initializeWindows = function() {
 			id: 'builder',
 			title: 'Window Builder',
 			icon: 'images/icons/16x16/page.gif',
-			contentURL: MUI.path.plugins + 'windowform/',
+			contentURL: 'plugins|windowform/',
 			width: 375,
 			height: 420,
 			maximizable: false,
 			resizable: false,
 			scrollbars: false,
 			require: {
-				css: [MUI.path.plugins + 'windowform/css/style.css'],
-				js: [MUI.path.plugins + 'windowform/scripts/window-from-form.js'],
+				css: ['plugins|windowform/css/style.css'],
+				js: ['plugins|windowform/scripts/window-from-form.js'],
 				onload: function() {
 					$('newWindowSubmit').addEvent('click', function(e) {
 						e.stop();
@@ -644,7 +644,7 @@ var initializeWindows = function() {
 			height: 250,
 			resizeLimit: {'x': [275, 2500], 'y': [125, 2000]},
 			require: {
-				css: [MUI.themePath() + 'css/Tabs.css']
+				css: ['theme|css/Tabs.css']
 			},
 			sections:[
 				{'position':'top',
@@ -780,8 +780,8 @@ var initializeColumns = function() {
 		contentURL: 'pages/file-view.html',
 		column: 'sideColumn1',
 		require: {
-			css: [MUI.path.plugins + 'tree/css/style.css'],
-			js: [MUI.path.plugins + 'tree/scripts/tree.js'],
+			css: ['plugins|tree/css/style.css'],
+			js: ['plugins|tree/scripts/tree.js'],
 			onload: function() {
 				if (buildTree) buildTree('tree1');
 			}
@@ -840,12 +840,12 @@ var initializeColumns = function() {
 			$('calendarLink').addEvent('click', function(e) {
 				MUI.updateContent({
 					element: $('mainPanel'),
-					url: MUI.path.controls + 'calendar/example.html',
+					url: 'controls|calendar/example.html',
 					title: 'Calendar Component',
 					padding: { top: 8, right: 8, bottom: 8, left: 8 },
 					require: {
-						css: [MUI.path.controls + 'calendar/css/calendar.css'],
-						js: [MUI.path.controls + 'calendar/scripts/calendar.js'],
+						css: ['controls|calendar/css/calendar.css'],
+						js: ['controls|calendar/scripts/calendar.js'],
 						onload: function() {
 							new Calendar({ date1: 'd/m/Y' }, { direction: 1, tweak: { x: 6, y: 0 }});
 						}
@@ -855,7 +855,7 @@ var initializeColumns = function() {
 			$('fxmorpherLink').addEvent('click', function() {
 				MUI.updateContent({
 					element: $('mainPanel'),
-					url: MUI.path.plugins + 'Fx.Morpher/',
+					url: 'plugins|Fx.Morpher/',
 					title: 'Fx.Morpher Path Animation',
 					padding: { top: 8, right: 8, bottom: 8, left: 8 }
 				});
@@ -991,7 +991,7 @@ var updateResizeElements = function() {
 			{	position:'header',
 				section:'tabs',
 				url:'pages/panel-tabs.html',
-			 	require: { css: [MUI.themePath() + 'css/Tabs.css'] }
+			 	require: { css: ['theme|css/Tabs.css'] }
 			}]
 	});
 
@@ -1062,8 +1062,9 @@ var updateResizeElements = function() {
 };
 
 // Initialize MochaUI when the DOM is ready
-window.addEvent('load', function() { //using load instead of domready for IE8
+MUI.initialize();
 
+window.addEvent('load', function() { //using load instead of domready for IE8
 	MUI.myChain = new Chain();
 	MUI.myChain.chain(
 			function() {

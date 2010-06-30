@@ -26,7 +26,7 @@
  ...
  */
 
-MUI.files[MUI.path.utils + 'window-cascade.js'] = 'loaded';
+MUI.files['utils|window-cascade.js'] = 'loaded';
 
 MUI.extend({
 

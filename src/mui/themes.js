@@ -39,7 +39,7 @@
  ...
  */
 
-MUI.files[MUI.path.source + 'themes.js'] = 'loaded';
+MUI.files['source|themes.js'] = 'loaded';
 
 MUI.Themes = {
 
@@ -58,7 +58,7 @@ MUI.Themes = {
 
 		$$('link').each(function(link){
 			var href = link.get('href');
-			if (href.contains(MUI.path.themes + MUI.options.theme)){
+			if (href.contains(MUI.options.path.themes + MUI.options.theme)){
 				this.oldURIs.push(href);
 				this.oldSheets.push(link);
 			}
@@ -66,7 +66,7 @@ MUI.Themes = {
 
 		/*
 		 MUI.files.each( function(value, key, hash){
-		 if (key.contains(MUI.path.themes + MUI.options.theme)){
+		 if (key.contains(MUI.options.path.themes + MUI.options.theme)){
 		 this.oldURIs.push(key);
 		 }
 		 }.bind(this));

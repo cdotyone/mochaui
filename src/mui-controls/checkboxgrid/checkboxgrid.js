@@ -27,7 +27,7 @@
  ...
  */
 
-MUI.files[MUI.path.plugins + 'MUI/CheckBoxGrid/CheckBoxGrid.js'] = 'loaded';
+MUI.files['controls|CheckBoxGrid/CheckBoxGrid.js'] = 'loaded';
 
 MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 
