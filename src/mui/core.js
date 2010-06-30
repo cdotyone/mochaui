@@ -28,10 +28,10 @@
  ...
  */
 var MUI = MochaUI = {
-	'options':$H({
+	'options': $H({
 		theme: 'default',
 		advancedEffects: false, // Effects that require fast browsers and are cpu intensive.
-		standardEffects: true,   // Basic effects that tend to run smoothly.
+		standardEffects: true,  // Basic effects that tend to run smoothly.
 
 		path: {
 			source:  '../mui/',			 	// Path to MochaUI source JavaScript
@@ -43,8 +43,8 @@ var MUI = MochaUI = {
 	})
 };
 
-MUI.extend = (function(hash) {
-	$extend(this,hash);
+MUI.extend = (function(hash){
+	$extend(this, hash);
 }).bind(MUI);
 
 MUI.extend({
@@ -57,29 +57,29 @@ MUI.extend({
 
 	replacePaths: function(files){
 		var s;
-		if($type(files)=='string') {
-		   	s=files.split('|');
-			if(s.length<2) return files;
-			if(s[0]=='theme') s[0]=MUI.options.path.themes + MUI.options.theme + '/';
-			else s[0]=MUI.options.path[s[0]];
+		if ($type(files) == 'string'){
+		   	s = files.split('|');
+			if (s.length < 2) return files;
+			if (s[0] == 'theme') s[0] = MUI.options.path.themes + MUI.options.theme + '/';
+			else s[0] = MUI.options.path[s[0]];
 			return s.join('');
 		}
-		if($type(files)=='array') {
-			for(var i=0;i<files.length;i++) {
-				files[i]=MUI.replacePaths(files[i]);
+		if ($type(files) == 'array'){
+			for(var i = 0; i < files.length; i++){
+				files[i] = MUI.replacePaths(files[i]);
 			}
 		}
 		return files;
 	},
 
-	files: new Hash({'source|core.js':'loaded'}),
+	files: new Hash({'source|core.js': 'loaded'}),
 
 	getID: function(el){
 		if (type == 'string') return el;
 		var type = $type(el);
-		if (type == 'element') return el.id; else
-		if (type == 'object' && el.id) return el.id; else
-		if (type == 'object' && el.options && el.options.id) return el.options.id;
+		if (type == 'element') return el.id; 
+		else if (type == 'object' && el.id) return el.id;
+		else if (type == 'object' && el.options && el.options.id) return el.options.id;
 		return el;
 	},
 
@@ -109,9 +109,9 @@ MUI.extend({
 		return this;
 	},
 
-	initialize: function(options) {
-		if(options) {
-			if(options.path) options.path = $extend(MUI.options.path,options.path);
+	initialize: function(options){
+		if (options){
+			if (options.path) options.path = $extend(MUI.options.path,options.path);
 			MUI.options.extend(options);
 		}
 	}
@@ -197,7 +197,7 @@ $extend(MUI,{
 			width: 220,
 			height: 40,
 			y: 53,
-			padding:  { top: 10, right: 12, bottom: 10, left: 12 },
+			padding: {top: 10, right: 12, bottom: 10, left: 12},
 			shadowBlur: 5
 		});
 	},
@@ -206,15 +206,15 @@ $extend(MUI,{
 	 Function: toggleEffects
 	 Turn effects on and off
 	 */
-	toggleAdvancedEffects: function(link) {
-		if (MUI.options.advancedEffects) {
+	toggleAdvancedEffects: function(link){
+		if (MUI.options.advancedEffects){
 			MUI.options.advancedEffects = false;
-			if (this.toggleAdvancedEffectsLink) {
+			if (this.toggleAdvancedEffectsLink){
 				this.toggleAdvancedEffectsLink.destroy();
 			}
 		} else {
 			MUI.options.advancedEffects = true;
-			if (link) {
+			if (link){
 				this.toggleAdvancedEffectsLink = new Element('div', {
 					'class': 'check',
 					'id': 'toggleAdvancedEffects_check'
@@ -227,15 +227,15 @@ $extend(MUI,{
 	 Function: toggleStandardEffects
 	 Turn standard effects on and off
 	 */
-	toggleStandardEffects: function(link) {
-		if (MUI.options.standardEffects) {
+	toggleStandardEffects: function(link){
+		if (MUI.options.standardEffects){
 			MUI.options.standardEffects = false;
-			if (this.toggleStandardEffectsLink) {
+			if (this.toggleStandardEffectsLink){
 				this.toggleStandardEffectsLink.destroy();
 			}
 		} else {
 			MUI.options.standardEffects = true;
-			if (link) {
+			if (link){
 				this.toggleStandardEffectsLink = new Element('div', {
 					'class': 'check',
 					'id': 'toggleStandardEffects_check'
@@ -373,7 +373,7 @@ Element.implement({
 
 	hide: function(){
 		var instance = MUI.get(this.id);
-		if (instance != null && instance.hide != null) {
+		if (instance != null && instance.hide != null){
 			instance.hide();
 			return;
 		}
@@ -384,7 +384,7 @@ Element.implement({
 
 	show: function(){
 		var instance = MUI.get(this.id);
-		if (instance != null && instance.show != null) {
+		if (instance != null && instance.show != null){
 			instance.show();
 			return;
 		}
@@ -409,9 +409,9 @@ Element.implement({
 	 (end)
 	 */
 	hideSpinner: function(instance){
-		if(instance == null) instance = MUI.get(this.id);
-		if(instance == null){
-			if($('spinner')) $('spinner').hide();
+		if (instance == null) instance = MUI.get(this.id);
+		if (instance == null){
+			if ($('spinner')) $('spinner').hide();
 			return;
 		}
 		if (instance != null && instance.hideSpinner == null){
@@ -431,9 +431,9 @@ Element.implement({
 	 (end)
 	 */
 	showSpinner: function(instance){
-		if(instance == null) instance = MUI.get(this.id);
-		if(instance == null){
-			if($('spinner')) $('spinner').show();
+		if (instance == null) instance = MUI.get(this.id);
+		if (instance == null){
+			if ($('spinner')) $('spinner').show();
 			return;
 		}
 		if (instance != null && instance.showSpinner == null){
@@ -452,9 +452,9 @@ Element.implement({
 	 */
 	resize: function(options){
 		var instance = MUI.get(this.id);
-		if (instance == null || instance.resize == null) {
-			if(options.width!=null) this.setStyle('width',options.width);
-			if(options.height!=null) this.setStyle('height',options.height);
+		if (instance == null || instance.resize == null){
+			if (options.width != null) this.setStyle('width', options.width);
+			if (options.height != null) this.setStyle('height', options.height);
 		} else instance.resize(options);
 		return this;
 	}
@@ -522,25 +522,21 @@ MUI.Require = new Class({
 
 						if (this.assetsLoaded == this.assetsToLoad - 1){
 							this.requireOnload();
-						}
-						else {
+						} else {
 							// Add a little delay since we are relying on cached CSS from XHR request.
 							this.assetsLoaded++;
 							this.requireContinue.delay(50, this);
 						}
-					}
-					else {
+					} else {
 						cssLoaded++;
 						this.assetsLoaded++;
 					}
 				}.bind(this));
 			}.bind(this));
-		}
-		else if (!options.js.length && !options.images.length){
+		} else if (!options.js.length && !options.images.length){
 			this.options.onload();
 			return true;
-		}
-		else {
+		} else {
 			this.requireContinue.delay(50, this); // Delay is for Safari
 		}
 
@@ -608,9 +604,7 @@ MUI.Require = new Class({
 			var oldonload = properties.onload;
 			properties.onload = function(){
 				MUI.files[source] = 'loaded';
-				if (oldonload){
-					oldonload();
-				}
+				if (oldonload) oldonload();
 			}.bind(this);
 
 			var sourcePath=MUI.replacePaths(source);
