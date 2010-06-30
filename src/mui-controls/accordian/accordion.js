@@ -27,7 +27,7 @@
  ...
  */
 
-MUI.files[MUI.path.plugins + 'MUI/Accordion/Accordion.js'] = 'loaded';
+MUI.files['controls|Accordion/Accordion.js'] = 'loaded';
 
 MUI.Accordion = new Class({
 

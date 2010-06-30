@@ -17,7 +17,7 @@
  ...
  */
 
-MUI.files[MUI.path.muiplugins + 'TextBox/Mask.js'] = 'loaded';
+MUI.files['controls|TextBox/Mask.js'] = 'loaded';
 
 // credits to Jan Kassens
 $extend(Element.NativeEvents, {

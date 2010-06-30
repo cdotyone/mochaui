@@ -22,7 +22,7 @@
  ...
  */
 
-MUI.files[MUI.path.source + 'modal.js'] = 'loaded';
+MUI.files['source|modal.js'] = 'loaded';
 
 MUI.Modal = new NamedClass('MUI.Modal', {
 

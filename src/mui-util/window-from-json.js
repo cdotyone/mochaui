@@ -41,7 +41,7 @@
  ...
  */
 
-MUI.files[MUI.path.utils + 'window-from-json.js'] = 'loaded';
+MUI.files['utils|window-from-json.js'] = 'loaded';
 
 MUI.extend({
 

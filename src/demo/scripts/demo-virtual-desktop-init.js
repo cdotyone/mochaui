@@ -127,7 +127,7 @@ initializeWindows = function() {
 			title: 'Canvas Clock',
 			addClass: 'transparent',
 			loadMethod: 'xhr',
-			contentURL: MUI.path.plugins + 'coolclock/index.html',
+			contentURL: 'plugins|coolclock/index.html',
 			shape: 'gauge',
 			headerHeight: 30,
 			width: 160,
@@ -136,7 +136,7 @@ initializeWindows = function() {
 			y: 152,
 			padding: { top: 0, right: 0, bottom: 0, left: 0 },
 			require: {
-				js: [MUI.path.plugins + 'coolclock/scripts/coolclock.js'],
+				js: ['plugins|coolclock/scripts/coolclock.js'],
 				onload: function() {
 					if (CoolClock) new CoolClock();
 				}
@@ -155,7 +155,7 @@ initializeWindows = function() {
 			id: 'parametrics',
 			title: 'Window Parametrics',
 			loadMethod: 'xhr',
-			contentURL: MUI.path.plugins + 'parametrics/index.html',
+			contentURL: 'plugins|parametrics/index.html',
 			width: 305,
 			height: 210,
 			x: 230,
@@ -164,8 +164,8 @@ initializeWindows = function() {
 			resizable: false,
 			maximizable: false,
 			require: {
-				css: [MUI.path.plugins + 'parametrics/css/style.css'],
-				js: [MUI.path.plugins + 'parametrics/scripts/parametrics.js'],
+				css: ['plugins|parametrics/css/style.css'],
+				js: ['plugins|parametrics/scripts/parametrics.js'],
 				onload: function() {
 					if (MUI.addRadiusSlider) MUI.addRadiusSlider();
 					if (MUI.addShadowSlider) MUI.addShadowSlider();
@@ -273,7 +273,7 @@ initializeWindows = function() {
 			maximizable: false,
 			padding: { top: 0, right: 0, bottom: 0, left: 0 },
 			require: {
-				css: [MUI.path.plugins + 'accordian/css/style.css'],
+				css: ['plugins|accordian/css/style.css'],
 				onload: function() {
 					this.windowEl = $(id);
 					new Accordion('#' + id + ' h3.accordianToggler', '#' + id + ' div.accordianElement', {
@@ -371,7 +371,7 @@ initializeWindows = function() {
 			title: 'Window Builder',
 			icon: 'images/icons/page.gif',
 			loadMethod: 'xhr',
-			contentURL: MUI.path.plugins + 'windowform/',
+			contentURL: 'plugins|windowform/',
 			width: 370,
 			height: 410,
 			maximizable: false,
@@ -379,10 +379,10 @@ initializeWindows = function() {
 			scrollbars: false,
 			onBeforeBuild: function() {
 				if ($('builderStyle')) return;
-				new Asset.css(MUI.path.plugins + 'windowform/css/style.css', {id: 'builderStyle'});
+				new Asset.css(MUI.replacePaths('plugins|windowform/css/style.css'), {id: 'builderStyle'});
 			},
 			onContentLoaded: function() {
-				new Asset.javascript(MUI.path.plugins + 'windowform/scripts/window-from-form.js', {
+				new Asset.javascript(MUI.replacePaths('plugins|windowform/scripts/window-from-form.js'), {
 					id: 'builderScript',
 					onload: function() {
 						$('newWindowSubmit').addEvent('click', function(e) {
@@ -528,6 +528,9 @@ initializeWindows = function() {
 	MUI.clockWindow();
 	MUI.myChain.callChain();
 };
+
+// Initialize MochaUI options
+MUI.initialize();
 
 // Initialize MochaUI when the DOM is ready
 window.addEvent('load', function() {

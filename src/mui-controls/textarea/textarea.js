@@ -35,7 +35,7 @@
  ...
  */
 
-MUI.files[MUI.path.muiplugins + 'TextArea/TextArea.js'] = 'loaded';
+MUI.files['controls|TextArea/TextArea.js'] = 'loaded';
 
 MUI.TextArea = new Class({
 

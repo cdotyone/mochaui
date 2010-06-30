@@ -26,7 +26,7 @@
  ...
  */
 
-MUI.files[MUI.path.utils + 'window-tile.js'] = 'loaded';
+MUI.files['utils|window-tile.js'] = 'loaded';
 
 MUI.extend({
 

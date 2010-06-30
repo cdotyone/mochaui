@@ -19,7 +19,7 @@
  ...
  */
 
-MUI.files[MUI.path.muiplugins + 'TextBox/PassShark.js'] = 'loaded';
+MUI.files['controls|TextBox/PassShark.js'] = 'loaded';
 
 MUI.PassShark = new Class({
 
