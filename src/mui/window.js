@@ -245,7 +245,7 @@ MUI.Windows.windowOptions = {
 	x:					null,
 	y:					null,
 	scrollbars:			true,
-	padding:			{ top: 10, right: 12, bottom: 10, left: 12 },
+	padding:			{top: 10, right: 12, bottom: 10, left: 12},
 	shadowBlur:			5,
 	shadowOffset:		{'x': 0, 'y': 1},
 	controlsOffset:		{'right': 6, 'top': 6},
@@ -389,23 +389,23 @@ MUI.Window = new NamedClass('MUI.Window', {
 	 Arguments:
 	 properties
 	 */
-	newWindow: function() { // options is not doing anything
+	newWindow: function(){ // options is not doing anything
 		// Shorten object chain
 		var instance = MUI.get(this);
 		var options = this.options;
 
 		// Check if window already exists and is not in progress of closing
-		if (this.windowEl && !this.isClosing) {
+		if (this.windowEl && !this.isClosing){
 			// Restore if minimized
-			if (instance.isMinimized) {
+			if (instance.isMinimized){
 				MUI.Dock.restoreMinimized(this.windowEl);
 			}
 			// Expand and focus if collapsed
-			else if (instance.isCollapsed) {
+			else if (instance.isCollapsed){
 				MUI.collapseToggle(this.windowEl);
 				setTimeout(MUI.focusWindow.pass(this.windowEl, this), 10);
 			}
-			else if (this.windowEl.hasClass('windowClosed')) {
+			else if (this.windowEl.hasClass('windowClosed')){
 
 				if (instance.check) instance.check.show();
 
@@ -413,7 +413,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 				this.windowEl.setStyle('opacity', 0);
 				this.windowEl.addClass('mocha');
 
-				if (MUI.Dock && $(MUI.options.dock) && instance.options.type == 'window') {
+				if (MUI.Dock && $(MUI.options.dock) && instance.options.type == 'window'){
 					var currentButton = $(instance.options.id + '_dockTab');
 					if (currentButton) currentButton.show();
 					MUI.Desktop.setDesktopSize();
@@ -461,19 +461,19 @@ MUI.Window = new NamedClass('MUI.Window', {
 		if (options.type == 'modal2') this.windowEl.addClass('modal2');
 
 		// Fix a mouseover issue with gauges in IE7
-		if (Browser.Engine.trident && options.shape == 'gauge') {
+		if (Browser.Engine.trident && options.shape == 'gauge'){
 			this.windowEl.setStyle('backgroundImage', 'url(../images/spacer.gif)');
 		}
 
-		if ((this.options.type == 'modal' || options.type == 'modal2' ) && Browser.Platform.mac && Browser.Engine.gecko) {
-			if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent)) {
+		if ((this.options.type == 'modal' || options.type == 'modal2' ) && Browser.Platform.mac && Browser.Engine.gecko){
+			if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent)){
 				var ffversion = new Number(RegExp.$1);
 				if (ffversion < 3) this.windowEl.setStyle('position', 'fixed');
 			}
 		}
 
-		if (options.loadMethod == 'iframe') {
-			options.padding = { top: 0, right: 0, bottom: 0, left: 0 };
+		if (options.loadMethod == 'iframe'){
+			options.padding = {top: 0, right: 0, bottom: 0, left: 0};
 		}
 
 		// Insert sub elements inside windowEl
@@ -500,7 +500,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 				showControls.delay(0, this);
 
 			}.bind(this));
-			this.windowEl.addEvent('mouseleave', function() {
+			this.windowEl.addEvent('mouseleave', function(){
 				this.mouseover = false;
 				if (this.options.useCanvasControls) this.canvasControlsEl.setStyle('visibility', 'hidden');
 				else this.controlsEl.setStyle('visibility', 'hidden');
@@ -533,7 +533,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 		});
 
 		// load/build all of the additional  content sections
-		if (options.sections) options.sections.each(function(section) {
+		if (options.sections) options.sections.each(function(section){
 			MUI.updateContent(section);
 		});
 
@@ -549,10 +549,10 @@ MUI.Window = new NamedClass('MUI.Window', {
 		// Position window. If position not specified by user then center the window on the page.
 		var dimensions = (options.container == document.body || options.container == MUI.Desktop.desktop) ? window.getSize() : $(this.options.container).getSize();
 		var x,y;
-		if (options.y) {
+		if (options.y){
 			y = options.y - options.shadowBlur;
 		} else {
-			if (MUI.Desktop && MUI.Desktop.desktop) {
+			if (MUI.Desktop && MUI.Desktop.desktop){
 				y = (dimensions.y * .5) - (this.windowEl.offsetHeight * .5);
 				if (y < -options.shadowBlur) y = -options.shadowBlur;
 			} else {
@@ -561,7 +561,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 			}
 		}
 
-		if (this.options.x == null) {
+		if (this.options.x == null){
 			x = (dimensions.x * .5) - (this.windowEl.offsetWidth * .5);
 			if (x < -options.shadowBlur) x = -options.shadowBlur;
 		} else {
@@ -578,7 +578,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 		this.opacityMorph = new Fx.Morph(this.windowEl, {
 			'duration': 350,
 			transition: Fx.Transitions.Sine.easeInOut,
-			onComplete: function() {
+			onComplete: function(){
 				if (Browser.Engine.trident) this.drawWindow();
 			}.bind(this)
 		});
@@ -595,10 +595,10 @@ MUI.Window = new NamedClass('MUI.Window', {
 		this.resizeMorph = new Fx.Elements([this.contentWrapperEl, this.windowEl], {
 			duration: 400,
 			transition: Fx.Transitions.Sine.easeInOut,
-			onStart: function() {
+			onStart: function(){
 				this.resizeAnimation = this.drawWindow.periodical(20, this);
 			}.bind(this),
-			onComplete: function() {
+			onComplete: function(){
 				$clear(this.resizeAnimation);
 				this.drawWindow();
 				// Show iframe
@@ -609,7 +609,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 
 		// Add check mark to menu if link exists in menu
 		// Need to make sure the check mark is not added to links not in menu
-		if ($(this.windowEl.id + 'LinkCheck')) {
+		if ($(this.windowEl.id + 'LinkCheck')){
 			this.check = new Element('div', {
 				'class': 'check',
 				'id': this.options.id + '_check'
@@ -625,11 +625,11 @@ MUI.Window = new NamedClass('MUI.Window', {
 
 	},
 
-	css3SetStyles: function() {
-		var self=this;
-		var options=this.options;
-		var color=Asset.getCSSRule('.mochaCss3Shadow').style.backgroundColor;
-		['','-o-','-webkit-','-moz-'].each(function(pre) {
+	css3SetStyles: function(){
+		var self = this;
+		var options = this.options;
+		var color = Asset.getCSSRule('.mochaCss3Shadow').style.backgroundColor;
+		['', '-o-', '-webkit-', '-moz-'].each(function(pre){
 			self.windowEl.setStyle(pre + 'box-shadow', options.shadowOffset.x + 'px ' + options.shadowOffset.y + 'px ' + options.shadowBlur + 'px ' + color);
 			self.windowEl.setStyle(pre + 'border-radius', options.cornerRadius + 'px');
 			self.titleBarEl.setStyle(pre + 'border-radius', options.cornerRadius + 'px');
@@ -639,11 +639,11 @@ MUI.Window = new NamedClass('MUI.Window', {
 	displayNewWindow: function(){
 
 		var options = this.options;
-		if (options.type == 'modal' || options.type == 'modal2') {
+		if (options.type == 'modal' || options.type == 'modal2'){
 			MUI.currentModal = this.windowEl;
 			if (Browser.Engine.trident4) $('modalFix').show();
 			$('modalOverlay').show();
-			if (MUI.options.advancedEffects) {
+			if (MUI.options.advancedEffects){
 				MUI.Modal.modalOverlayCloseMorph.cancel();
 				MUI.Modal.modalOverlayOpenMorph.start({
 					'opacity': .6
@@ -664,7 +664,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 			$$('.mocha').removeClass('isFocused');
 			this.windowEl.addClass('isFocused');
 
-		} else if (MUI.options.advancedEffects) {
+		} else if (MUI.options.advancedEffects){
 			// IE cannot handle both element opacity and VML alpha at the same time.
 			if (Browser.Engine.trident) this.drawWindow(false);
 			this.opacityMorph.start({
@@ -890,7 +890,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 
 	resizeOnStart: function(){
 		$('windowUnderlay').show();
-		if (this.iframeEl) {
+		if (this.iframeEl){
 			if (Browser.Engine.trident) this.iframeEl.hide();
 			else this.iframeEl.setStyle('visibility', 'hidden');
 		}
@@ -915,8 +915,8 @@ MUI.Window = new NamedClass('MUI.Window', {
 
 	resizeOnComplete: function(){
 		$('windowUnderlay').hide();
-		if (this.iframeEl) {
-			if (Browser.Engine.trident) {
+		if (this.iframeEl){
+			if (Browser.Engine.trident){
 				this.iframeEl.show();
 				// The following hack is to get IE8 RC1 IE8 Standards Mode to properly resize an iframe
 				// when only the vertical dimension is changed.
@@ -1139,16 +1139,16 @@ MUI.Window = new NamedClass('MUI.Window', {
 				var id = self.options.id + '_' + (section.section || 'section' + snum);
 
 				section = $extend({
-						'wrap': true,
-						'position': 'top',
-						'empty': false,
-						'height': 29,
-						'id': id,
-						'css': 'mochaToolbar',
-						'section': 'section' + snum,
-						'loadMethod': 'xhr',
-						'method': self.options.method
-				},section);
+					'wrap': true,
+					'position': 'top',
+					'empty': false,
+					'height': 29,
+					'id': id,
+					'css': 'mochaToolbar',
+					'section': 'section' + snum,
+					'loadMethod': 'xhr',
+					'method': self.options.method
+				}, section);
 
 				var wrap = section.wrap;
 				var where = section.position == 'bottom' ? 'after' : 'before';
@@ -1163,7 +1163,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 					section.wrapperEl = new Element('div', {
 						'id': section.id + '_wrapper',
 						'class': section.css+'Wrapper',
-						'styles': { 'height': section.height }
+						'styles': {'height': section.height}
 					}).inject(intoEl, where);
 
 					if (section.position == 'bottom') section.wrapperEl.addClass('bottom');
@@ -1174,7 +1174,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 				section.childElement = new Element('div', {
 					'id': section.id,
 					'class': section.css,
-					'styles': { 'height': section.height }
+					'styles': {'height': section.height}
 				}).inject(intoEl);
 
 				section.wrapperEl = intoEl;
@@ -1428,7 +1428,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 	 shadows: (boolean) false will draw a window without shadows
 	 */
 	drawWindow: function(shadows){
-		if(shadows==null) shadows = true;
+		if (shadows == null) shadows = true;
 		if (this.drawingWindow) return;
 		this.drawingWindow = true;
 
@@ -1467,7 +1467,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 			'height': options.headerHeight
 		});
 
-		if(this.useCSS3) this.css3SetStyles();
+		if (this.useCSS3) this.css3SetStyles();
 		else {
 			this.overlayEl.setStyles({
 				'height': height,
@@ -1485,7 +1485,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 			}
 
 			// Part of the fix for IE6 select z-index bug
-			if (Browser.Engine.trident4) this.zIndexFixEl.setStyles({ 'width': width, 'height': height });
+			if (Browser.Engine.trident4) this.zIndexFixEl.setStyles({'width': width, 'height': height});
 
 			// Make sure loading icon is placed correctly.
 			if (options.useSpinner && options.shape != 'gauge' && options.type != 'notification'){
@@ -1560,7 +1560,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 			'height': options.headerHeight
 		});
 
-		if(this.useCSS3) this.css3SetStyles();
+		if (this.useCSS3) this.css3SetStyles();
 		else {
 			this.overlayEl.setStyles({
 				'height': height,
@@ -1749,7 +1749,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 	drawGauge: function(ctx, width, height, shadowBlur, shadowOffset, shadows){
 		var options = this.options;
 		if (shadows && !this.useCSS3){
-			if(Browser.Engine.webkit) {
+			if (Browser.Engine.webkit){
 				var color=Asset.getCSSRule('.mochaCss3Shadow').style.backgroundColor;
 				ctx.shadowColor = color.replace(/rgb/g,'rgba');
 				ctx.shadowOffsetX = shadowOffset.x;
@@ -1775,7 +1775,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 			1
 		);
 
-		if(Browser.Engine.webkit) {
+		if (Browser.Engine.webkit){
 			ctx.shadowColor = "rgba(0,0,0,0)";
 			ctx.shadowOffsetX = 0;
 			ctx.shadowOffsetY = 0;
@@ -2095,11 +2095,11 @@ MUI.Window = new NamedClass('MUI.Window', {
 	/*
 	 Get the total height of all of the custom sections in the content area.
 	*/
-	getAllSectionsHeight: function() {
-		var height=0;
-		if(this.options.sections) {
+	getAllSectionsHeight: function(){
+		var height = 0;
+		if (this.options.sections){
 			this.options.sections.each(function(section){
-				height+=section.wrapperEl.getStyle('height').toInt() + section.wrapperEl.getStyle('border-top').toInt();
+				height += section.wrapperEl.getStyle('height').toInt() + section.wrapperEl.getStyle('border-top').toInt();
 			});
 		}
 		return height;
@@ -2139,9 +2139,7 @@ MUI.extend({
 
 		if (instance.check) instance.check.hide();
 
-		windowEl.setStyles({
-			zIndex: -1
-		});
+		windowEl.setStyle(zIndex, -1);
 		windowEl.addClass('windowClosed');
 		windowEl.removeClass('mocha');
 
@@ -2176,11 +2174,11 @@ MUI.extend({
 	 Function: collapseToggle
 	 Collapses an expanded window. Expands a collapsed window.
 	 */
-	collapseToggle: function(windowEl) {
+	collapseToggle: function(windowEl){
 		var instance = windowEl.retrieve('instance');
 		var handles = windowEl.getElements('.handle');
 		if (instance.isMaximized) return;
-		if (instance.isCollapsed) {
+		if (instance.isCollapsed){
 			instance.isCollapsed = false;
 			instance.drawWindow();
 			instance.contentBorderEl.setStyles({
@@ -2189,8 +2187,8 @@ MUI.extend({
 				top: null,
 				left: null
 			});
-			if (instance.sections) {
-				instance.sections.each(function(section) {
+			if (instance.sections){
+				instance.sections.each(function(section){
 					var el = section.wrap ? section.wrapperEl : section.childElement;
 					if (el) el.setStyles({
 						visibility: 'visible',
@@ -2212,8 +2210,8 @@ MUI.extend({
 				top: -10000,
 				left: -10000
 			});
-			if (instance.sections) {
-				instance.sections.each(function(section) {
+			if (instance.sections){
+				instance.sections.each(function(section){
 					var el = section.wrap ? section.wrapperEl : section.childElement;
 					if (el) el.setStyles({
 						visibility: 'hidden',
@@ -2367,7 +2365,7 @@ MUI.extend({
 		}
 	},
 
-	resizeWindow: function(windowEl, options) {
+	resizeWindow: function(windowEl, options){
 		var instance = windowEl.retrieve('instance');
 
 		$extend({
@@ -2384,7 +2382,7 @@ MUI.extend({
 		var oldLeft = windowEl.getStyle('left').toInt();
 
 		var top,left;
-		if (options.centered) {
+		if (options.centered){
 			top = typeof(options.top) != 'undefined' ? options.top : oldTop - ((options.height - oldHeight) * .5);
 			left = typeof(options.left) != 'undefined' ? options.left : oldLeft - ((options.width - oldWidth) * .5);
 		} else {
@@ -2392,7 +2390,7 @@ MUI.extend({
 			left = typeof(options.left) != 'undefined' ? options.left : oldLeft;
 		}
 
-		if (MUI.options.advancedEffects) {
+		if (MUI.options.advancedEffects){
 			windowEl.retrieve('resizeMorph').start({
 				'0': {
 					'height': options.height,
@@ -2414,7 +2412,7 @@ MUI.extend({
 			});
 			instance.drawWindow();
 			// Show iframe
-			if (instance.iframeEl) {
+			if (instance.iframeEl){
 				if (Browser.Engine.trident) instance.iframeEl.show();
 				else instance.iframeEl.setStyle('visibility', 'visible');
 			}
