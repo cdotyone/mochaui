@@ -187,7 +187,7 @@ MUI.extend({
 MUI.Content.Providers.xhr = function(instance, options){
 	var contentContainer = options.contentContainer;
 	var fireContentLoaded = options.fireContentLoaded;
-	var request=new Request.HTML({
+	new Request({
 		url: options.url,
 		method: options.method != null ? options.method : 'get',
 		data: options.data != null ? new Hash(options.data).toQueryString() : '',
@@ -195,7 +195,7 @@ MUI.Content.Providers.xhr = function(instance, options){
 		evalResponse: false,
 		onRequest: function(){
 			contentContainer.showSpinner(instance);
-		}.bind(this),
+		},
 		onFailure: function(response){
 			var getTitle = new RegExp('<title>[\n\r\s]*(.*)[\n\r\s]*</title>', 'gmi');
 			var error = getTitle.exec(response.responseText);
@@ -208,12 +208,15 @@ MUI.Content.Providers.xhr = function(instance, options){
 			if(updateSetContent) contentContainer.set('html', options.errorMessage);
 
 			contentContainer.hideSpinner(instance);
-		}.bind(this),
-		onSuccess: function(tree,elements,html,js){
+		},
+		onSuccess: function(text){
 			contentContainer.hideSpinner(instance);
 
-            // convert text files to html
-            if(request.getHeader('Content-Type')=='text/plain') html=html.replace(/\n/g,'<br>');  
+			var js;
+			var html = text.stripScripts(function(script){ js = script; });
+
+			// convert text files to html
+			if(this.getHeader('Content-Type')=='text/plain') html=html.replace(/\n/g,'<br>');  
 
 			var updateSetContent = true;
 			options.content=html;
@@ -222,13 +225,13 @@ MUI.Content.Providers.xhr = function(instance, options){
 				contentContainer.set('html', options.content);
 				var evalJS = true;
 				if(instance!=null && instance.options && instance.options.evalScripts!=null) evalJS=instance.options.evalScripts;
-				if(evalJS && js) eval(js);
-			}
+				if(evalJS && js) Browser.exec(js);
+				}
 			
 			Browser.Engine.trident4 ? fireContentLoaded.delay(50,this,['contentLoaded',instance,options]) : fireContentLoaded('contentLoaded',instance,options);
-		}.bind(this),
+		},
 		onComplete: function(){
-		}.bind(this)
+		}
 	}).send();
 };
 
