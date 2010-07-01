@@ -133,7 +133,7 @@ MUI.extend({
 		// prepare function to fire onContentLoaded event
 		options.fireContentLoaded = function(event, instance, options){
 			var fireEvent = true;
-			if (instance && instance.updateEnd) fireEvent=instance.updateEnd(options);
+			if (instance && instance.updateEnd) fireEvent = instance.updateEnd(options);
 			if (fireEvent){
 				if (options.require.js.length || typeof options.require.onload == 'function'){
 					new MUI.Require({
@@ -148,8 +148,7 @@ MUI.extend({
 							}
 						}.bind(this)
 					});
-				}
-				else {
+				} else {
 					if (options.onContentLoaded && options.onContentLoaded != $empty){
 						options.onContentLoaded()
 					} else {
