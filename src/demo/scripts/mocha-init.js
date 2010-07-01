@@ -991,7 +991,10 @@ var initializeColumns = function(){
 			addClass: 'tabs',
 			empty: true,
 			url: 'pages/panel-tabs.html',
-		 	require: {css: ['theme|css/Tabs.css']}
+		 	require: {css: ['theme|css/Tabs.css']},
+			onContentLoaded: function(){
+				MUI.initializeTabs('panelTabs', 'help-panel');
+			}
 		}]
 	});
 
