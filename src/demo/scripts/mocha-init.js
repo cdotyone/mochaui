@@ -990,7 +990,6 @@ var initializeColumns = function(){
 			section: 'tabs',
 			addClass: 'tabs',
 			empty: true,
-			evalResponse: true,
 			url: 'pages/panel-tabs.html',
 		 	require: {css: ['theme|css/Tabs.css']}
 		}]

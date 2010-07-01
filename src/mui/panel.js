@@ -196,10 +196,10 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		// determine of this panel has a footer
 		this.hasFooter = false;
 		this.hasHeaderTool = false;
-		if(options.sections) {
-			options.sections.each(function(section) {
-				if(section.position=='footer') instance.hasFooter=true;
-				if(section.position=='headertool') instance.hasHeaderTool=true;
+		if (options.sections){
+			options.sections.each(function(section){
+				if (section.position == 'footer') instance.hasFooter = true;
+				if (section.position == 'headertool') instance.hasHeaderTool = true;
 			});
 		}
 
@@ -248,7 +248,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 			columnInstance.options.container.retrieve('sortables').addItems(this.panelWrapperEl);
 			if (this.panelHeaderToolboxEl){
 				this.panelHeaderToolboxEl.addEvent('mousedown', function(e){
-					e = new Event(e).stop();
+					e = e.stop();
 					e.target.focus();
 				});
 				this.panelHeaderToolboxEl.setStyle('cursor', 'default');
@@ -275,24 +275,24 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 		this.addResizeBottom(options.id);
 
-		if (options.sections) {
+		if (options.sections){
 			var snum = 0;
-			options.sections.each(function(section, idx) {
+			options.sections.each(function(section, idx){
 				var intoEl = instance.panelEl;
 
 				snum++;
 				var id = options.id + '_' + (section.section || 'section' + snum);
 
 				section = $extend({
-					'element':instance.panelEl,
-					'wrap':false,
-					'position':'header',
-					'empty':false,
-					'addClass':false,
-					'height':0,
-					'id':id,
-					'css':'mochaToolbar',
-					'section':'section' + snum,
+					'element': instance.panelEl,
+					'wrap': false,
+					'position': 'header',
+					'empty': false,
+					'addClass': false,
+					'height': 0,
+					'id': id,
+					'css': 'mochaToolbar',
+					'section': 'section' + snum,
 					'loadMethod': 'xhr',
 					'method': options.method
 				}, section);
@@ -301,7 +301,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				var empty = section.empty;
 				var where = section.position == 'bottom' ? 'after' : 'before';
 
-				switch (section.position) {
+				switch (section.position){
 					case 'header':
 						intoEl = instance.panelHeaderContentEl;
 						if (!instance.options.header) return;
@@ -314,7 +314,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 						intoEl = instance.footerEl; break;
 				}
 
-				if (wrap) {
+				if (wrap){
 					section.wrapperEl = new Element('div', {
 						'id': section.id + '_wrapper',
 						'class': section.css + 'Wrapper'
@@ -330,7 +330,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				section.childElement = new Element('div', {
 					'id': section.id,
 					'class': section.css,
-					'styles': { 'height': section.height }
+					'styles': {'height': section.height}
 				}).inject(intoEl);
 
 				if (section.addClass) intoEl.addClass(section.addClass);
@@ -371,12 +371,12 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				js: options.require.js,
 				onload: options.require.onload
 			},
-	  		section:'content'
+	  		section: 'content'
 		});
 
 		// load/build all of the additional  content sections
 		if (options.sections) options.sections.each(function(section){
-			if(!options.header && (section.position=='header' || section.position=='headertool')) return;
+			if (!options.header && (section.position == 'header' || section.position == 'headertool')) return;
 			MUI.updateContent(section);
 		});
 
@@ -407,7 +407,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 			'title': 'Collapse Panel'
 		}).inject(this.panelHeaderCollapseBoxEl);
 
-		this.collapseToggleEl.addEvent('click', function() {
+		this.collapseToggleEl.addEvent('click', function(){
 			var panel = this.panelEl;
 			var panelWrapper = this.panelWrapperEl;
 
@@ -416,19 +416,19 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 			// Then collapse the column.
 			var expandedSiblings = [];
 
-			panelWrapper.getAllPrevious('.panelWrapper').each(function(sibling) {
+			panelWrapper.getAllPrevious('.panelWrapper').each(function(sibling){
 				var instance = MUI.get(sibling.getElement('.panel').id);
 				if (!instance.isCollapsed)
 					expandedSiblings.push(sibling.getElement('.panel').id);
 			});
 
-			panelWrapper.getAllNext('.panelWrapper').each(function(sibling) {
+			panelWrapper.getAllNext('.panelWrapper').each(function(sibling){
 				var instance = MUI.get(sibling.getElement('.panel').id);
 				if (!instance.isCollapsed)
 					expandedSiblings.push(sibling.getElement('.panel').id);
 			});
 
-			if (this.isCollapsed) {
+			if (this.isCollapsed){
 				// Expand Panel
 				this.contentEl.setStyle('position', null); // This is so IE6 and IE7 will collapse the panel all the way
 				panel.setStyle('height', this.oldHeight);
@@ -445,11 +445,11 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				// Collapse Panel
 				var currentColumn = MUI.get($(options.column).id);
 
-				if (expandedSiblings.length == 0 && currentColumn.options.placement != 'main') {
+				if (expandedSiblings.length == 0 && currentColumn.options.placement != 'main'){
 					currentColumn = MUI.get($(options.column).id);
 					currentColumn.columnToggle();
 					return;
-				} else if (expandedSiblings.length == 0 && currentColumn.options.placement == 'main') {
+				} else if (expandedSiblings.length == 0 && currentColumn.options.placement == 'main'){
 					return;
 				}
 				this.oldHeight = panel.getStyle('height').toInt();
@@ -495,7 +495,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		instance.resize = element.makeResizable({
 			handle: handle,
 			modifiers: {x: false, y: 'height'},
-			limit: { y: [min, max] },
+			limit: {y: [min, max]},
 			invert: false,
 
 			onBeforeStart: function(){
@@ -505,8 +505,8 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 			}.bind(this),
 
 			onStart: function(){
-				if (instance.iframeEl) {
-					if (Browser.Engine.trident) {
+				if (instance.iframeEl){
+					if (Browser.Engine.trident){
 						instance.iframeEl.hide();
 						partner.getElements('iframe').hide();
 					} else {
@@ -542,8 +542,8 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				partner.getChildren('.column').each(function(column){
 					MUI.panelHeight(column);
 				});
-				if (instance.iframeEl) {
-					if (Browser.Engine.trident) {
+				if (instance.iframeEl){
+					if (Browser.Engine.trident){
 						instance.iframeEl.show();
 						partner.getElements('iframe').show();
 						// The following hack is to get IE8 Standards Mode to properly resize an iframe
