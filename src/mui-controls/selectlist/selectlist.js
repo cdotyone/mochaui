@@ -50,13 +50,13 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		,dropText:			'{$} Selected'	// the text to show on the drop list when items are selected
 
 		,alternateRows:		false			// show the items with alternating background color
-		,width:				0					// width of the control
+		,width:				0				// width of the control
 		,height:			0				// height of the control when not in drop list mode, or height of drop
 		,canMultiSelect:	true			// can the user select multiple items
-		,showCheckBox:		true				// true to show checkBoxes
-		,value:				''					// the currently selected item's value
-		,selectedItem:		null				// the last selected item
-		,selectedItems:		$A([])				// all of the the currently selected item
+		,showCheckBox:		true			// true to show checkBoxes
+		,value:				''				// the currently selected item's value
+		,selectedItem:		null			// the last selected item
+		,selectedItems:		$A([])			// all of the the currently selected item
 
 		,onItemSelected:	$empty			// event: when a node is selected
 	},
@@ -89,8 +89,7 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 			var list = el.getElement('table');
 			if (list){
 				var rows = list.getElements('TR');
-				for (var i = 0; i < rows.length; i++)
-				{
+				for (var i = 0; i < rows.length; i++){
 					self.itemFromHTML(rows[i]);
 				}
 			}
@@ -149,7 +148,6 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 
 		var ul = new Element('ul').inject(div);
 
-		var selectCount = 0;
 		for (var i = 0; i < o.items.length; i++){
 			if (o.items[i].isBar) this.buildBar(o.items[i], ul);
 			else this.buildItem(o.items[i], ul, (i % 2));
@@ -216,11 +214,9 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		var o = self.options;
 		if (e.target && e.target.tagName == 'INPUT') return true;
 
-		if (!o.canMultiSelect)
-		{
+		if (!o.canMultiSelect){
 			var items = this.options.items;
-			for (var i = 0; i < items.length; i++)
-			{
+			for (var i = 0; i < items.length; i++){
 				var isSelected = self._getData(items[i], o.isSelectedField);
 				if (isSelected && item != items[i]){
 					items[i][o.isSelectedField] = false;
@@ -358,4 +354,4 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		this.options.items.push(item);
 	}
 
-});                        
+});

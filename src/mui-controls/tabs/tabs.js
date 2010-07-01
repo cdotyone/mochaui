@@ -33,21 +33,21 @@ MUI.Tabs = new Class({
 	Implements: [Events, Options],
 
 	options: {
-		id:			''			  // id of the primary element, and id os control that is registered with mocha
-		,container:	 null			// the parent control in the document to add the control to
-		,createOnInit:  true			// true to add tree to container when control is initialized
-		,cssClass:	  'tabs'		  // the primary css tag
+		 id:			''				// id of the primary element, and id os control that is registered with mocha
+		,container:		null			// the parent control in the document to add the control to
+		,createOnInit:	true			// true to add tree to container when control is initialized
+		,cssClass:		'tabs'			// the primary css tag
 
-		,tabs:		 $A([])		   // the list of tabs
+		,tabs:			$A([])			// the list of tabs
 
-		,textField:	 'text'		  // the name of the field that has the node's text
-		,valueField:	'value'		 // the name of the field that has the node's value
-		,titleField:	'title'		 // the name of the field that has the node's tip text
+		,textField:		'text'			// the name of the field that has the node's text
+		,valueField:	'value'			// the name of the field that has the node's value
+		,titleField:	'title'			// the name of the field that has the node's tip text
 
-		,value:		 ''			  // the currently selected tab's value
-		,selectedTab:   null			// the currently selected tab
+		,value:			''				// the currently selected tab's value
+		,selectedTab:	null			// the currently selected tab
 
-		,onTabSelected: $empty		  // event: when a node is checked
+		,onTabSelected:	$empty			// event: when a node is checked
 	},
 
 	initialize: function(options){

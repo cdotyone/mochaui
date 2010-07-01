@@ -42,22 +42,22 @@ MUI.TextArea = new Class({
 	Implements: [Events, Options],
 
 	options: {
-		id:				 ''			  // id of the primary element, and id os control that is registered with mocha
-		,container:		 null			// the parent control in the document to add the control to
-		,createOnInit:	  true			// true to add textbox to container when control is initialized
-		,cssClass:		  'form'		  // the primary css tag
+		 id:				''		// id of the primary element, and id os control that is registered with mocha
+		,container:			null	// the parent control in the document to add the control to
+		,createOnInit:		true	// true to add textbox to container when control is initialized
+		,cssClass:			'form'	// the primary css tag
 
-		,hasDynamicSize:	false		   // true if this textarea can automatically resize
-		,width:			 false		   // width of the textarea control
-		,height:			false		   // height of the textarea control, ignored if hasDynamicSize is true
-		,rows:			  1			   // number of lines to show, when hasDynamicSize is true this is the minimum # rows
+		,hasDynamicSize:	false	// true if this textarea can automatically resize
+		,width:				false	// width of the textarea control
+		,height:			false	// height of the textarea control, ignored if hasDynamicSize is true
+		,rows:				1		// number of lines to show, when hasDynamicSize is true this is the minimum # rows
 
-		,valueField:		false		   // defaults to the id on this field
-		,formTitleField:	false		   // defaults to the id of this field
-		,formData:		  false		   // used in conjunction with the above Fields to get/set value in an object
+		,valueField:		false	// defaults to the id on this field
+		,formTitleField:	false	// defaults to the id of this field
+		,formData:			false	// used in conjunction with the above Fields to get/set value in an object
 
-		,formTitle:		 ''			  // defaults to the id of this field
-		,value:			 ''			  // the currently textbox's value
+		,formTitle:			''		// defaults to the id of this field
+		,value:				''		// the currently textbox's value
 
 		,onValueChanged:	$empty
 	},

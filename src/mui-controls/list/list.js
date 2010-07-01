@@ -33,10 +33,10 @@ MUI.List = new Class({
 	Implements: [Events, Options],
 
 	options: {
-		id:					''			// id of the primary element, and id os control that is registered with mocha
+		 id:				''			// id of the primary element, and id os control that is registered with mocha
 		,container:			null		// the parent control in the document to add the control to
 		,createOnInit:		true		// true to add tree to container when control is initialized
-		,cssClass:			'list'	// the primary css tag
+		,cssClass:			'list'		// the primary css tag
 
 		,showCommand:		true		// turns row commands on or off
 		,commands:			$A([])		// commands to be used
@@ -45,12 +45,12 @@ MUI.List = new Class({
 		,items:				$A([])		// the array list of nodes
 		,columns:			$A([])		// the list of columns to be used
 
-		,alternateRows:		false			// show the items with alternating background color
+		,alternateRows:		false		// show the items with alternating background color
 		,showCheckBox:		false		// true to show checkBoxes
 		,navigateURL:		''			// the base url to navigate from
-		,canSelect:			true			// can the user select a row by clicking it
+		,canSelect:			true		// can the user select a row by clicking it
 		,value:				''			// the currently selected item's value
-		,selectedItem:		null			// the currently selected item
+		,selectedItem:		null		// the currently selected item
 
 		,onItemCommand:		$empty		// event: when a command is performed
 		,onItemSelected:	$empty		// event: when a node is selected

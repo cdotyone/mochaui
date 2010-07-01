@@ -33,21 +33,21 @@ MUI.TextBox = new Class({
 	Implements: [Events, Options],
 
 	options: {
-		id:			''			  // id of the primary element, and id os control that is registered with mocha
-		,container:	 null			// the parent control in the document to add the control to
-		,createOnInit:  true			// true to add textbox to container when control is initialized
-		,cssClass:	  'form'		  // the primary css tag
-		,type:		  'text'		  // this is a text field
+		 id:				''			// id of the primary element, and id os control that is registered with mocha
+		,container:			null		// the parent control in the document to add the control to
+		,createOnInit:		true		// true to add textbox to container when control is initialized
+		,cssClass:			'form'		// the primary css tag
+		,type:				'text'		// this is a text field
 
-		,maskType:	  'none'		  // type of mask to apply  ['Fixed','Regexp','Reverse']
-		,maskOptions:   {}			  // the field mask
+		,maskType:			'none'		// type of mask to apply  ['Fixed','Regexp','Reverse']
+		,maskOptions:		{}			// the field mask
 
-		,valueField:	false		   // defaults to the id on this field
-		,formTitleField:false		   // defaults to the id of this field
-		,formData:	  false		   // used in conjunction with the above Fields to get/set value in an object
+		,valueField:		false		// defaults to the id on this field
+		,formTitleField:	false		// defaults to the id of this field
+		,formData:			  false		// used in conjunction with the above Fields to get/set value in an object
 
-		,formTitle:	 ''			  // defaults to the id of this field
-		,value:		 ''			  // the currently textbox's value
+		,formTitle:			''			// defaults to the id of this field
+		,value:				''			// the currently textbox's value
 	},
 
 	initialize: function(options){

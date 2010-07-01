@@ -33,28 +33,28 @@ MUI.Tree = new Class({
 	Implements: [Events, Options],
 
 	options: {
-		id:			''			  // id of the primary element, and id os control that is registered with mocha
-		,container:	 null			// the parent control in the document to add the control to
-		,createOnInit:  true			// true to add tree to container when control is initialized
-		,cssClass:	  'tree'		  // the primary css tag
+		id:					''			// id of the primary element, and id os control that is registered with mocha
+		,container:			null		// the parent control in the document to add the control to
+		,createOnInit:		true		// true to add tree to container when control is initialized
+		,cssClass:			'tree'		// the primary css tag
 
-		,nodes:		 $A([])		  // the hierarchical list of nodes
+		,nodes:				$A([])		// the hierarchical list of nodes
 
-		,textField:	 'text'		  // the name of the field that has the node's text
-		,valueField:	'value'		 // the name of the field that has the node's value
-		,titleField:	'title'		 // the name of the field that has the node's tip text
-		,isCheckedField:'checked'	   // the name of the field that has the node's isChecked state
-		,hasChildrenField:'hasChildren' // the name of the field that has the node's hasChildren flag
+		,textField:			'text'		// the name of the field that has the node's text
+		,valueField:		'value'		// the name of the field that has the node's value
+		,titleField:		'title'		// the name of the field that has the node's tip text
+		,isCheckedField:	'checked'	// the name of the field that has the node's isChecked state
+		,hasChildrenField:	'hasChildren'// the name of the field that has the node's hasChildren flag
 
-		,showCheckBox:  false		   // true to show checkBoxes
-		,canSelect:	 true			// can the user select a node by clicking it
-		,value:		 ''			  // the currently selected node's value
-		,selectedNode:  null			// the currently selected node
-		,depth:		 2			   // how deep to expand the nodes to
+		,showCheckBox:		false		// true to show checkBoxes
+		,canSelect:			true		// can the user select a node by clicking it
+		,value:				''			// the currently selected node's value
+		,selectedNode:		null		// the currently selected node
+		,depth:				2			// how deep to expand the nodes to
 
-		,onNodeExpanded:$empty		  // event: called when node is expanded
-		,onNodeChecked: $empty		  // event: called when node's checkbox is checked
-		,onNodeSelected:$empty		  // event: when a node is checked
+		,onNodeExpanded:	$empty		// event: called when node is expanded
+		,onNodeChecked: 	$empty		// event: called when node's checkbox is checked
+		,onNodeSelected:	$empty		// event: when a node is checked
 	},
 
 	initialize: function(options){
@@ -293,7 +293,6 @@ MUI.Tree = new Class({
 
 	onNodeExpand: function(node, e){
 		var self = this;
-		var o = self.options;
 
 		var itm = node._element;
 		var mY = 0;
