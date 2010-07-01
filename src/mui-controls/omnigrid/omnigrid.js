@@ -221,27 +221,27 @@ var omniGrid = new NamedClass('omniGrid', {
 
 		// find the columnModel index
 		var c = options.columnIndex ? options.columnIndex : 0; // defaults to first column
-		var colmod;
+		var columnModel;
 		if (options.dataIndex){
 			for (; c < this.options.columnModel.length; c++){
-				colmod = this.options.columnModel[c];
+				columnModel = this.options.columnModel[c];
 
-				if (colmod.hidden) continue;
-				if (colmod.dataIndex == options.dataIndex) break;
+				if (columnModel.hidden) continue;
+				if (columnModel.dataIndex == options.dataIndex) break;
 			}
 		}
 
 		if (c == this.options.columnModel.length) return null; // column not found
 
-		colmod = this.options.columnModel[c];
-		if (!colmod.editable) return null;
+		columnModel = this.options.columnModel[c];
+		if (!columnModel.editable) return null;
 
 		var td = li.getElements('div.td')[c];
 		var data = this.options.data[ sels[0] ];
 
 		var width = td.getStyle('width').toInt() - 5;
 		var height = 15;
-		var html = data[colmod.dataIndex];
+		var html = data[columnModel.dataIndex];
 
 		td.set('html','');
 
@@ -252,7 +252,7 @@ var omniGrid = new NamedClass('omniGrid', {
 		input.inject(td);
 		input.focus();
 
-		this.inlineEditSafe = {row:sels[0], columnModel: colmod, td:td, input:input, oldvalue: html};
+		this.inlineEditSafe = {row:sels[0], columnModel: columnModel, td:td, input:input, oldvalue: html};
 		this.inlineeditmode = true; // Chrome calls for KeyUp and blur event almost simultaneously
 
 		return this.inlineEditSafe;
@@ -268,13 +268,13 @@ var omniGrid = new NamedClass('omniGrid', {
 
 		var row = this.inlineEditSafe.row;
 		var data = this.options.data[ row ];
-		var colmod = this.inlineEditSafe.columnModel;
+		var columnModel = this.inlineEditSafe.columnModel;
 		var td = this.inlineEditSafe.td;
 
 		// if not confirmed with ENTER returns to the old value
-		data[colmod.dataIndex] = ( evt && evt.type == "keyup" && evt.key == 'enter') ? this.inlineEditSafe.input.value : this.inlineEditSafe.oldvalue;
+		data[columnModel.dataIndex] = ( evt && evt.type == "keyup" && evt.key == 'enter') ? this.inlineEditSafe.input.value : this.inlineEditSafe.oldvalue;
 
-		td.set('html',colmod.labelFunction ? colmod.labelFunction(data, row, colmod) : data[colmod.dataIndex]);
+		td.set('html',columnModel.labelFunction ? columnModel.labelFunction(data, row, columnModel) : data[columnModel.dataIndex]);
 
 		if (td.get('html').length == 0) td.set('html','&nbsp;'); // important because otherwise would not have reacted at the second DBL click
 
@@ -1043,7 +1043,7 @@ var omniGrid = new NamedClass('omniGrid', {
 						'width':width
 					}}).inject(div);
 
-		var headDivBox = new Element('div',{'class':'hDiv'}).inject(headDiv);
+		var headDivBox = new Element('div',{'class':'hDivBox'}).inject(headDiv);
 
 		self.sumWidth = 0;
 		self.visibleColumns = 0; // differs from the columnCount because data for some columns are of reading but are not shown
