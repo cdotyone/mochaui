@@ -986,7 +986,7 @@ var omniGrid = new Class({
 				fBt.addClass('fbutton');
 
 				var cBt = new Element('div');
-				cBt.addEvent('click', bt[i].onclick.bind(this, [bt[i].bclass, this]));
+				cBt.addEvent('click', bt[i].click.bind(this, [bt[i].cssClass, this]));
 				cBt.addEvent('mouseover', function(){
 					this.addClass('fbOver');
 				});
@@ -997,7 +997,7 @@ var omniGrid = new Class({
 				fBt.appendChild(cBt);
 
 				var spanBt = new Element('span');
-				spanBt.addClass(bt[i].bclass);
+				spanBt.addClass(bt[i].cssClass);
 				spanBt.setStyle('padding-left', 20);
 				spanBt.set('html', bt[i].name);
 				cBt.appendChild(spanBt);
@@ -1105,7 +1105,7 @@ var omniGrid = new Class({
 		this.onBodyScrollBind = this.onBodyScroll.bind(this);
 		bDiv.addEvent('scroll', this.onBodyScrollBind);
 		this.ulBody = new Element('ul');
-		this.ulBody.setStyle('width', this.sumWidth + this.visibleColumns * (Browser.Engine.trident ? 1 : 1 ));
+		this.ulBody.setStyle('width', this.sumWidth + this.visibleColumns * (Browser.Engine.trident ? 1 : 1 )); // not to see surplus, address the overflow hidden
 		bDiv.appendChild(this.ulBody);
 
 		if (this.options.pagination && !this.container.getElement('div.pDiv')){

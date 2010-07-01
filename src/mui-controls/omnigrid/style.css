@@ -160,7 +160,13 @@
 	margin: 2px;
 }
 
-Filter
+.omnigrid div.fbutton .add {
+	background:transparent url(images/add.png) no-repeat scroll left center;
+}
+
+.omnigrid div.fbutton .delete {
+	background:transparent url(images/delete.png) no-repeat scroll left center;
+}
 /* toolbar */
 
 

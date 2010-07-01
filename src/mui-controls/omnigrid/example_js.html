@@ -1,0 +1,142 @@
+<html>
+<head>
+	<!--MOCHAUI-->
+	<script type="text/javascript" src="../../mootools/mootools-1.2.4-core-yc.js"></script>
+	<script type="text/javascript" src="../../mootools/mootools-1.2.4-more-yc.js"></script>
+	<script type="text/javascript" src="../../mui/core.js"></script>
+	<script type="text/javascript" src="../../mui/desktop.js"></script>
+	<script type="text/javascript" src="../../mui/column.js"></script>
+	<script type="text/javascript" src="../../mui/panel.js"></script>
+	<script type="text/javascript" src="../../mui/dock.js"></script>
+	<script type="text/javascript" src="../../mui/window.js"></script>
+	<script type="text/javascript" src="../../mui/modal.js"></script>
+	<!--MOCHAUI-->
+	<script type="text/javascript" src="omnigrid.js"></script>
+	<script type="text/javascript">
+
+		var dataGrid;
+		
+		var cmu = [
+			{
+				header: "Name",
+				dataIndex: 'Title',
+				dataType:'string'
+			},
+			{
+				header: "Address",
+				dataIndex: 'Address',
+				dataType:'string'
+			},
+			{
+				header: "City",
+				dataIndex: 'City',
+				dataType:'string'
+			},
+			{
+				header: "State",
+				dataIndex: 'State',
+				dataType:'string'
+			},
+			{
+				header: "Phone",
+				dataIndex: 'Phone',
+				dataType:'string'
+			}
+		];
+
+
+		function gridButtonClick(button){
+			alert(button);
+		}
+
+		function onGridSelect(){
+		}
+
+		function onGridDblClick(){
+		}
+
+		function filterGrid(){
+			dataGrid.filter($('filter').value);
+		}
+
+		function clearFilter(){
+			dataGrid.clearFilter();
+		}
+
+		function getSelectedIndices(){
+			var indices = dataGrid.getSelectedIndices();
+
+			if (indices.length == 0){
+				alert('No selection.');
+				return;
+			}
+
+			var str = '';
+			for (var i = 0; i < indices.length; i++){
+				str += 'row: ' + indices[i] + ' data: ' + dataGrid.getDataByRow(indices[i]) + '\n';
+			}
+
+			alert(str);
+		}
+
+		function deleteSelectedRow(){
+			var indices = dataGrid.getSelectedIndices();
+			for (var i = 0; i < indices.length; i++){
+				dataGrid.deleteRow(indices[i]);
+			}
+		}
+
+		function refresh(){
+			dataGrid.refresh();
+		}
+
+		function accordionFunction(obj){
+			obj.parent.set('html', '<div style="padding:5px"> Row ' + obj.row + '<br/><br/>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </div>');
+		}
+
+		window.addEvent("domready", function(){
+
+			dataGrid = new omniGrid('grid', {
+				columnModel: cmu,
+				buttons : [
+					{name: 'Add', cssClass: 'add', 'click': gridButtonClick},
+					{name: 'Delete', cssClass: 'delete', 'click': gridButtonClick},
+					{separator: true},
+					{name: 'Duplicate', cssClass: 'duplicate', 'click': gridButtonClick}
+				],
+				url:"sample.json",
+				accordion:true,
+				accordionRenderer:accordionFunction,
+				autoSectionToggle:false,
+				perPageOptions: [10,20,50,100,200],
+				perPage:10,
+				page:1,
+				pagination:true,
+				serverSort:false,
+				showHeader: true,
+				sortHeader: true,
+				alternateRows: true,
+				resizeColumns: true,
+				multipleSelection:true,
+				width:600,
+				height: 220
+			});
+
+			dataGrid.addEvent('click', onGridSelect);
+			dataGrid.addEvent('dblclick', onGridDblClick);
+		});
+
+	</script>
+	<link rel="stylesheet" type="text/css" href="style.css"/>
+
+</head>
+
+<body>
+
+<div id="page">
+	<div id="grid">
+	</div>
+</div>
+
+</body>
+</html>
