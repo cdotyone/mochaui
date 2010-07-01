@@ -17,7 +17,6 @@
  ...
  */
 
-
 /* Layout
 ---------------------------------------------------------------- */
 
@@ -26,7 +25,7 @@ html, body {
 }
 
 body {
-	margin: 0; /* Required */	
+	margin: 0; /* Required */
 }
 
 #desktop {
@@ -43,7 +42,7 @@ body {
 }
 
 #desktopTitlebarWrapper {
-	position: relative;	
+	position: relative;
 	height: 45px;
 	overflow: hidden;
 	background: #303030 url(../images/bg-header.gif) repeat-x;
@@ -67,13 +66,13 @@ body {
 }
 
 #desktopTitlebar h2.tagline {
-	padding: 7px 0 0 0;	
-	font-family: Verdana, Arial, Helvetica, sans-serif;	
-	font-size: 10px;    
-	color: #b2b2b2;    
+	padding: 7px 0 0 0;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #b2b2b2;
 	font-weight: bold;
 	text-align: center;
-	text-transform: uppercase;	
+	text-transform: uppercase;
 }
 
 #desktopTitlebar h2.tagline .taglineEm {
@@ -98,10 +97,10 @@ body {
 	background: #404040;
 	height: 30px;
 	margin: 0 0px;
-	overflow: hidden; /* Remove this line if you want the menu to be backward compatible with Firefox 2 */	
+	overflow: hidden; /* Remove this line if you want the menu to be backward compatible with Firefox 2 */
 }
 
-#desktopNavbar ul {	
+#desktopNavbar ul {
 	padding: 0;
 	margin: 0;
 	list-style: none;
@@ -114,10 +113,10 @@ body {
 
 #desktopNavbar a {
 	display: block;
-}	
-	
+}
+
 #desktopNavbar ul li a {
-	padding: 6px 10px 6px 10px;	
+	padding: 6px 10px 6px 10px;
 	color: #eee;
 	font-weight: normal;
 }
@@ -129,8 +128,8 @@ body {
 #desktopNavbar ul li a.arrow-right, #desktopNavbar ul li a:hover.arrow-right {
 	background-image: url(../images/arrow-right.gif);
 	background-repeat: no-repeat;
-	background-position: right 7px;	
-} 
+	background-position: right 7px;
+}
 
 #desktopNavbar li ul {
 	padding: 2px;
@@ -149,7 +148,8 @@ body {
 	left: -999em;
 }
 
-#desktopNavbar li ul ul { /* third-and-above-level lists */
+#desktopNavbar li ul ul {
+/* third-and-above-level lists */
 	margin: -22px 0 0 163px;
 }
 
@@ -176,7 +176,7 @@ body {
 #desktopNavbar li ul li a:hover {
 	background: #6C98D9;
 	color: #eee;
-	-moz-border-radius: 2px;	
+	-moz-border-radius: 2px;
 }
 
 #desktopNavbar li ul li a:hover .check {
@@ -188,19 +188,21 @@ body {
 #desktopNavbar li li.ieHover ul,
 #desktopNavbar li li li.ieHover ul,
 #desktopNavbar li li:hover ul,
-#desktopNavbar li li li:hover ul { /* lists nested under hovered list items */
+#desktopNavbar li li li:hover ul {
+/* lists nested under hovered list items */
 	left: auto;
 }
 
-#desktopNavbar li:hover { /* For IE7 */
-    position: static;
+#desktopNavbar li:hover {
+/* For IE7 */
+	position: static;
 }
 
 li.divider {
 	margin-top: 2px;
-	padding-top: 3px;	
+	padding-top: 3px;
 	border-top: 1px solid #e0e0e0;
-}	
+}
 
 #pageWrapper {
 	position: relative;
@@ -235,7 +237,7 @@ li.divider {
 /* Columns */
 
 .column {
-	position: relative;	
+	position: relative;
 	float: left;
 	overflow: hidden; /* Required by IE6 */
 }
@@ -250,39 +252,40 @@ li.divider {
 }
 
 .panelWrapper.collapsed .panel-header {
-	border-bottom: 0;	
-}	
+	border-bottom: 0;
+}
 
 .panelAlt {
-	background: #353535;	
-}	
+	background: #353535;
+}
 
 .bottomPanel .panel {
-	border-bottom: 0;	
+	border-bottom: 0;
 }
 
 .pad {
 	padding: 8px;
 }
 
-#mainPanel {	
-}	
+#mainPanel {
+}
 
 .panel-header {
-	position: relative;	
+	position: relative;
 	background: #404040 url(../images/bg-panel-header.gif) repeat-x;
 	height: 30px;
 	overflow: hidden;
-	border-bottom: 1px solid #282828;		
+	border-bottom: 1px solid #282828;
 }
 
 .panel-headerContent {
 	padding-top: 2px;
-}	
+}
 
 .panel-headerContent.tabs {
 	background: url(../images/tabs.gif) repeat-x;
-	background-position: left -68px;	
+	background-position: left -68px;
+	padding-top: 0;
 }
 
 .panel-header h2 {
@@ -329,12 +332,12 @@ li.divider {
 .panel-footer {
 	padding: 1px 0 0 8px;
 }
-	
+
 .panel-footerContent {
 	margin-top: 5px;
 }
 
-/* Column and Panel Handles */	
+/* Column and Panel Handles */
 
 .horizontalHandle {
 	height: 4px;
@@ -345,10 +348,10 @@ li.divider {
 }
 
 .horizontalHandle.detached .handleIcon {
-	background: transparent;	
+	background: transparent;
 }
 
-.horizontalHandle .handleIcon {	
+.horizontalHandle .handleIcon {
 	margin: 0 auto;
 	height: 4px;
 	line-height: 1px;
@@ -358,7 +361,7 @@ li.divider {
 }
 
 .columnHandle {
-	min-height: 10px;	
+	min-height: 10px;
 	float: left;
 	width: 4px;
 	overflow: hidden;
@@ -382,7 +385,8 @@ li.divider {
 .panel-header-toolbox {
 }
 
-div.toolbox.divider { /* Have to specify div here for IE6's sake */
+div.toolbox.divider {
+/* Have to specify div here for IE6's sake */
 	padding-left: 8px;
 	border-left: 1px solid #282828;
 }
@@ -411,16 +415,16 @@ div.toolbox.divider { /* Have to specify div here for IE6's sake */
 }
 
 .iconWrapper:hover {
-	background: #404040 url(../images/bg-panel-header.gif) repeat-x;	
+	background: #404040 url(../images/bg-panel-header.gif) repeat-x;
 	border: 1px solid #181818;
-	-moz-border-radius: 3px;	
+	-moz-border-radius: 3px;
 }
 
 #spinnerWrapper {
-    width: 16px;
-    height: 16px;
-    background: url(../images/spinner-placeholder.gif) no-repeat;
-    margin: 4px 5px 0 5px;
+	width: 16px;
+	height: 16px;
+	background: url(../images/spinner-placeholder.gif) no-repeat;
+	margin: 4px 5px 0 5px;
 }
 
 #spinner {

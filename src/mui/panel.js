@@ -57,7 +57,7 @@ MUI.files['source|panel.js'] = 'loaded';
 						'top' - below the panel header bar and above the content
 						'bottom' - below the content, above the panel's footer
 						'footer' - in the footer of the panel
-
+			 addClass - classname of css class to add to parent element
 			 wrap - used to wrap content div, good for things like tabs
 			 empty - true to empty the section before inserted, defaults to false
 					 ignored when position = 'top' or 'bottom'
@@ -275,64 +275,68 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 		this.addResizeBottom(options.id);
 
-		if (options.sections){
-			var snum=0;
-			options.sections.each(function(section,idx){
+		if (options.sections) {
+			var snum = 0;
+			options.sections.each(function(section, idx) {
 				var intoEl = instance.panelEl;
 
 				snum++;
-				var id=options.id + '_' + (section.section || 'section'+snum);
+				var id = options.id + '_' + (section.section || 'section' + snum);
 
 				section = $extend({
-						'element':instance.panelEl,
-						'wrap':false,
-						'position':'header',
-						'empty':true,
-						'height':29,
-						'id':id,
-						'css':'mochaToolbar',
-						'section':'section'+snum,
-						'loadMethod': 'xhr',
-						'method': options.method
-					   },section);
+					'element':instance.panelEl,
+					'wrap':false,
+					'position':'header',
+					'empty':false,
+					'addClass':false,
+					'height':0,
+					'id':id,
+					'css':'mochaToolbar',
+					'section':'section' + snum,
+					'loadMethod': 'xhr',
+					'method': options.method
+				}, section);
 
 				var wrap = section.wrap;
 				var empty = section.empty;
 				var where = section.position == 'bottom' ? 'after' : 'before';
 
-				switch(section.position) {
+				switch (section.position) {
 					case 'header':
-						intoEl= instance.panelHeaderContentEl;
-						if(!instance.options.header) return;
+						intoEl = instance.panelHeaderContentEl;
+						if (!instance.options.header) return;
 						break;
 					case 'headertool':
-						intoEl= instance.panelHeaderToolboxEl;
-						if(!instance.options.header) return;
+						intoEl = instance.panelHeaderToolboxEl;
+						if (!instance.options.header) return;
 						break;
 					case 'footer':
-						intoEl= instance.footerEl; break;
+						intoEl = instance.footerEl; break;
 				}
 
-				if(wrap){
+				if (wrap) {
 					section.wrapperEl = new Element('div', {
 						'id': section.id + '_wrapper',
-						'class': section.css+'Wrapper',
-						'styles': { 'height': section.height }
+						'class': section.css + 'Wrapper'
 					}).inject(intoEl, where);
+
+					if (section.height) section.wrapperEl.setStyle('height', section.height);
 
 					if (section.position == 'bottom') section.wrapperEl.addClass('bottom');
 					intoEl = section.wrapperEl;
 				}
 
-				if(empty) intoEl.empty();
+				if (empty) intoEl.empty();
 				section.childElement = new Element('div', {
 					'id': section.id,
 					'class': section.css,
 					'styles': { 'height': section.height }
-				}).inject( intoEl );
+				}).inject(intoEl);
+
+				if (section.addClass) intoEl.addClass(section.addClass);
 
 				section.wrapperEl = intoEl;
-				if(section.wrap && section.position == 'bottom') section.childElement.addClass('bottom');
+				if (section.wrap && section.position == 'bottom') section.childElement.addClass('bottom');
 
 				instance.options.sections[idx] = section;
 			});
