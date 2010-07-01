@@ -103,15 +103,10 @@ MUI.extend({
 		this.instances.each(func);
 		return this;
 	},
-	
-	close: function(el){
-		document.id(el).close();
-		return this;
-	},
 
 	initialize: function(options){
 		if (options){
-			if (options.path) options.path = $extend(MUI.options.path,options.path);
+			if (options.path) options.path = $extend(MUI.options.path, options.path);
 			MUI.options.extend(options);
 		}
 	}
