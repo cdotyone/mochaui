@@ -74,7 +74,7 @@ MUI.Accordion = new Class({
         }
 
         // create sub items if available
-        if (o.createOnInit && o.panels.length > 0) self.toDOM();
+        if (o.createOnInit && o.panels.length > 0) self.draw();
         else {
             window.addEvent('domready', function(){
                 var el = $(id);
@@ -125,10 +125,10 @@ MUI.Accordion = new Class({
         }
 
         o.panels = panels;
-        self.toDOM();
+        self.draw();
     },
 
-    toDOM: function(containerEl){
+    draw: function(containerEl){
         var self = this;
         var o = self.options;
 

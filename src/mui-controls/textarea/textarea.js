@@ -75,7 +75,7 @@ MUI.TextArea = new Class({
 		}
 
 		// create control if we have a target container
-		if (o.createOnInit && o.container != null) this.toDOM();
+		if (o.createOnInit && o.container != null) this.draw();
 
 		MUI.set(id, this);
 	},
@@ -105,11 +105,11 @@ MUI.TextArea = new Class({
 		o.value = inp.get('defaultValue');
 		if (inp.get('class')) o.cssClass = inp.get('class');
 
-		self.toDOM();
+		self.draw();
 		return self;
 	},
 
-	toDOM: function(containerEl){
+	draw: function(containerEl){
 		var self = this,o = this.options;
 
 		var isNew = false;

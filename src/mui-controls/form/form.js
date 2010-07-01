@@ -587,7 +587,7 @@ MUI.Form = new Class({
         o.tableCheck();
         o.addCol();
 
-        o.f.appendChild(new LinkButtonList({ id: item.id, List: item.List, selected: item.selected }).toDOM());
+        o.f.appendChild(new LinkButtonList({ id: item.id, List: item.List, selected: item.selected }).draw());
     },
 
     addGrid: function(item){
@@ -595,7 +595,7 @@ MUI.Form = new Class({
         o.tableCheck();
         o.addCol();
 
-        o.f.appendChild(new mochaList({ id: item.id, groups: item.groups }).toDOM());
+        o.f.appendChild(new mochaList({ id: item.id, groups: item.groups }).draw());
 
         var addAutoSize = function(id){
             return function(){
@@ -933,7 +933,7 @@ MUI.Form = new Class({
                         o.fireEvent('onEventHandler', [e, evt, o, img]);
                     }
                 }
-                })).toDOM();
+                })).draw();
             }
         });
         return o;

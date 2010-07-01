@@ -63,7 +63,7 @@ MUI.Tabs = new Class({
 		}
 
 		// create sub items if available
-		if (o.createOnInit && o.tabs.length > 0) this.toDOM();
+		if (o.createOnInit && o.tabs.length > 0) this.draw();
 		else {
 			window.addEvent('domready', function(){
 				var el = $(id);
@@ -106,10 +106,10 @@ MUI.Tabs = new Class({
 			tabs.push(tab);
 		});
 		o.tabs = tabs;
-		self.toDOM();
+		self.draw();
 	},
 
-	toDOM: function(containerEl){
+	draw: function(containerEl){
 		var self = this;
 		var o = self.options;
 

@@ -68,7 +68,7 @@ MUI.Tree = new Class({
 		}
 
 		// create sub items if available
-		if (this.options.createOnInit && this.options.nodes.length > 0) this.toDOM();
+		if (this.options.createOnInit && this.options.nodes.length > 0) this.draw();
 
 		MUI.set(id, this);
 	},
@@ -79,7 +79,7 @@ MUI.Tree = new Class({
 		return item[property];
 	},
 
-	toDOM: function(containerEl){
+	draw: function(containerEl){
 		var self = this;
 		var o = self.options;
 

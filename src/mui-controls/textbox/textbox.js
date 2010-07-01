@@ -65,7 +65,7 @@ MUI.TextBox = new Class({
 		if (o.maskType.capitalize() == 'Password') o.type = 'password';
 
 		// create sub items if available
-		if (o.createOnInit && o.container != null) this.toDOM();
+		if (o.createOnInit && o.container != null) this.draw();
 		else {
 			window.addEvent('domready', function(){
 				var el = $(id);
@@ -151,11 +151,11 @@ MUI.TextBox = new Class({
 		o.value = inp.get('defaultValue');
 		if (inp.get('class')) o.cssClass = inp.get('class');
 
-		self.toDOM();
+		self.draw();
 		return self;
 	},
 
-	toDOM: function(containerEl){
+	draw: function(containerEl){
 		var self = this;
 		var o = self.options;
 

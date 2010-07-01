@@ -57,13 +57,13 @@ MUI.ImageButton = new Class({
             this.options.id = id;
         }
 
-        if (this.options.createOnInit) this.toDOM();
+        if (this.options.createOnInit) this.draw();
 
         MUI.set(id, this);
     },
 
     // <span class="imgButton"><a class="imgButton"><span><img></span><span>Text</span></a></span>
-    toDOM: function(){
+    draw: function(){
         var self = this;
         var o = self.options;
 
@@ -122,7 +122,7 @@ MUI.ImageButton = new Class({
 
     setDisabled: function(disabled){
         this.options.isDisabled = disabled;
-        this.toDOM();
+        this.draw();
         return disabled;
     }
 
