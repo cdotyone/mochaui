@@ -101,7 +101,7 @@ var omniGrid = new NamedClass('omniGrid', {
 
 	// API
 	reset: function(){
-		this.renderData();
+		this._renderData();
 
 		this.refreshDelayID = null;
 		this.dragging = false;
@@ -113,13 +113,13 @@ var omniGrid = new NamedClass('omniGrid', {
 		this.filtered = false;
 		this.lastsection = null;
 
-		if (this.options.alternateRows)	this.altRow();
+		if (this.options.alternateRows)	this._altRow();
 
 		this.elements.each(function(el){
-			el.addEvent('click', this.onRowClick.bind(this));
-			el.addEvent('dblclick', this.onRowDblClick.bind(this));
-			el.addEvent('mouseover', this.onRowMouseOver.bind(this));
-			el.addEvent('mouseout', this.onRowMouseOut.bind(this));
+			el.addEvent('click', this._rowClick.bind(this));
+			el.addEvent('dblclick', this._rowDblClick.bind(this));
+			el.addEvent('mouseover', this._rowMouseOver.bind(this));
+			el.addEvent('mouseout', this._rowMouseOut.bind(this));
 		}, this);
 
 		// ------------------------- setup header --------------------------------
@@ -215,7 +215,7 @@ var omniGrid = new NamedClass('omniGrid', {
 
 		if (!sels || sels.length == 0 || !this.options.editable) return null;
 
-		this.finishEditing(); // if it is open somewhere
+		this._finishEditing(); // if it is open somewhere
 
 		var li = this.elements[ sels[0] ];
 
@@ -247,8 +247,8 @@ var omniGrid = new NamedClass('omniGrid', {
 
 		var input = new Element('input', {style:"width: " + width + "px; height: " + height + "px;", maxlength:254, value: html});
 		input.addClass('inline');
-		input.addEvent("keyup", this.finishEditing.bind(this));
-		input.addEvent("blur", this.finishEditing.bind(this));
+		input.addEvent("keyup", this._finishEditing.bind(this));
+		input.addEvent("blur", this._finishEditing.bind(this));
 		input.inject(td);
 		input.focus();
 
@@ -258,7 +258,7 @@ var omniGrid = new NamedClass('omniGrid', {
 		return this.inlineEditSafe;
 	},
 
-	finishEditing: function(evt)
+	_finishEditing: function(evt)
 	{
 		if (!this.inlineeditmode) return;
 
@@ -288,7 +288,7 @@ var omniGrid = new NamedClass('omniGrid', {
 		this.inlineEditSafe = null;
 	},
 
-	toggle: function(el){
+	_toggle: function(el){
 		el.setStyle('display', el.getStyle('display') == 'block' ? 'none' : 'block');
 	},
 
@@ -297,7 +297,7 @@ var omniGrid = new NamedClass('omniGrid', {
 		return this.ulBody.getElement('.section-' + row);
 	},
 
-	getLiParent: function (target){
+	_getLiParent: function (target){
 		target = $(target);
 
 		while (target && !target.hasClass('td')){
@@ -307,8 +307,8 @@ var omniGrid = new NamedClass('omniGrid', {
 		if (target) return target.getParent();
 	},
 
-	onRowMouseOver: function (evt){
-		var li = this.getLiParent(evt.target);
+	_rowMouseOver: function (evt){
+		var li = this._getLiParent(evt.target);
 		if (!li) return;
 
 		if (!this.dragging) li.addClass('over');
@@ -316,8 +316,8 @@ var omniGrid = new NamedClass('omniGrid', {
 		this.fireEvent("mouseover", {target:this, row:li.retrieve('row'), element:li });
 	},
 
-	onRowMouseOut: function (evt){
-		var li = this.getLiParent(evt.target);
+	_rowMouseOut: function (evt){
+		var li = this._getLiParent(evt.target);
 		if (!li) return;
 
 		if (!this.dragging)
@@ -326,8 +326,8 @@ var omniGrid = new NamedClass('omniGrid', {
 		this.fireEvent("mouseout", {target:this, row:li.retrieve('row'), element:li });
 	},
 
-	onRowClick: function (evt){
-		var li = this.getLiParent(evt.target);
+	_rowClick: function (evt){
+		var li = this._getLiParent(evt.target);
 		if (!li) return;
 
 		if (this.options.selectable){
@@ -375,16 +375,16 @@ var omniGrid = new NamedClass('omniGrid', {
 			this.unique(this.selected, true); // remove all duplicates from selection
 		}
 
-		if (this.options.accordion && !this.options.openAccordionOnDblClick) this.accordionOpen(li);
+		if (this.options.accordion && !this.options.openAccordionOnDblClick) this._accordionOpen(li);
 		this.fireEvent("click", {indices:this.selected, target:this, row:li.retrieve('row'), element:li });
 	},
 
-	toggleIconClick: function(evt){
-		var li = this.getLiParent(evt.target);
-		this.accordionOpen(li);
+	_toggleIconClick: function(evt){
+		var li = this._getLiParent(evt.target);
+		this._accordionOpen(li);
 	},
 
-	accordionOpen: function(li){
+	_accordionOpen: function(li){
 		var section = this.getSection(li.retrieve('row'));
 
 		if (this.options.autoSectionToggle){
@@ -398,7 +398,7 @@ var omniGrid = new NamedClass('omniGrid', {
 			if (!this.options.accordionRenderer) section.setStyle('display', 'block');
 		}
 
-		if (this.options.accordionRenderer) this.toggle(section);
+		if (this.options.accordionRenderer) this._toggle(section);
 
 		if (this.options.showToggleIcon)
 			li.getElement('.toggleicon').setStyle('background-position', section.getStyle('display') == 'block' ? '-16px 0' : '0 0');
@@ -406,9 +406,9 @@ var omniGrid = new NamedClass('omniGrid', {
 		this.lastsection = section;
 	},
 
-	onRowDblClick: function (evt){
+	_rowDblClick: function (evt){
 
-		var li = this.getLiParent(evt.target);
+		var li = this._getLiParent(evt.target);
 		if (!li) return;
 
 		var t = evt.target;
@@ -421,13 +421,13 @@ var omniGrid = new NamedClass('omniGrid', {
 			if (obj) obj.input.selectRange(0, obj.input.value.length);
 		}
 
-		if (this.options.accordion && this.options.openAccordionOnDblClick) this.accordionOpen(li);
+		if (this.options.accordion && this.options.openAccordionOnDblClick) this._accordionOpen(li);
 		this.fireEvent("dblclick", {row:li.retrieve('row'), target:this, element:li});
 	},
 
-	onLoadData: function (data){
+	update: function (data){
 		this.setData(data);
-		this.fireEvent("loaddata", {target:this, pkey:data.pkey});
+		this.fireEvent("update", {target:this, pkey:data.pkey});
 	},
 
 	unique: function(a, asNumber){
@@ -480,7 +480,7 @@ var omniGrid = new NamedClass('omniGrid', {
 			url = (url != null) ? url : this.options.url;
 
 			var request = new Request.JSON({url:url, data:param});
-			request.addEvent("complete", this.onLoadData.bind(this));
+			request.addEvent("complete", this.update.bind(this));
 			request.get();
 		}
 	},
@@ -497,7 +497,7 @@ var omniGrid = new NamedClass('omniGrid', {
 		this.options.data = data.data;
 
 		// if not make it default columnModel
-		if (!this.options.columnModel) this.setAutoColumnModel();
+		if (!this.options.columnModel) this._buildDefaultColumnModel();
 
 		if (this.options.pagination){
 			this.options.page = parseInt('' + data.page);
@@ -565,18 +565,18 @@ var omniGrid = new NamedClass('omniGrid', {
 		}
 	},
 
-	isHidden: function(i){
+	_isHidden: function(i){
 		return this.elements[i].hasClass(this.options.filterHideCls);
 	},
 
-	hideWhiteOverflow: function(){
+	_hideWhiteOverflow: function(){
 		if (this.element.getElement('.gBlock')) this.element.getElement('.gBlock').dispose();
 
 		var pReload = this.element.getElement('div.pDiv .pReload');
 		if (pReload) pReload.removeClass('loading');
 	},
 
-	showWhiteOverflow: function(i){
+	_showWhiteOverflow: function(i){
 		// white overflow & loader
 		if (this.element.getElement('.gBlock')) this.element.getElement('.gBlock').dispose();
 
@@ -596,10 +596,11 @@ var omniGrid = new NamedClass('omniGrid', {
 		if (pReload) pReload.addClass('loading');
 	},
 
+	/// TODO: replace with mochaui spinner
 	showLoader: function(){
 		if (this.loader) return;
 
-		this.showWhiteOverflow();
+		this._showWhiteOverflow();
 
 		this.loader = new Element('div', {
 			'class':'elementloader',
@@ -610,10 +611,11 @@ var omniGrid = new NamedClass('omniGrid', {
 		}).inject(this.element);
 	},
 
+	/// TODO: replace with mochaui spinner
 	hideLoader: function(){
 		if (!this.loader) return;
 
-		this.hideWhiteOverflow();
+		this._hideWhiteOverflow();
 		this.loader.dispose();
 		this.loader = null;
 
@@ -647,7 +649,7 @@ var omniGrid = new NamedClass('omniGrid', {
 
 		for (var i = 0; i < arr.length; i++){
 			var li = this.elements[arr[i]];
-			this.onRowClick({target:li.getFirst(), control:false});
+			this._rowClick({target:li.getFirst(), control:false});
 		}
 	},
 
@@ -692,7 +694,7 @@ var omniGrid = new NamedClass('omniGrid', {
 	},
 
 	// quickly determine provide default settings for the column
-	setAutoColumnModel: function(){
+	_buildDefaultColumnModel: function(){
 		if (!this.options.data) return;
 
 		var rowCount = this.options.data.length;
@@ -729,7 +731,7 @@ var omniGrid = new NamedClass('omniGrid', {
 		// Height
 		this.options.height = h ? h : this.options.height;
 
-		bodyEl.setStyle('height', this.getBodyHeight());
+		bodyEl.setStyle('height', this._getBodyHeight());
 		this.element.setStyle('height', this.options.height);
 
 		// if it has a gBlock by chance, set it whiteOverflow
@@ -737,28 +739,18 @@ var omniGrid = new NamedClass('omniGrid', {
 		if (gBlock) gBlock.setStyles({width:this.options.width, height: bodyEl.getSize().y });
 	},
 
-	onBodyScroll: function(){
+	_bodyScroll: function(){
 		var hbox = this.element.getElement('.hDivBox');
 		var bbox = this.element.getElement('.bDiv');
 
 		var xs = bbox.getScroll().x;
 		hbox.setStyle('left', -xs);
 
-		this.rePosDrag();
+		this._dragColumnReposition();
 	},
-
-	onBodyClick: function(){
-	},
-
-	onBodyMouseOver: function(){
-	},
-
-	onBodyMouseOut: function(){
-	},
-
 
 	// ------------------------- Drag columns events --------------------------------
-	rePosDrag: function(){
+	_dragColumnReposition: function(){
 		if (!this.options.resizeColumns) return;
 
 		var dragTempWidth = 0;
@@ -775,7 +767,7 @@ var omniGrid = new NamedClass('omniGrid', {
 		}
 	},
 
-	onColumnDragComplete: function(target){
+	_dragColumnComplete: function(target){
 		this.dragging = false;
 
 		var colindex = target.retrieve('column');
@@ -828,28 +820,28 @@ var omniGrid = new NamedClass('omniGrid', {
 
 		});
 
-		this.rePosDrag();
+		this._dragColumnReposition();
 	},
 
-	onColumnDragStart: function(){
+	_dragColumnStart: function(){
 		this.dragging = true;
 	},
 
-	onColumnDragging: function(target){
+	_dragColumnDragging: function(target){
 		target.setStyle('top', 1);
 	},
 
-	overDragColumn: function(evt){
+	_dragColumnOver: function(evt){
 		evt.target.addClass('dragging');
 	},
 
-	outDragColumn: function(evt){
+	_dragColumnOut: function(evt){
 		evt.target.removeClass('dragging');
 	},
 
 
 	// ------------------------- Header events --------------------------------
-	clickHeaderColumn: function(evt){
+	_clickHeaderColumn: function(evt){
 		if (this.dragging) return;
 
 		var colIndex = evt.target.retrieve('column');
@@ -862,7 +854,7 @@ var omniGrid = new NamedClass('omniGrid', {
 		this.sort(colIndex);
 	},
 
-	overHeaderColumn: function(evt){
+	_overHeaderColumn: function(evt){
 		if (this.dragging) return;
 
 		var colIndex = evt.target.retrieve('column');
@@ -871,7 +863,7 @@ var omniGrid = new NamedClass('omniGrid', {
 		evt.target.addClass(columnModel.sort);
 	},
 
-	outHeaderColumn: function(evt){
+	_outHeaderColumn: function(evt){
 		if (this.dragging) return;
 
 		var colindex = evt.target.retrieve('column');
@@ -880,7 +872,7 @@ var omniGrid = new NamedClass('omniGrid', {
 		evt.target.removeClass(columnModel.sort);
 	},
 
-	getBodyHeight: function(){
+	_getBodyHeight: function(){
 		// the total height of the entire grid is this.options.height have in the body header
 		// header
 		var headerHeight = this.options.showHeader ? 24 + 2 : 0;  //+2 for the border
@@ -891,7 +883,7 @@ var omniGrid = new NamedClass('omniGrid', {
 		return this.options.height - headerHeight - toolbarHeight - paginationToolbar - 2; //+2 for the border
 	},
 
-	renderData: function(){
+	_renderData: function(){
 		this.ulBody.empty();
 		this.inlineEditSafe = null;
 
@@ -953,7 +945,7 @@ var omniGrid = new NamedClass('omniGrid', {
 
 						// *** reg. event to toggleicon ***
 						if (firstVisible == c && this.options.accordion && this.options.showToggleIcon)
-							div.getElement('.toggleicon').addEvent('click', this.toggleIconClick.bind(this));
+							div.getElement('.toggleicon').addEvent('click', this._toggleIconClick.bind(this));
 					}
 				} // for column
 
@@ -1058,9 +1050,9 @@ var omniGrid = new NamedClass('omniGrid', {
 
 			// Header events
 			if (o.sortHeader){
-				columnDiv.addEvent('click', self.clickHeaderColumn.bind(self));
-				columnDiv.addEvent('mouseout', self.outHeaderColumn.bind(self));
-				columnDiv.addEvent('mouseover', self.overHeaderColumn.bind(self));
+				columnDiv.addEvent('click', self._clickHeaderColumn.bind(self));
+				columnDiv.addEvent('mouseout', self._outHeaderColumn.bind(self));
+				columnDiv.addEvent('mouseover', self._overHeaderColumn.bind(self));
 			}
 
 			columnDiv.store('column', c);
@@ -1084,7 +1076,7 @@ var omniGrid = new NamedClass('omniGrid', {
 
 		// --- Column size drag
 		if (o.height){
-			var bodyHeight = self.getBodyHeight();
+			var bodyHeight = self._getBodyHeight();
 			div.setStyle('height', o.height);
 		}
 
@@ -1105,13 +1097,13 @@ var omniGrid = new NamedClass('omniGrid', {
 				cDrag.appendChild(dragSt);
 
 				// Events
-				dragSt.addEvent('mouseout', self.outDragColumn.bind(self));
-				dragSt.addEvent('mouseover', self.overDragColumn.bind(self));
+				dragSt.addEvent('mouseout', self._dragColumnOut.bind(self));
+				dragSt.addEvent('mouseover', self._dragColumnOver.bind(self));
 
 				var dragMove = new Drag(dragSt, {snap:0});
-				dragMove.addEvent('drag', self.onColumnDragging.bind(self));
-				dragMove.addEvent('start', self.onColumnDragStart.bind(self));
-				dragMove.addEvent('complete', self.onColumnDragComplete.bind(self));
+				dragMove.addEvent('drag', self._dragColumnDragging.bind(self));
+				dragMove.addEvent('start', self._dragColumnStart.bind(self));
+				dragMove.addEvent('complete', self._dragColumnComplete.bind(self));
 
 				if (columnModel.hidden) dragSt.setStyle('display', 'none');
 				else dragTempWidth += columnModel.width;
@@ -1129,7 +1121,7 @@ var omniGrid = new NamedClass('omniGrid', {
 		div.appendChild(bDiv);
 
 		//  scroll event
-		self.onBodyScrollBind = self.onBodyScroll.bind(self);
+		self.onBodyScrollBind = self._bodyScroll.bind(self);
 		bDiv.addEvent('scroll', self.onBodyScrollBind);
 		self.ulBody = new Element('ul');
 		self.ulBody.setStyle('width', self.sumWidth + self.visibleColumns * (Browser.Engine.trident ? 1 : 1 )); // not to see surplus, address the overflow hidden
@@ -1180,19 +1172,21 @@ var omniGrid = new NamedClass('omniGrid', {
 			pageDiv.getElement('.pNext').addEvent('click', self.nextPage.bind(self));
 			pageDiv.getElement('.pLast').addEvent('click', self.lastPage.bind(self));
 			pageDiv.getElement('.pReload').addEvent('click', self.refresh.bind(self));
-			pageDiv.getElement('.rp').addEvent('change', self.perPageChange.bind(self));
-			pageDiv.getElement('input.cpage').addEvent('keyup', self.pageChange.bind(self));
+			pageDiv.getElement('.rp').addEvent('change', self._perPageChange.bind(self));
+			pageDiv.getElement('input.cpage').addEvent('keyup', self._pageChange.bind(self));
 
 			if (o.filterInput) pageDiv.getElement('input.cfilter').addEvent('change', self.firstPage.bind(self)); // goto 1 & refresh
 		}
 		// --- body
 	},
 
+	// API
 	firstPage: function(){
 		this.options.page = 1;
 		this.refresh();
 	},
 
+	// API
 	prevPage: function(){
 		if (this.options.page > 1){
 			this.options.page--;
@@ -1200,24 +1194,26 @@ var omniGrid = new NamedClass('omniGrid', {
 		}
 	},
 
+	// API
 	nextPage: function(){
 		if ((this.options.page + 1) > this.options.maxpage) return;
 		this.options.page++;
 		this.refresh();
 	},
 
+	// API
 	lastPage: function(){
 		this.options.page = this.options.maxpage;
 		this.refresh();
 	},
 
-	perPageChange: function(){
+	_perPageChange: function(){
 		this.options.page = 1;
 		this.options.perPage = this.element.getElement('.rp').value;
 		this.refresh();
 	},
 
-	pageChange: function(){
+	_pageChange: function(){
 		var np = this.element.getElement('div.pDiv2 input').value;
 
 		if (np > 0 && np <= this.options.maxpage){
@@ -1235,6 +1231,7 @@ var omniGrid = new NamedClass('omniGrid', {
 		}
 	},
 
+	// API
 	setPerPage: function(p){
 		if (p > 0){
 			this.options.perPage = p;
@@ -1242,7 +1239,7 @@ var omniGrid = new NamedClass('omniGrid', {
 		}
 	},
 
-	// API, not doc
+	// API
 	sort: function(index, by){
 		if (index < 0 || index >= this.options.columnModel.length) return;
 
@@ -1271,19 +1268,19 @@ var omniGrid = new NamedClass('omniGrid', {
 			}, this);
 
 			// Filter
-			if (this.filtered) this.filteredAltRow();
-			else this.altRow();
+			if (this.filtered) this._filteredAltRow();
+			else this._altRow();
 		}
 	},
 
-	altRow: function(){
+	_altRow: function(){
 		this.elements.each(function(el,i){
 			if(i % 2) el.removeClass('erow');
 			else el.addClass('erow');
 		});
 	},
 
-	filteredAltRow: function(){
+	_filteredAltRow: function(){
 		this.ulBody.getElements('.'+this.options.filterSelectedCls).each(function(el,i){
 			if(i % 2) el.removeClass('erow');
 			else el.addClass('erow');
@@ -1319,7 +1316,7 @@ var omniGrid = new NamedClass('omniGrid', {
 			}
 
 			if (this.options.filterHide){
-				this.filteredAltRow();
+				this._filteredAltRow();
 				this.filtered = true;
 			}
 		}
@@ -1332,7 +1329,7 @@ var omniGrid = new NamedClass('omniGrid', {
 			if(this.options.filterHide) el.removeClass(this.options.filterHideCls);
 		}, this);
 		if(this.options.filterHide){
-			this.altRow();
+			this._altRow();
 			this.filtered = false;
 		}
 	}
