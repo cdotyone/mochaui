@@ -8,4 +8,5 @@ Chris Doty (cdotyone@gmail.com)
 Greg Houstan (greg.houston@gmail.com)
 Scott F. Frederick
 Joel Lindau
-Harry Roberts 
+Harry Roberts
+Marko Šanti?		<http://www.omnisdata.com/omnigrid/>

@@ -7,11 +7,12 @@
 
  description: MUI - Create a list with check boxes next to each item.
 
- copyright: (c) 2010 Omnisdata Ltd.
+ copyright: (c) 2010 Contributors in (/AUTHORS.txt).
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 
- author: Marko Šantić
+ authors:	Marko Šantić	original <http://www.omnisdata.com/omnigrid/>
+			Chris Doty		MochaUI Version
 
  note:
  This documentation is taken directly from the javascript source files. It is built using Natural Docs.
@@ -28,54 +29,74 @@
  ...
  */
 
-var omniGrid = new Class({
+MUI.files['controls|omnigrid/omnigrid.js'] = 'loaded';
+
+var omniGrid = new NamedClass('omniGrid', {
+
 	Implements: [Events,Options],
 
-	getOptions: function(){
-		return {
-			alternateRows: true,
-			showHeader:true,
-			sortHeader:false,
-			resizeColumns:true,
-			selectable:true,
-			serverSort:true,
-			sortOn: null,
-			sortBy: 'ASC',
-			filterHide: true,
-			filterHideCls: 'hide',
-			filterSelectedCls: 'filter',
-			multipleSelection:true,
-			editable:false,
-			editOnDblClick:false,
+	options: {
+		 id:						''			// id of the primary element, and id os control that is registered with mocha
+		,container:					null		// the parent control in the document to add the control to
+		,createOnInit:				true		// true to add tree to container when control is initialized
 
-			// accordion
-			accordion:false,
-			accordionRenderer:null,
-			autoSectionToggle:true, // if true just one section can be open/visible
-			showToggleIcon:true,
-			openAccordionOnDblClick:false,
+		,alternateRows:				true
+		,showHeader:				true
+		,sortHeader:				false
+		,resizeColumns:				true
+		,selectable:				true
+		,serverSort:				true
+		,sortOn:					null
+		,sortBy:					'ASC'
+		,filterHide:				true
+		,filterHideCls:				'hide'
+		,filterSelectedCls:			'filter'
+		,multipleSelection:			true
+		,editable:					false
+		,editOnDblClick:			false
 
-			// pagination
-			url:null,
-			pagination:false,
-			page:1,
-			perPageOptions: [10, 20, 50, 100, 200],
-			perPage:10,
-			filterInput:false,
+		// accordion
+		,accordion:					false
+		,accordionRenderer:			null
+		,autoSectionToggle:			true 		// if true just one section can be open/visible
+		,showToggleIcon:			true
+		,openAccordionOnDblClick:	false
 
-			// dataProvider
-			dataProvider:null
-		};
+		// pagination
+		,url:						null
+		,pagination:				false
+		,page:						1
+		,perPageOptions:			[10, 20, 50, 100, 200]
+		,perPage:					10
+		,filterInput:				false
+
+		// dataProvider
+		,dataProvider:				null
 	},
 
-	initialize: function(container, options){
-		this.setOptions(this.getOptions(), options);
-		this.container = $(container);
+	initialize: function(options){
+		this.setOptions(options);
 
-		if (!this.container) return;
-		this.draw();
-		this.reset();
-		this.loadData();
+		// make sure this controls has an ID
+		var id = this.options.id;
+		if (!id){
+			id = 'omnigrid' + (++MUI.IDCount);
+			this.options.id = id;
+		}
+		this.id=id;
+
+		// see if we can find the control
+		if (MUI.get(id)) return; // don't do anything if this control is already registered
+
+		// create sub items if available
+		if (this.options.createOnInit){
+			this.draw();
+			this.reset();
+			this.loadData();
+		}
+
+		// register with mocha
+		MUI.set(id, this);
 	},
 
 	// API
@@ -95,16 +116,14 @@ var omniGrid = new Class({
 		if (this.options.alternateRows)	this.altRow();
 
 		this.elements.each(function(el){
-
 			el.addEvent('click', this.onRowClick.bind(this));
 			el.addEvent('dblclick', this.onRowDblClick.bind(this));
 			el.addEvent('mouseover', this.onRowMouseOver.bind(this));
 			el.addEvent('mouseout', this.onRowMouseOut.bind(this));
-
 		}, this);
 
 		// ------------------------- setup header --------------------------------
-		this.container.getElements('.th').each(function(el, i){
+		this.element.getElements('.th').each(function(el, i){
 
 			var dataType = el.retrieve('dataType');
 			if (dataType){
@@ -147,13 +166,13 @@ var omniGrid = new Class({
 					if (child){
 						return el.findData(child);
 					} else {
-						return elem.innerHTML.trim();
+						return elem.get('html').trim();
 					}
 				};
 
 				el.compare = function(a, b){
-					var var1 = a.getChildren()[i].innerHTML.trim();
-					var var2 = b.getChildren()[i].innerHTML.trim();
+					var var1 = a.getChildren()[i].get('html').trim();
+					var var2 = b.getChildren()[i].get('html').trim();
 
 					if (dataType == 'number'){
 						var1 = parseFloat(var1);
@@ -224,7 +243,7 @@ var omniGrid = new Class({
 		var height = 15;
 		var html = data[colmod.dataIndex];
 
-		td.innerHTML = "";
+		td.set('html','');
 
 		var input = new Element('input', {style:"width: " + width + "px; height: " + height + "px;", maxlength:254, value: html});
 		input.addClass('inline');
@@ -255,12 +274,12 @@ var omniGrid = new Class({
 		// if not confirmed with ENTER returns to the old value
 		data[colmod.dataIndex] = ( evt && evt.type == "keyup" && evt.key == 'enter') ? this.inlineEditSafe.input.value : this.inlineEditSafe.oldvalue;
 
-		td.innerHTML = colmod.labelFunction ? colmod.labelFunction(data, row, colmod) : data[colmod.dataIndex];
+		td.set('html',colmod.labelFunction ? colmod.labelFunction(data, row, colmod) : data[colmod.dataIndex]);
 
-		if (td.innerHTML.length == 0) td.innerHTML = "&nbsp;"; // important because otherwise would not have reacted at the second DBL click
+		if (td.get('html').length == 0) td.set('html','&nbsp;'); // important because otherwise would not have reacted at the second DBL click
 
 		// decreased event for key = ENTER if the change is made
-		if (evt && evt.type == "keyup" && evt.key == 'enter' && this.inlineEditSafe.oldvalue != td.innerHTML){
+		if (evt && evt.type == "keyup" && evt.key == 'enter' && this.inlineEditSafe.oldvalue != td.get('html')){
 			// dropped out of the event for
 			this.inlineEditSafe.target = this;
 			this.fireEvent("editcomplete", this.inlineEditSafe);
@@ -448,7 +467,7 @@ var omniGrid = new Class({
 		}
 
 		if (this.options.filterInput){
-			var cfilter = this.container.getElement('input.cfilter');
+			var cfilter = this.element.getElement('input.cfilter');
 			if (cfilter) param.filter = cfilter.value;
 		}
 
@@ -485,10 +504,10 @@ var omniGrid = new Class({
 			this.options.total = data.total;
 			this.options.maxpage = Math.ceil(this.options.total / this.options.perPage);
 
-			this.container.getElement('div.pDiv input').value = data.page;
+			this.element.getElement('div.pDiv input').value = data.page;
 			var to = (data.page * this.options.perPage) > data.total ? data.total : (data.page * this.options.perPage);
-			this.container.getElement('div.pDiv .pPageStat').set('html', ((data.page - 1) * this.options.perPage + 1) + '..' + to + ' / ' + data.total);
-			this.container.getElement('div.pDiv .pcontrol span').set('html', this.options.maxpage);
+			this.element.getElement('div.pDiv .pPageStat').set('html', ((data.page - 1) * this.options.perPage + 1) + '..' + to + ' / ' + data.total);
+			this.element.getElement('div.pDiv .pcontrol span').set('html', this.options.maxpage);
 		}
 
 		if (cm){
@@ -525,7 +544,7 @@ var omniGrid = new Class({
 
 	// API
 	setScroll: function(x, y){
-		var bDiv = this.container.getElement('.bDiv');
+		var bDiv = this.element.getElement('.bDiv');
 		new Fx.Scroll(bDiv).set(x, y);
 	},
 
@@ -551,29 +570,29 @@ var omniGrid = new Class({
 	},
 
 	hideWhiteOverflow: function(){
-		if (this.container.getElement('.gBlock')) this.container.getElement('.gBlock').dispose();
+		if (this.element.getElement('.gBlock')) this.element.getElement('.gBlock').dispose();
 
-		var pReload = this.container.getElement('div.pDiv .pReload');
+		var pReload = this.element.getElement('div.pDiv .pReload');
 		if (pReload) pReload.removeClass('loading');
 	},
 
 	showWhiteOverflow: function(i){
 		// white overflow & loader
-		if (this.container.getElement('.gBlock')) this.container.getElement('.gBlock').dispose();
+		if (this.element.getElement('.gBlock')) this.element.getElement('.gBlock').dispose();
 
 		var gBlock = new Element('div', {style:'top: 0px; left: 0px; background: white none repeat scroll 0% 0%;  -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial; position: absolute; z-index: 999; opacity: 0.5; filter: alpha(opacity=50'});
-		var bDiv = this.container.getElement('.bDiv');
+		var bDiv = this.element.getElement('.bDiv');
 
 		var top = 1;
-		top += this.container.getElement('.tDiv') ? this.container.getElement('.tDiv').getSize().y : 0;
-		top += this.container.getElement('.hDiv') ? this.container.getElement('.hDiv').getSize().y : 0;
+		top += this.element.getElement('.tDiv') ? this.element.getElement('.tDiv').getSize().y : 0;
+		top += this.element.getElement('.hDiv') ? this.element.getElement('.hDiv').getSize().y : 0;
 
 		gBlock.setStyles({width:this.options.width, height: this.options.height - 1, top:0});
 		gBlock.addClass('gBlock');
 
-		this.container.appendChild(gBlock);
+		this.element.appendChild(gBlock);
 
-		var pReload = this.container.getElement('div.pDiv .pReload');
+		var pReload = this.element.getElement('div.pDiv .pReload');
 		if (pReload) pReload.addClass('loading');
 	},
 
@@ -588,7 +607,7 @@ var omniGrid = new Class({
 				'top': this.options.height / 2 - 16,
 				'left': this.options.width / 2
 			}
-		}).inject(this.container);
+		}).inject(this.element);
 	},
 
 	hideLoader: function(){
@@ -638,7 +657,7 @@ var omniGrid = new Class({
 
 	// API
 	removeHeader: function(){
-		var obj = this.container.getElement('.hDiv');
+		var obj = this.element.getElement('.hDiv');
 		if (obj) obj.empty();
 		this.options.columnModel = null;
 	},
@@ -695,32 +714,32 @@ var omniGrid = new Class({
 	setSize: function(w, h){
 		// Width
 		this.options.width = w ? w : this.options.width;
-		this.container.setStyle('width', this.options.width);
+		this.element.setStyle('width', this.options.width);
 
 		var width = this.options.width - 2;
-		if (this.options.buttons) this.container.getElement('.tDiv').setStyle('width', width);
+		if (this.options.buttons) this.element.getElement('.tDiv').setStyle('width', width);
 
-		var hDiv = this.container.getElement('.hDiv');
+		var hDiv = this.element.getElement('.hDiv');
 		if (this.options.showHeader && hDiv) hDiv.setStyle('width', width);
 
-		var bodyEl = this.container.getElement('.bDiv');
+		var bodyEl = this.element.getElement('.bDiv');
 		bodyEl.setStyle('width', width);
-		this.container.getElement('.pDiv').setStyle('width', width);
+		this.element.getElement('.pDiv').setStyle('width', width);
 
 		// Height
 		this.options.height = h ? h : this.options.height;
 
 		bodyEl.setStyle('height', this.getBodyHeight());
-		this.container.setStyle('height', this.options.height);
+		this.element.setStyle('height', this.options.height);
 
 		// if it has a gBlock by chance, set it whiteOverflow
-		var gBlock = this.container.getElement('.gBlock');
+		var gBlock = this.element.getElement('.gBlock');
 		if (gBlock) gBlock.setStyles({width:this.options.width, height: bodyEl.getSize().y });
 	},
 
 	onBodyScroll: function(){
-		var hbox = this.container.getElement('.hDivBox');
-		var bbox = this.container.getElement('.bDiv');
+		var hbox = this.element.getElement('.hDivBox');
+		var bbox = this.element.getElement('.bDiv');
 
 		var xs = bbox.getScroll().x;
 		hbox.setStyle('left', -xs);
@@ -743,8 +762,8 @@ var omniGrid = new Class({
 		if (!this.options.resizeColumns) return;
 
 		var dragTempWidth = 0;
-		var cDrags = this.container.getElements('.cDrag div');
-		var scrollX = this.container.getElement('div.bDiv').getScroll().x;
+		var cDrags = this.element.getElements('.cDrag div');
+		var scrollX = this.element.getElement('div.bDiv').getScroll().x;
 
 		for (var c = 0; c < this.options.columnModel.length; c++){
 			var columnModel = this.options.columnModel[c];
@@ -762,9 +781,9 @@ var omniGrid = new Class({
 		var colindex = target.retrieve('column');
 
 		// find the first position
-		var cDrag = this.container.getElement('div.cDrag');
+		var cDrag = this.element.getElement('div.cDrag');
 		var dragSt = cDrag.getElements('div')[colindex];
-		var scrollX = this.container.getElement('div.bDiv').getScroll().x;
+		var scrollX = this.element.getElement('div.bDiv').getScroll().x;
 
 		// calculate the total width
 		this.sumWidth = 0;
@@ -784,7 +803,7 @@ var omniGrid = new Class({
 		this.sumWidth += pos;
 
 		this.ulBody.setStyle('width', this.sumWidth + this.visibleColumns * (Browser.Engine.trident ? 1 : 1 ));
-		var hDivBox = this.container.getElement('div.hDivBox');
+		var hDivBox = this.element.getElement('div.hDivBox');
 
 		hDivBox.setStyle('width', this.sumWidth + this.visibleColumns * 2);
 
@@ -866,7 +885,7 @@ var omniGrid = new Class({
 		// header
 		var headerHeight = this.options.showHeader ? 24 + 2 : 0;  //+2 for the border
 		// toolbar
-		var toolbarHeight = this.options.buttons ? this.container.getElement('.tDiv').getStyle('height').toInt() : 0;
+		var toolbarHeight = this.options.buttons ? this.element.getElement('.tDiv').getStyle('height').toInt() : 0;
 		// pagination toolbar height 25px + 1px bottom border
 		var paginationToolbar = this.options.pagination ? 26 : 0;
 		return this.options.height - headerHeight - toolbarHeight - paginationToolbar - 2; //+2 for the border
@@ -884,7 +903,7 @@ var omniGrid = new Class({
 				var rowData = this.options.data[r];
 
 				var li = new Element('li');
-				li.setStyle('width', this.sumWidth + 2 * this.visibleColumns); 
+				li.setStyle('width', this.sumWidth + 2 * this.visibleColumns);
 				li.store('row', r);
 				li.addClass('tr');
 
@@ -922,7 +941,7 @@ var omniGrid = new Class({
 					} else if (columnModel.type == 'custom'){
 						//columnModel.labelFunction(td, this.options.data[r], r);
 					} else if (columnModel.labelFunction != null){
-						div.innerHTML = columnModel.labelFunction(rowData, r, columnModel);
+						div.set('html',columnModel.labelFunction(rowData, r, columnModel));
 					} else {
 						var str = new String(rowData[columnModel.dataIndex]); // must be a string, and if reaches 0 as the number of error
 						if (str == null || str == 'null' || str == 'undefined' || str == "") str = '&nbsp;';
@@ -930,7 +949,7 @@ var omniGrid = new Class({
 						var trimmed = str.replace(/^\s+|\s+$/g, ''); // see if string is empty
 						if (trimmed.length == 0) str = '&nbsp;';
 
-						div.innerHTML = toggleIcon + str;
+						div.set('html',toggleIcon + str);
 
 						// *** reg. event to toggleicon ***
 						if (firstVisible == c && this.options.accordion && this.options.showToggleIcon)
@@ -953,138 +972,146 @@ var omniGrid = new Class({
 
 	// --- Main draw function
 	draw: function(){
-		this.removeAll(); // reset variables and only empty ulBody
-		this.container.empty(); // empty all
+		var self = this;
+		var o = self.options;
+
+		self.removeAll(); // reset variables and only empty ulBody
+
+		// build control's wrapper div
+		var div = $(self.id);
+		var isNew = false;
+		if (!div){					 // check to see if it is already on DOM
+			div = new Element('div',{'id':o.id});
+			isNew = true;
+		}
+		self.element = div.empty();
 
 		// --- common
-		var width = this.options.width - (Browser.Engine.trident ? 2 : 2 ); //-2 for the borders
-		var columnCount = this.options.columnModel ? this.options.columnModel.length : 0;
+		var width = o.width - (Browser.Engine.trident ? 2 : 2 ); //-2 for the borders
+		var columnCount = o.columnModel ? o.columnModel.length : 0;
 		// --- common
 
 		// --- container
-		if (this.options.width)	this.container.setStyle('width', this.options.width);
-		this.container.addClass('omnigrid');
+		if (o.width)	self.element.setStyle('width', o.width);
+		div.addClass('omnigrid');
 		// --- container
 
 		// --- toolbar
-		if (this.options.buttons){
-			var tDiv = new Element('div');
-			tDiv.addClass('tDiv');
-			tDiv.setStyle('width', width);
-			tDiv.setStyle('height', 25 + (Browser.Engine.trident ? 2 : 0 ));// for the borders in FF
-			this.container.appendChild(tDiv);
+		if (o.buttons){
+			var toolDiv = new Element('div',{
+				'class':'tDiv',
+				'styles':{
+					'width':width,
+					'height': 25 + (Browser.Engine.trident ? 2 : 0 )
+				}
+			}).inject(div);
 
-			var bt = this.options.buttons;
-			for (var i = 0; i < bt.length; i++){
-				var fBt = new Element('div');
-				tDiv.appendChild(fBt);
-				if (bt[i].separator){
-					fBt.addClass('btnseparator');
-					continue;
+			$each(o.buttons, function(button){
+				var divBtn = new Element('div');
+				toolDiv.appendChild(divBtn);
+				if (button.separator){
+					divBtn.addClass('btnseparator');
+					return;
 				}
 
-				fBt.addClass('fbutton');
+				divBtn.addClass('fbutton');
 
-				var cBt = new Element('div');
-				cBt.addEvent('click', bt[i].click.bind(this, [bt[i].cssClass, this]));
-				cBt.addEvent('mouseover', function(){
-					this.addClass('fbOver');
+				var divBtnC = new Element('div');
+				divBtnC.addEvent('click', button.click.bind(self, [button.cssClass, self]));
+				divBtnC.addEvent('mouseover', function(){
+					self.addClass('fbOver');
 				});
-				cBt.addEvent('mouseout', function(){
-					this.removeClass('fbOver');
+				divBtnC.addEvent('mouseout', function(){
+					self.removeClass('fbOver');
 				});
 
-				fBt.appendChild(cBt);
+				divBtn.appendChild(divBtnC);
 
-				var spanBt = new Element('span');
-				spanBt.addClass(bt[i].cssClass);
-				spanBt.setStyle('padding-left', 20);
-				spanBt.set('html', bt[i].name);
-				cBt.appendChild(spanBt);
-			}
+				var divBText = new Element('span');
+				divBText.addClass(button.cssClass);
+				divBText.setStyle('padding-left', 20);
+				divBText.set('html', button.name);
+				divBtnC.appendChild(divBText);
+			});
 		}
 		// --- toolbar
 
 		// --- header
-		var hDiv = new Element('div');
-		hDiv.addClass('hDiv');
-		hDiv.setStyle('width', width); // borderi u FF
-		this.container.appendChild(hDiv);
+		var headDiv = new Element('div',{
+					'class':'hDiv',
+					'styles':{
+						'width':width
+					}}).inject(div);
 
-		var hDivBox = new Element('div');
-		hDivBox.addClass('hDivBox');
+		var headDivBox = new Element('div',{'class':'hDiv'}).inject(headDiv);
 
-		hDiv.appendChild(hDivBox);
-
-		this.sumWidth = 0;
-		this.visibleColumns = 0; // differs from the columnCount because data for some columns are of reading but are not shown
+		self.sumWidth = 0;
+		self.visibleColumns = 0; // differs from the columnCount because data for some columns are of reading but are not shown
 		var columnModel,c;
 		for (c = 0; c < columnCount; c++){
-			columnModel = this.options.columnModel[c];
+			columnModel = o.columnModel[c];
 
-			var div = new Element('div');
+			var columnDiv = new Element('div');
 			// default settings columnModel
-			if (columnModel.width == null)  this.options.columnModel[c].width = 100;
+			if (columnModel.width == null)  o.columnModel[c].width = 100;
 			columnModel.sort = 'ASC';
 
 			// Header events
-			if (this.options.sortHeader){
-				div.addEvent('click', this.clickHeaderColumn.bind(this));
-				div.addEvent('mouseout', this.outHeaderColumn.bind(this));
-				div.addEvent('mouseover', this.overHeaderColumn.bind(this));
+			if (o.sortHeader){
+				columnDiv.addEvent('click', self.clickHeaderColumn.bind(self));
+				columnDiv.addEvent('mouseout', self.outHeaderColumn.bind(self));
+				columnDiv.addEvent('mouseover', self.overHeaderColumn.bind(self));
 			}
 
-			div.store('column', c);
-			div.store('dataType', columnModel.dataType);
-			div.addClass('th');
-			div.setStyle('width', columnModel.width - (Browser.Engine.trident ? 6 : 6 ));
-			hDivBox.appendChild(div);
+			columnDiv.store('column', c);
+			columnDiv.store('dataType', columnModel.dataType);
+			columnDiv.addClass('th');
+			columnDiv.setStyle('width', columnModel.width - (Browser.Engine.trident ? 6 : 6 ));
+			headDivBox.appendChild(columnDiv);
 
-			if (columnModel.hidden) div.setStyle('display', 'none');
+			if (columnModel.hidden) columnDiv.setStyle('display', 'none');
 			else {
-				this.sumWidth += columnModel.width;
-				this.visibleColumns++;
+				self.sumWidth += columnModel.width;
+				self.visibleColumns++;
 			}
 
 			var header = columnModel.header;
-			if (header) div.innerHTML = header;
+			if (header) columnDiv.set('html',header);
 		}
-		hDivBox.setStyle('width', this.sumWidth + this.visibleColumns * 2);
-		if (!this.options.showHeader) hDiv.setStyle('display', 'none');
+		headDivBox.setStyle('width', self.sumWidth + self.visibleColumns * 2);
+		if (!o.showHeader) headDiv.setStyle('display', 'none');
 		// --- header
 
 		// --- Column size drag
-		if (this.options.height){
-			var bodyHeight = this.getBodyHeight();
-			this.container.setStyle('height', this.options.height);
+		if (o.height){
+			var bodyHeight = self.getBodyHeight();
+			div.setStyle('height', o.height);
 		}
 
-		if (this.options.resizeColumns){
-			var cDrag = new Element('div');
-			cDrag.addClass('cDrag');
-			var toolbarHeight = this.options.buttons ? tDiv.getStyle('height').toInt() : 0; // toolbar
+		if (o.resizeColumns){
+			var cDrag = new Element('div',{'class':'cDrag'}).inject(div);
+			var toolbarHeight = o.buttons ? toolDiv.getStyle('height').toInt() : 0; // toolbar
 			cDrag.setStyle('top', toolbarHeight);
-			this.container.appendChild(cDrag);
 
 			var dragTempWidth = 0;
 			for (c = 0; c < columnCount; c++){
-				columnModel = this.options.columnModel[c];
+				columnModel = o.columnModel[c];
 
 				var dragSt = new Element('div');
-				var headerHeight = this.options.showHeader ? 24 + 2 : 0; // +2 border
+				var headerHeight = o.showHeader ? 24 + 2 : 0; // +2 border
 
 				dragSt.setStyles({top:1,left: dragTempWidth + columnModel.width, height: headerHeight, display:'block'}); // bodyHeight+
 				dragSt.store('column', c);
 				cDrag.appendChild(dragSt);
 
 				// Events
-				dragSt.addEvent('mouseout', this.outDragColumn.bind(this));
-				dragSt.addEvent('mouseover', this.overDragColumn.bind(this));
+				dragSt.addEvent('mouseout', self.outDragColumn.bind(self));
+				dragSt.addEvent('mouseover', self.overDragColumn.bind(self));
 
 				var dragMove = new Drag(dragSt, {snap:0});
-				dragMove.addEvent('drag', this.onColumnDragging.bind(this));
-				dragMove.addEvent('start', this.onColumnDragStart.bind(this));
-				dragMove.addEvent('complete', this.onColumnDragComplete.bind(this));
+				dragMove.addEvent('drag', self.onColumnDragging.bind(self));
+				dragMove.addEvent('start', self.onColumnDragStart.bind(self));
+				dragMove.addEvent('complete', self.onColumnDragComplete.bind(self));
 
 				if (columnModel.hidden) dragSt.setStyle('display', 'none');
 				else dragTempWidth += columnModel.width;
@@ -1096,42 +1123,40 @@ var omniGrid = new Class({
 		var bDiv = new Element('div');
 		bDiv.addClass('bDiv');
 
-		if (this.options.width) bDiv.setStyle('width', width);
+		if (o.width) bDiv.setStyle('width', width);
 
 		bDiv.setStyle('height', bodyHeight);
-		this.container.appendChild(bDiv);
+		div.appendChild(bDiv);
 
 		//  scroll event
-		this.onBodyScrollBind = this.onBodyScroll.bind(this);
-		bDiv.addEvent('scroll', this.onBodyScrollBind);
-		this.ulBody = new Element('ul');
-		this.ulBody.setStyle('width', this.sumWidth + this.visibleColumns * (Browser.Engine.trident ? 1 : 1 )); // not to see surplus, address the overflow hidden
-		bDiv.appendChild(this.ulBody);
+		self.onBodyScrollBind = self.onBodyScroll.bind(self);
+		bDiv.addEvent('scroll', self.onBodyScrollBind);
+		self.ulBody = new Element('ul');
+		self.ulBody.setStyle('width', self.sumWidth + self.visibleColumns * (Browser.Engine.trident ? 1 : 1 )); // not to see surplus, address the overflow hidden
+		bDiv.appendChild(self.ulBody);
 
-		if (this.options.pagination && !this.container.getElement('div.pDiv')){
-			var pDiv = new Element('div');
-			pDiv.addClass('pDiv');
-			pDiv.setStyle('width', width);
-			pDiv.setStyle('height', 25);
-			this.container.appendChild(pDiv);
+		if (o.pagination && !div.getElement('div.pDiv')){
+			var pageDivWrap = new Element('div',{
+							'class':'pDiv',
+							'styles':{
+								'width':width,
+								'height':25
+							}}).inject(div);
 
-			var pDiv2 = new Element('div');
-			pDiv2.addClass('pDiv2');
-			pDiv.appendChild(pDiv2);
+			var pageDiv = new Element('div',{'class':'pDiv2'}).inject(pageDivWrap);
 
 			var h = '<div class="pGroup"><select class="rp" name="rp">';
 
-			var optIdx;
+			var idx;
 			var setDefaultPerPage = false;
-			for (optIdx = 0; optIdx < this.options.perPageOptions.length; optIdx++){
-				if (this.options.perPageOptions[optIdx] != this.options.perPage)
-					h += '<option value="' + this.options.perPageOptions[optIdx] + '">' + this.options.perPageOptions[optIdx] + '</option>';
+			for (idx = 0; idx < o.perPageOptions.length; idx++){
+				if (o.perPageOptions[idx] != o.perPage)
+					h += '<option value="' + o.perPageOptions[idx] + '">' + o.perPageOptions[idx] + '</option>';
 				else {
 					setDefaultPerPage = true;
-					h += '<option selected="selected" value="' + this.options.perPageOptions[optIdx] + '">' + this.options.perPageOptions[optIdx] + '</option>';
+					h += '<option selected="selected" value="' + o.perPageOptions[idx] + '">' + o.perPageOptions[idx] + '</option>';
 				}
 			}
-
 			h += '</select></div>';
 
 			h += '<div class="btnseparator"></div><div class="pGroup"><div class="pFirst pButton"></div><div class="pPrev pButton"></div></div>';
@@ -1140,26 +1165,25 @@ var omniGrid = new Class({
 			h += '<div class="btnseparator"></div><div class="pGroup"><div class="pReload pButton"></div></div>';
 			h += '<div class="btnseparator"></div><div class="pGroup"><span class="pPageStat"></div>';
 
-			if (this.options.filterInput) h += '<div class="btnseparator"></div><div class="pGroup"><span class="pcontrol"><input class="cfilter" type="text" value="" style="" /><span></div>';
+			if (o.filterInput) h += '<div class="btnseparator"></div><div class="pGroup"><span class="pcontrol"><input class="cfilter" type="text" value="" style="" /><span></div>';
+			pageDiv.set('html',h);
 
-			pDiv2.innerHTML = h;
-
-			// set this.options.perPage value from this.options.perPageOptions array
-			var rpObj = pDiv2.getElement('.rp');
+			// set o.perPage value from o.perPageOptions array
+			var rpObj = pageDiv.getElement('.rp');
 			if (!setDefaultPerPage && rpObj.options.length > 0){
-				this.options.perPage = rpObj.options[0].value;
+				o.perPage = rpObj.options[0].value;
 				rpObj.options[0].selected = true;
 			}
 
-			pDiv2.getElement('.pFirst').addEvent('click', this.firstPage.bind(this));
-			pDiv2.getElement('.pPrev').addEvent('click', this.prevPage.bind(this));
-			pDiv2.getElement('.pNext').addEvent('click', this.nextPage.bind(this));
-			pDiv2.getElement('.pLast').addEvent('click', this.lastPage.bind(this));
-			pDiv2.getElement('.pReload').addEvent('click', this.refresh.bind(this));
-			pDiv2.getElement('.rp').addEvent('change', this.perPageChange.bind(this));
-			pDiv2.getElement('input.cpage').addEvent('keyup', this.pageChange.bind(this));
+			pageDiv.getElement('.pFirst').addEvent('click', self.firstPage.bind(self));
+			pageDiv.getElement('.pPrev').addEvent('click', self.prevPage.bind(self));
+			pageDiv.getElement('.pNext').addEvent('click', self.nextPage.bind(self));
+			pageDiv.getElement('.pLast').addEvent('click', self.lastPage.bind(self));
+			pageDiv.getElement('.pReload').addEvent('click', self.refresh.bind(self));
+			pageDiv.getElement('.rp').addEvent('change', self.perPageChange.bind(self));
+			pageDiv.getElement('input.cpage').addEvent('keyup', self.pageChange.bind(self));
 
-			if (this.options.filterInput) pDiv2.getElement('input.cfilter').addEvent('change', this.firstPage.bind(this)); // goto 1 & refresh
+			if (o.filterInput) pageDiv.getElement('input.cfilter').addEvent('change', self.firstPage.bind(self)); // goto 1 & refresh
 		}
 		// --- body
 	},
@@ -1189,12 +1213,12 @@ var omniGrid = new Class({
 
 	perPageChange: function(){
 		this.options.page = 1;
-		this.options.perPage = this.container.getElement('.rp').value;
+		this.options.perPage = this.element.getElement('.rp').value;
 		this.refresh();
 	},
 
 	pageChange: function(){
-		var np = this.container.getElement('div.pDiv2 input').value;
+		var np = this.element.getElement('div.pDiv2 input').value;
 
 		if (np > 0 && np <= this.options.maxpage){
 			if (this.refreshDelayID) $clear(this.refreshDelayID);
@@ -1224,7 +1248,7 @@ var omniGrid = new Class({
 
 		if (this.options.onStart) this.fireEvent('onStart');
 
-		var header = this.container.getElements('.th');
+		var header = this.element.getElements('.th');
 		var el = header[index];
 
 		if (by != null) el.addClass(by.toLowerCase());
@@ -1312,4 +1336,5 @@ var omniGrid = new Class({
 			this.filtered = false;
 		}
 	}
+
 });

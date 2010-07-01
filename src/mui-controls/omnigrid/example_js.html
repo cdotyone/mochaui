@@ -96,7 +96,8 @@
 
 		window.addEvent("domready", function(){
 
-			dataGrid = new omniGrid('grid', {
+			dataGrid = new omniGrid({
+				'id':'grid',
 				columnModel: cmu,
 				buttons : [
 					{name: 'Add', cssClass: 'add', 'click': gridButtonClick},
