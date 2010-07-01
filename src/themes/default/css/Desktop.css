@@ -21,8 +21,8 @@
 ---------------------------------------------------------------- */
 
 html, body {
-	background: #fff;	
-}	
+	background: #fff;
+}
 
 body {
 	margin: 0; /* Required */
@@ -42,7 +42,7 @@ body {
 }
 
 #desktopTitlebarWrapper {
-	position: relative;	
+	position: relative;
 	height: 45px;
 	overflow: hidden;
 	background: #718BA6 url(../images/bg-header.gif) repeat-x;
@@ -66,10 +66,10 @@ body {
 }
 
 #desktopTitlebar h2.tagline {
-	padding: 7px 0 0 0;	
+	padding: 7px 0 0 0;
 	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 10px;    
-	color: #d4dce4;    
+	font-size: 10px;
+	color: #d4dce4;
 	font-weight: bold;
 	text-align: center;
 	text-transform: uppercase;
@@ -106,10 +106,10 @@ body {
 	background: #f2f2f2;
 	height: 30px;
 	margin: 0 0px;
-	overflow: hidden; /* Remove this line if you want the menu to be backward compatible with Firefox 2 */	
+	overflow: hidden; /* Remove this line if you want the menu to be backward compatible with Firefox 2 */
 }
 
-#desktopNavbar ul {	
+#desktopNavbar ul {
 	padding: 0;
 	margin: 0;
 	list-style: none;
@@ -122,10 +122,10 @@ body {
 
 #desktopNavbar a {
 	display: block;
-}	
-	
+}
+
 #desktopNavbar ul li a {
-	padding: 6px 10px 6px 10px;	
+	padding: 6px 10px 6px 10px;
 	color: #333;
 	font-weight: normal;
 }
@@ -137,8 +137,8 @@ body {
 #desktopNavbar ul li a.arrow-right, #desktopNavbar ul li a:hover.arrow-right {
 	background-image: url(../images/arrow-right.gif);
 	background-repeat: no-repeat;
-	background-position: right 7px;	
-} 
+	background-position: right 7px;
+}
 
 #desktopNavbar li ul {
 	padding: 2px;
@@ -178,13 +178,13 @@ body {
 	padding: 1px 9px 1px 25px;
 	width: 130px;
 	color: #3f3f3f;
-	font-weight: normal;	
+	font-weight: normal;
 }
 
 #desktopNavbar li ul li a:hover {
 	background: #6C98D9;
 	color: #fff;
-	-moz-border-radius: 2px;	
+	-moz-border-radius: 2px;
 }
 
 #desktopNavbar li ul li a:hover .check {
@@ -206,15 +206,15 @@ body {
 
 li.divider {
 	margin-top: 2px;
-	padding-top: 3px;	
+	padding-top: 3px;
 	border-top: 1px solid #ebebeb;
-}	
+}
 
 #pageWrapper {
 	position: relative;
 	overflow: hidden; /* This can be set to hidden or auto */
 	border-top: 1px solid #909090;
-	border-bottom: 1px solid #909090;	
+	border-bottom: 1px solid #909090;
 }
 
 /* Footer */
@@ -244,7 +244,7 @@ li.divider {
 /* Columns */
 
 .column {
-	position: relative;	
+	position: relative;
 	float: left;
 	overflow: hidden; /* Required by IE6 */
 }
@@ -254,45 +254,46 @@ li.divider {
 .panel {
 	position: relative;
 	overflow: auto;
-	background: #f8f8f8;	
+	background: #f8f8f8;
 	border-bottom: 1px solid #b9b9b9;
 }
 
 .panelWrapper.collapsed .panel-header {
-	border-bottom: 0;	
+	border-bottom: 0;
 }
 
 .panelAlt {
-	background: #f2f2f2;	
+	background: #f2f2f2;
 }
 
 .bottomPanel .panel {
-	border-bottom: 0;	
-}	
+	border-bottom: 0;
+}
 
 .pad {
 	padding: 8px;
 }
 
 #mainPanel {
-	background: #fff; 	
-}	
+	background: #fff;
+}
 
 .panel-header {
-	position: relative;	
+	position: relative;
 	background: #f1f1f1 url(../images/bg-panel-header.gif) repeat-x;
 	height: 30px;
 	overflow: hidden;
-	border-bottom: 1px solid #d3d3d3;		
+	border-bottom: 1px solid #d3d3d3;
 }
 
 .panel-headerContent {
 	padding-top: 2px;
-}	
+}
 
 .panel-headerContent.tabs {
 	background: url(../images/tabs.gif) repeat-x;
-	background-position: left -68px;	
+	background-position: left -68px;
+	padding-top:0;
 }
 
 .panel-header h2 {
@@ -339,12 +340,12 @@ li.divider {
 .panel-footer {
 	padding: 1px 0 0 8px;
 }
-	
+
 .panel-footerContent {
 	margin-top: 5px;
 }
 
-/* Column and Panel Handles */	
+/* Column and Panel Handles */
 
 .horizontalHandle {
 	height: 4px;
@@ -355,10 +356,10 @@ li.divider {
 }
 
 .horizontalHandle.detached .handleIcon {
-	background: transparent;	
+	background: transparent;
 }
 
-.horizontalHandle .handleIcon {	
+.horizontalHandle .handleIcon {
 	margin: 0 auto;
 	height: 4px;
 	line-height: 1px;
@@ -368,7 +369,7 @@ li.divider {
 }
 
 .columnHandle {
-	min-height: 10px;	
+	min-height: 10px;
 	float: left;
 	width: 4px;
 	overflow: hidden;
@@ -422,7 +423,7 @@ div.toolbox.divider { /* Have to specify div here for IE6's sake */
 
 .iconWrapper:hover {
 	border: 1px solid #a0a0a0;
-	-moz-border-radius: 3px;	
+	-moz-border-radius: 3px;
 }
 
 #spinnerWrapper {
