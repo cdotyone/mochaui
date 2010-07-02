@@ -27,7 +27,7 @@
  ...
  */
 
-MUI.files['controls|ImageButton/ImageButton.js'] = 'loaded';
+MUI.files['controls|imageButton/imageButton.js'] = 'loaded';
 
 MUI.ImageButton = new Class({
 

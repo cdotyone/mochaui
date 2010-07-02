@@ -27,7 +27,7 @@
  ...
  */
 
-MUI.files['controls|CheckBoxGrid/CheckBoxGrid.js'] = 'loaded';
+MUI.files['controls|checkBoxGrid/checkBoxGrid.js'] = 'loaded';
 
 MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 
@@ -97,19 +97,19 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 		if (o.title)  new Element('div', {'id':o.id + '_tle','text':o.title}).inject(fs);
 
 		for (var i = 0; i < o.items.length; i++){
-			self.buildItem(o.items[i], fs, i);
+			self._buildItem(o.items[i], fs, i);
 		}
 
 		if (!isNew) return this;
 		window.addEvent('domready', function(){
 			fs.inject($(containerEl ? containerEl : o.container));
-			self.convertToGrid.delay(1, self, [fs]);
+			self._convertToGrid.delay(1, self, [fs]);
 		});
 
 		return this;
 	},
 
-	buildItem: function(item, fs, num){
+	_buildItem: function(item, fs, num){
 		var self = this,o = this.options;
 
 		item._span = new Element('span', {'id':o.id + num + '_field',styles:{'textAlign':o.labelPlacement == 'left' ? 'right' : 'left'}}).inject(fs);
@@ -121,7 +121,7 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 		if (isSelected) inp.set('checked', 'true');
 		item._input = inp;
 		inp.addEvent('click', function(e){
-			self.click(inp, self, e);
+			self._click(inp, self, e);
 		});
 
 		var text = self._getData(item, o.textField);
@@ -130,7 +130,7 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 		return inp;
 	},
 
-	click: function(inp, self, e){
+	_click: function(inp, self, e){
 		self.fireEvent('itemClick', [inp.checked,inp,self,e]);
 
 		var o = self.options;
@@ -142,7 +142,7 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 		self.fireEvent('valueChanged', [o.value,self,e]);
 	},
 
-	convertToGrid: function(fs){
+	_convertToGrid: function(fs){
 		var self = this,o = this.options;
 		if (!fs) fs = $(o.id);
 

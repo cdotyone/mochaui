@@ -26,7 +26,7 @@
  ...
  */
 
-MUI.files['controls|List/List.js'] = 'loaded';
+MUI.files['controls|list/list.js'] = 'loaded';
 
 MUI.List = new Class({
 
@@ -144,7 +144,7 @@ MUI.List = new Class({
 			for (i = 0; i < items.length; i++){
 				// build the row
 				var item = items[i];
-				self.buildItem(item, tbody);
+				self._buildItem(item, tbody);
 				tr = item._element;
 
 				// select row if it needs to selected
@@ -167,7 +167,7 @@ MUI.List = new Class({
 		return self;
 	},
 
-	buildItem: function(item, parent){
+	_buildItem: function(item, parent){
 		var self = this;
 		var o = self.options;
 		var id = o.id;
@@ -308,7 +308,7 @@ MUI.List = new Class({
 					a.title = cmd.text;
 					a.href = "#" + cmd.name;
 					a.addEvent('click', function(e){
-						self.onItemCommand(e, item, parent, cmd);
+						self._itemCommand(e, item, parent, cmd);
 						return false;
 					});
 
@@ -332,13 +332,13 @@ MUI.List = new Class({
 			tr.removeEvents('mouseout');
 			tr.removeEvents('click');
 			tr.addEvent('mouseover', function(e){
-				self.onItemOver(e, item, parent);
+				self._itemOver(e, item, parent);
 			});
 			tr.addEvent('mouseout', function(e){
-				self.onItemOut(e, item, parent);
+				self._itemOut(e, item, parent);
 			});
 			tr.addEvent('click', function(e){
-				self.onItemClick(e, item, parent);
+				self._itemClick(e, item, parent);
 			});
 		}
 
@@ -351,7 +351,7 @@ MUI.List = new Class({
 		return item[property];
 	},
 
-	onItemCommand: function(e, item, parent, cmd){
+	_itemCommand: function(e, item, parent, cmd){
 		var self = this;
 		e = new Event(e);
 		e.stop();
@@ -361,7 +361,7 @@ MUI.List = new Class({
 		self.fireEvent('itemCommand', [item,self,cmd,img]);
 	},
 
-	onItemClick: function(e, item, parent){
+	_itemClick: function(e, item, parent){
 		var self = this;
 		var o = self.options;
 
@@ -378,14 +378,14 @@ MUI.List = new Class({
 		return this;
 	},
 
-	onItemOver: function(e, item){
+	_itemOver: function(e, item){
 		if (item._element){
 			item._element.addClass('O');
 		}
 		return this;
 	},
 
-	onItemOut: function(e, item){
+	_itemOut: function(e, item){
 		if (item._element){
 			item._element.removeClass('O');
 		}

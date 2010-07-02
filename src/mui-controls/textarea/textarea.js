@@ -35,7 +35,7 @@
  ...
  */
 
-MUI.files['controls|TextArea/TextArea.js'] = 'loaded';
+MUI.files['controls|textarea/textarea.js'] = 'loaded';
 
 MUI.TextArea = new Class({
 
@@ -92,21 +92,6 @@ MUI.TextArea = new Class({
 		if (o.formTitleField) return self._getData(o.formData, o.formTitleField);
 		if (o.formData) return self._getData(o.formData, o.id);
 		return o.id;
-	},
-
-	fromHTML: function(){
-		var self = this,o = this.options;
-
-		var inp = $(o.id);
-		if (!inp) return self;
-		self.element = inp;
-
-		if (inp.get('type')) o.type = inp.get('type');
-		o.value = inp.get('defaultValue');
-		if (inp.get('class')) o.cssClass = inp.get('class');
-
-		self.draw();
-		return self;
 	},
 
 	draw: function(containerEl){

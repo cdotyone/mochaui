@@ -26,7 +26,7 @@
  ...
  */
 
-MUI.files['controls|SelectList/SelectList.js'] = 'loaded';
+MUI.files['controls|selectList/selectList.js'] = 'loaded';
 
 MUI.SelectList = new NamedClass('MUI.SelectList', {
 
@@ -73,31 +73,9 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 
 		// create sub items if available
 		if (this.options.createOnInit && this.options.items.length > 0) this.draw();
-		else if ($(id)) this.fromHTML(id);
+		else if ($(id) && this.fromHTML!=null) this.fromHTML(id);
 
 		MUI.set(id, this);
-	},
-
-	fromHTML: function(el){
-		var self = this;
-		var o = self.options;
-		el = $(el);
-		if (el){
-			var nItems = new Array();
-
-			o.cssClass = el.get('class');
-			var list = el.getElement('table');
-			if (list){
-				var rows = list.getElements('TR');
-				for (var i = 0; i < rows.length; i++){
-					self.itemFromHTML(rows[i]);
-				}
-			}
-
-			o.items = nItems;
-			el.style.visibility = 'visible';
-		}
-		return this;
 	},
 
 	_getData: function(item, property){
@@ -123,7 +101,7 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 			drop = new Element('div', {id:id + '_droplist','class':o.dropCssClass,styles:{'width':parseInt('' + o.width) + 'px'}}).inject(panel);
 			self.dropElement = drop;
 			drop.addEvent('click', function(e){
-				self.onOpen(e);
+				self._open(e);
 			});
 
 			self.textElement = new Element('div', {id:id + '_text','class':'text','text':'1 selected',styles:{'width':(parseInt('' + o.width) - 24) + 'px'}}).inject(drop);
@@ -149,8 +127,8 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		var ul = new Element('ul').inject(div);
 
 		for (var i = 0; i < o.items.length; i++){
-			if (o.items[i].isBar) this.buildBar(o.items[i], ul);
-			else this.buildItem(o.items[i], ul, (i % 2));
+			if (o.items[i].isBar) this._buildBar(o.items[i], ul);
+			else this._buildItem(o.items[i], ul, (i % 2));
 		}
 
 		if (!isNew) return this;
@@ -209,7 +187,7 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		self.draw();
 	},
 
-	onSelected: function(e, item){
+	_selected: function(e, item){
 		var self = this;
 		var o = self.options;
 		if (e.target && e.target.tagName == 'INPUT') return true;
@@ -240,7 +218,7 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		}
 	},
 
-	onChecked: function(e, item){
+	_checked: function(e, item){
 		e.stopPropagation();
 		var self = this;
 		var o = self.options;
@@ -255,15 +233,15 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		return true;
 	},
 
-	onOver: function(e, item){
+	_over: function(e, item){
 		item._element.addClass('O');
 	},
 
-	onOut: function(e, item){
+	_out: function(e, item){
 		item._element.removeClass('O');
 	},
 
-	onOpen: function(){
+	_open: function(){
 		var self = this;
 		var pos = self.dropElement.getCoordinates();
 		var element = self.element;
@@ -274,7 +252,7 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 			element.removeEvent('mouseleave');
 			button.removeEvent('click');
 			button.addEvent('click', function(e){
-				self.onOpen(e);
+				self._open(e);
 			});
 		};
 		element.addEvent('mouseleave', close);
@@ -282,7 +260,7 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		button.addEvent('click', close);
 	},
 
-	buildItem: function(item, ul, alt){
+	_buildItem: function(item, ul, alt){
 		var self = this;
 		var o = self.options;
 
@@ -293,13 +271,13 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		var isSelected = self._getData(item, o.isSelectedField);
 		if (isSelected) li.addClass('C');
 		li.addEvent('click', function(e){
-			self.onSelected(e, item);
+			self._selected(e, item);
 		});
 		li.addEvent('mouseover', function(e){
-			self.onOver(e, item);
+			self._over(e, item);
 		});
 		li.addEvent('mouseout', function(e){
-			self.onOut(e, item);
+			self._out(e, item);
 		});
 		item._element = li;
 
@@ -309,7 +287,7 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 			var input = new Element('input', { 'type': 'checkbox', 'name': id, 'id': id, 'value':value }).inject(li);
 			if (isSelected) input.checked = true;
 			input.addEvent('click', function(e){
-				self.onChecked(e, item);
+				self._checked(e, item);
 			});
 			item._checkBox = input;
 		}
@@ -320,38 +298,11 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		return li;
 	},
 
-	buildBar: function(item, ul){
+	_buildBar: function(item, ul){
 		var li = new Element('li', {'class':'bar'}).inject(ul);
 		item._element = $(li);
 		new Element('hr').inject(li);
 		return li;
-	},
-
-	itemFromHTML: function(rw){
-		var item = new Hash;
-		rw = $(rw);
-		item._element = rw;
-
-		var inp = rw.getElement('input');
-		if (inp){
-			item.id = inp.id;
-			item.name = inp.name;
-			item.value = inp.value;
-			item.isSelected = inp.checked;
-			item._checkBox = inp;
-		}
-
-		if (rw.getElement('hr')) item.isBar = true;
-		else {
-			var c = rw.getElements('TD');
-			if (c.length > 1){
-				item.text = c[1].innerText;
-			} else {
-				item.text = c[0].innerText;
-			}
-		}
-
-		this.options.items.push(item);
 	}
 
 });

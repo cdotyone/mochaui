@@ -26,7 +26,7 @@
  ...
  */
 
-MUI.files['controls|Tabs/Tabs.js'] = 'loaded';
+MUI.files['controls|tabs/tabs.js'] = 'loaded';
 
 MUI.Tabs = new Class({
 
@@ -64,7 +64,7 @@ MUI.Tabs = new Class({
 
 		// create sub items if available
 		if (o.createOnInit && o.tabs.length > 0) this.draw();
-		else {
+		else if(self.fromHTML) {
 			window.addEvent('domready', function(){
 				var el = $(id);
 				if (el != null) self.fromHTML();
@@ -78,35 +78,6 @@ MUI.Tabs = new Class({
 		if (!item || !property) return '';
 		if (item[property] == null) return '';
 		return item[property];
-	},
-
-	fromHTML: function(el){
-		var self = this;
-		var o = self.options;
-		if (!el) el = $(o.id);
-		else el = $(el);
-		if (!el) return;
-
-		o.cssClass = el.get('class');
-
-		var tabs = $A([]);
-		el.getElements('li').each(function(li){
-			var tab = {};
-
-			var value = li.get('id');
-			if (!value) value = 'tab' + (++MUI.IDCount);
-
-			var a = li.getElement('a');
-			var title = a.get('title');
-
-			tab[o.valueField] = value;
-			tab[o.textField] = a.get('text');
-			if (title) tab[o.titleField] = title;
-
-			tabs.push(tab);
-		});
-		o.tabs = tabs;
-		self.draw();
 	},
 
 	draw: function(containerEl){
@@ -133,7 +104,7 @@ MUI.Tabs = new Class({
 
 		// build all tabs
 		$A(o.tabs).each(function(tab){
-			self.buildTab(tab, ul);
+			self._buildTab(tab, ul);
 		});
 
 		// add a formatting div
@@ -149,7 +120,7 @@ MUI.Tabs = new Class({
 		return div;
 	},
 
-	buildTab: function(tab, ul){
+	_buildTab: function(tab, ul){
 		var self = this;
 		var o = self.options;
 
@@ -163,7 +134,7 @@ MUI.Tabs = new Class({
 		tab._element = li;
 
 		li.addEvent('click', function(e){
-			self.onTabClick(tab, ul, e);
+			self._tabClick(tab, ul, e);
 		});
 		a.addEvent('click', function(e){
 			e.preventDefault();
@@ -174,7 +145,7 @@ MUI.Tabs = new Class({
 		if (o.value == value) li.addClass('sel');
 	},
 
-	onTabClick: function(tab, ul, e){
+	_tabClick: function(tab, ul, e){
 		var self = this;
 		var o = self.options;
 		e.stopPropagation();
