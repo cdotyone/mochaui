@@ -42,9 +42,13 @@ MUI.Tree = new Class({
 
 		,textField:			'text'		// the name of the field that has the node's text
 		,valueField:		'value'		// the name of the field that has the node's value
+		,idField:			'id'		// the name of the field that has anchors id value
 		,titleField:		'title'		// the name of the field that has the node's tip text
 		,isCheckedField:	'checked'	// the name of the field that has the node's isChecked state
 		,hasChildrenField:	'hasChildren'// the name of the field that has the node's hasChildren flag
+		,imageField:		'image'		// the name of the field that has the node's image if imageOpenField and imageClosedField are not defined
+		,imageOpenField:	'imageOpen'	// the name of the field that has the node's open image
+		,imageClosedField:	'imageClosed'// the name of the field that has the node's closed image
 
 		,showCheckBox:		false		// true to show checkBoxes
 		,canSelect:			true		// can the user select a node by clicking it
@@ -55,6 +59,7 @@ MUI.Tree = new Class({
 		,onNodeExpanded:	$empty		// event: called when node is expanded
 		,onNodeChecked: 	$empty		// event: called when node's checkbox is checked
 		,onNodeSelected:	$empty		// event: when a node is checked
+		,onContentLoaded:	$empty		// event: called when tree is done building itself
 	},
 
 	initialize: function(options){
@@ -87,17 +92,18 @@ MUI.Tree = new Class({
 		var div = $(o.id);
 		var ul;
 		if (!div){
-			div = new Element('div');
-			div.id = o.id;
-			isNew = true;
+			var container=MUI.get(MUI.get($(containerEl ? containerEl : o.container)));
+			if(container && (container.isTypeOf('MUI.Panel') || container.isTypeOf('MUI.Window'))) {
+				//container.contentEl.setStyle('display','none');
+				div = container.contentEl.addClass('tree');
+			} else {
+				div = new Element('div',{'id':o.id,'class':o.cssClass});
+				isNew = true;
+			}
 		} else ul = div.getElement('ul');
 		if (!ul){
-			ul = new Element('ul').inject(div);
+			ul = new Element('ul',{'class':o.cssClass}).inject(div);
 		} else ul.empty();
-		if (o.cssClass){
-			div.set('class', o.cssClass);
-			ul.set('class', o.cssClass);
-		}
 		self.element = div;
 
 		var nodes = o.nodes;
@@ -108,16 +114,22 @@ MUI.Tree = new Class({
 		nodes.each(function(node){
 			self.buildNode(node, ul, 1);
 		});
+		var first = ul.getFirst();
+		if(first) first.addClass('first');
 		var last = ul.getChildren().getLast();
 		if (last) last.addClass('last');
 
 		o.depth = 0;
 
-		if (!isNew) return this;
+		if (!isNew) {
+			self.fireEvent('contentLoaded', [self]);
+			return this;
+		}
 
 		window.addEvent('domready', function(){
 			var container = $(containerEl ? containerEl : o.container);
 			container.appendChild(div);
+			self.fireEvent('contentLoaded', [self]);
 		});
 
 		return div;
@@ -167,23 +179,25 @@ MUI.Tree = new Class({
 		var o = this.options;
 		if (!depth) depth = 1;
 
-		var a, span, t, ul, li;
-		if (node._element != null){
-			li = node._element;
-		}
-		if (!li) li = new Element('li');
+		var a, span, ul, li;
+		var id = self._getData(node, o.idField);
+		if(!id) id='tn'+(++MUI.IDCount);
+		
+		if (node._element != null) li = node._element;
+		if (!li) li = new Element('li',{'id':id+'_li'});
 		else li.empty();
 
-		if (parent){
+		if (parent) {
 			if (parent._ul) li.inject(parent._ul);
 			else li.inject(parent);
 		}
 
 		var value = self._getData(node, o.valueField);
 		var text = self._getData(node, o.textField);
-		if (o.showCheckBox) node._checkbox = new Element('INPUT', { 'type':'checkbox', 'value': value }).inject(li);
-		a = new Element('a', {'href':'#' + value}).inject(li);
-		span = new Element('span', {'text':text}).inject(a);
+		if (o.showCheckBox) node._checkbox = new Element('INPUT', { 'type':'checkbox', 'value': value,'id':id+'_cb' }).inject(li);
+		a = new Element('a', {'href':'#' + value,'id':id}).inject(li);
+		span = new Element('span', {'text':text,'id':id+'_tle'}).inject(a);
+		node._span = span;
 
 		node._element = li;
 		var title = self._getData(node, o.titleField);
@@ -193,11 +207,6 @@ MUI.Tree = new Class({
 			self.element.getElements('.sel').removeClass('sel');
 			a.className = 'sel';
 			o.selectedNode = self;
-		}
-
-		if (node.image){
-			span.style.background = 'transparent url(' + node.image + ') no-repeat scroll left top';
-			span.style.paddingLeft = '20px';
 		}
 
 		if (node.nodes && node.nodes.length > 0){
@@ -214,6 +223,9 @@ MUI.Tree = new Class({
 			ul.childNodes[ul.childNodes.length - 1].addClass('last');
 		} else li.addClass('nochild');
 		if (node.isExpanded) li.set('class', 'O');
+
+		// add image to node if necessary
+		this._nodeSetImage(node);
 
 		var hasChildren = self._getData(node, o.hasChildrenField);
 		if ((!node.nodes || node.nodes.length == 0) && !hasChildren) li.addClass('nochild');
@@ -244,9 +256,7 @@ MUI.Tree = new Class({
 		var o = self.options;
 		if (node != null){
 			var value = self._getData(node, o.valueField);
-			if (value && value + '' == val + ''){
-				return node;
-			}
+			if (value && value + '' == val + '') return node;
 		} else node = self;
 		var nodes;
 		if (node.options) nodes = node.options.nodes;
@@ -320,9 +330,35 @@ MUI.Tree = new Class({
 				node.isExpanded = true;
 				//if (node.nodes.length > 0) return;
 			}
+			this._nodeSetImage(node);
 		}
 
 		self.fireEvent('nodeExpanded', [node,node.isExpanded,self,e]);
+	},
+
+	_nodeSetImage: function(node) {
+		var o=this.options;
+		var span=node._span;
+
+		var def=this._getData(node, o.imageField);
+		var open = this._getData(node, o.imageOpenField) || def;
+		var closed = this._getData(node, o.imageClosedField) || def;
+		if (closed) span.removeClass(closed);
+		if (open) span.removeClass(open);
+		if(closed && !node.isExpanded) {
+			if(closed.substr(0,1)=='_') span.addClass(closed);
+			else {
+				span.style.background = 'transparent url(' + closed + ') no-repeat scroll left top';
+				span.style.paddingLeft = '20px';
+			}
+		}
+		if (open && node.isExpanded){
+			if(open.substr(0,1)=='_') span.addClass(open);
+			else {
+				span.style.background = 'transparent url(' + open+ ') no-repeat scroll left top';
+				span.style.paddingLeft = '20px';
+			}
+		}
 	},
 
 	onNodeClick: function(node, e){

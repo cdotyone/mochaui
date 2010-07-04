@@ -470,3 +470,11 @@ div.panel div.pad.tree ul.tree li a:hover {
 	background-color: white;
 	color: black;
 }
+
+ul.tree ul li.O.first {
+	background: transparent url(../images/tree_open_first.gif) no-repeat left top;
+}
+
+ul.tree ul li.C.first {
+	background: transparent url(../images/tree_close_first.gif) no-repeat left top;
+}

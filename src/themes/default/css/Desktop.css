@@ -455,3 +455,11 @@ div.panel div.pad.tree ul ul li.last {
 div.panel div.pad.tree ul li.last {
 	background-color: #f8f8f8;
 }
+
+ul.tree ul li.O.first {
+	background: transparent url(../images/tree_open_first.gif) no-repeat left top;
+}
+
+ul.tree ul li.C.first {
+	background: transparent url(../images/tree_close_first.gif) no-repeat left top;
+}
