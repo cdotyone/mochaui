@@ -432,5 +432,41 @@ div.toolbox.divider {
 	background: url(../images/spinner.gif) no-repeat;
 	width: 16px;
 	height: 16px;
-}	
+}
 
+/* tree */
+div.panel div.pad.tree {
+	overflow: hidden;
+	background-color: #303030;
+}
+
+div.panel div.pad.tree ul ul li.last {
+	background-color: #303030;
+}
+
+div.panel div.pad.tree ul li.last {
+	background-color: #303030;
+}
+
+div.panel div.pad.tree ul.tree li a:link {
+	text-decoration: none;
+	vertical-align: middle;
+	color: #CFCFCF
+}
+
+div.panel div.pad.tree ul.tree li a:visited {
+	text-decoration: none;
+	vertical-align: middle;
+	color: #CFCFCF
+}
+
+div.panel div.pad.tree ul.tree li a:active {
+	text-decoration: none;
+	vertical-align: middle;
+	color: #CFCFCF
+}
+
+div.panel div.pad.tree ul.tree li a:hover {
+	background-color: white;
+	color: black;
+}

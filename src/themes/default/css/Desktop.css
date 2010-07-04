@@ -157,7 +157,8 @@ body {
 	left: -999em;
 }
 
-#desktopNavbar li ul ul { /* third-and-above-level lists */
+#desktopNavbar li ul ul {
+/* third-and-above-level lists */
 	margin: -22px 0 0 163px;
 }
 
@@ -196,12 +197,14 @@ body {
 #desktopNavbar li li.ieHover ul,
 #desktopNavbar li li li.ieHover ul,
 #desktopNavbar li li:hover ul,
-#desktopNavbar li li li:hover ul { /* lists nested under hovered list items */
+#desktopNavbar li li li:hover ul {
+/* lists nested under hovered list items */
 	left: auto;
 }
 
-#desktopNavbar li:hover { /* For IE7 */
-    position: static;
+#desktopNavbar li:hover {
+/* For IE7 */
+	position: static;
 }
 
 li.divider {
@@ -235,8 +238,6 @@ li.divider {
 	padding: 6px 8px 0 8px;
 	background: #f2f2f2;
 }
-
-
 
 /* Panel Layout
 ---------------------------------------------------------------- */
@@ -293,7 +294,7 @@ li.divider {
 .panel-headerContent.tabs {
 	background: url(../images/tabs.gif) repeat-x;
 	background-position: left -68px;
-	padding-top:0;
+	padding-top: 0;
 }
 
 .panel-header h2 {
@@ -393,7 +394,8 @@ li.divider {
 .panel-header-toolbox {
 }
 
-div.toolbox.divider { /* Have to specify div here for IE6's sake */
+div.toolbox.divider {
+/* Have to specify div here for IE6's sake */
 	background: url(../images/toolbox-divider.gif) repeat-y;
 	padding-left: 8px;
 }
@@ -427,10 +429,10 @@ div.toolbox.divider { /* Have to specify div here for IE6's sake */
 }
 
 #spinnerWrapper {
-    width: 16px;
-    height: 16px;
-    background: url(../images/spinner-placeholder.gif) no-repeat;
-    margin: 4px 5px 0 5px;
+	width: 16px;
+	height: 16px;
+	background: url(../images/spinner-placeholder.gif) no-repeat;
+	margin: 4px 5px 0 5px;
 }
 
 #spinner {
@@ -438,5 +440,18 @@ div.toolbox.divider { /* Have to specify div here for IE6's sake */
 	background: url(../images/spinner.gif) no-repeat;
 	width: 16px;
 	height: 16px;
-}	
+}
 
+/* tree */
+div.panel div.pad.tree {
+	overflow: hidden;
+	background-color: #f8f8f8;
+}
+
+div.panel div.pad.tree ul ul li.last {
+	background-color: #f8f8f8;
+}
+
+div.panel div.pad.tree ul li.last {
+	background-color: #f8f8f8;
+}

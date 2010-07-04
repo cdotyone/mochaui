@@ -42,17 +42,17 @@
 
 .dockTab {
 	float: left;
-	position: relative;	
+	position: relative;
 	font-size: 11px;
 	width: 150px;
 	height: 24px;
 	margin: 0 3px 2px 0;
-	overflow: hidden;	
+	overflow: hidden;
 	cursor: pointer;
 	background: url(../images/dock-tabs.gif) left top no-repeat;
 }
 
-.dockTab.activeDockTab {	
+.dockTab.activeDockTab {
 	background-position: left -24px;
 }
 
@@ -62,7 +62,7 @@
 	left: 0;
 	display: block;
 	font-weight: bold;
-	color: #bbb;	
+	color: #bbb;
 	text-align: left;
 	padding: 4px 10px 2px 10px;
 	width: 130px;
@@ -82,7 +82,7 @@
 	position: absolute;
 	top: 5px;
 	right: 3px;
-	z-index: 2;	
+	z-index: 2;
 }
 
 #dockPlacement {
@@ -90,11 +90,11 @@
 	top: 4px;
 	right: 8px;
 	width: 10px;
-	height: 9px;	
+	height: 9px;
 	opacity: 0;
 	cursor: pointer;
 	z-index: 3; /* for IE */
-	text-align: right;	
+	text-align: right;
 }
 
 #dockAutoHide {
@@ -102,11 +102,11 @@
 	top: 14px;
 	right: 8px;
 	width: 10px;
-	height: 9px;	
+	height: 9px;
 	opacity: 0;
 	cursor: pointer;
 	z-index: 3; /* for IE */
-	text-align: right;	
+	text-align: right;
 }
 
 .dockButtonEnabled {
@@ -114,7 +114,7 @@
 }
 
 .dockButtonDisabled {
-	background-color: #aaa;	
+	background-color: #aaa;
 }
 
 .dockButtonTrue {
