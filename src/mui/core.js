@@ -53,6 +53,8 @@ MUI.extend({
 	instances: new Hash(),
 	IDCount: 0,
 
+	classes: {},
+
 	path: MUI.options.path,		// depreciated, will be removed
 
 	replacePaths: function(files){
@@ -102,6 +104,44 @@ MUI.extend({
 	each: function(func){
 		this.instances.each(func);
 		return this;
+	},
+
+
+	create:function(type,options){
+		if(MUI.files['controls|mui-controls.js'] != 'loaded') {
+			new MUI.Require({
+				'js':['controls|mui-controls.js'],
+				'onload':function() {
+					MUI.create(type,options);
+				}
+			});
+			return;
+		}
+
+		var name=type.replace(/(^MUI\.)/i,'');
+		var sname=name.toLowerCase();
+		if(MUI.classes[sname]==null) return null;
+
+		var js=['controls|'+sname+'/'+sname+'.js'];
+		if(MUI.files[js[0]]=='loaded') {
+			var klass=MUI[name];
+			return new klass(options);
+		}
+
+		var additionalOptions=MUI.classes[sname];
+		var css=[];
+		if(additionalOptions.css) css=additionalOptions.css;
+
+		var ret;
+		new MUI.Require({
+			'js':js,
+			'css':css,
+			'onload':function() {
+				var klass=MUI[name];
+				ret = new klass(options);
+			}
+		});
+		return ret;
 	},
 
 	initialize: function(options){
