@@ -417,9 +417,10 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 			var expandedSiblings = [];
 
 			panelWrapper.getAllPrevious('.panelWrapper').each(function(sibling){
-				var instance = MUI.get(sibling.getElement('.panel').id);
-				if (!instance.isCollapsed)
-					expandedSiblings.push(sibling.getElement('.panel').id);
+				var panel=sibling.getElement('.panel');
+				if(!panel) return;
+				var instance = MUI.get(panel.id);
+				if (!instance.isCollapsed) expandedSiblings.push(panel.id);
 			});
 
 			panelWrapper.getAllNext('.panelWrapper').each(function(sibling){

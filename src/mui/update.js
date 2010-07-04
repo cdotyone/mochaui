@@ -131,7 +131,7 @@ MUI.extend({
 		}
 
 		// prepare function to fire onContentLoaded event
-		options.fireContentLoaded = function(event, instance, options){
+		options.fireContentLoaded = function(event, instance, options, json){
 			var fireEvent = true;
 			if (instance && instance.updateEnd) fireEvent = instance.updateEnd(options);
 			if (fireEvent){
@@ -144,7 +144,7 @@ MUI.extend({
 							if (options.onContentLoaded && options.onContentLoaded != $empty){
 								options.onContentLoaded()
 							} else {
-								if (instance) instance.fireEvent(event, element);
+								if (instance) instance.fireEvent(event, [element,options,json]);
 							}
 						}.bind(this)
 					});
@@ -152,7 +152,7 @@ MUI.extend({
 					if (options.onContentLoaded && options.onContentLoaded != $empty){
 						options.onContentLoaded()
 					} else {
-						if (instance) instance.fireEvent(event, element);
+						if (instance) instance.fireEvent(event, [element,options,json]);
 					}
 				}
 			}
@@ -226,6 +226,7 @@ MUI.Content.Providers.xhr = function(instance, options){
 };
 
 MUI.Content.Providers.json = function(instance, options){
+	var fireContentLoaded = options.fireContentLoaded;
 	var contentContainer = options.contentContainer;
 
 	new Request({
@@ -256,7 +257,7 @@ MUI.Content.Providers.json = function(instance, options){
 			// onLoaded - event should call updateContent again with loadMethod='html'
 
 			contentContainer.hideSpinner(instance);
-			Browser.Engine.trident4 ? fireContentLoaded.delay(50, this, ['loaded', instance, options]) : fireContentLoaded('loaded', instance, options);
+			Browser.Engine.trident4 ? fireContentLoaded.delay(50, this, ['loaded', instance, options, json]) : fireContentLoaded('loaded', instance, options, json);
 		}.bind(this),
 		onComplete: function(){
 		}.bind(this)
