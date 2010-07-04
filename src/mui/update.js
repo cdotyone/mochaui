@@ -323,8 +323,10 @@ MUI.extend({
 		updateStart: function(options){
 			if (options.section == 'content'){
 				// copy padding from main options if not passed in
-				if (!options.padding && this.options.padding)
+				if (!options.padding && this.options.padding && $type(this.options.padding)!='number')
 					options.padding = $extend(options, this.options.padding);
+				if (!options.padding && this.options.padding && $type(this.options.padding)=='number')
+					options.padding = {top:this.options.padding,left:this.options.padding,right:this.options.padding,bottom:this.options.padding};
 
 				// update padding if requested
 				if (options.padding) this.contentEl.setStyles({
