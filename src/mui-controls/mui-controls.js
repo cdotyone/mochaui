@@ -19,7 +19,7 @@ MUI.files['controls|mui-controls.js'] = 'loaded';
 
 $extend(MUI.classes, {
 
-	'accordion':{'samples':['html','js'],'description':'Accordion','isFormControl':true},
+	'accordion':{'samples':['html','js'],'description':'Accordion','isFormControl':true,'css':['controls|accordion/style.css']},
 	'calender':{'samples':['html'],'description':'Calender','isFormControl':true},
 	'checkboxgrid':{'samples':['js'],'description':'Check Box Grid','isFormControl':true},
 	'imagebutton':{'samples':['js'],'description':'Image Button','isFormControl':true},

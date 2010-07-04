@@ -50,6 +50,7 @@ MUI.Accordion = new Class({
 		,selectedPanel:		null		// the currently selected panel
 		,height:			false		// If set, displayed elements will have a fixed height equal to the specified value.
 		,width:				false		// If set, displayed elements will have a fixed width equal to the specified value.
+		,insertTitle:		true		// If set, the title will be inserted into the panel html
 
 		,heightFx:			true		// If set to true, a height transition effect will take place when switching between displayed elements.
 		,widthFx:			false		// If set to true, it will add a width transition to the accordion when switching between displayed elements. Warning: CSS mastery is required to make this work!
@@ -99,8 +100,15 @@ MUI.Accordion = new Class({
 		// build primary wrapper div
 		var div = $(o.id);
 		if (!div){
-			div = new Element('div', {'id':o.id});
-			isNew = true;
+			var instance=MUI.get(MUI.get($(containerEl ? containerEl : o.container)));
+			if(instance && (instance.isTypeOf('MUI.Panel') || instance.isTypeOf('MUI.Window'))) {
+				instance.contentEl.setStyle('padding',0);
+				instance.options.padding=0;
+				div = instance.contentEl.addClass(o.cssClass);
+			} else {
+				div = new Element('div',{'id':o.id});
+				isNew = true;
+			}
 		} else div.empty();
 		if (o.cssClass) div.set('class', o.cssClass);
 		self.element = div;
@@ -138,11 +146,23 @@ MUI.Accordion = new Class({
 					,'alwaysHide':o.alwaysHide
 					,'initialDisplayFx':o.initialDisplayFx
 					,onActive: function(toggler){
-					toggler.addClass('open');
-				}
-				,onBackground: function(toggler){
-				toggler.removeClass('open');
-			}
+						toggler.addClass('open');
+					},
+					onBackground: function(toggler){
+						toggler.removeClass('open');
+					},
+					onStart: function(){
+						var id=MUI.getID(self.options.container);
+						self.accordionResize = function(){
+							MUI.dynamicResize($(id));
+						};
+						self.accordionTimer = self.accordionResize.periodical(10);
+					},
+					onComplete: function(){
+						var id=MUI.getID(self.options.container);
+						self.accordionTimer = $clear(self.accordionTimer);
+						MUI.dynamicResize($(id)); // once more for good measure
+					}
 			});
 		};
 
@@ -168,7 +188,12 @@ MUI.Accordion = new Class({
 
 		panel._togglerEl = new Element('h3', {'id':value,'class':'toggler','text':text,'title':title}).inject(div);
 		panel._element = new Element('div', {'id':value + '_panel','class':'element'}).inject(div);
-		panel._contentEl = new Element('div', {'class':'content','html':html}).inject(panel._element);
+		panel._contentEl = new Element('div', {'class':'content'}).inject(panel._element);
+
+		if(o.insertTitle) {
+			new Element('h3', {'html':title}).inject(panel._contentEl);
+			new Element('p', {'html':html}).inject(panel._contentEl);
+		} else panel._contentEl.set('html',html);
 
 		self._togglers.push(panel._togglerEl);
 		self._panels.push(panel._element);

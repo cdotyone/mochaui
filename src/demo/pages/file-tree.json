@@ -9,7 +9,7 @@
 		{'value':'ajaxpageLink','text':'Ajax/XHR Demo','isChecked': false,'isSelected': false, 'image':'_doc'},
 		{'value':'jsonLink','text':'Json Demo','isChecked': false,'isSelected': false, 'image':'_doc'},
 		{'value':'youtubeLink','text':'Iframe','isChecked': false,'isSelected': false, 'image':'_doc'},
-		{'value':'accordiantestLink','text':'Accordian','isChecked': false,'isSelected': false, 'image':'_doc'},
+		{'value':'accordiontestLink','text':'Accordion','isChecked': false,'isSelected': false, 'image':'_doc'},
 		{'value':'parametricsLink','text':'Window Parametrics','isChecked': false,'isSelected': false, 'image':'_doc'},
 		{'value':'splitWindowLink','text':'Split Window','isChecked': false,'isSelected': false, 'image':'_doc'}
 	]},

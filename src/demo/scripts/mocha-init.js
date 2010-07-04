@@ -373,50 +373,32 @@ var initializeWindows = function(){
 		});
 	}
 
-	MUI.accordianTestWindow = function(){
-		var id = 'accordiantest';
+	MUI.accordionTestWindow = function(){
+		var id = 'accordiontest';
 		new MUI.Window({
 			id: id,
-			title: 'Accordian',
-			contentURL: 'pages/accordian-demo.html',
+			title: 'Accordion',
+			contentURL: 'pages/accordion-demo.json',
 			width: 300,
 			height: 200,
 			scrollbars: false,
 			resizable: false,
 			maximizable: false,
-			padding: {top: 0, right: 0, bottom: 0, left: 0},
-			require: {
-				css: ['plugins|accordian/css/style.css'],
-				onload: function(){
-					this.windowEl = $(id);
-					new Accordion('#' + id + ' h3.accordianToggler', '#' + id + ' div.accordianElement', {
-						opacity: false,
-						alwaysHide: true,
-						onActive: function(toggler){
-							toggler.addClass('open');
-						},
-						onBackground: function(toggler){
-							toggler.removeClass('open');
-						},
-						onStart: function(){
-							this.windowEl.accordianResize = function(){
-								MUI.dynamicResize($(id));
-							};
-							this.windowEl.accordianTimer = this.windowEl.accordianResize.periodical(10);
-						}.bind(this),
-						onComplete: function(){
-							this.windowEl.accordianTimer = $clear(this.windowEl.accordianTimer);
-							MUI.dynamicResize($(id)); // once more for good measure
-						}.bind(this)
-					}, $(id));
-				}
+
+			loadMethod: 'json',
+			onLoaded: function(el,cOptions,json){
+				MUI.create('MUI.Accordion',{
+					'container':id,
+					'idField':'value',
+					'panels':json
+				});
 			}
 		});
 	};
-	if ($('accordiantestLinkCheck')){
-		$('accordiantestLinkCheck').addEvent('click', function(e){
+	if ($('accordiontestLinkCheck')){
+		$('accordiontestLinkCheck').addEvent('click', function(e){
 			e.stop();
-			MUI.accordianTestWindow();
+			MUI.accordionTestWindow();
 		});
 	}
 
@@ -826,8 +808,8 @@ var initializeColumns = function(){
 					$('youtubeLink').addEvent('click', function(){
 						MUI.youtubeWindow();
 					});
-					$('accordiantestLink').addEvent('click', function(){
-						MUI.accordianTestWindow();
+					$('accordiontestLink').addEvent('click', function(){
+						MUI.accordionTestWindow();
 					});
 					$('clockLink').addEvent('click', function(){
 						MUI.clockWindow();
