@@ -107,7 +107,7 @@ MUI.extend({
 	},
 
 
-	create:function(type,options){
+	create:function(type,options,fromHTML){
 		if(MUI.files['controls|mui-controls.js'] != 'loaded') {
 			new MUI.Require({
 				'js':['controls|mui-controls.js'],
@@ -123,10 +123,13 @@ MUI.extend({
 		if(MUI.classes[sname]==null) return null;
 
 		var js=['controls|'+sname+'/'+sname+'.js'];
-		if(MUI.files[js[0]]=='loaded') {
+
+		if(MUI.files[js[0]]=='loaded' && !fromHTML) {
 			var klass=MUI[name];
 			return new klass(options);
 		}
+
+		if(fromHTML) js.push('controls|'+sname+'/'+sname+'_html.js');
 
 		var additionalOptions=MUI.classes[sname];
 		var css=[];
@@ -139,6 +142,7 @@ MUI.extend({
 			'onload':function() {
 				var klass=MUI[name];
 				ret = new klass(options);
+				if(fromHTML) ret.fromHTML();
 			}
 		});
 		return ret;

@@ -354,8 +354,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 		if (!options.useCSS3) this.useCSS3 = false;
 		else if (Browser.Engine.gecko && Browser.Engine.version >= 19) this.useCSS3 = true; // FF3.6
 		else if (Browser.Engine.webkit && Browser.Engine.version >= 525) this.useCSS3 = true; // S4
-		else if (Browser.Engine.trident && Browser.Engine.version > 6) this.useCSS3 = true; // IE9
-		else this.useCSS3 = false;
+		else this.useCSS3 = Browser.Engine.trident && Browser.Engine.version > 6;
 
 		// if somebody wants CSS3 but not canvas and condition are false for css3
 		// i.e. IE8 Test CSS3 Body

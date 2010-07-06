@@ -119,7 +119,7 @@ MUI.Accordion = new Class({
 		// if no tab selected, then select first tab for them
 		if (o.panels.length > 0 && (o.value == null || o.value == '')) o.value = self._getData(o.panels[0], o.valueField);
 
-		// build all tabs
+		// build all panels
 		self._togglers = [];
 		self._panels = [];
 		$A(o.panels).each(function(panel){

@@ -142,7 +142,7 @@ MUI.extend({
 							if (Browser.Engine.presto) options.require.onload.delay(100);
 							else options.require.onload();
 							if (options.onContentLoaded && options.onContentLoaded != $empty){
-								options.onContentLoaded()
+								options.onContentLoaded(element,options,json)
 							} else {
 								if (instance) instance.fireEvent(event, [element,options,json]);
 							}
@@ -150,7 +150,7 @@ MUI.extend({
 					});
 				} else {
 					if (options.onContentLoaded && options.onContentLoaded != $empty){
-						options.onContentLoaded()
+						options.onContentLoaded(element,options,json)
 					} else {
 						if (instance) instance.fireEvent(event, [element,options,json]);
 					}
@@ -228,6 +228,11 @@ MUI.Content.Providers.xhr = function(instance, options){
 MUI.Content.Providers.json = function(instance, options){
 	var fireContentLoaded = options.fireContentLoaded;
 	var contentContainer = options.contentContainer;
+
+	if(options.content) {
+		Browser.Engine.trident4 ? fireContentLoaded.delay(50, this, ['loaded', instance, options, options.content]) : fireContentLoaded('loaded', instance, options, options.content);
+		return;
+	}
 
 	new Request({
 		url: options.url,
