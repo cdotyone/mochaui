@@ -112,9 +112,21 @@ var initializeWindows = function(){
 			sections: [{
 				'position': 'top',
 				section: 'toolbar',
-				url: 'pages/youtube-tabs.html',
-				onContentLoaded: function(){
-					MUI.initializeTabs('youtubeTabs', 'youtube');
+				loadMethod:'json',
+				content: [
+					{'text':'Zero 7','url':'pages/youtube.html','title':'Zero 7'},
+					{'text':'Fleet Foxes','url':'pages/youtube2.html','title':'Fleet Foxes'},
+					{'text':'Boards of Canada','url':'pages/youtube3.html','title':'Boards of Canada'}
+				],
+				onContentLoaded: function(element,uOptions,json) {
+					MUI.create('MUI.Tabs',{
+						'id':'youtube_toolbar',
+						'container':'youtube',
+						'position': 'top',
+						'tabs':json,
+						'partner':'youtube',
+						'section':'toolbar'
+					})
 				}
 			}]
 		});
@@ -624,15 +636,18 @@ var initializeWindows = function(){
 			width: 275,
 			height: 250,
 			resizeLimit: {'x': [275, 2500], 'y': [125, 2000]},
-			require: {
-				css: ['theme|css/Tabs.css']
-			},
 			sections: [{
 				'position': 'top',
 				section: 'toolbar',
 				url: 'pages/features-tabs.html',
-				onContentLoaded: function(){
-					MUI.initializeTabs('featuresTabs', 'features');
+				onContentLoaded: function(element,uOptions,json) {
+					MUI.create('MUI.Tabs',{
+						'id':'features_toolbar',
+						'container':'features',
+						'position': 'top',
+						'partner':'features',
+						'section':'toolbar'
+					},true);
 				}
 			}]
 		});
@@ -972,12 +987,19 @@ var initializeColumns = function(){
 		sections: [{
 			position: 'header',
 			section: 'tabs',
-			addClass: 'tabs',
 			empty: true,
-			url: 'pages/panel-tabs.html',
-		 	require: {css: ['theme|css/Tabs.css']},
-			onContentLoaded: function(){
-				MUI.initializeTabs('panelTabs', 'help-panel');
+			loadMethod:'json',
+			content: [
+				{'text':'Overview','url':'pages/overview.html','title':'Overview'},
+				{'text':'Download','url':'pages/download.html','title':'Download'}
+			],
+			onContentLoaded: function(element,uOptions,json) {
+				MUI.create('MUI.Tabs',{
+					'container':'help-panel',
+					'position': 'header',
+					'tabs':json,
+					'partner':'help-panel'
+				})
 			}
 		}]
 	});

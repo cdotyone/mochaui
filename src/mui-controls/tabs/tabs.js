@@ -40,12 +40,18 @@ MUI.Tabs = new Class({
 
 		,tabs:			$A([])			// the list of tabs
 
-		,textField:		'text'			// the name of the field that has the node's text
-		,valueField:	'value'			// the name of the field that has the node's value
-		,titleField:	'title'			// the name of the field that has the node's tip text
+		,textField:		'text'			// the name of the field that has the tab's text
+		,valueField:	'value'			// the name of the field that has the tab's value
+		,titleField:	'title'			// the name of the field that has the tab's tip text
+
+		,partner:		null			// element or id of
+		,urlField:		'url'			// the name of the field that has the tab's url to load content from and put content into options.partner
+		,contentField:	'content'		// the name of the field that has the tab's content insert into options.partner
+		,updateOptions:	null			// the options used to load the content into the partner element, panel, or window
 
 		,value:			''				// the currently selected tab's value
 		,selectedTab:	null			// the currently selected tab
+		,position:		null			// container is a panel or window this tell tabs where the tabs should go, 'header' or 'footer'
 
 		,onTabSelected:	$empty			// event: when a node is checked
 	},
@@ -64,12 +70,6 @@ MUI.Tabs = new Class({
 
 		// create sub items if available
 		if (o.createOnInit && o.tabs.length > 0) this.draw();
-		else if(self.fromHTML) {
-			window.addEvent('domready', function(){
-				var el = $(id);
-				if (el != null) self.fromHTML();
-			});
-		}
 
 		MUI.set(id, this);
 	},
@@ -85,22 +85,36 @@ MUI.Tabs = new Class({
 		var o = self.options;
 
 		var isNew = false;
-		var div = $(o.id);
-		var ul;
-		if (!div){
-			div = new Element('div', {'id':o.id});
-			isNew = true;
-		} else ul = div.getElement('ul');
-		if (!ul) ul = new Element('ul').inject(div);
-		else ul.empty();
-		if (o.cssClass){
-			div.set('class', o.cssClass);
-			ul.set('class', o.cssClass);
+		var div;
+		var instance=MUI.get(MUI.get($(containerEl ? containerEl : o.container)));
+
+		if(instance && instance.isTypeOf('MUI.Panel')) {
+			instance.panelHeaderContentEl.addClass(o.cssClass);
+			div = instance.panelHeaderContentEl.getElement('div').empty();
+		} else if(instance && instance.isTypeOf('MUI.Window')) {
+			div = $(o.id);
+			div.addClass(o.cssClass);
+		} else {
+			div = $(o.id);
+			if (!div){
+				div = new Element('div',{'id':o.id,'class':o.cssClass});
+				isNew = true;
+			}
 		}
+
+		var ul = div.getElement('ul');
+		if (!ul) ul = new Element('ul',{'class':o.cssClass}).inject(div);
+		else ul.set('class',o.cssClass).empty();
 		self.element = div;
 
 		// if no tab selected, then select first tab for them
-		if (o.tabs.length > 0 && (o.value == null || o.value == '')) o.value = self._getData(o.tabs[0], o.valueField);
+		if (o.tabs.length > 0 && (o.value == null || o.value == '')) {
+			o.value = self._getData(o.tabs[0], o.valueField);
+			if(o.value == null || o.value == '') {
+				o.valueField = o.textField;
+				o.value = self._getData(o.tabs[0], o.valueField);
+			}
+		}
 
 		// build all tabs
 		$A(o.tabs).each(function(tab){
@@ -159,6 +173,20 @@ MUI.Tabs = new Class({
 			listItem.removeClass('sel');
 		});
 		tab._element.addClass('sel');
+
+		if(o.partner) {
+			var url = self._getData(tab, o.urlField);
+			var content = self._getData(tab, o.contentField);
+
+			var uOptions = {
+				element:o.partner,
+				content:content,
+				url:	url
+			};
+			if(o.updateOptions) $extend(uOptions,o.updateOptions);
+
+			MUI.updateContent(uOptions);
+		}
 
 		self.fireEvent('tabSelected', [tab,value,self,e]);
 	}

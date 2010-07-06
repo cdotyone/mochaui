@@ -110,7 +110,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		evalResponse:			false,
 
 		// html options
-		content:				'Panel content',
+		content:				false,
 
 		// additional content sections
 		sections:				false,
@@ -289,9 +289,9 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 					'position': 'header',
 					'empty': false,
 					'addClass': false,
-					'height': 0,
+					'height': false,
 					'id': id,
-					'css': 'mochaToolbar',
+					'css': '',
 					'section': 'section' + snum,
 					'loadMethod': 'xhr',
 					'method': options.method

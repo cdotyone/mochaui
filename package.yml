@@ -28,4 +28,3 @@ sources:
   - "src/mui/column.js"
   - "src/mui/panel.js"
   - "src/mui/dock.js"
-  - "src/mui/tabs.js"

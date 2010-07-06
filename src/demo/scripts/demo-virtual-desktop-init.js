@@ -94,7 +94,7 @@ initializeWindows = function() {
 		});
 	}
 
-	MUI.youtubeWindow = function() {
+	MUI.youtubeWindow = function(){
 		new MUI.Window({
 			id: 'youtube',
 			title: 'YouTube in Iframe',
@@ -102,16 +102,27 @@ initializeWindows = function() {
 			contentURL: 'pages/youtube.html',
 			width: 340,
 			height: 280,
-			resizeLimit:  {'x': [330, 2500], 'y': [250, 2000]},
-			sections:[
-				{'position':'top',
-					section:'toolbar',
-					url:'pages/youtube-tabs.html',
-					onContentLoaded:function() {
-						MUI.initializeTabs('youtubeTabs', 'youtube');
-					}
+			resizeLimit: {'x': [330, 2500], 'y': [250, 2000]},
+			sections: [{
+				'position': 'top',
+				section: 'toolbar',
+				loadMethod:'json',
+				content: [
+					{'text':'Zero 7','url':'pages/youtube.html','title':'Zero 7'},
+					{'text':'Fleet Foxes','url':'pages/youtube2.html','title':'Fleet Foxes'},
+					{'text':'Boards of Canada','url':'pages/youtube3.html','title':'Boards of Canada'}
+				],
+				onContentLoaded: function(element,uOptions,json) {
+					MUI.create('MUI.Tabs',{
+						'id':'youtube_toolbar',
+						'container':'youtube',
+						'position': 'top',
+						'tabs':json,
+						'partner':'youtube',
+						'section':'toolbar'
+					})
 				}
-			]
+			}]
 		});
 	};
 	if ($('youtubeLinkCheck')) {
@@ -415,25 +426,28 @@ initializeWindows = function() {
 	}
 
 	// Help
-	MUI.featuresWindow = function() {
+	MUI.featuresWindow = function(){
 		new MUI.Window({
 			id: 'features',
 			title: 'Features',
-			loadMethod: 'xhr',
 			contentURL: 'pages/features-layout.html',
-			width: 305,
-			height: 175,
+			width: 275,
+			height: 250,
 			resizeLimit: {'x': [275, 2500], 'y': [125, 2000]},
-
-			sections:[
-				{'position':'top',
-					section:'toolbar',
-					url:'pages/features-tabs.html',
-					onContentLoaded:function() {
-						MUI.initializeTabs('featuresTabs', 'features');
-					}
+			sections: [{
+				'position': 'top',
+				section: 'toolbar',
+				url: 'pages/features-tabs.html',
+				onContentLoaded: function(element,uOptions,json) {
+					MUI.create('MUI.Tabs',{
+						'id':'features_toolbar',
+						'container':'features',
+						'position': 'top',
+						'partner':'features',
+						'section':'toolbar'
+					},true);
 				}
-			]
+			}]
 		});
 	};
 	if ($('featuresLinkCheck')) {

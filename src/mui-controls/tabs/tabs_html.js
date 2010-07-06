@@ -36,8 +36,6 @@ MUI.Tabs.implement({
 		else el = $(el);
 		if (!el) return;
 
-		o.cssClass = el.get('class');
-
 		var tabs = $A([]);
 		el.getElements('li').each(function(li){
 			var tab = {};
@@ -50,6 +48,7 @@ MUI.Tabs.implement({
 
 			tab[o.valueField] = value;
 			tab[o.textField] = a.get('text');
+			tab[o.urlField] = a.get('href');
 			if (title) tab[o.titleField] = title;
 
 			tabs.push(tab);
