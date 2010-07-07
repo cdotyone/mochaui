@@ -438,7 +438,7 @@ initializeWindows = function() {
 				'position': 'top',
 				section: 'toolbar',
 				url: 'pages/features-tabs.html',
-				onContentLoaded: function(element,uOptions,json) {
+				onContentLoaded: function() {
 					MUI.create('MUI.Tabs',{
 						'id':'features_toolbar',
 						'container':'features',
