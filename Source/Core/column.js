@@ -1,9 +1,7 @@
 /*
  ---
 
- name: Column
-
- script: column.js
+ script: Column.js
 
  description: Column control for horizontal layouts.
 
@@ -21,59 +19,33 @@
  ...
  */
 
-MUI.files['source|column.js'] = 'loaded';
+MUI.files['source|Column.js'] = 'loaded';
 
-/*
 
- Class: Column
- Create a column. Columns should be created from left to right.
-
- Syntax:
- (start code)
- MUI.Column();
- (end)
-
- Arguments:
- options
-
- Options:
- id - The ID of the column. This must be set when creating the column.
- container - Defaults to MUI.Desktop.pageWrapper.
- placement - Can be 'right', 'main', or 'left'. There must be at least one column with the 'main' option.
- width - 'main' column is fluid and should not be given a width.
- resizeLimit - resizelimit of a 'right' or 'left' column.
- sortable - (boolean) Whether the panels can be reordered via drag and drop.
- isCollapsed - (boolean) Whether the column is collapsed
- onResize - (function) Fired when the column is resized.
- onCollapse - (function) Fired when the column is collapsed.
- onExpand - (function) Fired when the column is expanded.
-
- */
 MUI.Column = new NamedClass('MUI.Column', {
 
 	Implements: [Events, Options],
 
 	options: {
 		id:			null,
-		container:	 null,
-		placement:	 null,
-		width:		 null,
-		resizeLimit:   [],
-		sortable:	  true,
-		isCollapsed:   false,
+		container:	null,
+		createOnInit: true,
 
-		// Events
-		onResize:	 $empty,
-		onCollapse:   $empty,
-		onExpand:	 $empty
+		placement:	null,
+		width:		null,
+		resizeLimit:[],
+		sortable:	true,
+		isCollapsed:false,
 
+		onResize:	$empty,
+		onCollapse:	$empty,
+		onExpand:	$empty
 	},
 
 	initialize: function(options){
 		this.setOptions(options);
 
 		$extend(this, {
-			timestamp: $time(),
 			isCollapsed: false,
 			oldWidth: 0
 		});
@@ -83,21 +55,19 @@ MUI.Column = new NamedClass('MUI.Column', {
 			this.options.id = 'column' + (++MUI.IDCount);
 		}
 
-		// Shorten object chain
-		options = this.options;
+		if (this.options.createOnInit) this.draw();
+	},
 
-		if (options.container == null){
-			options.container = MUI.Desktop.pageWrapper
-		} else {
-			$(options.container).setStyle('overflow', 'hidden');
-		}
+	draw: function() {
+		var options = this.options;
 
-		if (typeof this.options.container == 'string'){
-			this.options.container = $(this.options.container);
-		}
+		if (options.container == null) options.container = MUI.Desktop.pageWrapper;
+		else $(options.container).setStyle('overflow', 'hidden');
+
+		if ($type(options.container) == 'string') options.container = $(options.container);
 
 		// Check if column already exists
-		if (this.columnEl) return;
+		if (this.element) return;
 		else MUI.set(options.id, this);
 
 		// If loading columns into a panel, hide the regular content container.
@@ -110,23 +80,23 @@ MUI.Column = new NamedClass('MUI.Column', {
 			$(options.container).getElement('.mochaContent').hide();
 		}
 
-		this.columnEl = new Element('div', {
-			'id': this.options.id,
+		this.element = new Element('div', {
+			'id': options.id,
 			'class': 'column expanded',
 			'styles': {
 				'width': options.placement == 'main' ? null : options.width
 			}
 		}).inject($(options.container));
 
-		this.columnEl.store('instance', this);
+		this.element.store('instance', this);
 
-		var parent = this.columnEl.getParent();
+		var parent = this.element.getParent();
 		var columnHeight = parent.getStyle('height').toInt();
-		this.columnEl.setStyle('height', columnHeight);
+		this.element.setStyle('height', columnHeight);
 
-		if (this.options.sortable){
-			if (!this.options.container.retrieve('sortables')){
-				var sortables = new Sortables(this.columnEl, {
+		if (options.sortable){
+			if (!options.container.retrieve('sortables')){
+				var sortables = new Sortables(this.element, {
 					opacity: 1,
 					handle: '.panel-header',
 					constrain: false,
@@ -140,63 +110,61 @@ MUI.Column = new NamedClass('MUI.Column', {
 							column.getChildren('.panelWrapper').each(function(panelWrapper){
 								var panel = panelWrapper.getElement('.panel');
 								var column = panelWrapper.getParent().id;
-								instance = MUI.get(panel.id);
+								var instance = MUI.get(panel.id);
 								instance.options.column = column;
 								if (instance){
-									var nextpanel = panel.getParent().getNext('.expanded');
-									if (nextpanel){
-										nextpanel = nextpanel.getElement('.panel');
+									var nextPanel = panel.getParent().getNext('.expanded');
+									if (nextPanel){
+										nextPanel = nextPanel.getElement('.panel');
 									}
-									instance.partner = nextpanel;
+									instance.partner = nextPanel;
 								}
 							});
 							MUI.panelHeight();
 						}.bind(this));
 					}.bind(this)
 				});
-				this.options.container.store('sortables', sortables);
+				options.container.store('sortables', sortables);
 			} else {
-				this.options.container.retrieve('sortables').addLists(this.columnEl);
+				options.container.retrieve('sortables').addLists(this.element);
 			}
 		}
 
-		if (options.placement == 'main') this.columnEl.addClass('rWidth');
+		if (options.placement == 'main') this.element.addClass('rWidth');
 
-		switch (this.options.placement){
+		switch (options.placement){
 			case 'left':
 				this.handleEl = new Element('div', {
-					'id': this.options.id + '_handle',
+					'id': options.id + '_handle',
 					'class': 'columnHandle'
-				}).inject(this.columnEl, 'after');
+				}).inject(this.element, 'after');
 
 				this.handleIconEl = new Element('div', {
 					'id': options.id + '_handle_icon',
 					'class': 'handleIcon'
 				}).inject(this.handleEl);
 
-				this.addResizeRight(this.columnEl, options.resizeLimit[0], options.resizeLimit[1]);
+				this._addResizeRight(this.element, options.resizeLimit[0], options.resizeLimit[1]);
 				break;
 			case 'right':
 				this.handleEl = new Element('div', {
-					'id': this.options.id + '_handle',
+					'id': options.id + '_handle',
 					'class': 'columnHandle'
-				}).inject(this.columnEl, 'before');
+				}).inject(this.element, 'before');
 
 				this.handleIconEl = new Element('div', {
 					'id': options.id + '_handle_icon',
 					'class': 'handleIcon'
 				}).inject(this.handleEl);
-				this.addResizeLeft(this.columnEl, options.resizeLimit[0], options.resizeLimit[1]);
+				this._addResizeLeft(this.element, options.resizeLimit[0], options.resizeLimit[1]);
 				break;
 		}
 
-		if (this.options.isCollapsed && this.options.placement != 'main'){
-			this.columnToggle();
-		}
+		if (options.isCollapsed && this.options.placement != 'main') this.toggle();
 
 		if (this.handleEl != null){
 			this.handleEl.addEvent('dblclick', function(){
-				this.columnToggle();
+				this.toggle();
 			}.bind(this));
 		}
 
@@ -206,22 +174,22 @@ MUI.Column = new NamedClass('MUI.Column', {
 
 	getPanels: function(){
 		var panels=[];
-		$(this.columnEl).getElements('.panel').each(function(panelEl) {
+		$(this.element).getElements('.panel').each(function(panelEl) {
 			var panel=MUI.get(panelEl.id);
 			if(panel) panels.push(panel);
 		});
 		return panels;
 	},
 
-	columnCollapse: function(){
-		var column = this.columnEl;
+	collapse: function(){
+		var column = this.element;
 
 		this.oldWidth = column.getStyle('width').toInt();
 
 		this.resize.detach();
 		this.handleEl.removeEvents('dblclick');
 		this.handleEl.addEvent('click', function(){
-			this.columnExpand();
+			this.expand();
 		}.bind(this));
 		this.handleEl.setStyle('cursor', 'pointer').addClass('detached');
 
@@ -235,8 +203,8 @@ MUI.Column = new NamedClass('MUI.Column', {
 		return true;
 	},
 
-	columnExpand : function(){
-		var column = this.columnEl;
+	expand : function(){
+		var column = this.element;
 
 		column.setStyle('width', this.oldWidth);
 		this.isCollapsed = false;
@@ -245,7 +213,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 
 		this.handleEl.removeEvents('click');
 		this.handleEl.addEvent('dblclick', function(){
-			this.columnCollapse();
+			this.collapse();
 		}.bind(this));
 		this.resize.attach();
 		this.handleEl.setStyle('cursor', Browser.Engine.webkit ? 'col-resize' : 'e-resize').addClass('attached');
@@ -256,12 +224,39 @@ MUI.Column = new NamedClass('MUI.Column', {
 		return true;
 	},
 
-	columnToggle: function(){
-		if (!this.isCollapsed) this.columnCollapse();
-		else this.columnExpand();
+	toggle: function(){
+		if (!this.isCollapsed) this.collapse();
+		else this.expand();
 	},
 
-	addResizeRight: function(element, min, max){
+	close: function(){
+		var self = this;
+		self.isClosing = true;
+
+		// Destroy all the panels in the column.
+		var panels = self.getPanels();
+		panels.each(function(panel){
+			panel.close();
+		}.bind(this));
+
+		if (Browser.Engine.trident){
+			self.element.dispose();
+			if (self.handleEl != null) self.handleEl.dispose();
+		} else {
+			self.element.destroy();
+			if (self.handleEl != null) self.handleEl.destroy();
+		}
+
+		if (MUI.Desktop) MUI.Desktop.resizePanels();
+
+		var sortables = self.options.container.retrieve('sortables');
+		if (sortables) sortables.removeLists(this.element);
+
+		MUI.erase(self.options.id);
+		return true;
+	},
+
+	_addResizeRight: function(element, min, max){
 		if (!$(element)) return;
 		element = $(element);
 
@@ -338,7 +333,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 		});
 	},
 
-	addResizeLeft: function(element, min, max){
+	_addResizeLeft: function(element, min, max){
 		if (!$(element)) return;
 		element = $(element);
 
@@ -383,36 +378,9 @@ MUI.Column = new NamedClass('MUI.Column', {
 				  .combine(instance.getPanels())
 				  .each(function(panel){
 						panel.fireEvent('resize')
-				  });				
+				  });
 			}.bind(this)
 		});
-	},
-
-	close: function(){
-		var self = this;
-		self.isClosing = true;
-
-		// Destroy all the panels in the column.
-		var panels = self.getPanels(); 
-		panels.each(function(panel){
-			panel.close();
-		}.bind(this));
-
-		if (Browser.Engine.trident){
-			self.columnEl.dispose();
-			if (self.handleEl != null) self.handleEl.dispose();
-		} else {
-			self.columnEl.destroy();
-			if (self.handleEl != null) self.handleEl.destroy();
-		}
-
-		if (MUI.Desktop) MUI.Desktop.resizePanels();
-
-		var sortables = self.options.container.retrieve('sortables');
-		if (sortables) sortables.removeLists(this.columnEl);
-
-		MUI.erase(self.options.id);
-		return true;
 	}
 
 });
