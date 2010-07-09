@@ -313,27 +313,21 @@ MUI.Dock = {
 			if ((this.timeUp - this.timeDown) < 275){
 				// If the visibility of the windows on the page are toggled off, toggle visibility on.
 				if (!MUI.Windows.windowsVisible){
-					MUI.toggleWindowVisibility();
-					if (instance.isMinimized){
-						MUI.Dock.restoreMinimized.delay(25, MUI.Dock, windowEl);
-					}
-					else {
-						MUI.focusWindow(windowEl);
-					}
+					MUI.Windows.toggleVisibility();
+					if (instance.isMinimized) MUI.Dock.restoreMinimized.delay(25, MUI.Dock, windowEl);
+					else MUI.Windows.focus(windowEl);
 					return;
 				}
 				// If window is minimized, restore window.
-				if (instance.isMinimized){
-					MUI.Dock.restoreMinimized.delay(25, MUI.Dock, windowEl);
-				}
+				if (instance.isMinimized) MUI.Dock.restoreMinimized.delay(25, MUI.Dock, windowEl);
 				else {
 					if (instance.el.windowEl.hasClass('isFocused') && instance.options.minimizable) MUI.Dock.minimizeWindow(windowEl);
-					else MUI.focusWindow(windowEl);
+					else MUI.Windows.focus(windowEl);
 
 					// if the window is not minimized and is outside the viewport, center it in the viewport.
 					var coordinates = document.getCoordinates();
 					if (windowEl.getStyle('left').toInt() > coordinates.width || windowEl.getStyle('top').toInt() > coordinates.height){
-						MUI.centerWindow(windowEl);
+						MUI.Windows.center(windowEl);
 					}
 				}
 			}
@@ -363,7 +357,7 @@ MUI.Dock = {
 
 		// getWindowWith HighestZindex is used in case the currently focused window
 		// is closed.
-		var windowEl = MUI.getWindowWithHighestZindex();
+		var windowEl = MUI.Windows._getWithHighestZIndex();
 		var instance = windowEl.retrieve('instance');
 
 		$$('.dockTab').removeClass('activeDockTab');
@@ -425,43 +419,23 @@ MUI.Dock = {
 	},
 
 	restoreMinimized: function(windowEl){
-
 		var instance = windowEl.retrieve('instance');
-
 		if (!instance.isMinimized) return;
 
-		if (!MUI.Windows.windowsVisible){
-			MUI.toggleWindowVisibility();
-		}
-
+		if (!MUI.Windows.windowsVisible) MUI.Windows.toggleVisibility();
 		MUI.Desktop.setDesktopSize();
+		if (instance.options.scrollbars && !instance.el.iframe) instance.el.contentWrapper.setStyle('overflow', 'auto'); // Part of Mac FF2 scrollbar fix
+		if (instance.isCollapsed) MUI.Windows.collapseToggle(windowEl);
+		instance.show(); // show the window
 
-		// Part of Mac FF2 scrollbar fix
-		if (instance.options.scrollbars && !instance.el.iframe){
-			instance.el.contentWrapper.setStyle('overflow', 'auto');
-		}
-
-		if (instance.isCollapsed){
-			MUI.collapseToggle(windowEl);
-		}
-
-        // show the window 
-        instance.show();
-
-		// Show iframe
-		if (instance.el.iframe){
-			if (!Browser.Engine.trident){
-				instance.el.iframe.setStyle('visibility', 'visible');
-			}
-			else {
-				instance.el.iframe.show();
-			}
+		if (instance.el.iframe){  // Show iframe
+			if (!Browser.Engine.trident) instance.el.iframe.setStyle('visibility', 'visible');
+			else instance.el.iframe.show();
 		}
 
 		instance.isMinimized = false;
-		MUI.focusWindow(windowEl);
+		MUI.Windows.focus(windowEl);
 		instance.fireEvent('onRestore', windowEl);
-
 	},
 
 	toggle: function(){

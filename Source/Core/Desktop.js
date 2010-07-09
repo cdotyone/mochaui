@@ -105,9 +105,9 @@ MUI.Desktop = {
 					var newHeight = resizeDimensions.height - options.headerHeight - options.footerHeight;
 					newHeight -= instance.el.contentBorder.getStyle('border-top').toInt();
 					newHeight -= instance.el.contentBorder.getStyle('border-bottom').toInt();
-					newHeight -= instance.getAllSectionsHeight();
+					newHeight -= instance._getAllSectionsHeight();
 
-					MUI.resizeWindow(instance.el.windowEl, {
+					MUI.Windows.resize(instance.el.windowEl, {
 						width: resizeDimensions.width,
 						height: newHeight,
 						top: resizeDimensions.top + shadowOffset.y - shadowBlur,
@@ -168,7 +168,7 @@ MUI.Desktop = {
 
 		// If window no longer exists or is maximized, stop
 		if (windowEl != $(windowEl) || instance.isMaximized) return;
-		if (instance.isCollapsed) MUI.collapseToggle(windowEl);
+		if (instance.isCollapsed) MUI.Windows.collapseToggle(windowEl);
 		instance.isMaximized = true;
 
 		// If window is restricted to a container, it should not be draggable when maximized.
@@ -220,9 +220,9 @@ MUI.Desktop = {
 		var newHeight = resizeDimensions.height - options.headerHeight - options.footerHeight;
 		newHeight -= instance.el.contentBorder.getStyle('border-top').toInt();
 		newHeight -= instance.el.contentBorder.getStyle('border-bottom').toInt();
-		newHeight -= instance.getAllSectionsHeight();
+		newHeight -= instance._getAllSectionsHeight();
 
-		MUI.resizeWindow(windowEl, {
+		MUI.Windows.resize(windowEl, {
 			width: resizeDimensions.width,
 			height: newHeight,
 			top: resizeDimensions.top + shadowOffset.y - shadowBlur,
@@ -231,7 +231,7 @@ MUI.Desktop = {
 		instance.fireEvent('onMaximize', windowEl);
 
 		if (instance.el.maximizeButton) instance.el.maximizeButton.setProperty('title', 'Restore');
-		MUI.focusWindow(windowEl);
+		MUI.Windows.focus(windowEl);
 	},
 
 	restoreWindow: function(windowEl){
@@ -263,7 +263,7 @@ MUI.Desktop = {
 		}
 
 		var contentWrapper = instance.el.contentWrapper;
-		MUI.resizeWindow(windowEl, {
+		MUI.Windows.resize(windowEl, {
 			width: contentWrapper.oldWidth,
 			height: contentWrapper.oldHeight,
 			top: instance.oldTop,

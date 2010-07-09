@@ -66,7 +66,7 @@ MUI.extend({
 			var instance = windowEl.retrieve('instance');
 			if (!instance.isMinimized && !instance.isMaximized && instance.options.draggable){
 				id = windowEl.id;
-				MUI.focusWindow(windowEl);
+				MUI.Windows.focus(windowEl);
 				x += leftOffset;
 				y += topOffset;
 

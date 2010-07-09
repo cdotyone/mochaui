@@ -67,7 +67,7 @@ MUI.extend({
 
 				instance.drawWindow();
 
-				MUI.focusWindow(instance.el.windowEl);
+				MUI.Windows.focus(instance.el.windowEl);
 
 				if (MUI.options.advancedEffects == false){
 					instance.el.windowEl.setStyles({

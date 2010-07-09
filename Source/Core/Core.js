@@ -27,6 +27,7 @@
 
  ...
  */
+
 var MUI = MochaUI = {
 	'options': $H({
 		theme: 'default',
@@ -42,20 +43,24 @@ var MUI = MochaUI = {
 		}
 	})
 };
-
 MUI.extend = (function(hash){
 	$extend(this, hash);
 }).bind(MUI);
 
 MUI.extend({
-	version: '0.9.8',
-
+	version: '1.0.0',
 	instances: new Hash(),
 	IDCount: 0,
-
+	ieSupport: 'excanvas',  // Makes it easier to switch between Excanvas and Moocanvas for testing
 	classes: {},
-
 	path: MUI.options.path,		// depreciated, will be removed
+
+	initialize: function(options){
+		if (options){
+			if (options.path) options.path = $extend(MUI.options.path, options.path);
+			MUI.options.extend(options);
+		}
+	},
 
 	replacePaths: function(files){
 		var s;
@@ -106,7 +111,6 @@ MUI.extend({
 		return this;
 	},
 
-
 	create:function(type,options,fromHTML){
 		if(MUI.files['controls|mui-controls.js'] != 'loaded') {
 			new MUI.Require({
@@ -148,47 +152,6 @@ MUI.extend({
 		return ret;
 	},
 
-	initialize: function(options){
-		if (options){
-			if (options.path) options.path = $extend(MUI.options.path, options.path);
-			MUI.options.extend(options);
-		}
-	}
-});
-
-var NamedClass = function(name, members){
-	members.className = name;
-	members.isTypeOf = function(cName){
-		if (cName == this.className) return true;
-		if (!this.constructor || !this.constructor.parent) return false;
-		return this.isTypeOf.run(cName, this.constructor.parent.prototype);
-	};
-	return new Class(members);
-};
-
-$extend(MUI,{
-	ieSupport: 'excanvas',  // Makes it easier to switch between Excanvas and Moocanvas for testing
-
-	/*
-
-	 Function: reloadIframe
-	 Reload an iframe. Fixes an issue in Firefox when trying to use location.reload on an iframe that has been destroyed and recreated.
-
-	 Arguments:
-	 iframe - This should be both the name and the id of the iframe.
-
-	 Syntax:
-	 (start code)
-	 MUI.reloadIframe(element);
-	 (end)
-
-	 Example:
-	 To reload an iframe from within another iframe:
-	 (start code)
-	 parent.MUI.reloadIframe('myIframeName');
-	 (end)
-
-	 */
 	reloadIframe: function(iframe){
 		var src = $(iframe).src;
 		Browser.Engine.gecko ? $(iframe).src = src : top.frames[iframe].location.reload(true);
@@ -241,16 +204,10 @@ $extend(MUI,{
 		});
 	},
 
-	/*
-	 Function: toggleEffects
-	 Turn effects on and off
-	 */
 	toggleAdvancedEffects: function(link){
 		if (MUI.options.advancedEffects){
 			MUI.options.advancedEffects = false;
-			if (this.toggleAdvancedEffectsLink){
-				this.toggleAdvancedEffectsLink.destroy();
-			}
+			if (this.toggleAdvancedEffectsLink) this.toggleAdvancedEffectsLink.destroy();
 		} else {
 			MUI.options.advancedEffects = true;
 			if (link){
@@ -262,16 +219,10 @@ $extend(MUI,{
 		}
 	},
 
-	/*
-	 Function: toggleStandardEffects
-	 Turn standard effects on and off
-	 */
 	toggleStandardEffects: function(link){
 		if (MUI.options.standardEffects){
 			MUI.options.standardEffects = false;
-			if (this.toggleStandardEffectsLink){
-				this.toggleStandardEffectsLink.destroy();
-			}
+			if (this.toggleStandardEffectsLink) this.toggleStandardEffectsLink.destroy();
 		} else {
 			MUI.options.standardEffects = true;
 			if (link){
@@ -281,41 +232,20 @@ $extend(MUI,{
 				}).inject(link);
 			}
 		}
-	},
-
-	/*
-	 The underlay is inserted directly under windows when they are being dragged or resized
-	 so that the cursor is not captured by iframes or other plugins (such as Flash)
-	 underneath the window.
-	 */
-	underlayInitialize: function(){
-		var windowUnderlay = new Element('div', {
-			'id': 'windowUnderlay',
-			'styles': {
-				'height': parent.getCoordinates().height,
-				'opacity': .01,
-				'display': 'none'
-			}
-		}).inject(document.body);
-	},
-
-	setUnderlaySize: function(){
-		$('windowUnderlay').setStyle('height', parent.getCoordinates().height);
 	}
+
 });
 
-/* 
- function: fixPNG
- Bob Osola's PngFix for IE6.
+var NamedClass = function(name, members){
+	members.className = name;
+	members.isTypeOf = function(cName){
+		if (cName == this.className) return true;
+		if (!this.constructor || !this.constructor.parent) return false;
+		return this.isTypeOf.run(cName, this.constructor.parent.prototype);
+	};
+	return new Class(members);
+};
 
- example:
- (begin code)
- <img src="xyz.png" alt="foo" width="10" height="20" onload="fixPNG(this)">
- (end)
-
- note:
- You must have the image height and width attributes specified in the markup.
- */
 function fixPNG(myImage){
 	if (Browser.Engine.trident4 && document.body.filters){
 		var imgID = (myImage.id) ? "id='" + myImage.id + "' " : "";
@@ -331,38 +261,8 @@ function fixPNG(myImage){
 	}
 }
 
-// Blur all windows if user clicks anywhere else on the page
-document.addEvent('mousedown', function(){
-	MUI.blurAll.delay(50);
-});
-
-window.addEvent('domready', function(){
-	MUI.underlayInitialize();
-});
-
-window.addEvent('resize', function(){
-	if ($('windowUnderlay')){
-		MUI.setUnderlaySize();
-	}
-	else {
-		MUI.underlayInitialize();
-	}
-});
-
 Element.implement({
 
-	/*
-	 Shake effect by Uvumi Tools
-	 http://tools.uvumi.com/element-shake.html
-
-	 Function: shake
-
-	 Example:
-	 Shake a window.
-	 (start code)
-	 $('parametrics').shake()
-	 (end)
-	 */
 	shake: function(radius, duration){
 		radius = radius || 3;
 		duration = duration || 500;
@@ -408,7 +308,7 @@ Element.implement({
 			}
 		}.bind(this));
 		return this;
-	},		
+	},
 
 	hide: function(){
 		var instance = MUI.get(this.id);
@@ -438,15 +338,6 @@ Element.implement({
 		instance.close();
 	},
 
-	/*
-	 Function: hideSpinner
-	 Hides the spinner.
-
-	 Example:
-	 (start code)
-	 $('id').hideSpinner(element);
-	 (end)
-	 */
 	hideSpinner: function(instance){
 		if (instance == null) instance = MUI.get(this.id);
 		if (instance == null){
@@ -460,15 +351,6 @@ Element.implement({
 		return this;
 	},
 
-	/*
-	 Function: showSpinner
-	 Shows the spinner.
-
-	 Example:
-	 (start code)
-	 $('id').showSpinner(element);
-	 (end)
-	 */
 	showSpinner: function(instance){
 		if (instance == null) instance = MUI.get(this.id);
 		if (instance == null){
@@ -481,14 +363,6 @@ Element.implement({
 		return this;
 	},
 
-	/*
-	 Function: resize a control
-
-	 Example:
-	 (start code)
-	 MUI.resize(element,{width:500,height:300,centered:true});
-	 (end)
-	 */
 	resize: function(options){
 		var instance = MUI.get(this.id);
 		if (instance == null || instance.resize == null){
@@ -558,10 +432,8 @@ MUI.Require = new Class({
 
 				this.getAsset(sheet, function(){
 					if (cssLoaded == options.css.length - 1){
-
-						if (this.assetsLoaded == this.assetsToLoad - 1){
-							this.requireOnload();
-						} else {
+						if (this.assetsLoaded == this.assetsToLoad - 1) this.requireOnload();
+						else {
 							// Add a little delay since we are relying on cached CSS from XHR request.
 							this.assetsLoaded++;
 							this.requireContinue.delay(50, this);
@@ -575,10 +447,7 @@ MUI.Require = new Class({
 		} else if (!options.js.length && !options.images.length){
 			this.options.onload();
 			return true;
-		} else {
-			this.requireContinue.delay(50, this); // Delay is for Safari
-		}
-
+		} else this.requireContinue.delay(50, this); // Delay is for Safari
 	},
 
 	requireOnload: function(){
@@ -587,11 +456,9 @@ MUI.Require = new Class({
 			this.options.onload();
 			return true;
 		}
-
 	},
 
 	requireContinue: function(){
-
 		var options = this.options;
 		if (options.images.length){
 			options.images.each(function(image){
@@ -604,11 +471,9 @@ MUI.Require = new Class({
 				this.getAsset(script, this.requireOnload.bind(this));
 			}.bind(this));
 		}
-
 	},
 
 	getAsset: function(source, onload){
-
 		// If the asset is loaded, fire the onload function.
 		if (MUI.files[source] == 'loaded'){
 			if (typeof onload == 'function'){
@@ -629,10 +494,7 @@ MUI.Require = new Class({
 					onload();
 				}
 			}).periodical(50);
-		}
-
-		// If the asset is not yet loaded or loading, start loading the asset.
-		else {
+		} else {  // If the asset is not yet loaded or loading, start loading the asset.
 			MUI.files[source] = 'loading';
 
 			properties = {
@@ -658,14 +520,11 @@ MUI.Require = new Class({
 			alert('The required file "' + source + '" could not be loaded');
 		}
 	}
-
 });
 
 $extend(Asset, {
-
 	// Get the CSS with XHR before appending it to document.head so that we can have an onload callback.
 	css: function(source, properties){
-
 		properties = $extend({
 			id: null,
 			media: 'screen',
@@ -692,13 +551,6 @@ $extend(Asset, {
 		}).send();
 	},
 
-	/*
-	 Examples:
-	 (start code)
-	 getCSSRule('.myRule');
-	 getCSSRule('#myRule');
-	 (end)
-	 */
 	getCSSRule: function(selector){
 		for (var ii = 0; ii < document.styleSheets.length; ii++){
 			var mySheet = document.styleSheets[ii];
@@ -711,43 +563,9 @@ $extend(Asset, {
 		}
 		return false;
 	}
-
 });
 
-/*
-
- REGISTER PLUGINS
-
- Register Components and Plugins for Lazy Loading
-
- How this works may take a moment to grasp. Take a look at MUI.Window below.
- If we try to create a new Window and Window.js has not been loaded then the function
- below will run. It will load the CSS required by the MUI.Window Class and then
- then it will load Window.js. Here is the interesting part. When Window.js loads,
- it will overwrite the function below, and new MUI.Window(arg) will be ran
- again. This time it will create a new MUI.Window instance, and any future calls
- to new MUI.Window(arg) will immediately create new windows since the assets
- have already been loaded and our temporary function below has been overwritten.
-
- Example:
-
- MyPlugins.extend({
-
- MyGadget: function(arg){
- new MUI.Require({
- css: ['plugins|myGadget/css/style.css'],
- images: ['plugins|myGadget/images/background.gif']
- js: ['plugins|myGadget/scripts/myGadget.js'],
- onload: function(){
- new MyPlguins.MyGadget(arg);
- }
- });
- }
-
- });
-
- -------------------------------------------------------------------- */
-
+/// TODO: These need to be moved out of the MUI namespace
 MUI.extend({
 
 	newWindowsFromHTML: function(arg){
