@@ -1734,9 +1734,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 	},
 
 	maximize: function(){
-		if (this.isMinimized){
-			MUI.Dock.restoreMinimized(this.el.windowEl);
-		}
+		if (this.isMinimized) MUI.Dock.restoreMinimized(this.el.windowEl);
 		MUI.Desktop.maximizeWindow(this.el.windowEl);
 		return this;
 	},

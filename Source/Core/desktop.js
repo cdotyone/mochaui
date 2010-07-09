@@ -161,66 +161,66 @@ MUI.Desktop = {
 		MUI.rWidth();
 	},
 
-	maximizeWindow: function(){
-		var options = this.options;
-		var windowDrag = this.windowDrag;
-		var windowEl = this.el.windowEl;
-		
-		if (this.isCollapsed) MUI.collapseToggle(windowEl);
-		this.isMaximized = true;
+	maximizeWindow: function(windowEl){
+		var instance = MUI.get(windowEl);
+		var options = instance.options;
+		var windowDrag = instance.windowDrag;
+
+		// If window no longer exists or is maximized, stop
+		if (windowEl != $(windowEl) || instance.isMaximized) return;
+		if (instance.isCollapsed) MUI.collapseToggle(windowEl);
+		instance.isMaximized = true;
 
 		// If window is restricted to a container, it should not be draggable when maximized.
-		if (this.options.restrict){
+		if (instance.options.restrict){
 			windowDrag.detach();
-			if (options.resizable) this.detachResizable();
-			this.el.titleBar.setStyle('cursor', 'default');
+			if (options.resizable) instance.detachResizable();
+			instance.el.titleBar.setStyle('cursor', 'default');
 		}
 
 		// If the window has a container that is not the desktop
 		// temporarily move the window to the desktop while it is minimized.
 		if (options.container != this.desktop){
 			this.desktop.grab(windowEl);
-			if (this.options.restrict){
-				windowDrag.container = this.desktop;
-			}
+			if (this.options.restrict) windowDrag.container = this.desktop;
 		}
 
 		// Save original position
-		this.oldTop = windowEl.getStyle('top');
-		this.oldLeft = windowEl.getStyle('left');
+		instance.oldTop = windowEl.getStyle('top');
+		instance.oldLeft = windowEl.getStyle('left');
 
 		// save original corner radius
 		if (!options.radiusOnMaximize){
-			this.oldRadius = this.options.cornerRadius;
-			this.oldShadowBlur = this.options.shadowBlur;
-			this.oldShadowOffset = this.options.shadowOffset;
+			instance.oldRadius = instance.options.cornerRadius;
+			instance.oldShadowBlur = instance.options.shadowBlur;
+			instance.oldShadowOffset = instance.options.shadowOffset;
 
-			this.options.cornerRadius = 0;
-			this.options.shadowBlur=0;
-			this.options.shadowOffset={'x': 0, 'y': 0};
+			instance.options.cornerRadius = 0;
+			instance.options.shadowBlur = 0;
+			instance.options.shadowOffset = {'x': 0, 'y': 0};
 		}
 
 		// Save original dimensions
-		var contentWrapper = this.el.contentWrapper;
+		var contentWrapper = instance.el.contentWrapper;
 		contentWrapper.oldWidth = contentWrapper.getStyle('width');
 		contentWrapper.oldHeight = contentWrapper.getStyle('height');
 
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
-		if (this.el.iframe){
-			if (!Browser.Engine.trident) this.el.iframe.setStyle('visibility', 'hidden');
-			else this.el.iframe.hide();
+		if (instance.el.iframe){
+			if (!Browser.Engine.trident) instance.el.iframe.setStyle('visibility', 'hidden');
+			else instance.el.iframe.hide();
 		}
 
 		var resizeDimensions;
-        if(options.maximizeTo) resizeDimensions=$(options.maximizeTo).getCoordinates();
-        else resizeDimensions=document.getCoordinates();
+		if (options.maximizeTo) resizeDimensions = $(options.maximizeTo).getCoordinates();
+		else resizeDimensions = document.getCoordinates();
 		var shadowBlur = options.shadowBlur;
 		var shadowOffset = options.shadowOffset;
 		var newHeight = resizeDimensions.height - options.headerHeight - options.footerHeight;
-		newHeight -= this.el.contentBorder.getStyle('border-top').toInt();
-		newHeight -= this.el.contentBorder.getStyle('border-bottom').toInt();
-		newHeight -= this.getAllSectionsHeight();
+		newHeight -= instance.el.contentBorder.getStyle('border-top').toInt();
+		newHeight -= instance.el.contentBorder.getStyle('border-bottom').toInt();
+		newHeight -= instance.getAllSectionsHeight();
 
 		MUI.resizeWindow(windowEl, {
 			width: resizeDimensions.width,
@@ -228,56 +228,51 @@ MUI.Desktop = {
 			top: resizeDimensions.top + shadowOffset.y - shadowBlur,
 			left: resizeDimensions.left + shadowOffset.x - shadowBlur
 		});
-		this.fireEvent('maximize', [this]);
+		instance.fireEvent('onMaximize', windowEl);
 
-		if (this.el.maximizeButton) this.el.maximizeButton.setProperty('title', 'Restore');
+		if (instance.el.maximizeButton) instance.el.maximizeButton.setProperty('title', 'Restore');
 		MUI.focusWindow(windowEl);
-
 	},
 
-	restoreWindow: function(){
-		if (!this.isMaximized) return;
+	restoreWindow: function(windowEl){
+		var instance = windowEl.retrieve('instance');
+		var options = instance.options;
 
-		var options = this.options;
-		this.isMaximized = false;
+		// Window exists and is maximized ?
+		if (windowEl != $(windowEl) || !instance.isMaximized) return;
+
+		instance.isMaximized = false;
 
 		if (!options.radiusOnMaximize){
-			this.options.cornerRadius = this.oldRadius;
-			this.options.shadowBlur = this.oldShadowBlur;
-			this.options.shadowOffset = this.oldShadowOffset;
+			instance.options.cornerRadius = instance.oldRadius;
+			instance.options.shadowBlur = instance.oldShadowBlur;
+			instance.options.shadowOffset = instance.oldShadowOffset;
 		}
 
 		if (options.restrict){
-			this.windowDrag.attach();
-			if (options.resizable){
-				this.reattachResizable();
-			}
-			this.el.titleBar.setStyle('cursor', 'move');
+			instance.windowDrag.attach();
+			if (options.resizable) instance.reattachResizable();
+			instance.el.titleBar.setStyle('cursor', 'move');
 		}
 
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
-		if (this.el.iframe){
-			if (!Browser.Engine.trident){
-				this.el.iframe.setStyle('visibility', 'hidden');
-			} else {
-				this.el.iframe.hide();
-			}
+		if (instance.el.iframe){
+			if (!Browser.Engine.trident) instance.el.iframe.setStyle('visibility', 'hidden');
+			else instance.el.iframe.hide();
 		}
 
-		var contentWrapper = this.el.contentWrapper;
-
-		MUI.resizeWindow(this.el.windowEl, {
+		var contentWrapper = instance.el.contentWrapper;
+		MUI.resizeWindow(windowEl, {
 			width: contentWrapper.oldWidth,
 			height: contentWrapper.oldHeight,
-			top: this.oldTop,
-			left: this.oldLeft
+			top: instance.oldTop,
+			left: instance.oldLeft
 		});
-		this.fireEvent('onRestore', this.el.windowEl);
+		instance.fireEvent('onRestore', windowEl);
 
-		if (this.el.maximizeButton) this.el.maximizeButton.setProperty('title', 'Maximize');
+		if (instance.el.maximizeButton) instance.el.maximizeButton.setProperty('title', 'Maximize');
 	}
-
 };
 
 MUI.extend({
