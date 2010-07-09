@@ -389,13 +389,13 @@ MUI.Dock = {
 
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
-		if (instance.iframeEl){
+		if (instance.el.iframe){
 			// Some elements are still visible in IE8 in the iframe when the iframe's visibility is set to hidden.
 			if (!Browser.Engine.trident){
-				instance.iframeEl.setStyle('visibility', 'hidden');
+				instance.el.iframe.setStyle('visibility', 'hidden');
 			}
 			else {
-				instance.iframeEl.hide();
+				instance.el.iframe.hide();
 			}
 		}
 
@@ -437,7 +437,7 @@ MUI.Dock = {
 		MUI.Desktop.setDesktopSize();
 
 		// Part of Mac FF2 scrollbar fix
-		if (instance.options.scrollbars && !instance.iframeEl){
+		if (instance.options.scrollbars && !instance.el.iframe){
 			instance.el.contentWrapper.setStyle('overflow', 'auto');
 		}
 
@@ -449,12 +449,12 @@ MUI.Dock = {
         instance.show();
 
 		// Show iframe
-		if (instance.iframeEl){
+		if (instance.el.iframe){
 			if (!Browser.Engine.trident){
-				instance.iframeEl.setStyle('visibility', 'visible');
+				instance.el.iframe.setStyle('visibility', 'visible');
 			}
 			else {
-				instance.iframeEl.show();
+				instance.el.iframe.show();
 			}
 		}
 

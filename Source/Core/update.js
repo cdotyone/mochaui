@@ -291,7 +291,7 @@ MUI.Content.Providers.iframe = function(instance, options){
 				'width': instance && instance.el.panel ? contentContainer.offsetWidth - contentContainer.getStyle('border-left').toInt() - contentContainer.getStyle('border-right').toInt() : '100%'
 			}
 		}).inject(contentContainer);
-		if (instance) instance.iframeEl = iframeEl;
+		if (instance) instance.el.iframe = iframeEl;
 
 		// Add onload event to iframe so we can hide the spinner and run fireContentLoaded()
 		iframeEl.addEvent('load', function(){

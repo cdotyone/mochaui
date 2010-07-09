@@ -463,12 +463,12 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 			}.bind(this),
 
 			onStart: function(){
-				if (instance.iframeEl){
+				if (instance.el.iframe){
 					if (Browser.Engine.trident){
-						instance.iframeEl.hide();
+						instance.el.iframe.hide();
 						partner.getElements('iframe').hide();
 					} else {
-						instance.iframeEl.setStyle('visibility', 'hidden');
+						instance.el.iframe.setStyle('visibility', 'hidden');
 						partner.getElements('iframe').setStyle('visibility', 'hidden');
 					}
 				}
@@ -500,18 +500,18 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				partner.getChildren('.column').each(function(column){
 					MUI.panelHeight(column);
 				});
-				if (instance.iframeEl){
+				if (instance.el.iframe){
 					if (Browser.Engine.trident){
-						instance.iframeEl.show();
+						instance.el.iframe.show();
 						partner.getElements('iframe').show();
 						// The following hack is to get IE8 Standards Mode to properly resize an iframe
 						// when only the vertical dimension is changed.
-						var width = instance.iframeEl.getStyle('width').toInt();
-						instance.iframeEl.setStyle('width', width - 1);
+						var width = instance.el.iframe.getStyle('width').toInt();
+						instance.el.iframe.setStyle('width', width - 1);
 						MUI.rWidth();
-						instance.iframeEl.setStyle('width', width);
+						instance.el.iframe.setStyle('width', width);
 					} else {
-						instance.iframeEl.setStyle('visibility', 'visible');
+						instance.el.iframe.setStyle('visibility', 'visible');
 						partner.getElements('iframe').setStyle('visibility', 'visible');
 					}
 				}

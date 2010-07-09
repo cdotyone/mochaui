@@ -90,11 +90,12 @@ MUI.Desktop = {
 		// Resize maximized windows to fit new browser window size
 		setTimeout(function(){
 			MUI.each(function(instance){
+				var options=instance.options;
 				if (instance.className != 'MUI.Window') return;
 				if (instance.isMaximized){
 
 					// Hide iframe while resize for better performance
-					if (instance.iframeEl) instance.iframeEl.setStyle('visibility', 'hidden');
+					if (instance.el.iframe) instance.el.iframe.setStyle('visibility', 'hidden');
 
 					var resizeDimensions;
 					if(options.maximizeTo) resizeDimensions=$(options.maximizeTo).getCoordinates();
@@ -114,11 +115,11 @@ MUI.Desktop = {
 					});
 
 					instance.drawWindow();
-					if (instance.iframeEl){
-						instance.iframeEl.setStyles({
+					if (instance.el.iframe){
+						instance.el.iframe.setStyles({
 							'height': instance.el.contentWrapper.getStyle('height')
 						});
-						instance.iframeEl.setStyle('visibility', 'visible');
+						instance.el.iframe.setStyle('visibility', 'visible');
 					}
 
 				}
@@ -206,9 +207,9 @@ MUI.Desktop = {
 
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
-		if (this.iframeEl){
-			if (!Browser.Engine.trident) this.iframeEl.setStyle('visibility', 'hidden');
-			else this.iframeEl.hide();
+		if (this.el.iframe){
+			if (!Browser.Engine.trident) this.el.iframe.setStyle('visibility', 'hidden');
+			else this.el.iframe.hide();
 		}
 
 		var resizeDimensions;
@@ -256,11 +257,11 @@ MUI.Desktop = {
 
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
-		if (this.iframeEl){
+		if (this.el.iframe){
 			if (!Browser.Engine.trident){
-				this.iframeEl.setStyle('visibility', 'hidden');
+				this.el.iframe.setStyle('visibility', 'hidden');
 			} else {
-				this.iframeEl.hide();
+				this.el.iframe.hide();
 			}
 		}
 
@@ -506,20 +507,20 @@ MUI.extend({
 		var instance = MUI.get(panel.id);
 		var contentWrapper = instance.el.contentWrapper;
 
-		if (instance.iframeEl){
+		if (instance.el.iframe){
 			if (!Browser.Engine.trident){
-				instance.iframeEl.setStyles({
+				instance.el.iframe.setStyles({
 					'height': contentWrapper.getStyle('height'),
 					'width': contentWrapper.offsetWidth - contentWrapper.getStyle('border-left').toInt() - contentWrapper.getStyle('border-right').toInt()
 				});
 			} else {
 				// The following hack is to get IE8 RC1 IE8 Standards Mode to properly resize an iframe
 				// when only the vertical dimension is changed.
-				instance.iframeEl.setStyles({
+				instance.el.iframe.setStyles({
 					'height': contentWrapper.getStyle('height'),
 					'width': contentWrapper.offsetWidth - contentWrapper.getStyle('border-left').toInt() - contentWrapper.getStyle('border-right').toInt() - 1
 				});
-				instance.iframeEl.setStyles({
+				instance.el.iframe.setStyles({
 					'width': contentWrapper.offsetWidth - contentWrapper.getStyle('border-left').toInt() - contentWrapper.getStyle('border-right').toInt()
 				});
 			}
