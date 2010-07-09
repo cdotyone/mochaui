@@ -18,7 +18,7 @@
  ...
  */
 
-MUI.files['source|window.js'] = 'loaded';
+MUI.files['source|Window.js'] = 'loaded';
 
 /*
  Class: Window
@@ -278,7 +278,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 	options: MUI.Windows.windowOptions,
 
 	initialize: function(options){
-		this.setOptions(MUI.Windows.windowOptions); // looks strange, but is here to allow global options to be set externally to window.js
+		this.setOptions(MUI.Windows.windowOptions); // looks strange, but is here to allow global options to be set externally to Window.js
 		this.setOptions(options);
 
 		// Shorten object chain
@@ -294,8 +294,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 			oldLeft: 0,
 			isMaximized: false,
 			isMinimized: false,
-			isCollapsed: false,
-			timestamp: $time()
+			isCollapsed: false
 		});
 
 		if (options.type != 'window'){

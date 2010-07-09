@@ -34,11 +34,11 @@ var MUI = MochaUI = {
 		standardEffects: true,  // Basic effects that tend to run smoothly.
 
 		path: {
-			source:  '../mui/',			 	// Path to MochaUI source JavaScript
-			themes:  '../themes/',		  	// Path to MochaUI Themes
-			plugins: '../plugins/',		 	// Path to Plugins
-			controls:'../mui-controls/',	// Path to Mocha Owned Plugins
-			utils:   '../mui-util/'		 	// Path to Mocha On Demand Functionality
+			source:  '../Source/',			// Path to MochaUI source JavaScript
+			controls:'../Source/Controls/',	// Path to Mocha Owned Plugins
+			utils:   '../Source/Utility/',	// Path to Mocha On Demand Functionality
+			themes:  '../Demo/themes/',		// Path to MochaUI Themes
+			plugins: '../Demo/plugins/'		// Path to Plugins
 		}
 	})
 };

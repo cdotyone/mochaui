@@ -67,7 +67,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 		if ($type(options.container) == 'string') options.container = $(options.container);
 
 		// Check if column already exists
-		if (this.element) return;
+		if (this.columnEl) return;
 		else MUI.set(options.id, this);
 
 		// If loading columns into a panel, hide the regular content container.
@@ -80,7 +80,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 			$(options.container).getElement('.mochaContent').hide();
 		}
 
-		this.element = new Element('div', {
+		this.columnEl = new Element('div', {
 			'id': options.id,
 			'class': 'column expanded',
 			'styles': {
@@ -88,15 +88,15 @@ MUI.Column = new NamedClass('MUI.Column', {
 			}
 		}).inject($(options.container));
 
-		this.element.store('instance', this);
+		this.columnEl.store('instance', this);
 
-		var parent = this.element.getParent();
+		var parent = this.columnEl.getParent();
 		var columnHeight = parent.getStyle('height').toInt();
-		this.element.setStyle('height', columnHeight);
+		this.columnEl.setStyle('height', columnHeight);
 
 		if (options.sortable){
 			if (!options.container.retrieve('sortables')){
-				var sortables = new Sortables(this.element, {
+				var sortables = new Sortables(this.columnEl, {
 					opacity: 1,
 					handle: '.panel-header',
 					constrain: false,
@@ -126,37 +126,37 @@ MUI.Column = new NamedClass('MUI.Column', {
 				});
 				options.container.store('sortables', sortables);
 			} else {
-				options.container.retrieve('sortables').addLists(this.element);
+				options.container.retrieve('sortables').addLists(this.columnEl);
 			}
 		}
 
-		if (options.placement == 'main') this.element.addClass('rWidth');
+		if (options.placement == 'main') this.columnEl.addClass('rWidth');
 
 		switch (options.placement){
 			case 'left':
 				this.handleEl = new Element('div', {
 					'id': options.id + '_handle',
 					'class': 'columnHandle'
-				}).inject(this.element, 'after');
+				}).inject(this.columnEl, 'after');
 
 				this.handleIconEl = new Element('div', {
 					'id': options.id + '_handle_icon',
 					'class': 'handleIcon'
 				}).inject(this.handleEl);
 
-				this._addResizeRight(this.element, options.resizeLimit[0], options.resizeLimit[1]);
+				this._addResizeRight(this.columnEl, options.resizeLimit[0], options.resizeLimit[1]);
 				break;
 			case 'right':
 				this.handleEl = new Element('div', {
 					'id': options.id + '_handle',
 					'class': 'columnHandle'
-				}).inject(this.element, 'before');
+				}).inject(this.columnEl, 'before');
 
 				this.handleIconEl = new Element('div', {
 					'id': options.id + '_handle_icon',
 					'class': 'handleIcon'
 				}).inject(this.handleEl);
-				this._addResizeLeft(this.element, options.resizeLimit[0], options.resizeLimit[1]);
+				this._addResizeLeft(this.columnEl, options.resizeLimit[0], options.resizeLimit[1]);
 				break;
 		}
 
@@ -174,7 +174,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 
 	getPanels: function(){
 		var panels=[];
-		$(this.element).getElements('.panel').each(function(panelEl) {
+		$(this.columnEl).getElements('.panel').each(function(panelEl) {
 			var panel=MUI.get(panelEl.id);
 			if(panel) panels.push(panel);
 		});
@@ -182,7 +182,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 	},
 
 	collapse: function(){
-		var column = this.element;
+		var column = this.columnEl;
 
 		this.oldWidth = column.getStyle('width').toInt();
 
@@ -204,7 +204,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 	},
 
 	expand : function(){
-		var column = this.element;
+		var column = this.columnEl;
 
 		column.setStyle('width', this.oldWidth);
 		this.isCollapsed = false;
@@ -240,17 +240,17 @@ MUI.Column = new NamedClass('MUI.Column', {
 		}.bind(this));
 
 		if (Browser.Engine.trident){
-			self.element.dispose();
+			self.columnEl.dispose();
 			if (self.handleEl != null) self.handleEl.dispose();
 		} else {
-			self.element.destroy();
+			self.columnEl.destroy();
 			if (self.handleEl != null) self.handleEl.destroy();
 		}
 
 		if (MUI.Desktop) MUI.Desktop.resizePanels();
 
 		var sortables = self.options.container.retrieve('sortables');
-		if (sortables) sortables.removeLists(this.element);
+		if (sortables) sortables.removeLists(this.columnEl);
 
 		MUI.erase(self.options.id);
 		return true;

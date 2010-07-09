@@ -21,7 +21,7 @@
  ...
  */
 
-MUI.files['source|panel.js'] = 'loaded';
+MUI.files['source|Panel.js'] = 'loaded';
 
 /*
  Class: Panel
@@ -141,7 +141,6 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		this.setOptions(options);
 
 		$extend(this, {
-			timestamp: $time(),
 			isCollapsed: false, // This is probably redundant since we can check for the class
 			oldHeight: 0,
 			partner: null
@@ -448,7 +447,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 				if (expandedSiblings.length == 0 && currentColumn.options.placement != 'main'){
 					currentColumn = MUI.get($(options.column).id);
-					currentColumn.columnToggle();
+					currentColumn.toggle();
 					return;
 				} else if (expandedSiblings.length == 0 && currentColumn.options.placement == 'main'){
 					return;

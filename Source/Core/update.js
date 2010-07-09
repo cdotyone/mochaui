@@ -19,7 +19,7 @@
  ...
  */
 
-MUI.files['source|update.js'] = 'loaded';
+MUI.files['source|Update.js'] = 'loaded';
 
 /*
 
