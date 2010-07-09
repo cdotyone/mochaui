@@ -6,28 +6,25 @@
 
 	<title>Mootools MochaUI</title>
 
-	<link rel="stylesheet" type="text/css" id="cssContent" href="../themes/default/css/Content.css"/>
-	<link rel="stylesheet" type="text/css" id="cssCore" href="../themes/default/css/Core.css"/>
-	<link rel="stylesheet" type="text/css" id="cssWindow" href="../themes/default/css/Window.css"/>
+	<link rel="stylesheet" type="text/css" href="../Demo/themes/default/css/Content.css"/>
+	<link rel="stylesheet" type="text/css" href="../Demo/themes/default/css/Core.css"/>
+	<link rel="stylesheet" type="text/css" href="../Demo/themes/default/css/Window.css"/>
 
 	<!--[if IE]>
 	<script type="text/javascript" src="scripts/excanvas_r43.js"></script>
 	<![endif]-->
+	<script type="text/javascript" src="scripts/mootools-1.2.4-core-yc.js"></script>
+	<script type="text/javascript" src="scripts/mootools-1.2.4-more-yc.js"></script>
 
 	<!--MOCHAUI-->
-	<script type="text/javascript" src="../mootools/mootools-1.2.4-core-yc.js"></script>
-	<script type="text/javascript" src="../mootools/mootools-1.2.4-more-yc.js"></script>
-	<script type="text/javascript" src="../mui/core.js"></script>
-	<script type="text/javascript" src="../mui/update.js"></script>
-	<script type="text/javascript" src="../mui/dock.js"></script>
-	<script type="text/javascript" src="../mui/window.js"></script>
-	<script type="text/javascript" src="../mui/modal.js"></script>
+	<script type="text/javascript" src="../Source/Core/Core.js"></script>
+	<script type="text/javascript" src="../Source/Core/Update.js"></script>
+	<script type="text/javascript" src="../Source/Core/Dock.js"></script>
+	<script type="text/javascript" src="../Source/Core/Window.js"></script>
+	<script type="text/javascript" src="../Source/Core/Modal.js"></script>
 	<!--MOCHAUI-->
 
 	<script type="text/javascript">
-
-		// Initialize MochaUI options
-		MUI.initialize();
 
 		function makeModal() {
 			new MUI.Modal({
@@ -39,7 +36,8 @@
 			});
 		}
 
-		window.addEvent('load', function() {
+		window.addEvent('domready',function() {
+			MUI.initialize(); // Initialize MochaUI options
 			$$('.modalDemoLink').addEvent('click', function(e) {
 				e.stop();
 				makeModal();
