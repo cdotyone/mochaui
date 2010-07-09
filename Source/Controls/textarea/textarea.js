@@ -44,7 +44,7 @@ MUI.TextArea = new Class({
 	options: {
 		 id:				''		// id of the primary element, and id os control that is registered with mocha
 		,container:			null	// the parent control in the document to add the control to
-		,createOnInit:		true	// true to add textbox to container when control is initialized
+		,drawOnInit:		true	// true to add textbox to container when control is initialized
 		,cssClass:			'form'	// the primary css tag
 
 		,hasDynamicSize:	false	// true if this textarea can automatically resize
@@ -75,7 +75,7 @@ MUI.TextArea = new Class({
 		}
 
 		// create control if we have a target container
-		if (o.createOnInit && o.container != null) this.draw();
+		if (o.drawOnInit && o.container != null) this.draw();
 
 		MUI.set(id, this);
 	},

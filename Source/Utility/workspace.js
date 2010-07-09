@@ -56,8 +56,8 @@ MUI.extend({
 				'id': instance.options.id,
 				'top': instance.options.y,
 				'left': instance.options.x,
-				'width': instance.contentWrapperEl.getStyle('width').toInt(),
-				'height': instance.contentWrapperEl.getStyle('height').toInt()
+				'width': instance.el.contentWrapper.getStyle('width').toInt(),
+				'height': instance.el.contentWrapper.getStyle('height').toInt()
 			});
 		}.bind(this));
 		this.cookie.save();
@@ -99,7 +99,7 @@ MUI.extend({
 					'left': workspaceWindow.left
 				});
 				var instance = windowEl.retrieve('instance');
-				instance.contentWrapperEl.setStyles({
+				instance.el.contentWrapper.setStyles({
 					'width': workspaceWindow.width,
 					'height': workspaceWindow.height
 				});

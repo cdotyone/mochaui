@@ -938,7 +938,7 @@ var initializeColumns = function(){
 	});
 
 	var addResizeElements = function(){
-		var panel = this.contentWrapperEl;
+		var panel = this.el.contentWrapper;
 		var pad = panel.getElement('.pad');
 		pad.appendText('Width: ');
 		this.displayWidthEl = new Element('span', {
@@ -951,8 +951,8 @@ var initializeColumns = function(){
 	};
 
 	var updateResizeElements = function(){
-		var newSize = this.contentWrapperEl.getStyles(['width', 'height']);
-		var pad = this.contentEl;
+		var newSize = this.el.contentWrapper.getStyles(['width', 'height']);
+		var pad = this.el.content;
 		if (this.displayWidthEl) this.displayWidthEl.set('text', newSize['width']);
 		if (this.displayHeightEl) this.displayHeightEl.set('text', newSize['height']);
 	};

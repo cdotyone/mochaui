@@ -99,7 +99,7 @@ MUI.extend({
 
 		if (options.url) options.url = MUI.replacePaths(options.url);
 
-		var contentEl = instance == null ? element : instance.contentEl;
+		var contentEl = instance == null ? element : instance.el.content;
 		options.contentContainer = options.childElement != null ? options.childElement : contentEl;
 
 		if (!options.loadMethod){
@@ -111,7 +111,7 @@ MUI.extend({
 			}
 		}
 
-        if (!options.section) options.section = 'content';
+		if (!options.section) options.section = 'content';
 
 		// -- argument pre-processing override --
 		// allow controls to process any custom arguments, titles, scrollbars, etc..
@@ -288,7 +288,7 @@ MUI.Content.Providers.iframe = function(instance, options){
 			'scrolling': 'auto',
 			'styles': {
 				'height': contentContainer.offsetHeight - contentContainer.getStyle('border-top').toInt() - contentContainer.getStyle('border-bottom').toInt(),
-				'width': instance && instance.panelEl ? contentContainer.offsetWidth - contentContainer.getStyle('border-left').toInt() - contentContainer.getStyle('border-right').toInt() : '100%'
+				'width': instance && instance.el.panel ? contentContainer.offsetWidth - contentContainer.getStyle('border-left').toInt() - contentContainer.getStyle('border-right').toInt() : '100%'
 			}
 		}).inject(contentContainer);
 		if (instance) instance.iframeEl = iframeEl;
@@ -334,7 +334,7 @@ MUI.extend({
 					options.padding = {top:this.options.padding,left:this.options.padding,right:this.options.padding,bottom:this.options.padding};
 
 				// update padding if requested
-				if (options.padding) this.contentEl.setStyles({
+				if (options.padding) this.el.content.setStyles({
 					'padding-top': options.padding.top,
 					'padding-bottom': options.padding.bottom,
 					'padding-left': options.padding.left,
@@ -342,14 +342,14 @@ MUI.extend({
 				});
 
 				// set title if given option to do so
-				if (options.title && this.titleEl){
+				if (options.title && this.el && this.el.title){
 					this.options.title = options.title;
-					this.titleEl.set('html', options.title);
+					this.el.title.set('html', options.title);
 				}
 
 				// Set scrollbars if loading content in main content container.
 				// Always use 'hidden' for iframe windows
-				this.contentWrapperEl.setStyles({
+				this.el.contentWrapper.setStyles({
 					'overflow': this.options.scrollbars && options.loadMethod != 'iframe' ? 'auto' : 'hidden'
 				});
 			}
@@ -359,8 +359,8 @@ MUI.extend({
 		/// intercepts workflow from MUI.updateContent
 		updateClear: function(options){
 			if (options.section == 'content'){
-				this.contentEl.show();
-				var iframes = this.contentWrapperEl.getElements('.mochaIframe');
+				this.el.content.show();
+				var iframes = this.el.contentWrapper.getElements('.mochaIframe');
 				if (iframes) iframes.destroy();
 			}
 			return true;
@@ -369,12 +369,12 @@ MUI.extend({
 		/// intercepts workflow from MUI.updateContent
 		updateSetContent: function(options){
 			if (options.section == 'content'){
-				if (options.loadMethod == 'html') this.contentEl.addClass('pad');
+				if (options.loadMethod == 'html') this.el.content.addClass('pad');
 				if (options.loadMethod == 'iframe'){
-					this.contentEl.removeClass('pad');
-					this.contentEl.setStyle('padding', '0px');
-					this.contentEl.hide();
-					options.contentContainer = this.contentWrapperEl;
+					this.el.content.removeClass('pad');
+					this.el.content.setStyle('padding', '0px');
+					this.el.content.hide();
+					options.contentContainer = this.el.contentWrapper;
 				}
 			}
 			return true;	// tells MUI.updateContent to update the content

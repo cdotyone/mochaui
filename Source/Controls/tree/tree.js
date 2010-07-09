@@ -35,7 +35,7 @@ MUI.Tree = new Class({
 	options: {
 		id:					''			// id of the primary element, and id os control that is registered with mocha
 		,container:			null		// the parent control in the document to add the control to
-		,createOnInit:		true		// true to add tree to container when control is initialized
+		,drawOnInit:		true		// true to add tree to container when control is initialized
 		,cssClass:			'tree'		// the primary css tag
 
 		,nodes:				$A([])		// the hierarchical list of nodes
@@ -73,7 +73,7 @@ MUI.Tree = new Class({
 		}
 
 		// create sub items if available
-		if (this.options.createOnInit && this.options.nodes.length > 0) this.draw();
+		if (this.options.drawOnInit && this.options.nodes.length > 0) this.draw();
 
 		MUI.set(id, this);
 	},
@@ -94,8 +94,7 @@ MUI.Tree = new Class({
 		if (!div){
 			var container=MUI.get(MUI.get($(containerEl ? containerEl : o.container)));
 			if(container && (container.isTypeOf('MUI.Panel') || container.isTypeOf('MUI.Window'))) {
-				//container.contentEl.setStyle('display','none');
-				div = container.contentEl.addClass('tree');
+				div = container.el.content.addClass('tree');
 			} else {
 				div = new Element('div',{'id':o.id,'class':o.cssClass});
 				isNew = true;

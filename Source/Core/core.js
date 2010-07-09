@@ -454,7 +454,7 @@ Element.implement({
 			return;
 		}
 		if (instance != null && instance.hideSpinner == null){
-			if (instance.spinnerEl)	instance.spinnerEl.hide();
+			if (instance.el && instance.el.spinner) instance.el.spinner.hide();
 		} else instance.hideSpinner();
 
 		return this;
@@ -476,7 +476,7 @@ Element.implement({
 			return;
 		}
 		if (instance != null && instance.showSpinner == null){
-			if (instance.spinnerEl)	instance.spinnerEl.show();
+			if (instance.el && instance.el.spinner) instance.el.spinner.show();
 		} else instance.showSpinner();
 		return this;
 	},

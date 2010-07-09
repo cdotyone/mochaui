@@ -35,7 +35,7 @@ MUI.TextBox = new Class({
 	options: {
 		 id:				''			// id of the primary element, and id os control that is registered with mocha
 		,container:			null		// the parent control in the document to add the control to
-		,createOnInit:		true		// true to add textbox to container when control is initialized
+		,drawOnInit:		true		// true to add textbox to container when control is initialized
 		,cssClass:			'form'		// the primary css tag
 		,type:				'text'		// this is a text field
 
@@ -65,7 +65,7 @@ MUI.TextBox = new Class({
 		if (o.maskType.capitalize() == 'Password') o.type = 'password';
 
 		// create sub items if available
-		if (o.createOnInit && o.container != null) this.draw();
+		if (o.drawOnInit && o.container != null) this.draw();
 		else {
 			window.addEvent('domready', function(){
 				var el = $(id);

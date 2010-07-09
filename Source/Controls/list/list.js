@@ -35,7 +35,7 @@ MUI.List = new Class({
 	options: {
 		 id:				''			// id of the primary element, and id os control that is registered with mocha
 		,container:			null		// the parent control in the document to add the control to
-		,createOnInit:		true		// true to add tree to container when control is initialized
+		,drawOnInit:		true		// true to add tree to container when control is initialized
 		,cssClass:			'list'		// the primary css tag
 
 		,showCommand:		true		// turns row commands on or off
@@ -69,7 +69,7 @@ MUI.List = new Class({
 		}
 
 		// create sub items if available
-		if (this.options.createOnInit && this.options.items.length > 0) this.draw();
+		if (this.options.drawOnInit && this.options.items.length > 0) this.draw();
 		else if ($(id)) this.fromHTML(id);
 
 		MUI.set(id, this);

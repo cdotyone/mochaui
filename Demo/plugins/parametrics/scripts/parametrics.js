@@ -81,9 +81,9 @@ MUI.extend({
 						instance.options.shadowBlur = pos;
 
 						if (!instance.useCSS3){
-							instance.windowEl.setStyles({
-								'top': instance.windowEl.getStyle('top').toInt() - (instance.options.shadowBlur - oldShadowBlur),
-								'left': instance.windowEl.getStyle('left').toInt() - (instance.options.shadowBlur - oldShadowBlur)
+							instance.el.windowEl.setStyles({
+								'top': instance.el.windowEl.getStyle('top').toInt() - (instance.options.shadowBlur - oldShadowBlur),
+								'left': instance.el.windowEl.getStyle('left').toInt() - (instance.options.shadowBlur - oldShadowBlur)
 							});
 						}
 
@@ -123,7 +123,7 @@ MUI.extend({
 						if (instance.className != 'MUI.Window') return;
 						var oldOffsetX = instance.options.shadowOffset.x;
 						instance.options.shadowOffset.x = pos;
-						if (!instance.useCSS3) instance.windowEl.setStyle('left', instance.windowEl.getStyle('left').toInt() - (oldOffsetX - pos));
+						if (!instance.useCSS3) instance.el.windowEl.setStyle('left', instance.el.windowEl.getStyle('left').toInt() - (oldOffsetX - pos));
 						instance.drawWindow();
 					}.bind(this));
 				}.bind(this),
@@ -160,7 +160,7 @@ MUI.extend({
 						if (instance.className != 'MUI.Window') return;
 						var oldOffsetY = instance.options.shadowOffset.y;
 						instance.options.shadowOffset.y = pos;
-						if (!instance.useCSS3) instance.windowEl.setStyle('top', instance.windowEl.getStyle('top').toInt() - (oldOffsetY - pos));
+						if (!instance.useCSS3) instance.el.windowEl.setStyle('top', instance.el.windowEl.getStyle('top').toInt() - (oldOffsetY - pos));
 						instance.drawWindow();
 					}.bind(this));
 				}.bind(this),

@@ -38,7 +38,7 @@ var omniGrid = new NamedClass('omniGrid', {
 	options: {
 		 id:						''			// id of the primary element, and id os control that is registered with mocha
 		,container:					null		// the parent control in the document to add the control to
-		,createOnInit:				true		// true to add tree to container when control is initialized
+		,drawOnInit:				true		// true to add tree to container when control is initialized
 
 		,alternateRows:				true
 		,showHeader:				true
@@ -89,7 +89,7 @@ var omniGrid = new NamedClass('omniGrid', {
 		if (MUI.get(id)) return; // don't do anything if this control is already registered
 
 		// create sub items if available
-		if (this.options.createOnInit){
+		if (this.options.drawOnInit){
 			this.draw();
 			this.reset();
 			this.loadData();

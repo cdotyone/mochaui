@@ -327,14 +327,9 @@ MUI.Dock = {
 					MUI.Dock.restoreMinimized.delay(25, MUI.Dock, windowEl);
 				}
 				else {
-					// If window is not minimized and is focused, minimize window.
-					if (instance.windowEl.hasClass('isFocused') && instance.options.minimizable){
-						MUI.Dock.minimizeWindow(windowEl)
-					}
-					// If window is not minimized and is not focused, focus window.
-					else {
-						MUI.focusWindow(windowEl);
-					}
+					if (instance.el.windowEl.hasClass('isFocused') && instance.options.minimizable) MUI.Dock.minimizeWindow(windowEl);
+					else MUI.focusWindow(windowEl);
+
 					// if the window is not minimized and is outside the viewport, center it in the viewport.
 					var coordinates = document.getCoordinates();
 					if (windowEl.getStyle('left').toInt() > coordinates.width || windowEl.getStyle('top').toInt() > coordinates.height){
@@ -346,7 +341,7 @@ MUI.Dock = {
 
 		this.dockSortables.addItems(dockTab);
 
-		var titleText = instance.titleEl.innerHTML;
+		var titleText = instance.el.title.innerHTML;
 
 		new Element('div', {
 			'id': instance.options.id + '_dockTabText',
@@ -374,7 +369,7 @@ MUI.Dock = {
 		$$('.dockTab').removeClass('activeDockTab');
 		if (instance.isMinimized != true){
 
-			instance.windowEl.addClass('isFocused');
+			instance.el.windowEl.addClass('isFocused');
 
 			var currentButton = $(instance.options.id + '_dockTab');
 			if (currentButton != null){
@@ -382,7 +377,7 @@ MUI.Dock = {
 			}
 		}
 		else {
-			instance.windowEl.removeClass('isFocused');
+			instance.el.windowEl.removeClass('isFocused');
 		}
 	},
 
@@ -412,7 +407,7 @@ MUI.Dock = {
 			if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent)){
 				var ffversion = new Number(RegExp.$1);
 				if (ffversion < 3){
-					instance.contentWrapperEl.setStyle('overflow', 'hidden');
+					instance.el.contentWrapper.setStyle('overflow', 'hidden');
 				}
 			}
 		}
@@ -443,7 +438,7 @@ MUI.Dock = {
 
 		// Part of Mac FF2 scrollbar fix
 		if (instance.options.scrollbars && !instance.iframeEl){
-			instance.contentWrapperEl.setStyle('overflow', 'auto');
+			instance.el.contentWrapper.setStyle('overflow', 'auto');
 		}
 
 		if (instance.isCollapsed){

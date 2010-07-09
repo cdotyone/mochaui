@@ -36,7 +36,7 @@ MUI.ImageButton = new Class({
 	options: {
 		 id:			''		// id of the primary element, and id os control that is registered with mocha
 		,container:		null		// the parent control in the document to add the control to
-		,createOnInit:	true		// true to add tree to container when control is initialized
+		,drawOnInit:	true		// true to add tree to container when control is initialized
 		,cssClass:		'imgButton'	// the primary css tag
 
 		,text:			null		// the text displayed on the button
@@ -57,7 +57,7 @@ MUI.ImageButton = new Class({
 			this.options.id = id;
 		}
 
-		if (this.options.createOnInit) this.draw();
+		if (this.options.drawOnInit) this.draw();
 
 		MUI.set(id, this);
 	},

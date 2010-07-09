@@ -36,7 +36,7 @@ MUI.Accordion = new Class({
 	options: {
 		id:					''			// id of the primary element, and id os control that is registered with mocha
 		,container:			null		// the parent control in the document to add the control to
-		,createOnInit:		true		// true to add accordion to container when control is initialized
+		,drawOnInit:		true		// true to add accordion to container when control is initialized
 		,cssClass:			'accordian'	// the primary css tag
 
 		,panels:			$A([])		// the list of accordion panels
@@ -74,7 +74,7 @@ MUI.Accordion = new Class({
 		}
 
 		// create sub items if available
-		if (o.createOnInit && o.panels.length > 0) self.draw();
+		if (o.drawOnInit && o.panels.length > 0) self.draw();
 		else if(self.fromHTML) {
 			window.addEvent('domready', function(){
 				var el = $(id);
@@ -102,9 +102,9 @@ MUI.Accordion = new Class({
 		if (!div){
 			var instance=MUI.get(MUI.get($(containerEl ? containerEl : o.container)));
 			if(instance && (instance.isTypeOf('MUI.Panel') || instance.isTypeOf('MUI.Window'))) {
-				instance.contentEl.setStyle('padding',0);
+				instance.el.content.setStyle('padding',0);
 				instance.options.padding=0;
-				div = instance.contentEl.addClass(o.cssClass);
+				div = instance.el.content.addClass(o.cssClass);
 			} else {
 				div = new Element('div',{'id':o.id});
 				isNew = true;

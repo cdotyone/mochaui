@@ -35,7 +35,7 @@ MUI.Tabs = new Class({
 	options: {
 		 id:			''				// id of the primary element, and id os control that is registered with mocha
 		,container:		null			// the parent control in the document to add the control to
-		,createOnInit:	true			// true to add tree to container when control is initialized
+		,drawOnInit:	true			// true to add tree to container when control is initialized
 		,cssClass:		'tabs'			// the primary css tag
 
 		,tabs:			$A([])			// the list of tabs
@@ -69,7 +69,7 @@ MUI.Tabs = new Class({
 		}
 
 		// create sub items if available
-		if (o.createOnInit && o.tabs.length > 0) this.draw();
+		if (o.drawOnInit && o.tabs.length > 0) this.draw();
 
 		MUI.set(id, this);
 	},
@@ -89,8 +89,8 @@ MUI.Tabs = new Class({
 		var instance=MUI.get(MUI.get($(containerEl ? containerEl : o.container)));
 
 		if(instance && instance.isTypeOf('MUI.Panel')) {
-			instance.panelHeaderContentEl.addClass(o.cssClass);
-			div = instance.panelHeaderContentEl.getElement('div').empty();
+			instance.el.panelHeaderContent.addClass(o.cssClass);
+			div = instance.el.panelHeaderContent.getElement('div').empty();
 		} else if(instance && instance.isTypeOf('MUI.Window')) {
 			div = $(o.id);
 			div.addClass(o.cssClass);

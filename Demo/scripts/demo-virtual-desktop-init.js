@@ -369,7 +369,7 @@ initializeWindows = function() {
 			maximizable: false,
 			resizable: false,
 			scrollbars: false,
-			onBeforeBuild: function() {
+			onDrawBegin: function() {
 				if ($('builderStyle')) return;
 				new Asset.css(MUI.replacePaths('plugins|windowform/css/style.css'), {id: 'builderStyle'});
 			},
