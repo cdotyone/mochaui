@@ -16,10 +16,10 @@
 	<ul>
 		<li><a href="#1" onclick="new parent.MochaUI.Window({x: 100, y: 100});">Open a new window in the parent document.</a></li>
 		<li><a href="#2" onclick="parent.$('iframetests_dockTabText').highlight();">Highlight dock tab</a></li>
-		<li><a href="#3" onclick="parent.MochaUI.reloadIframe('iframetests_iframe');">Reload</a></li>
-		<li><a href="#4" onclick="parent.MochaUI.centerWindow(parent.$('iframetests'));">Center window</a></li>
-		<li><a href="#5" onclick="parent.MochaUI.closeAll(parent.$('iframetests'));">Close all window</a></li>
-		<li><a href="#6" onclick="parent.MochaUI.get(parent.$('iframetests')).close();">Close this window</a></li>
+		<li><a href="#3" onclick="parent.MUI.reloadIframe('iframetests_iframe');">Reload</a></li>
+		<li><a href="#4" onclick="parent.$('iframetests').center();">Center window</a></li>
+		<li><a href="#5" onclick="parent.MUI.Windows.closeAll();">Close all window</a></li>
+		<li><a href="#6" onclick="parent.$('iframetests').close();">Close this window</a></li>
 	</ul>
 </div>
 

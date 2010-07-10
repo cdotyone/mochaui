@@ -149,7 +149,7 @@ MUI.Themes = {
 
 			// Convert CSS colors to Canvas colors.
 			instance.setColors();
-			instance.drawWindow();
+			instance.redrawWindow();
 		});
 
 		if (MUI.Dock){

@@ -35,23 +35,6 @@ MUI.options.extend({
 	dock:		'dock'
 });
 
-MUI.extend({
-
-	/*
-	 Function: minimizeAll
-	 Minimize all windows that are minimizable.
-	 */
-	minimizeAll: function(){
-		$$('.mocha').each(function(windowEl){
-			var instance = windowEl.retrieve('instance');
-			if (!instance.isMinimized && instance.options.minimizable){
-				MUI.Dock.minimizeWindow(windowEl);
-			}
-		}.bind(this));
-	}
-
-});
-
 MUI.Dock = {
 
 	options: {
@@ -166,7 +149,7 @@ MUI.Dock = {
 			if (this.dockAutoHide){
 				$('dockAutoHide').setProperty('title', 'Turn Auto Hide Off');
 				//ctx.clearRect(0, 11, 100, 100);
-				MUI.circle(ctx, 5, 14, 3, this.options.trueButtonColor, 1.0);
+				MUI.Canvas.circle(ctx, 5, 14, 3, this.options.trueButtonColor, 1.0);
 
 				// Define event
 				this.autoHideEvent = function(event){
@@ -209,7 +192,7 @@ MUI.Dock = {
 			} else {
 				$('dockAutoHide').setProperty('title', 'Turn Auto Hide On');
 				//ctx.clearRect(0, 11, 100, 100);
-				MUI.circle(ctx, 5, 14, 3, this.options.enabledButtonColor, 1.0);
+				MUI.Canvas.circle(ctx, 5, 14, 3, this.options.enabledButtonColor, 1.0);
 				// Remove event
 				document.removeEvent('mousemove', this.autoHideEvent);
 			}
@@ -245,16 +228,16 @@ MUI.Dock = {
 		// Draw dock controls
 		var ctx = $('dockCanvas').getContext('2d');
 		ctx.clearRect(0, 0, 100, 100);
-		MUI.circle(ctx, 5, 4, 3, this.options.enabledButtonColor, 1.0);
+		MUI.Canvas.circle(ctx, 5, 4, 3, this.options.enabledButtonColor, 1.0);
 
 		if (this.dockWrapper.getProperty('dockPosition') == 'top'){
-			MUI.circle(ctx, 5, 14, 3, this.options.disabledButtonColor, 1.0)
+			MUI.Canvas.circle(ctx, 5, 14, 3, this.options.disabledButtonColor, 1.0)
 		}
 		else if (this.dockAutoHide){
-			MUI.circle(ctx, 5, 14, 3, this.options.trueButtonColor, 1.0);
+			MUI.Canvas.circle(ctx, 5, 14, 3, this.options.trueButtonColor, 1.0);
 		}
 		else {
-			MUI.circle(ctx, 5, 14, 3, this.options.enabledButtonColor, 1.0);
+			MUI.Canvas.circle(ctx, 5, 14, 3, this.options.enabledButtonColor, 1.0);
 		}
 	},
 
@@ -270,8 +253,8 @@ MUI.Dock = {
 			MUI.Desktop.setDesktopSize();
 			this.dockWrapper.setProperty('dockPosition', 'top');
 			ctx.clearRect(0, 0, 100, 100);
-			MUI.circle(ctx, 5, 4, 3, this.options.enabledButtonColor, 1.0);
-			MUI.circle(ctx, 5, 14, 3, this.options.disabledButtonColor, 1.0);
+			MUI.Canvas.circle(ctx, 5, 4, 3, this.options.enabledButtonColor, 1.0);
+			MUI.Canvas.circle(ctx, 5, 14, 3, this.options.disabledButtonColor, 1.0);
 			$('dockPlacement').setProperty('title', 'Position Dock Bottom');
 			$('dockAutoHide').setProperty('title', 'Auto Hide Disabled in Top Dock Position');
 			this.dockAutoHide = false;
@@ -286,8 +269,8 @@ MUI.Dock = {
 			MUI.Desktop.setDesktopSize();
 			this.dockWrapper.setProperty('dockPosition', 'bottom');
 			ctx.clearRect(0, 0, 100, 100);
-			MUI.circle(ctx, 5, 4, 3, this.options.enabledButtonColor, 1.0);
-			MUI.circle(ctx, 5, 14, 3, this.options.enabledButtonColor, 1.0);
+			MUI.Canvas.circle(ctx, 5, 4, 3, this.options.enabledButtonColor, 1.0);
+			MUI.Canvas.circle(ctx, 5, 14, 3, this.options.enabledButtonColor, 1.0);
 			$('dockPlacement').setProperty('title', 'Position Dock Top');
 			$('dockAutoHide').setProperty('title', 'Turn Auto Hide On');
 		}
@@ -313,21 +296,21 @@ MUI.Dock = {
 			if ((this.timeUp - this.timeDown) < 275){
 				// If the visibility of the windows on the page are toggled off, toggle visibility on.
 				if (!MUI.Windows.windowsVisible){
-					MUI.Windows.toggleVisibility();
-					if (instance.isMinimized) MUI.Dock.restoreMinimized.delay(25, MUI.Dock, windowEl);
-					else MUI.Windows.focus(windowEl);
+					MUI.Windows.toggleAll();
+					if (instance.isMinimized) MUI.Windows.restoreMinimized.delay(25, MUI.Dock, windowEl);
+					else instance.focus();
 					return;
 				}
 				// If window is minimized, restore window.
-				if (instance.isMinimized) MUI.Dock.restoreMinimized.delay(25, MUI.Dock, windowEl);
+				if (instance.isMinimized) MUI.Windows.restoreMinimized.delay(25, MUI.Dock, windowEl);
 				else {
-					if (instance.el.windowEl.hasClass('isFocused') && instance.options.minimizable) MUI.Dock.minimizeWindow(windowEl);
-					else MUI.Windows.focus(windowEl);
+					if (instance.el.windowEl.hasClass('isFocused') && instance.options.minimizable) MUI.Windows.minimize(windowEl);
+					else this.focus();
 
 					// if the window is not minimized and is outside the viewport, center it in the viewport.
 					var coordinates = document.getCoordinates();
 					if (windowEl.getStyle('left').toInt() > coordinates.width || windowEl.getStyle('top').toInt() > coordinates.height){
-						MUI.Windows.center(windowEl);
+						instance.center();
 					}
 				}
 			}
@@ -375,7 +358,33 @@ MUI.Dock = {
 		}
 	},
 
-	minimizeWindow: function(windowEl){
+	toggle: function(){
+		if (!MochaUI.dockVisible){
+			this.dockWrapper.show();
+			MUI.dockVisible = true;
+			MUI.Desktop.setDesktopSize();
+		}
+		else {
+			this.dockWrapper.hide();
+			MUI.dockVisible = false;
+			MUI.Desktop.setDesktopSize();
+		}
+	}
+
+};
+
+MUI.Windows = (MUI.Windows || $H({})).extend({
+
+	minimizeAll: function(){
+		$$('.mocha').each(function(windowEl){
+			var instance = windowEl.retrieve('instance');
+			if (!instance.isMinimized && instance.options.minimizable){
+				MUI.Windows.minimize(windowEl);
+			}
+		}.bind(this));
+	},
+
+	minimize: function(windowEl){
 		if (windowEl != $(windowEl)) return;
 
 		var instance = windowEl.retrieve('instance');
@@ -412,7 +421,7 @@ MUI.Dock = {
 		setTimeout(function(){
 			windowEl.setStyle('zIndex', 1);
 			windowEl.removeClass('isFocused');
-			this.makeActiveTab();
+			MUI.Dock.makeActiveTab();
 		}.bind(this), 100);
 
 		instance.fireEvent('onMinimize', windowEl);
@@ -422,10 +431,10 @@ MUI.Dock = {
 		var instance = windowEl.retrieve('instance');
 		if (!instance.isMinimized) return;
 
-		if (!MUI.Windows.windowsVisible) MUI.Windows.toggleVisibility();
+		if (!MUI.Windows.windowsVisible) MUI.Windows.toggleAll();
 		MUI.Desktop.setDesktopSize();
 		if (instance.options.scrollbars && !instance.el.iframe) instance.el.contentWrapper.setStyle('overflow', 'auto'); // Part of Mac FF2 scrollbar fix
-		if (instance.isCollapsed) MUI.Windows.collapseToggle(windowEl);
+		if (instance.isCollapsed) instance.collapseToggle();
 		instance.show(); // show the window
 
 		if (instance.el.iframe){  // Show iframe
@@ -434,22 +443,9 @@ MUI.Dock = {
 		}
 
 		instance.isMinimized = false;
-		MUI.Windows.focus(windowEl);
+		instance.focus();
 		instance.fireEvent('onRestore', windowEl);
-	},
-
-	toggle: function(){
-		if (!MochaUI.dockVisible){
-			this.dockWrapper.show();
-			MUI.dockVisible = true;
-			MUI.Desktop.setDesktopSize();
-		}
-		else {
-			this.dockWrapper.hide();
-			MUI.dockVisible = false;
-			MUI.Desktop.setDesktopSize();
-		}
 	}
 
-};
+});
  

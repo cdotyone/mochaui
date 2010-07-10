@@ -83,7 +83,7 @@ initializeWindows = function() {
 			url: url,
 			method: 'get',
 			onComplete: function(properties) {
-				MUI.newWindowsFromJSON(properties.windows);
+				MUI.Windows.newFromJSON(properties.windows);
 			}
 		}).send();
 	};
@@ -331,28 +331,28 @@ initializeWindows = function() {
 	if ($('cascadeLink')) {
 		$('cascadeLink').addEvent('click', function(e) {
 			e.stop();
-			MUI.arrangeCascade();
+			MUI.Windows.arrangeCascade();
 		});
 	}
 
 	if ($('tileLink')) {
 		$('tileLink').addEvent('click', function(e) {
 			e.stop();
-			MUI.arrangeTile();
+			MUI.Windows.arrangeTile();
 		});
 	}
 
 	if ($('closeLink')) {
 		$('closeLink').addEvent('click', function(e) {
 			e.stop();
-			MUI.closeAll();
+			MUI.Windows.closeAll();
 		});
 	}
 
 	if ($('minimizeLink')) {
 		$('minimizeLink').addEvent('click', function(e) {
 			e.stop();
-			MUI.minimizeAll();
+			MUI.Windows.minimizeAll();
 		});
 	}
 
@@ -400,14 +400,14 @@ initializeWindows = function() {
 	if ($('saveWorkspaceLink')) {
 		$('saveWorkspaceLink').addEvent('click', function(e) {
 			e.stop();
-			MUI.saveWorkspace();
+			MUI.Desktop.saveWorkspace();
 		});
 	}
 
 	if ($('loadWorkspaceLink')) {
 		$('loadWorkspaceLink').addEvent('click', function(e) {
 			e.stop();
-			MUI.loadWorkspace();
+			MUI.Desktop.loadWorkspace();
 		});
 	}
 

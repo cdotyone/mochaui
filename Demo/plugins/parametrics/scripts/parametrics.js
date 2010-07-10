@@ -50,7 +50,7 @@ MUI.extend({
 					MUI.each(function(instance){
 						if (instance.className != 'MUI.Window') return;
 						instance.options.cornerRadius = pos;
-						instance.drawWindow();
+						instance.redrawWindow();
 					}.bind(this));
 				}.bind(this)
 			}).set(windowOptions.cornerRadius);
@@ -87,7 +87,7 @@ MUI.extend({
 							});
 						}
 
-						instance.drawWindow();
+						instance.redrawWindow();
 					}.bind(this));
 				}.bind(this),
 				onComplete: function(){
@@ -124,7 +124,7 @@ MUI.extend({
 						var oldOffsetX = instance.options.shadowOffset.x;
 						instance.options.shadowOffset.x = pos;
 						if (!instance.useCSS3) instance.el.windowEl.setStyle('left', instance.el.windowEl.getStyle('left').toInt() - (oldOffsetX - pos));
-						instance.drawWindow();
+						instance.redrawWindow();
 					}.bind(this));
 				}.bind(this),
 				onComplete: function(){
@@ -161,7 +161,7 @@ MUI.extend({
 						var oldOffsetY = instance.options.shadowOffset.y;
 						instance.options.shadowOffset.y = pos;
 						if (!instance.useCSS3) instance.el.windowEl.setStyle('top', instance.el.windowEl.getStyle('top').toInt() - (oldOffsetY - pos));
-						instance.drawWindow();
+						instance.redrawWindow();
 					}.bind(this));
 				}.bind(this),
 				onComplete: function(){

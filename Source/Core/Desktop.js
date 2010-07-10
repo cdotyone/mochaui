@@ -28,11 +28,11 @@ MUI.Desktop = {
 	options: {
 		// Naming options:
 		// If you change the IDs of the MochaUI Desktop containers in your HTML, you need to change them here as well.
-		desktop:			 'desktop',
-		desktopHeader:	   'desktopHeader',
-		desktopFooter:	   'desktopFooter',
-		desktopNavBar:	   'desktopNavbar',
-		pageWrapper:		 'pageWrapper',
+		desktop:			'desktop',
+		desktopHeader:		'desktopHeader',
+		desktopFooter:		'desktopFooter',
+		desktopNavBar:		'desktopNavbar',
+		pageWrapper:		'pageWrapper',
 		page:				'page',
 		desktopFooterWrapper:'desktopFooterWrapper'
 	},
@@ -107,14 +107,14 @@ MUI.Desktop = {
 					newHeight -= instance.el.contentBorder.getStyle('border-bottom').toInt();
 					newHeight -= instance._getAllSectionsHeight();
 
-					MUI.Windows.resize(instance.el.windowEl, {
+					instance.resize({
 						width: resizeDimensions.width,
 						height: newHeight,
 						top: resizeDimensions.top + shadowOffset.y - shadowBlur,
 						left: resizeDimensions.left + shadowOffset.x - shadowBlur
 					});
 
-					instance.drawWindow();
+					instance.redrawWindow();
 					if (instance.el.iframe){
 						instance.el.iframe.setStyles({
 							'height': instance.el.contentWrapper.getStyle('height')
@@ -161,6 +161,219 @@ MUI.Desktop = {
 		MUI.rWidth();
 	},
 
+	saveWorkspace: function() {
+		this.cookie = new Hash.Cookie('mochaUIworkspaceCookie', {duration: 3600});
+		this.cookie.empty();
+
+		MUI.each(function(instance) {
+			if (instance.className != 'MUI.Window') return;
+			instance.saveValues();
+			this.cookie.set(instance.options.id, {
+				'id': instance.options.id,
+				'top': instance.options.y,
+				'left': instance.options.x,
+				'width': instance.el.contentWrapper.getStyle('width').toInt(),
+				'height': instance.el.contentWrapper.getStyle('height').toInt()
+			});
+		}.bind(this));
+		this.cookie.save();
+
+		new MUI.Window({
+			loadMethod: 'html',
+			type: 'notification',
+			addClass: 'notification',
+			content: 'Workspace saved.',
+			closeAfter: '1400',
+			width: 200,
+			height: 40,
+			y: 53,
+			padding: { top: 10, right: 12, bottom: 10, left: 12 },
+			shadowBlur: 5
+		});
+	},
+
+	loadingCallChain: function() {
+		if ($$('.mocha').length == 0 && this.myChain) {
+			this.myChain.callChain();
+		}
+	},
+
+	loadWorkspace: function() {
+		var cookie = new Hash.Cookie('mochaUIworkspaceCookie', {duration: 3600});
+		var workspaceWindows = cookie.load();
+
+		if (!cookie.getKeys().length) {
+			new MUI.Window({
+				loadMethod: 'html',
+				type: 'notification',
+				addClass: 'notification',
+				content: 'You have no saved workspace.',
+				closeAfter: '1400',
+				width: 220,
+				height: 40,
+				y: 25,
+				padding: { top: 10, right: 12, bottom: 10, left: 12 },
+				shadowBlur: 5
+			});
+			return;
+		}
+
+		var doLoadWorkspace = (function(workspaceWindows) {
+			workspaceWindows.each(function(workspaceWindow) {
+				windowFunction = MUI[workspaceWindow.id + 'Window'];
+				if (windowFunction) windowFunction();
+				// currently disabled positioning of windows, that would need to be passed to the MUI.Window call
+				/*if (windowFunction){
+				 windowFunction({
+				 width: workspaceWindow.width,
+				 height: workspaceWindow.height
+				 });
+				 var windowEl = $(workspaceWindow.id);
+				 windowEl.setStyles({
+				 'top': workspaceWindow.top,
+				 'left': workspaceWindow.left
+				 });
+				 var instance = windowEl.retrieve('instance');
+				 instance.el.contentWrapper.setStyles({
+				 'width': workspaceWindow.width,
+				 'height': workspaceWindow.height
+				 });
+				 instance.redrawWindow();
+				 }*/
+			}.bind(this));
+			this.loadingWorkspace = false;
+		}).bind(this);
+
+		if ($$('.mocha').length != 0) {
+			this.loadingWorkspace = true;
+			this.myChain = new Chain();
+			this.myChain.chain(
+					function() {
+						$$('.mocha').each(function(el) {
+							el.close();
+						});
+						this.myChain.callChain();
+					}.bind(this),
+					doLoadWorkspace
+					);
+			this.myChain.callChain();
+		} else doLoadWorkspace(workspaceWindows);
+	}
+
+};
+
+MUI.Windows = (MUI.Windows || $H({})).extend({
+
+	arrangeCascade: function(){
+
+		var viewportTopOffset = 30;    // Use a negative number if neccessary to place first window where you want it
+		var viewportLeftOffset = 20;
+		var windowTopOffset = 50;    // Initial vertical spacing of each window
+		var windowLeftOffset = 40;
+
+		// See how much space we have to work with
+		var coordinates = document.getCoordinates();
+
+		var openWindows = 0;
+		MUI.each(function(instance){
+			if (instance.className != 'MUI.Window') return;
+			if (!instance.isMinimized && instance.options.draggable) openWindows ++;
+		});
+
+		var topOffset = ((windowTopOffset * (openWindows + 1)) >= (coordinates.height - viewportTopOffset)) ?
+				(coordinates.height - viewportTopOffset) / (openWindows + 1) : windowTopOffset;
+		var leftOffset = ((windowLeftOffset * (openWindows + 1)) >= (coordinates.width - viewportLeftOffset - 20)) ?
+				(coordinates.width - viewportLeftOffset - 20) / (openWindows + 1) : windowLeftOffset;
+
+		var x = viewportLeftOffset;
+		var y = viewportTopOffset;
+		$$('.mocha').each(function(windowEl){
+			var instance = windowEl.retrieve('instance');
+			if (!instance.isMinimized && !instance.isMaximized && instance.options.draggable){
+				instance.focus();
+				x += leftOffset;
+				y += topOffset;
+
+				if (!MUI.options.advancedEffects){
+					windowEl.setStyles({
+						'top': y,
+						'left': x
+					});
+				}
+				else {
+					var cascadeMorph = new Fx.Morph(windowEl, {
+						'duration': 550
+					});
+					cascadeMorph.start({
+						'top': y,
+						'left': x
+					});
+				}
+			}
+		}.bind(this));
+	},
+
+	arrangeTile: function(){
+
+		var viewportTopOffset = 30;    // Use a negative number if neccessary to place first window where you want it
+		var viewportLeftOffset = 20;
+
+		var x = 10;
+		var y = 80;
+
+		var windowsNum = 0;
+
+		MUI.each(function(instance){
+			if (instance.className != 'MUI.Window') return;
+			if (!instance.isMinimized && !instance.isMaximized){
+				windowsNum++;
+			}
+		});
+
+		var cols = 3;
+		var rows = Math.ceil(windowsNum / cols);
+
+		var coordinates = document.getCoordinates();
+
+		var col_width = ((coordinates.width - viewportLeftOffset) / cols);
+		var col_height = ((coordinates.height - viewportTopOffset) / rows);
+
+		var row = 0;
+		var col = 0;
+
+		MUI.each(function(instance){
+			if (instance.className != 'MUI.Window') return;
+			if (!instance.isMinimized && !instance.isMaximized && instance.options.draggable){
+
+				var left = (x + (col * col_width));
+				var top = (y + (row * col_height));
+
+				instance.redrawWindow();
+				instance.focus();
+
+				if (MUI.options.advancedEffects){
+					var tileMorph = new Fx.Morph(instance.el.windowEl, {
+						'duration': 550
+					});
+					tileMorph.start({
+						'top': top,
+						'left': left
+					});
+				} else {
+					instance.el.windowEl.setStyles({
+						'top': top,
+						'left': left
+					});
+				}
+
+				if (++col === cols){
+					row++;
+					col = 0;
+				}
+			}
+		}.bind(this));
+	},
+
 	maximizeWindow: function(windowEl){
 		var instance = MUI.get(windowEl);
 		var options = instance.options;
@@ -168,21 +381,21 @@ MUI.Desktop = {
 
 		// If window no longer exists or is maximized, stop
 		if (windowEl != $(windowEl) || instance.isMaximized) return;
-		if (instance.isCollapsed) MUI.Windows.collapseToggle(windowEl);
+		if (instance.isCollapsed) instance.collapseToggle(windowEl);
 		instance.isMaximized = true;
 
 		// If window is restricted to a container, it should not be draggable when maximized.
 		if (instance.options.restrict){
 			windowDrag.detach();
-			if (options.resizable) instance.detachResizable();
+			if (options.resizable) instance._detachResizable();
 			instance.el.titleBar.setStyle('cursor', 'default');
 		}
 
 		// If the window has a container that is not the desktop
 		// temporarily move the window to the desktop while it is minimized.
-		if (options.container != this.desktop){
-			this.desktop.grab(windowEl);
-			if (this.options.restrict) windowDrag.container = this.desktop;
+		if (options.container != MUI.Desktop.desktop){
+			MUI.Desktop.desktop.grab(windowEl);
+			if (instance.options.restrict) windowDrag.container = instance.el.desktop;
 		}
 
 		// Save original position
@@ -222,7 +435,7 @@ MUI.Desktop = {
 		newHeight -= instance.el.contentBorder.getStyle('border-bottom').toInt();
 		newHeight -= instance._getAllSectionsHeight();
 
-		MUI.Windows.resize(windowEl, {
+		instance.resize({
 			width: resizeDimensions.width,
 			height: newHeight,
 			top: resizeDimensions.top + shadowOffset.y - shadowBlur,
@@ -231,7 +444,7 @@ MUI.Desktop = {
 		instance.fireEvent('onMaximize', windowEl);
 
 		if (instance.el.maximizeButton) instance.el.maximizeButton.setProperty('title', 'Restore');
-		MUI.Windows.focus(windowEl);
+		instance.focus();
 	},
 
 	restoreWindow: function(windowEl){
@@ -251,7 +464,7 @@ MUI.Desktop = {
 
 		if (options.restrict){
 			instance.windowDrag.attach();
-			if (options.resizable) instance.reattachResizable();
+			if (options.resizable) instance._reattachResizable();
 			instance.el.titleBar.setStyle('cursor', 'move');
 		}
 
@@ -263,7 +476,7 @@ MUI.Desktop = {
 		}
 
 		var contentWrapper = instance.el.contentWrapper;
-		MUI.Windows.resize(windowEl, {
+		instance.resize({
 			width: contentWrapper.oldWidth,
 			height: contentWrapper.oldHeight,
 			top: instance.oldTop,
@@ -273,7 +486,8 @@ MUI.Desktop = {
 
 		if (instance.el.maximizeButton) instance.el.maximizeButton.setProperty('title', 'Maximize');
 	}
-};
+
+});
 
 MUI.extend({
 
@@ -497,8 +711,7 @@ MUI.extend({
 
 	},
 
-	// May rename this resizeIframeEl()
-	resizeChildren: function(panel){
+	resizeChildren: function(panel){ // May rename this resizeIframeEl()
 		var instance = MUI.get(panel.id);
 		var contentWrapper = instance.el.contentWrapper;
 
@@ -523,8 +736,7 @@ MUI.extend({
 
 	},
 
-	// Remaining Width
-	rWidth: function(container){
+	rWidth: function(container){ // Remaining Width
 		if (container == null){
 			container = MUI.Desktop.desktop;
 		}

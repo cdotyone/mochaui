@@ -157,38 +157,6 @@ MUI.extend({
 		Browser.Engine.gecko ? $(iframe).src = src : top.frames[iframe].location.reload(true);
 	},
 
-	roundedRect: function(ctx, x, y, width, height, radius, rgb, a){
-		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
-		ctx.beginPath();
-		ctx.moveTo(x, y + radius);
-		ctx.lineTo(x, y + height - radius);
-		ctx.quadraticCurveTo(x, y + height, x + radius, y + height);
-		ctx.lineTo(x + width - radius, y + height);
-		ctx.quadraticCurveTo(x + width, y + height, x + width, y + height - radius);
-		ctx.lineTo(x + width, y + radius);
-		ctx.quadraticCurveTo(x + width, y, x + width - radius, y);
-		ctx.lineTo(x + radius, y);
-		ctx.quadraticCurveTo(x, y, x, y + radius);
-		ctx.fill();
-	},
-
-	triangle: function(ctx, x, y, width, height, rgb, a){
-		ctx.beginPath();
-		ctx.moveTo(x + width, y);
-		ctx.lineTo(x, y + height);
-		ctx.lineTo(x + width, y + height);
-		ctx.closePath();
-		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
-		ctx.fill();
-	},
-
-	circle: function(ctx, x, y, diameter, rgb, a){
-		ctx.beginPath();
-		ctx.arc(x, y, diameter, 0, Math.PI * 2, true);
-		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
-		ctx.fill();
-	},
-
 	notification: function(message){
 		new MUI.Window({
 			loadMethod: 'html',
@@ -564,63 +532,3 @@ $extend(Asset, {
 		return false;
 	}
 });
-
-/// TODO: These need to be moved out of the MUI namespace
-MUI.extend({
-
-	newWindowsFromHTML: function(arg){
-		new MUI.Require({
-			js: ['utils|window-from-html.js'],
-			onload: function(){
-				new MUI.newWindowsFromHTML(arg);
-			}
-		});
-	},
-
-	newWindowsFromJSON: function(arg){
-		new MUI.Require({
-			js: ['utils|window-from-json.js'],
-			onload: function(){
-				new MUI.newWindowsFromJSON(arg);
-			}
-		});
-	},
-
-	arrangeCascade: function(){
-		new MUI.Require({
-			js: ['utils|window-cascade.js'],
-			onload: function(){
-				new MUI.arrangeCascade();
-			}
-		});
-	},
-
-	arrangeTile: function(){
-		new MUI.Require({
-			js: ['utils|window-tile.js'],
-			onload: function(){
-				new MUI.arrangeTile();
-			}
-		});
-	},
-
-	saveWorkspace: function(){
-		new MUI.Require({
-			js: ['utils|workspace.js'],
-			onload: function(){
-				new MUI.saveWorkspace();
-			}
-		});
-	},
-
-	loadWorkspace: function(){
-		new MUI.Require({
-			js: ['utils|workspace.js'],
-			onload: function(){
-				new MUI.loadWorkspace();
-			}
-		});
-	}
-
-});
-

@@ -18,6 +18,7 @@
 
 	<!--MOCHAUI-->
 	<script type="text/javascript" src="../Source/Core/Core.js"></script>
+	<script type="text/javascript" src="../Source/Core/Canvas.js"></script>
 	<script type="text/javascript" src="../Source/Core/Update.js"></script>
 	<script type="text/javascript" src="../Source/Core/Window.js"></script>
 	<script type="text/javascript" src="../Source/Core/Modal.js"></script>
@@ -39,7 +40,7 @@
 		};
 
 		window.addEvent('load', function() {
-			MUI.NewWindowsFromHTML = new MUI.newWindowsFromHTML();
+			MUI.Windows.newFromHTML();
 
 			$('testLink').addEvent('click', function(e) {
 				e.stop();
