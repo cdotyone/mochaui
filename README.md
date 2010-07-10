@@ -2,12 +2,9 @@ A MooTools UI Library User Interface Library
 
 Development Source
 
-   /src - all source files required to build
+   /Source - all source files required to build
+   /Demo - demonstration of MochaUI
 
-Generated Files
+Development Branch Expected Release Version # is 1.0.0
 
-   /demo - working demo (all files needed to host)
-
-   /build - compressed/minimized MochaUI
-
-Development Branch Expected Release Version # is 0.9.8
+   Expect some breaking changes
