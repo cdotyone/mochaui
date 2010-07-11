@@ -1,9 +1,7 @@
 /*
  ---
 
- name: Desktop
-
- script: desktop.js
+ script: Desktop.js
 
  description: Create web application layouts. Enables window maximize.
 
@@ -167,7 +165,7 @@ MUI.Desktop = {
 
 		MUI.each(function(instance) {
 			if (instance.className != 'MUI.Window') return;
-			instance.saveValues();
+			instance._saveValues();
 			this.cookie.set(instance.options.id, {
 				'id': instance.options.id,
 				'top': instance.options.y,
@@ -373,7 +371,6 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 			}
 		}.bind(this));
 	}
-
 });
 
 MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
@@ -654,7 +651,7 @@ MUI.extend({
 			}.bind(this));
 
 			panelsToResize.each(function(panel){
-				MUI.get(panel.id).fireEvent('resize');
+				MUI.get(panel.id).fireEvent('resize',this);
 			});
 		}.bind(this));
 
@@ -775,8 +772,8 @@ MUI.extend({
 			[].include(instance)
 			  .combine(instance.getPanels())
 			  .each(function(panel){
-					panel.fireEvent('resize')
-			  });
+					panel.fireEvent('resize',this)
+			  },this);
 
 			column.getChildren('.panel').each(function(panel){
 				panel.setStyle('width', newWidth - panel.getStyle('border-left').toInt() - panel.getStyle('border-right').toInt());

@@ -94,7 +94,7 @@ MUI.extend({
 					MUI.each(function(instance){
 						if (instance.className != 'MUI.Window') return;
 						if (instance.options.resizable){
-							instance.adjustHandles();
+							instance._adjustHandles();
 						}
 					});
 				}
@@ -131,7 +131,7 @@ MUI.extend({
 					MUI.each(function(instance){
 						if (instance.className != 'MUI.Window') return;
 						if (instance.options.resizable){
-							instance.adjustHandles();
+							instance._adjustHandles();
 						}
 					});
 				}
@@ -168,7 +168,7 @@ MUI.extend({
 					MUI.each(function(instance){
 						if (instance.className != 'MUI.Window') return;
 						if (instance.options.resizable){
-							instance.adjustHandles();
+							instance._adjustHandles();
 						}
 					});
 				}

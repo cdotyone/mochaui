@@ -160,26 +160,6 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 		}
 	},
 
-	underlayInitialize: function(){
-		/*
-		 The underlay is inserted directly under windows when they are being dragged or resized
-		 so that the cursor is not captured by iframes or other plugins (such as Flash)
-		 underneath the window.
-		 */
-		var windowUnderlay = new Element('div', {
-			'id': 'windowUnderlay',
-			'styles': {
-				'height': parent.getCoordinates().height,
-				'opacity': .01,
-				'display': 'none'
-			}
-		}).inject(document.body);
-	},
-
-	setUnderlaySize: function(){
-		$('windowUnderlay').setStyle('height', parent.getCoordinates().height);
-	},
-
 	newFromHTML: function(){
 
 		$$('.mocha').each(function(el){
@@ -230,6 +210,26 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 			new MUI.Window(options);
 		});
 
+	},
+
+	_underlayInitialize: function(){
+		/*
+		 The underlay is inserted directly under windows when they are being dragged or resized
+		 so that the cursor is not captured by iframes or other plugins (such as Flash)
+		 underneath the window.
+		 */
+		var windowUnderlay = new Element('div', {
+			'id': 'windowUnderlay',
+			'styles': {
+				'height': parent.getCoordinates().height,
+				'opacity': .01,
+				'display': 'none'
+			}
+		}).inject(document.body);
+	},
+
+	_setUnderlaySize: function(){
+		$('windowUnderlay').setStyle('height', parent.getCoordinates().height);
 	},
 
 	_getWithHighestZIndex: function(){
@@ -351,12 +351,6 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		return this;
 	},
 
-	saveValues: function(){
-		var coordinates = this.el.windowEl.getCoordinates();
-		this.options.x = coordinates.left.toInt();
-		this.options.y = coordinates.top.toInt();
-	},
-
 	draw: function(){ // options is not doing anything
 		var options = this.options;
 
@@ -391,11 +385,11 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 				this.focus.delay(10,this);
 				if (MUI.options.standardEffects) this.el.windowEl.shake();
 			}
-			return;
+			return this;
 		} else MUI.set(options.id, this);
 
 		this.isClosing = false;
-		this.fireEvent('onDrawBegin');
+		this.fireEvent('drawBegin',this);
 
 		// Create window div
 		MUI.Windows.indexLevel++;
@@ -465,8 +459,8 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		this.el.windowEl.inject(options.container);
 		
 		// Convert CSS colors to Canvas colors.
-		this.setColors();
-		if (options.type != 'notification') this.setMochaControlsWidth();
+		this._setColors();
+		if (options.type != 'notification') this._setMochaControlsWidth();
 
 		// Add content to window.
 		MUI.updateContent({
@@ -493,9 +487,9 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		// Attach events to the window
 		this._attachDraggable();
 		this._attachResizable();
-		this.setupEvents();
+		this._setupEvents();
 
-		if (options.resizable) this.adjustHandles();
+		if (options.resizable) this._adjustHandles();
 
 		// Position window. If position not specified by user then center the window on the page.
 		var dimensions = (options.container == document.body || options.container == MUI.Desktop.desktop) ? window.getSize() : $(this.options.container).getSize();
@@ -567,184 +561,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 
 		if (this.options.closeAfter) this.el.windowEl.close.delay(this.options.closeAfter, this);
 		if (MUI.Dock && $(MUI.options.dock) && this.options.type == 'window') MUI.Dock.createDockTab(this.el.windowEl);
-	},
-
-	setupEvents: function(){
-		var windowEl = this.el.windowEl;
-		// Set events
-		// Note: if a button does not exist, its due to properties passed to newWindow() stating otherwise
-		if (this.el.closeButton) this.el.closeButton.addEvent('click', function(e){
-			e.stop();
-			windowEl.close();
-		}.bind(this));
-
-		if (this.options.type == 'window'){
-			windowEl.addEvent('mousedown', function(e){
-				if (Browser.Engine.trident) e.stop();
-				this.focus();
-				if (windowEl.getStyle('top').toInt() < -this.options.shadowBlur){
-					windowEl.setStyle('top', -this.options.shadowBlur);
-				}
-			}.bind(this));
-		}
-
-		if (this.el.minimizeButton) this.el.minimizeButton.addEvent('click', function(e){
-			e.stop();
-			this.minimize();
-		}.bind(this));
-
-		if (this.el.maximizeButton) this.el.maximizeButton.addEvent('click', function(e){
-			e.stop();
-			if (this.isMaximized) this._restoreMaximized();
-			else this.maximize();
-		}.bind(this));
-
-		if (this.options.collapsible){
-			// Keep titlebar text from being selected on double click in Safari.
-			this.el.title.addEvent('selectstart', function(e){
-				e.stop();
-			}.bind(this));
-
-			if (Browser.Engine.trident){
-				this.el.titleBar.addEvent('mousedown', function(){
-					this.el.title.setCapture();
-				}.bind(this));
-				this.el.titleBar.addEvent('mouseup', function(){
-					this.el.title.releaseCapture();
-				}.bind(this));
-			}
-
-			this.el.titleBar.addEvent('dblclick', function(e){
-				e.stop();
-				this.collapseToggle();
-			}.bind(this));
-		}
-	},
-
-	adjustHandles: function(){
-		var shadowBlur = this.options.shadowBlur;
-		var shadowBlur2x = shadowBlur * 2;
-		var shadowOffset = this.options.shadowOffset;
-		var top = shadowBlur - shadowOffset.y - 1;
-		var right = shadowBlur + shadowOffset.x - 1;
-		var bottom = shadowBlur + shadowOffset.y - 1;
-		var left = shadowBlur - shadowOffset.x - 1;
-
-		var coordinates = this.el.windowEl.getCoordinates();
-		var width = coordinates.width - shadowBlur2x + 2;
-		var height = coordinates.height - shadowBlur2x + 2;
-
-		this.el.n.setStyles({
-			'top': top,
-			'left': left + 10,
-			'width': width - 20
-		});
-		this.el.e.setStyles({
-			'top': top + 10,
-			'right': right,
-			'height': height - 30
-		});
-		this.el.s.setStyles({
-			'bottom': bottom,
-			'left': left + 10,
-			'width': width - 30
-		});
-		this.el.w.setStyles({
-			'top': top + 10,
-			'left': left,
-			'height': height - 20
-		});
-		this.el.ne.setStyles({
-			'top': top,
-			'right': right
-		});
-		this.el.se.setStyles({
-			'bottom': bottom,
-			'right': right
-		});
-		this.el.sw.setStyles({
-			'bottom': bottom,
-			'left': left
-		});
-		this.el.nw.setStyles({
-			'top': top,
-			'left': left
-		});
-	},
-
-	setColors: function(){
-		// Convert CSS colors to Canvas colors.
-		if (this.options.useCanvas && !this.useCSS3){
-			
-			// Set TitlebarColor
-			var pattern = /\?(.*?)\)/;
-			if (this.el.titleBar.getStyle('backgroundImage') != 'none'){
-				var gradient = this.el.titleBar.getStyle('backgroundImage');
-				gradient = gradient.match(pattern)[1];
-				gradient = gradient.parseQueryString();
-				var gradientFrom = gradient.from;
-				var gradientTo = gradient.to.replace(/\"/, ''); // IE7 was adding a quotation mark in. No idea why.
-
-				this.headerStartColor = new Color(gradientFrom);
-				this.headerStopColor = new Color(gradientTo);
-				this.el.titleBar.addClass('replaced');
-			} else if (this.el.titleBar.getStyle('background-color') !== '' && this.el.titleBar.getStyle('background-color') !== 'transparent'){
-				this.headerStartColor = new Color(this.el.titleBar.getStyle('background-color')).mix('#fff', 20);
-				this.headerStopColor = new Color(this.el.titleBar.getStyle('background-color')).mix('#000', 20);
-				this.el.titleBar.addClass('replaced');
-			}
-
-			// Set BodyBGColor
-			if (this.el.windowEl.getStyle('background-color') !== '' && this.el.windowEl.getStyle('background-color') !== 'transparent'){
-				this.bodyBgColor = new Color(this.el.windowEl.getStyle('background-color'));
-				this.el.windowEl.addClass('replaced');
-			}
-
-			// Set resizableColor, the color of the SE corner resize handle
-			if (this.options.resizable && this.se.getStyle('background-color') !== '' && this.se.getStyle('background-color') !== 'transparent'){
-				this.resizableColor = new Color(this.se.getStyle('background-color'));
-				this.se.addClass('replaced');
-			}
-
-		}
-
-		if (this.options.useCanvasControls){
-			if (this.el.minimizeButton){
-				// Set Minimize Button Foreground Color
-				if (this.el.minimizeButton.getStyle('color') !== '' && this.el.minimizeButton.getStyle('color') !== 'transparent')
-					this.minimizeColor = new Color(this.el.minimizeButton.getStyle('color'));
-
-				// Set Minimize Button Background Color
-				if (this.el.minimizeButton.getStyle('background-color') !== '' && this.el.minimizeButton.getStyle('background-color') !== 'transparent'){
-					this.minimizeBgColor = new Color(this.el.minimizeButton.getStyle('background-color'));
-					this.el.minimizeButton.addClass('replaced');
-				}
-			}
-
-			if (this.el.maximizeButton){
-				// Set Maximize Button Foreground Color
-				if (this.el.maximizeButton.getStyle('color') !== '' && this.el.maximizeButton.getStyle('color') !== 'transparent')
-					this.maximizeColor = new Color(this.el.maximizeButton.getStyle('color'));
-
-				// Set Maximize Button Background Color
-				if (this.el.maximizeButton.getStyle('background-color') !== '' && this.el.maximizeButton.getStyle('background-color') !== 'transparent'){
-					this.maximizeBgColor = new Color(this.el.maximizeButton.getStyle('background-color'));
-					this.el.maximizeButton.addClass('replaced');
-				}
-			}
-
-			if (this.el.closeButton){
-				// Set Close Button Foreground Color
-				if (this.el.closeButton.getStyle('color') !== '' && this.el.closeButton.getStyle('color') !== 'transparent')
-					this.closeColor = new Color(this.el.closeButton.getStyle('color'));
-
-				// Set Close Button Background Color
-				if (this.el.closeButton.getStyle('background-color') !== '' && this.el.closeButton.getStyle('background-color') !== 'transparent'){
-					this.closeBgColor = new Color(this.el.closeButton.getStyle('background-color'));
-					this.el.closeButton.addClass('replaced');
-				}
-			}
-		}
+		return this;
 	},
 
 	redraw: function(shadows){
@@ -849,25 +666,6 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 
 		this.drawingWindow = false;
 		return this;
-
-	},
-
-	setMochaControlsWidth: function(){
-		this.mochaControlsWidth = 0;
-		var options = this.options;
-		if (options.minimizable){
-			this.mochaControlsWidth += (this.el.minimizeButton.getStyle('margin-left').toInt() + this.el.minimizeButton.getStyle('width').toInt());
-		}
-		if (options.maximizable){
-			this.mochaControlsWidth += (this.el.maximizeButton.getStyle('margin-left').toInt() + this.el.maximizeButton.getStyle('width').toInt());
-		}
-		if (options.closable){
-			this.mochaControlsWidth += (this.el.closeButton.getStyle('margin-left').toInt() + this.el.closeButton.getStyle('width').toInt());
-		}
-		this.el.controls.setStyle('width', this.mochaControlsWidth);
-		if (options.useCanvasControls){
-			this.el.canvasControls.setProperty('width', this.mochaControlsWidth);
-		}
 	},
 
 	restore: function(){
@@ -882,13 +680,9 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		var dimensions = options.container.getCoordinates();
 
 		var windowPosTop = window.getScroll().y + (window.getSize().y * .5) - (windowEl.offsetHeight * .5);
-		if (windowPosTop < -options.shadowBlur){
-			windowPosTop = -options.shadowBlur;
-		}
+		if (windowPosTop < -options.shadowBlur) windowPosTop = -options.shadowBlur;
 		var windowPosLeft = (dimensions.width * .5) - (windowEl.offsetWidth * .5);
-		if (windowPosLeft < -options.shadowBlur){
-			windowPosLeft = -options.shadowBlur;
-		}
+		if (windowPosLeft < -options.shadowBlur) windowPosLeft = -options.shadowBlur;
 		if (MUI.options.advancedEffects){
 			this.morph.start({
 				'top': windowPosTop,
@@ -900,7 +694,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 				'left': windowPosLeft
 			});
 		}
-		
+
 		return this;
 	},
 
@@ -995,7 +789,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		MUI.each(function(instance){
 			if (instance.className != 'MUI.Window') return;
 			if (instance.el.windowEl.hasClass('isFocused')){
-				instance.fireEvent('onBlur', instance.el.windowEl);
+				instance.fireEvent('blur', instance);
 			}
 			instance.el.windowEl.removeClass('isFocused');
 		});
@@ -1003,7 +797,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		if (MUI.Dock && $(MUI.options.dock) && this.options.type == 'window') MUI.Dock.makeActiveTab();
 		windowEl.addClass('isFocused');
 
-		if (fireEvent) this.fireEvent('onFocus', windowEl);
+		if (fireEvent) this.fireEvent('focus', this);
 		return this;
 	},
 
@@ -1024,7 +818,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		if (self.isClosing) return this;
 
 		self.isClosing = true;
-		self.fireEvent('onClose', self.el.windowEl);
+		self.fireEvent('close', this);
 
 		if (self.options.storeOnClose){
 			this._storeOnClose();
@@ -1039,7 +833,6 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		if (!MUI.options.advancedEffects){
 			if (self.options.type == 'modal' || self.options.type == 'modal2') $('modalOverlay').setStyle('opacity', 0);
 			self._doClosingJobs();
-			return this;
 		} else {
 			// Redraws IE windows without shadows since IE messes up canvas alpha when you change element opacity
 			if (Browser.Engine.trident) self.redraw(false);
@@ -1064,7 +857,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 
 	collapseToggle: function() {
 		var handles = this.el.windowEl.getElements('.handle');
-		if (this.isMaximized) return;
+		if (this.isMaximized) return this;
 		if (this.isCollapsed){
 			this.isCollapsed = false;
 			this.redraw();
@@ -1109,6 +902,210 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 				});
 			}
 			this._drawWindowCollapsed();
+		}
+		return this;
+	},
+
+	_saveValues: function(){
+		var coordinates = this.el.windowEl.getCoordinates();
+		this.options.x = coordinates.left.toInt();
+		this.options.y = coordinates.top.toInt();
+		return this;
+	},
+
+	_setupEvents: function(){
+		var windowEl = this.el.windowEl;
+		// Set events
+		// Note: if a button does not exist, its due to properties passed to newWindow() stating otherwise
+		if (this.el.closeButton) this.el.closeButton.addEvent('click', function(e){
+			e.stop();
+			windowEl.close();
+		}.bind(this));
+
+		if (this.options.type == 'window'){
+			windowEl.addEvent('mousedown', function(e){
+				if (Browser.Engine.trident) e.stop();
+				this.focus();
+				if (windowEl.getStyle('top').toInt() < -this.options.shadowBlur){
+					windowEl.setStyle('top', -this.options.shadowBlur);
+				}
+			}.bind(this));
+		}
+
+		if (this.el.minimizeButton) this.el.minimizeButton.addEvent('click', function(e){
+			e.stop();
+			this.minimize();
+		}.bind(this));
+
+		if (this.el.maximizeButton) this.el.maximizeButton.addEvent('click', function(e){
+			e.stop();
+			if (this.isMaximized) this._restoreMaximized();
+			else this.maximize();
+		}.bind(this));
+
+		if (this.options.collapsible){
+			// Keep titlebar text from being selected on double click in Safari.
+			this.el.title.addEvent('selectstart', function(e){
+				e.stop();
+			}.bind(this));
+
+			if (Browser.Engine.trident){
+				this.el.titleBar.addEvent('mousedown', function(){
+					this.el.title.setCapture();
+				}.bind(this));
+				this.el.titleBar.addEvent('mouseup', function(){
+					this.el.title.releaseCapture();
+				}.bind(this));
+			}
+
+			this.el.titleBar.addEvent('dblclick', function(e){
+				e.stop();
+				this.collapseToggle();
+			}.bind(this));
+		}
+	},
+
+	_adjustHandles: function(){
+		var shadowBlur = this.options.shadowBlur;
+		var shadowBlur2x = shadowBlur * 2;
+		var shadowOffset = this.options.shadowOffset;
+		var top = shadowBlur - shadowOffset.y - 1;
+		var right = shadowBlur + shadowOffset.x - 1;
+		var bottom = shadowBlur + shadowOffset.y - 1;
+		var left = shadowBlur - shadowOffset.x - 1;
+
+		var coordinates = this.el.windowEl.getCoordinates();
+		var width = coordinates.width - shadowBlur2x + 2;
+		var height = coordinates.height - shadowBlur2x + 2;
+
+		this.el.n.setStyles({
+			'top': top,
+			'left': left + 10,
+			'width': width - 20
+		});
+		this.el.e.setStyles({
+			'top': top + 10,
+			'right': right,
+			'height': height - 30
+		});
+		this.el.s.setStyles({
+			'bottom': bottom,
+			'left': left + 10,
+			'width': width - 30
+		});
+		this.el.w.setStyles({
+			'top': top + 10,
+			'left': left,
+			'height': height - 20
+		});
+		this.el.ne.setStyles({
+			'top': top,
+			'right': right
+		});
+		this.el.se.setStyles({
+			'bottom': bottom,
+			'right': right
+		});
+		this.el.sw.setStyles({
+			'bottom': bottom,
+			'left': left
+		});
+		this.el.nw.setStyles({
+			'top': top,
+			'left': left
+		});
+	},
+
+	_setColors: function(){
+		// Convert CSS colors to Canvas colors.
+		if (this.options.useCanvas && !this.useCSS3){
+
+			// Set TitlebarColor
+			var pattern = /\?(.*?)\)/;
+			if (this.el.titleBar.getStyle('backgroundImage') != 'none'){
+				var gradient = this.el.titleBar.getStyle('backgroundImage');
+				gradient = gradient.match(pattern)[1];
+				gradient = gradient.parseQueryString();
+				var gradientFrom = gradient.from;
+				var gradientTo = gradient.to.replace(/\"/, ''); // IE7 was adding a quotation mark in. No idea why.
+
+				this.headerStartColor = new Color(gradientFrom);
+				this.headerStopColor = new Color(gradientTo);
+				this.el.titleBar.addClass('replaced');
+			} else if (this.el.titleBar.getStyle('background-color') !== '' && this.el.titleBar.getStyle('background-color') !== 'transparent'){
+				this.headerStartColor = new Color(this.el.titleBar.getStyle('background-color')).mix('#fff', 20);
+				this.headerStopColor = new Color(this.el.titleBar.getStyle('background-color')).mix('#000', 20);
+				this.el.titleBar.addClass('replaced');
+			}
+
+			// Set BodyBGColor
+			if (this.el.windowEl.getStyle('background-color') !== '' && this.el.windowEl.getStyle('background-color') !== 'transparent'){
+				this.bodyBgColor = new Color(this.el.windowEl.getStyle('background-color'));
+				this.el.windowEl.addClass('replaced');
+			}
+
+			// Set resizableColor, the color of the SE corner resize handle
+			if (this.options.resizable && this.se.getStyle('background-color') !== '' && this.se.getStyle('background-color') !== 'transparent'){
+				this.resizableColor = new Color(this.se.getStyle('background-color'));
+				this.se.addClass('replaced');
+			}
+
+		}
+
+		if (this.options.useCanvasControls){
+			if (this.el.minimizeButton){
+				// Set Minimize Button Foreground Color
+				if (this.el.minimizeButton.getStyle('color') !== '' && this.el.minimizeButton.getStyle('color') !== 'transparent')
+					this.minimizeColor = new Color(this.el.minimizeButton.getStyle('color'));
+
+				// Set Minimize Button Background Color
+				if (this.el.minimizeButton.getStyle('background-color') !== '' && this.el.minimizeButton.getStyle('background-color') !== 'transparent'){
+					this.minimizeBgColor = new Color(this.el.minimizeButton.getStyle('background-color'));
+					this.el.minimizeButton.addClass('replaced');
+				}
+			}
+
+			if (this.el.maximizeButton){
+				// Set Maximize Button Foreground Color
+				if (this.el.maximizeButton.getStyle('color') !== '' && this.el.maximizeButton.getStyle('color') !== 'transparent')
+					this.maximizeColor = new Color(this.el.maximizeButton.getStyle('color'));
+
+				// Set Maximize Button Background Color
+				if (this.el.maximizeButton.getStyle('background-color') !== '' && this.el.maximizeButton.getStyle('background-color') !== 'transparent'){
+					this.maximizeBgColor = new Color(this.el.maximizeButton.getStyle('background-color'));
+					this.el.maximizeButton.addClass('replaced');
+				}
+			}
+
+			if (this.el.closeButton){
+				// Set Close Button Foreground Color
+				if (this.el.closeButton.getStyle('color') !== '' && this.el.closeButton.getStyle('color') !== 'transparent')
+					this.closeColor = new Color(this.el.closeButton.getStyle('color'));
+
+				// Set Close Button Background Color
+				if (this.el.closeButton.getStyle('background-color') !== '' && this.el.closeButton.getStyle('background-color') !== 'transparent'){
+					this.closeBgColor = new Color(this.el.closeButton.getStyle('background-color'));
+					this.el.closeButton.addClass('replaced');
+				}
+			}
+		}
+	},
+
+	_setMochaControlsWidth: function(){
+		this.mochaControlsWidth = 0;
+		var options = this.options;
+		if (options.minimizable){
+			this.mochaControlsWidth += (this.el.minimizeButton.getStyle('margin-left').toInt() + this.el.minimizeButton.getStyle('width').toInt());
+		}
+		if (options.maximizable){
+			this.mochaControlsWidth += (this.el.maximizeButton.getStyle('margin-left').toInt() + this.el.maximizeButton.getStyle('width').toInt());
+		}
+		if (options.closable){
+			this.mochaControlsWidth += (this.el.closeButton.getStyle('margin-left').toInt() + this.el.closeButton.getStyle('width').toInt());
+		}
+		this.el.controls.setStyle('width', this.mochaControlsWidth);
+		if (options.useCanvasControls){
+			this.el.canvasControls.setProperty('width', this.mochaControlsWidth);
 		}
 	},
 
@@ -1518,7 +1515,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 					if (!Browser.Engine.trident) this.el.iframe.setStyle('visibility', 'hidden');
 					else this.el.iframe.hide();
 				}
-				this.fireEvent('onDragStart', windowEl);
+				this.fireEvent('dragStart', this);
 			}.bind(this),
 			onComplete: function(){
 				if (this.options.type != 'modal' && this.options.type != 'modal2')
@@ -1529,8 +1526,8 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 					else this.el.iframe.show();
 				}
 				// Store new position in options.
-				this.saveValues();
-				this.fireEvent('onDragComplete', windowEl);
+				this._saveValues();
+				this.fireEvent('dragComplete', this);
 			}.bind(this)
 		});
 	},
@@ -1665,7 +1662,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			});
 		}
 		this.redraw();
-		this.adjustHandles();
+		this._adjustHandles();
 		if (Browser.Engine.gecko){
 			this.el.windowEl.getElements('.panel').each(function(panel){
 				panel.setStyle('overflow', panel.retrieve('oldOverflow')); // Fix for a rendering bug in FF
@@ -1695,7 +1692,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			});
 		}
 
-		this.fireEvent('onResize', this.el.windowEl);
+		this.fireEvent('resize', this);
 	},
 
 	_detachResizable: function(){
@@ -1813,7 +1810,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		// Destroy throws an error in IE8
 		if (Browser.Engine.trident) windowEl.dispose();
 		else windowEl.destroy();
-		this.fireEvent('onCloseComplete');
+		this.fireEvent('closeComplete',this);
 
 		if (this.options.type != 'notification'){
 			var newFocus = MUI.Windows._getWithHighestZIndex();
@@ -1845,7 +1842,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			MUI.Desktop.setDesktopSize();
 		}
 
-		this.fireEvent('onCloseComplete');
+		this.fireEvent('closeComplete',this);
 
 		if (this.options.type != 'notification'){
 			var newFocus = MUI.Windows._getWithHighestZIndex();
@@ -1916,11 +1913,11 @@ document.addEvents({
 
 window.addEvents({
 	'domready': function(){
-		MUI.Windows.underlayInitialize();
+		MUI.Windows._underlayInitialize();
 	},
 
 	'resize': function(){
-		if ($('windowUnderlay')) MUI.Windows.setUnderlaySize();
-		else MUI.Windows.underlayInitialize();
+		if ($('windowUnderlay')) MUI.Windows._setUnderlaySize();
+		else MUI.Windows._underlayInitialize();
 	}
 });

@@ -1,9 +1,7 @@
 /*
  ---
 
- name: Core
-
- script: core.js
+ script: Core.js
 
  description: MUI - A Web Applications User Interface Framework.
 

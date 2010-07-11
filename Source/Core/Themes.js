@@ -1,9 +1,7 @@
 /*
  ---
 
- name: Themes
-
- script: themes.js
+ script: Themes.js
 
  description: MUI - Allows for switching themes dynamically.
 
@@ -148,7 +146,7 @@ MUI.Themes = {
 			var instance = element.retrieve('instance');
 
 			// Convert CSS colors to Canvas colors.
-			instance.setColors();
+			instance._setColors();
 			instance.redraw();
 		});
 
@@ -186,7 +184,6 @@ MUI.Themes = {
 };
 
 window.addEvent('load', function(){
-
 	/*
 	 // Load theme the user was last using. This needs work.
 	 var cookie = new Hash.Cookie('mochaUIthemeCookie', {duration: 3600});
@@ -200,9 +197,6 @@ window.addEvent('load', function(){
 
 	if ($('themeControl')){
 		$('themeControl').getElements('option').setProperty('selected', 'false');
-		if ($('chooseTheme')){
-			$('chooseTheme').setProperty('selected', 'true');
-		}
+		if ($('chooseTheme')) $('chooseTheme').setProperty('selected', 'true');
 	}
-
 });

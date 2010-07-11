@@ -1,8 +1,6 @@
 /*
  ---
 
- name: Canvas
-
  script: Canvas.js
 
  description: Namespace for all canvas drawing functions.

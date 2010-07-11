@@ -1,9 +1,7 @@
 /*
  ---
 
- name: Panel
-
- script: panel.js
+ script: Panel.js
 
  description: Panel is used to create a content area in a column
 

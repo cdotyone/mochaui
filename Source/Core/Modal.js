@@ -1,9 +1,7 @@
 /*
  ---
 
- name: Modal
-
- script: modal.js
+ script: Modal.js
 
  description: Create modal dialog windows.
 

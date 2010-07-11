@@ -1,9 +1,7 @@
 /*
  ---
 
- name: Update
-
- script: update.js
+ script: Update.js
 
  description: core content update routines
 

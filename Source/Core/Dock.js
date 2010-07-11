@@ -1,9 +1,7 @@
 /*
  ---
 
- name: Dock
-
- script: dock.js
+ script: Dock.js
 
  description: Implements the dock/taskbar. Enables window minimize.
 
@@ -389,7 +387,7 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 
 	minimize: function(){
-		if(this.isMinimized) return;
+		if(this.isMinimized) return this;
 		this.isMinimized = true;
 
 		// Hide iframe
@@ -422,6 +420,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		}.bind(this), 100);
 
 		this.fireEvent('minimize', this);
+		return this;
 	},
 
 	_restoreMinimized: function(){
