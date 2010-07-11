@@ -28,7 +28,8 @@
  ...
  */
 
-var MUI = MochaUI = {
+var MochaUI;
+var MUI = MochaUI = (MUI || $H({})).extend({
 	'options': $H({
 		theme: 'default',
 		advancedEffects: false, // Effects that require fast browsers and are cpu intensive.
@@ -42,16 +43,13 @@ var MUI = MochaUI = {
 			plugins: '../Demo/plugins/'		// Path to Plugins
 		}
 	})
-};
-MUI.extend = (function(hash){
-	$extend(this, hash);
-}).bind(MUI);
+});
 
 MUI.extend({
 	version: '1.0.0',
 	instances: new Hash(),
 	IDCount: 0,
-	ieSupport: 'excanvas',  // Makes it easier to switch between Excanvas and Moocanvas for testing
+	ieSupport: 'excanvas',		// Makes it easier to switch between Excanvas and Moocanvas for testing
 	classes: {},
 	path: MUI.options.path,		// depreciated, will be removed
 

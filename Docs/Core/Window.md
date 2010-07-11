@@ -43,13 +43,11 @@
 	section - used to name the section being update, such as 'content,'toolbar','header','footer'
 	onContentLoaded - (function)
 	}]
- container - (element ID) Element the window is injected in. The container defaults to 'desktop'. If no desktop then to document.body. Use 'pageWrapper' if you don't want the windows to overlap the toolbars.
- restrict - (boolean) Restrict window to container when dragging.
  shape - ('box' or 'gauge') Shape of window. Defaults to 'box'.
  collapsible - (boolean) Defaults to true.
  minimizable - (boolean) Requires MUI.Desktop and MUI.Dock. Defaults to true if dependenices are met.
  maximizable - (boolean) Requires MUI.Desktop. Defaults to true if dependenices are met.
- maximizeTo - (element ID) Element to maximize windows to. Defaults to client area.
+ container - (element ID) Element the window is injected in. The container defaults to 'desktop'. If no desktop then to document.body. Use 'pageWrapper' if you don't want the windows to overlap the toolbars.
  closable - (boolean) Defaults to true.
  storeOnClose - (boolean) Hides a window and it's dock tab rather than destroying them on close. If you try to create the window again it will unhide the window and dock tab.
  modalOverlayClose - (boolean) Whether or not you can close a modal by clicking on the modal overlay. Defaults to true.

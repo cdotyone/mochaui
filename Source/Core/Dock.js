@@ -297,12 +297,12 @@ MUI.Dock = {
 				// If the visibility of the windows on the page are toggled off, toggle visibility on.
 				if (!MUI.Windows.windowsVisible){
 					MUI.Windows.toggleAll();
-					if (instance.isMinimized) MUI.Windows.restoreMinimized.delay(25, MUI.Dock, windowEl);
+					if (instance.isMinimized) instance._restoreMinimized.delay(25,instance);
 					else instance.focus();
 					return;
 				}
 				// If window is minimized, restore window.
-				if (instance.isMinimized) MUI.Windows.restoreMinimized.delay(25, MUI.Dock, windowEl);
+				if (instance.isMinimized) instance._restoreMinimized.delay(25,instance);
 				else {
 					if (instance.el.windowEl.hasClass('isFocused') && instance.options.minimizable) MUI.Windows.minimize(windowEl);
 					else this.focus();
@@ -379,73 +379,68 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 		$$('.mocha').each(function(windowEl){
 			var instance = windowEl.retrieve('instance');
 			if (!instance.isMinimized && instance.options.minimizable){
-				MUI.Windows.minimize(windowEl);
+				instance.minimize();
 			}
 		}.bind(this));
-	},
+	}
 
-	minimize: function(windowEl){
-		if (windowEl != $(windowEl)) return;
+});
 
-		var instance = windowEl.retrieve('instance');
-		instance.isMinimized = true;
+MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
+
+	minimize: function(){
+		if(this.isMinimized) return;
+		this.isMinimized = true;
 
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
-		if (instance.el.iframe){
+		if (this.el.iframe){
 			// Some elements are still visible in IE8 in the iframe when the iframe's visibility is set to hidden.
-			if (!Browser.Engine.trident){
-				instance.el.iframe.setStyle('visibility', 'hidden');
-			}
-			else {
-				instance.el.iframe.hide();
-			}
+			if (!Browser.Engine.trident) this.el.iframe.setStyle('visibility', 'hidden');
+			else this.el.iframe.hide();
 		}
 
-		// Hide window and add to dock
-        instance.hide();
+		this.hide(); // Hide window and add to dock
 
 		// Fixes a scrollbar issue in Mac FF2
 		if (Browser.Platform.mac && Browser.Engine.gecko){
 			if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent)){
 				var ffversion = new Number(RegExp.$1);
 				if (ffversion < 3){
-					instance.el.contentWrapper.setStyle('overflow', 'hidden');
+					this.el.contentWrapper.setStyle('overflow', 'hidden');
 				}
 			}
 		}
 
-		MUI.Desktop.setDesktopSize();
+		if(MUI.Desktop) MUI.Desktop.setDesktopSize();
 
 		// Have to use timeout because window gets focused when you click on the minimize button
 		setTimeout(function(){
-			windowEl.setStyle('zIndex', 1);
-			windowEl.removeClass('isFocused');
+			this.el.windowEl.setStyle('zIndex', 1);
+			this.el.windowEl.removeClass('isFocused');
 			MUI.Dock.makeActiveTab();
 		}.bind(this), 100);
 
-		instance.fireEvent('onMinimize', windowEl);
+		this.fireEvent('minimize', this);
 	},
 
-	restoreMinimized: function(windowEl){
-		var instance = windowEl.retrieve('instance');
-		if (!instance.isMinimized) return;
+	_restoreMinimized: function(){
+		if (!this.isMinimized) return;
 
 		if (!MUI.Windows.windowsVisible) MUI.Windows.toggleAll();
 		MUI.Desktop.setDesktopSize();
-		if (instance.options.scrollbars && !instance.el.iframe) instance.el.contentWrapper.setStyle('overflow', 'auto'); // Part of Mac FF2 scrollbar fix
-		if (instance.isCollapsed) instance.collapseToggle();
-		instance.show(); // show the window
+		if (this.options.scrollbars && !this.el.iframe) this.el.contentWrapper.setStyle('overflow', 'auto'); // Part of Mac FF2 scrollbar fix
+		if (this.isCollapsed) this.collapseToggle();
+		this.show(); // show the window
 
-		if (instance.el.iframe){  // Show iframe
-			if (!Browser.Engine.trident) instance.el.iframe.setStyle('visibility', 'visible');
-			else instance.el.iframe.show();
+		if (this.el.iframe){  // Show iframe
+			if (!Browser.Engine.trident) this.el.iframe.setStyle('visibility', 'visible');
+			else this.el.iframe.show();
 		}
 
-		instance.isMinimized = false;
-		instance.focus();
-		instance.fireEvent('onRestore', windowEl);
+		this.isMinimized = false;
+		this.focus();
+		this.fireEvent('restore',this);
 	}
 
 });
- 

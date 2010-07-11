@@ -98,7 +98,7 @@ MUI.Desktop = {
 					if (instance.el.iframe) instance.el.iframe.setStyle('visibility', 'hidden');
 
 					var resizeDimensions;
-					if(options.maximizeTo) resizeDimensions=$(options.maximizeTo).getCoordinates();
+					if(options.container) resizeDimensions=$(options.container).getCoordinates();
 					else resizeDimensions=document.getCoordinates();
 					var shadowBlur = options.shadowBlur;
 					var shadowOffset = options.shadowOffset;
@@ -114,7 +114,7 @@ MUI.Desktop = {
 						left: resizeDimensions.left + shadowOffset.x - shadowBlur
 					});
 
-					instance.redrawWindow();
+					instance.redraw();
 					if (instance.el.iframe){
 						instance.el.iframe.setStyles({
 							'height': instance.el.contentWrapper.getStyle('height')
@@ -238,7 +238,7 @@ MUI.Desktop = {
 				 'width': workspaceWindow.width,
 				 'height': workspaceWindow.height
 				 });
-				 instance.redrawWindow();
+				 instance.redraw();
 				 }*/
 			}.bind(this));
 			this.loadingWorkspace = false;
@@ -348,7 +348,7 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 				var left = (x + (col * col_width));
 				var top = (y + (row * col_height));
 
-				instance.redrawWindow();
+				instance.redraw();
 				instance.focus();
 
 				if (MUI.options.advancedEffects){
@@ -372,119 +372,128 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 				}
 			}
 		}.bind(this));
-	},
+	}
 
-	maximizeWindow: function(windowEl){
-		var instance = MUI.get(windowEl);
-		var options = instance.options;
-		var windowDrag = instance.windowDrag;
+});
+
+MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
+
+	maximize: function(){
+		if (this.isMinimized) this._restoreMinimized();
+
+		var options = this.options;
+		var windowDrag = this.windowDrag;
+	   	var windowEl = this.el.windowEl;
 
 		// If window no longer exists or is maximized, stop
-		if (windowEl != $(windowEl) || instance.isMaximized) return;
-		if (instance.isCollapsed) instance.collapseToggle(windowEl);
-		instance.isMaximized = true;
+		if (this.isMaximized) return this;
+		if (this.isCollapsed) this.collapseToggle();
+		this.isMaximized = true;
 
 		// If window is restricted to a container, it should not be draggable when maximized.
-		if (instance.options.restrict){
+		if (this.options.restrict){
 			windowDrag.detach();
-			if (options.resizable) instance._detachResizable();
-			instance.el.titleBar.setStyle('cursor', 'default');
+			if (options.resizable) this._detachResizable();
+			this.el.titleBar.setStyle('cursor', 'default');
 		}
 
 		// If the window has a container that is not the desktop
 		// temporarily move the window to the desktop while it is minimized.
 		if (options.container != MUI.Desktop.desktop){
 			MUI.Desktop.desktop.grab(windowEl);
-			if (instance.options.restrict) windowDrag.container = instance.el.desktop;
+			if (options.restrict) windowDrag.container = this.el.desktop;
 		}
 
 		// Save original position
-		instance.oldTop = windowEl.getStyle('top');
-		instance.oldLeft = windowEl.getStyle('left');
+		this.oldTop = windowEl.getStyle('top');
+		this.oldLeft = windowEl.getStyle('left');
 
 		// save original corner radius
 		if (!options.radiusOnMaximize){
-			instance.oldRadius = instance.options.cornerRadius;
-			instance.oldShadowBlur = instance.options.shadowBlur;
-			instance.oldShadowOffset = instance.options.shadowOffset;
+			this.oldRadius = options.cornerRadius;
+			this.oldShadowBlur = options.shadowBlur;
+			this.oldShadowOffset = options.shadowOffset;
 
-			instance.options.cornerRadius = 0;
-			instance.options.shadowBlur = 0;
-			instance.options.shadowOffset = {'x': 0, 'y': 0};
+			options.cornerRadius = 0;
+			options.shadowBlur = 0;
+			options.shadowOffset = {'x': 0, 'y': 0};
 		}
 
 		// Save original dimensions
-		var contentWrapper = instance.el.contentWrapper;
+		var contentWrapper = this.el.contentWrapper;
 		contentWrapper.oldWidth = contentWrapper.getStyle('width');
 		contentWrapper.oldHeight = contentWrapper.getStyle('height');
 
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
-		if (instance.el.iframe){
-			if (!Browser.Engine.trident) instance.el.iframe.setStyle('visibility', 'hidden');
-			else instance.el.iframe.hide();
+		if (this.el.iframe){
+			if (!Browser.Engine.trident) this.el.iframe.setStyle('visibility', 'hidden');
+			else this.el.iframe.hide();
 		}
 
 		var resizeDimensions;
-		if (options.maximizeTo) resizeDimensions = $(options.maximizeTo).getCoordinates();
+		if (options.container) resizeDimensions = $(options.container).getCoordinates();
 		else resizeDimensions = document.getCoordinates();
 		var shadowBlur = options.shadowBlur;
 		var shadowOffset = options.shadowOffset;
 		var newHeight = resizeDimensions.height - options.headerHeight - options.footerHeight;
-		newHeight -= instance.el.contentBorder.getStyle('border-top').toInt();
-		newHeight -= instance.el.contentBorder.getStyle('border-bottom').toInt();
-		newHeight -= instance._getAllSectionsHeight();
+		newHeight -= this.el.contentBorder.getStyle('border-top').toInt();
+		newHeight -= this.el.contentBorder.getStyle('border-bottom').toInt();
+		newHeight -= this._getAllSectionsHeight();
 
-		instance.resize({
+		this.resize({
 			width: resizeDimensions.width,
 			height: newHeight,
 			top: resizeDimensions.top + shadowOffset.y - shadowBlur,
 			left: resizeDimensions.left + shadowOffset.x - shadowBlur
 		});
-		instance.fireEvent('onMaximize', windowEl);
+		this.fireEvent('maximize', this);
 
-		if (instance.el.maximizeButton) instance.el.maximizeButton.setProperty('title', 'Restore');
-		instance.focus();
+		if (this.el.maximizeButton) this.el.maximizeButton.setProperty('title', 'Restore');
+		this.focus();
+
+		return this;
 	},
 
-	restoreWindow: function(windowEl){
-		var instance = windowEl.retrieve('instance');
-		var options = instance.options;
+	_restoreMaximized: function(){
+		var windowEl = this.el.windowEl;
+		var options = this.options;
 
 		// Window exists and is maximized ?
-		if (windowEl != $(windowEl) || !instance.isMaximized) return;
+		if (!this.isMaximized) return this;
 
-		instance.isMaximized = false;
+		this.isMaximized = false;
 
 		if (!options.radiusOnMaximize){
-			instance.options.cornerRadius = instance.oldRadius;
-			instance.options.shadowBlur = instance.oldShadowBlur;
-			instance.options.shadowOffset = instance.oldShadowOffset;
+			options.cornerRadius = this.oldRadius;
+			options.shadowBlur = this.oldShadowBlur;
+			options.shadowOffset = this.oldShadowOffset;
 		}
 
 		if (options.restrict){
-			instance.windowDrag.attach();
-			if (options.resizable) instance._reattachResizable();
-			instance.el.titleBar.setStyle('cursor', 'move');
+			this.windowDrag.attach();
+			if (options.resizable) this._reattachResizable();
+			this.el.titleBar.setStyle('cursor', 'move');
 		}
 
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
-		if (instance.el.iframe){
-			if (!Browser.Engine.trident) instance.el.iframe.setStyle('visibility', 'hidden');
-			else instance.el.iframe.hide();
+		if (this.el.iframe){
+			if (!Browser.Engine.trident) this.el.iframe.setStyle('visibility', 'hidden');
+			else this.el.iframe.hide();
 		}
 
-		var contentWrapper = instance.el.contentWrapper;
-		instance.resize({
+		var contentWrapper = this.el.contentWrapper;
+		this.resize({
 			width: contentWrapper.oldWidth,
 			height: contentWrapper.oldHeight,
-			top: instance.oldTop,
-			left: instance.oldLeft
+			top: this.oldTop,
+			left: this.oldLeft
 		});
-		instance.fireEvent('onRestore', windowEl);
+		this.fireEvent('restore', this);
 
-		if (instance.el.maximizeButton) instance.el.maximizeButton.setProperty('title', 'Maximize');
+		if (this.el.maximizeButton) this.el.maximizeButton.setProperty('title', 'Maximize');
+		return this;
 	}
 
 });

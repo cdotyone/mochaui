@@ -53,7 +53,6 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 
 		// Container options
 		container:			null,
-		restrict:			true,
 		shape:				'box',
 
 		// Window Controls
@@ -61,8 +60,6 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 		minimizable:		true,
 		maximizable:		true,
 		closable:			true,
-
-		maximizeTo:			null,
 
 		// Close options
 		storeOnClose:		false,
@@ -253,7 +250,7 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 
 });
 
-MUI.Window = new NamedClass('MUI.Window', {
+MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 
 	Implements: [Events, Options],
 
@@ -366,7 +363,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 		// Check if window already exists and is not in progress of closing
 		if (this.el.windowEl && !this.isClosing){
 			// Restore if minimized
-			if (this.isMinimized) MUI.Windows.restoreMinimized(this.el.windowEl);
+			if (this.isMinimized) this._restoreMinimized();
 
 			// Expand and focus if collapsed
 			else if (this.isCollapsed){
@@ -491,7 +488,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 			MUI.updateContent(section);
 		});
 
-		this.redrawWindow();
+		this.redraw();
 
 		// Attach events to the window
 		this._attachDraggable();
@@ -531,7 +528,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 			'duration': 350,
 			transition: Fx.Transitions.Sine.easeInOut,
 			onComplete: function(){
-				if (Browser.Engine.trident) this.redrawWindow();
+				if (Browser.Engine.trident) this.redraw();
 			}.bind(this)
 		});
 
@@ -548,11 +545,11 @@ MUI.Window = new NamedClass('MUI.Window', {
 			duration: 400,
 			transition: Fx.Transitions.Sine.easeInOut,
 			onStart: function(){
-				this.resizeAnimation = this.redrawWindow.periodical(20, this);
+				this.resizeAnimation = this.redraw.periodical(20, this);
 			}.bind(this),
 			onComplete: function(){
 				$clear(this.resizeAnimation);
-				this.redrawWindow();
+				this.redraw();
 				// Show iframe
 				if (this.el.iframe) this.el.iframe.setStyle('visibility', 'visible');
 			}.bind(this)
@@ -593,13 +590,13 @@ MUI.Window = new NamedClass('MUI.Window', {
 
 		if (this.el.minimizeButton) this.el.minimizeButton.addEvent('click', function(e){
 			e.stop();
-			MUI.Windows.minimize(windowEl);
+			this.minimize();
 		}.bind(this));
 
 		if (this.el.maximizeButton) this.el.maximizeButton.addEvent('click', function(e){
 			e.stop();
-			if (this.isMaximized) MUI.Windows.restoreWindow(windowEl);
-			else MUI.Windows.maximizeWindow(windowEl);
+			if (this.isMaximized) this._restoreMaximized();
+			else this.maximize();
 		}.bind(this));
 
 		if (this.options.collapsible){
@@ -750,7 +747,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 		}
 	},
 
-	redrawWindow: function(shadows){
+	redraw: function(shadows){
 		if (shadows == null) shadows = true;
 		if (this.drawingWindow) return;
 		this.drawingWindow = true;
@@ -873,20 +870,9 @@ MUI.Window = new NamedClass('MUI.Window', {
 		}
 	},
 
-	minimize: function(){
-		MUI.Windows.minimize(this.el.windowEl);
-		return this;
-	},
-
-	maximize: function(){
-		if (this.isMinimized) MUI.Windows.restoreMinimized(this.el.windowEl);
-		MUI.Windows.maximizeWindow(this.el.windowEl);
-		return this;
-	},
-
 	restore: function(){
-		if (this.isMinimized) MUI.Windows.restoreMinimized(this.el.windowEl);
-		else if (this.isMaximized) MUI.Windows.restoreWindow(this.el.windowEl);
+		if (this.isMinimized) { if(this._restoreMinimized) this._restoreMinimized(); }
+		else if (this.isMaximized && this._restoreMaximized) this._restoreMaximized();
 		return this;
 	},
 
@@ -963,11 +949,11 @@ MUI.Window = new NamedClass('MUI.Window', {
 				'height': options.height,
 				'width':  options.width
 			});
-			this.redrawWindow();
+			this.redraw();
 			// Show iframe
-			if (instance.el.iframe){
-				if (Browser.Engine.trident) instance.el.iframe.show();
-				else instance.el.iframe.setStyle('visibility', 'visible');
+			if (this.el.iframe){
+				if (Browser.Engine.trident) this.el.iframe.show();
+				else this.el.iframe.setStyle('visibility', 'visible');
 			}
 		}
 
@@ -1056,7 +1042,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 			return this;
 		} else {
 			// Redraws IE windows without shadows since IE messes up canvas alpha when you change element opacity
-			if (Browser.Engine.trident) self.redrawWindow(false);
+			if (Browser.Engine.trident) self.redraw(false);
 			if (self.options.type == 'modal' || self.options.type == 'modal2'){
 				MUI.Modal.modalOverlayCloseMorph.start({
 					'opacity': 0
@@ -1081,7 +1067,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 		if (this.isMaximized) return;
 		if (this.isCollapsed){
 			this.isCollapsed = false;
-			this.redrawWindow();
+			this.redraw();
 			this.el.contentBorder.setStyles({
 				visibility: 'visible',
 				position: null,
@@ -1483,7 +1469,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 
 		} else if (MUI.options.advancedEffects){
 			// IE cannot handle both element opacity and VML alpha at the same time.
-			if (Browser.Engine.trident) this.redrawWindow(false);
+			if (Browser.Engine.trident) this.redraw(false);
 			this.opacityMorph.start({'opacity': 1});
 			this.focus.delay(10,this);
 		} else {
@@ -1519,7 +1505,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 		if (!this.options.draggable) return;
 		this.windowDrag = new Drag.Move(windowEl, {
 			handle: this.el.titleBar,
-			container: this.options.restrict ? $(this.options.container) : false,
+			container: this.options.container ? $(this.options.container) : false,
 			grid: this.options.draggableGrid,
 			limit: this.options.draggableLimit,
 			snap: this.options.draggableSnap,
@@ -1598,7 +1584,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 		});
 
 		this.resizable3 = this.el.contentWrapper.makeResizable({
-			container: this.options.restrict ? $(this.options.container) : false,
+			container: this.options.container ? $(this.options.container) : false,
 			handle: this.se,
 			limit: {
 				x: [this.options.resizeLimit.x[0] - (this.options.shadowBlur * 2), this.options.resizeLimit.x[1] - (this.options.shadowBlur * 2) ],
@@ -1678,7 +1664,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 				panel.setStyle('overflow', 'visible');
 			});
 		}
-		this.redrawWindow();
+		this.redraw();
 		this.adjustHandles();
 		if (Browser.Engine.gecko){
 			this.el.windowEl.getElements('.panel').each(function(panel){
@@ -1830,7 +1816,7 @@ MUI.Window = new NamedClass('MUI.Window', {
 		this.fireEvent('onCloseComplete');
 
 		if (this.options.type != 'notification'){
-			var newFocus = this._getWithHighestZIndex();
+			var newFocus = MUI.Windows._getWithHighestZIndex();
 			this.focus(newFocus);
 		}
 
@@ -1862,16 +1848,14 @@ MUI.Window = new NamedClass('MUI.Window', {
 		this.fireEvent('onCloseComplete');
 
 		if (this.options.type != 'notification'){
-			var newFocus = this._getWithHighestZIndex();
+			var newFocus = MUI.Windows._getWithHighestZIndex();
 			this.focus(newFocus);
 		}
 
 		this.isClosing = false;
 	}
 
-});
-
-MUI.Window.implement(MUI.WindowPanelShared);
+}).implement(MUI.WindowPanelShared);
 
 MUI.extend({
 
@@ -1883,7 +1867,7 @@ MUI.extend({
 			'height': contentEl.offsetHeight,
 			'width': contentEl.offsetWidth
 		});
-		instance.redrawWindow();
+		instance.redraw();
 	}
 
 });

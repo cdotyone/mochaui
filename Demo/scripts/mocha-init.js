@@ -58,7 +58,7 @@
 var initializeWindows = function(){
 
 	// change default setting - keep window within inside the main area.
-	MUI.Windows.options.maximizeTo = 'pageWrapper';
+	MUI.Windows.options.container = 'pageWrapper';
 
 	// Examples
 	MUI.htmlWindow = function(){
