@@ -29,7 +29,13 @@
  */
 
 var MochaUI;
-var MUI = MochaUI = (MUI || $H({})).extend({
+var MUI = MochaUI = (MUI || {});
+
+MUI.extend = function(hash) {
+	$extend(MUI,hash);
+}.bind(MUI);
+
+MUI.extend({
 	'options': $H({
 		theme: 'default',
 		advancedEffects: false, // Effects that require fast browsers and are cpu intensive.
