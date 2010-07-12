@@ -37,7 +37,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 		isCollapsed:	false,
 
 		onDrawBegin:	$empty,
-		onEndBegin:		$empty,
+		onDrawEnd:		$empty,
 		onResize:		$empty,
 		onCollapse:		$empty,
 		onExpand:		$empty
@@ -251,6 +251,9 @@ MUI.Column = new NamedClass('MUI.Column', {
 
 		var sortables = self.options.container.retrieve('sortables');
 		if (sortables) sortables.removeLists(this.el.column);
+
+		$each(this.el,function(el){el.destroy();});
+		this.el = {};
 
 		MUI.erase(self.options.id);
 		return this;
