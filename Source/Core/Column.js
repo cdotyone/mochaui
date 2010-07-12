@@ -21,7 +21,6 @@
 
 MUI.files['source|Column.js'] = 'loaded';
 
-
 MUI.Column = new NamedClass('MUI.Column', {
 
 	Implements: [Events, Options],
@@ -70,7 +69,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 		if ($type(options.container) == 'string') options.container = $(options.container);
 
 		// Check if column already exists
-		if (this.el.column) return;
+		if (this.el.column) return this;
 		else MUI.set(options.id, this);
 
 		// If loading columns into a panel, hide the regular content container.
@@ -110,8 +109,8 @@ MUI.Column = new NamedClass('MUI.Column', {
 								var panel = panelWrapper.getElement('.panel');
 								var column = panelWrapper.getParent().id;
 								var instance = MUI.get(panel.id);
-								instance.options.column = column;
 								if (instance){
+									instance.options.column = column;
 									var nextPanel = panel.getParent().getNext('.expanded');
 									if (nextPanel){
 										nextPanel = nextPanel.getElement('.panel');
@@ -169,6 +168,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 
 		MUI.rWidth();
 		this.fireEvent('drawEnd',[this]);
+		return this;
 	},
 
 	getPanels: function(){
@@ -199,7 +199,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 		MUI.rWidth();
 		this.fireEvent('collapse',[this]);
 
-		return true;
+		return this;
 	},
 
 	expand : function(){
@@ -220,12 +220,13 @@ MUI.Column = new NamedClass('MUI.Column', {
 		MUI.rWidth();
 		this.fireEvent('expand',[this]);
 
-		return true;
+		return this;
 	},
 
 	toggle: function(){
 		if (!this.isCollapsed) this.collapse();
 		else this.expand();
+		return this;
 	},
 
 	close: function(){
@@ -252,14 +253,13 @@ MUI.Column = new NamedClass('MUI.Column', {
 		if (sortables) sortables.removeLists(this.el.column);
 
 		MUI.erase(self.options.id);
-		return true;
+		return this;
 	},
 
 	_addResizeRight: function(element, min, max){
+		var instance = this;
 		if (!$(element)) return;
 		element = $(element);
-
-		var instance = MUI.get(element.id);
 
 		var handle = element.getNext('.columnHandle');
 		handle.setStyle('cursor', Browser.Engine.webkit ? 'col-resize' : 'e-resize');
@@ -276,7 +276,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 			});
 		}
 
-		instance.resize = element.makeResizable({
+		this.resize = element.makeResizable({
 			handle: handle,
 			modifiers: {
 				x: 'width',
@@ -333,10 +333,9 @@ MUI.Column = new NamedClass('MUI.Column', {
 	},
 
 	_addResizeLeft: function(element, min, max){
+		var instance = this;
 		if (!$(element)) return;
 		element = $(element);
-
-		var instance = MUI.get(element.id);
 
 		var handle = element.getPrevious('.columnHandle');
 		handle.setStyle('cursor', Browser.Engine.webkit ? 'col-resize' : 'e-resize');
@@ -354,7 +353,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 				}
 			});
 		}
-		instance.resize = element.makeResizable({
+		this.resize = element.makeResizable({
 			handle: handle,
 			modifiers: {x: 'width' , y: false},
 			invert: true,

@@ -389,7 +389,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		} else MUI.set(options.id, this);
 
 		this.isClosing = false;
-		this.fireEvent('drawBegin',this);
+		this.fireEvent('drawBegin',[this]);
 
 		// Create window div
 		MUI.Windows.indexLevel++;
@@ -789,7 +789,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		MUI.each(function(instance){
 			if (instance.className != 'MUI.Window') return;
 			if (instance.el.windowEl.hasClass('isFocused')){
-				instance.fireEvent('blur', instance);
+				instance.fireEvent('blur', [this]);
 			}
 			instance.el.windowEl.removeClass('isFocused');
 		});
@@ -797,7 +797,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		if (MUI.Dock && $(MUI.options.dock) && this.options.type == 'window') MUI.Dock.makeActiveTab();
 		windowEl.addClass('isFocused');
 
-		if (fireEvent) this.fireEvent('focus', this);
+		if (fireEvent) this.fireEvent('focus', [this]);
 		return this;
 	},
 
@@ -818,7 +818,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		if (self.isClosing) return this;
 
 		self.isClosing = true;
-		self.fireEvent('close', this);
+		self.fireEvent('close', [this]);
 
 		if (self.options.storeOnClose){
 			this._storeOnClose();
@@ -1515,7 +1515,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 					if (!Browser.Engine.trident) this.el.iframe.setStyle('visibility', 'hidden');
 					else this.el.iframe.hide();
 				}
-				this.fireEvent('dragStart', this);
+				this.fireEvent('dragStart', [this]);
 			}.bind(this),
 			onComplete: function(){
 				if (this.options.type != 'modal' && this.options.type != 'modal2')
@@ -1527,7 +1527,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 				}
 				// Store new position in options.
 				this._saveValues();
-				this.fireEvent('dragComplete', this);
+				this.fireEvent('dragComplete', [this]);
 			}.bind(this)
 		});
 	},
@@ -1692,7 +1692,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			});
 		}
 
-		this.fireEvent('resize', this);
+		this.fireEvent('resize', [this]);
 	},
 
 	_detachResizable: function(){
@@ -1810,7 +1810,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		// Destroy throws an error in IE8
 		if (Browser.Engine.trident) windowEl.dispose();
 		else windowEl.destroy();
-		this.fireEvent('closeComplete',this);
+		this.fireEvent('closeComplete',[this]);
 
 		if (this.options.type != 'notification'){
 			var newFocus = MUI.Windows._getWithHighestZIndex();
@@ -1842,7 +1842,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			MUI.Desktop.setDesktopSize();
 		}
 
-		this.fireEvent('closeComplete',this);
+		this.fireEvent('closeComplete',[this]);
 
 		if (this.options.type != 'notification'){
 			var newFocus = MUI.Windows._getWithHighestZIndex();

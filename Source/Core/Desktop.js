@@ -444,7 +444,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			top: resizeDimensions.top + shadowOffset.y - shadowBlur,
 			left: resizeDimensions.left + shadowOffset.x - shadowBlur
 		});
-		this.fireEvent('maximize', this);
+		this.fireEvent('maximize', [this]);
 
 		if (this.el.maximizeButton) this.el.maximizeButton.setProperty('title', 'Restore');
 		this.focus();
@@ -487,7 +487,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			top: this.oldTop,
 			left: this.oldLeft
 		});
-		this.fireEvent('restore', this);
+		this.fireEvent('restore', [this]);
 
 		if (this.el.maximizeButton) this.el.maximizeButton.setProperty('title', 'Maximize');
 		return this;
@@ -651,7 +651,7 @@ MUI.extend({
 			}.bind(this));
 
 			panelsToResize.each(function(panel){
-				MUI.get(panel.id).fireEvent('resize',this);
+				MUI.get(panel.id).fireEvent('resize',[this]);
 			});
 		}.bind(this));
 
@@ -772,7 +772,7 @@ MUI.extend({
 			[].include(instance)
 			  .combine(instance.getPanels())
 			  .each(function(panel){
-					panel.fireEvent('resize',this)
+					panel.fireEvent('resize',[this])
 			  },this);
 
 			column.getChildren('.panel').each(function(panel){

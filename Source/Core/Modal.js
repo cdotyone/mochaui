@@ -33,17 +33,16 @@ MUI.Modal = new NamedClass('MUI.Modal', {
 	initialize: function(options){
 
 		if (!$('modalOverlay')){
-			this.modalInitialize();
-
+			this._modalInitialize();
 			window.addEvent('resize', function(){
-				this.setModalSize();
+				this._setModalSize();
 			}.bind(this));
 		}
 		this.parent(options);
 
 	},
 
-	modalInitialize: function(){
+	_modalInitialize: function(){
 		var modalOverlay = new Element('div', {
 			'id': 'modalOverlay',
 			'styles': {
@@ -88,11 +87,9 @@ MUI.Modal = new NamedClass('MUI.Modal', {
 		});
 	},
 
-	setModalSize: function(){
+	_setModalSize: function(){
 		$('modalOverlay').setStyle('height', document.getCoordinates().height);
-		if (Browser.Engine.trident4){
-			$('modalFix').setStyle('height', document.getCoordinates().height);
-		}
+		if (Browser.Engine.trident4) $('modalFix').setStyle('height', document.getCoordinates().height);
 	}
 
 });

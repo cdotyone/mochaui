@@ -419,7 +419,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			MUI.Dock.makeActiveTab();
 		}.bind(this), 100);
 
-		this.fireEvent('minimize', this);
+		this.fireEvent('minimize', [this]);
 		return this;
 	},
 
@@ -439,7 +439,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 
 		this.isMinimized = false;
 		this.focus();
-		this.fireEvent('restore',this);
+		this.fireEvent('restore',[this]);
 	}
 
 });

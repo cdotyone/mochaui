@@ -92,14 +92,13 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 	},
 
 	draw: function() {
-		var instance = this;
 		var options = this.options;
 
 		// Check if panel already exists
-		if (instance.el.panel) return;
+		if (this.el.panel) return this;
 		else MUI.set(this.options.id, this);
 
-		this.fireEvent('onDrawBegin');
+		this.fireEvent('drawBegin',[this]);
 
 		if (options.loadMethod == 'iframe') options.padding = 0;  // Iframes have their own padding.
 
@@ -132,9 +131,9 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		this.hasHeaderTool = false;
 		if (options.sections){
 			options.sections.each(function(section){
-				if (section.position == 'footer') instance.hasFooter = true;
-				if (section.position == 'headertool') instance.hasHeaderTool = true;
-			});
+				if (section.position == 'footer') this.hasFooter = true;
+				if (section.position == 'headertool') this.hasHeaderTool = true;
+			},this);
 		}
 
 		if (this.hasFooter){
@@ -207,7 +206,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 			'class': 'handleIcon'
 		}).inject(this.el.handle);
 
-		this._addResizeBottom(options.id);
+		this._addResizeBottom();
 
 		if (options.sections){
 			var snum = 0;
@@ -287,19 +286,20 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		} else {
 			this._loadContent();
 		}
+
+		return this;
 	},
 
 	close: function(){
-		var instance = this;
-		var column = instance.options.column;
-		instance.isClosing = true;
+		var column = this.options.column;
+		this.isClosing = true;
 
 		var columnInstance = MUI.get(column);
 
 		if (columnInstance.options.sortable)
-			columnInstance.options.container.retrieve('sortables').removeItems(instance.el.panelWrapper);
+			columnInstance.options.container.retrieve('sortables').removeItems(this.el.panelWrapper);
 
-		instance.el.panelWrapper.destroy();
+		this.el.panelWrapper.destroy();
 
 		if (MUI.Desktop) MUI.Desktop.resizePanels();
 
@@ -308,8 +308,8 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		panels.removeClass('bottomPanel');
 		if (panels.length > 0) panels.getLast().addClass('bottomPanel');
 
-		MUI.erase(instance.options.id);
-		return true;
+		MUI.erase(this.options.id);
+		return this;
 	},
 
 	_loadContent: function(){
@@ -396,7 +396,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				this.el.collapseToggle.removeClass('panel-expand');
 				this.el.collapseToggle.addClass('panel-collapsed');
 				this.el.collapseToggle.setProperty('title', 'Collapse Panel');
-				this.fireEvent('onExpand');
+				this.fireEvent('expand',[this]);
 			} else {
 				// Collapse Panel
 				var currentColumn = MUI.get($(options.column).id);
@@ -420,19 +420,18 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				this.el.collapseToggle.removeClass('panel-collapsed');
 				this.el.collapseToggle.addClass('panel-expand');
 				this.el.collapseToggle.setProperty('title', 'Expand Panel');
-				this.fireEvent('onCollapse');
+				this.fireEvent('collapse',[this]);
 			}
 		}.bind(this));
 	},
 
-	_addResizeBottom: function(element){
-		if (!$(element)) return;
-		element = $(element);
+	_addResizeBottom: function(){
+		var instance=this;
+		var element = this.el.panel;
 
-		var instance = MUI.get(element.id);
-		var handle = instance.el.handle;
+		var handle = this.el.handle;
 		handle.setStyle('cursor', Browser.Engine.webkit ? 'row-resize' : 'n-resize');
-		var partner = instance.partner;
+		var partner = this.partner;
 		var min = 0;
 		var max = function(){
 			return element.getStyle('height').toInt() + partner.getStyle('height').toInt();
@@ -448,7 +447,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				}
 			});
 		}
-		instance.resize = element.makeResizable({
+		this.resize = element.makeResizable({
 			handle: handle,
 			modifiers: {x: false, y: 'height'},
 			limit: {y: [min, max]},
@@ -514,12 +513,10 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 					}
 				}
 
-				instance.fireEvent('resize');
-				MUI.get(partner).fireEvent('resize');
+				instance.fireEvent('resize',[this]);
+				MUI.get(partner).fireEvent('resize',[this]);
 			}.bind(this)
 		});
 	}
 
-});
-
-MUI.Panel.implement(MUI.WindowPanelShared);
+}).implement(MUI.WindowPanelShared);
