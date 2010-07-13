@@ -22,6 +22,14 @@ Creates a column. Columns should be created from left to right.
 * sortable		- (*boolean*: defaults to true) Whether the panels can be reordered via drag and drop.
 * isCollapsed 	- (*boolean*: defaults to false) Whether the column is collapsed
 
+### Events:
+
+* drawBegin - (*function*) callback is executed just before the column is drawn is added to the DOM.
+* drawEnd - (*function*) callback is executed just after the column is drawn is added to the DOM.
+* resize - (*function*) callback is executed when the column is resized.
+* collapse  - (*function*) callback is executed when the is being collapsed.
+* expand    - (*function*) callback is executed when the column is expanded after being collapsed.
+
 ### Returns:
 
 * (*object*) A new *MUI.Column* instance.
@@ -30,7 +38,7 @@ Creates a column. Columns should be created from left to right.
 
 ### drawBegin
 
-* (*function*) Function to execute when the just before the column is drawn is added to the DOM.
+* (*function*) Function to execute just before the column is drawn is added to the DOM.
 
 #### Signature:
 
@@ -42,7 +50,7 @@ Creates a column. Columns should be created from left to right.
 
 ### drawEnd
 
-* (*function*) Function to execute when just just after the column is drawn is added to the DOM.
+* (*function*) Function to execute just after the column is drawn is added to the DOM.
 
 #### Signature:
 
@@ -78,7 +86,7 @@ Creates a column. Columns should be created from left to right.
 
 ### expand
 
-* (*function*) Function to execute when the column is expanded after being collapsed.
+* (*function*) Function to execute when the column is expanded after is collapsed.
 
 #### Signature:
 
