@@ -99,6 +99,7 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 
 		// Events
 		onDrawBegin:		$empty,
+		onDrawEnd:			$empty,
 		onContentLoaded:	$empty,
 		onFocus:			$empty,
 		onBlur:				$empty,
@@ -561,6 +562,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 
 		if (this.options.closeAfter) this.el.windowEl.close.delay(this.options.closeAfter, this);
 		if (MUI.Dock && $(MUI.options.dock) && this.options.type == 'window') MUI.Dock.createDockTab(this.el.windowEl);
+		this.fireEvent('drawEnd',[this]);
 		return this;
 	},
 

@@ -9,7 +9,7 @@ Creates a column. Columns should be created from left to right.
 
 ### Arguments:
 
- 1. options - (*object*) - Options listed below.
+options - (*object*) - Options listed below.
 
 #### Options:
 
@@ -24,11 +24,11 @@ Creates a column. Columns should be created from left to right.
 
 ### Events:
 
-* drawBegin - (*function*) callback is executed just before the column is drawn is added to the DOM.
-* drawEnd - (*function*) callback is executed just after the column is drawn is added to the DOM.
-* resize - (*function*) callback is executed when the column is resized.
-* collapse  - (*function*) callback is executed when the is being collapsed.
-* expand    - (*function*) callback is executed when the column is expanded after being collapsed.
+* drawBegin 	- (*function*) callback is executed just before the column is drawn is added to the DOM.
+* drawEnd 		- (*function*) callback is executed just after the column is drawn is added to the DOM.
+* resize 		- (*function*) callback is executed when the column is resized.
+* collapse		- (*function*) callback is executed when the is being collapsed.
+* expand		- (*function*) callback is executed when the column is expanded after being collapsed.
 
 ### Returns:
 
@@ -217,7 +217,7 @@ Toggles the collapsed mode of the column.  If the column is visible it is collap
 MUI.Column Method: close {#MUI-Column:close}
 ----------------------------------------------------
 
-Closed the column and removes from the DOM and removes it from the MochaUI list of instances.
+Closes the column and removes it from the DOM and removes it from the MochaUI list of instances.
 
 ### Syntax:
 

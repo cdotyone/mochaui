@@ -19,7 +19,7 @@ Create modal dialog windows.
 
 ### Arguments:
 
- 1. options - (*object*) - Same as [MUI.Window][], except type described below.
+options - (*object*) - Same as [MUI.Window][], except type described below.
 
 #### Options:
 
