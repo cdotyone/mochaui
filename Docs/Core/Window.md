@@ -18,7 +18,7 @@ options - (*object*) - Options listed below.
 
 #### Options:
 
-* id 				- (*string*) the ID of the window. If not defined, it will be set to 'win' + windowIDCount.
+* id 				- (*string*) the ID of the window. If not defined, it will be set to 'win' + MUI.IDCount.
 * title 			- (*string*) the title of the window.
 * icon 				- (*string*) place an icon in the window's titlebar. This is either set to false or to the url of the icon. It is set up for icons that are 16 x 16px.
 * type 				- (*string*: defaults to 'window') valid values are 'window', 'modal', 'modal2', or 'notification', Modals should be created with new MUI.Modal(options).
@@ -51,7 +51,7 @@ options - (*object*) - Options listed below.
 * minimizable 		- (*boolean*: defaults to true) Set this to false to keep the window from being minimized. Requires MUI.Desktop and MUI.Dock.
 * maximizable 		- (*boolean*: defaults to true) Set this to false to keep the window from being maximized. Requires MUI.Desktop.
 * container 		- (*element*: defaults to 'desktop') Element the window is injected into. If no desktop then to document.body. Use 'pageWrapper' if you don't want the windows to overlap the toolbars.
-* closable 			- (*boolean*: defaults to true) Set to false to keep window from being able to closed be the user.
+* closable 			- (*boolean*: defaults to true) Set to false to keep the window from being able to closed be the user.
 * storeOnClose 		- (*boolean*) hides a window and it's dock tab rather than destroying them on close. If you try to create the window again it will unhide the window and dock tab.
 * modalOverlayClose - (*boolean*: defaults to true) Whether or not you can close a modal by clicking on the modal overlay.
 * draggable 		- (*boolean*: defaults to true) Set to false to keep the user from dragging. the window. Defaults to false for modals
@@ -79,10 +79,10 @@ options - (*object*) - Options listed below.
 * useCSS3 			- (*boolean*: defaults to true) Tries to use CSS3 for shadow, gradient and radius. Fallback to canvas if useCanvas is set to true.
 * useSpinner 		- (*boolean*: defaults to true) Toggles whether or not the ajax spinners are displayed in window footers.
 
-### Events
+### Events:
 
-* drawBegin 		- (*function*) callback is executed just before the column is drawn is added to the DOM.
-* drawEnd 			- (*function*) callback is executed just after the column is drawn is added to the DOM.
+* drawBegin 		- (*function*) callback is executed just before the window is drawn is added to the DOM.
+* drawEnd 			- (*function*) callback is executed just after the window is drawn is added to the DOM.
 * contentLoaded 	- (*function*) callback is executed when content is successfully loaded via XHR or Iframe.
 * focus 			- (*function*) callback is executed when the window is focused.
 * blur 				- (*function*) callback is executed when window loses focus.
@@ -319,6 +319,7 @@ Draws the window and adds it to the DOM.  And also adds it to the MochaUI list o
 	myWindow.draw();
 
 
+
 MUI.Window Method: redraw {#MUI-Window:redraw}
 ----------------------------------------------------
 
@@ -336,6 +337,7 @@ Refreshes the windows elements.
 
 	var myWindow = new MUI.Window({'id':'mywin1'});
 	myWindow.redraw();
+
 
 
 MUI.Window Method: minimize {#MUI-Window:minimize}
@@ -357,6 +359,7 @@ Minimizes the window to the MUI.Dock.  This function does not exist unless the M
 	myWindow.minimize();
 
 
+
 MUI.Window Method: maximize {#MUI-Window:maximize}
 ----------------------------------------------------
 
@@ -374,6 +377,7 @@ Maximizes the window to the MUI.Desktop.  This function does not exist unless th
 
 	var myWindow = new MUI.Window({'id':'mywin1'});
 	myWindow.restore();
+
 
 
 MUI.Window Method: restore {#MUI-Window:restore}
@@ -396,6 +400,7 @@ Restores the window after it has been minimized or maximized.
 	myWindow.restore();
 
 
+
 MUI.Window Method: center {#MUI-Window:center}
 ----------------------------------------------------
 
@@ -413,6 +418,7 @@ This method centers the window in the client area.
 
 	var myWindow = new MUI.Window({'id':'mywin1'});
 	myWindow.center();
+
 
 
 MUI.Window Method: resize {#MUI-Window:resize}
@@ -446,6 +452,7 @@ options - (*hash*) A hash object with the new size and position of the window.
 	myWindow.redraw({width:200,height:400);
 
 
+
 MUI.Window Method: hide {#MUI-Window:hide}
 ----------------------------------------------------
 
@@ -463,6 +470,7 @@ This will hide the window from view.  If the MUI.Dock is available the window ta
 
 	var myWindow = new MUI.Window({'id':'mywin1'});
 	myWindow.hide();
+
 
 
 MUI.Window Method: show {#MUI-Window:show}
@@ -485,6 +493,7 @@ This will show a hidden window.
 	myWindow.show();
 
 
+
 MUI.Window Method: focus {#MUI-Window:focus}
 ----------------------------------------------------
 
@@ -504,6 +513,7 @@ This brings a window that may have been in the background to the front of the ot
 	myWindow.focus();
 
 
+
 MUI.Window Method: showSpinner {#MUI-Window:showSpinner}
 ----------------------------------------------------
 
@@ -521,6 +531,7 @@ This shows the spinner image in the footer window to let the user know that the 
 
 	var myWindow = new MUI.Window({'id':'mywin1'});
 	myWindow.showSpinner();
+
 
 
 MUI.Window Method: hideSpinner {#MUI-Window:hideSpinner}
@@ -543,6 +554,7 @@ This hides the spinner previously shown by the showSpinner method. The spinner c
 	myWindow.hideSpinner();
 
 
+
 MUI.Window Method: close {#MUI-Window:close}
 ----------------------------------------------------
 
@@ -560,6 +572,7 @@ Closes the window and removes it from the DOM and removes it from the MochaUI li
 
 	var myWindow = new MUI.Window({'id':'mywin1'});
 	myWindow.close();
+
 
 
 MUI.Window Method: collapseToggle {#MUI-Window:collapseToggle}

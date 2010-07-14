@@ -309,6 +309,81 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		if (panels.length > 0) panels.getLast().addClass('bottomPanel');
 
 		MUI.erase(this.options.id);
+		this.fireEvent('close',[this]);
+		return this;
+	},
+
+	collapse: function() {
+		var panelWrapper = this.el.panelWrapper;
+		var panel = this.el.panel;
+		var options = this.options;
+
+		// Get siblings and make sure they are not all collapsed.
+		// If they are all collapsed and the current panel is collapsing
+		// Then collapse the column.
+		var expandedSiblings = [];
+
+		panelWrapper.getAllPrevious('.panelWrapper').each(function(sibling){
+			var panel=sibling.getElement('.panel');
+			if(!panel) return;
+			var instance = MUI.get(panel.id);
+			if (!instance.isCollapsed) expandedSiblings.push(panel.id);
+		});
+
+		panelWrapper.getAllNext('.panelWrapper').each(function(sibling){
+			var instance = MUI.get(sibling.getElement('.panel').id);
+			if (!instance.isCollapsed)
+				expandedSiblings.push(sibling.getElement('.panel').id);
+		});
+
+		// Collapse Panel
+		var currentColumn = MUI.get($(options.column).id);
+
+		if (expandedSiblings.length == 0 && currentColumn.options.placement != 'main'){
+			currentColumn = MUI.get($(options.column).id);
+			currentColumn.toggle();
+			return;
+		} else if (expandedSiblings.length == 0 && currentColumn.options.placement == 'main'){
+			return;
+		}
+		this.oldHeight = panel.getStyle('height').toInt();
+		if (this.oldHeight < 10) this.oldHeight = 20;
+		this.el.content.setStyle('position', 'absolute'); // This is so IE6 and IE7 will collapse the panel all the way
+		panel.setStyle('height', 0);
+		this.isCollapsed = true;
+		panelWrapper.addClass('collapsed');
+		panelWrapper.removeClass('expanded');
+		MUI.panelHeight(options.column, panel, 'collapsing');
+		MUI.panelHeight(); // Run this a second time for panels within panels
+		this.el.collapseToggle.removeClass('panel-collapsed');
+		this.el.collapseToggle.addClass('panel-expand');
+		this.el.collapseToggle.setProperty('title', 'Expand Panel');
+		this.fireEvent('collapse',[this]);
+
+		return this;
+	},
+
+	expand: function() {
+
+		// Expand Panel
+		this.el.content.setStyle('position', null); // This is so IE6 and IE7 will collapse the panel all the way
+		this.el.panel.setStyle('height', this.oldHeight);
+		this.isCollapsed = false;
+		this.el.panelWrapper.addClass('expanded');
+		this.el.panelWrapper.removeClass('collapsed');
+		MUI.panelHeight(this.options.column, this.el.panel, 'expanding');
+		MUI.panelHeight(); // Run this a second time for panels within panels
+		this.el.collapseToggle.removeClass('panel-expand');
+		this.el.collapseToggle.addClass('panel-collapsed');
+		this.el.collapseToggle.setProperty('title', 'Collapse Panel');
+		this.fireEvent('expand',[this]);
+
+		return this;
+	},
+
+	toggle: function() {
+		if (this.isCollapsed) this.expand();
+		else this.collapse();
 		return this;
 	},
 
@@ -363,65 +438,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		}).inject(this.el.panelHeaderCollapseBox);
 
 		this.el.collapseToggle.addEvent('click', function(){
-			var panel = this.el.panel;
-			var panelWrapper = this.el.panelWrapper;
-
-			// Get siblings and make sure they are not all collapsed.
-			// If they are all collapsed and the current panel is collapsing
-			// Then collapse the column.
-			var expandedSiblings = [];
-
-			panelWrapper.getAllPrevious('.panelWrapper').each(function(sibling){
-				var panel=sibling.getElement('.panel');
-				if(!panel) return;
-				var instance = MUI.get(panel.id);
-				if (!instance.isCollapsed) expandedSiblings.push(panel.id);
-			});
-
-			panelWrapper.getAllNext('.panelWrapper').each(function(sibling){
-				var instance = MUI.get(sibling.getElement('.panel').id);
-				if (!instance.isCollapsed)
-					expandedSiblings.push(sibling.getElement('.panel').id);
-			});
-
-			if (this.isCollapsed){
-				// Expand Panel
-				this.el.content.setStyle('position', null); // This is so IE6 and IE7 will collapse the panel all the way
-				panel.setStyle('height', this.oldHeight);
-				this.isCollapsed = false;
-				panelWrapper.addClass('expanded');
-				panelWrapper.removeClass('collapsed');
-				MUI.panelHeight(this.options.column, panel, 'expanding');
-				MUI.panelHeight(); // Run this a second time for panels within panels
-				this.el.collapseToggle.removeClass('panel-expand');
-				this.el.collapseToggle.addClass('panel-collapsed');
-				this.el.collapseToggle.setProperty('title', 'Collapse Panel');
-				this.fireEvent('expand',[this]);
-			} else {
-				// Collapse Panel
-				var currentColumn = MUI.get($(options.column).id);
-
-				if (expandedSiblings.length == 0 && currentColumn.options.placement != 'main'){
-					currentColumn = MUI.get($(options.column).id);
-					currentColumn.toggle();
-					return;
-				} else if (expandedSiblings.length == 0 && currentColumn.options.placement == 'main'){
-					return;
-				}
-				this.oldHeight = panel.getStyle('height').toInt();
-				if (this.oldHeight < 10) this.oldHeight = 20;
-				this.el.content.setStyle('position', 'absolute'); // This is so IE6 and IE7 will collapse the panel all the way
-				panel.setStyle('height', 0);
-				this.isCollapsed = true;
-				panelWrapper.addClass('collapsed');
-				panelWrapper.removeClass('expanded');
-				MUI.panelHeight(options.column, panel, 'collapsing');
-				MUI.panelHeight(); // Run this a second time for panels within panels
-				this.el.collapseToggle.removeClass('panel-collapsed');
-				this.el.collapseToggle.addClass('panel-expand');
-				this.el.collapseToggle.setProperty('title', 'Expand Panel');
-				this.fireEvent('collapse',[this]);
-			}
+			this.toggle();
 		}.bind(this));
 	},
 
