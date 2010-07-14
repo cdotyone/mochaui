@@ -1,7 +1,7 @@
 Class: MUI.Desktop {#MUI-Desktop}
 =============================
 
-Setups up the page for a desktop with columns and panels.
+Setups up the page for a desktop with columns and panels.  Enables maximize, arrangeTile, and arrangeCascade.
 
 ### Notes:
 

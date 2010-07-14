@@ -1081,9 +1081,6 @@ window.addEvent('load', function(){ //using load instead of domready for IE8
 			MUI.Desktop.initialize();
 		},
 		function(){
-			MUI.Dock.initialize();
-		},
-		function(){
 			initializeColumns();
 		},
 		function(){

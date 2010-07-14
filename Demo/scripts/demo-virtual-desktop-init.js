@@ -536,9 +536,6 @@ window.addEvent('load', function() {
 				MUI.Desktop.initialize();
 			},
 			function() {
-				MUI.Dock.initialize();
-			},
-			function() {
 				initializeWindows();
 			},
 			function() {

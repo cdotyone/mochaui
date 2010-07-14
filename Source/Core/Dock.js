@@ -9,14 +9,9 @@
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 
- todo:
- - Make it so the dock requires no initial html markup.
-
  requires:
  - MochaUI/MUI
- - MochaUI/MUI.Windows
- - MochaUI/MUI.Column
- - MochaUI/MUI.Panel
+ - MochaUI/MUI.Desktop
 
  provides: [MUI.Dock]
 
@@ -25,66 +20,68 @@
 
 MUI.files['source|Dock.js'] = 'loaded';
 
-MUI.options.extend({
-	// Naming options:
-	// If you change the IDs of the Mocha Desktop containers in your HTML, you need to change them here as well.
-	dockWrapper: 'dockWrapper',
-	dockVisible: 'true',
-	dock:		'dock'
-});
+MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
 
-MUI.Dock = {
+	Implements: [Events, Options],
 
 	options: {
-		useControls:		  true,	  // Toggles autohide and dock placement controls.
-		dockPosition:		 'bottom',  // Position the dock starts in, top or bottom.
-		dockVisible:		  true,	  // is the dock visible
-		// Style options
-		trueButtonColor:	  [70, 245, 70],	 // Color for autohide on
-		enabledButtonColor:   [115, 153, 191],
-		disabledButtonColor:  [170, 170, 170]
+		id:				'dock',
+		container:		null,
+		drawOnInit:		true,
+
+		useControls:	true,			// Toggles autohide and dock placement controls.
+		position:		'bottom',		// Position the dock starts in, top or bottom.
+		visible:		true,			// is the dock visible
+		autoHide: 		false,			// True when dock autohide is set to on, false if set to off
+		menuCheck:		'dockLinkCheck',// the name of the element in the menu that needs to be checked if dock is shown
+
+		onDrawBegin:	$empty,
+		onDrawEnd:		$empty,
+		onMove:			$empty,
+		onTabCreated:	$empty,
+		onTabSet:		$empty,
+		onHide:			$empty,
+		onShow:			$empty
 	},
 
-	initialize: function(){
-		// Stops if MUI.Desktop is not implemented
-		if (!MUI.Desktop) return;
+	initialize: function(options){
+		this.setOptions(options);
 
-		MUI.dockVisible = this.options.dockVisible;
-		this.dockWrapper = $(MUI.options.dockWrapper);
-		this.dock = $(MUI.options.dock);
-		this.autoHideEvent = null;
-		this.dockAutoHide = false;  // True when dock autohide is set to on, false if set to off
+		if (MUI.dock!=null) return false;  // only one dock allowed
+		else MUI.set(this.options.id, this);
+		MUI.dock = this;
 
-		if (!this.dockWrapper) return;
+		if(!this.options.container) this.options.container = 'desktop';
+		this.container = $(this.options.container);
 
-		if (!this.options.useControls){
-			if ($('dockPlacement')){
-				$('dockPlacement').setStyle('cursor', 'default');
+		this.el = {};
+		this.el.dock = $(this.options.id);
+		if(!this.el.dock && this.options.drawOnInit) this.draw();
+		else if(this.el.dock) {
+			this.el.wrapper = $(this.options.id+'Wrapper');
+
+			if (!this.options.useControls){
+				if ($('dockPlacement')) $('dockPlacement').setStyle('cursor', 'default');
+				if ($('dockAutoHide')) $('dockAutoHide').setStyle('cursor', 'default');
 			}
-			if ($('dockAutoHide')){
-				$('dockAutoHide').setStyle('cursor', 'default');
-			}
+
+			this.el.wrapper.setStyles({
+				'display':	'block',
+				'position':	'absolute',
+				'top':		null,
+				'bottom':	MUI.Desktop.desktopFooter ? MUI.Desktop.desktopFooter.offsetHeight : 0,
+				'left':		0
+			});
 		}
 
-		this.dockWrapper.setStyles({
-			'display':  'block',
-			'position': 'absolute',
-			'top':	  null,
-			'bottom':   MUI.Desktop.desktopFooter ? MUI.Desktop.desktopFooter.offsetHeight : 0,
-			'left':	 0
-		});
-
-		if (this.options.useControls){
-			this.initializeDockControls();
-		}
+		if (!this.el.wrapper) return;
+		if (this.options.useControls) this._initializeDockControls();
 
 		// Add check mark to menu if link exists in menu
-		if ($('dockLinkCheck')){
-			this.sidebarCheck = new Element('div', {
+		if ($(this.options.menuCheck)) this.sidebarCheck = new Element('div', {
 				'class': 'check',
 				'id': 'dock_check'
-			}).inject($('dockLinkCheck'));
-		}
+		}).inject($(this.options.menuCheck));
 
 		this.dockSortables = new Sortables('#dockSort', {
 			opacity: 1,
@@ -93,21 +90,181 @@ MUI.Dock = {
 			revert: false
 		});
 
-		if (!(MUI.dockVisible)){
-			this.dockWrapper.hide();
-		}
+		if (!(this.options.visible)) this.el.wrapper.hide();
+		if (this.options.autoHide) this._doAutoHide(true);
 		MUI.Desktop.setDesktopSize();
-
-		if (MUI.myChain){
-			MUI.myChain.callChain();
-		}
-
 	},
 
-	initializeDockControls: function(){
+	draw: function() {
+		this.fireEvent('drawBegin',[this]);
 
-		// Convert CSS colors to Canvas colors.
-		this.setDockColors();
+		this.el.wrapper = new Element('div',{'id':this.options.dockWrapper,styles:{
+				'display':	'block',
+				'position':	'absolute',
+				'top':		null,
+				'bottom':	MUI.Desktop.desktopFooter ? MUI.Desktop.desktopFooter.offsetHeight : 0,
+				'left':		0
+			}}).inject(this.container);
+		this.el.dock = new Element('div',{'id':this.options.dock}).inject(this.el.wrapper);
+
+		if (this.options.useControls){
+			this.el.dockPlacement = new Element('div',{'id':'dockPlacement'}).inject(this.el.dock).setStyle('cursor', 'default');
+			this.el.dockAutoHide = new Element('div',{'id':'dockAutoHide'}).inject(this.el.dock).setStyle('cursor', 'default');
+		}
+
+		this.el.dockSort = new Element('div',{'id':'dockSort'}).inject(this.el.dock);
+		this.el.dockClear = new Element('div',{'id':'dockClear','class':'clear'}).inject(this.el.dockSort);
+
+		this.fireEvent('drawEnd',[this]);
+	},
+
+	setDockColors: function(){
+		var dockButtonEnabled = Asset.getCSSRule('.dockButtonEnabled');
+		if (dockButtonEnabled && dockButtonEnabled.style.backgroundColor)
+			this.enabledButtonColor = new Color(dockButtonEnabled.style.backgroundColor);
+
+		var dockButtonDisabled = Asset.getCSSRule('.dockButtonDisabled');
+		if (dockButtonDisabled && dockButtonDisabled.style.backgroundColor)
+			this.disabledButtonColor = new Color(dockButtonDisabled.style.backgroundColor);
+
+		var trueButtonColor = Asset.getCSSRule('.dockButtonTrue');
+		if (trueButtonColor && trueButtonColor.style.backgroundColor)
+			this.trueButtonColor = new Color(trueButtonColor.style.backgroundColor);
+
+		this._renderDockControls();
+	},
+
+	getHeight: function() {
+		return this.el.wrapper.offsetHeight;
+	},
+
+	moveDock: function(position){
+		var ctx = $('dockCanvas').getContext('2d');
+		// Move dock to top position
+		if (position=='top' || this.el.wrapper.getStyle('position') != 'relative'){
+			if (position=='top') return;
+
+			this.el.wrapper.setStyles({
+				'position':	'relative',
+				'bottom':	null
+			}).addClass('top');
+			MUI.Desktop.setDesktopSize();
+			this.el.wrapper.setProperty('position', 'top');
+			ctx.clearRect(0, 0, 100, 100);
+			MUI.Canvas.circle(ctx, 5, 4, 3, this.enabledButtonColor, 1.0);
+			MUI.Canvas.circle(ctx, 5, 14, 3, this.disabledButtonColor, 1.0);
+			$('dockPlacement').setProperty('title', 'Position Dock Bottom');
+			$('dockAutoHide').setProperty('title', 'Auto Hide Disabled in Top Dock Position');
+			this.options.autoHide = false;
+			this.options.position = 'top';
+		} else {
+			if (position=='bottom') return;
+
+			// Move dock to bottom position
+			this.el.wrapper.setStyles({
+				'position':	'absolute',
+				'bottom':	MUI.Desktop.desktopFooter ? MUI.Desktop.desktopFooter.offsetHeight : 0
+			}).removeClass('top');
+			MUI.Desktop.setDesktopSize();
+			this.el.wrapper.setProperty('position', 'bottom');
+			ctx.clearRect(0, 0, 100, 100);
+			MUI.Canvas.circle(ctx, 5, 4, 3, this.enabledButtonColor, 1.0);
+			MUI.Canvas.circle(ctx, 5, 14, 3, this.enabledButtonColor, 1.0);
+			$('dockPlacement').setProperty('title', 'Position Dock Top');
+			$('dockAutoHide').setProperty('title', 'Turn Auto Hide On');
+			this.options.position = 'bottom';
+		}
+
+		this.fireEvent('move',[this,this.options.position]);
+	},
+
+	createDockTab: function(instance){
+		var dockTab = new Element('div', {
+			'id': instance.options.id + '_dockTab',
+			'class': 'dockTab',
+			'title': titleText
+		}).inject($('dockClear'), 'before');
+
+		dockTab.addEvent('mousedown', function(e){
+			new Event(e).stop();
+			this.timeDown = $time();
+		}.bind(instance));
+
+		dockTab.addEvent('mouseup', function(){
+			this.timeUp = $time();
+			if ((this.timeUp - this.timeDown) < 275){
+				// If the visibility of the windows on the page are toggled off, toggle visibility on.
+				if (!MUI.Windows.windowsVisible){
+					MUI.Windows.toggleAll();
+					if (this.isMinimized) this._restoreMinimized.delay(25,this);
+					else this.focus();
+					return;
+				}
+				// If window is minimized, restore window.
+				if (this.isMinimized) this._restoreMinimized.delay(25,this);
+				else {
+					var windowEl = this.el.windowEl;
+					if (windowEl.hasClass('isFocused') && this.options.minimizable) MUI.Windows.minimize(windowEl);
+					else this.focus();
+
+					// if the window is not minimized and is outside the viewport, center it in the viewport.
+					var coordinates = document.getCoordinates();
+					if (windowEl.getStyle('left').toInt() > coordinates.width || windowEl.getStyle('top').toInt() > coordinates.height)
+						this.center();
+				}
+			}
+		}.bind(instance));
+
+		this.dockSortables.addItems(dockTab);
+
+		var titleText = instance.el.title.innerHTML;
+
+		new Element('div', {
+			'id': instance.options.id + '_dockTabText',
+			'class': 'dockText'
+		}).set('html', titleText.substring(0, 19) + (titleText.length > 19 ? '...' : '')).inject($(dockTab));
+
+		// Need to resize everything in case the dock wraps when a new tab is added
+		MUI.Desktop.setDesktopSize();
+		this.fireEvent('tabCreated',[this,instance]);
+	},
+
+	makeActiveTab: function(instance){
+		if(!instance) {
+			// getWindowWithHighestZindex is used in case the currently focused window is closed.
+			var windowEl = MUI.Windows._getWithHighestZIndex();
+			instance = windowEl.retrieve('instance');
+		}
+
+		$$('.dockTab').removeClass('activeDockTab');
+		if (instance.isMinimized != true){
+			instance.el.windowEl.addClass('isFocused');
+			var currentButton = $(instance.options.id + '_dockTab');
+			if (currentButton != null) currentButton.addClass('activeDockTab');
+		} else instance.el.windowEl.removeClass('isFocused');
+		this.fireEvent('tabSet',[this,instance]);
+	},
+
+	show: function() {
+		this.el.wrapper.show();
+		this.options.visible = true;
+		MUI.Desktop.setDesktopSize();
+		this.fireEvent('show',[this]);
+	},
+
+	hide: function() {
+		this.el.wrapper.hide();
+		this.options.visible = false;
+		MUI.Desktop.setDesktopSize();
+		this.fireEvent('hide',[this]);
+	},
+
+	toggle: function(){
+		if (!this.options.visible) this.show();
+		else this.hide();
+	},
+
+	_initializeDockControls: function(){
 
 		if (this.options.useControls){
 			// Insert canvas
@@ -115,7 +272,7 @@ MUI.Dock = {
 				'id':	 'dockCanvas',
 				'width':  '15',
 				'height': '18'
-			}).inject(this.dock);
+			}).inject(this.el.dock);
 
 			// Dynamically initialize canvas using excanvas. This is only required by IE
 			if (Browser.Engine.trident && MUI.ieSupport == 'excanvas'){
@@ -139,237 +296,68 @@ MUI.Dock = {
 
 		// Attach event Auto Hide
 		dockAutoHide.addEvent('click', function(){
-			if (this.dockWrapper.getProperty('dockPosition') == 'top')
-				return false;
-
-			var ctx = $('dockCanvas').getContext('2d');
-			this.dockAutoHide = !this.dockAutoHide;	// Toggle
-			if (this.dockAutoHide){
-				$('dockAutoHide').setProperty('title', 'Turn Auto Hide Off');
-				//ctx.clearRect(0, 11, 100, 100);
-				MUI.Canvas.circle(ctx, 5, 14, 3, this.options.trueButtonColor, 1.0);
-
-				// Define event
-				this.autoHideEvent = function(event){
-					if (!this.dockAutoHide)
-						return;
-					var dockHotspotHeight;
-					if (!MUI.Desktop.desktopFooter){
-						dockHotspotHeight = this.dockWrapper.offsetHeight;
-						if (dockHotspotHeight < 25) dockHotspotHeight = 25;
-					}
-					else if (MUI.Desktop.desktopFooter){
-						dockHotspotHeight = this.dockWrapper.offsetHeight + MUI.Desktop.desktopFooter.offsetHeight;
-						if (dockHotspotHeight < 25) dockHotspotHeight = 25;
-					}
-					if (!MUI.Desktop.desktopFooter && event.client.y > (document.getCoordinates().height - dockHotspotHeight)){
-						if (!MUI.dockVisible){
-							this.dockWrapper.show();
-							MUI.dockVisible = true;
-							MUI.Desktop.setDesktopSize();
-						}
-					}
-					else if (MUI.Desktop.desktopFooter && event.client.y > (document.getCoordinates().height - dockHotspotHeight)){
-						if (!MUI.dockVisible){
-							this.dockWrapper.show();
-							MUI.dockVisible = true;
-							MUI.Desktop.setDesktopSize();
-						}
-					}
-					else if (MUI.dockVisible){
-						this.dockWrapper.hide();
-						MUI.dockVisible = false;
-						MUI.Desktop.setDesktopSize();
-
-					}
-				}.bind(this);
-
-				// Add event
-				document.addEvent('mousemove', this.autoHideEvent);
-
-			} else {
-				$('dockAutoHide').setProperty('title', 'Turn Auto Hide On');
-				//ctx.clearRect(0, 11, 100, 100);
-				MUI.Canvas.circle(ctx, 5, 14, 3, this.options.enabledButtonColor, 1.0);
-				// Remove event
-				document.removeEvent('mousemove', this.autoHideEvent);
-			}
-
+			this._doAutoHide();
 		}.bind(this));
 
-		this.renderDockControls();
+		this.setDockColors();
 
-		if (this.options.dockPosition == 'top'){
-			this.moveDock();
-		}
-
+		if (this.options.position == 'top') this.moveDock();
 	},
 
-	setDockColors: function(){
-		var dockButtonEnabled = Asset.getCSSRule('.dockButtonEnabled');
-		if (dockButtonEnabled && dockButtonEnabled.style.backgroundColor){
-			this.options.enabledButtonColor = new Color(dockButtonEnabled.style.backgroundColor);
-		}
+	_doAutoHide: function(notoggle) {
+		if (this.el.wrapper.getProperty('position') == 'top')
+			return false;
 
-		var dockButtonDisabled = Asset.getCSSRule('.dockButtonDisabled');
-		if (dockButtonDisabled && dockButtonDisabled.style.backgroundColor){
-			this.options.disabledButtonColor = new Color(dockButtonDisabled.style.backgroundColor);
-		}
+		var ctx = $('dockCanvas').getContext('2d');
+		if(!notoggle) this.options.autoHide = !this.options.autoHide;	// Toggle
 
-		var trueButtonColor = Asset.getCSSRule('.dockButtonTrue');
-		if (trueButtonColor && trueButtonColor.style.backgroundColor){
-			this.options.trueButtonColor = new Color(trueButtonColor.style.backgroundColor);
+		if (this.options.autoHide){
+			$('dockAutoHide').setProperty('title', 'Turn Auto Hide Off');
+			//ctx.clearRect(0, 11, 100, 100);
+			MUI.Canvas.circle(ctx, 5, 14, 3, this.trueButtonColor, 1.0);
+			// Add event
+			document.addEvent('mousemove', this._autoHideEvent.bind(this));
+		} else {
+			$('dockAutoHide').setProperty('title', 'Turn Auto Hide On');
+			//ctx.clearRect(0, 11, 100, 100);
+			MUI.Canvas.circle(ctx, 5, 14, 3, this.enabledButtonColor, 1.0);
+			// Remove event
+			document.removeEvent('mousemove', this._autoHideEvent.bind(this));
 		}
 	},
 
-	renderDockControls: function(){
+	_autoHideEvent: function(event){
+		if (!this.options.autoHide) return;
+		var dockHotspotHeight;
+		if (!MUI.Desktop.desktopFooter){
+			dockHotspotHeight = this.el.wrapper.offsetHeight;
+			if (dockHotspotHeight < 25) dockHotspotHeight = 25;
+		}
+		else if (MUI.Desktop.desktopFooter){
+			dockHotspotHeight = this.el.wrapper.offsetHeight + MUI.Desktop.desktopFooter.offsetHeight;
+			if (dockHotspotHeight < 25) dockHotspotHeight = 25;
+		}
+		if (!MUI.Desktop.desktopFooter && event.client.y > (document.getCoordinates().height - dockHotspotHeight)){
+			if (!this.options.visible) this.show();
+		}
+		else if (MUI.Desktop.desktopFooter && event.client.y > (document.getCoordinates().height - dockHotspotHeight)){
+			if (!this.options.visible) this.show();
+		}
+		else if (this.options.visible) this.hide();
+	},
+
+	_renderDockControls: function(){
 		// Draw dock controls
 		var ctx = $('dockCanvas').getContext('2d');
 		ctx.clearRect(0, 0, 100, 100);
-		MUI.Canvas.circle(ctx, 5, 4, 3, this.options.enabledButtonColor, 1.0);
+		MUI.Canvas.circle(ctx, 5, 4, 3, this.enabledButtonColor, 1.0);
 
-		if (this.dockWrapper.getProperty('dockPosition') == 'top'){
-			MUI.Canvas.circle(ctx, 5, 14, 3, this.options.disabledButtonColor, 1.0)
-		}
-		else if (this.dockAutoHide){
-			MUI.Canvas.circle(ctx, 5, 14, 3, this.options.trueButtonColor, 1.0);
-		}
-		else {
-			MUI.Canvas.circle(ctx, 5, 14, 3, this.options.enabledButtonColor, 1.0);
-		}
-	},
-
-	moveDock: function(){
-		var ctx = $('dockCanvas').getContext('2d');
-		// Move dock to top position
-		if (this.dockWrapper.getStyle('position') != 'relative'){
-			this.dockWrapper.setStyles({
-				'position': 'relative',
-				'bottom':   null
-			});
-			this.dockWrapper.addClass('top');
-			MUI.Desktop.setDesktopSize();
-			this.dockWrapper.setProperty('dockPosition', 'top');
-			ctx.clearRect(0, 0, 100, 100);
-			MUI.Canvas.circle(ctx, 5, 4, 3, this.options.enabledButtonColor, 1.0);
-			MUI.Canvas.circle(ctx, 5, 14, 3, this.options.disabledButtonColor, 1.0);
-			$('dockPlacement').setProperty('title', 'Position Dock Bottom');
-			$('dockAutoHide').setProperty('title', 'Auto Hide Disabled in Top Dock Position');
-			this.dockAutoHide = false;
-		}
-		// Move dock to bottom position
-		else {
-			this.dockWrapper.setStyles({
-				'position':	  'absolute',
-				'bottom':		MUI.Desktop.desktopFooter ? MUI.Desktop.desktopFooter.offsetHeight : 0
-			});
-			this.dockWrapper.removeClass('top');
-			MUI.Desktop.setDesktopSize();
-			this.dockWrapper.setProperty('dockPosition', 'bottom');
-			ctx.clearRect(0, 0, 100, 100);
-			MUI.Canvas.circle(ctx, 5, 4, 3, this.options.enabledButtonColor, 1.0);
-			MUI.Canvas.circle(ctx, 5, 14, 3, this.options.enabledButtonColor, 1.0);
-			$('dockPlacement').setProperty('title', 'Position Dock Top');
-			$('dockAutoHide').setProperty('title', 'Turn Auto Hide On');
-		}
-	},
-
-	createDockTab: function(windowEl){
-
-		var instance = windowEl.retrieve('instance');
-
-		var dockTab = new Element('div', {
-			'id': instance.options.id + '_dockTab',
-			'class': 'dockTab',
-			'title': titleText
-		}).inject($('dockClear'), 'before');
-
-		dockTab.addEvent('mousedown', function(e){
-			new Event(e).stop();
-			this.timeDown = $time();
-		});
-
-		dockTab.addEvent('mouseup', function(){
-			this.timeUp = $time();
-			if ((this.timeUp - this.timeDown) < 275){
-				// If the visibility of the windows on the page are toggled off, toggle visibility on.
-				if (!MUI.Windows.windowsVisible){
-					MUI.Windows.toggleAll();
-					if (instance.isMinimized) instance._restoreMinimized.delay(25,instance);
-					else instance.focus();
-					return;
-				}
-				// If window is minimized, restore window.
-				if (instance.isMinimized) instance._restoreMinimized.delay(25,instance);
-				else {
-					if (instance.el.windowEl.hasClass('isFocused') && instance.options.minimizable) MUI.Windows.minimize(windowEl);
-					else this.focus();
-
-					// if the window is not minimized and is outside the viewport, center it in the viewport.
-					var coordinates = document.getCoordinates();
-					if (windowEl.getStyle('left').toInt() > coordinates.width || windowEl.getStyle('top').toInt() > coordinates.height){
-						instance.center();
-					}
-				}
-			}
-		});
-
-		this.dockSortables.addItems(dockTab);
-
-		var titleText = instance.el.title.innerHTML;
-
-		new Element('div', {
-			'id': instance.options.id + '_dockTabText',
-			'class': 'dockText'
-		}).set('html', titleText.substring(0, 19) + (titleText.length > 19 ? '...' : '')).inject($(dockTab));
-
-		// If I implement this again, will need to also adjust the titleText truncate and the tab's
-		// left padding.
-		if (instance.options.icon != false){
-			// dockTabText.setStyle('background', 'url(' + instance.options.icon + ') 4px 4px no-repeat');
-		}
-
-		// Need to resize everything in case the dock wraps when a new tab is added
-		MUI.Desktop.setDesktopSize();
-
-	},
-
-	makeActiveTab: function(){
-
-		// getWindowWith HighestZindex is used in case the currently focused window
-		// is closed.
-		var windowEl = MUI.Windows._getWithHighestZIndex();
-		var instance = windowEl.retrieve('instance');
-
-		$$('.dockTab').removeClass('activeDockTab');
-		if (instance.isMinimized != true){
-
-			instance.el.windowEl.addClass('isFocused');
-
-			var currentButton = $(instance.options.id + '_dockTab');
-			if (currentButton != null){
-				currentButton.addClass('activeDockTab');
-			}
-		}
-		else {
-			instance.el.windowEl.removeClass('isFocused');
-		}
-	},
-
-	toggle: function(){
-		if (!MochaUI.dockVisible){
-			this.dockWrapper.show();
-			MUI.dockVisible = true;
-			MUI.Desktop.setDesktopSize();
-		}
-		else {
-			this.dockWrapper.hide();
-			MUI.dockVisible = false;
-			MUI.Desktop.setDesktopSize();
-		}
+		if (this.el.wrapper.getProperty('position') == 'top') MUI.Canvas.circle(ctx, 5, 14, 3, this.disabledButtonColor, 1.0)
+		else if (this.options.autoHide) MUI.Canvas.circle(ctx, 5, 14, 3, this.trueButtonColor, 1.0);
+		else MUI.Canvas.circle(ctx, 5, 14, 3, this.enabledButtonColor, 1.0);
 	}
 
-};
+});
 
 MUI.Windows = (MUI.Windows || $H({})).extend({
 
@@ -416,7 +404,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		setTimeout(function(){
 			this.el.windowEl.setStyle('zIndex', 1);
 			this.el.windowEl.removeClass('isFocused');
-			MUI.Dock.makeActiveTab();
+			MUI.dock.makeActiveTab();
 		}.bind(this), 100);
 
 		this.fireEvent('minimize', [this]);

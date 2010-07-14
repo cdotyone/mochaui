@@ -5,6 +5,9 @@
 
  description: Create web application layouts. Enables window maximize.
 
+ todo:
+ - Make it so the dock requires no initial html markup.
+
  copyright: (c) 2010 Contributors in (/AUTHORS.txt).
 
  license: MIT-style license in (/MIT-LICENSE.txt).
@@ -32,11 +35,17 @@ MUI.Desktop = {
 		desktopNavBar:		'desktopNavbar',
 		pageWrapper:		'pageWrapper',
 		page:				'page',
-		desktopFooterWrapper:'desktopFooterWrapper'
+		desktopFooterWrapper:'desktopFooterWrapper',
+
+		createDock:			true,
+		dockOptions:		{}
 	},
 
 	initialize: function(options){
 		if (options) $extend(MUI.Desktop.options,options);
+
+		if(MUI.desktop) return;	// only one desktop allowed
+		MUI.desktop = this;
 
 		this.desktop = $(this.options.desktop);
 		this.desktopHeader = $(this.options.desktopHeader);
@@ -57,7 +66,9 @@ MUI.Desktop = {
 			});
 		}
 
-		if (!MUI.Dock) this.setDesktopSize();  // This is run on dock initialize so no need to do it twice.
+		if(!this.options.dockOptions.container) this.options.dockOptions.container = this.desktop;
+		if(this.options.createDock) this.dock=new MUI.Dock(this.options.dockOptions);
+		if (!this.dock) this.setDesktopSize();  // This is run on dock initialize so no need to do it twice.
 		this._menuInitialize();
 
 		// Resize desktop, page wrapper, modal overlay, and maximized windows when browser window is resized
@@ -72,24 +83,19 @@ MUI.Desktop = {
 	setDesktopSize: function(){
 		var windowDimensions = window.getCoordinates();
 
-		// var dock = $(MUI.options.dock);
-		var dockWrapper = $(MUI.options.dockWrapper);
-
 		// Setting the desktop height may only be needed by IE7
 		if (this.desktop) this.desktop.setStyle('height', windowDimensions.height);
 
 		// Set pageWrapper height so the dock doesn't cover the pageWrapper scrollbars.
 		if (this.pageWrapper){
-			var dockOffset = MUI.dockVisible ? dockWrapper.offsetHeight : 0;
+			var dockOffset = this.dock ? this.dock.getHeight() : 0;
 			var pageWrapperHeight = windowDimensions.height;
 			pageWrapperHeight -= this.pageWrapper.getStyle('border-top').toInt();
 			pageWrapperHeight -= this.pageWrapper.getStyle('border-bottom').toInt();
 			if (this.desktopHeader) pageWrapperHeight -= this.desktopHeader.offsetHeight;
 			if (this.desktopFooter) pageWrapperHeight -= this.desktopFooter.offsetHeight;
 			pageWrapperHeight -= dockOffset;
-
 			if (pageWrapperHeight < 0) pageWrapperHeight = 0;
-
 			this.pageWrapper.setStyle('height', pageWrapperHeight);
 		}
 

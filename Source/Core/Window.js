@@ -305,8 +305,8 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		}
 
 		// Minimizable, dock is required and window cannot be modal
-		if (MUI.Dock && $(MUI.options.dock)){
-			if (MUI.Dock.dock && options.type != 'modal' && options.type != 'modal2') this.options.minimizable = options.minimizable;
+		if (MUI.dock){
+			if (options.type != 'modal' && options.type != 'modal2') this.options.minimizable = options.minimizable;
 		} else options.minimizable = false;
 
 		// Maximizable, desktop is required
@@ -372,7 +372,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 				this.el.windowEl.setStyle('opacity', 0);
 				this.el.windowEl.addClass('mocha');
 
-				if (MUI.Dock && $(MUI.options.dock) && options.type == 'window'){
+				if (MUI.dock && options.type == 'window'){
 					var currentButton = $(options.id + '_dockTab');
 					if (currentButton) currentButton.show();
 					MUI.Desktop.setDesktopSize();
@@ -561,7 +561,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		}
 
 		if (this.options.closeAfter) this.el.windowEl.close.delay(this.options.closeAfter, this);
-		if (MUI.Dock && $(MUI.options.dock) && this.options.type == 'window') MUI.Dock.createDockTab(this.el.windowEl);
+		if (MUI.dock && this.options.type == 'window') MUI.dock.createDockTab(this);
 		this.fireEvent('drawEnd',[this]);
 		return this;
 	},
@@ -796,7 +796,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			instance.el.windowEl.removeClass('isFocused');
 		});
 
-		if (MUI.Dock && $(MUI.options.dock) && this.options.type == 'window') MUI.Dock.makeActiveTab();
+		if (MUI.dock && this.options.type == 'window') MUI.dock.makeActiveTab();
 		windowEl.addClass('isFocused');
 
 		if (fireEvent) this.fireEvent('focus', [this]);
@@ -1822,9 +1822,9 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		MUI.erase(this.options.id);
 		if (MUI.Desktop.loadingWorkspace) MUI.Desktop.loadingCallChain();
 
-		if (MUI.Dock && $(MUI.options.dock) && this.options.type == 'window'){
+		if (MUI.dock && this.options.type == 'window'){
 			var currentButton = $(this.options.id + '_dockTab');
-			if (currentButton) MUI.Dock.dockSortables.removeItems(currentButton).destroy();
+			if (currentButton) MUI.dock.dockSortables.removeItems(currentButton).destroy();
 			// Need to resize everything in case the dock becomes smaller when a tab is removed
 			MUI.Desktop.setDesktopSize();
 		}
@@ -1838,7 +1838,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		windowEl.addClass('windowClosed');
 		windowEl.removeClass('mocha');
 
-		if (MUI.Dock && $(MUI.options.dock) && this.options.type == 'window'){
+		if (MUI.dock && this.options.type == 'window'){
 			var currentButton = $(this.options.id + '_dockTab');
 			if (currentButton) currentButton.hide();
 			MUI.Desktop.setDesktopSize();

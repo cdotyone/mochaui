@@ -214,9 +214,6 @@ Expands a panel that was previously collapsed.
 
 
 
-
-
-
 MUI.Panel Method: toggle {#MUI-Panel:toggle}
 ----------------------------------------------------
 

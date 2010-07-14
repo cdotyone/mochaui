@@ -150,15 +150,10 @@ MUI.Themes = {
 			instance.redraw();
 		});
 
-		if (MUI.Dock){
-			if (MUI.Dock.options.useControls){
-				MUI.Dock.setDockColors();
-				MUI.Dock.renderDockControls();
-			}
-		}
+		if(MUI.dock) MUI.dock.setDockColors();
 
 		// Reformat layout
-		if (MUI.Desktop.desktop){
+		if (MUI.Desktop && MUI.Desktop.desktop){
 			var checker = (function(){
 				// Make sure the style sheets are really ready.
 				if (MUI.Desktop.desktop.getStyle('overflow') != 'hidden'){
