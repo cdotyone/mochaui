@@ -35,7 +35,8 @@ MUI.Desktop = {
 		desktopFooterWrapper:'desktopFooterWrapper'
 	},
 
-	initialize: function(){
+	initialize: function(options){
+		if (options) $extend(MUI.Desktop.options,options);
 
 		this.desktop = $(this.options.desktop);
 		this.desktopHeader = $(this.options.desktopHeader);
@@ -56,73 +57,16 @@ MUI.Desktop = {
 			});
 		}
 
-		// This is run on dock initialize so no need to do it twice.
-		if (!MUI.Dock) this.setDesktopSize();
-		this.menuInitialize();
+		if (!MUI.Dock) this.setDesktopSize();  // This is run on dock initialize so no need to do it twice.
+		this._menuInitialize();
 
 		// Resize desktop, page wrapper, modal overlay, and maximized windows when browser window is resized
 		window.addEvent('resize', function(){
-			this.onBrowserResize();
+			this._onBrowserResize();
 		}.bind(this));
 
 		if (MUI.myChain) MUI.myChain.callChain();
 
-	},
-
-	menuInitialize: function(){
-		// Fix for dropdown menus in IE6
-		if (Browser.Engine.trident4 && this.desktopNavBar){
-			this.desktopNavBar.getElements('li').each(function(element){
-				element.addEvent('mouseenter', function(){
-					this.addClass('ieHover');
-				});
-				element.addEvent('mouseleave', function(){
-					this.removeClass('ieHover');
-				});
-			});
-		}
-	},
-
-	onBrowserResize: function(){
-		this.setDesktopSize();
-		// Resize maximized windows to fit new browser window size
-		setTimeout(function(){
-			MUI.each(function(instance){
-				var options=instance.options;
-				if (instance.className != 'MUI.Window') return;
-				if (instance.isMaximized){
-
-					// Hide iframe while resize for better performance
-					if (instance.el.iframe) instance.el.iframe.setStyle('visibility', 'hidden');
-
-					var resizeDimensions;
-					if(options.container) resizeDimensions=$(options.container).getCoordinates();
-					else resizeDimensions=document.getCoordinates();
-					var shadowBlur = options.shadowBlur;
-					var shadowOffset = options.shadowOffset;
-					var newHeight = resizeDimensions.height - options.headerHeight - options.footerHeight;
-					newHeight -= instance.el.contentBorder.getStyle('border-top').toInt();
-					newHeight -= instance.el.contentBorder.getStyle('border-bottom').toInt();
-					newHeight -= instance._getAllSectionsHeight();
-
-					instance.resize({
-						width: resizeDimensions.width,
-						height: newHeight,
-						top: resizeDimensions.top + shadowOffset.y - shadowBlur,
-						left: resizeDimensions.left + shadowOffset.x - shadowBlur
-					});
-
-					instance.redraw();
-					if (instance.el.iframe){
-						instance.el.iframe.setStyles({
-							'height': instance.el.contentWrapper.getStyle('height')
-						});
-						instance.el.iframe.setStyle('visibility', 'visible');
-					}
-
-				}
-			}.bind(this));
-		}.bind(this), 100);
 	},
 
 	setDesktopSize: function(){
@@ -256,6 +200,62 @@ MUI.Desktop = {
 					);
 			this.myChain.callChain();
 		} else doLoadWorkspace(workspaceWindows);
+	},
+
+	_menuInitialize: function(){
+		// Fix for dropdown menus in IE6
+		if (Browser.Engine.trident4 && this.desktopNavBar){
+			this.desktopNavBar.getElements('li').each(function(element){
+				element.addEvent('mouseenter', function(){
+					this.addClass('ieHover');
+				});
+				element.addEvent('mouseleave', function(){
+					this.removeClass('ieHover');
+				});
+			});
+		}
+	},
+
+	_onBrowserResize: function(){
+		this.setDesktopSize();
+		// Resize maximized windows to fit new browser window size
+		setTimeout(function(){
+			MUI.each(function(instance){
+				var options=instance.options;
+				if (instance.className != 'MUI.Window') return;
+				if (instance.isMaximized){
+
+					// Hide iframe while resize for better performance
+					if (instance.el.iframe) instance.el.iframe.setStyle('visibility', 'hidden');
+
+					var resizeDimensions;
+					if(options.container) resizeDimensions=$(options.container).getCoordinates();
+					else resizeDimensions=document.getCoordinates();
+					var shadowBlur = options.shadowBlur;
+					var shadowOffset = options.shadowOffset;
+					var newHeight = resizeDimensions.height - options.headerHeight - options.footerHeight;
+					newHeight -= instance.el.contentBorder.getStyle('border-top').toInt();
+					newHeight -= instance.el.contentBorder.getStyle('border-bottom').toInt();
+					newHeight -= instance._getAllSectionsHeight();
+
+					instance.resize({
+						width: resizeDimensions.width,
+						height: newHeight,
+						top: resizeDimensions.top + shadowOffset.y - shadowBlur,
+						left: resizeDimensions.left + shadowOffset.x - shadowBlur
+					});
+
+					instance.redraw();
+					if (instance.el.iframe){
+						instance.el.iframe.setStyles({
+							'height': instance.el.contentWrapper.getStyle('height')
+						});
+						instance.el.iframe.setStyle('visibility', 'visible');
+					}
+
+				}
+			}.bind(this));
+		}.bind(this), 100);
 	}
 
 };
