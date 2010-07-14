@@ -1538,7 +1538,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		var windowEl = this.el.windowEl;
 		if (!this.options.resizable) return;
 		this.resizable1 = this.el.windowEl.makeResizable({
-			handle: [this.n, this.ne, this.nw],
+			handle: [this.el.n, this.el.ne, this.el.nw],
 			limit: {
 				y: [
 					function(){
@@ -1566,7 +1566,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		});
 
 		this.resizable2 = this.el.contentWrapper.makeResizable({
-			handle: [this.e, this.ne],
+			handle: [this.el.e, this.el.ne],
 			limit: {
 				x: [this.options.resizeLimit.x[0] - (this.options.shadowBlur * 2), this.options.resizeLimit.x[1] - (this.options.shadowBlur * 2) ]
 			},
@@ -1584,7 +1584,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 
 		this.resizable3 = this.el.contentWrapper.makeResizable({
 			container: this.options.container ? $(this.options.container) : false,
-			handle: this.se,
+			handle: this.el.se,
 			limit: {
 				x: [this.options.resizeLimit.x[0] - (this.options.shadowBlur * 2), this.options.resizeLimit.x[1] - (this.options.shadowBlur * 2) ],
 				y: [this.options.resizeLimit.y[0] - this.headerFooterShadow, this.options.resizeLimit.y[1] - this.headerFooterShadow]
@@ -1602,7 +1602,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		});
 
 		this.resizable4 = this.el.contentWrapper.makeResizable({
-			handle: [this.s, this.sw],
+			handle: [this.el.s, this.el.sw],
 			limit: {
 				y: [this.options.resizeLimit.y[0] - this.headerFooterShadow, this.options.resizeLimit.y[1] - this.headerFooterShadow]
 			},
@@ -1619,7 +1619,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		});
 
 		this.resizable5 = this.el.windowEl.makeResizable({
-			handle: [this.w, this.sw, this.nw],
+			handle: [this.el.w, this.el.sw, this.el.nw],
 			limit: {
 				x: [
 					function(){

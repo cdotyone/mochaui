@@ -189,12 +189,12 @@ var initializeWindows = function(){
 					if (MUI.addOffsetYSlider) MUI.addOffsetYSlider();
 				}
 			},
-			onDragStart: function(win){
-				if (!Browser.Engine.trident) win.setStyle('opacity', 0.5);
+			onDragStart: function(instance){
+				if (!Browser.Engine.trident) instance.el.windowEl.setStyle('opacity', 0.5);
 				// VML doesn't render opacity nicely on the shadow
 			},
-			onDragComplete: function(win){
-				if (!Browser.Engine.trident) win.setStyle('opacity', 1);
+			onDragComplete: function(instance){
+				if (!Browser.Engine.trident) instance.el.windowEl.setStyle('opacity', 1);
 			}
 		});
 	};
