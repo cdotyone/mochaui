@@ -402,7 +402,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 
 		// Have to use timeout because window gets focused when you click on the minimize button
 		setTimeout(function(){
-			this.el.windowEl.setStyle('zIndex', 1);
+			//this.el.windowEl.setStyle('zIndex', 1);
 			this.el.windowEl.removeClass('isFocused');
 			MUI.dock.makeActiveTab();
 		}.bind(this), 100);
@@ -415,10 +415,10 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		if (!this.isMinimized) return;
 
 		if (!MUI.Windows.windowsVisible) MUI.Windows.toggleAll();
+		this.show(); // show the window
 		MUI.Desktop.setDesktopSize();
 		if (this.options.scrollbars && !this.el.iframe) this.el.contentWrapper.setStyle('overflow', 'auto'); // Part of Mac FF2 scrollbar fix
 		if (this.isCollapsed) this.collapseToggle();
-		this.show(); // show the window
 
 		if (this.el.iframe){  // Show iframe
 			if (!Browser.Engine.trident) this.el.iframe.setStyle('visibility', 'visible');
