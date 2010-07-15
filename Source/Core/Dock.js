@@ -61,8 +61,8 @@ MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
 			this.el.wrapper = $(this.options.id+'Wrapper');
 
 			if (!this.options.useControls){
-				if ($('dockPlacement')) $('dockPlacement').setStyle('cursor', 'default');
-				if ($('dockAutoHide')) $('dockAutoHide').setStyle('cursor', 'default');
+				if ($(this.options.id+'Placement')) $(this.options.id+'Placement').setStyle('cursor', 'default');
+				if ($(this.options.id+'AutoHide')) $(this.options.id+'AutoHide').setStyle('cursor', 'default');
 			}
 
 			this.el.wrapper.setStyles({
@@ -72,49 +72,32 @@ MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
 				'bottom':	MUI.Desktop.desktopFooter ? MUI.Desktop.desktopFooter.offsetHeight : 0,
 				'left':		0
 			});
+
+			if (this.options.useControls) this._initializeDockControls();
 		}
-
-		if (!this.el.wrapper) return;
-		if (this.options.useControls) this._initializeDockControls();
-
-		// Add check mark to menu if link exists in menu
-		if ($(this.options.menuCheck)) this.sidebarCheck = new Element('div', {
-				'class': 'check',
-				'id': 'dock_check'
-		}).inject($(this.options.menuCheck));
-
-		this.dockSortables = new Sortables('#dockSort', {
-			opacity: 1,
-			constrain: true,
-			clone: false,
-			revert: false
-		});
-
-		if (!(this.options.visible)) this.el.wrapper.hide();
-		if (this.options.autoHide) this._doAutoHide(true);
-		MUI.Desktop.setDesktopSize();
 	},
 
 	draw: function() {
 		this.fireEvent('drawBegin',[this]);
 
-		this.el.wrapper = new Element('div',{'id':this.options.dockWrapper,styles:{
+		this.el.wrapper = new Element('div',{'id':this.options.id+'Wrapper',styles:{
 				'display':	'block',
 				'position':	'absolute',
 				'top':		null,
 				'bottom':	MUI.Desktop.desktopFooter ? MUI.Desktop.desktopFooter.offsetHeight : 0,
 				'left':		0
 			}}).inject(this.container);
-		this.el.dock = new Element('div',{'id':this.options.dock}).inject(this.el.wrapper);
+		this.el.dock = new Element('div',{'id':this.options.id}).inject(this.el.wrapper);
 
 		if (this.options.useControls){
-			this.el.dockPlacement = new Element('div',{'id':'dockPlacement'}).inject(this.el.dock).setStyle('cursor', 'default');
-			this.el.dockAutoHide = new Element('div',{'id':'dockAutoHide'}).inject(this.el.dock).setStyle('cursor', 'default');
+			this.el.dockPlacement = new Element('div',{'id':this.options.id+'Placement'}).inject(this.el.dock).setStyle('cursor', 'default');
+			this.el.dockAutoHide = new Element('div',{'id':this.options.id+'AutoHide'}).inject(this.el.dock).setStyle('cursor', 'default');
 		}
 
-		this.el.dockSort = new Element('div',{'id':'dockSort'}).inject(this.el.dock);
-		this.el.dockClear = new Element('div',{'id':'dockClear','class':'clear'}).inject(this.el.dockSort);
+		this.el.dockSort = new Element('div',{'id':this.options.id+'Sort'}).inject(this.el.dock);
+		this.el.dockClear = new Element('div',{'id':this.options.id+'Clear','class':'clear'}).inject(this.el.dockSort);
 
+		this._initializeDockControls();
 		this.fireEvent('drawEnd',[this]);
 	},
 
@@ -139,7 +122,7 @@ MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
 	},
 
 	moveDock: function(position){
-		var ctx = $('dockCanvas').getContext('2d');
+		var ctx = $(this.options.id+'Canvas').getContext('2d');
 		// Move dock to top position
 		if (position=='top' || this.el.wrapper.getStyle('position') != 'relative'){
 			if (position=='top') return;
@@ -153,8 +136,8 @@ MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
 			ctx.clearRect(0, 0, 100, 100);
 			MUI.Canvas.circle(ctx, 5, 4, 3, this.enabledButtonColor, 1.0);
 			MUI.Canvas.circle(ctx, 5, 14, 3, this.disabledButtonColor, 1.0);
-			$('dockPlacement').setProperty('title', 'Position Dock Bottom');
-			$('dockAutoHide').setProperty('title', 'Auto Hide Disabled in Top Dock Position');
+			$(this.options.id+'Placement').setProperty('title', 'Position Dock Bottom');
+			$(this.options.id+'AutoHide').setProperty('title', 'Auto Hide Disabled in Top Dock Position');
 			this.options.autoHide = false;
 			this.options.position = 'top';
 		} else {
@@ -170,8 +153,8 @@ MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
 			ctx.clearRect(0, 0, 100, 100);
 			MUI.Canvas.circle(ctx, 5, 4, 3, this.enabledButtonColor, 1.0);
 			MUI.Canvas.circle(ctx, 5, 14, 3, this.enabledButtonColor, 1.0);
-			$('dockPlacement').setProperty('title', 'Position Dock Top');
-			$('dockAutoHide').setProperty('title', 'Turn Auto Hide On');
+			$(this.options.id+'Placement').setProperty('title', 'Position Dock Top');
+			$(this.options.id+'AutoHide').setProperty('title', 'Turn Auto Hide On');
 			this.options.position = 'bottom';
 		}
 
@@ -183,7 +166,7 @@ MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
 			'id': instance.options.id + '_dockTab',
 			'class': 'dockTab',
 			'title': titleText
-		}).inject($('dockClear'), 'before');
+		}).inject($(this.options.id+'Clear'), 'before');
 
 		dockTab.addEvent('mousedown', function(e){
 			new Event(e).stop();
@@ -265,11 +248,10 @@ MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
 	},
 
 	_initializeDockControls: function(){
-
 		if (this.options.useControls){
 			// Insert canvas
 			var canvas = new Element('canvas', {
-				'id':	 'dockCanvas',
+				'id':	 this.options.id+'Canvas',
 				'width':  '15',
 				'height': '18'
 			}).inject(this.el.dock);
@@ -280,8 +262,8 @@ MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
 			}
 		}
 
-		var dockPlacement = $('dockPlacement');
-		var dockAutoHide = $('dockAutoHide');
+		var dockPlacement = $(this.options.id+'Placement');
+		var dockAutoHide = $(this.options.id+'AutoHide');
 
 		// Position top or bottom selector
 		dockPlacement.setProperty('title', 'Position Dock Top');
@@ -302,23 +284,39 @@ MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
 		this.setDockColors();
 
 		if (this.options.position == 'top') this.moveDock();
+
+		// Add check mark to menu if link exists in menu
+		if ($(this.options.menuCheck)) this.sidebarCheck = new Element('div', {
+				'class': 'check',
+				'id': this.options.id+'_check'
+		}).inject($(this.options.menuCheck));
+
+		this.dockSortables = new Sortables('#dockSort', {
+			opacity: 1,
+			constrain: true,
+			clone: false,
+			revert: false
+		});
+
+		if (this.options.autoHide) this._doAutoHide(true);
+		MUI.Desktop.setDesktopSize();
 	},
 
 	_doAutoHide: function(notoggle) {
 		if (this.el.wrapper.getProperty('position') == 'top')
 			return false;
 
-		var ctx = $('dockCanvas').getContext('2d');
+		var ctx = $(this.options.id+'Canvas').getContext('2d');
 		if(!notoggle) this.options.autoHide = !this.options.autoHide;	// Toggle
 
 		if (this.options.autoHide){
-			$('dockAutoHide').setProperty('title', 'Turn Auto Hide Off');
+			$(this.options.id+'AutoHide').setProperty('title', 'Turn Auto Hide Off');
 			//ctx.clearRect(0, 11, 100, 100);
 			MUI.Canvas.circle(ctx, 5, 14, 3, this.trueButtonColor, 1.0);
 			// Add event
 			document.addEvent('mousemove', this._autoHideEvent.bind(this));
 		} else {
-			$('dockAutoHide').setProperty('title', 'Turn Auto Hide On');
+			$(this.options.id+'AutoHide').setProperty('title', 'Turn Auto Hide On');
 			//ctx.clearRect(0, 11, 100, 100);
 			MUI.Canvas.circle(ctx, 5, 14, 3, this.enabledButtonColor, 1.0);
 			// Remove event
@@ -348,7 +346,7 @@ MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
 
 	_renderDockControls: function(){
 		// Draw dock controls
-		var ctx = $('dockCanvas').getContext('2d');
+		var ctx = $(this.options.id+'Canvas').getContext('2d');
 		ctx.clearRect(0, 0, 100, 100);
 		MUI.Canvas.circle(ctx, 5, 4, 3, this.enabledButtonColor, 1.0);
 
