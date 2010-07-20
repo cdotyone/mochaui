@@ -27,6 +27,9 @@
  ...
  */
 
+var PO={};  // these are here to help until MUI.Data is finished
+PO.RS={};
+
 MUI.files['controls|Form/Form.js'] = 'loaded';
 
 MUI.Form = new Class({
@@ -139,7 +142,6 @@ MUI.Form = new Class({
 		if (prefix){
 			this.options.Prefix = prefix;
 		}
-		this.parent(json);
 		if (this.options.Padding == "0"){
 			this.options.Padding = 0;
 		}
@@ -225,11 +227,11 @@ MUI.Form = new Class({
 
 		o.flds.each(function(fld){
 			if (fld.id){
-				var val = PO.GetItem(data, fld.id);
+				var val = this._getData(data, fld.id);
 				var ctrl = o.DOM.getElementById(fld.id);
 				if (val == '' || val == null){
 					val = o.fdef[fld.id.toLowerCase()];
-					if (val != null && val.indexOf('{') > -1) val = PO.GetItem(data, val);
+					if (val != null && val.indexOf('{') > -1) val = this._getData(data, val);
 				}
 				if (ctrl != null && val != null){
 					var typ = ctrl.get('type');
@@ -305,7 +307,7 @@ MUI.Form = new Class({
 				if ($type(val[ii].getClass) != "function"){
 					if (!val[ii].Type) val[ii].Type = val[ii].options.Type;
 					if (val[ii].Type){
-						val[ii] = PO.FormRules[val[ii].Type].create(val[ii]);
+						val[ii] = MUI.FormRules[val[ii].Type].create(val[ii]);
 					}
 				}
 			}
@@ -575,7 +577,7 @@ MUI.Form = new Class({
 
 	addButton: function(item){
 		this.tableCheck();
-		var but = new Element('input', { 'type': 'button', 'id': item.id, 'value': item.text, 'class': 'B' });
+		var but = new Element('input', { 'type': 'button', 'id': item.id, 'value': item.Text, 'class': 'B' });
 		if (item.Width){
 			but.setStyle('width', item.Width + 'px');
 		}
@@ -748,13 +750,13 @@ MUI.Form = new Class({
 
 		var items = item.Items;
 		if (item.CacheName){
-			items = PO.GetRS(item.CacheName);
+			items = PO.RS[item.CacheName];
 		}
 
 		if ($type(items) == 'array'){
 			$A(items).each(function(row){
 				if (item.CanAdd){
-					var opt = new Element('option', { 'value': row[item.valueField], 'text': row[item.textField] });
+					var opt = new Element('option', { 'value': row[item.ValueField], 'text': row[item.TextField] });
 					sel.appendChild(opt);
 				}
 			});
@@ -1002,6 +1004,12 @@ MUI.Form = new Class({
 		if ($type(p) != 'element') p = $(id).getParent();
 		var c = p.getSize();
 		$(id).setStyles({ 'width': c.x, 'height': c.y });
+	},
+
+	_getData: function(item, property){
+		if (!item || !property) return '';
+		if (item[property] == null) return '';
+		return item[property];
 	}
 
 });

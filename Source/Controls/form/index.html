@@ -1,0 +1,64 @@
+<html>
+<head>
+	<!--MOCHAUI-->
+	<script type="text/javascript" src="../../../Demo/scripts/mootools-1.2.4-core-yc.js"></script>
+	<script type="text/javascript" src="../../../Demo/scripts/mootools-1.2.4-more-yc.js"></script>
+	<script type="text/javascript" src="../../Core/Core.js"></script>
+	<script type="text/javascript" src="../../Core/Desktop.js"></script>
+	<script type="text/javascript" src="../../Core/Column.js"></script>
+	<script type="text/javascript" src="../../Core/Panel.js"></script>
+	<script type="text/javascript" src="../../Core/Dock.js"></script>
+	<script type="text/javascript" src="../../Core/Window.js"></script>
+	<script type="text/javascript" src="../../Core/Modal.js"></script>
+	<!--MOCHAUI-->
+	<script type="text/javascript" src="form.js"></script>
+	<script type="text/javascript">
+
+	var ready=false;
+
+	function doForm() {
+		if(!ready || !PO.RS.Forms || !PO.RS.Country || !PO.RS.State || !PO.RS.Prefix || !PO.RS.Suffix) return;
+
+		var myForm = new MUI.Form('User');
+		myForm.End().inject($('myform'));
+	}
+
+	new Request.JSON({url: "../../../Demo/pages/data-forms.json", onSuccess: function(json){
+		$extend(PO.RS,{Forms:json});
+		doForm();
+	}}).get();
+
+	new Request.JSON({url: "../../../Demo/pages/data-country-state.json", onSuccess: function(json){
+		$extend(PO.RS,json);
+		doForm();
+	}}).get();
+
+	new Request.JSON({url: "../../../Demo/pages/data-prefix.json", onSuccess: function(json){
+		$extend(PO.RS,{Prefix:json});
+		doForm();
+	}}).get();
+
+	new Request.JSON({url: "../../../Demo/pages/data-suffix.json", onSuccess: function(json){
+		$extend(PO.RS,{Suffix:json});
+		doForm();
+	}}).get();
+
+	window.addEvent("domready", function(){
+		ready=true;
+		doForm();
+	});
+
+	</script>
+	<link rel="stylesheet" type="text/css" href="style.css"/>
+
+</head>
+
+<body>
+
+<div id="page">
+	<div id="myform" style="width:415px">
+	</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1535 @@
+{
+	"Country": [
+		{
+			"CountryCode": "US",
+			"Country": "United States of America",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "AF",
+			"Country": "Afghanistan",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "AL",
+			"Country": "Albania",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "DZ",
+			"Country": "Algeria",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "AS",
+			"Country": "American Samoa",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "AD",
+			"Country": "Andorra",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "AO",
+			"Country": "Angola",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "AI",
+			"Country": "Anguilla",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "AQ",
+			"Country": "Antarctica",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "AG",
+			"Country": "Antigua and Barbuda",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "AR",
+			"Country": "Argentina",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "AM",
+			"Country": "Armenia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "AW",
+			"Country": "Aruba",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "AU",
+			"Country": "Australia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "AT",
+			"Country": "Austria",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "AZ",
+			"Country": "Azerbaidjan",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "BS",
+			"Country": "Bahamas",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "BH",
+			"Country": "Bahrain",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "BD",
+			"Country": "Bangladesh",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "BB",
+			"Country": "Barbados",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "BY",
+			"Country": "Belarus",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "BE",
+			"Country": "Belgium",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "BZ",
+			"Country": "Belize",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "BJ",
+			"Country": "Benin",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "BM",
+			"Country": "Bermuda",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "BT",
+			"Country": "Bhutan",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "BO",
+			"Country": "Bolivia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "BA",
+			"Country": "Bosnia-Herzegovina",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "BW",
+			"Country": "Botswana",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "BV",
+			"Country": "Bouvet Island",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "BR",
+			"Country": "Brazil",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "IO",
+			"Country": "British Indian Ocean Territory",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "BN",
+			"Country": "Brunei Darussalam",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "BG",
+			"Country": "Bulgaria",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "BF",
+			"Country": "Burkina Faso",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "BI",
+			"Country": "Burundi",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "KH",
+			"Country": "Cambodia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "CM",
+			"Country": "Cameroon",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "CA",
+			"Country": "Canada",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "CV",
+			"Country": "Cape Verde",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "KY",
+			"Country": "Cayman Islands",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "CF",
+			"Country": "Central African Republic",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "TD",
+			"Country": "Chad",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "CL",
+			"Country": "Chile",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "CN",
+			"Country": "China",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "CX",
+			"Country": "Christmas Island",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "CC",
+			"Country": "Cocos (Keeling) Islands",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "CO",
+			"Country": "Colombia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "KM",
+			"Country": "Comoros",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "CG",
+			"Country": "Congo",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "CK",
+			"Country": "Cook Islands",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "CR",
+			"Country": "Costa Rica",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "HR",
+			"Country": "Croatia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "CU",
+			"Country": "Cuba",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "CY",
+			"Country": "Cyprus",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "CZ",
+			"Country": "Czech Republic",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "DK",
+			"Country": "Denmark",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "DJ",
+			"Country": "Djibouti",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "DM",
+			"Country": "Dominica",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "DO",
+			"Country": "Dominican Republic",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "TP",
+			"Country": "East Timor",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "EC",
+			"Country": "Ecuador",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "EG",
+			"Country": "Egypt",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "SV",
+			"Country": "El Salvador",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "GQ",
+			"Country": "Equatorial Guinea",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "ER",
+			"Country": "Eritrea",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "EE",
+			"Country": "Estonia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "ET",
+			"Country": "Ethiopia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "FK",
+			"Country": "Falkland Islands",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "FO",
+			"Country": "Faroe Islands",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "FJ",
+			"Country": "Fiji",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "FI",
+			"Country": "Finland",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "CS",
+			"Country": "Former Czechoslovakia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "SU",
+			"Country": "Former USSR",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "FR",
+			"Country": "France",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "FX",
+			"Country": "France (European Territory)",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "GF",
+			"Country": "French Guyana",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "TF",
+			"Country": "French Southern Territories",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "GA",
+			"Country": "Gabon",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "GM",
+			"Country": "Gambia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "GE",
+			"Country": "Georgia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "DE",
+			"Country": "Germany",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "GH",
+			"Country": "Ghana",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "GI",
+			"Country": "Gibraltar",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "GB",
+			"Country": "Great Britain",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "GR",
+			"Country": "Greece",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "GL",
+			"Country": "Greenland",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "GD",
+			"Country": "Grenada",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "GP",
+			"Country": "Guadeloupe (French)",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "GU",
+			"Country": "Guam (USA)",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "GT",
+			"Country": "Guatemala",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "GN",
+			"Country": "Guinea",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "GW",
+			"Country": "Guinea Bissau",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "GY",
+			"Country": "Guyana",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "HT",
+			"Country": "Haiti",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "HM",
+			"Country": "Heard and McDonald Islands",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "HN",
+			"Country": "Honduras",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "HK",
+			"Country": "Hong Kong",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "HU",
+			"Country": "Hungary",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "IS",
+			"Country": "Iceland",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "IN",
+			"Country": "India",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "ID",
+			"Country": "Indonesia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "IR",
+			"Country": "Iran",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "IQ",
+			"Country": "Iraq",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "IE",
+			"Country": "Ireland",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "IL",
+			"Country": "Israel",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "IT",
+			"Country": "Italy",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "CI",
+			"Country": "Ivory Coast",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "JM",
+			"Country": "Jamaica",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "JP",
+			"Country": "Japan",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "JO",
+			"Country": "Jordan",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "KZ",
+			"Country": "Kazakhstan",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "KE",
+			"Country": "Kenya",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "KI",
+			"Country": "Kiribati",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "KW",
+			"Country": "Kuwait",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "KG",
+			"Country": "Kyrgyzstan",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "LA",
+			"Country": "Laos",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "LV",
+			"Country": "Latvia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "LB",
+			"Country": "Lebanon",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "LS",
+			"Country": "Lesotho",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "LR",
+			"Country": "Liberia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "LY",
+			"Country": "Libya",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "LI",
+			"Country": "Liechtenstein",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "LT",
+			"Country": "Lithuania",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "LU",
+			"Country": "Luxembourg",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "MO",
+			"Country": "Macau",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "MK",
+			"Country": "Macedonia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "MG",
+			"Country": "Madagascar",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "MW",
+			"Country": "Malawi",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "MY",
+			"Country": "Malaysia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "MV",
+			"Country": "Maldives",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "ML",
+			"Country": "Mali",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "MT",
+			"Country": "Malta",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "MH",
+			"Country": "Marshall Islands",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "MQ",
+			"Country": "Martinique (French)",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "MR",
+			"Country": "Mauritania",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "MU",
+			"Country": "Mauritius",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "YT",
+			"Country": "Mayotte",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "MX",
+			"Country": "Mexico",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "FM",
+			"Country": "Micronesia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "MD",
+			"Country": "Moldavia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "MC",
+			"Country": "Monaco",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "MN",
+			"Country": "Mongolia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "MS",
+			"Country": "Montserrat",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "MA",
+			"Country": "Morocco",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "MZ",
+			"Country": "Mozambique",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "MM",
+			"Country": "Myanmar",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "NA",
+			"Country": "Namibia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "NR",
+			"Country": "Nauru",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "NP",
+			"Country": "Nepal",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "NL",
+			"Country": "Netherlands",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "AN",
+			"Country": "Netherlands Antilles",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "NC",
+			"Country": "New Caledonia (French)",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "NZ",
+			"Country": "New Zealand",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "NI",
+			"Country": "Nicaragua",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "NE",
+			"Country": "Niger",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "NG",
+			"Country": "Nigeria",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "NU",
+			"Country": "Niue",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "NF",
+			"Country": "Norfolk Island",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "KP",
+			"Country": "North Korea",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "MP",
+			"Country": "Northern Mariana Islands",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "NO",
+			"Country": "Norway",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "OM",
+			"Country": "Oman",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "PK",
+			"Country": "Pakistan",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "PW",
+			"Country": "Palau",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "PA",
+			"Country": "Panama",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "PG",
+			"Country": "Papua New Guinea",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "PY",
+			"Country": "Paraguay",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "PE",
+			"Country": "Peru",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "PH",
+			"Country": "Philippines",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "PN",
+			"Country": "Pitcairn Island",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "PL",
+			"Country": "Poland",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "PF",
+			"Country": "Polynesia (French)",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "PT",
+			"Country": "Portugal",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "PR",
+			"Country": "Puerto Rico",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "QA",
+			"Country": "Qatar",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "RE",
+			"Country": "Reunion (French)",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "RO",
+			"Country": "Romania",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "RU",
+			"Country": "Russian Federation",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "RW",
+			"Country": "Rwanda",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "GS",
+			"Country": "S. Georgia & S. Sandwich Isls.",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "SH",
+			"Country": "Saint Helena",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "KN",
+			"Country": "Saint Kitts & Nevis Anguilla",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "LC",
+			"Country": "Saint Lucia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "PM",
+			"Country": "Saint Pierre and Miquelon",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "ST",
+			"Country": "Saint Tome (Sao Tome) and Prin",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "VC",
+			"Country": "Saint Vincent & Grenadines",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "WS",
+			"Country": "Samoa",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "SM",
+			"Country": "San Marino",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "SA",
+			"Country": "Saudi Arabia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "SN",
+			"Country": "Senegal",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "SC",
+			"Country": "Seychelles",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "SL",
+			"Country": "Sierra Leone",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "SG",
+			"Country": "Singapore",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "SK",
+			"Country": "Slovak Republic",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "SI",
+			"Country": "Slovenia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "SB",
+			"Country": "Solomon Islands",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "SO",
+			"Country": "Somalia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "ZA",
+			"Country": "South Africa",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "KR",
+			"Country": "South Korea",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "ES",
+			"Country": "Spain",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "LK",
+			"Country": "Sri Lanka",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "SD",
+			"Country": "Sudan",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "SR",
+			"Country": "Suriname",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "SJ",
+			"Country": "Svalbard and Jan Mayen Islands",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "SZ",
+			"Country": "Swaziland",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "SE",
+			"Country": "Sweden",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "CH",
+			"Country": "Switzerland",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "SY",
+			"Country": "Syria",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "TJ",
+			"Country": "Tadjikistan",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "TW",
+			"Country": "Taiwan",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "TZ",
+			"Country": "Tanzania",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "TH",
+			"Country": "Thailand",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "TG",
+			"Country": "Togo",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "TK",
+			"Country": "Tokelau",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "TO",
+			"Country": "Tonga",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "TT",
+			"Country": "Trinidad and Tobago",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "TN",
+			"Country": "Tunisia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "TR",
+			"Country": "Turkey",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "TM",
+			"Country": "Turkmenistan",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "TC",
+			"Country": "Turks and Caicos Islands",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "TV",
+			"Country": "Tuvalu",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "UG",
+			"Country": "Uganda",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "UA",
+			"Country": "Ukraine",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "AE",
+			"Country": "United Arab Emirates",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "UK",
+			"Country": "United Kingdom",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "UY",
+			"Country": "Uruguay",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "UZ",
+			"Country": "Uzbekistan",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "VU",
+			"Country": "Vanuatu",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "VA",
+			"Country": "Vatican City State",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "VE",
+			"Country": "Venezuela",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "VN",
+			"Country": "Vietnam",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "VG",
+			"Country": "Virgin Islands (British)",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "VI",
+			"Country": "Virgin Islands (USA)",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "WF",
+			"Country": "Wallis and Futuna Islands",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "EH",
+			"Country": "Western Sahara",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "YE",
+			"Country": "Yemen",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "YU",
+			"Country": "Yugoslavia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "ZR",
+			"Country": "Zaire",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "ZM",
+			"Country": "Zambia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "ZW",
+			"Country": "Zimbabwe",
+			"IsActive": true
+		}
+	],
+	"State": [
+		{
+			"CountryCode": "US",
+			"StateCode": "AL",
+			"State": "Alabama",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "AK",
+			"State": "Alaska",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "AZ",
+			"State": "Arizona",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "AR",
+			"State": "Arkansas",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "AA",
+			"State": "Armed Forces America",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "AE",
+			"State": "Armed Forces Europe",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "AP",
+			"State": "Armed Forces Pacific",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "CA",
+			"State": "California",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "CO",
+			"State": "Colorado",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "CT",
+			"State": "Connecticut",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "DE",
+			"State": "Delaware",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "DC",
+			"State": "District of Columbia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "FL",
+			"State": "Florida",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "GA",
+			"State": "Georgia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "HI",
+			"State": "Hawaii",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "ID",
+			"State": "Idaho",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "IL",
+			"State": "Illinois",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "IN",
+			"State": "Indiana",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "IA",
+			"State": "Iowa",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "KS",
+			"State": "Kansas",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "KY",
+			"State": "Kentucky",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "LA",
+			"State": "Louisiana",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "ME",
+			"State": "Maine",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "MD",
+			"State": "Maryland",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "MA",
+			"State": "Massachusetts",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "MI",
+			"State": "Michigan",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "MN",
+			"State": "Minnesota",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "MS",
+			"State": "Mississppi",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "MO",
+			"State": "Missouri",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "MT",
+			"State": "Montana",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "NE",
+			"State": "Nebraska",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "NV",
+			"State": "Nevada",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "NH",
+			"State": "New Hampshire",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "NJ",
+			"State": "New Jersey",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "NM",
+			"State": "New Mexico",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "NY",
+			"State": "New York",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "NC",
+			"State": "North Carolina",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "ND",
+			"State": "North Dakota",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "OH",
+			"State": "Ohio",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "OK",
+			"State": "Oklahoma",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "OR",
+			"State": "Oregon",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "PA",
+			"State": "Pennsylvania",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "RI",
+			"State": "Rhode Island",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "SC",
+			"State": "South Carolina",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "SD",
+			"State": "South Dakota",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "TN",
+			"State": "Tennessee",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "TX",
+			"State": "Texas",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "UT",
+			"State": "Utah",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "VT",
+			"State": "Vermont",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "VA",
+			"State": "Virginia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "WA",
+			"State": "Washington",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "WV",
+			"State": "West Virginia",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "WI",
+			"State": "Wisconsin",
+			"IsActive": true
+		},
+		{
+			"CountryCode": "US",
+			"StateCode": "WY",
+			"State": "Wyoming",
+			"IsActive": true
+		}
+	]
+}

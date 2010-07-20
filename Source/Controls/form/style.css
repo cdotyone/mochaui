@@ -1,0 +1,144 @@
+.form {
+	padding: 0 2px 0 2px;
+	text-align: left;
+}
+
+.formBack {
+	background-color: #FFFFFF;
+}
+
+table.form {
+	border: solid 0 black;
+	color: black;
+	margin: 0;
+	padding: 0;
+	background-color: #FFFFFF;
+}
+
+.formT, .formTS, .formT_S, .formTM, .formTL, .formTBar {
+	border: solid 1px black;
+	background-color: #cccccc;
+	font-family: Sans-Serif;
+	font-size: 11px;
+	line-height: 20px;
+	border-bottom-style: none;
+	border-left-style: none;
+	padding: 0 2px 0 2px;
+	text-align: right;
+}
+
+.formTBar {
+	padding: 0 2px 0 2px;
+	border-bottom: solid 1px black;
+	border-right: none;
+	text-align: left;
+}
+
+tr.formTBar td.form {
+	padding: 5px 20px 5px 20px;
+	border-right: none;
+	background-color: #DDDDDD;
+}
+
+.formTitle {
+	border-bottom: solid 1px black;
+	border-right: none;
+	background-color: #1A3119;
+	color: White;
+	padding: 2px 0 2px 5px;
+	font-family: Sans-Serif;
+	font-weight: bold;
+	font-size: 9pt;
+}
+
+.formT_S {
+	font-weight: 600;
+}
+
+.formTS {
+	font-size: 10px;
+}
+
+.formTM {
+	font-size: 12px;
+}
+
+.formTL {
+	font-size: 12px;
+}
+
+td.form {
+	padding: 0 10px 0 10px;
+	border-right: none;
+}
+
+tr.formH td.formT {
+	border-top: none;
+}
+
+tr.formH td.formTBar {
+	border-top: none;
+}
+
+tr.formF td {
+	border-top: solid 1px black;
+	padding: 2px 2px 2px 2px;
+	text-align: center;
+}
+
+tr.formF td.formT {
+	padding: 10px 20px 10px 20px;
+	border-right: none;
+	background-color: #cccccc;
+}
+
+span.formTR {
+	color: Red;
+	font-family: Sans-Serif;
+	font-size: 11px;
+	font-weight: normal;
+}
+
+div.formTR {
+	color: Red;
+	font-family: Sans-Serif;
+	font-size: 11px;
+	font-weight: normal;
+}
+
+div.formF {
+	border-top: outset 1px black;
+	padding: 2px 2px 2px 2px;
+	text-align: left;
+}
+
+div.hr1 {
+	clear: both;
+	height: 7px;
+	background: url(images/lineH.gif) repeat-x right top;
+}
+
+div.hr1 hr {
+	visibility: hidden;
+}
+
+div.hr2 {
+	clear: both;
+	height: 7px;
+	background: url(images/lineH2.gif) repeat-x right top;
+}
+
+div.hr2 hr {
+	visibility: hidden;
+}
+
+div.hr3 {
+	clear: both;
+	height: 7px;
+	background: url(images/lineH3.gif) repeat-x right top;
+	padding-bottom: 3px;
+}
+
+div.hr3 hr {
+	visibility: hidden;
+}

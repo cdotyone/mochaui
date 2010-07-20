@@ -1,0 +1,292 @@
+{
+	"AddressBlock":{"id":"AddressBlock","Version":1,"TypeCode":"FRMB","Rules":{},
+		"SubItems":[
+			{
+				"Type": "row",
+				"SubItems": [
+					{
+						"id": "Address1",
+						"Type": "text",
+						"Label": "Address",
+						"Length": 100,
+						"Width": 410,
+						"Title": "First address line"
+					}
+				]
+			},
+			{
+				"Type": "row",
+				"SubItems": [
+					{
+						"id": "Address2",
+						"Type": "text",
+						"Length": 100,
+						"Width": 410,
+						"Title": "Second address line"
+					}
+				]
+			},
+			{
+				"Type": "row",
+				"SubItems": [
+					{
+						"id": "Address3",
+						"Type": "text",
+						"Length": 100,
+						"Width": 410,
+						"Title": "Third address line"
+					}
+				]
+			},
+			{
+				"Type": "row",
+				"SubItems": [
+					{
+						"id": "CountryCode",
+						"Type": "drop",
+						"Label": "Country",
+						"Width": 110,
+						"CacheName": "Country",
+						"TextField": "Country",
+						"ValueField": "CountryCode"
+					},
+					{
+						"id": "City",
+						"Type": "text",
+						"Label": "City",
+						"Length": 100,
+						"Width": 130
+					},
+					{
+						"id": "StateCode",
+						"Type": "drop",
+						"Label": "State",
+						"Width": 50,
+						"CacheName": "State",
+						"TextField": "StateCode",
+						"ValueField": "StateCode"
+					},
+					{
+						"id": "PostalCode",
+						"Type": "text",
+						"Label": "Zip",
+						"Length": 100,
+						"Width": 90
+					}
+				]
+			}
+		],"Title":"AddressBlock","Width":"400","Rank":999,"Length":2144,"Created":"11/6/2008 8:43:58 PM","CreatedBy":0,"Modified":"11/6/2008 8:43:58 PM","ModifiedBy":0},
+	"EmailBlock":{"id":"EmailBlock","Version":1,"TypeCode":"FRM","Rules":{},"SubItems":[
+		{
+			"Type": "row",
+			"SubItems": [
+				{
+					"id": "Email",
+					"Type": "text",
+					"Label": "Email",
+					"Length": 255,
+					"Width": 400
+				}
+			]
+		}
+	],"Title":"EmailBlock","ProjectID":1001,"Rank":999,"Length":704,"Created":"11/26/2008 2:26:49 AM","CreatedBy":13,"Modified":"11/26/2008 2:26:49 AM","ModifiedBy":13},
+	"User":{"id":"Member","Version":1,"TypeCode":"FRM","Rules":{
+		"G1": [
+			{
+				"IconURL": "images/required.gif",
+				"ErrIconURL": "images/required-error.gif",
+				"CSS": "R",
+				"ErrCSS": "Err",
+				"LegendText": "Required fields.",
+				"Type": "Required",
+				"Fields": [
+					"FirstName",
+					"LastName",
+					"Address1",
+					"City",
+					"CountryCode",
+					"StateCode",
+					"PostalCode"
+				]
+			},
+			{
+				"IconURL": "images/any-required.gif",
+				"ErrIconURL": "images/required-error.gif",
+				"CSS": "R",
+				"ErrCSS": "Err",
+				"LegendText": "At Least One Field Required.",
+				"Type": "AnyRequired",
+				"Fields": [
+					"Phone",
+					"Cell",
+					"Work"
+				]
+			},
+			{
+				"IconURL": "images/same-required.gif",
+				"ErrIconURL": "images/required-error.gif",
+				"CSS": "L",
+				"ErrCSS": "Err",
+				"LegendText": "Fields must be identical.",
+				"Type": "Same",
+				"Fields": [
+					"Password",
+					"ConfirmPassword"
+				]
+			}
+		]
+	},"SubItems":[
+		{
+			"Type": "form",
+			"id": "PersonBlock"
+		},
+		{
+			"Type": "row",
+			"SubItems": [
+				{
+					"id": "UserName",
+					"Type": "text",
+					"Label": "Username",
+					"Length": 255,
+					"Width": 200
+				},
+				{
+					"Type": "form",
+					"id": "PasswordBlock"
+				},
+				{
+					"Type": "button",
+					"id": "save",
+					"Text": "Save Changes"
+				}
+			]
+		}
+	]
+		,"Title":"User","ProjectID":1001,"Rank":999,"Length":2452,"Created":"2/8/2009 10:59:11 AM","CreatedBy":13,"Modified":"2/8/2009 10:59:11 AM","ModifiedBy":13},
+	"NameBlock":{"id":"NameBlock","Version":1,"TypeCode":"FRMB","Rules":{},"SubItems":[
+		{
+			"Type": "row",
+			"SubItems": [
+				{
+					"id": "Prefix",
+					"Type": "drop",
+					"Label": "Prefix",
+					"Width": 50,
+					"CacheName": "Prefix",
+					"TextField": "Prefix",
+					"ValueField": "Prefix"
+				},
+				{
+					"id": "FirstName",
+					"Type": "text",
+					"Label": "First",
+					"Length": 100,
+					"Width": 140
+				},
+				{
+					"id": "MiddleName",
+					"Type": "text",
+					"Label": "Middle",
+					"Length": 100,
+					"Width": 30
+				},
+				{
+					"id": "LastName",
+					"Type": "text",
+					"Label": "Last",
+					"Length": 100,
+					"Width": 100
+				},
+				{
+					"id": "Suffix",
+					"Type": "drop",
+					"Label": "Suffix",
+					"Width": 50,
+					"CacheName": "Suffix",
+					"TextField": "Suffix",
+					"ValueField": "Suffix"
+				}
+			]
+		}
+	],"Title":"NameBlock","Width":"400","ProjectID":1001,"Rank":999,"Length":1530,"Created":"11/6/2008 8:43:42 PM","CreatedBy":0,"Modified":"11/6/2008 8:43:42 PM","ModifiedBy":0},
+	"PasswordBlock":{"id":"PasswordBlock","Version":1,"TypeCode":"FRM","Rules":{},"SubItems":[
+		{
+			"Type": "row",
+			"SubItems": [
+				{
+					"id": "Password",
+					"Type": "password",
+					"Label": "Password",
+					"Length": 20,
+					"Width": 200
+				}
+			]
+		},
+		{
+			"Type": "row",
+			"SubItems": [
+				{
+					"id": "ConfirmPassword",
+					"Type": "password",
+					"Label": "Confirm Password",
+					"Length": 20,
+					"Width": 200
+				}
+			]
+		}
+	],"Title":"PasswordBlock","ProjectID":1001,"Rank":999,"Length":978,"Created":"11/26/2008 2:19:18 AM","CreatedBy":13,"Modified":"11/26/2008 2:19:18 AM","ModifiedBy":13},
+	"PersonBlock":{"id":"PersonBlock","Version":1,"TypeCode":"FRM","Rules":{},"SubItems":[
+		{
+			"Type": "form",
+			"id": "NameBlock"
+		},
+		{
+			"Type": "form",
+			"id": "AddressBlock"
+		},
+		{
+			"Type": "form",
+			"id": "PhoneBlock"
+		}
+	],"Title":"PersonBlock","Width":"380","ProjectID":1001,"Rank":999,"Length":742,"Created":"11/26/2008 2:18:18 AM","CreatedBy":13,"Modified":"11/26/2008 2:18:18 AM","ModifiedBy":13},
+	"PhoneBlock":{"id":"PhoneBlock","Version":1,"TypeCode":"FRMB","Rules":{},"SubItems":[
+		{
+			"Type": "row",
+			"SubItems": [
+				{
+					"id": "Phone",
+					"Type": "text",
+					"Label": "Home Phone",
+					"Length": 100,
+					"Width": 200
+				},
+				{
+					"id": "Work",
+					"Type": "text",
+					"Label": "Work Phone",
+					"Length": 100,
+					"Width": 200
+				}
+			]
+		},
+		{
+			"Type": "row",
+			"SubItems": [
+				{
+					"id": "Cell",
+					"Type": "text",
+					"Label": "Cell Phone",
+					"Length": 100,
+					"Width": 200
+				},
+				{
+					"id": "Fax",
+					"Type": "text",
+					"Label": "Fax",
+					"Length": 100,
+					"Width": 200
+				}
+			]
+		}
+	],"Title":"PhoneBlock","Width":"40","ProjectID":1001,"Rank":999,"Length":1248,"Created":"11/6/2008 8:44:13 PM","CreatedBy":0,"Modified":"11/6/2008 8:44:13 PM","ModifiedBy":0}
+}
