@@ -119,16 +119,21 @@ MUI.Tabs = new Class({
 		// build all tabs
 		$A(o.tabs).each(function(tab){
 			self._buildTab(tab, ul);
+			if(self._getData(tab, o.valueField)==o.value) o.selectedTab = tab;
 		});
 
 		// add a formatting div
 		new Element('div', {'class':'clear'}).inject(ul);
 
-		if (!isNew) return this;
+		if (!isNew) {
+			if(o.selectedTab) o.selectedTab._element.fireEvent('click');
+			return this;
+		}
 
 		window.addEvent('domready', function(){
 			var container = $(containerEl ? containerEl : o.container);
 			container.appendChild(div);
+			if(o.selectedTab) o.selectedTab._element.fireEvent('click');
 		});
 
 		return div;
@@ -162,7 +167,7 @@ MUI.Tabs = new Class({
 	_tabClick: function(tab, ul, e){
 		var self = this;
 		var o = self.options;
-		e.stopPropagation();
+		if(e) e.stopPropagation();
 
 		var value = self._getData(tab, o.valueField);
 		if (value == null) value = self._getData(tab, o.textField);

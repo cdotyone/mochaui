@@ -101,6 +101,7 @@ MUI.Tree = new Class({
 			}
 		} else ul = div.getElement('ul');
 		if (!ul){
+			div.empty();
 			ul = new Element('ul',{'class':o.cssClass}).inject(div);
 		} else ul.empty();
 		self.element = div;
@@ -227,7 +228,7 @@ MUI.Tree = new Class({
 		this._nodeSetImage(node);
 
 		var hasChildren = self._getData(node, o.hasChildrenField);
-		if ((!node.nodes || node.nodes.length == 0) && !hasChildren) li.addClass('nochild');
+		if (hasChildren && li.hasClass('nochild')) li.removeClass('nochild').addClass('C');
 
 		// set events
 		if (node._checkbox){
