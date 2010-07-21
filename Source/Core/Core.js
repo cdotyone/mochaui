@@ -21,7 +21,7 @@
  - Hash
  - More/Assets
 
- provides: [MUI, MochaUI, MUI.Require]
+ provides: [MUI, MochaUI, MUI.Require, NamedClass]
 
  ...
  */
@@ -310,26 +310,30 @@ Element.implement({
 
 	hideSpinner: function(instance){
 		if (instance == null) instance = MUI.get(this.id);
-		if (instance == null){
-			if ($('spinner')) $('spinner').hide();
+		var spinner = $('spinner');
+		if (instance && instance.el && instance.el.spinner) spinner = instance.el.spinner;
+		if ((instance == null || (instance && instance.hideSpinner == null) || spinner) && spinner){
+			(function(){
+				var count = this.retrieve("count");
+				this.store("count", count ? count - 1 : 0);
+				if (count <= 1) this.hide();
+			}).delay(500, spinner);
 			return;
 		}
-		if (instance != null && instance.hideSpinner == null){
-			if (instance.el && instance.el.spinner) instance.el.spinner.hide();
-		} else instance.hideSpinner();
-
+		if (instance && instance.hideSpinner) instance.hideSpinner();
 		return this;
 	},
 
 	showSpinner: function(instance){
 		if (instance == null) instance = MUI.get(this.id);
-		if (instance == null){
-			if ($('spinner')) $('spinner').show();
+		var spinner = $('spinner');
+		if (instance && instance.el && instance.el.spinner) spinner = instance.el.spinner;
+		if ((instance == null || (instance && instance.hideSpinner == null) || spinner) && spinner){
+			var count=spinner.retrieve("count");
+			spinner.store("count",count ? count+1 : 1).show();
 			return;
 		}
-		if (instance != null && instance.showSpinner == null){
-			if (instance.el && instance.el.spinner) instance.el.spinner.show();
-		} else instance.showSpinner();
+		if (instance && instance.hideSpinner) instance.showSpinner();
 		return this;
 	},
 
