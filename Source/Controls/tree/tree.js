@@ -343,17 +343,18 @@ MUI.Tree = new Class({
 		var def=this._getData(node, o.imageField);
 		var open = this._getData(node, o.imageOpenField) || def;
 		var closed = this._getData(node, o.imageClosedField) || def;
-		if (closed) span.removeClass(closed);
-		if (open) span.removeClass(open);
+
+		span.removeClass(closed).removeClass(open);
+
 		if(closed && !node.isExpanded) {
-			if(closed.substr(0,1)=='_') span.addClass(closed);
+			if(closed.indexOf('.')>0) span.addClass(closed);
 			else {
 				span.style.background = 'transparent url(' + closed + ') no-repeat scroll left top';
 				span.style.paddingLeft = '20px';
 			}
 		}
 		if (open && node.isExpanded){
-			if(open.substr(0,1)=='_') span.addClass(open);
+			if(open.indexOf('.')>0) span.addClass(open);
 			else {
 				span.style.background = 'transparent url(' + open+ ') no-repeat scroll left top';
 				span.style.paddingLeft = '20px';
