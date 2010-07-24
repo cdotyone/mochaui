@@ -9,4 +9,5 @@ Greg Houstan (greg.houston@gmail.com)
 Scott F. Frederick
 Joel Lindau
 Harry Roberts
-Marko Šanti?		<http://www.omnisdata.com/omnigrid/>
+Marko Santic (marko@omnisdata.com) <http://www.omnisdata.com/omnigrid/>
+Paul Duncan (paul@pablotron.org) <http://github.com/jeremydurham/persist-js>
