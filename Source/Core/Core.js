@@ -348,7 +348,7 @@ Element.implement({
 
 });
 
-// Mootools Patch: Fixes issues in Safari, Chrome, and Internet Explorer caused by processing text as XML. 
+/*// Mootools Patch: Fixes issues in Safari, Chrome, and Internet Explorer caused by processing text as XML.
 Request.HTML.implement({
 
 	processHTML: function(text){
@@ -358,7 +358,7 @@ Request.HTML.implement({
 		return container.set('html', text);
 	}
 
-});
+});*/
 
 // This makes it so Request will work to some degree locally
 if (location.protocol == 'file:'){

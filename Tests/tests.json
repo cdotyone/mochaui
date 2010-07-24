@@ -1,0 +1,3 @@
+[
+	{'source':'Core/Persist.json', 'title':'MUI.Persist', 'js':['source|Core/Persist.js']}
+]

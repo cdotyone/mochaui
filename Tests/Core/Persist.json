@@ -1,0 +1,86 @@
+{
+	"tests": [
+		{
+			"title": "automatic provider selection",
+			"description": "Checks to see that MUI.Persist.initialize() is able to choose a cache provider.",
+			"test":function() {
+				MUI.Persist.initialize();
+				if(MUI.Persist.currentProvider==null) this.error="there is not a current cache provider for MUI.Persist";
+				else this.error=MUI.Persist.options.provider;
+				return MUI.Persist.currentProvider!=null;
+			}
+		},
+		{
+			"title": "default set/get",
+			"description": "Checks to see that MUI.Persist.initialize() chooses a default provider and it is able to set and get the value back",
+			"test":function() {
+				MUI.Persist.initialize();
+				MUI.Persist.set('test1','val1');
+				return MUI.Persist.get('test1') == 'val1';
+			}
+		},
+		{
+			"title": "force 'Cookie' provider selection",
+			"description": "Checks to see that MUI.Persist.initialize() is able to force the Cookie provider.",
+			"test":function() {
+				MUI.Persist.initialize({provider:'Cookie'});
+				if(MUI.Persist.currentProvider==null) this.error="there is not a current cache provider for MUI.Persist - Cookie";
+				if(MUI.Persist.options.provider!='Cookie') this.error="the cache provider was not set correctly to 'Cookie'";
+				this.error='Cookie';
+				return MUI.Persist.options.provider=='Cookie';
+			}
+		},
+		{
+			"title": "Cookie set/get",
+			"description": "Checks to see that MUI.Persist.initialize() chooses a cookie provider and it is able to set and get the value back",
+			"test":function() {
+				MUI.Persist.initialize({provider:'Cookie'});
+				if(MUI.Persist.options.provider!='Cookie') this.error="the cache provider was not set correctly to 'Cookie'";
+				MUI.Persist.set('test1','val1');
+				return MUI.Persist.get('test1') == 'val1';
+			}
+		},
+		{
+			"title": "force 'Flash' provider selection",
+			"description": "Checks to see that MUI.Persist.initialize() is able to force the Flash provider.",
+			"test":function() {
+				MUI.Persist.initialize({provider:'Flash'});
+				if(MUI.Persist.currentProvider==null) this.error="there is not a current cache provider for MUI.Persist - Flash";
+				if(MUI.Persist.options.provider!='Flash') this.error="the cache provider was not set correctly to 'Flash'";
+				this.error='Flash';
+				return MUI.Persist.options.provider=='Flash';
+			}
+		},
+		{
+			"title": "Flash set/get",
+			"description": "Checks to see that MUI.Persist.initialize() chooses a Flash provider and it is able to set and get the value back",
+			"test":function() {
+				MUI.Persist.initialize({provider:'Flash'});
+				if(MUI.Persist.options.provider!='Flash') this.error="the cache provider was not set correctly to 'Flash'";
+				MUI.Persist.set('test1','val1');
+				return MUI.Persist.get('test1') == 'val1';
+			}
+		},
+		{
+			"title": "force 'IE' provider selection",
+			"description": "Checks to see that MUI.Persist.initialize() is able to force the IE provider.",
+			"test":function() {
+				MUI.Persist.initialize({provider:'IE'});
+				if(MUI.Persist.currentProvider==null) this.error="there is not a current cache provider for MUI.Persist - IE";
+				if(MUI.Persist.options.provider!='IE') this.error="the cache provider was not set correctly to 'IE'";
+				this.error='IE';
+				return MUI.Persist.options.provider=='IE';
+			}
+		},
+		{
+			"title": "IE set/get",
+			"description": "Checks to see that MUI.Persist.initialize() chooses a cookie provider and it is able to set and get the value back",
+			"test":function() {
+				MUI.Persist.initialize({provider:'IE'});
+				if(MUI.Persist.options.provider!='IE') this.error="the cache provider was not set correctly to 'IE'";
+				MUI.Persist.set('test1','val1');
+				return MUI.Persist.get('test1') == 'val1';
+			}
+		}
+	]
+}

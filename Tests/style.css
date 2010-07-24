@@ -1,0 +1,5 @@
+
+
+div.good,span.good { padding-left: 18px; line-height:18px; background: transparent url(images/accept.png) no-repeat left -1px; }
+div.failed,span.failed { padding-left: 18px; line-height:18px; background: transparent url(images/exclamation.png) no-repeat left -1px; }
+span.loading { padding-left: 18px; line-height:18px; background: transparent url(images/arrow_down.png) no-repeat left -1px; }

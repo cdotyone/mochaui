@@ -71,11 +71,10 @@ MUI.Tree = new Class({
 			id = 'tree' + (++MUI.IDCount);
 			this.options.id = id;
 		}
+		MUI.set(id, this);
 
 		// create sub items if available
 		if (this.options.drawOnInit && this.options.nodes.length > 0) this.draw();
-
-		MUI.set(id, this);
 	},
 
 	_getData: function(item, property){
@@ -163,10 +162,10 @@ MUI.Tree = new Class({
 
 		var self = this;
 		var o = self.options;
-		var n = self.nodeFind(self._getData(node, o.valueField));
-		if (n){
-			var el = node._element;
-			n.fromJSON(node);
+		var n = node;
+		if(!node._element) n=self.nodeFind(self._getData(node, o.valueField));
+		if(n){
+			var el = n._element;
 			if (el){
 				self.buildNode(node, el.getParent());
 				self.setLast(el.getParent());
@@ -196,6 +195,7 @@ MUI.Tree = new Class({
 		var text = self._getData(node, o.textField);
 		if (o.showCheckBox) node._checkbox = new Element('INPUT', { 'type':'checkbox', 'value': value,'id':id+'_cb' }).inject(li);
 		a = new Element('a', {'href':'#' + value,'id':id}).inject(li);
+		node._a = a;
 		span = new Element('span', {'text':text,'id':id+'_tle'}).inject(a);
 		node._span = span;
 
@@ -339,7 +339,6 @@ MUI.Tree = new Class({
 	_nodeSetImage: function(node) {
 		var o=this.options;
 		var span=node._span;
-
 		var def=this._getData(node, o.imageField);
 		var open = this._getData(node, o.imageOpenField) || def;
 		var closed = this._getData(node, o.imageClosedField) || def;
@@ -347,18 +346,12 @@ MUI.Tree = new Class({
 		span.removeClass(closed).removeClass(open);
 
 		if(closed && !node.isExpanded) {
-			if(closed.indexOf('.')>0) span.addClass(closed);
-			else {
-				span.style.background = 'transparent url(' + closed + ') no-repeat scroll left top';
-				span.style.paddingLeft = '20px';
-			}
+			if(closed.indexOf('.')<0) span.addClass(closed);
+			else span.setStyles({'background':'transparent url(' + closed + ') no-repeat scroll left top','paddingLeft':'20px'});
 		}
 		if (open && node.isExpanded){
-			if(open.indexOf('.')>0) span.addClass(open);
-			else {
-				span.style.background = 'transparent url(' + open+ ') no-repeat scroll left top';
-				span.style.paddingLeft = '20px';
-			}
+			if(open.indexOf('.')<0) span.addClass(open);
+			else span.setStyles({'background':'transparent url(' + open + ') no-repeat scroll left top','paddingLeft':'20px'});
 		}
 	},
 
