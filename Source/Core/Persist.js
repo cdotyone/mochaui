@@ -37,67 +37,6 @@
  ...
  */
 
-/*
- * The contents of gears_init.js; we need this because Chrome supports
- * Gears out of the box, but still requires this constructor.  Note that
- * if you include gears_init.js then this function does nothing.
- */
-(function(){
-	// We are already defined. Hooray!
-	if (window.google && google.gears){
-		return;
-	}
-
-	// factory
-	var F = null;
-
-	// Firefox
-	if (typeof GearsFactory != 'undefined'){
-		F = new GearsFactory();
-	} else {
-		// IE
-		try{
-			F = new ActiveXObject('Gears.Factory');
-			// privateSetGlobalObject is only required and supported on WinCE.
-			if (F.getBuildInfo().indexOf('ie_mobile') != -1){
-				F.privateSetGlobalObject(this);
-			}
-
-		} catch (e){
-			// Safari
-			if ((typeof navigator.mimeTypes != 'undefined') && navigator.mimeTypes["application/x-googlegears"]){
-				F = document.createElement("object");
-				F.style.display = "none";
-				F.width = 0;
-				F.height = 0;
-				F.type = "application/x-googlegears";
-				document.documentElement.appendChild(F);
-			}
-		}
-	}
-
-	// *Do not* define any objects if Gears is not installed. This mimics the
-	// behavior of Gears defining the objects in the future.
-	if (!F){
-		return;
-	}
-
-
-	// Now set up the objects, being careful not to overwrite anything.
-	//
-	// Note: In Internet Explorer for Windows Mobile, you can't add properties to
-	// the window object. However, global objects are automatically added as
-	// properties of the window object in all browsers.
-	if (!window.google){
-		google = {};
-	}
-
-	if (!google.gears){
-		google.gears = {factory: F};
-	}
-
-})();
-
 MUI.files['source|Core/Persist.js'] = 'loaded';
 
 MUI.Persist = (MUI.Persist || $H({})).extend({
@@ -404,8 +343,13 @@ MUI.Persist.Providers.GlobalStorage = new Class({
 		this.options = $extend(this.options, MUI.Persist.options);
 		this.setOptions(options);
 
+		// cleanup domain option
+		var o = this.options;
+		o.domain = o.domain || location.host || 'localhost';
+		o.domain = o.domain.replace(/:\d+$/, '');
+		
 		// create data store
-		this.store = globalStorage[this.options.domain];
+		this.store = globalStorage[o.domain];
 	},
 
 	_key: function(key){
@@ -661,3 +605,48 @@ MUI.Persist.Providers.Flash = new Class({
 	}
 
 });
+
+
+/*
+ * The contents of gears_init.js; we need this because Chrome supports
+ * Gears out of the box, but still requires this constructor.  Note that
+ * if you include gears_init.js then this function does nothing.
+ */
+(function(){
+	// We are already defined. Hooray!
+	if (window.google && google.gears) return;
+
+	// factory
+	var F = null;
+
+	// Firefox
+	if (typeof GearsFactory != 'undefined'){
+		F = new GearsFactory();
+	} else {
+		// IE
+		try{
+			F = new ActiveXObject('Gears.Factory');
+			// privateSetGlobalObject is only required and supported on WinCE.
+			if (F.getBuildInfo().indexOf('ie_mobile') != -1){
+				F.privateSetGlobalObject(this);
+			}
+		} catch (e){
+			// Safari
+			if ((typeof navigator.mimeTypes != 'undefined') && navigator.mimeTypes["application/x-googlegears"]){
+				F = new Element('object',{width:0,height:0,type:'pplication/x-googlegears',styles:{display:'name'}}).inject(document.documentElement);
+			}
+		}
+	}
+
+	// *Do not* define any objects if Gears is not installed. This mimics the
+	// behavior of Gears defining the objects in the future.
+	if (!F) return;
+
+	// Now set up the objects, being careful not to overwrite anything.
+	//
+	// Note: In Internet Explorer for Windows Mobile, you can't add properties to
+	// the window object. However, global objects are automatically added as
+	// properties of the window object in all browsers.
+	if (!window.google) google = {};
+	if (!google.gears) google.gears = {factory: F};
+})();
