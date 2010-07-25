@@ -74,10 +74,73 @@
 		},
 		{
 			"title": "IE set/get",
-			"description": "Checks to see that MUI.Persist.initialize() chooses a cookie provider and it is able to set and get the value back",
+			"description": "Checks to see that MUI.Persist.initialize() chooses an IE provider and it is able to set and get the value back",
 			"test":function() {
 				MUI.Persist.initialize({provider:'IE'});
 				if(MUI.Persist.options.provider!='IE') this.error="the cache provider was not set correctly to 'IE'";
+				MUI.Persist.set('test1','val1');
+				return MUI.Persist.get('test1') == 'val1';
+			}
+		},
+		{
+			"title": "force 'Gears' provider selection",
+			"description": "Checks to see that MUI.Persist.initialize() is able to force the Gears provider.",
+			"test":function() {
+				MUI.Persist.initialize({provider:'Gears'});
+				if(MUI.Persist.currentProvider==null) this.error="there is not a current cache provider for MUI.Persist - Gears";
+				if(MUI.Persist.options.provider!='Gears') this.error="the cache provider was not set correctly to 'Gears'";
+				this.error='Gears';
+				return MUI.Persist.options.provider=='Gears';
+			}
+		},
+		{
+			"title": "Gears set/get",
+			"description": "Checks to see that MUI.Persist.initialize() chooses a Gears provider and it is able to set and get the value back",
+			"test":function() {
+				MUI.Persist.initialize({provider:'Gears'});
+				if(MUI.Persist.options.provider!='Gears') this.error="the cache provider was not set correctly to 'Gears'";
+				MUI.Persist.set('test1','val1');
+				return MUI.Persist.get('test1') == 'val1';
+			}
+		},
+		{
+			"title": "force 'GlobalStorage' provider selection",
+			"description": "Checks to see that MUI.Persist.initialize() is able to force the GlobalStorage provider.",
+			"test":function() {
+				MUI.Persist.initialize({provider:'GlobalStorage'});
+				if(MUI.Persist.currentProvider==null) this.error="there is not a current cache provider for MUI.Persist - GlobalStorage";
+				if(MUI.Persist.options.provider!='GlobalStorage') this.error="the cache provider was not set correctly to 'GlobalStorage'";
+				this.error='GlobalStorage';
+				return MUI.Persist.options.provider=='GlobalStorage';
+			}
+		},
+		{
+			"title": "GlobalStorage set/get",
+			"description": "Checks to see that MUI.Persist.initialize() chooses a GlobalStorage provider and it is able to set and get the value back",
+			"test":function() {
+				MUI.Persist.initialize({provider:'GlobalStorage'});
+				if(MUI.Persist.options.provider!='GlobalStorage') this.error="the cache provider was not set correctly to 'GlobalStorage'";
+				MUI.Persist.set('test1','val1');
+				return MUI.Persist.get('test1') == 'val1';
+			}
+		},
+		{
+			"title": "force 'WhatWG' provider selection",
+			"description": "Checks to see that MUI.Persist.initialize() is able to force the WhatWG provider.",
+			"test":function() {
+				MUI.Persist.initialize({provider:'WhatWG'});
+				if(MUI.Persist.currentProvider==null) this.error="there is not a current cache provider for MUI.Persist - WhatWG";
+				if(MUI.Persist.options.provider!='WhatWG') this.error="the cache provider was not set correctly to 'WhatWG'";
+				this.error='WhatWG';
+				return MUI.Persist.options.provider=='WhatWG';
+			}
+		},
+		{
+			"title": "WhatWG set/get",
+			"description": "Checks to see that MUI.Persist.initialize() chooses a WhatWG provider and it is able to set and get the value back",
+			"test":function() {
+				MUI.Persist.initialize({provider:'WhatWG'});
+				if(MUI.Persist.options.provider!='WhatWG') this.error="the cache provider was not set correctly to 'WhatWG'";
 				MUI.Persist.set('test1','val1');
 				return MUI.Persist.get('test1') == 'val1';
 			}
