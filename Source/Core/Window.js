@@ -16,7 +16,7 @@
  ...
  */
 
-MUI.files['source|Window.js'] = 'loaded';
+MUI.files['source|Core/Window.js'] = 'loaded';
 
 MUI.Windows = (MUI.Windows || $H({})).extend({
 	indexLevel:	 100,			// Used for window z-Index
@@ -100,7 +100,7 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 		// Events
 		onDrawBegin:		$empty,
 		onDrawEnd:			$empty,
-		onContentLoaded:	$empty,
+		onLoaded:	$empty,
 		onFocus:			$empty,
 		onBlur:				$empty,
 		onResize:			$empty,
@@ -470,7 +470,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			'method': options.method,
 			'url': options.contentURL,
 			'data': options.data,
-			'onContentLoaded': null,
+			"onLoaded": null,
 			'require': {
 				js: options.require.js,
 				onload: options.require.onload

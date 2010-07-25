@@ -20,7 +20,7 @@
  ...
  */
 
-MUI.files['source|Modal.js'] = 'loaded';
+MUI.files['source|Core/Modal.js'] = 'loaded';
 
 MUI.Modal = new NamedClass('MUI.Modal', {
 

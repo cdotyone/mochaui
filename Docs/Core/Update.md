@@ -43,7 +43,7 @@ instance.updateEnd - this is called after the childElement has been updated and 
 	 content - (string or element) An html loadMethod option.
 	 loadMethod - ('html', 'xhr', or 'iframe')
 	 url - Used if loadMethod is set to 'xhr' or 'iframe'.
-     section - used to name the section being update, such as 'content,'toolbar','header','footer'
-	 onContentLoaded - (function)
+	 section - used to name the section being update, such as 'content,'toolbar','header','footer'
+	 onLoaded - (function)
 
 	 */

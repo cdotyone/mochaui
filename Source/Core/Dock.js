@@ -18,7 +18,7 @@
  ...
  */
 
-MUI.files['source|Dock.js'] = 'loaded';
+MUI.files['source|Core/Dock.js'] = 'loaded';
 
 MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
 

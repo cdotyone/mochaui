@@ -37,7 +37,7 @@
  ...
  */
 
-MUI.files['source|Themes.js'] = 'loaded';
+MUI.files['source|Core/Themes.js'] = 'loaded';
 
 MUI.Themes = {
 

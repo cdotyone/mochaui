@@ -17,13 +17,13 @@
  ...
  */
 
-MUI.files['source|Update.js'] = 'loaded';
+MUI.files['source|Core/Update.js'] = 'loaded';
 
-MUI.extend({
+MUI.Content = (MUI.Content || $H({})).extend({
 
-	Content:{Providers:{}},
+	Providers:{},
 
-	updateContent: function(options){
+	update: function(options){
 
 		options = $extend({
 			element:		null,
@@ -35,7 +35,7 @@ MUI.extend({
 			url:			null,
 			section:		null,
 			require:		{},
-			onContentLoaded:$empty
+			onLoaded:		$empty
 		}, options);
 
 		options.require = $extend({
@@ -79,8 +79,8 @@ MUI.extend({
 			contentEl.getAllNext('.columnHandle').destroy();
 		}
 
-		// prepare function to fire onContentLoaded event
-		options.fireContentLoaded = function(event, instance, options, json){
+		// prepare function to fire onLoaded event
+		options.fireLoaded = function(instance, options, json){
 			var fireEvent = true;
 			if (instance && instance.updateEnd) fireEvent = instance.updateEnd(options);
 			if (fireEvent){
@@ -90,18 +90,18 @@ MUI.extend({
 						onload: function(){
 							if (Browser.Engine.presto) options.require.onload.delay(100);
 							else options.require.onload();
-							if (options.onContentLoaded && options.onContentLoaded != $empty){
-								options.onContentLoaded(element,options,json)
+							if (options.onLoaded && options.onLoaded != $empty){
+								options.onLoaded(element,options,json)
 							} else {
-								if (instance) instance.fireEvent(event, [element,options,json]);
+								if (instance) instance.fireEvent('loaded', [element,options,json]);
 							}
 						}.bind(this)
 					});
 				} else {
-					if (options.onContentLoaded && options.onContentLoaded != $empty){
-						options.onContentLoaded(element,options,json)
+					if (options.onLoaded && options.onLoaded != $empty){
+						options.onLoaded(element,options,json)
 					} else {
-						if (instance) instance.fireEvent(event, [element,options,json]);
+						if (instance) instance.fireEvent('loaded',[element,options,json]);
 					}
 				}
 			}
@@ -120,12 +120,14 @@ MUI.extend({
 			MUI.Content.Providers[options.loadMethod](instance, options);
 		}
 	}
-			
+
 });
+
+MUI.updateContent = MUI.Content.update;
 
 MUI.Content.Providers.xhr = function(instance, options){
 	var contentContainer = options.contentContainer;
-	var fireContentLoaded = options.fireContentLoaded;
+	var fireLoaded = options.fireLoaded;
 	new Request({
 		url: options.url,
 		method: options.method ? options.method : 'get',
@@ -167,7 +169,7 @@ MUI.Content.Providers.xhr = function(instance, options){
 				if (evalJS && js) Browser.exec(js);
 			}
 			
-			Browser.Engine.trident4 ? fireContentLoaded.delay(50, this, ['contentLoaded', instance,options]) : fireContentLoaded('contentLoaded', instance,options);
+			Browser.Engine.trident4 ? fireLoaded.delay(50, this, [instance,options]) : fireLoaded(instance,options);
 		},
 		onComplete: function(){
 		}
@@ -175,11 +177,11 @@ MUI.Content.Providers.xhr = function(instance, options){
 };
 
 MUI.Content.Providers.json = function(instance, options){
-	var fireContentLoaded = options.fireContentLoaded;
+	var fireLoaded = options.fireLoaded;
 	var contentContainer = options.contentContainer;
 
 	if(options.content) {
-		Browser.Engine.trident4 ? fireContentLoaded.delay(50, this, ['loaded', instance, options, options.content]) : fireContentLoaded('loaded', instance, options, options.content);
+		Browser.Engine.trident4 ? fireLoaded.delay(50, this, [instance, options, options.content]) : fireLoaded(instance, options, options.content);
 		return;
 	}
 
@@ -207,11 +209,11 @@ MUI.Content.Providers.json = function(instance, options){
 		}.bind(this),
 		onSuccess: function(json){
 			json = JSON.decode(json);
-			// calls onLoaded event instead of onContentLoaded
+			// calls onLoaded event instead of onLoaded
 			// onLoaded - event should call updateContent again with loadMethod='html'
 
 			contentContainer.hideSpinner(instance);
-			Browser.Engine.trident4 ? fireContentLoaded.delay(50, this, ['loaded', instance, options, json]) : fireContentLoaded('loaded', instance, options, json);
+			Browser.Engine.trident4 ? fireLoaded.delay(50, this, [instance, options, json]) : fireLoaded(instance, options, json);
 		}.bind(this),
 		onComplete: function(){
 		}.bind(this)
@@ -219,7 +221,7 @@ MUI.Content.Providers.json = function(instance, options){
 };
 
 MUI.Content.Providers.iframe = function(instance, options){
-	var fireContentLoaded = options.fireContentLoaded;
+	var fireLoaded = options.fireLoaded;
 
 	var updateSetContent = true;
 	if (instance && instance.updateSetContent) updateSetContent = instance.updateSetContent(options);
@@ -242,10 +244,10 @@ MUI.Content.Providers.iframe = function(instance, options){
 		}).inject(contentContainer);
 		if (instance) instance.el.iframe = iframeEl;
 
-		// Add onload event to iframe so we can hide the spinner and run fireContentLoaded()
+		// Add onload event to iframe so we can hide the spinner and run fireLoaded()
 		iframeEl.addEvent('load', function(){
 			contentContainer.hideSpinner(instance);
-			Browser.Engine.trident4 ? fireContentLoaded.delay(50, this, ['contentLoaded', instance, options]) : fireContentLoaded('contentLoaded', instance, options);
+			Browser.Engine.trident4 ? fireLoaded.delay(50, this, [instance, options]) : fireLoaded(instance, options);
 		}.bind(this));
 	}
 
@@ -253,7 +255,7 @@ MUI.Content.Providers.iframe = function(instance, options){
 };
 
 MUI.Content.Providers.html = function(instance, options){
-	var fireContentLoaded = options.fireContentLoaded;
+	var fireLoaded = options.fireLoaded;
 	var elementTypes = new Array('element', 'textnode', 'whitespace', 'collection');
 
 	var updateSetContent = true;
@@ -265,7 +267,7 @@ MUI.Content.Providers.html = function(instance, options){
 	}
 
 	contentContainer.hideSpinner(instance);
-	Browser.Engine.trident4 ? fireContentLoaded.delay(50, this, ['contentLoaded', instance, options]) : fireContentLoaded('contentLoaded', instance, options);
+	Browser.Engine.trident4 ? fireLoaded.delay(50, this, [instance, options]) : fireLoaded(instance, options);
 };
 
 MUI.extend({

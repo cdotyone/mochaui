@@ -45,7 +45,7 @@ options - (*object*) - Options listed below.
 ** loadMethod		- (*string*: defaults to 'xhr') valid values are 'json', 'html', 'xhr', or 'iframe'.
 ** url				- (*string*) this option should be used if loadMethod is set to 'xhr', 'json' or 'iframe'.
 ** section			- (*string*) this is used to name the section being update, such as 'content,'toolbar','header','footer', so that event handlers can tell what section is being updated.
-** onContentLoaded	- (*function*) this callback is called when this section content is loaded.
+** onLoaded			- (*function*) this callback is called when this section content is loaded.
 * shape 			- (*string*: defaults to 'box') 'box' or 'gauge' Shape of window.
 * collapsible 		- (*boolean*: defaults to true) Set this to false to keep the window from being collapsed.
 * minimizable 		- (*boolean*: defaults to true) Set this to false to keep the window from being minimized. Requires MUI.Desktop and MUI.Dock.
@@ -131,7 +131,7 @@ options - (*object*) - Options listed below.
 
 #### Signature:
 
-		onContentLoaded( window )
+		onLoaded( window )
 
 #### Arguments:
 

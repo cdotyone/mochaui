@@ -22,7 +22,7 @@
  ...
  */
 
-MUI.files['source|Desktop.js'] = 'loaded';
+MUI.files['source|Core/Desktop.js'] = 'loaded';
 
 MUI.Desktop = {
 

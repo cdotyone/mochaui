@@ -35,7 +35,7 @@ Creates a column. Columns should be created from left to right.
 ** loadMethod		- (*string*: defaults to 'xhr') valid values are 'json', 'html', 'xhr', or 'iframe'.
 ** url				- (*string*) this option should be used if loadMethod is set to 'xhr', 'json' or 'iframe'.
 ** section			- (*string*) this is used to name the section being update, such as 'content,'toolbar','header','footer', so that event handlers can tell what section is being updated.
-** onContentLoaded	- (*function*) this callback is called when this section content is loaded.
+** onLoaded			- (*function*) this callback is called when this section content is loaded.
 * header			- (*boolean*) set to false to keep the panel from being created.
 * title				- (*string*) title of the panel.
 * height			- (*integer*) height of content area.
@@ -89,7 +89,7 @@ Creates a column. Columns should be created from left to right.
 
 #### Signature:
 
-		onContentLoaded( panel )
+		onLoaded( panel )
 
 #### Arguments:
 

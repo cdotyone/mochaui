@@ -53,7 +53,7 @@ var initializeColumns = function(){
 					{'text':'Automatic','url':'pages/overview.html','title':'Automatic Unit Tests'},
 					{'text':'Interactive','url':'pages/download.html','title':'Interactive Unit Tests'}
 				],
-				onContentLoaded: function(element, uOptions, json){
+				onLoaded: function(element, uOptions, json){
 					MUI.create('MUI.Tabs', {
 						'container':'test-panel',
 						'position': 'header',
@@ -150,7 +150,7 @@ var buildTestTree = function(testType){
 			'valueField':'title',
 			'titleField':'error',
 			'nodes':tests,
-			onContentLoaded: function() {
+			onLoaded: function() {
 				testTree=MUI.get('testTree');
 				if(testType=='Automatic' || testType=='All') doAutomatedTests(testTree.options.nodes);
 				if(!statusPeriodId) statusPeriodId=doUpdateStatuses.periodical(1000,testTree,[testTree.options.nodes]);

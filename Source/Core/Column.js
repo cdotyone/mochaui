@@ -19,7 +19,7 @@
  ...
  */
 
-MUI.files['source|Column.js'] = 'loaded';
+MUI.files['source|Core/Column.js'] = 'loaded';
 
 MUI.Column = new NamedClass('MUI.Column', {
 

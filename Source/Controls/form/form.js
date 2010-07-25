@@ -494,7 +494,7 @@ MUI.Form = new Class({
 			width: item.Width,
 			padding: item.Padding,
 			panelBackground: '#fff',
-			onContentLoaded: function(el){
+			onLoaded: function(el){
 				el.empty();
 				el.appendChild(sform.End());
 				sform.Execute(el, item.id);

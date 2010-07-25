@@ -51,7 +51,7 @@
 
  Notes:
  If you need to add link events to links within windows you are creating, do
- it in the onContentLoaded function of the new window.
+ it in the onLoaded function of the new window.
 
  -------------------------------------------------------------------- */
 
@@ -112,7 +112,7 @@ initializeWindows = function() {
 					{'text':'Fleet Foxes','url':'pages/youtube2.html','title':'Fleet Foxes'},
 					{'text':'Boards of Canada','url':'pages/youtube3.html','title':'Boards of Canada'}
 				],
-				onContentLoaded: function(element,uOptions,json) {
+				onLoaded: function(element,uOptions,json) {
 					MUI.create('MUI.Tabs',{
 						'id':'youtube_toolbar',
 						'container':'youtube',
@@ -202,7 +202,7 @@ initializeWindows = function() {
 			contentURL: 'pages/events.html',
 			width: 340,
 			height: 250,
-			onContentLoaded: function() {
+			onLoaded: function() {
 				MUI.notification('Window content was loaded.');
 			},
 			onCloseComplete: function() {
@@ -373,7 +373,7 @@ initializeWindows = function() {
 				if ($('builderStyle')) return;
 				new Asset.css(MUI.replacePaths('plugins|windowform/css/style.css'), {id: 'builderStyle'});
 			},
-			onContentLoaded: function() {
+			onLoaded: function() {
 				new Asset.javascript(MUI.replacePaths('plugins|windowform/scripts/window-from-form.js'), {
 					id: 'builderScript',
 					onload: function() {
@@ -438,7 +438,7 @@ initializeWindows = function() {
 				'position': 'top',
 				section: 'toolbar',
 				url: 'pages/features-tabs.html',
-				onContentLoaded: function() {
+				onLoaded: function() {
 					MUI.create('MUI.Tabs',{
 						'id':'features_toolbar',
 						'container':'features',

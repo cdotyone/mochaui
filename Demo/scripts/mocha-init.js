@@ -51,7 +51,7 @@
 
  Notes:
  If you need to add link events to links within windows you are creating, do
- it in the onContentLoaded function of the new window.
+ it in the onLoaded function of the new window.
 
  -------------------------------------------------------------------- */
 
@@ -118,7 +118,7 @@ var initializeWindows = function(){
 					{'text':'Fleet Foxes','url':'pages/youtube2.html','title':'Fleet Foxes'},
 					{'text':'Boards of Canada','url':'pages/youtube3.html','title':'Boards of Canada'}
 				],
-				onContentLoaded: function(element,uOptions,json) {
+				onLoaded: function(element,uOptions,json) {
 					MUI.create('MUI.Tabs',{
 						'id':'youtube_toolbar',
 						'container':'youtube',
@@ -213,7 +213,7 @@ var initializeWindows = function(){
 			height: 350,
 			resizeLimit: {'x': [450, 2500], 'y': [300, 2000]},
 			scrollbars: false, // Could make this automatic if a 'panel' method were created
-			onContentLoaded: function(){
+			onLoaded: function(){
 
 				new MUI.Column({
 					container: 'splitWindow_contentWrapper',
@@ -295,7 +295,7 @@ var initializeWindows = function(){
 			contentURL: 'pages/events.html',
 			width: 340,
 			height: 255,
-			onContentLoaded: function(){
+			onLoaded: function(){
 				MUI.notification('Window content was loaded.');
 			},
 			onCloseComplete: function(){
@@ -373,7 +373,7 @@ var initializeWindows = function(){
 			id: 'formtests',
 			title: 'Form Tests',
 			contentURL: 'pages/formtests.html',
-			onContentLoaded: function(){
+			onLoaded: function(){
 				document.testForm.focusTest.focus();
 			}
 		});
@@ -640,7 +640,7 @@ var initializeWindows = function(){
 				'position': 'top',
 				section: 'toolbar',
 				url: 'pages/features-tabs.html',
-				onContentLoaded: function(element,uOptions,json) {
+				onLoaded: function(element,uOptions,json) {
 					MUI.create('MUI.Tabs',{
 						'id':'features_toolbar',
 						'container':'features',
@@ -781,7 +781,7 @@ var initializeColumns = function(){
 				'container':'files-panel',
 				'idField':'value',
 				'nodes':json,
-				'onContentLoaded': function(){
+				"onLoaded": function(){
 					$('notesLink').addEvent('click', function(){
 						MUI.updateContent({
 							element: $('mainPanel'),
@@ -867,7 +867,7 @@ var initializeColumns = function(){
 		contentURL: 'pages/ajax.form.html',
 		column: 'sideColumn1',
 		height: 230,
-		onContentLoaded: function(){
+		onLoaded: function(){
 			$('myForm').addEvent('submit', function(e){
 				e.stop();
 
@@ -908,7 +908,7 @@ var initializeColumns = function(){
 			position: 'headertool',
 			section: 'tool',
 			url: 'pages/toolbox-demo2.html',
-			onContentLoaded: function(){
+			onLoaded: function(){
 				if ($('demoSearch')){
 					$('demoSearch').addEvent('submit', function(e){
 						e.stop();
@@ -968,13 +968,13 @@ var initializeColumns = function(){
 			position: 'headertool',
 			section: 'tool',
 			url: 'pages/console.toolbox.html',
-			onContentLoaded: function(){
+			onLoaded: function(){
 				this.childElement.getElements('.demoAction').removeEvents().addEvent('click', function(){
 					MUI.notification('Do Something');
 				});
 			}
 		}],
-		onContentLoaded: addResizeElements,
+		onLoaded: addResizeElements,
 		onResize: updateResizeElements
 	});
 
@@ -993,7 +993,7 @@ var initializeColumns = function(){
 				{'text':'Overview','url':'pages/overview.html','title':'Overview'},
 				{'text':'Download','url':'pages/download.html','title':'Download'}
 			],
-			onContentLoaded: function(element,uOptions,json) {
+			onLoaded: function(element,uOptions,json) {
 				MUI.create('MUI.Tabs',{
 					'container':'help-panel',
 					'position': 'header',
@@ -1010,7 +1010,7 @@ var initializeColumns = function(){
 		contentURL: 'pages/lipsum.html',
 		column: 'sideColumn2',
 		height: 120,
-		onContentLoaded: addResizeElements,
+		onLoaded: addResizeElements,
 		onResize: updateResizeElements
 	});
 
@@ -1024,7 +1024,7 @@ var initializeColumns = function(){
 			position: 'footer',
 			section: 'tool',
 			url: 'pages/toolbox-demo.html',
-			onContentLoaded: function(){
+			onLoaded: function(){
 				this.childElement.getElements('.demoAction').removeEvents().addEvent('click', function(){
 					MUI.notification('Do Something');
 				});

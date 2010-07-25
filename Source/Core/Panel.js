@@ -19,7 +19,7 @@
  ...
  */
 
-MUI.files['source|Panel.js'] = 'loaded';
+MUI.files['source|Core/Panel.js'] = 'loaded';
 
 MUI.Panel = new NamedClass('MUI.Panel', {
 
@@ -67,7 +67,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		// Events
 		onDrawBegin:			$empty,
 		onDrawEnd:				$empty,
-		onContentLoaded:		$empty,
+		onLoaded:		$empty,
 		onResize:				$empty,
 		onCollapse:				$empty,
 		onExpand:				$empty
@@ -397,7 +397,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 			'method': options.method,
 			'data': options.data,
 			'url': options.contentURL,
-			'onContentLoaded': null,
+			"onLoaded": null,
 			'require': {
 				js: options.require.js,
 				onload: options.require.onload

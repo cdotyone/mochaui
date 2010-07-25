@@ -16,7 +16,7 @@
  ...
  */
 
-MUI.files['source|Canvas.js'] = 'loaded';
+MUI.files['source|Core/Canvas.js'] = 'loaded';
 
 MUI.Canvas = (MUI.Canvas || $H({})).extend({
 
