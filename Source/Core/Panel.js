@@ -260,7 +260,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				}
 
 				if (empty) intoEl.empty();
-				section.childElement = new Element('div', {
+				section.element = new Element('div', {
 					'id': section.id,
 					'class': section.css,
 					'styles': {'height': section.height}
@@ -269,7 +269,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				if (section.addClass) intoEl.addClass(section.addClass);
 
 				section.wrapperEl = intoEl;
-				if (section.wrap && section.position == 'bottom') section.childElement.addClass('bottom');
+				if (section.wrap && section.position == 'bottom') section.element.addClass('bottom');
 
 				this.options.sections[idx] = section;
 			},this);

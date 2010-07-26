@@ -14,14 +14,14 @@ instance.updateStart - this is called when MUI.Content.update first starts, it i
 	at this point.
 
 instance.updateClear - this is called when MUI.Content.update needs to clear the contents of
-	the childElement.  The return result true/false will determine if the childElement is
+	the container element.  The return result true/false will determine if the container element is
 	cleared by MUI.Content.update.
 
 instance.updateSetContent - this is called after a response has been received and the content of the
-	childElement needs to be updated.  The return result true/false will determine if the
-	childElement is updated by MUI.Content.update.
+	container element needs to be updated.  The return result true/false will determine if the
+	container element is updated by MUI.Content.update.
 
-instance.updateEnd - this is called after the childElement has been updated and the control,
+instance.updateEnd - this is called after the container element has been updated and the control,
 	window, or panel needs to be informed that the update was successful.  The return result
 	true/false will determine if control, window, or panel will be informed of the update.
 
@@ -36,8 +36,7 @@ instance.updateEnd - this is called after the childElement has been updated and 
 	 updateOptions - (object)
 
 	 updateOptions:
-	 element - The parent window or panel.
-	 childElement - The child element of the window or panel receiving the content.
+	 element - The parent window, panel, or element.
 	 method - ('get', or 'post') The way data is transmitted.
 	 data - (hash) Data to be transmitted
 	 content - (string or element) An html loadMethod option.

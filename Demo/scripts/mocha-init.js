@@ -969,7 +969,7 @@ var initializeColumns = function(){
 			section: 'tool',
 			url: 'pages/console.toolbox.html',
 			onLoaded: function(){
-				this.childElement.getElements('.demoAction').removeEvents().addEvent('click', function(){
+				this.element.getElements('.demoAction').removeEvents().addEvent('click', function(){
 					MUI.notification('Do Something');
 				});
 			}
@@ -1025,7 +1025,7 @@ var initializeColumns = function(){
 			section: 'tool',
 			url: 'pages/toolbox-demo.html',
 			onLoaded: function(){
-				this.childElement.getElements('.demoAction').removeEvents().addEvent('click', function(){
+				this.element.getElements('.demoAction').removeEvents().addEvent('click', function(){
 					MUI.notification('Do Something');
 				});
 			}

@@ -27,7 +27,6 @@ MUI.Content = (MUI.Content || $H({})).extend({
 
 		options = $extend({
 			element:		null,
-			childElement:	null,
 			method:			null,
 			data:			null,
 			content:		null,
@@ -49,7 +48,7 @@ MUI.Content = (MUI.Content || $H({})).extend({
 		if (options.url) options.url = MUI.replacePaths(options.url);
 
 		var contentEl = instance == null ? element : instance.el.content;
-		options.contentContainer = options.childElement != null ? options.childElement : contentEl;
+		options.contentContainer = contentEl;
 
 		if (!options.loadMethod){
 			if (instance==null || instance.options == null || !instance.options.loadMethod){
@@ -68,7 +67,7 @@ MUI.Content = (MUI.Content || $H({})).extend({
 
 		// -- content removal --
 		// allow controls option to clear their own content
-		var removeContent = (options.contentContainer == contentEl);
+		var removeContent = true;
 		if (instance && instance.updateClear) removeContent = instance.updateClear(options);
 
 		// Remove old content.

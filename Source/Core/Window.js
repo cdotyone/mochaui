@@ -46,7 +46,7 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 		evalResponse:		false,
 
 		// html options
-		content:			'Window content',
+		content:			null,
 
 		// additional content sections
 		sections:			false,
@@ -127,7 +127,7 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 				if (instance.iframe) instance.el.iframe.setStyle('visibility', 'hidden');
 				if (instance.sections){
 					instance.sections.each(function(section){
-						var el=section.wrap ? section.wrapperEl : section.childElement;
+						var el=section.wrap ? section.wrapperEl : section.element;
 						if (el) el.setStyle('visibility', 'hidden');
 					});
 				}
@@ -140,7 +140,7 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 				if (instance.iframe) instance.el.iframe.setStyle('visibility', 'visible');
 				if (instance.sections){
 					instance.sections.each(function(section){
-						var el=section.wrap ? section.wrapperEl : section.childElement;
+						var el=section.wrap ? section.wrapperEl : section.element;
 						if (el) el.setStyle('visibility', 'visible');
 					});
 				}
@@ -593,7 +593,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		var width = this.el.contentWrapper.getStyle('width').toInt() + shadowBlur2x;
 		var height = this.el.contentWrapper.getStyle('height').toInt() + this.headerFooterShadow + borderHeight;
 		if (options.sections) options.sections.each(function(section){
-			var el = section.wrap ? section.wrapperEl : section.childElement;
+			var el = section.wrap ? section.wrapperEl : section.element;
 			height += el.getStyle('height').toInt() + el.getStyle('border-top').toInt();
 		} );
 
@@ -871,7 +871,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			});
 			if (this.sections){
 				this.sections.each(function(section){
-					var el = section.wrap ? section.wrapperEl : section.childElement;
+					var el = section.wrap ? section.wrapperEl : section.element;
 					if (el) el.setStyles({
 						visibility: 'visible',
 						position: null,
@@ -894,7 +894,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			});
 			if (this.sections){
 				this.sections.each(function(section){
-					var el = section.wrap ? section.wrapperEl : section.childElement;
+					var el = section.wrap ? section.wrapperEl : section.element;
 					if (el) el.setStyles({
 						visibility: 'hidden',
 						position: 'absolute',
@@ -1268,14 +1268,14 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 				}
 
 				if (empty) intoEl.empty();
-				section.childElement = new Element('div', {
+				section.element = new Element('div', {
 					'id': section.id,
 					'class': section.css,
 					'styles': {'height': section.height}
 				}).inject(intoEl);
 
 				section.wrapperEl = intoEl;
-				if (section.wrap && section.position == 'bottom') section.childElement.addClass('bottom');
+				if (section.wrap && section.position == 'bottom') section.element.addClass('bottom');
 
 				self.options.sections[idx] = section;
 			});
