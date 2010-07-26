@@ -59,7 +59,7 @@ MUI.Tree = new Class({
 		,onNodeExpanded:	$empty		// event: called when node is expanded
 		,onNodeChecked: 	$empty		// event: called when node's checkbox is checked
 		,onNodeSelected:	$empty		// event: when a node is checked
-		,onLoaded:	$empty		// event: called when tree is done building itself
+		,onLoaded:			$empty		// event: called when tree is done building itself
 	},
 
 	initialize: function(options){
@@ -121,14 +121,14 @@ MUI.Tree = new Class({
 		o.depth = 0;
 
 		if (!isNew) {
-			self.fireEvent('contentLoaded', [self]);
+			self.fireEvent('loaded', [self]);
 			return this;
 		}
 
 		window.addEvent('domready', function(){
 			var container = $(containerEl ? containerEl : o.container);
 			container.appendChild(div);
-			self.fireEvent('contentLoaded', [self]);
+			self.fireEvent('loaded', [self]);
 		});
 
 		return div;

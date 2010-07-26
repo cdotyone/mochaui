@@ -83,7 +83,7 @@ options - (*object*) - Options listed below.
 
 * drawBegin 		- (*function*) callback is executed just before the window is drawn is added to the DOM.
 * drawEnd 			- (*function*) callback is executed just after the window is drawn is added to the DOM.
-* contentLoaded 	- (*function*) callback is executed when content is successfully loaded via XHR or Iframe.
+* loaded 			- (*function*) callback is executed when content is successfully loaded via XHR or Iframe.
 * focus 			- (*function*) callback is executed when the window is focused.
 * blur 				- (*function*) callback is executed when window loses focus.
 * resize 			- (*function*) callback is executed when the window is resized.
@@ -125,7 +125,7 @@ options - (*object*) - Options listed below.
 
 1. window - (*object*) The instance of the window that fired the event.
 
-### contentLoaded
+### loaded
 
 * (*function*) callback is executed when content is successfully loaded via XHR or Iframe.
 

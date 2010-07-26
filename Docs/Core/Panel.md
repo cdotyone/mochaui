@@ -48,7 +48,7 @@ Creates a column. Columns should be created from left to right.
 
 * drawBegin 		- (*function*) callback is executed just before the panel is drawn is added to the DOM.
 * drawEnd 			- (*function*) callback is executed just after the panel is drawn is added to the DOM.
-* contentLoaded 	- (*function*) callback is executed when content is successfully loaded via XHR or Iframe.
+* loaded 			- (*function*) callback is executed when content is successfully loaded via XHR or Iframe.
 * resize 			- (*function*) callback is executed when the panel is resized.
 * collapse			- (*function*) callback is executed when the panel is collapsed.
 * expand			- (*function*) callback is executed when the panel is expanded.
@@ -83,7 +83,7 @@ Creates a column. Columns should be created from left to right.
 
 1. panel - (*object*) The instance of the panel that fired the event.
 
-### contentLoaded
+### loaded
 
 * (*function*) callback is executed when content is successfully loaded via XHR or Iframe.
 
