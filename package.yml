@@ -21,7 +21,7 @@ authors:
 
 sources:
   - "src/mui/Core.js"
-  - "src/mui/Update.js"
+  - "src/mui/Content.js"
   - "src/mui/Window.js"
   - "src/mui/Modal.js"
   - "src/mui/Desktop.js"

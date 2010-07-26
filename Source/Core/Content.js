@@ -1,7 +1,7 @@
 /*
  ---
 
- script: Update.js
+ script: Content.js
 
  description: core content update routines
 
@@ -17,7 +17,7 @@
  ...
  */
 
-MUI.files['source|Core/Update.js'] = 'loaded';
+MUI.files['source|Core/Content.js'] = 'loaded';
 
 MUI.Content = (MUI.Content || $H({})).extend({
 
