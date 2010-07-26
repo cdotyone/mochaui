@@ -560,7 +560,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			}).inject(this.el.windowEl.id + 'LinkCheck');
 		}
 
-		if (this.options.closeAfter) this.el.windowEl.close.delay(this.options.closeAfter, this);
+		if (this.options.closeAfter) this.close.delay(this.options.closeAfter, this);
 		if (MUI.dock && this.options.type == 'window') MUI.dock.createDockTab(this);
 		this.fireEvent('drawEnd',[this]);
 		return this;
@@ -641,10 +641,10 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 
 				switch (options.shape){
 					case 'box':
-						MUI.Canvas.drawBox(ctx, width, height, shadowBlur, shadowOffset, shadows, this.options.type != 'notification' ? this.options.headerHeight : 0, this.options.cornerRadius);
+						MUI.Canvas.drawBox(ctx, width, height, shadowBlur, shadowOffset, shadows, this.options.type != 'notification' ? this.options.headerHeight : 0, this.options.cornerRadius, this.bodyBgColor, this.headerStartColor, this.headerStopColor);
 						break;
 					case 'gauge':
-						MUI.Canvas.drawGauge(ctx, width, height, shadowBlur, shadowOffset, shadows, this.options.headerHeight);
+						MUI.Canvas.drawGauge(ctx, width, height, shadowBlur, shadowOffset, shadows, this.el.canvasHeader, this.options.headerHeight, this.bodyBgColor, this.useCSS3);
 						break;
 				}
 
@@ -1755,7 +1755,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 				var ctx = this.el.canvas.getContext('2d');
 				ctx.clearRect(0, 0, width, height);
 
-				MUI.Canvas.drawBoxCollapsed(ctx, width, height, shadowBlur, shadowOffset, shadows);
+				MUI.Canvas.drawBoxCollapsed(ctx, width, height, shadowBlur, shadowOffset, shadows, this.options.cornerRadius, this.headerStartColor, this.headerStopColor);
 				if (options.useCanvasControls) this._drawControls(width, height, shadows);
 
 				// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7

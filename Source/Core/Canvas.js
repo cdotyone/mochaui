@@ -16,12 +16,11 @@
  ...
  */
 
-MUI.files['source|Core/Canvas.js'] = 'loaded';
+MUI.files['source|Canvas.js'] = 'loaded';
 
 MUI.Canvas = (MUI.Canvas || $H({})).extend({
 
-   	drawBox: function(ctx, width, height, shadowBlur, shadowOffset, shadows, headerHeight, cornerRadius){
-		var options = this.options;
+	drawBox: function(ctx, width, height, shadowBlur, shadowOffset, shadows, headerHeight, cornerRadius, bodyBgColor, headerStartColor, headerStopColor){
 		var shadowBlur2x = shadowBlur * 2;
 
 		// This is the drop shadow. It is created onion style.
@@ -48,7 +47,7 @@ MUI.Canvas = (MUI.Canvas || $H({})).extend({
 			width - shadowBlur2x, // width
 			height - shadowBlur2x, // height
 			cornerRadius, // corner radius
-			this.bodyBgColor // Footer color
+			bodyBgColor // Footer color
 		);
 
 		if (headerHeight){
@@ -60,14 +59,14 @@ MUI.Canvas = (MUI.Canvas || $H({})).extend({
 				width - shadowBlur2x, // width
 				headerHeight, // height
 				cornerRadius, // corner radius
-				this.headerStartColor, // Header gradient's top color
-				this.headerStopColor // Header gradient's bottom color
+				headerStartColor, // Header gradient's top color
+				headerStopColor // Header gradient's bottom color
 			);
 		}
 	},
 
-	drawGauge: function(ctx, width, height, shadowBlur, shadowOffset, shadows, headerHeight){
-		if (shadows && !this.useCSS3){
+	drawGauge: function(ctx, width, height, shadowBlur, shadowOffset, shadows, canvasHeader, headerHeight, bodyBgColor, useCSS3){
+		if (shadows && !useCSS3){
 			if (Browser.Engine.webkit){
 				var color=Asset.getCSSRule('.mochaCss3Shadow').style.backgroundColor;
 				ctx.shadowColor = color.replace(/rgb/g,'rgba');
@@ -90,7 +89,7 @@ MUI.Canvas = (MUI.Canvas || $H({})).extend({
 			width * .5 - shadowOffset.x,
 			(height + headerHeight) * .5 - shadowOffset.y,
 			(width * .5) - shadowBlur,
-			this.bodyBgColor,
+			bodyBgColor,
 			1
 		);
 
@@ -101,23 +100,25 @@ MUI.Canvas = (MUI.Canvas || $H({})).extend({
 			ctx.shadowBlur = 0;
 		}
 
-		// Draw gauge header
-		this.el.canvasHeader.setStyles({
-			'top': shadowBlur - shadowOffset.y,
-			'left': shadowBlur - shadowOffset.x
-		});
-		ctx = this.el.canvasHeader.getContext('2d');
-		ctx.clearRect(0, 0, width, 100);
-		ctx.beginPath();
-		ctx.lineWidth = 24;
-		ctx.lineCap = 'round';
-		ctx.moveTo(13, 13);
-		ctx.lineTo(width - (shadowBlur * 2) - 13, 13);
-		ctx.strokeStyle = 'rgba(0, 0, 0, .65)';
-		ctx.stroke();
+		if(canvasHeader) {
+			// Draw gauge header
+			canvasHeader.setStyles({
+				'top': shadowBlur - shadowOffset.y,
+				'left': shadowBlur - shadowOffset.x
+			});
+			ctx = canvasHeader.getContext('2d');
+			ctx.clearRect(0, 0, width, 100);
+			ctx.beginPath();
+			ctx.lineWidth = 24;
+			ctx.lineCap = 'round';
+			ctx.moveTo(13, 13);
+			ctx.lineTo(width - (shadowBlur * 2) - 13, 13);
+			ctx.strokeStyle = 'rgba(0, 0, 0, .65)';
+			ctx.stroke();
+		}
 	},
 
-	drawBoxCollapsed: function(ctx, width, height, shadowBlur, shadowOffset, shadows, headerHeight, cornerRadius){
+	drawBoxCollapsed: function(ctx, width, height, shadowBlur, shadowOffset, shadows, headerHeight, cornerRadius, headerStartColor, headerStopColor){
 		var shadowBlur2x = shadowBlur * 2;
 
 		// This is the drop shadow. It is created onion style.
@@ -143,9 +144,10 @@ MUI.Canvas = (MUI.Canvas || $H({})).extend({
 			shadowBlur - shadowOffset.y, // y
 			width - shadowBlur2x, // width
 			headerHeight + 2, // height
+			shadowBlur,
 			cornerRadius, // corner radius
-			this.headerStartColor, // Header gradient's top color
-			this.headerStopColor // Header gradient's bottom color
+			headerStartColor, // Header gradient's top color
+			headerStopColor // Header gradient's bottom color
 		);
 
 	},
@@ -262,12 +264,12 @@ MUI.Canvas = (MUI.Canvas || $H({})).extend({
 		ctx.fill();
 	},
 
-	_drawTopRoundedRect2: function(ctx, x, y, width, height, radius, headerStartColor, headerStopColor){
+	_drawTopRoundedRect2: function(ctx, x, y, width, height, shadowBlur, radius, headerStartColor, headerStopColor){
 		// Chrome is having trouble rendering the LinearGradient in this particular case
 		if (navigator.userAgent.toLowerCase().indexOf('chrome') > -1){
 			ctx.fillStyle = 'rgba(' + headerStopColor.join(',') + ', 1)';
 		} else {
-			var lingrad = ctx.createLinearGradient(0, this.options.shadowBlur - 1, 0, height + this.options.shadowBlur + 3);
+			var lingrad = ctx.createLinearGradient(0, shadowBlur - 1, 0, height + shadowBlur + 3);
 			lingrad.addColorStop(0, 'rgb(' + headerStartColor.join(',') + ')');
 			lingrad.addColorStop(1, 'rgb(' + headerStopColor.join(',') + ')');
 			ctx.fillStyle = lingrad;
