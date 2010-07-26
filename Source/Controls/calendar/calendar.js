@@ -29,9 +29,7 @@ var Calendar = new Class({
 
 	initialize: function(obj, options){
 		// basic error checking
-		if (!obj){
-			return false;
-		}
+		if (!obj) return false;
 
 		this.setOptions(options);
 
@@ -52,13 +50,13 @@ var Calendar = new Class({
 		// create cal element with css styles required for proper cal functioning
 		this.calendar = new Element('div', {
 			'styles': { left: '-1000px', opacity: 0, position: 'absolute', top: '-1000px', zIndex: 1000 }
-		}).addClass(this.classes.calendar).injectInside(document.body);
+		}).addClass(this.classes.calendar).inject(document.body);
 
 		// iex 6 needs a transparent iframe underneath the calendar in order to not allow select elements to render through
 		if (window.ie6){
 			this.iframe = new Element('iframe', {
 				'styles': { left: '-1000px', position: 'absolute', top: '-1000px', zIndex: 999 }
-			}).injectInside(document.body);
+			}).inject(document.body);
 			this.iframe.style.filter = 'progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0)';
 		}
 
@@ -66,27 +64,19 @@ var Calendar = new Class({
 		this.fx = new Fx.Tween(this.calendar, {
 			onStart: function(){
 				if (this.calendar.getStyle('opacity') == 0){ // show
-					if (window.ie6){
-						this.iframe.setStyle('display', 'block');
-					}
+					if (window.ie6) this.iframe.setStyle('display', 'block');
 					this.calendar.setStyle('display', 'block');
-					this.fireEvent('onShowStart', this.element);
+					this.fireEvent('showStart', this.element);
 				}
-				else { // hide
-					this.fireEvent('onHideStart', this.element);
-				}
+				else this.fireEvent('hideStart', this.element); // hide
 			}.bind(this),
 			onComplete: function(){
 				if (this.calendar.getStyle('opacity') == 0){ // hidden
 					this.calendar.setStyle('display', 'none');
-					if (window.ie6){
-						this.iframe.setStyle('display', 'none');
-					}
-					this.fireEvent('onHideComplete', this.element);
+					if (window.ie6) this.iframe.setStyle('display', 'none');
+					this.fireEvent('hideComplete', this.element);
 				}
-				else { // shown
-					this.fireEvent('onShowComplete', this.element);
-				}
+				else this.fireEvent('showComplete', this.element); // shown
 			}.bind(this)
 		});
 
@@ -94,9 +84,7 @@ var Calendar = new Class({
 		if (window.Drag && this.options.draggable){
 			this.drag = new Drag.Move(this.calendar, {
 				onDrag: function(){
-					if (window.ie6){
-						this.iframe.setStyles({ left: this.calendar.style.left, top: this.calendar.style.top });
-					}
+					if (window.ie6) this.iframe.setStyles({ left: this.calendar.style.left, top: this.calendar.style.top });
 				}.bind(this)
 			});
 		}
@@ -121,16 +109,14 @@ var Calendar = new Class({
 			};
 
 			// fix for bad element (naughty, naughty element!)
-			if (!this.element(i, obj[i], cal)){
-				continue;
-			}
+			if (!this.element(i, obj[i], cal)) continue;
 
 			cal.el.addClass(this.classes.calendar);
 
 			// create cal button
 			cal.button.addClass(this.classes.calendar).addEvent('click', function(cal){
 				this.toggle(cal);
-			}.pass(cal, this)).injectAfter(cal.el);
+			}.pass(cal, this)).inject(cal.el,'after');
 
 			// read in default value
 			cal.val = this.read(cal);
@@ -156,10 +142,10 @@ var Calendar = new Class({
 		var last = new Date(cal.year, cal.month + 1, 0).getDate(); // last day of this month
 
 		this.options.blocked.each(function(date){
-			var values = date.split(' ');
+			var values = date.split(' '),i;
 
 			// preparation
-			for (var i = 0; i <= 3; i++){
+			for (i = 0; i <= 3; i++){
 				if (!values[i]){
 					values[i] = (i == 3) ? '' : '*';
 				} // make sure blocked date contains values for at least d, m and y
@@ -169,9 +155,7 @@ var Calendar = new Class({
 					if (values[i][j].contains('-')){ // a range
 						var val = values[i][j].split('-');
 						for (var k = val[0]; k <= val[1]; k++){
-							if (!values[i].contains(k)){
-								values[i].push(k + '');
-							}
+							if (!values[i].contains(k)) values[i].push(k + '');
 						}
 						values[i].splice(j, 1);
 					}
@@ -182,18 +166,13 @@ var Calendar = new Class({
 			if (values[2].contains(cal.year + '') || values[2].contains('*')){
 				if (values[1].contains(cal.month + 1 + '') || values[1].contains('*')){
 					values[0].each(function(val){ // if blocked value indicates this month / year
-						if (val > 0){
-							blocked.push(val.toInt());
-						} // add date to blocked array
+						if (val > 0) blocked.push(val.toInt()); // add date to blocked array
 					});
 
 					if (values[3]){ // optional value for day of week
-						for (var i = 0; i < last; i++){
+						for (i = 0; i < last; i++){
 							var day = (i + offset) % 7;
-
-							if (values[3].contains(day + '')){
-								blocked.push(i + 1); // add every date that corresponds to the blocked day of the week to the blocked array
-							}
+							if (values[3].contains(day + '')) blocked.push(i + 1); // add every date that corresponds to the blocked day of the week to the blocked array
 						}
 					}
 				}
@@ -209,6 +188,7 @@ var Calendar = new Class({
 	// @returns obj
 
 	bounds: function(cal){
+		var d;
 		// 1. first we assume the calendar has no bounds (or a thousand years in either direction)
 
 		// by default the calendar will accept a millennium in either direction
@@ -236,31 +216,20 @@ var Calendar = new Class({
 
 					el.getChildren().each(function(option){ // get options
 						var values = this.unformat(option.value, el.format);
-
-						if (!years.contains(values[0])){
-							years.push(values[0]);
-						} // add to years array
+						if (!years.contains(values[0])) years.push(values[0]); // add to years array
 					}, this);
 
 					years.sort(this.sort);
 
 					if (years[0] > start.getFullYear()){
 						d = new Date(years[0], start.getMonth() + 1, 0); // last day of new month
-
-						if (start.getDate() > d.getDate()){
-							start.setDate(d.getDate());
-						}
-
+						if (start.getDate() > d.getDate()) start.setDate(d.getDate());
 						start.setYear(years[0]);
 					}
 
 					if (years.getLast() < end.getFullYear()){
 						d = new Date(years.getLast(), end.getMonth() + 1, 0); // last day of new month
-
-						if (end.getDate() > d.getDate()){
-							end.setDate(d.getDate());
-						}
-
+						if (end.getDate() > d.getDate()) end.setDate(d.getDate());
 						end.setYear(years.getLast());
 					}
 				}
@@ -290,21 +259,13 @@ var Calendar = new Class({
 
 					if (months_start[0] > start.getMonth()){
 						d = new Date(start.getFullYear(), months_start[0] + 1, 0); // last day of new month
-
-						if (start.getDate() > d.getDate()){
-							start.setDate(d.getDate());
-						}
-
+						if (start.getDate() > d.getDate()) start.setDate(d.getDate());
 						start.setMonth(months_start[0]);
 					}
 
 					if (months_end.getLast() < end.getMonth()){
 						d = new Date(start.getFullYear(), months_end.getLast() + 1, 0); // last day of new month
-
-						if (end.getDate() > d.getDate()){
-							end.setDate(d.getDate());
-						}
-
+						if (end.getDate() > d.getDate()) end.setDate(d.getDate());
 						end.setMonth(months_end.getLast());
 					}
 				}
@@ -353,12 +314,12 @@ var Calendar = new Class({
 		var next = new Element('a').addClass(this.classes.next).appendText('\x3e'); // >
 
 		if (this.options.navigation == 2){
-			var month = new Element('span').addClass(this.classes.month).injectInside(caption);
+			var month = new Element('span').addClass(this.classes.month).inject(caption);
 
 			if (navigation.prev.month){
 				prev.clone().addEvent('click', function(cal){
 					this.navigate(cal, 'm', -1);
-				}.pass(cal, this)).injectInside(month);
+				}.pass(cal, this)).inject(month);
 			}
 
 			month.adopt(new Element('span').appendText(this.options.months[cal.month]));
@@ -366,15 +327,15 @@ var Calendar = new Class({
 			if (navigation.next.month){
 				next.clone().addEvent('click', function(cal){
 					this.navigate(cal, 'm', 1);
-				}.pass(cal, this)).injectInside(month);
+				}.pass(cal, this)).inject(month);
 			}
 
-			var year = new Element('span').addClass(this.classes.year).injectInside(caption);
+			var year = new Element('span').addClass(this.classes.year).inject(caption);
 
 			if (navigation.prev.year){
 				prev.clone().addEvent('click', function(cal){
 					this.navigate(cal, 'y', -1);
-				}.pass(cal, this)).injectInside(year);
+				}.pass(cal, this)).inject(year);
 			}
 
 			year.adopt(new Element('span').appendText(cal.year));
@@ -382,14 +343,14 @@ var Calendar = new Class({
 			if (navigation.next.year){
 				next.clone().addEvent('click', function(cal){
 					this.navigate(cal, 'y', 1);
-				}.pass(cal, this)).injectInside(year);
+				}.pass(cal, this)).inject(year);
 			}
 		}
 		else { // 1 or 0
 			if (navigation.prev.month && this.options.navigation){
 				prev.clone().addEvent('click', function(cal){
 					this.navigate(cal, 'm', -1);
-				}.pass(cal, this)).injectInside(caption);
+				}.pass(cal, this)).inject(caption);
 			}
 
 			caption.adopt(new Element('span').addClass(this.classes.month).appendText(this.options.months[cal.month]));
@@ -399,7 +360,7 @@ var Calendar = new Class({
 			if (navigation.next.month && this.options.navigation){
 				next.clone().addEvent('click', function(cal){
 					this.navigate(cal, 'm', 1);
-				}.pass(cal, this)).injectInside(caption);
+				}.pass(cal, this)).inject(caption);
 			}
 
 		}
@@ -449,11 +410,10 @@ var Calendar = new Class({
 	check: function(cal){
 		this.calendars.each(function(kal, i){
 			if (kal.val){ // if calendar has value set
-				var change = false;
+				var change = false,bound;
 
 				if (i < cal.id){ // preceding calendar
-					var bound = new Date(Date.parse(cal.val));
-
+					bound = new Date(Date.parse(cal.val));
 					bound.setDate(bound.getDate() - (this.options.pad * (cal.id - i)));
 
 					if (bound < kal.val){
@@ -461,8 +421,7 @@ var Calendar = new Class({
 					}
 				}
 				if (i > cal.id){ // following calendar
-					var bound = new Date(Date.parse(cal.val));
-
+					bound = new Date(Date.parse(cal.val));
 					bound.setDate(bound.getDate() + (this.options.pad * (i - cal.id)));
 
 					if (bound > kal.val){
@@ -539,14 +498,14 @@ var Calendar = new Class({
 
 		this.calendar.className = this.classes.calendar + ' ' + this.options.months[cal.month].toLowerCase();
 
-		var div = new Element('div').injectInside(this.calendar); // a wrapper div to help correct browser css problems with the caption element
+		var div = new Element('div').inject(this.calendar); // a wrapper div to help correct browser css problems with the caption element
 
-		var table = new Element('table').injectInside(div).adopt(this.caption(cal));
+		var table = new Element('table').inject(div).adopt(this.caption(cal));
 
 		// 2. day names
-		var thead = new Element('thead').injectInside(table);
+		var thead = new Element('thead').inject(table);
 
-		var tr = new Element('tr').injectInside(thead);
+		var tr = new Element('tr').inject(thead);
 
 		for (var i = 0; i <= 6; i++){
 			var th = this.options.days[(i + this.options.offset) % 7];
@@ -555,8 +514,8 @@ var Calendar = new Class({
 		}
 
 		// 3. day numbers
-		var tbody = new Element('tbody').injectInside(table);
-		var tr = new Element('tr').injectInside(tbody);
+		var tbody = new Element('tbody').inject(table);
+		tr = new Element('tr').inject(tbody);
 
 		var d = new Date(cal.year, cal.month, 1);
 		var offset = ((d.getDay() - this.options.offset) + 7) % 7; // day of the week (offset)
@@ -585,15 +544,15 @@ var Calendar = new Class({
 				}
 			}
 		}, this);
-		var d = new Date();
+		d = new Date();
 		var today = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime(); // today obv
 
-		for (var i = 1; i < 43; i++){ // 1 to 42 (6 x 7 or 6 weeks)
+		for (i = 1; i < 43; i++){ // 1 to 42 (6 x 7 or 6 weeks)
 			if ((i - 1) % 7 == 0){
-				tr = new Element('tr').injectInside(tbody);
+				tr = new Element('tr').inject(tbody);
 			} // each week is it's own table row
 
-			var td = new Element('td').injectInside(tr);
+			var td = new Element('td').inject(tr);
 
 			var day = i - offset;
 			var date = new Date(cal.year, cal.month, day);
@@ -788,10 +747,11 @@ var Calendar = new Class({
 	// @param n (int) + or - for next or prev
 
 	navigate: function(cal, type, n){
+		var i;
 		switch (type){
 			case 'm': // month
 				if ($type(cal.months) == 'array'){
-					var i = cal.months.indexOf(cal.month) + n; // index of current month
+					i = cal.months.indexOf(cal.month) + n; // index of current month
 
 					if (i < 0 || i == cal.months.length){ // out of range
 						if (this.options.navigation == 1){ // if type 1 nav we'll need to increment the year
@@ -804,7 +764,7 @@ var Calendar = new Class({
 					cal.month = cal.months[i];
 				}
 				else {
-					var i = cal.month + n;
+					i = cal.month + n;
 
 					if (i < 0 || i == 12){
 						if (this.options.navigation == 1){
@@ -820,8 +780,7 @@ var Calendar = new Class({
 
 			case 'y': // year
 				if ($type(cal.years) == 'array'){
-					var i = cal.years.indexOf(cal.year) + n;
-
+					i = cal.years.indexOf(cal.year) + n;
 					cal.year = cal.years[i];
 				}
 				else {
@@ -833,7 +792,7 @@ var Calendar = new Class({
 		$extend(cal, this.values(cal));
 
 		if ($type(cal.months) == 'array'){ // if the calendar has a months select
-			var i = cal.months.indexOf(cal.month); // and make sure the curr months exists for the new year
+			i = cal.months.indexOf(cal.month); // and make sure the curr months exists for the new year
 
 			if (i < 0){
 				cal.month = cal.months[0];
@@ -907,7 +866,7 @@ var Calendar = new Class({
 			 var option = new Element('option', {
 			 'selected': (val == month),
 			 'value': this.format(new Date(1, month, 1), el.format);
-			 }).appendText(day).injectInside(el);
+			 }).appendText(day).inject(el);
 			 }, this);
 			 }
 			 */
@@ -926,7 +885,7 @@ var Calendar = new Class({
 					var option = new Element('option', {
 						'selected': (d == day),
 						'value': ((el.format == 'd' && day < 10) ? '0' + day : day)
-					}).appendText(day).injectInside(el);
+					}).appendText(day).inject(el);
 				}, this);
 			}
 		}, this);
@@ -955,10 +914,7 @@ var Calendar = new Class({
 		else { // otherwise show (may have to hide others)
 			// hide cal on out-of-bounds click
 			this.fn = function(e, cal){
-				var e = new Event(e);
-
 				var el = e.target;
-
 				var stop = false;
 
 				while (el != document.body && el.nodeType == 1){
@@ -1052,10 +1008,9 @@ var Calendar = new Class({
 			n: '([0-9]{1,2})',
 			Y: '([0-9]{4})',
 			y: '([0-9]{2})'
-		}
+		};
 
 		var arr = []; // array of indexes
-
 		var g = '';
 
 		// convert our format string to regexp
@@ -1064,7 +1019,6 @@ var Calendar = new Class({
 
 			if (re[c]){
 				arr.push(c);
-
 				g += re[c];
 			}
 			else {
@@ -1192,7 +1146,7 @@ var Calendar = new Class({
 		}, this);
 
 		// we start with what would be the first and last days were there no restrictions
-		var first = 1;
+		var first = 1,i;
 		var last = new Date(cal.year, cal.month + 1, 0).getDate(); // last day of the month
 
 		// if we're in an out of bounds year
@@ -1201,7 +1155,7 @@ var Calendar = new Class({
 			if (months == null && this.options.navigation == 2){
 				months = [];
 
-				for (var i = 0; i < 12; i ++){
+				for (i = 0; i < 12; i ++){
 					if (i >= cal.start.getMonth()){
 						months.push(i);
 					}
@@ -1218,7 +1172,7 @@ var Calendar = new Class({
 			if (months == null && this.options.navigation == 2){
 				months = [];
 
-				for (var i = 0; i < 12; i ++){
+				for (i = 0; i < 12; i ++){
 					if (i <= cal.end.getMonth()){
 						months.push(i);
 					}
@@ -1244,7 +1198,7 @@ var Calendar = new Class({
 		else { // no days select we'll need to construct a valid days array
 			days = [];
 
-			for (var i = first; i <= last; i++){
+			for (i = first; i <= last; i++){
 				if (!blocked.contains(i)){
 					days.push(i);
 				}

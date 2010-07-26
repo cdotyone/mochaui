@@ -839,8 +839,8 @@ var initializeColumns = function(){
 							title: 'Calendar Component',
 							padding: {top: 8, right: 8, bottom: 8, left: 8},
 							require: {
-								css: ['controls|calendar/css/calendar.css'],
-								js: ['controls|calendar/scripts/calendar.js'],
+								css: ['controls|calendar/style.css'],
+								js: ['controls|calendar/calendar.js'],
 								onload: function(){
 									new Calendar({ date1: 'd/m/Y' }, { direction: 1, tweak: {x: 6, y: 0}});
 								}
