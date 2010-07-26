@@ -12,7 +12,7 @@
  requires:
  - MochaUI/MUI
 
- provides: [MUI.updateContent]
+ provides: [MUI.Content.update]
 
  ...
  */
@@ -210,7 +210,7 @@ MUI.Content.Providers.json = function(instance, options){
 		onSuccess: function(json){
 			json = JSON.decode(json);
 			// calls onLoaded event instead of onLoaded
-			// onLoaded - event should call updateContent again with loadMethod='html'
+			// onLoaded - event should call MUI.Content.update again with loadMethod='html'
 
 			contentContainer.hideSpinner(instance);
 			Browser.Engine.trident4 ? fireLoaded.delay(50, this, [instance, options, json]) : fireLoaded(instance, options, json);
@@ -274,7 +274,7 @@ MUI.extend({
 
 	WindowPanelShared: {
 
-		/// intercepts workflow from updateContent
+		/// intercepts workflow from MUI.Content.update
 		/// sets title and scroll bars of this window
 		updateStart: function(options){
 			if (options.section == 'content'){
@@ -307,7 +307,7 @@ MUI.extend({
 			return false;  // not used but expected
 		},
 
-		/// intercepts workflow from MUI.updateContent
+		/// intercepts workflow from MUI.Content.update
 		updateClear: function(options){
 			if (options.section == 'content'){
 				this.el.content.show();
@@ -317,7 +317,7 @@ MUI.extend({
 			return true;
 		},
 
-		/// intercepts workflow from MUI.updateContent
+		/// intercepts workflow from MUI.Content.update
 		updateSetContent: function(options){
 			if (options.section == 'content'){
 				if (options.loadMethod == 'html') this.el.content.addClass('pad');
@@ -328,7 +328,7 @@ MUI.extend({
 					options.contentContainer = this.el.contentWrapper;
 				}
 			}
-			return true;	// tells MUI.updateContent to update the content
+			return true;	// tells MUI.Content.update to update the content
 		}
 
 	}

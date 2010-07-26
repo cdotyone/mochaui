@@ -190,7 +190,7 @@ MUI.Tabs = new Class({
 			};
 			if(o.updateOptions) $extend(uOptions,o.updateOptions);
 
-			MUI.updateContent(uOptions);
+			MUI.Content.update(uOptions);
 		}
 
 		self.fireEvent('tabSelected', [tab,value,self,e]);

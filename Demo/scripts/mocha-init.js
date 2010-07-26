@@ -783,21 +783,21 @@ var initializeColumns = function(){
 				'nodes':json,
 				"onLoaded": function(){
 					$('notesLink').addEvent('click', function(){
-						MUI.updateContent({
+						MUI.Content.update({
 							element: $('mainPanel'),
 							url: 'pages/notes.html',
 							title: 'Development Notes'
 						});
 					});
 					$('xhrLink').addEvent('click', function(){
-						MUI.updateContent({
+						MUI.Content.update({
 							element: $('mainPanel'),
 							url: 'pages/lipsum.html',
 							title: 'Lorem Ipsum'
 						});
 					});
 					$('youtube4Link').addEvent('click', function(){
-						MUI.updateContent({
+						MUI.Content.update({
 							element: $('mainPanel'),
 							loadMethod: 'iframe',
 							url: 'pages/youtube.html',
@@ -805,7 +805,7 @@ var initializeColumns = function(){
 						});
 					});
 					$('splitPanelLink').addEvent('click', function(){
-						MUI.updateContent({
+						MUI.Content.update({
 							element: $('mainPanel'),
 							title: 'Split Panel'
 						});
@@ -833,7 +833,7 @@ var initializeColumns = function(){
 						MUI.parametricsWindow();
 					});
 					$('calendarLink').addEvent('click', function(e){
-						MUI.updateContent({
+						MUI.Content.update({
 							element: $('mainPanel'),
 							url: 'controls|calendar/example.html',
 							title: 'Calendar Component',
@@ -848,7 +848,7 @@ var initializeColumns = function(){
 						});
 					});
 					$('fxmorpherLink').addEvent('click', function(){
-						MUI.updateContent({
+						MUI.Content.update({
 							element: $('mainPanel'),
 							url: 'plugins|Fx.Morpher/',
 							title: 'Fx.Morpher Path Animation',
@@ -880,7 +880,7 @@ var initializeColumns = function(){
 
 				this.set('send', {
 					onComplete: function(response){
-						MUI.updateContent({
+						MUI.Content.update({
 							'element': $('mainPanel'),
 							'content': response,
 							'title': 'Ajax Response',
@@ -918,7 +918,7 @@ var initializeColumns = function(){
 							
 						this.set('send', {
 							onComplete: function(response){
-								MUI.updateContent({
+								MUI.Content.update({
 									'element': $('mainPanel'),
 									'content': response,
 									'title': 'Ajax Response',

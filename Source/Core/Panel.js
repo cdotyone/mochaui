@@ -148,7 +148,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 			}).inject(this.el.footerWrapper);
 		}
 
-		// This is in order to use the same variable as the windows do in updateContent.
+		// This is in order to use the same variable as the windows do in MUI.Content.update.
 		// May rethink this.
 		this.el.contentWrapper = this.el.panel;
 
@@ -391,7 +391,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		var options = this.options;
 
 		// Add content to panel.
-		MUI.updateContent({
+		MUI.Content.update({
 			'element': this.el.panel,
 			'content': options.content,
 			'method': options.method,
@@ -408,7 +408,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		// load/build all of the additional  content sections
 		if (options.sections) options.sections.each(function(section){
 			if (!options.header && (section.position == 'header' || section.position == 'headertool')) return;
-			MUI.updateContent(section);
+			MUI.Content.update(section);
 		});
 
 		// Do this when creating and removing panels

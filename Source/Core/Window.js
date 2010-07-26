@@ -464,7 +464,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		if (options.type != 'notification') this._setMochaControlsWidth();
 
 		// Add content to window.
-		MUI.updateContent({
+		MUI.Content.update({
 			'element': this.el.windowEl,
 			'content': options.content,
 			'method': options.method,
@@ -480,7 +480,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 
 		// load/build all of the additional  content sections
 		if (options.sections) options.sections.each(function(section){
-			MUI.updateContent(section);
+			MUI.Content.update(section);
 		});
 
 		this.redraw();
