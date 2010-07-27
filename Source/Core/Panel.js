@@ -397,6 +397,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 			'method': options.method,
 			'data': options.data,
 			'url': options.contentURL,
+			'loadMethod': options.loadMethod,
 			"onLoaded": null,
 			'require': {
 				js: options.require.js,
