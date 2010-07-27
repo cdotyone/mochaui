@@ -35,6 +35,9 @@ MUI.Content = (MUI.Content || $H({})).extend({
 			url:			null,
 			section:		'content',
 			require:		{},
+			paging:			false,
+			filters:		[],
+			persistKey:		false,
 			onLoaded:		$empty
 		}, options);
 
@@ -123,6 +126,13 @@ MUI.Content = (MUI.Content || $H({})).extend({
 		} else {
 			MUI.Content.Providers[options.loadMethod].doRequest(instance, options);
 		}
+	},
+
+	processFilters: function(options,response) {
+		options.filters.each(function(filter) {
+			response = filter(response);
+		});
+		return response;
 	}
 
 });
@@ -133,7 +143,7 @@ MUI.Content.Providers.xhr = {
 
 	canPersist:		true,
 
-	canPage:		 true,
+	canPage:		false,
 
 	doRequest: function(instance, options){
 		var contentContainer = options.contentContainer;
@@ -161,6 +171,7 @@ MUI.Content.Providers.xhr = {
 				contentContainer.hideSpinner(instance);
 			},
 			onSuccess: function(text){
+				text = MUI.Content.processFilters(text);
 				contentContainer.hideSpinner(instance);
 
 				var js;
@@ -200,7 +211,8 @@ MUI.Content.Providers.json = {
 		var contentContainer = options.contentContainer;
 
 		if (options.content){
-			Browser.Engine.trident4 ? fireLoaded.delay(50, this, [instance, options, options.content]) : fireLoaded(instance, options, options.content);
+			var content = MUI.Content.processFilters(options.content);
+			Browser.Engine.trident4 ? fireLoaded.delay(50, this, [instance, options, content]) : fireLoaded(instance, options, content);
 			return;
 		}
 
@@ -228,6 +240,8 @@ MUI.Content.Providers.json = {
 			}.bind(this),
 			onSuccess: function(json){
 				json = JSON.decode(json);
+				json = MUI.Content.processFilters(json);
+
 				// calls onLoaded event instead of onLoaded
 				// onLoaded - event should call MUI.Content.update again with loadMethod='html'
 
@@ -242,9 +256,9 @@ MUI.Content.Providers.json = {
 
 MUI.Content.Providers.iframe = {
 
-	canPersist:		true,
+	canPersist:		false,
 
-	canPage:		 true,
+	canPage:		false,
 
 	doRequest: function(instance, options){
 		var fireLoaded = options.fireLoaded;
@@ -279,17 +293,19 @@ MUI.Content.Providers.iframe = {
 
 		contentContainer.showSpinner(instance);
 	}
+
 };
 
 MUI.Content.Providers.html = {
 
-	canPersist:		true,
+	canPersist:		false,
 
-	canPage:		 true,
+	canPage:		false,
 
 	doRequest: function(instance, options){
 		var fireLoaded = options.fireLoaded;
 		var elementTypes = new Array('element', 'textnode', 'whitespace', 'collection');
+
 
 		var updateSetContent = true;
 		if (instance && instance.updateSetContent) updateSetContent = instance.updateSetContent(options);
@@ -302,6 +318,7 @@ MUI.Content.Providers.html = {
 		contentContainer.hideSpinner(instance);
 		Browser.Engine.trident4 ? fireLoaded.delay(50, this, [instance, options]) : fireLoaded(instance, options);
 	}
+
 };
 
 MUI.extend({
