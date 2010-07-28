@@ -16,7 +16,7 @@
  ...
  */
 
-MUI.files['controls|TextBox/Mask.Reverse.js'] = 'loaded';
+MUI.files['{controls}TextBox/Mask.Reverse.js'] = 'loaded';
 
 MUI.Mask.Reverse = new Class({
 

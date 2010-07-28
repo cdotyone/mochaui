@@ -26,7 +26,7 @@
  ...
  */
 
-MUI.files['controls|TextBox/TextBox.js'] = 'loaded';
+MUI.files['{controls}TextBox/TextBox.js'] = 'loaded';
 
 MUI.TextBox = new Class({
 

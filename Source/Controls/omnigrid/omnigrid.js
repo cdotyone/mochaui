@@ -29,7 +29,7 @@
  ...
  */
 
-MUI.files['controls|omnigrid/omnigrid.js'] = 'loaded';
+MUI.files['{controls}omnigrid/omnigrid.js'] = 'loaded';
 
 var omniGrid = new NamedClass('omniGrid', {
 

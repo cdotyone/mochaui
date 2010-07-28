@@ -16,7 +16,7 @@
  ...
  */
 
-MUI.files['controls|TextBox/Mask.Fixed.js'] = 'loaded';
+MUI.files['{controls}TextBox/Mask.Fixed.js'] = 'loaded';
 
 MUI.Mask.Fixed = new Class({
 

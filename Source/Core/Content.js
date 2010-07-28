@@ -17,7 +17,7 @@
  ...
  */
 
-MUI.files['source|Core/Content.js'] = 'loaded';
+MUI.files['{source}Core/Content.js'] = 'loaded';
 
 MUI.Content = (MUI.Content || $H({})).extend({
 
@@ -171,7 +171,7 @@ MUI.Content.Providers.xhr = {
 				contentContainer.hideSpinner(instance);
 			},
 			onSuccess: function(text){
-				text = MUI.Content.processFilters(text);
+				text = MUI.Content.processFilters(options,text);
 				contentContainer.hideSpinner(instance);
 
 				var js;
@@ -211,7 +211,7 @@ MUI.Content.Providers.json = {
 		var contentContainer = options.contentContainer;
 
 		if (options.content){
-			var content = MUI.Content.processFilters(options.content);
+			var content = MUI.Content.processFilters(options,options.content);
 			Browser.Engine.trident4 ? fireLoaded.delay(50, this, [instance, options, content]) : fireLoaded(instance, options, content);
 			return;
 		}
@@ -240,7 +240,7 @@ MUI.Content.Providers.json = {
 			}.bind(this),
 			onSuccess: function(json){
 				json = JSON.decode(json);
-				json = MUI.Content.processFilters(json);
+				json = MUI.Content.processFilters(options,json);
 
 				// calls onLoaded event instead of onLoaded
 				// onLoaded - event should call MUI.Content.update again with loadMethod='html'

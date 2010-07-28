@@ -37,7 +37,7 @@
  ...
  */
 
-MUI.files['source|Core/Persist.js'] = 'loaded';
+MUI.files['{source}Core/Persist.js'] = 'loaded';
 
 MUI.Persist = (MUI.Persist || $H({})).extend({
 

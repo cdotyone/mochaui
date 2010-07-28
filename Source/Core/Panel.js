@@ -19,7 +19,7 @@
  ...
  */
 
-MUI.files['source|Core/Panel.js'] = 'loaded';
+MUI.files['{source}Core/Panel.js'] = 'loaded';
 
 MUI.Panel = new NamedClass('MUI.Panel', {
 

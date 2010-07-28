@@ -42,7 +42,6 @@ MUI.extend({
 		path: {
 			source:  '../Source/',			// Path to MochaUI source JavaScript
 			controls:'../Source/Controls/',	// Path to Mocha Owned Plugins
-			utils:   '../Source/Utility/',	// Path to Mocha On Demand Functionality
 			themes:  '../Demo/themes/',		// Path to MochaUI Themes
 			plugins: '../Demo/plugins/'		// Path to Plugins
 		}
@@ -64,24 +63,34 @@ MUI.extend({
 		}
 	},
 
-	replacePaths: function(files){
-		var s;
-		if ($type(files) == 'string'){
-		   	s = files.split('|');
-			if (s.length < 2) return files;
-			if (s[0] == 'theme') s[0] = MUI.options.path.themes + MUI.options.theme + '/';
-			else s[0] = MUI.options.path[s[0]];
-			return s.join('');
+	replaceFields: function(str,values){
+		if ($type(str) == 'string'){
+			var keys = str.match(/\{+(\w*)\}+/g);
+			if(keys==null) return str;
+
+			keys.each(function(key){
+				var name=key.replace(/[\{\}]/g,"");
+				if (name==null || name=='') return;
+
+				var re = new RegExp("\\{"+name+"\\}","g");
+				str = str.replace(re,values[name]);
+			});
+			return str;
 		}
-		if ($type(files) == 'array'){
-			for(var i = 0; i < files.length; i++){
-				files[i] = MUI.replacePaths(files[i]);
+		if ($type(str) == 'array'){
+			for(var i = 0; i < str.length; i++){
+				str[i] = MUI.replaceFields(str[i]);
 			}
 		}
-		return files;
+		return str;
 	},
 
-	files: new Hash({'source|core.js': 'loaded'}),
+	replacePaths: function(files){
+		var paths = $extend({'theme':MUI.options.path.themes + MUI.options.theme + '/'}, MUI.options.path);
+		return MUI.replaceFields(files,paths);
+	},
+
+	files: new Hash({'{source}Core/Core.js': 'loaded'}),
 
 	getID: function(el){
 		if (type == 'string') return el;
@@ -114,9 +123,9 @@ MUI.extend({
 	},
 
 	create:function(type,options,fromHTML){
-		if(MUI.files['controls|mui-controls.js'] != 'loaded') {
+		if(MUI.files['{controls}mui-controls.js'] != 'loaded') {
 			new MUI.Require({
-				'js':['controls|mui-controls.js'],
+				'js':['{controls}mui-controls.js'],
 				'onload':function() {
 					MUI.create(type,options);
 				}
@@ -128,14 +137,14 @@ MUI.extend({
 		var sname=name.toLowerCase();
 		if(MUI.classes[sname]==null) return null;
 
-		var js=['controls|'+sname+'/'+sname+'.js'];
+		var js=['{controls}'+sname+'/'+sname+'.js'];
 
 		if(MUI.files[js[0]]=='loaded' && !fromHTML) {
 			var klass=MUI[name];
 			return new klass(options);
 		}
 
-		if(fromHTML) js.push('controls|'+sname+'/'+sname+'_html.js');
+		if(fromHTML) js.push('{controls}'+sname+'/'+sname+'_html.js');
 
 		var additionalOptions=MUI.classes[sname];
 		var css=[];

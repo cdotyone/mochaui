@@ -30,7 +30,7 @@
 var PO={};  // these are here to help until MUI.Data is finished
 PO.RS={};
 
-MUI.files['controls|Form/Form.js'] = 'loaded';
+MUI.files['{controls}Form/Form.js'] = 'loaded';
 
 MUI.Form = new Class({
 	Implements: [Events, Options],

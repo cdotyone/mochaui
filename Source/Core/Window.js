@@ -16,7 +16,7 @@
  ...
  */
 
-MUI.files['source|Core/Window.js'] = 'loaded';
+MUI.files['{source}Core/Window.js'] = 'loaded';
 
 MUI.Windows = (MUI.Windows || $H({})).extend({
 	indexLevel:	 100,			// Used for window z-Index

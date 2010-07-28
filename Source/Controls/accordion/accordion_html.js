@@ -27,7 +27,7 @@
  ...
  */
 
-MUI.files['controls|accordion/accordion_html.js'] = 'loaded';
+MUI.files['{controls}accordion/accordion_html.js'] = 'loaded';
 
 MUI.Accordion.implement({
 

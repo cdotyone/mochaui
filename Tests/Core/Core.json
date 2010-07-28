@@ -1,0 +1,18 @@
+{
+	"tests": [
+		{
+			"title": "path replacement",
+			"description": "checks to see that path field replacement is working.",
+			"test":function() {
+				return MUI.replacePaths('{source}Core/Core.js')==MUI.path.source+'Core/Core.js';
+			}
+		},
+		{
+			"title": "path replacement - special themes case",
+			"description": "checks to see that path field replacement is working.",
+			"test":function() {
+				return MUI.replacePaths('{theme}Test.js')==MUI.options.path.themes + MUI.options.theme + '/Test.js';
+			}
+		}
+	]
+}

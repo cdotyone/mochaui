@@ -26,7 +26,7 @@
  ...
  */
 
-MUI.files['controls|list/list.js'] = 'loaded';
+MUI.files['{controls}list/list.js'] = 'loaded';
 
 MUI.List = new Class({
 

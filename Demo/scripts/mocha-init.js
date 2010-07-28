@@ -143,7 +143,7 @@ var initializeWindows = function(){
 			id: 'clock',
 			title: 'Canvas Clock',
 			addClass: 'transparent',
-			contentURL: 'plugins|coolclock/index.html',
+			contentURL: '{plugins}coolclock/index.html',
 			shape: 'gauge',
 			headerHeight: 30,
 			width: 160,
@@ -152,7 +152,7 @@ var initializeWindows = function(){
 			y: 140,
 			padding: {top: 0, right: 0, bottom: 0, left: 0},
 			require: {
-				js: ['plugins|coolclock/scripts/coolclock.js'],
+				js: ['{plugins}coolclock/scripts/coolclock.js'],
 				onload: function(){
 					if (CoolClock) new CoolClock();
 				}
@@ -170,7 +170,7 @@ var initializeWindows = function(){
 		new MUI.Window({
 			id: 'parametrics',
 			title: 'Window Parametrics',
-			contentURL: 'plugins|parametrics/index.html',
+			contentURL: '{plugins}parametrics/index.html',
 			width: 305,
 			height: 210,
 			x: 570,
@@ -180,8 +180,8 @@ var initializeWindows = function(){
 			minimizable: true,
 			maximizable: false,
 			require: {
-				css: ['plugins|parametrics/css/style.css'],
-				js: ['plugins|parametrics/scripts/parametrics.js'],
+				css: ['{plugins}parametrics/css/style.css'],
+				js: ['{plugins}parametrics/scripts/parametrics.js'],
 				onload: function(){
 					if (MUI.addRadiusSlider) MUI.addRadiusSlider();
 					if (MUI.addShadowSlider) MUI.addShadowSlider();
@@ -261,15 +261,15 @@ var initializeWindows = function(){
 		new MUI.Window({
 			id: 'fxmorpherExample',
 			title: 'Path Animation Example',
-			contentURL: 'plugins|Fx.Morpher/example.html',
+			contentURL: '{plugins}Fx.Morpher/example.html',
 			width: 330,
 			height: 330,
 			padding: {top: 0, right: 0, bottom: 0, left: 0},
 			scrollbars: false,
 			resizable: false,
 			require: {
-				css: ['plugins|Fx.Morpher/css/style.css'],
-				js: ['plugins|Fx.Morpher/scripts/cbox.js', 'plugins|Fx.Morpher/scripts/example.js'],
+				css: ['{plugins}Fx.Morpher/css/style.css'],
+				js: ['{plugins}Fx.Morpher/scripts/cbox.js', '{plugins}Fx.Morpher/scripts/example.js'],
 				onload: function(){
 					createCanvas();
 					myAnim.delay(250);
@@ -561,15 +561,15 @@ var initializeWindows = function(){
 			id: 'builder',
 			title: 'Window Builder',
 			icon: 'images/icons/16x16/page.gif',
-			contentURL: 'plugins|windowform/',
+			contentURL: '{plugins}windowform/',
 			width: 375,
 			height: 420,
 			maximizable: false,
 			resizable: false,
 			scrollbars: false,
 			require: {
-				css: ['plugins|windowform/css/style.css'],
-				js: ['plugins|windowform/scripts/window-from-form.js'],
+				css: ['{plugins}windowform/css/style.css'],
+				js: ['{plugins}windowform/scripts/window-from-form.js'],
 				onload: function(){
 					$('newWindowSubmit').addEvent('click', function(e){
 						e.stop();
@@ -835,12 +835,12 @@ var initializeColumns = function(){
 					$('calendarLink').addEvent('click', function(e){
 						MUI.Content.update({
 							element: $('mainPanel'),
-							url: 'controls|calendar/example.html',
+							url: '{controls}calendar/example.html',
 							title: 'Calendar Component',
 							padding: {top: 8, right: 8, bottom: 8, left: 8},
 							require: {
-								css: ['controls|calendar/style.css'],
-								js: ['controls|calendar/calendar.js'],
+								css: ['{controls}calendar/style.css'],
+								js: ['{controls}calendar/calendar.js'],
 								onload: function(){
 									new Calendar({ date1: 'd/m/Y' }, { direction: 1, tweak: {x: 6, y: 0}});
 								}
@@ -850,7 +850,7 @@ var initializeColumns = function(){
 					$('fxmorpherLink').addEvent('click', function(){
 						MUI.Content.update({
 							element: $('mainPanel'),
-							url: 'plugins|Fx.Morpher/',
+							url: '{plugins}Fx.Morpher/',
 							title: 'Fx.Morpher Path Animation',
 							padding: {top: 8, right: 8, bottom: 8, left: 8}
 						});

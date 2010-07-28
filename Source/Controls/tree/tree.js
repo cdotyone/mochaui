@@ -26,7 +26,7 @@
  ...
  */
 
-MUI.files['controls|Tree/Tree.js'] = 'loaded';
+MUI.files['{controls}Tree/Tree.js'] = 'loaded';
 
 MUI.Tree = new Class({
 
