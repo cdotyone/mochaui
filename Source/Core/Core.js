@@ -64,6 +64,8 @@ MUI.extend({
 	},
 
 	replaceFields: function(str,values){
+		if (values == null) return str;
+
 		if ($type(str) == 'string'){
 			var keys = str.match(/\{+(\w*)\}+/g);
 			if(keys==null) return str;
