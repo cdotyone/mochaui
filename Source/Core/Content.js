@@ -228,7 +228,8 @@ MUI.Content = (MUI.Content || $H({})).extend({
 	},
 
 	getRecords: function(options){
-
+		if (!options.fireLoaded || !options.paging || !options.paging.recordsField || options.paging.size <= 0 || options.paging.totalCount == 0) return null;
+		return options.content[options.paging.recordsField];
 	}
 
 });
