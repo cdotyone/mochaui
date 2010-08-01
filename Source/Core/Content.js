@@ -38,13 +38,15 @@ MUI.Content = (MUI.Content || $H({})).extend({
 			require:		{},				// used to add additional css, images, or javascript
 			paging:			{},				// used to specify paging parameters
 			filters:		[],				// used to make post request processing/filtering of data, can be used to convert request to JSON
-			persist:		false,			// true if you want to persist the request, false if you do not. . if it is a string value the string will be used to persist the data instead of the request URL.
+			persist:		false,			// true if you want to persist the request, false if you do not.
+			// if it is a string value the string will be used to persist the data instead of the request URL.
+			// if it is an array, it will assume the array is an array of strings and each string represents a cache key that is also the name of a hash value that needs to cached individually.
 			onLoaded:		$empty			// fired when content is loaded
 		}, options);
 
 		// set defaults for require option
 		options.require = $extend({
-			  css: []		// the style sheets to load before the request is made
+			css: []		// the style sheets to load before the request is made
 			, images: []	// the images to preload before the request is made
 			, js: []		// the JavaScript that is loaded and called after the request is made
 			, onload: null	// the event that is fired after all required files are loaded
@@ -72,17 +74,19 @@ MUI.Content = (MUI.Content || $H({})).extend({
 			}
 		}
 
-		if (!options.element) return;
-		var element = $(options.element);
-		var instance = element.retrieve('instance');
+		var element,instance;
+		if (options.element){
+			element = $(options.element);
+			instance = element.retrieve('instance');
+		}
 
 		// replace in path replacement fields,  and prepare the url
-		if (options.url) {
+		if (options.url){
 			// create standard field replacements from data, paging, and path hashes
-			var values=$H({}).combine(options.data).combine(options.paging).combine(MUI.options.path);
+			var values = $H({}).combine(options.data).combine(options.paging).combine(MUI.options.path);
 			// call the prepUrl callback if it was defined
-			if(options.prepUrl) options.url=options.prepUrl.run([options.url,values,instance],this);
-			options.url=MUI.replaceFields(options.url,values);
+			if (options.prepUrl) options.url = options.prepUrl.run([options.url,values,instance], this);
+			options.url = MUI.replaceFields(options.url, values);
 		}
 
 		var contentEl = instance == null ? element : instance.el.content;
@@ -98,7 +102,7 @@ MUI.Content = (MUI.Content || $H({})).extend({
 		if (instance && instance.updateClear) removeContent = instance.updateClear(options);
 
 		// Remove old content.
-		if (removeContent){
+		if (removeContent && contentEl){
 			contentEl.empty().show();
 			// Panels are not loaded into the padding div, so we remove them separately.
 			contentEl.getAllNext('.column').destroy();
@@ -106,28 +110,39 @@ MUI.Content = (MUI.Content || $H({})).extend({
 		}
 
 		// prepare function to persist the data
-		if(options.persist && MUI.Content.Providers[options.loadMethod].canPersist) {
-			options.persistKey=options.url;
+		if (options.persist && MUI.Content.Providers[options.loadMethod].canPersist){
+			options.persistKey = options.url;
 			// if given string to use as persist key then use it
-			if($type(options.persist)=='string') options.persistKey=options.persist;
+			if ($type(options.persist) == 'string') options.persistKey = options.persist;
+			if ($type(options.persist) == 'array') options.persistKey = options.persist;
 			options.persist = true;
 		} else options.persist = false;
 
-		options.persistLoad = function(options) {
-			if(options.persist) {
-				// store the response
-				var content = MUI.Persist.get(options.persistKey);
-				if(content) return content;
+		options.persistLoad = function(options){
+			if (options.persist){
+				if ($type(options.persistKey) == 'string'){
+					// load the response
+					var content = MUI.Persist.get(options.persistKey);
+					if (content) return content;
+				}
 			}
 			return options.content;
-		}
+		};
 
-		options.persistStore = function(options,response) {
-			if(!options.persist) return response;
+		options.persistStore = function(options, response){
+			if (!options.persist) return response;
+
 			// store the response
-			MUI.Persist.set(options.persistKey,response);
+			if ($type(options.persistKey) == 'string') MUI.Persist.set(options.persistKey, response);
+			if ($type(options.persistKey) == 'array'){
+				response = JSON.decode(response);
+				options.persistKey.each(function(key){
+					MUI.Persist.set(key, response[key]);
+				});
+				return null;
+			}
 			return response;
-		}
+		};
 
 		// prepare function to fire onLoaded event
 		options.fireLoaded = function(instance, options, json){
@@ -176,43 +191,43 @@ MUI.Content = (MUI.Content || $H({})).extend({
 		return options;
 	},
 
-	processFilters: function(options,response) {
-		options.filters.each(function(filter) {
+	processFilters: function(options, response){
+		options.filters.each(function(filter){
 			response = filter(response);
 		});
 		return response;
 	},
 
-	firstPage: function(options) {
-		if(!options.fireLoaded || !options.paging || options.paging.size<=0 || options.paging.totalCount==0) return options;
+	firstPage: function(options){
+		if (!options.fireLoaded || !options.paging || options.paging.size <= 0 || options.paging.totalCount == 0) return options;
 		options.paging.index = 0;
 		MUI.Content.Providers[options.loadMethod].doRequest(instance, options);
 	},
 
-	prevPage: function(options) {
-		if(!options.fireLoaded || !options.paging || options.paging.size<=0 || options.paging.totalCount==0) return options;
+	prevPage: function(options){
+		if (!options.fireLoaded || !options.paging || options.paging.size <= 0 || options.paging.totalCount == 0) return options;
 		options.paging.index--;
-		if(options.paging.index<1 && options.paging.wrap) return this.lastPage(options);
-		if(options.paging.index<1) options.paging.index=1;
+		if (options.paging.index < 1 && options.paging.wrap) return this.lastPage(options);
+		if (options.paging.index < 1) options.paging.index = 1;
 		MUI.Content.Providers[options.loadMethod].doRequest(instance, options);
 	},
 
-	nextPage: function(options) {
-		if(!options.fireLoaded || !options.paging || options.paging.size<=0 || options.paging.totalCount==0) return options;
+	nextPage: function(options){
+		if (!options.fireLoaded || !options.paging || options.paging.size <= 0 || options.paging.totalCount == 0) return options;
 		options.paging.index++;
-		var lastPage = Math.round(options.paging.totalCount/options.paging.size);
-		if(options.paging.index>lastPage && options.paging.wrap) return this.firstPage();
-		if(options.paging.index>lastPage) options.paging.index=lastPage;
+		var lastPage = Math.round(options.paging.totalCount / options.paging.size);
+		if (options.paging.index > lastPage && options.paging.wrap) return this.firstPage();
+		if (options.paging.index > lastPage) options.paging.index = lastPage;
 		MUI.Content.Providers[options.loadMethod].doRequest(instance, options);
 	},
 
-	lastPage: function(options) {
-		if(!options.fireLoaded || !options.paging || options.paging.size<=0 || options.paging.totalCount==0) return options;
-		options.paging.index = Math.round(options.paging.totalCount/options.paging.size);
+	lastPage: function(options){
+		if (!options.fireLoaded || !options.paging || options.paging.size <= 0 || options.paging.totalCount == 0) return options;
+		options.paging.index = Math.round(options.paging.totalCount / options.paging.size);
 		MUI.Content.Providers[options.loadMethod].doRequest(instance, options);
 	},
 
-	getRecords: function(options) {
+	getRecords: function(options){
 
 	}
 
@@ -235,7 +250,7 @@ MUI.Content.Providers.xhr = {
 
 		// process content passed to options.content or persisted data
 		if (content){
-			content = MUI.Content.processFilters(options,content);
+			content = MUI.Content.processFilters(options, content);
 			Browser.Engine.trident4 ? fireLoaded.delay(50, this, [instance, options, content]) : fireLoaded(instance, options, content);
 			return;
 		}
@@ -247,7 +262,7 @@ MUI.Content.Providers.xhr = {
 			evalScripts: false,
 			evalResponse: false,
 			onRequest: function(){
-				contentContainer.showSpinner(instance);
+				if (contentContainer) contentContainer.showSpinner(instance);
 			},
 			onFailure: function(response){
 				var getTitle = new RegExp('<title>[\n\r\s]*(.*)[\n\r\s]*</title>', 'gmi');
@@ -258,14 +273,15 @@ MUI.Content.Providers.xhr = {
 				options.error = error;
 				options.errorMessage = '<h3>Error: ' + error[1] + '</h3>';
 				if (instance && instance.updateSetContent) updateSetContent = instance.updateSetContent(options);
-				if (updateSetContent) contentContainer.set('html', options.errorMessage);
-
-				contentContainer.hideSpinner(instance);
+				if (contentContainer){
+					if (updateSetContent) contentContainer.set('html', options.errorMessage);
+					contentContainer.hideSpinner(instance);
+				}
 			},
 			onSuccess: function(text){
-				text = options.persistStore(options,text);
-				text = MUI.Content.processFilters(options,text);
-				contentContainer.hideSpinner(instance);
+				text = options.persistStore(options, text);
+				text = MUI.Content.processFilters(options, text);
+				if (contentContainer) contentContainer.hideSpinner(instance);
 
 				var js;
 				var html = text.stripScripts(function(script){
@@ -279,7 +295,7 @@ MUI.Content.Providers.xhr = {
 				options.content = html;
 				if (instance && instance.updateSetContent) updateSetContent = instance.updateSetContent(options);
 				if (updateSetContent){
-					contentContainer.set('html', options.content);
+					if (contentContainer) contentContainer.set('html', options.content);
 					var evalJS = true;
 					if (instance && instance.options && instance.options.evalScripts) evalJS = instance.options.evalScripts;
 					if (evalJS && js) Browser.exec(js);
@@ -309,7 +325,7 @@ MUI.Content.Providers.json = {
 
 		// process content passed to options.content or persisted data
 		if (content){
-			content = MUI.Content.processFilters(options,content);
+			content = MUI.Content.processFilters(options, content);
 			Browser.Engine.trident4 ? fireLoaded.delay(50, this, [instance, options, content]) : fireLoaded(instance, options, content);
 			return;
 		}
@@ -323,25 +339,29 @@ MUI.Content.Providers.json = {
 			evalResponse: false,
 			headers: {'Content-Type':'application/json'},
 			onRequest: function(){
-				contentContainer.showSpinner(instance);
+				if (contentContainer) contentContainer.showSpinner(instance);
 			}.bind(this),
 			onFailure: function(){
 				var updateSetContent = true;
 				options.error = [500, 'Error Loading XMLHttpRequest'];
 				options.errorMessage = '<p><strong>Error Loading XMLHttpRequest</strong></p>';
 				if (instance && instance.updateSetContent) updateSetContent = instance.updateSetContent(options);
-				if (updateSetContent) contentContainer.set('html', options.errorMessage);
 
-				contentContainer.hideSpinner(instance);
+				if (contentContainer){
+					if (updateSetContent) contentContainer.set('html', options.errorMessage);
+					contentContainer.hideSpinner(instance);
+				}
 			}.bind(this),
 			onException: function(){
 			}.bind(this),
 			onSuccess: function(json){
-				json = options.persistStore(options,json);
-				json = JSON.decode(json);
-				json = MUI.Content.processFilters(options,json);
+				json = options.persistStore(options, json);
+				if (json != null){	// when multiple results are persisted, null is returned.  decoding takes place in persistStore instead, and filtering is not allowed
+					json = JSON.decode(json);
+					json = MUI.Content.processFilters(options, json);
+				}
 
-				contentContainer.hideSpinner(instance);
+				if (contentContainer) contentContainer.hideSpinner(instance);
 				Browser.Engine.trident4 ? fireLoaded.delay(50, this, [instance, options, json]) : fireLoaded(instance, options, json);
 			}.bind(this),
 			onComplete: function(){
@@ -364,7 +384,7 @@ MUI.Content.Providers.iframe = {
 		if (instance && instance.updateSetContent) updateSetContent = instance.updateSetContent(options);
 		var contentContainer = options.contentContainer;
 
-		if (updateSetContent){
+		if (updateSetContent && contentContainer){
 			var iframeEl = new Element('iframe', {
 				'id': options.element.id + '_iframe',
 				'name': options.element.id + '_iframe',
@@ -387,8 +407,6 @@ MUI.Content.Providers.iframe = {
 				Browser.Engine.trident4 ? fireLoaded.delay(50, this, [instance, options]) : fireLoaded(instance, options);
 			}.bind(this));
 		}
-
-		contentContainer.showSpinner(instance);
 	}
 
 };
@@ -407,12 +425,11 @@ MUI.Content.Providers.html = {
 		var updateSetContent = true;
 		if (instance && instance.updateSetContent) updateSetContent = instance.updateSetContent(options);
 		var contentContainer = options.contentContainer;
-		if (updateSetContent){
+		if (updateSetContent && contentContainer){
 			if (elementTypes.contains($type(options.content))) options.content.inject(contentContainer);
 			else contentContainer.set('html', options.content);
 		}
 
-		contentContainer.hideSpinner(instance);
 		Browser.Engine.trident4 ? fireLoaded.delay(50, this, [instance, options]) : fireLoaded(instance, options);
 	}
 

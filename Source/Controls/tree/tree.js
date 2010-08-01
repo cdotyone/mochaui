@@ -287,6 +287,7 @@ MUI.Tree = new Class({
 	},
 
 	setLast: function(node){
+		if(!node) return this;
 		if (node.childNodes)
 		{
 			var u = node;
@@ -299,6 +300,7 @@ MUI.Tree = new Class({
 				}
 			}
 		}
+		return this;
 	},
 
 	onNodeExpand: function(node, e){

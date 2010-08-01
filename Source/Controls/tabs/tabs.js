@@ -179,8 +179,8 @@ MUI.Tabs = new Class({
 		});
 		tab._element.addClass('sel');
 
-		if(o.partner) {
-			var url = self._getData(tab, o.urlField);
+		var url = self._getData(tab, o.urlField);
+		if(o.partner && url) {
 			var content = self._getData(tab, o.contentField);
 
 			var uOptions = {
