@@ -7,6 +7,8 @@ var initializeWindows = function(){
 	MUI.myChain.callChain();
 };
 
+var testPeriodId;
+var statusPeriodId;
 var initializeColumns = function(){
 
 	new MUI.Column({
@@ -18,8 +20,8 @@ var initializeColumns = function(){
 	new MUI.Column({
 		id: 'sideColumn',
 		placement: 'right',
-		width: 230,
-		resizeLimit: [200, 300]
+		width: 320,
+		resizeLimit: [200, 320]
 	});
 
 	// Add panels to main column
@@ -50,8 +52,8 @@ var initializeColumns = function(){
 				empty: true,
 				loadMethod:'json',
 				content: [
-					{'text':'Automatic','url':'pages/overview.html','title':'Automatic Unit Tests'},
-					{'text':'Interactive','url':'pages/download.html','title':'Interactive Unit Tests'}
+					{'text':'Automatic','title':'Automatic Unit Tests'},
+					{'text':'Interactive','title':'Interactive Unit Tests'}
 				],
 				onLoaded: function(element, uOptions, json){
 					MUI.create('MUI.Tabs', {
@@ -61,6 +63,7 @@ var initializeColumns = function(){
 						'partner':'test-panel',
 						onTabSelected: function(tab, value){
 							buildTestTree(value);
+							if(!testPeriodId) testPeriodId = doAutomatedTests.periodical(1000);
 						}
 					})
 				}
@@ -69,10 +72,13 @@ var initializeColumns = function(){
 	});
 
 	MUI.myChain.callChain();
+
+	testPeriodId = doAutomatedTests.periodical(1000);
+	statusPeriodId = doUpdateStatuses.periodical(1000);
 };
 
 var testList = null;
-var statusPeriodId;
+var loadingCount = 0;
 var buildTestTree = function(testType){
 	if (!testList){
 		new Request({
@@ -82,9 +88,11 @@ var buildTestTree = function(testType){
 				buildTestTree(testType);
 			}
 			,onComplete:function(){
+				loadingCount--;
 				$('test-panel').hideSpinner();
 			}
 			,onRequest:function(){
+				loadingCount++;
 				$('test-panel').showSpinner();
 			}
 		}).get();
@@ -117,9 +125,11 @@ var buildTestTree = function(testType){
 					testSource.nodes = [];
 				}
 				,onComplete:function(){
+					loadingCount--;
 					$('test-panel').hideSpinner();
 				},
 				onRequest:function(){
+					loadingCount++;
 					$('test-panel').showSpinner();
 				}
 			}).get();
@@ -152,34 +162,51 @@ var buildTestTree = function(testType){
 			'nodes':tests,
 			onLoaded: function() {
 				testTree=MUI.get('testTree');
-				if(testType=='Automatic' || testType=='All') doAutomatedTests(testTree.options.nodes);
-				if(!statusPeriodId) statusPeriodId=doUpdateStatuses.periodical(1000,testTree,[testTree.options.nodes]);
 			}
 		});
 	} else testTree.draw();
 };
 
-var doAutomatedTests = function(nodes) {
+var logResult = function() {
+	var msg;
+	if(this.lastResult==-1) return;
+	if(this.lastResult) msg=this.title+' - ok';
+	else msg=this.title+' - failed';
+	if(this.error) msg+=' - ' + this.error;
+	new Element('div',{'text':msg,'class':(this.lastResult?'good':'failed')}).inject('testOutput_pad');
+};
+
+var doAutomatedTests = function(nodes,recurse) {
+	if(loadingCount>0) return;
+	if(nodes==null) {
+		var testTree=MUI.get('testTree');
+		if(!testTree) return;
+		nodes=testTree.options.nodes;
+	}
+	if(!recurse) $('testOutput_pad').empty();
 	nodes.each(function(test) {
 		if(test.test) {
+			test.logResult = logResult.bind(test);
 			try {
 				test.lastResult=test.test();
-				var msg=test.title+' - ok';
-				if(test.error) msg+=' - ' + test.error;
-				new Element('div',{'text':msg,'class':'good'}).inject('testOutput_pad');
 			} catch(e) {
 				test.lastResult = false;
 				test.error = e.message;
-				new Element('div',{'text':test.title+' - '+e.message,'class':'failed'}).inject('testOutput_pad');
 			}
+			test.logResult();
 		}
-		if(test.nodes) doAutomatedTests(test.nodes);
+		if(test.nodes) doAutomatedTests(test.nodes,true);
 	});
+
+	clearTimeout(testPeriodId);
 };
 
 var doUpdateStatuses = function(nodes) {
 	var testTree=MUI.get('testTree');
+	if(!testTree) return;
+	if(nodes==null) nodes=testTree.options.nodes;
 	nodes.each(function(test) {
+		if(test.lastResult==-1) return;
 		if(test.lastResult!=null && test._span!=null) {
 			test.image=test.lastResult ? 'good' : 'failed';
 			testTree.nodeRefresh(test);

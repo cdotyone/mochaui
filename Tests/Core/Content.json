@@ -1,0 +1,50 @@
+{
+	"tests": [
+		{
+			"title": "persist option - no key",
+			"description": "checks to see that content is persisted without using a key",
+			"test":function() {
+				MUI.Content.update({
+					'url':'../Demo/pages/data-country-state.json',
+					'persist':true,
+					onLoaded:function() {
+						this.lastResult=MUI.Persist.get('../Demo/pages/data-country-state.json');
+						this.logResult();
+					}.bind(this)
+				});
+				return -1;
+			}
+		},
+		{
+			"title": "persist option - with key",
+			"description": "checks to see that content is persisted using a key",
+			"test":function() {
+				MUI.Content.update({
+					'url':'../Demo/pages/data-country-state.json',
+					'persist':'data-country-state',
+					onLoaded:function() {
+						this.lastResult=MUI.Persist.get('data-country-state');
+						this.logResult();
+					}.bind(this)
+				});
+				return -1;
+			}
+		},
+		{
+			"title": "persist option - with key - multiple data sets",
+			"description": "checks to see that content is persisted using a key",
+			"test":function() {
+				MUI.Content.update({
+					'loadMethod':'json',
+					'url':'../Demo/pages/data-country-state.json',
+					'persist':['Country','State'],
+					onLoaded:function() {
+						this.lastResult=MUI.Persist.get('Country') && MUI.Persist.get('State');
+						this.logResult();
+					}.bind(this)
+				});
+				return -1;
+			}
+		}
+	]
+}

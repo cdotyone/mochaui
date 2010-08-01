@@ -1,4 +1,5 @@
 [
 	{'source':'Core/Core.json', 'title':'MUI'},
-	{'source':'Core/Persist.json', 'title':'MUI.Persist', 'js':['{source}Core/Persist.js']}
+	{'source':'Core/Persist.json', 'title':'MUI.Persist', 'js':['{source}Core/Persist.js']},
+	{'source':'Core/Content.json', 'title':'MUI.Content', 'js':['{source}Core/Persist.js']}
 ]

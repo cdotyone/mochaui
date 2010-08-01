@@ -4,6 +4,7 @@
 			"title": "automatic provider selection",
 			"description": "Checks to see that MUI.Persist.initialize() is able to choose a cache provider.",
 			"test":function() {
+				MUI.Persist.currentProvider=null;
 				MUI.Persist.initialize();
 				if(MUI.Persist.currentProvider==null) this.error="there is not a current cache provider for MUI.Persist";
 				else this.error=MUI.Persist.options.provider;
@@ -14,6 +15,7 @@
 			"title": "default set/get",
 			"description": "Checks to see that MUI.Persist.initialize() chooses a default provider and it is able to set and get the value back",
 			"test":function() {
+				MUI.Persist.currentProvider=null;
 				MUI.Persist.initialize();
 				MUI.Persist.set('test1','val1');
 				return MUI.Persist.get('test1') == 'val1';
