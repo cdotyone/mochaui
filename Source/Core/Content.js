@@ -23,6 +23,8 @@ MUI.Content = (MUI.Content || $H({})).extend({
 
 	Providers:{},
 
+	Filters:{},
+
 	update: function(options){
 
 		// set defaults for options
@@ -191,9 +193,9 @@ MUI.Content = (MUI.Content || $H({})).extend({
 		return options;
 	},
 
-	processFilters: function(options, response){
+	processFilters: function(response, options){
 		options.filters.each(function(filter){
-			response = filter(response);
+			response = filter(response, options);
 		});
 		return response;
 	},
@@ -236,6 +238,46 @@ MUI.Content = (MUI.Content || $H({})).extend({
 
 MUI.updateContent = MUI.Content.update;
 
+MUI.Content.Filters.tree = function(response, options, node){
+	var usePaging = node == null && options.paging && options.paging.size > 0 && options.paging.recordsField;
+	var data = response, i;
+
+	if (node == null) options = $extend(options, {
+		fieldParentID: 'parentID',
+		fieldID: 'ID',
+		fieldNodes: 'nodes',
+		topID: '0'
+	});
+
+	if (usePaging) data = response[options.paging.recordsField];
+
+	if (node == null){
+		for (i = 0; i < data.length; i++)
+		{
+			if (data[i][options.fieldID] == options.topID){
+				node = data[i];
+				break;
+			}
+		}
+	}
+
+	if (node != null){
+		var id = node[options.fieldID];
+		node[options.fieldNodes] = [];
+		for (i = 0; i < data.length; i++)
+		{
+			if (data[i][options.fieldParentID] == id && data[i][options.fieldID] != id){
+				node[options.fieldNodes].push(data[i]);
+				MUI.Content.Filters.tree(data, options, data[i]);
+			}
+		}
+	}
+
+	if (usePaging) response[options.paging.recordsField] = node;
+
+	return node;
+};
+
 MUI.Content.Providers.xhr = {
 
 	canPersist:		true,
@@ -251,7 +293,7 @@ MUI.Content.Providers.xhr = {
 
 		// process content passed to options.content or persisted data
 		if (content){
-			content = MUI.Content.processFilters(options, content);
+			content = MUI.Content.processFilters(content, options);
 			Browser.Engine.trident4 ? fireLoaded.delay(50, this, [instance, options, content]) : fireLoaded(instance, options, content);
 			return;
 		}
@@ -281,7 +323,7 @@ MUI.Content.Providers.xhr = {
 			},
 			onSuccess: function(text){
 				text = options.persistStore(options, text);
-				text = MUI.Content.processFilters(options, text);
+				text = MUI.Content.processFilters(text, options);
 				if (contentContainer) contentContainer.hideSpinner(instance);
 
 				var js;
@@ -326,7 +368,7 @@ MUI.Content.Providers.json = {
 
 		// process content passed to options.content or persisted data
 		if (content){
-			content = MUI.Content.processFilters(options, content);
+			content = MUI.Content.processFilters(content, options);
 			Browser.Engine.trident4 ? fireLoaded.delay(50, this, [instance, options, content]) : fireLoaded(instance, options, content);
 			return;
 		}
@@ -359,7 +401,7 @@ MUI.Content.Providers.json = {
 				json = options.persistStore(options, json);
 				if (json != null){	// when multiple results are persisted, null is returned.  decoding takes place in persistStore instead, and filtering is not allowed
 					json = JSON.decode(json);
-					json = MUI.Content.processFilters(options, json);
+					json = MUI.Content.processFilters(json, options);
 				}
 
 				if (contentContainer) contentContainer.hideSpinner(instance);

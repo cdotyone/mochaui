@@ -45,6 +45,22 @@
 				});
 				return -1;
 			}
+		},
+		{
+			"title": "tree filter test",
+			"description": "converts record data into a hierarchical data format",
+			"test":function() {
+				MUI.Content.update({
+					'loadMethod':'json',
+					'url':'../Demo/pages/employees.json',
+					filters:[MUI.Content.Filters.tree],
+					onLoaded:function(element,options) {
+						this.lastResult=options.content.nodes.length>0;
+						this.logResult();
+					}.bind(this)
+				});
+				return -1;
+			}
 		}
 	]
 }
