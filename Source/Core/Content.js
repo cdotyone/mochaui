@@ -403,6 +403,7 @@ MUI.Content.Providers.json = {
 					json = JSON.decode(json);
 					json = MUI.Content.processFilters(json, options);
 				}
+				options.content=json;
 
 				if (contentContainer) contentContainer.hideSpinner(instance);
 				Browser.Engine.trident4 ? fireLoaded.delay(50, this, [instance, options, json]) : fireLoaded(instance, options, json);
