@@ -933,6 +933,7 @@ var initializeColumns = function(){
 						this.send();
 					});
 				}
+				addResizeElements.run(null,MUI.get('mainPanel'));
 			}
 		}]
 	});
@@ -974,7 +975,6 @@ var initializeColumns = function(){
 				});
 			}
 		}],
-		onLoaded: addResizeElements,
 		onResize: updateResizeElements
 	});
 
