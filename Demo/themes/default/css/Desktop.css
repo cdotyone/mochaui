@@ -339,11 +339,16 @@ li.divider {
 }
 
 .panel-footer {
-	padding: 1px 0 0 8px;
+	padding: 0 0 0 8px;
+}
+
+.panel-footer div div.toolbox {
+	padding:0;
+	margin: -2px 0 0;
 }
 
 .panel-footerContent {
-	margin-top: 5px;
+	margin-top: 6px;
 }
 
 /* Column and Panel Handles */
