@@ -465,7 +465,8 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 
 		// Add content to window.
 		MUI.Content.update({
-			'element': this.el.windowEl,
+			'instance': this,
+			'element': this.el.content,
 			'content': options.content,
 			'method': options.method,
 			'url': options.contentURL,

@@ -29,6 +29,7 @@ MUI.Content = (MUI.Content || $H({})).extend({
 
 		// set defaults for options
 		options = $extend({
+			instance:		null,			// the instance of the control to be updated, this is normally used internally only
 			element:		null,			// the element to inject into, or the instance name
 			method:			null,			// the method to use to make request, 'POST' or 'GET'
 			data:			null,			// the data payload to send to the url
@@ -36,7 +37,6 @@ MUI.Content = (MUI.Content || $H({})).extend({
 			loadMethod:		null,			// the provider that will be used to make the request
 			url:			null,			// the url endpoint to make the request to
 			prepUrl:		null,			// callback that is executed to prepare the url. syntax: prepUrl.run([url,values,instance],this) return url;
-			section:		'content',		// name of the subsection that is being updated
 			require:		{},				// used to add additional css, images, or javascript
 			paging:			{},				// used to specify paging parameters
 			filters:		[],				// used to make post request processing/filtering of data, can be used to convert request to JSON
@@ -76,10 +76,10 @@ MUI.Content = (MUI.Content || $H({})).extend({
 			}
 		}
 
-		var element,instance;
-		if (options.element){
+		var element,instance = options.instance;
+		if (options.element) {
 			element = $(options.element);
-			instance = element.retrieve('instance');
+			if (!instance) instance = element.retrieve('instance');
 		}
 
 		// replace in path replacement fields,  and prepare the url
@@ -91,8 +91,7 @@ MUI.Content = (MUI.Content || $H({})).extend({
 			options.url = MUI.replaceFields(options.url, values);
 		}
 
-		var contentEl = instance == null ? element : instance.el.content;
-		options.contentContainer = contentEl;
+		options.contentContainer = element;
 
 		// -- argument pre-processing override --
 		// allow controls to process any custom arguments, titles, scrollbars, etc..
@@ -104,12 +103,7 @@ MUI.Content = (MUI.Content || $H({})).extend({
 		if (instance && instance.updateClear) removeContent = instance.updateClear(options);
 
 		// Remove old content.
-		if (removeContent && contentEl){
-			contentEl.empty().show();
-			// Panels are not loaded into the padding div, so we remove them separately.
-			contentEl.getAllNext('.column').destroy();
-			contentEl.getAllNext('.columnHandle').destroy();
-		}
+		if (removeContent && element) element.empty().show();
 
 		// prepare function to persist the data
 		if (options.persist && MUI.Content.Providers[options.loadMethod].canPersist){
@@ -252,8 +246,7 @@ MUI.Content.Filters.tree = function(response, options, node){
 	if (usePaging) data = response[options.paging.recordsField];
 
 	if (node == null){
-		for (i = 0; i < data.length; i++)
-		{
+		for (i = 0; i < data.length; i++){
 			if (data[i][options.fieldID] == options.topID){
 				node = data[i];
 				break;
@@ -264,8 +257,7 @@ MUI.Content.Filters.tree = function(response, options, node){
 	if (node != null){
 		var id = node[options.fieldID];
 		node[options.fieldNodes] = [];
-		for (i = 0; i < data.length; i++)
-		{
+		for (i = 0; i < data.length; i++){
 			if (data[i][options.fieldParentID] == id && data[i][options.fieldID] != id){
 				node[options.fieldNodes].push(data[i]);
 				MUI.Content.Filters.tree(data, options, data[i]);
@@ -403,7 +395,7 @@ MUI.Content.Providers.json = {
 					json = JSON.decode(json);
 					json = MUI.Content.processFilters(json, options);
 				}
-				options.content=json;
+				options.content = json;
 
 				if (contentContainer) contentContainer.hideSpinner(instance);
 				Browser.Engine.trident4 ? fireLoaded.delay(50, this, [instance, options, json]) : fireLoaded(instance, options, json);
@@ -486,7 +478,7 @@ MUI.extend({
 		/// intercepts workflow from MUI.Content.update
 		/// sets title and scroll bars of this window
 		updateStart: function(options){
-			if (options.section == 'content'){
+			if (options.position == 'content'){
 				// copy padding from main options if not passed in
 				if (!options.padding && this.options.padding && $type(this.options.padding) != 'number')
 					options.padding = $extend(options, this.options.padding);
@@ -518,17 +510,21 @@ MUI.extend({
 
 		/// intercepts workflow from MUI.Content.update
 		updateClear: function(options){
-			if (options.section == 'content'){
+			if (options.position == 'content'){
 				this.el.content.show();
 				var iframes = this.el.contentWrapper.getElements('.mochaIframe');
 				if (iframes) iframes.destroy();
+
+				// Panels are not loaded into the padding div, so we remove them separately.
+				//this.el.content.getAllNext('.column').destroy();
+				//this.el.content.getAllNext('.columnHandle').destroy();
 			}
 			return true;
 		},
 
 		/// intercepts workflow from MUI.Content.update
 		updateSetContent: function(options){
-			if (options.section == 'content'){
+			if (options.position == 'content'){
 				if (options.loadMethod == 'html') this.el.content.addClass('pad');
 				if (options.loadMethod == 'iframe'){
 					this.el.content.removeClass('pad');

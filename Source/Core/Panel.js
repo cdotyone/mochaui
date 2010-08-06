@@ -26,52 +26,38 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 	Implements: [Events, Options],
 
 	options: {
-		id:						null,
-		column:					null,
-		drawOnInit:				true,
+		id:						null,			// id of the main div tag for the panel
+		column:					null,			// the name of the column to insert this panel into
+		drawOnInit:				true,			// true to inject panel into DOM when panel is first created
 
-		require:{
-			css:				[],
-			images:				[],
-			js:					[],
-			onload:				null
-		},
-		loadMethod:				null,
-		contentURL:				null,
-
-		// xhr options
-		method:					'get',
-		data:					null,
-		evalScripts:			true,
-		evalResponse:			false,
-
-		// html options
-		content:				false,
+		// content section update options
+		content:				false,			// used to update the content section of the panel.
+		// if it is a string it assumes that the content is html and it will be injected into the content div.
+		// if it is an array then assume we need to update multiple sections of the panel
+		// if it is not a string or array it assumes that is a hash and just the content section will have .
 
 		// additional content sections
-		sections:				false,
+		sections:				false,			// hash to provide all of the update options for all of the different sections of the panel.
 
 		// header
-		header:					true,
-		title:					'New Panel',
+		header:					true,			// true to create a panel header when panel is created
+		title:					'New Panel',	// the title inserted into the panel's header
 
 		// Style options:
-		height:					125,
-		addClass:				'',
-		scrollbars:		 		true,
-		padding:				8,
+		height:					125,			// the desired height of the panel
+		addClass:				'',				// css class to add to the main panel div
+		scrollbars:				 true,			// true to allow scrollbars to be shown
+		padding:				8,				// default padding for the panel
 
 		// Other:
-		collapsible:			true,
+		collapsible:			true,			// can the panel be collapsed
 
 		// Events
 		onDrawBegin:			$empty,
 		onDrawEnd:				$empty,
-		onLoaded:		$empty,
 		onResize:				$empty,
 		onCollapse:				$empty,
 		onExpand:				$empty
-
 	},
 
 	initialize: function(options){
@@ -91,14 +77,14 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		if (this.options.drawOnInit) this.draw();
 	},
 
-	draw: function() {
+	draw: function(){
 		var options = this.options;
 
 		// Check if panel already exists
 		if (this.el.panel) return this;
 		else MUI.set(this.options.id, this);
 
-		this.fireEvent('drawBegin',[this]);
+		this.fireEvent('drawBegin', [this]);
 
 		if (options.loadMethod == 'iframe') options.padding = 0;  // Iframes have their own padding.
 
@@ -126,15 +112,36 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 			'class': 'pad'
 		}).inject(this.el.panel);
 
+		// make sure we have a content sections
+		this.sections = [];
+
+		switch($type(options.content)) {
+			case 'string':
+				// was passed html, so make sure it is added
+				this.sections.push({
+					loadMethod:'html',
+					content:options.content,
+					element:this.el.panel,
+					position:'content'
+				});
+				break;
+			case 'array':
+				this.sections = options.content;
+				break;
+			default:
+				this.sections.push($extend({
+					element:this.el.panel,
+					position:'content'
+				}, options.content));
+		}
+
 		// determine of this panel has a footer
 		this.hasFooter = false;
 		this.hasHeaderTool = false;
-		if (options.sections){
-			options.sections.each(function(section){
-				if (section.position == 'footer') this.hasFooter = true;
-				if (section.position == 'headertool') this.hasHeaderTool = true;
-			},this);
-		}
+		this.sections.each(function(section){
+			if (section.position == 'footer') this.hasFooter = true;
+			if (section.position == 'headertool') this.hasHeaderTool = true;
+		}, this);
 
 		if (this.hasFooter){
 			this.el.footerWrapper = new Element('div', {
@@ -208,84 +215,75 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 		this._addResizeBottom();
 
-		if (options.sections){
-			var snum = 0;
-			options.sections.each(function(section, idx){
-				var intoEl = this.el.panel;
+		var snum = 0;
+		this.sections.each(function(section, idx){
+			var intoEl = this.el.panel;
 
-				snum++;
-				var id = options.id + '_' + (section.section || 'section' + snum);
+			snum++;
+			var id = options.id + '_' + (section.section || 'section' + snum);
 
-				section = $extend({
-					'element': this.el.panel,
-					'wrap': false,
-					'position': 'header',
-					'empty': false,
-					'addClass': false,
-					'height': false,
-					'id': id,
-					'css': '',
-					'section': 'section' + snum,
-					'loadMethod': 'xhr',
-					'method': options.method
-				}, section);
+			section = $extend({
+				'element': this.el.panel,
+				'wrap': false,
+				'position': 'header',
+				'empty': false,
+				'addClass': false,
+				'height': false,
+				'id': id,
+				'css': '',
+				'loadMethod': 'xhr',
+				'method': options.method
+			}, section);
 
-				var wrap = section.wrap;
-				var empty = section.empty;
-				var where = section.position == 'bottom' ? 'after' : 'before';
+			var wrap = section.wrap;
+			var empty = section.empty;
+			var where = section.position == 'bottom' ? 'after' : 'before';
 
-				switch (section.position){
-					case 'header':
-						intoEl = this.el.panelHeaderContent;
-						if (!this.options.header) return;
-						break;
-					case 'headertool':
-						intoEl = this.el.panelHeaderToolbox;
-						if (!this.options.header) return;
-						break;
-					case 'footer':
-						intoEl = this.el.footer; break;
-				}
+			switch (section.position){
+				case 'header':
+					intoEl = this.el.panelHeaderContent;
+					if (!this.options.header) return;
+					break;
+				case 'headertool':
+					intoEl = this.el.panelHeaderToolbox;
+					if (!this.options.header) return;
+					break;
+				case 'footer':
+					intoEl = this.el.footer; break;
+					break;
+				case 'content':
+					this.sections[idx].element = this.el.content;
+					return;
+			}
 
-				if (wrap){
-					section.wrapperEl = new Element('div', {
-						'id': section.id + '_wrapper',
-						'class': section.css + 'Wrapper'
-					}).inject(intoEl, where);
+			if (wrap){
+				section.wrapperEl = new Element('div', {
+					'id': section.id + '_wrapper',
+					'class': section.css + 'Wrapper'
+				}).inject(intoEl, where);
 
-					if (section.height) section.wrapperEl.setStyle('height', section.height);
+				if (section.height) section.wrapperEl.setStyle('height', section.height);
 
-					if (section.position == 'bottom') section.wrapperEl.addClass('bottom');
-					intoEl = section.wrapperEl;
-				}
+				if (section.position == 'bottom') section.wrapperEl.addClass('bottom');
+				intoEl = section.wrapperEl;
+			}
 
-				if (empty) intoEl.empty();
-				section.element = new Element('div', {
-					'id': section.id,
-					'class': section.css,
-					'styles': {'height': section.height}
-				}).inject(intoEl);
+			if (empty) intoEl.empty();
+			section.element = new Element('div', {
+				'id': section.id,
+				'class': section.css,
+				'styles': {'height': section.height}
+			}).inject(intoEl);
 
-				if (section.addClass) intoEl.addClass(section.addClass);
+			if (section.addClass) intoEl.addClass(section.addClass);
 
-				section.wrapperEl = intoEl;
-				if (section.wrap && section.position == 'bottom') section.element.addClass('bottom');
+			section.wrapperEl = intoEl;
+			if (section.wrap && section.position == 'bottom') section.element.addClass('bottom');
 
-				this.options.sections[idx] = section;
-			},this);
-		}
+			this.sections[idx] = section;
+		}, this);
 
-		if (options.require.css.length || options.require.images.length){
-			new MUI.Require({
-				css: options.require.css,
-				images: options.require.images,
-				onload: function(){
-					this._loadContent();
-				}.bind(this)
-			});
-		} else {
-			this._loadContent();
-		}
+		this._loadContent();
 
 		return this;
 	},
@@ -309,11 +307,11 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		if (panels.length > 0) panels.getLast().addClass('bottomPanel');
 
 		MUI.erase(this.options.id);
-		this.fireEvent('close',[this]);
+		this.fireEvent('close', [this]);
 		return this;
 	},
 
-	collapse: function() {
+	collapse: function(){
 		var panelWrapper = this.el.panelWrapper;
 		var panel = this.el.panel;
 		var options = this.options;
@@ -324,8 +322,8 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		var expandedSiblings = [];
 
 		panelWrapper.getAllPrevious('.panelWrapper').each(function(sibling){
-			var panel=sibling.getElement('.panel');
-			if(!panel) return;
+			var panel = sibling.getElement('.panel');
+			if (!panel) return;
 			var instance = MUI.get(panel.id);
 			if (!instance.isCollapsed) expandedSiblings.push(panel.id);
 		});
@@ -358,12 +356,12 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		this.el.collapseToggle.removeClass('panel-collapsed');
 		this.el.collapseToggle.addClass('panel-expand');
 		this.el.collapseToggle.setProperty('title', 'Expand Panel');
-		this.fireEvent('collapse',[this]);
+		this.fireEvent('collapse', [this]);
 
 		return this;
 	},
 
-	expand: function() {
+	expand: function(){
 
 		// Expand Panel
 		this.el.content.setStyle('position', null); // This is so IE6 and IE7 will collapse the panel all the way
@@ -376,12 +374,12 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		this.el.collapseToggle.removeClass('panel-expand');
 		this.el.collapseToggle.addClass('panel-collapsed');
 		this.el.collapseToggle.setProperty('title', 'Collapse Panel');
-		this.fireEvent('expand',[this]);
+		this.fireEvent('expand', [this]);
 
 		return this;
 	},
 
-	toggle: function() {
+	toggle: function(){
 		if (this.isCollapsed) this.expand();
 		else this.collapse();
 		return this;
@@ -390,27 +388,13 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 	_loadContent: function(){
 		var options = this.options;
 
-		// Add content to panel.
-		MUI.Content.update({
-			'element': this.el.panel,
-			'content': options.content,
-			'method': options.method,
-			'data': options.data,
-			'url': options.contentURL,
-			'loadMethod': options.loadMethod,
-			"onLoaded": null,
-			'require': {
-				js: options.require.js,
-				onload: options.require.onload
-			},
-	  		section: 'content'
-		});
-
 		// load/build all of the additional  content sections
-		if (options.sections) options.sections.each(function(section){
+		this.sections.each(function(section){
 			if (!options.header && (section.position == 'header' || section.position == 'headertool')) return;
+			if (section.onLoaded) section.onLoaded = section.onLoaded.bind(this);
+			section.instance = this;
 			MUI.Content.update(section);
-		});
+		}, this);
 
 		// Do this when creating and removing panels
 		$(options.column).getChildren('.panelWrapper').removeClass('bottomPanel').getLast().addClass('bottomPanel');
@@ -444,7 +428,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 	},
 
 	_addResizeBottom: function(){
-		var instance=this;
+		var instance = this;
 		var element = this.el.panel;
 
 		var handle = this.el.handle;
@@ -531,8 +515,8 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 					}
 				}
 
-				instance.fireEvent('resize',[this]);
-				MUI.get(partner).fireEvent('resize',[this]);
+				instance.fireEvent('resize', [this]);
+				MUI.get(partner).fireEvent('resize', [this]);
 			}.bind(this)
 		});
 	}
