@@ -18,7 +18,7 @@
  new MUI.Window({
  id: 'mywindow',
  title: 'My Window',
- contentURL: 'pages/lipsum.html',
+ content: {url:'pages/lipsum.html'},
  width: 340,
  height: 150
  });
@@ -73,7 +73,7 @@ var initializeWindows = function(){
 	MUI.ajaxpageWindow = function(){
 		new MUI.Window({
 			id: 'ajaxpage',
-			contentURL: 'pages/lipsum.html',
+			content: { url:'pages/lipsum.html' },
 			width: 340,
 			height: 150
 		});
@@ -105,14 +105,16 @@ var initializeWindows = function(){
 			id: 'youtube',
 			title: 'YouTube in Iframe',
 			loadMethod: 'iframe',
-			contentURL: 'pages/youtube.html',
 			width: 340,
 			height: 280,
 			resizeLimit: {'x': [330, 2500], 'y': [250, 2000]},
-			sections: [
+			content: [
+				{ url:'pages/youtube.html'},
 				{
 					position: 'top',
 					loadMethod:'json',
+					id: 'youtube_toolbar',
+					css: 'mochaToolbar',
 					content: [
 						{'text':'Zero 7','url':'pages/youtube.html','title':'Zero 7'},
 						{'text':'Fleet Foxes','url':'pages/youtube2.html','title':'Fleet Foxes'},
@@ -143,20 +145,21 @@ var initializeWindows = function(){
 			id: 'clock',
 			title: 'Canvas Clock',
 			addClass: 'transparent',
-			contentURL: '{plugins}coolclock/index.html',
+			content: {
+				url:'{plugins}coolclock/index.html',
+				require: {
+				js: ['{plugins}coolclock/scripts/coolclock.js'],
+				onload: function(){
+					if (CoolClock) new CoolClock();
+				}
+			}},
 			shape: 'gauge',
 			headerHeight: 30,
 			width: 160,
 			height: 160,
 			x: 570,
 			y: 140,
-			padding: {top: 0, right: 0, bottom: 0, left: 0},
-			require: {
-				js: ['{plugins}coolclock/scripts/coolclock.js'],
-				onload: function(){
-					if (CoolClock) new CoolClock();
-				}
-			}
+			padding: 0
 		});
 	};
 	if ($('clockLinkCheck')){
@@ -170,7 +173,19 @@ var initializeWindows = function(){
 		new MUI.Window({
 			id: 'parametrics',
 			title: 'Window Parametrics',
-			contentURL: '{plugins}parametrics/index.html',
+			content: {
+				url:'{plugins}parametrics/index.html',
+				require: {
+					css: ['{plugins}parametrics/css/style.css'],
+					js: ['{plugins}parametrics/scripts/parametrics.js'],
+					onload: function(){
+						if (MUI.addRadiusSlider) MUI.addRadiusSlider();
+						if (MUI.addShadowSlider) MUI.addShadowSlider();
+						if (MUI.addOffsetXSlider) MUI.addOffsetXSlider();
+						if (MUI.addOffsetYSlider) MUI.addOffsetYSlider();
+					}
+				}
+			},
 			width: 305,
 			height: 210,
 			x: 570,
@@ -179,16 +194,6 @@ var initializeWindows = function(){
 			resizable: false,
 			minimizable: true,
 			maximizable: false,
-			require: {
-				css: ['{plugins}parametrics/css/style.css'],
-				js: ['{plugins}parametrics/scripts/parametrics.js'],
-				onload: function(){
-					if (MUI.addRadiusSlider) MUI.addRadiusSlider();
-					if (MUI.addShadowSlider) MUI.addShadowSlider();
-					if (MUI.addOffsetXSlider) MUI.addOffsetXSlider();
-					if (MUI.addOffsetYSlider) MUI.addOffsetYSlider();
-				}
-			},
 			onDragStart: function(instance){
 				if (!Browser.Engine.trident) instance.el.windowEl.setStyle('opacity', 0.5);
 				// VML doesn't render opacity nicely on the shadow
@@ -213,6 +218,7 @@ var initializeWindows = function(){
 			height: 350,
 			resizeLimit: {'x': [450, 2500], 'y': [300, 2000]},
 			scrollbars: false, // Could make this automatic if a 'panel' method were created
+			content: '',
 			onLoaded: function(){
 
 				new MUI.Column({
@@ -261,20 +267,22 @@ var initializeWindows = function(){
 		new MUI.Window({
 			id: 'fxmorpherExample',
 			title: 'Path Animation Example',
-			contentURL: '{plugins}Fx.Morpher/example.html',
+			content: {
+				url:'{plugins}Fx.Morpher/example.html',
+				require: {
+					css: ['{plugins}Fx.Morpher/css/style.css'],
+					js: ['{plugins}Fx.Morpher/scripts/cbox.js', '{plugins}Fx.Morpher/scripts/example.js'],
+					onload: function(){
+						createCanvas();
+						myAnim.delay(250);
+					}
+				}
+			},
 			width: 330,
 			height: 330,
 			padding: {top: 0, right: 0, bottom: 0, left: 0},
 			scrollbars: false,
-			resizable: false,
-			require: {
-				css: ['{plugins}Fx.Morpher/css/style.css'],
-				js: ['{plugins}Fx.Morpher/scripts/cbox.js', '{plugins}Fx.Morpher/scripts/example.js'],
-				onload: function(){
-					createCanvas();
-					myAnim.delay(250);
-				}
-			}
+			resizable: false
 		});
 	};
 
@@ -292,7 +300,7 @@ var initializeWindows = function(){
 		new MUI.Window({
 			id: 'windowevents',
 			title: 'Window Events',
-			contentURL: 'pages/events.html',
+			content: { url:'pages/events.html' },
 			width: 340,
 			height: 255,
 			onLoaded: function(){
@@ -338,7 +346,7 @@ var initializeWindows = function(){
 		new MUI.Window({
 			id: 'containertest',
 			title: 'Container Test',
-			contentURL: 'pages/lipsum.html',
+			content: { url:'pages/lipsum.html' },
 			container: 'pageWrapper',
 			width: 340,
 			height: 150,
@@ -358,7 +366,7 @@ var initializeWindows = function(){
 			id: 'iframetests',
 			title: 'Iframe Tests',
 			loadMethod: 'iframe',
-			contentURL: 'pages/iframetests.html'
+			content: { url:'pages/iframetests.html' }
 		});
 	};
 	if ($('iframetestsLinkCheck')){
@@ -372,7 +380,7 @@ var initializeWindows = function(){
 		new MUI.Window({
 			id: 'formtests',
 			title: 'Form Tests',
-			contentURL: 'pages/formtests.html',
+			content: { url:'pages/formtests.html' },
 			onLoaded: function(){
 				document.testForm.focusTest.focus();
 			}
@@ -390,14 +398,13 @@ var initializeWindows = function(){
 		new MUI.Window({
 			id: id,
 			title: 'Accordion',
-			contentURL: 'pages/accordion-demo.json',
+			content: { url:'pages/accordion-demo.json', loadMethod: 'json' },
 			width: 300,
 			height: 200,
 			scrollbars: false,
 			resizable: false,
 			maximizable: false,
 
-			loadMethod: 'json',
 			onLoaded: function(el, cOptions, json){
 				MUI.create('MUI.Accordion', {
 					'container':id,
@@ -418,7 +425,7 @@ var initializeWindows = function(){
 		new MUI.Window({
 			id: 'nocanvas',
 			title: 'No Canvas',
-			contentURL: 'pages/lipsum.html',
+			content: { url:'pages/lipsum.html' },
 			addClass: 'no-canvas',
 			width: 305,
 			height: 175,
@@ -439,7 +446,7 @@ var initializeWindows = function(){
 		new MUI.Window({
 			id: 'css3',
 			title: 'CSS3',
-			contentURL: 'pages/lipsum.html',
+			content: { url:'pages/lipsum.html' },
 			addClass: 'no-canvas',
 			width: 305,
 			height: 175,
@@ -459,7 +466,7 @@ var initializeWindows = function(){
 		new MUI.Window({
 			id: 'css3fallback',
 			title: 'CSS3 with Fallback to Canvas',
-			contentURL: 'pages/lipsum.html',
+			content: { url:'pages/lipsum.html' },
 			width: 305,
 			height: 175,
 			resizable: false,
@@ -478,7 +485,7 @@ var initializeWindows = function(){
 		new MUI.Window({
 			id: 'forceCanvas',
 			title: 'Force Canvas',
-			contentURL: 'pages/lipsum.html',
+			content: { url:'pages/lipsum.html' },
 			width: 305,
 			height: 175,
 			resizable: false,
@@ -561,22 +568,24 @@ var initializeWindows = function(){
 			id: 'builder',
 			title: 'Window Builder',
 			icon: 'images/icons/16x16/page.gif',
-			contentURL: '{plugins}windowform/',
+			content: {
+				url:'{plugins}windowform/',
+				require: {
+					css: ['{plugins}windowform/css/style.css'],
+					js: ['{plugins}windowform/scripts/window-from-form.js'],
+					onload: function(){
+						$('newWindowSubmit').addEvent('click', function(e){
+							e.stop();
+							new MUI.WindowForm();
+						});
+					}
+				}
+			},
 			width: 375,
 			height: 420,
 			maximizable: false,
 			resizable: false,
-			scrollbars: false,
-			require: {
-				css: ['{plugins}windowform/css/style.css'],
-				js: ['{plugins}windowform/scripts/window-from-form.js'],
-				onload: function(){
-					$('newWindowSubmit').addEvent('click', function(e){
-						e.stop();
-						new MUI.WindowForm();
-					});
-				}
-			}
+			scrollbars: false
 		});
 	};
 	if ($('builderLinkCheck')){
@@ -632,11 +641,11 @@ var initializeWindows = function(){
 		new MUI.Window({
 			id: 'features',
 			title: 'Features',
-			contentURL: 'pages/features-layout.html',
 			width: 275,
 			height: 250,
 			resizeLimit: {'x': [275, 2500], 'y': [125, 2000]},
-			sections: [
+			content: [
+				{ url:'pages/features-layout.html' },
 				{
 					position: 'top',
 					url: 'pages/features-tabs.html',
@@ -663,7 +672,7 @@ var initializeWindows = function(){
 		new MUI.Modal({
 			id: 'about',
 			title: 'MUI',
-			contentURL: 'pages/about.html',
+			content: { url:'pages/about.html' },
 			type: 'modal2',
 			width: 350,
 			height: 195,
@@ -683,7 +692,7 @@ var initializeWindows = function(){
 		new MUI.Modal({
 			id: 'authorsWindow',
 			title: 'AUTHORS.txt',
-			contentURL: 'scripts/AUTHORS.txt',
+			content: { url:'scripts/AUTHORS.txt' },
 			width: 400,
 			height: 250,
 			scrollbars: true
@@ -700,7 +709,7 @@ var initializeWindows = function(){
 		new MUI.Modal({
 			id: 'License',
 			title: 'MIT-LICENSE.txt',
-			contentURL: 'scripts/MIT-LICENSE.txt',
+			content: { url:'scripts/MIT-LICENSE.txt' },
 			width: 580,
 			height: 350,
 			scrollbars: true

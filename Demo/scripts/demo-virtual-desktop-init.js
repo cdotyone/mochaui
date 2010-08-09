@@ -18,7 +18,7 @@
  new MUI.Window({
  id: 'mywindow',
  title: 'My Window',
- contentURL: 'pages/lipsum.html',
+ content: {url:pages/lipsum.html'},
  width: 340,
  height: 150
  });
@@ -65,7 +65,7 @@ initializeWindows = function() {
 		new MUI.Window({
 			id: 'ajaxpage',
 			loadMethod: 'xhr',
-			contentURL: 'pages/lipsum.html',
+			content: { url:'pages/lipsum.html' },
 			width: 340,
 			height: 150
 		});
@@ -99,11 +99,12 @@ initializeWindows = function() {
 			id: 'youtube',
 			title: 'YouTube in Iframe',
 			loadMethod: 'iframe',
-			contentURL: 'pages/youtube.html',
 			width: 340,
 			height: 280,
 			resizeLimit: {'x': [330, 2500], 'y': [250, 2000]},
-			sections: [{
+			content: [
+				{ url: 'pages/youtube.html' },
+				{
 				'position': 'top',
 				section: 'toolbar',
 				loadMethod:'json',
@@ -138,7 +139,7 @@ initializeWindows = function() {
 			title: 'Canvas Clock',
 			addClass: 'transparent',
 			loadMethod: 'xhr',
-			contentURL: '{plugins}coolclock/index.html',
+			content: { url:'{plugins}coolclock/index.html' },
 			shape: 'gauge',
 			headerHeight: 30,
 			width: 160,
@@ -166,7 +167,7 @@ initializeWindows = function() {
 			id: 'parametrics',
 			title: 'Window Parametrics',
 			loadMethod: 'xhr',
-			contentURL: '{plugins}parametrics/index.html',
+			content: { url: '{plugins}parametrics/index.html' },
 			width: 305,
 			height: 210,
 			x: 230,
@@ -199,7 +200,7 @@ initializeWindows = function() {
 			id: 'windowevents',
 			title: 'Window Events',
 			loadMethod: 'xhr',
-			contentURL: 'pages/events.html',
+			content: { url: 'pages/events.html' },
 			width: 340,
 			height: 250,
 			onLoaded: function() {
@@ -240,7 +241,7 @@ initializeWindows = function() {
 			id: 'containertest',
 			title: 'Container Test',
 			loadMethod: 'xhr',
-			contentURL: 'pages/lipsum.html',
+			content: { url: 'pages/lipsum.html' },
 			container: 'pageWrapper',
 			width: 340,
 			height: 150,
@@ -260,7 +261,7 @@ initializeWindows = function() {
 			id: 'iframetests',
 			title: 'Iframe Tests',
 			loadMethod: 'iframe',
-			contentURL: 'pages/iframetests.html'
+			content: { url: 'pages/iframetests.html' }
 		});
 	};
 	if ($('iframetestsLinkCheck')) {
@@ -275,21 +276,22 @@ initializeWindows = function() {
 		new MUI.Window({
 			id: id,
 			title: 'Accordion',
-			contentURL: 'pages/accordion-demo.json',
+			content: {
+				url: 'pages/accordion-demo.json',
+				loadMethod: 'json',
+				onLoaded: function(el,cOptions,json){
+					MUI.create('MUI.Accordion',{
+						'container':id,
+						'idField':'value',
+						'panels':json
+					});
+				}
+			},
 			width: 300,
 			height: 200,
 			scrollbars: false,
 			resizable: false,
-			maximizable: false,
-
-			loadMethod: 'json',
-			onLoaded: function(el,cOptions,json){
-				MUI.create('MUI.Accordion',{
-					'container':id,
-					'idField':'value',
-					'panels':json
-				});
-			}
+			maximizable: false
 		});
 	};
 	if ($('accordiantestLinkCheck')) {
@@ -304,7 +306,7 @@ initializeWindows = function() {
 			id: 'nocanvas',
 			title: 'No Canvas',
 			loadMethod: 'xhr',
-			contentURL: 'pages/lipsum.html',
+			content: { url:'pages/lipsum.html' },
 			addClass: 'no-canvas',
 			width: 305,
 			height: 175,
@@ -363,7 +365,7 @@ initializeWindows = function() {
 			title: 'Window Builder',
 			icon: 'images/icons/page.gif',
 			loadMethod: 'xhr',
-			contentURL: '{plugins}windowform/',
+			content: { url:'{plugins}windowform/' },
 			width: 370,
 			height: 410,
 			maximizable: false,
@@ -430,11 +432,12 @@ initializeWindows = function() {
 		new MUI.Window({
 			id: 'features',
 			title: 'Features',
-			contentURL: 'pages/features-layout.html',
 			width: 275,
 			height: 250,
 			resizeLimit: {'x': [275, 2500], 'y': [125, 2000]},
-			sections: [{
+			content: [
+				{url:'pages/features-layout.html'},
+				{
 				'position': 'top',
 				section: 'toolbar',
 				url: 'pages/features-tabs.html',
@@ -463,7 +466,7 @@ initializeWindows = function() {
 			addClass: 'about',
 			title: 'MochaUI',
 			loadMethod: 'xhr',
-			contentURL: 'pages/about.html',
+			content: { url:'pages/about.html' },
 			type: 'modal2',
 			width: 350,
 			height: 195,
@@ -483,7 +486,7 @@ initializeWindows = function() {
 		new MUI.Modal({
 			id: 'authorsWindow',
 			title: 'AUTHORS.txt',
-			contentURL: 'scripts/AUTHORS.txt',
+			content: { url:'scripts/AUTHORS.txt' },
 			width: 400,
 			height: 250,
 			scrollbars:true
@@ -500,7 +503,7 @@ initializeWindows = function() {
 		new MUI.Modal({
 			id: 'License',
 			title: 'MIT-LICENSE.txt',
-			contentURL: 'scripts/MIT-LICENSE.txt',
+			content: { url:'scripts/MIT-LICENSE.txt' },
 			width: 580,
 			height: 350,
 			scrollbars:true

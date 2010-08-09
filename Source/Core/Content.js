@@ -103,7 +103,7 @@ MUI.Content = (MUI.Content || $H({})).extend({
 		if (instance && instance.updateClear) removeContent = instance.updateClear(options);
 
 		// Remove old content.
-		if (removeContent && element) element.empty().show();
+		if (removeContent && element) options.contentContainer.empty().show();
 
 		// prepare function to persist the data
 		if (options.persist && MUI.Content.Providers[options.loadMethod].canPersist){
@@ -478,20 +478,25 @@ MUI.extend({
 		/// intercepts workflow from MUI.Content.update
 		/// sets title and scroll bars of this window
 		updateStart: function(options){
+			if (!options.position) options.position = 'content';
 			if (options.position == 'content'){
-				// copy padding from main options if not passed in
-				if (!options.padding && this.options.padding && $type(this.options.padding) != 'number')
-					options.padding = $extend(options, this.options.padding);
-				if (!options.padding && this.options.padding && $type(this.options.padding) == 'number')
-					options.padding = {top:this.options.padding,left:this.options.padding,right:this.options.padding,bottom:this.options.padding};
+				options.contentContainer = this.el.content;
+				if (!options.padding) options.padding = this.options.padding;
+				if (options.padding){
+					// copy padding from main options if not passed in
+					if ($type(options.padding) != 'number')
+						options.padding = $extend(options, this.options.padding);
+					if ($type(options.padding) == 'number')
+						options.padding = {top:options.padding,left:options.padding,right:options.padding,bottom:options.padding};
 
-				// update padding if requested
-				if (options.padding) this.el.content.setStyles({
-					'padding-top': options.padding.top,
-					'padding-bottom': options.padding.bottom,
-					'padding-left': options.padding.left,
-					'padding-right': options.padding.right
-				});
+					// update padding if requested
+					this.el.content.setStyles({
+						'padding-top': options.padding.top,
+						'padding-bottom': options.padding.bottom,
+						'padding-left': options.padding.left,
+						'padding-right': options.padding.right
+					});
+				}
 
 				// set title if given option to do so
 				if (options.title && this.el && this.el.title){
@@ -516,8 +521,8 @@ MUI.extend({
 				if (iframes) iframes.destroy();
 
 				// Panels are not loaded into the padding div, so we remove them separately.
-				//this.el.content.getAllNext('.column').destroy();
-				//this.el.content.getAllNext('.columnHandle').destroy();
+				this.el.content.getAllNext('.column').destroy();
+				this.el.content.getAllNext('.columnHandle').destroy();
 			}
 			return true;
 		},

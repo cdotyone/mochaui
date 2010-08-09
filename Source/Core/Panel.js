@@ -36,9 +36,6 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		// if it is an array then assume we need to update multiple sections of the panel
 		// if it is not a string or array it assumes that is a hash and just the content section will have .
 
-		// additional content sections
-		sections:				false,			// hash to provide all of the update options for all of the different sections of the panel.
-
 		// header
 		header:					true,			// true to create a panel header when panel is created
 		title:					'New Panel',	// the title inserted into the panel's header
@@ -86,8 +83,6 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 		this.fireEvent('drawBegin', [this]);
 
-		if (options.loadMethod == 'iframe') options.padding = 0;  // Iframes have their own padding.
-
 		this.showHandle = $(options.column).getChildren().length != 0;
 
 		this.el.panelWrapper = new Element('div', {
@@ -120,19 +115,14 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				// was passed html, so make sure it is added
 				this.sections.push({
 					loadMethod:'html',
-					content:options.content,
-					element:this.el.panel,
-					position:'content'
+					content:options.content
 				});
 				break;
 			case 'array':
 				this.sections = options.content;
 				break;
 			default:
-				this.sections.push($extend({
-					element:this.el.panel,
-					position:'content'
-				}, options.content));
+				this.sections.push(options.content);
 		}
 
 		// determine of this panel has a footer
@@ -225,14 +215,14 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 			section = $extend({
 				'element': this.el.panel,
 				'wrap': false,
-				'position': 'header',
+				'position': 'content',
 				'empty': false,
 				'addClass': false,
 				'height': false,
 				'id': id,
 				'css': '',
 				'loadMethod': 'xhr',
-				'method': options.method
+				'method': 'get'
 			}, section);
 
 			var wrap = section.wrap;
@@ -252,7 +242,9 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 					intoEl = this.el.footer; break;
 					break;
 				case 'content':
-					this.sections[idx].element = this.el.content;
+					if (section.loadMethod == 'iframe') section.padding = 0;  // Iframes have their own padding.
+					section.element = this.el.content;
+					this.sections[idx] = section;
 					return;
 			}
 

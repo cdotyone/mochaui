@@ -93,6 +93,7 @@ MUI.Tabs = new Class({
 			div = instance.el.panelHeaderContent.getElement('div').empty();
 		} else if(instance && instance.isTypeOf('MUI.Window')) {
 			div = $(o.id);
+			if(div==null) div = new Element('div',{'id':o.id,'class':o.cssClass}).inject(instance.el.contentWrapper,'top');
 			div.addClass(o.cssClass);
 		} else {
 			div = $(o.id);

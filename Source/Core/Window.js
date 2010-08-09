@@ -28,28 +28,12 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 		title:				'New Window',
 		icon:				false,
 		type:				'window',
-		require: {
-			css:			[],
-			images:			[],
-			js:				[],
-			onload:			null
-		},
-		loadMethod:			null,
-		method:				'get',
-		contentURL:			null,
-		data:				null,
 
-		closeAfter:			false,
-
-		// xhr options
-		evalScripts:		true,
-		evalResponse:		false,
-
-		// html options
-		content:			null,
-
-		// additional content sections
-		sections:			false,
+		// content section update options
+		content:				false,			// used to update the content section of the panel.
+		// if it is a string it assumes that the content is html and it will be injected into the content div.
+		// if it is an array then assume we need to update multiple sections of the panel
+		// if it is not a string or array it assumes that is a hash and just the content section will have .
 
 		// Container options
 		container:			null,
@@ -63,6 +47,7 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 
 		// Close options
 		storeOnClose:		false,
+		closeAfter:			false,
 
 		// Modal options
 		modalOverlayClose:	true,
@@ -100,7 +85,6 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 		// Events
 		onDrawBegin:		$empty,
 		onDrawEnd:			$empty,
-		onLoaded:	$empty,
 		onFocus:			$empty,
 		onBlur:				$empty,
 		onResize:			$empty,
@@ -127,6 +111,7 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 				if (instance.iframe) instance.el.iframe.setStyle('visibility', 'hidden');
 				if (instance.sections){
 					instance.sections.each(function(section){
+						if (section.position == 'content') return;
 						var el=section.wrap ? section.wrapperEl : section.element;
 						if (el) el.setStyle('visibility', 'hidden');
 					});
@@ -140,6 +125,7 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 				if (instance.iframe) instance.el.iframe.setStyle('visibility', 'visible');
 				if (instance.sections){
 					instance.sections.each(function(section){
+						if (section.position == 'content') return;
 						var el=section.wrap ? section.wrapperEl : section.element;
 						if (el) el.setStyle('visibility', 'visible');
 					});
@@ -336,17 +322,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		// i.e. IE8 Test CSS3 Body
 		if (options.useCSS3 && !this.useCSS3 && !this.options.useCanvas) options.shadowBlur = 0;
 
-		if (options.require.css.length || options.require.images.length){
-			new MUI.Require({
-				css: options.require.css,
-				images: options.require.images,
-				onload: function(){
-					this.draw();
-				}.bind(this)
-			});
-		} else {
-			this.draw();
-		}
+		this.draw();
 
 		// Return window object
 		return this;
@@ -421,8 +397,6 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			}
 		}
 
-		if (options.loadMethod == 'iframe') options.padding = {top: 0, right: 0, bottom: 0, left: 0};
-
 		// Insert sub elements inside el.windowEl
 		this._insertWindowElements();
 
@@ -458,31 +432,17 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 
 		// Inject window into DOM
 		this.el.windowEl.inject(options.container);
-		
+
 		// Convert CSS colors to Canvas colors.
 		this._setColors();
 		if (options.type != 'notification') this._setMochaControlsWidth();
 
-		// Add content to window.
-		MUI.Content.update({
-			'instance': this,
-			'element': this.el.content,
-			'content': options.content,
-			'method': options.method,
-			'url': options.contentURL,
-			'data': options.data,
-			"onLoaded": null,
-			'require': {
-				js: options.require.js,
-				onload: options.require.onload
-			},
-			'section':'content'
-		});
-
 		// load/build all of the additional  content sections
-		if (options.sections) options.sections.each(function(section){
+		if (this.sections) this.sections.each(function(section){
+			if (section.onLoaded) section.onLoaded = section.onLoaded.bind(this);
+			section.instance = this;
 			MUI.Content.update(section);
-		});
+		},this);
 
 		this.redraw();
 
@@ -519,7 +479,6 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		});
 
 		// Create opacityMorph
-
 		this.opacityMorph = new Fx.Morph(this.el.windowEl, {
 			'duration': 350,
 			transition: Fx.Transitions.Sine.easeInOut,
@@ -593,7 +552,8 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 
 		var width = this.el.contentWrapper.getStyle('width').toInt() + shadowBlur2x;
 		var height = this.el.contentWrapper.getStyle('height').toInt() + this.headerFooterShadow + borderHeight;
-		if (options.sections) options.sections.each(function(section){
+		if (this.sections) this.sections.each(function(section){
+			if(section.position=='content') return;
 			var el = section.wrap ? section.wrapperEl : section.element;
 			height += el.getStyle('height').toInt() + el.getStyle('border-top').toInt();
 		} );
@@ -815,39 +775,37 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 	},
 
 	close: function(){
-		var self = this;
-
 		// Does window exist and is not already in process of closing ?
-		if (self.isClosing) return this;
+		if (this.isClosing) return this;
 
-		self.isClosing = true;
-		self.fireEvent('close', [this]);
+		this.isClosing = true;
+		this.fireEvent('close', [this]);
 
-		if (self.options.storeOnClose){
+		if (this.options.storeOnClose){
 			this._storeOnClose();
 			return this;
 		}
-		if (self.check) self.check.destroy();
+		if (this.check) this.check.destroy();
 
-		if ((self.options.type == 'modal' || self.options.type == 'modal2') && Browser.Engine.trident4){
+		if ((this.options.type == 'modal' || this.options.type == 'modal2') && Browser.Engine.trident4){
 			$('modalFix').hide();
 		}
 
 		if (!MUI.options.advancedEffects){
-			if (self.options.type == 'modal' || self.options.type == 'modal2') $('modalOverlay').setStyle('opacity', 0);
-			self._doClosingJobs();
+			if (this.options.type == 'modal' || this.options.type == 'modal2') $('modalOverlay').setStyle('opacity', 0);
+			this._doClosingJobs();
 		} else {
 			// Redraws IE windows without shadows since IE messes up canvas alpha when you change element opacity
-			if (Browser.Engine.trident) self.redraw(false);
-			if (self.options.type == 'modal' || self.options.type == 'modal2'){
+			if (Browser.Engine.trident) this.redraw(false);
+			if (this.options.type == 'modal' || this.options.type == 'modal2'){
 				MUI.Modal.modalOverlayCloseMorph.start({
 					'opacity': 0
 				});
 			}
-			var closeMorph = new Fx.Morph(self.el.windowEl, {
+			var closeMorph = new Fx.Morph(this.el.windowEl, {
 				duration: 120,
 				onComplete: function(){
-					self._doClosingJobs();
+					this._doClosingJobs();
 					return true;
 				}.bind(this)
 			});
@@ -872,6 +830,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			});
 			if (this.sections){
 				this.sections.each(function(section){
+					if(section.position=='content') return;
 					var el = section.wrap ? section.wrapperEl : section.element;
 					if (el) el.setStyles({
 						visibility: 'visible',
@@ -895,6 +854,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			});
 			if (this.sections){
 				this.sections.each(function(section){
+					if(section.position=='content') return;
 					var el = section.wrap ? section.wrapperEl : section.element;
 					if (el) el.setStyles({
 						visibility: 'hidden',
@@ -1113,8 +1073,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 	},
 
 	_insertWindowElements: function(){
-		var self = this;
-		var options = self.options;
+		var options = this.options;
 		var height = options.height;
 		var width = options.width;
 		var id = options.id;
@@ -1132,7 +1091,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 				'styles': {
 					'position': 'absolute' // This is set here to make theme transitions smoother
 				}
-			}).inject(self.el.windowEl);
+			}).inject(this.el.windowEl);
 		}
 
 		cache.overlay = new Element('div', {
@@ -1143,7 +1102,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 				'top': 0,
 				'left': 0
 			}
-		}).inject(self.el.windowEl);
+		}).inject(this.el.windowEl);
 
 		cache.titleBar = new Element('div', {
 			'id': id + '_titleBar',
@@ -1179,7 +1138,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			}
 		}).inject(cache.contentBorder);
 
-		if (self.options.shape == 'gauge'){
+		if (this.options.shape == 'gauge'){
 			cache.contentBorder.setStyle('borderWidth', 0);
 		}
 
@@ -1188,14 +1147,14 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			'class': 'mochaContent'
 		}).inject(cache.contentWrapper);
 
-		if (self.options.useCanvas && !this.useCSS3){
+		if (this.options.useCanvas && !this.useCSS3){
 			if (!Browser.Engine.trident){
 				cache.canvas = new Element('canvas', {
 					'id': id + '_canvas',
 					'class': 'mochaCanvas',
 					'width': 10,
 					'height': 10
-				}).inject(self.el.windowEl);
+				}).inject(this.el.windowEl);
 			} else if (Browser.Engine.trident){
 				cache.canvas = new Element('canvas', {
 					'id': id + '_canvas',
@@ -1207,11 +1166,11 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 						'top': 0,
 						'left': 0
 					}
-				}).inject(self.el.windowEl);
+				}).inject(this.el.windowEl);
 
 				if (MUI.ieSupport == 'excanvas'){
 					G_vmlCanvasManager.initElement(cache.canvas);
-					cache.canvas = self.el.windowEl.getElement('.mochaCanvas');
+					cache.canvas = this.el.windowEl.getElement('.mochaCanvas');
 				}
 			}
 		}
@@ -1227,60 +1186,83 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			'styles':{ 'width': width - 30 }
 		}).inject(cache.overlay, 'bottom');
 
-		if (options.sections){
-			var snum = 0;
-			options.sections.each(function(section,idx){
-				var intoEl = cache.contentBorder;
+		// make sure we have a content sections
+		this.sections = [];
 
-				section.element = self.el.windowEl;
-				snum++;
-				var id = self.options.id + '_' + (section.section || 'section' + snum);
-
-				section = $extend({
-					'wrap': true,
-					'position': 'top',
-					'empty': false,
-					'height': 29,
-					'id': id,
-					'css': 'mochaToolbar',
-					'section': 'section' + snum,
-					'loadMethod': 'xhr',
-					'method': self.options.method
-				}, section);
-
-				var wrap = section.wrap;
-				var where = section.position == 'bottom' ? 'after' : 'before';
-				var empty = section.empty;
-				if (section.position == 'header' || section.position == 'footer'){
-					intoEl = section.position == 'header' ? cache.titleBar : cache.footer;
-					where = 'bottom';
-					wrap = false;
-				} else empty = false; // can't empty in content border area
-
-				if (wrap){
-					section.wrapperEl = new Element('div', {
-						'id': section.id + '_wrapper',
-						'class': section.css+'Wrapper',
-						'styles': {'height': section.height}
-					}).inject(intoEl, where);
-
-					if (section.position == 'bottom') section.wrapperEl.addClass('bottom');
-					intoEl = section.wrapperEl;
-				}
-
-				if (empty) intoEl.empty();
-				section.element = new Element('div', {
-					'id': section.id,
-					'class': section.css,
-					'styles': {'height': section.height}
-				}).inject(intoEl);
-
-				section.wrapperEl = intoEl;
-				if (section.wrap && section.position == 'bottom') section.element.addClass('bottom');
-
-				self.options.sections[idx] = section;
-			});
+		switch($type(options.content)) {
+			case 'string':
+				// was passed html, so make sure it is added
+				this.sections.push({
+					loadMethod:'html',
+					content:options.content
+				});
+				break;
+			case 'array':
+				this.sections = options.content;
+				break;
+			default:
+				this.sections.push(options.content);
 		}
+
+		var snum = 0;
+		this.sections.each(function(section,idx){
+			var intoEl = cache.contentBorder;
+
+			section.element = this.el.windowEl;
+			snum++;
+			var id = this.options.id + '_' + (section.section || 'section' + snum);
+
+			section = $extend({
+				'wrap': true,
+				'position': 'content',
+				'empty': false,
+				'height': 29,
+				'id': id,
+				'css': null,
+				'loadMethod': 'xhr',
+				'method': 'get'
+			}, section);
+
+			if (section.position == 'content'){
+				if (section.loadMethod == 'iframe') this.options.padding = 0;  // Iframes have their own padding.
+				section.element = cache.content;
+				this.sections[idx] = section;
+				return;
+			}
+
+			var wrap = section.wrap;
+			var where = section.position == 'bottom' ? 'after' : 'before';
+			var empty = section.empty;
+			if (section.position == 'header' || section.position == 'footer'){
+				if(!section.css) section.css='mochaToolbar';
+				intoEl = section.position == 'header' ? cache.titleBar : cache.footer;
+				where = 'bottom';
+				wrap = false;
+			} else empty = false; // can't empty in content border area
+
+			if (wrap){
+				section.wrapperEl = new Element('div', {
+					'id': section.id + '_wrapper',
+					'class': section.css+'Wrapper',
+					'styles': {'height': section.height}
+				}).inject(intoEl, where);
+
+				if (section.position == 'bottom') section.wrapperEl.addClass('bottom');
+				intoEl = section.wrapperEl;
+			}
+
+			if (empty) intoEl.empty();
+			section.element = new Element('div', {
+				'id': section.id,
+				'class': section.css,
+				'styles': {'height': section.height}
+			}).inject(intoEl);
+
+			section.wrapperEl = intoEl;
+			if (section.wrap && section.position == 'bottom') section.element.addClass('bottom');
+
+			this.sections[idx] = section;
+		},this);
 
 		if (options.useCanvasControls){
 			cache.canvasControls = new Element('canvas', {
@@ -1288,11 +1270,11 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 				'class': 'mochaCanvasControls',
 				'width': 14,
 				'height': 14
-			}).inject(self.el.windowEl);
+			}).inject(this.el.windowEl);
 
 			if (Browser.Engine.trident && MUI.ieSupport == 'excanvas'){
 				G_vmlCanvasManager.initElement(cache.canvasControls);
-				cache.canvasControls = self.el.windowEl.getElement('.mochaCanvasControls');
+				cache.canvasControls = this.el.windowEl.getElement('.mochaCanvasControls');
 			}
 		}
 
@@ -1329,17 +1311,17 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			}).inject(cache.footer, 'bottom');
 		}
 
-		if (self.options.shape == 'gauge'){
+		if (this.options.shape == 'gauge'){
 			cache.canvasHeader = new Element('canvas', {
 				'id': id + '_canvasHeader',
 				'class': 'mochaCanvasHeader',
-				'width': self.options.width,
+				'width': this.options.width,
 				'height': 26
-			}).inject(self.el.windowEl, 'bottom');
+			}).inject(this.el.windowEl, 'bottom');
 
 			if (Browser.Engine.trident && MUI.ieSupport == 'excanvas'){
 				G_vmlCanvasManager.initElement(cache.canvasHeader);
-				cache.canvasHeader = self.el.windowEl.getElement('.mochaCanvasHeader');
+				cache.canvasHeader = this.el.windowEl.getElement('.mochaCanvasHeader');
 			}
 		}
 
@@ -1481,8 +1463,9 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 	_getAllSectionsHeight: function(){
 		// Get the total height of all of the custom sections in the content area.
 		var height = 0;
-		if (this.options.sections){
-			this.options.sections.each(function(section){
+		if (this.sections){
+			this.sections.each(function(section){
+				if(section.position=='content') return;
 				height += section.wrapperEl.getStyle('height').toInt() + section.wrapperEl.getStyle('border-top').toInt();
 			});
 		}
@@ -1490,14 +1473,13 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 	},
 
 	_css3SetStyles: function(){
-		var self = this;
 		var options = this.options;
 		var color = Asset.getCSSRule('.mochaCss3Shadow').style.backgroundColor;
 		['', '-o-', '-webkit-', '-moz-'].each(function(pre){
-			self.el.windowEl.setStyle(pre + 'box-shadow', options.shadowOffset.x + 'px ' + options.shadowOffset.y + 'px ' + options.shadowBlur + 'px ' + color);
-			self.el.windowEl.setStyle(pre + 'border-radius', options.cornerRadius + 'px');
-			self.el.titleBar.setStyle(pre + 'border-radius', options.cornerRadius + 'px '+options.cornerRadius + 'px 0px 0px');
-		});
+			this.el.windowEl.setStyle(pre + 'box-shadow', options.shadowOffset.x + 'px ' + options.shadowOffset.y + 'px ' + options.shadowBlur + 'px ' + color);
+			this.el.windowEl.setStyle(pre + 'border-radius', options.cornerRadius + 'px');
+			this.el.titleBar.setStyle(pre + 'border-radius', options.cornerRadius + 'px '+options.cornerRadius + 'px 0px 0px');
+		},this);
 	},
 
 	_attachDraggable: function(){
