@@ -481,8 +481,8 @@ MUI.extend({
 			if (!options.position) options.position = 'content';
 			if (options.position == 'content'){
 				options.contentContainer = this.el.content;
-				if (!options.padding) options.padding = this.options.padding;
-				if (options.padding){
+				if (options.padding==null) options.padding = this.options.padding;
+				if (options.padding || options.padding==0){
 					// copy padding from main options if not passed in
 					if ($type(options.padding) != 'number')
 						options.padding = $extend(options, this.options.padding);
