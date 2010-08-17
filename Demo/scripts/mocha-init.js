@@ -104,21 +104,22 @@ var initializeWindows = function(){
 		new MUI.Window({
 			id: 'youtube',
 			title: 'YouTube in Iframe',
-			loadMethod: 'iframe',
 			width: 340,
 			height: 280,
 			resizeLimit: {'x': [330, 2500], 'y': [250, 2000]},
 			content: [
-				{ url:'pages/youtube.html'},
+				{
+					url:'pages/youtube.html',
+					loadMethod: 'iframe'},
 				{
 					position: 'top',
 					loadMethod:'json',
 					id: 'youtube_toolbar',
 					css: 'mochaToolbar',
 					content: [
-						{'text':'Zero 7','url':'pages/youtube.html','title':'Zero 7'},
-						{'text':'Fleet Foxes','url':'pages/youtube2.html','title':'Fleet Foxes'},
-						{'text':'Boards of Canada','url':'pages/youtube3.html','title':'Boards of Canada'}
+						{'text':'Zero 7','url':'pages/youtube.html','loadMethod':'iframe','title':'Zero 7'},
+						{'text':'Fleet Foxes','url':'pages/youtube2.html','loadMethod':'iframe','title':'Fleet Foxes'},
+						{'text':'Boards of Canada','url':'pages/youtube3.html','loadMethod':'iframe','title':'Boards of Canada'}
 					],
 					onLoaded: function(element, uOptions, json){
 						MUI.create('MUI.Tabs', {
@@ -365,8 +366,10 @@ var initializeWindows = function(){
 		new MUI.Window({
 			id: 'iframetests',
 			title: 'Iframe Tests',
-			loadMethod: 'iframe',
-			content: { url:'pages/iframetests.html' }
+			content: {
+				url:'pages/iframetests.html', 
+				loadMethod: 'iframe'
+			}
 		});
 	};
 	if ($('iframetestsLinkCheck')){

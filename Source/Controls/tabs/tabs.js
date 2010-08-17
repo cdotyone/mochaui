@@ -190,6 +190,10 @@ MUI.Tabs = new Class({
 				url:	url
 			};
 			if(o.updateOptions) $extend(uOptions,o.updateOptions);
+			else {
+				var instance=MUI.get(o.partner);
+				if(instance && instance.el && instance.el.iframe) uOptions.loadMethod='iframe';
+			}
 
 			MUI.Content.update(uOptions);
 		}
