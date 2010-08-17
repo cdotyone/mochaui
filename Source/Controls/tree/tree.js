@@ -107,7 +107,7 @@ MUI.Tree = new Class({
 
 		var nodes = o.nodes;
 		if (o.nodes.length > 1){
-			var li = new Element('li', {styles:{'border':'solid 1px white;'}}).inject(ul);
+			var li = new Element('li', {styles:{'border':'solid 1px white'}}).inject(ul);
 			ul = new Element('ul').inject(li);
 		}
 		nodes.each(function(node){

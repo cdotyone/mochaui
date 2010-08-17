@@ -1008,9 +1008,9 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			}
 
 			// Set resizableColor, the color of the SE corner resize handle
-			if (this.options.resizable && this.se.getStyle('background-color') !== '' && this.se.getStyle('background-color') !== 'transparent'){
-				this.resizableColor = new Color(this.se.getStyle('background-color'));
-				this.se.addClass('replaced');
+			if (this.options.resizable && this.el.se.getStyle('background-color') !== '' && this.el.se.getStyle('background-color') !== 'transparent'){
+				this.resizableColor = new Color(this.el.se.getStyle('background-color'));
+				this.el.se.addClass('replaced');
 			}
 
 		}

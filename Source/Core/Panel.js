@@ -263,9 +263,9 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 			if (empty) intoEl.empty();
 			section.element = new Element('div', {
 				'id': section.id,
-				'class': section.css,
-				'styles': {'height': section.height}
+				'class': section.css
 			}).inject(intoEl);
+			if(section.height || $type(section.height)=='number') section.element.setStyle('height',section.height);
 
 			if (section.addClass) intoEl.addClass(section.addClass);
 
