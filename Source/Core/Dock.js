@@ -187,7 +187,7 @@ MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
 				if (this.isMinimized) this._restoreMinimized.delay(25,this);
 				else {
 					var windowEl = this.el.windowEl;
-					if (windowEl.hasClass('isFocused') && this.options.minimizable) MUI.Windows.minimize(windowEl);
+					if (windowEl.hasClass('isFocused') && this.options.minimizable) this.minimize.delay(25,this);
 					else this.focus();
 
 					// if the window is not minimized and is outside the viewport, center it in the viewport.
