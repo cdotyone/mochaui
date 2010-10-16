@@ -280,6 +280,12 @@ MUI.Content.Providers.xhr = {
 		var contentContainer = options.contentContainer;
 		var fireLoaded = options.fireLoaded;
 
+		// if js is required, but no url, fire loaded to proceed with js-only
+		if (options.url == null && options.require.length != 0){
+			Browser.Engine.trident4 ? fireLoaded.delay(50, this, [instance, options]) : fireLoaded(instance, options);
+			return null;
+		}
+
 		// load persisted data if it exists
 		var content = options.persistLoad(options);
 
