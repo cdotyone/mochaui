@@ -281,7 +281,7 @@ MUI.Content.Providers.xhr = {
 		var fireLoaded = options.fireLoaded;
 		
 		// if js is required, but no url, fire loaded to proceed with js-only
-		if (options.url == null && options.require.length != 0){
+		if (options.url == null && options.require.js && options.require.js.length != 0){
 			Browser.Engine.trident4 ? fireLoaded.delay(50, this, [instance, options]) : fireLoaded(instance, options);
 			return null;
 		}
