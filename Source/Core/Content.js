@@ -21,9 +21,9 @@ MUI.files['{source}Core/Content.js'] = 'loaded';
 
 MUI.Content = (MUI.Content || $H({})).extend({
 
-	Providers:{},
+	Providers: {},
 
-	Filters:{},
+	Filters: {},
 
 	update: function(options){
 
@@ -77,7 +77,7 @@ MUI.Content = (MUI.Content || $H({})).extend({
 		}
 
 		var element,instance = options.instance;
-		if (options.element) {
+		if (options.element){
 			element = $(options.element);
 			if (!instance) instance = element.retrieve('instance');
 		}
@@ -87,7 +87,7 @@ MUI.Content = (MUI.Content || $H({})).extend({
 			// create standard field replacements from data, paging, and path hashes
 			var values = $H({}).combine(options.data).combine(options.paging).combine(MUI.options.path);
 			// call the prepUrl callback if it was defined
-			if (options.prepUrl) options.url = options.prepUrl.run([options.url,values,instance], this);
+			if (options.prepUrl) options.url = options.prepUrl.run([options.url, values, instance], this);
 			options.url = MUI.replaceFields(options.url, values);
 		}
 
@@ -155,7 +155,7 @@ MUI.Content = (MUI.Content || $H({})).extend({
 							if (options.onLoaded && options.onLoaded != $empty){
 								options.onLoaded(element, options, json)
 							} else {
-								if (instance) instance.fireEvent('loaded', [element,options,json]);
+								if (instance) instance.fireEvent('loaded', [element, options, json]);
 							}
 						}.bind(this)
 					});
@@ -165,7 +165,7 @@ MUI.Content = (MUI.Content || $H({})).extend({
 						options.onLoaded(element, options, json)
 					} else {
 						// fire the event
-						if (instance) instance.fireEvent('loaded', [element,options,json]);
+						if (instance) instance.fireEvent('loaded', [element, options, json]);
 					}
 				}
 			}
@@ -279,7 +279,7 @@ MUI.Content.Providers.xhr = {
 	doRequest: function(instance, options){
 		var contentContainer = options.contentContainer;
 		var fireLoaded = options.fireLoaded;
-
+		
 		// if js is required, but no url, fire loaded to proceed with js-only
 		if (options.url == null && options.require.length != 0){
 			Browser.Engine.trident4 ? fireLoaded.delay(50, this, [instance, options]) : fireLoaded(instance, options);
@@ -295,7 +295,7 @@ MUI.Content.Providers.xhr = {
 			Browser.Engine.trident4 ? fireLoaded.delay(50, this, [instance, options, content]) : fireLoaded(instance, options, content);
 			return;
 		}
-
+		
 		new Request({
 			url: options.url,
 			method: options.method ? options.method : 'get',
@@ -347,6 +347,7 @@ MUI.Content.Providers.xhr = {
 			onComplete: function(){
 			}
 		}).send();
+	
 	}
 
 };
@@ -493,7 +494,7 @@ MUI.extend({
 					if ($type(options.padding) != 'number')
 						options.padding = $extend(options, this.options.padding);
 					if ($type(options.padding) == 'number')
-						options.padding = {top:options.padding,left:options.padding,right:options.padding,bottom:options.padding};
+						options.padding = {top: options.padding, left: options.padding, right: options.padding, bottom: options.padding};
 
 					// update padding if requested
 					this.el.content.setStyles({

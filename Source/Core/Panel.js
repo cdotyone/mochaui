@@ -64,7 +64,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 			isCollapsed: false, // This is probably redundant since we can check for the class
 			oldHeight: 0,
 			partner: null,
-			el:{}
+			el: {}
 		});
 
 		// If panel has no ID, give it one.
@@ -110,12 +110,12 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		// make sure we have a content sections
 		this.sections = [];
 
-		switch($type(options.content)) {
+		switch ($type(options.content)){
 			case 'string':
 				// was passed html, so make sure it is added
 				this.sections.push({
-					loadMethod:'html',
-					content:options.content
+					loadMethod: 'html',
+					content: options.content
 				});
 				break;
 			case 'array':
@@ -265,7 +265,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				'id': section.id,
 				'class': section.css
 			}).inject(intoEl);
-			if(section.height || $type(section.height)=='number') section.element.setStyle('height',section.height);
+			if (section.height || $type(section.height) == 'number') section.element.setStyle('height', section.height);
 
 			if (section.addClass) intoEl.addClass(section.addClass);
 

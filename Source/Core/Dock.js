@@ -47,22 +47,22 @@ MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
 	initialize: function(options){
 		this.setOptions(options);
 
-		if (MUI.dock!=null) return false;  // only one dock allowed
+		if (MUI.dock != null) return false;  // only one dock allowed
 		else MUI.set(this.options.id, this);
 		MUI.dock = this;
 
-		if(!this.options.container) this.options.container = 'desktop';
+		if (!this.options.container) this.options.container = 'desktop';
 		this.container = $(this.options.container);
 
 		this.el = {};
 		this.el.dock = $(this.options.id);
-		if(!this.el.dock && this.options.drawOnInit) this.draw();
-		else if(this.el.dock) {
-			this.el.wrapper = $(this.options.id+'Wrapper');
+		if (!this.el.dock && this.options.drawOnInit) this.draw();
+		else if (this.el.dock){
+			this.el.wrapper = $(this.options.id + 'Wrapper');
 
 			if (!this.options.useControls){
-				if ($(this.options.id+'Placement')) $(this.options.id+'Placement').setStyle('cursor', 'default');
-				if ($(this.options.id+'AutoHide')) $(this.options.id+'AutoHide').setStyle('cursor', 'default');
+				if ($(this.options.id + 'Placement')) $(this.options.id + 'Placement').setStyle('cursor', 'default');
+				if ($(this.options.id + 'AutoHide')) $(this.options.id + 'AutoHide').setStyle('cursor', 'default');
 			}
 
 			this.el.wrapper.setStyles({
@@ -77,28 +77,28 @@ MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
 		}
 	},
 
-	draw: function() {
-		this.fireEvent('drawBegin',[this]);
+	draw: function(){
+		this.fireEvent('drawBegin', [this]);
 
-		this.el.wrapper = new Element('div',{'id':this.options.id+'Wrapper',styles:{
+		this.el.wrapper = new Element('div', {'id': this.options.id + 'Wrapper', styles: {
 				'display':	'block',
 				'position':	'absolute',
 				'top':		null,
 				'bottom':	MUI.Desktop.desktopFooter ? MUI.Desktop.desktopFooter.offsetHeight : 0,
 				'left':		0
 			}}).inject(this.container);
-		this.el.dock = new Element('div',{'id':this.options.id}).inject(this.el.wrapper);
+		this.el.dock = new Element('div', {'id': this.options.id}).inject(this.el.wrapper);
 
 		if (this.options.useControls){
-			this.el.dockPlacement = new Element('div',{'id':this.options.id+'Placement'}).inject(this.el.dock).setStyle('cursor', 'default');
-			this.el.dockAutoHide = new Element('div',{'id':this.options.id+'AutoHide'}).inject(this.el.dock).setStyle('cursor', 'default');
+			this.el.dockPlacement = new Element('div', {'id': this.options.id + 'Placement'}).inject(this.el.dock).setStyle('cursor', 'default');
+			this.el.dockAutoHide = new Element('div', {'id': this.options.id + 'AutoHide'}).inject(this.el.dock).setStyle('cursor', 'default');
 		}
 
-		this.el.dockSort = new Element('div',{'id':this.options.id+'Sort'}).inject(this.el.dock);
-		this.el.dockClear = new Element('div',{'id':this.options.id+'Clear','class':'clear'}).inject(this.el.dockSort);
+		this.el.dockSort = new Element('div', {'id': this.options.id + 'Sort'}).inject(this.el.dock);
+		this.el.dockClear = new Element('div', {'id': this.options.id + 'Clear', 'class': 'clear'}).inject(this.el.dockSort);
 
 		this._initializeDockControls();
-		this.fireEvent('drawEnd',[this]);
+		this.fireEvent('drawEnd', [this]);
 	},
 
 	setDockColors: function(){
@@ -117,7 +117,7 @@ MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
 		this._renderDockControls();
 	},
 
-	getHeight: function() {
+	getHeight: function(){
 		return this.el.wrapper.offsetHeight;
 	},
 
@@ -136,8 +136,8 @@ MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
 			ctx.clearRect(0, 0, 100, 100);
 			MUI.Canvas.circle(ctx, 5, 4, 3, this.enabledButtonColor, 1.0);
 			MUI.Canvas.circle(ctx, 5, 14, 3, this.disabledButtonColor, 1.0);
-			$(this.options.id+'Placement').setProperty('title', 'Position Dock Bottom');
-			$(this.options.id+'AutoHide').setProperty('title', 'Auto Hide Disabled in Top Dock Position');
+			$(this.options.id + 'Placement').setProperty('title', 'Position Dock Bottom');
+			$(this.options.id + 'AutoHide').setProperty('title', 'Auto Hide Disabled in Top Dock Position');
 			this.options.autoHide = false;
 			this.options.position = 'top';
 		} else {
@@ -153,12 +153,12 @@ MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
 			ctx.clearRect(0, 0, 100, 100);
 			MUI.Canvas.circle(ctx, 5, 4, 3, this.enabledButtonColor, 1.0);
 			MUI.Canvas.circle(ctx, 5, 14, 3, this.enabledButtonColor, 1.0);
-			$(this.options.id+'Placement').setProperty('title', 'Position Dock Top');
-			$(this.options.id+'AutoHide').setProperty('title', 'Turn Auto Hide On');
+			$(this.options.id + 'Placement').setProperty('title', 'Position Dock Top');
+			$(this.options.id + 'AutoHide').setProperty('title', 'Turn Auto Hide On');
 			this.options.position = 'bottom';
 		}
 
-		this.fireEvent('move',[this,this.options.position]);
+		this.fireEvent('move', [this, this.options.position]);
 	},
 
 	createDockTab: function(instance){
@@ -166,7 +166,7 @@ MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
 			'id': instance.options.id + '_dockTab',
 			'class': 'dockTab',
 			'title': titleText
-		}).inject($(this.options.id+'Clear'), 'before');
+		}).inject($(this.options.id + 'Clear'), 'before');
 
 		dockTab.addEvent('mousedown', function(e){
 			new Event(e).stop();
@@ -179,15 +179,15 @@ MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
 				// If the visibility of the windows on the page are toggled off, toggle visibility on.
 				if (!MUI.Windows.windowsVisible){
 					MUI.Windows.toggleAll();
-					if (this.isMinimized) this._restoreMinimized.delay(25,this);
+					if (this.isMinimized) this._restoreMinimized.delay(25, this);
 					else this.focus();
 					return;
 				}
 				// If window is minimized, restore window.
-				if (this.isMinimized) this._restoreMinimized.delay(25,this);
+				if (this.isMinimized) this._restoreMinimized.delay(25, this);
 				else {
 					var windowEl = this.el.windowEl;
-					if (windowEl.hasClass('isFocused') && this.options.minimizable) this.minimize.delay(25,this);
+					if (windowEl.hasClass('isFocused') && this.options.minimizable) this.minimize.delay(25, this);
 					else this.focus();
 
 					// if the window is not minimized and is outside the viewport, center it in the viewport.
@@ -209,11 +209,11 @@ MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
 
 		// Need to resize everything in case the dock wraps when a new tab is added
 		MUI.Desktop.setDesktopSize();
-		this.fireEvent('tabCreated',[this,instance]);
+		this.fireEvent('tabCreated', [this, instance]);
 	},
 
 	makeActiveTab: function(instance){
-		if(!instance) {
+		if (!instance){
 			// getWindowWithHighestZindex is used in case the currently focused window is closed.
 			var windowEl = MUI.Windows._getWithHighestZIndex();
 			instance = windowEl.retrieve('instance');
@@ -228,14 +228,14 @@ MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
 		this.fireEvent('tabSet',[this,instance]);
 	},
 
-	show: function() {
+	show: function(){
 		this.el.wrapper.show();
 		this.options.visible = true;
 		MUI.Desktop.setDesktopSize();
 		this.fireEvent('show',[this]);
 	},
 
-	hide: function() {
+	hide: function(){
 		this.el.wrapper.hide();
 		this.options.visible = false;
 		MUI.Desktop.setDesktopSize();
@@ -251,7 +251,7 @@ MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
 		if (this.options.useControls){
 			// Insert canvas
 			var canvas = new Element('canvas', {
-				'id':	 this.options.id+'Canvas',
+				'id':	 this.options.id + 'Canvas',
 				'width':  '15',
 				'height': '18'
 			}).inject(this.el.dock);
@@ -262,8 +262,8 @@ MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
 			}
 		}
 
-		var dockPlacement = $(this.options.id+'Placement');
-		var dockAutoHide = $(this.options.id+'AutoHide');
+		var dockPlacement = $(this.options.id + 'Placement');
+		var dockAutoHide = $(this.options.id + 'AutoHide');
 
 		// Position top or bottom selector
 		dockPlacement.setProperty('title', 'Position Dock Top');
@@ -287,8 +287,8 @@ MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
 
 		// Add check mark to menu if link exists in menu
 		if ($(this.options.menuCheck)) this.sidebarCheck = new Element('div', {
-				'class': 'check',
-				'id': this.options.id+'_check'
+			'class': 'check',
+			'id': this.options.id + '_check'
 		}).inject($(this.options.menuCheck));
 
 		this.dockSortables = new Sortables('#dockSort', {
@@ -302,15 +302,15 @@ MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
 		MUI.Desktop.setDesktopSize();
 	},
 
-	_doAutoHide: function(notoggle) {
+	_doAutoHide: function(notoggle){
 		if (this.el.wrapper.getProperty('position') == 'top')
 			return false;
 
-		var ctx = $(this.options.id+'Canvas').getContext('2d');
-		if(!notoggle) this.options.autoHide = !this.options.autoHide;	// Toggle
+		var ctx = $(this.options.id + 'Canvas').getContext('2d');
+		if (!notoggle) this.options.autoHide = !this.options.autoHide;	// Toggle
 
 		if (this.options.autoHide){
-			$(this.options.id+'AutoHide').setProperty('title', 'Turn Auto Hide Off');
+			$(this.options.id + 'AutoHide').setProperty('title', 'Turn Auto Hide Off');
 			//ctx.clearRect(0, 11, 100, 100);
 			MUI.Canvas.circle(ctx, 5, 14, 3, this.trueButtonColor, 1.0);
 			// Add event
@@ -346,7 +346,7 @@ MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
 
 	_renderDockControls: function(){
 		// Draw dock controls
-		var ctx = $(this.options.id+'Canvas').getContext('2d');
+		var ctx = $(this.options.id + 'Canvas').getContext('2d');
 		ctx.clearRect(0, 0, 100, 100);
 		MUI.Canvas.circle(ctx, 5, 4, 3, this.enabledButtonColor, 1.0);
 
@@ -373,7 +373,7 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 
 	minimize: function(){
-		if(this.isMinimized) return this;
+		if (this.isMinimized) return this;
 		this.isMinimized = true;
 
 		// Hide iframe
@@ -396,7 +396,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			}
 		}
 
-		if(MUI.Desktop) MUI.Desktop.setDesktopSize();
+		if (MUI.Desktop) MUI.Desktop.setDesktopSize();
 
 		// Have to use timeout because window gets focused when you click on the minimize button
 		setTimeout(function(){
@@ -425,7 +425,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 
 		this.isMinimized = false;
 		this.focus();
-		this.fireEvent('restore',[this]);
+		this.fireEvent('restore', [this]);
 	}
 
 });
