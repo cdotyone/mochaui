@@ -44,7 +44,7 @@ MUI.Desktop = {
 	initialize: function(options){
 		if (options) $extend(MUI.Desktop.options,options);
 
-		if(MUI.desktop) return;	// only one desktop allowed
+		if (MUI.desktop) return;	// only one desktop allowed
 		MUI.desktop = this;
 
 		this.desktop = $(this.options.desktop);
@@ -66,8 +66,8 @@ MUI.Desktop = {
 			});
 		}
 
-		if(!this.options.dockOptions.container) this.options.dockOptions.container = this.desktop;
-		if(this.options.createDock) this.dock=new MUI.Dock(this.options.dockOptions);
+		if (!this.options.dockOptions.container) this.options.dockOptions.container = this.desktop;
+		if (this.options.createDock) this.dock = new MUI.Dock(this.options.dockOptions);
 		if (!this.dock) this.setDesktopSize();  // This is run on dock initialize so no need to do it twice.
 		this._menuInitialize();
 
@@ -109,11 +109,11 @@ MUI.Desktop = {
 		MUI.rWidth();
 	},
 
-	saveWorkspace: function() {
+	saveWorkspace: function(){
 		this.cookie = new Hash.Cookie('mochaUIworkspaceCookie', {duration: 3600});
 		this.cookie.empty();
 
-		MUI.each(function(instance) {
+		MUI.each(function(instance){
 			if (instance.className != 'MUI.Window') return;
 			instance._saveValues();
 			this.cookie.set(instance.options.id, {
@@ -135,22 +135,22 @@ MUI.Desktop = {
 			width: 200,
 			height: 40,
 			y: 53,
-			padding: { top: 10, right: 12, bottom: 10, left: 12 },
+			padding: {top: 10, right: 12, bottom: 10, left: 12},
 			shadowBlur: 5
 		});
 	},
 
-	loadingCallChain: function() {
-		if ($$('.mocha').length == 0 && this.myChain) {
+	loadingCallChain: function(){
+		if ($$('.mocha').length == 0 && this.myChain){
 			this.myChain.callChain();
 		}
 	},
 
-	loadWorkspace: function() {
+	loadWorkspace: function(){
 		var cookie = new Hash.Cookie('mochaUIworkspaceCookie', {duration: 3600});
 		var workspaceWindows = cookie.load();
 
-		if (!cookie.getKeys().length) {
+		if (!cookie.getKeys().length){
 			new MUI.Window({
 				loadMethod: 'html',
 				type: 'notification',
@@ -160,14 +160,14 @@ MUI.Desktop = {
 				width: 220,
 				height: 40,
 				y: 25,
-				padding: { top: 10, right: 12, bottom: 10, left: 12 },
+				padding: {top: 10, right: 12, bottom: 10, left: 12},
 				shadowBlur: 5
 			});
 			return;
 		}
 
-		var doLoadWorkspace = (function(workspaceWindows) {
-			workspaceWindows.each(function(workspaceWindow) {
+		var doLoadWorkspace = (function(workspaceWindows){
+			workspaceWindows.each(function(workspaceWindow){
 				windowFunction = MUI[workspaceWindow.id + 'Window'];
 				if (windowFunction) windowFunction();
 				// currently disabled positioning of windows, that would need to be passed to the MUI.Window call
@@ -192,12 +192,12 @@ MUI.Desktop = {
 			this.loadingWorkspace = false;
 		}).bind(this);
 
-		if ($$('.mocha').length != 0) {
+		if ($$('.mocha').length != 0){
 			this.loadingWorkspace = true;
 			this.myChain = new Chain();
 			this.myChain.chain(
-					function() {
-						$$('.mocha').each(function(el) {
+					function(){
+						$$('.mocha').each(function(el){
 							el.close();
 						});
 						this.myChain.callChain();
@@ -227,7 +227,7 @@ MUI.Desktop = {
 		// Resize maximized windows to fit new browser window size
 		setTimeout(function(){
 			MUI.each(function(instance){
-				var options=instance.options;
+				var options = instance.options;
 				if (instance.className != 'MUI.Window') return;
 				if (instance.isMaximized){
 
@@ -235,7 +235,7 @@ MUI.Desktop = {
 					if (instance.el.iframe) instance.el.iframe.setStyle('visibility', 'hidden');
 
 					var resizeDimensions;
-					if(options.container) resizeDimensions=$(options.container).getCoordinates();
+					if (options.container) resizeDimensions = $(options.container).getCoordinates();
 					else resizeDimensions=document.getCoordinates();
 					var shadowBlur = options.shadowBlur;
 					var shadowOffset = options.shadowOffset;
@@ -303,8 +303,7 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 						'top': y,
 						'left': x
 					});
-				}
-				else {
+				} else {
 					var cascadeMorph = new Fx.Morph(windowEl, {
 						'duration': 550
 					});
@@ -379,7 +378,7 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 	}
 });
 
-MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
+MUI.Window = (MUI.Window || new NamedClass('MUI.Window', {})).implement({
 
 	maximize: function(){
 		if (this.isMinimized) this._restoreMinimized();

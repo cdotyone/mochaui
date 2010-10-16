@@ -23,7 +23,7 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 	windowsVisible: true,		// Ctrl-Alt-Q to toggle window visibility
 	focusingWindow: false,
 
-	options:{
+	options: {
 		id:					null,
 		title:				'New Window',
 		icon:				false,
@@ -126,7 +126,7 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 				if (instance.sections){
 					instance.sections.each(function(section){
 						if (section.position == 'content') return;
-						var el=section.wrap ? section.wrapperEl : section.element;
+						var el = section.wrap ? section.wrapperEl : section.element;
 						if (el) el.setStyle('visibility', 'visible');
 					});
 				}
@@ -442,7 +442,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			if (section.onLoaded) section.onLoaded = section.onLoaded.bind(this);
 			section.instance = this;
 			MUI.Content.update(section);
-		},this);
+		}, this);
 
 		this.redraw();
 
@@ -553,7 +553,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		var width = this.el.contentWrapper.getStyle('width').toInt() + shadowBlur2x;
 		var height = this.el.contentWrapper.getStyle('height').toInt() + this.headerFooterShadow + borderHeight;
 		if (this.sections) this.sections.each(function(section){
-			if(section.position=='content') return;
+			if (section.position=='content') return;
 			var el = section.wrap ? section.wrapperEl : section.element;
 			height += el.getStyle('height').toInt() + el.getStyle('border-top').toInt();
 		} );
@@ -632,7 +632,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 	},
 
 	restore: function(){
-		if (this.isMinimized) { if(this._restoreMinimized) this._restoreMinimized(); }
+		if (this.isMinimized){ if (this._restoreMinimized) this._restoreMinimized(); }
 		else if (this.isMaximized && this._restoreMaximized) this._restoreMaximized();
 		return this;
 	},
@@ -664,7 +664,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 	resize: function(options){
 		var windowEl = this.el.windowEl;
 
-		options=$extend({
+		options = $extend({
 			width: null,
 			height: null,
 			top: null,
@@ -677,7 +677,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		var oldTop = windowEl.getStyle('top').toInt();
 		var oldLeft = windowEl.getStyle('left').toInt();
 
-		var top,left;
+		var top, left;
 		if (options.centered){
 			top = typeof(options.top) != 'undefined' ? options.top : oldTop - ((options.height - oldHeight) * .5);
 			left = typeof(options.left) != 'undefined' ? options.left : oldLeft - ((options.width - oldWidth) * .5);
@@ -728,9 +728,9 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 	},
 
 	focus: function(fireEvent){
-		if(fireEvent==null) fireEvent=true;
+		if (fireEvent == null) fireEvent = true;
 		MUI.Windows.focusingWindow = true; // This is used with blurAll
-		(function() { MUI.Windows.focusingWindow = false; }).delay(170, this);
+		(function(){ MUI.Windows.focusingWindow = false; }).delay(170, this);
 
 		// Only focus when needed
 		var windowEl = this.el.windowEl;
@@ -765,7 +765,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 	},
 
 	hideSpinner: function(){
-		if (this.el.spinner)	this.el.spinner.hide();
+		if (this.el.spinner) this.el.spinner.hide();
 		return this;
 	},
 
@@ -816,7 +816,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		return this;
 	},
 
-	collapseToggle: function() {
+	collapseToggle: function(){
 		var handles = this.el.windowEl.getElements('.handle');
 		if (this.isMaximized) return this;
 		if (this.isCollapsed){
@@ -830,7 +830,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			});
 			if (this.sections){
 				this.sections.each(function(section){
-					if(section.position=='content') return;
+					if (section.position=='content') return;
 					var el = section.wrap ? section.wrapperEl : section.element;
 					if (el) el.setStyles({
 						visibility: 'visible',
@@ -854,7 +854,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			});
 			if (this.sections){
 				this.sections.each(function(section){
-					if(section.position=='content') return;
+					if (section.position=='content') return;
 					var el = section.wrap ? section.wrapperEl : section.element;
 					if (el) el.setStyles({
 						visibility: 'hidden',
@@ -1183,13 +1183,13 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		cache.footer = new Element('div', {
 			'id': id + '_footer',
 			'class': 'mochaWindowFooter',
-			'styles':{ 'width': width - 30 }
+			'styles': {'width': width - 30}
 		}).inject(cache.overlay, 'bottom');
 
 		// make sure we have a content sections
 		this.sections = [];
 
-		switch($type(options.content)) {
+		switch ($type(options.content)){
 			case 'string':
 				// was passed html, so make sure it is added
 				this.sections.push({
@@ -1234,7 +1234,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			var where = section.position == 'bottom' ? 'after' : 'before';
 			var empty = section.empty;
 			if (section.position == 'header' || section.position == 'footer'){
-				if(!section.css) section.css='mochaToolbar';
+				if (!section.css) section.css='mochaToolbar';
 				intoEl = section.position == 'header' ? cache.titleBar : cache.footer;
 				where = 'bottom';
 				wrap = false;
@@ -1306,8 +1306,10 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			cache.spinner = new Element('div', {
 				'id': id + '_spinner',
 				'class': 'mochaSpinner',
-				'styles':{	'width': 16,
-							'height': 16 }
+				'styles': {
+					'width': 16,
+					'height': 16
+				}
 			}).inject(cache.footer, 'bottom');
 		}
 
@@ -1465,7 +1467,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		var height = 0;
 		if (this.sections){
 			this.sections.each(function(section){
-				if(section.position=='content') return;
+				if (section.position=='content') return;
 				height += section.wrapperEl.getStyle('height').toInt() + section.wrapperEl.getStyle('border-top').toInt();
 			});
 		}

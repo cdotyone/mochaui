@@ -130,8 +130,7 @@ MUI.Themes = {
 		// Delay gives the stylesheets time to take effect. IE6 needs more delay.
 		if (Browser.Engine.trident){
 			this.redraw.delay(1250, this);
-		}
-		else {
+		} else {
 			this.redraw.delay(250, this);
 		}
 
@@ -150,7 +149,7 @@ MUI.Themes = {
 			instance.redraw();
 		});
 
-		if(MUI.dock) MUI.dock.setDockColors();
+		if (MUI.dock) MUI.dock.setDockColors();
 
 		// Reformat layout
 		if (MUI.Desktop && MUI.Desktop.desktop){
@@ -183,7 +182,7 @@ window.addEvent('load', function(){
 	 // Load theme the user was last using. This needs work.
 	 var cookie = new Hash.Cookie('mochaUIthemeCookie', {duration: 3600});
 	 var themeCookie = cookie.load();
-	 if(cookie.getKeys().length){
+	 if (cookie.getKeys().length){
 	 if (themeCookie.get('theme') != MUI.Themes.options.theme){
 	 MUI.Themes.init.delay(1000, MUI.Themes, themeCookie.get('theme'));
 	 }

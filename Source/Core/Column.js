@@ -59,9 +59,9 @@ MUI.Column = new NamedClass('MUI.Column', {
 		if (this.options.drawOnInit) this.draw();
 	},
 
-	draw: function() {
+	draw: function(){
 		var options = this.options;
-		this.fireEvent('drawBegin',[this]);
+		this.fireEvent('drawBegin', [this]);
 
 		if (options.container == null) options.container = MUI.Desktop.pageWrapper;
 		else $(options.container).setStyle('overflow', 'hidden');
@@ -167,15 +167,15 @@ MUI.Column = new NamedClass('MUI.Column', {
 		}
 
 		MUI.rWidth();
-		this.fireEvent('drawEnd',[this]);
+		this.fireEvent('drawEnd', [this]);
 		return this;
 	},
 
 	getPanels: function(){
-		var panels=[];
-		$(this.el.column).getElements('.panel').each(function(panelEl) {
-			var panel=MUI.get(panelEl.id);
-			if(panel) panels.push(panel);
+		var panels = [];
+		$(this.el.column).getElements('.panel').each(function(panelEl){
+			var panel = MUI.get(panelEl.id);
+			if (panel) panels.push(panel);
 		});
 		return panels;
 	},
@@ -197,7 +197,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 		column.addClass('collapsed');
 		column.removeClass('expanded');
 		MUI.rWidth();
-		this.fireEvent('collapse',[this]);
+		this.fireEvent('collapse', [this]);
 
 		return this;
 	},
@@ -218,7 +218,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 		this.el.handle.setStyle('cursor', Browser.Engine.webkit ? 'col-resize' : 'e-resize').addClass('attached');
 
 		MUI.rWidth();
-		this.fireEvent('expand',[this]);
+		this.fireEvent('expand', [this]);
 
 		return this;
 	},
