@@ -1002,7 +1002,6 @@ var initializeColumns = function(){
 		id: 'help-panel',
 		column: 'sideColumn2',
 		content: [
-			{url:'pages/overview.html'},
 			{
 				position: 'header',
 				empty: true,
