@@ -65,7 +65,7 @@ initializeWindows = function(){
 		new MUI.Window({
 			id: 'ajaxpage',
 			content: {
-				url:'pages/lipsum.html',
+				url: 'pages/lipsum.html',
 				loadMethod: 'xhr'
 			},
 			width: 340,
@@ -113,9 +113,9 @@ initializeWindows = function(){
 					section: 'toolbar',
 					loadMethod:'json',
 					content: [
-						{'text': 'Zero 7','url':'pages/youtube.html','title':'Zero 7'},
-						{'text': 'Fleet Foxes','url':'pages/youtube2.html','title':'Fleet Foxes'},
-						{'text': 'Boards of Canada','url':'pages/youtube3.html','title':'Boards of Canada'}
+						{'text': 'Zero 7', 'url': 'pages/youtube.html', 'title': 'Zero 7'},
+						{'text': 'Fleet Foxes', 'url': 'pages/youtube2.html', 'title': 'Fleet Foxes'},
+						{'text': 'Boards of Canada', 'url': 'pages/youtube3.html', 'title': 'Boards of Canada'}
 					],
 					onLoaded: function(element,uOptions,json){
 						MUI.create('MUI.Tabs',{
@@ -144,7 +144,7 @@ initializeWindows = function(){
 			title: 'Canvas Clock',
 			addClass: 'transparent',
 			content: {
-				url:'{plugins}coolclock/index.html',
+				url: '{plugins}coolclock/index.html',
 				loadMethod: 'xhr',
 				require: {
 					js: ['{plugins}coolclock/scripts/coolclock.js'],
@@ -191,7 +191,7 @@ initializeWindows = function(){
 			height: 210,
 			x: 230,
 			y: 180,
-			padding: { top: 12, right: 12, bottom: 10, left: 12 },
+			padding: {top: 12, right: 12, bottom: 10, left: 12},
 			resizable: false,
 			maximizable: false,
 			onDragStart: function(instance){
@@ -216,7 +216,7 @@ initializeWindows = function(){
 			id: 'windowevents',
 			title: 'Window Events',
 			loadMethod: 'xhr',
-			content: { url: 'pages/events.html' },
+			content: {url: 'pages/events.html'},
 			width: 340,
 			height: 250,
 			onLoaded: function(){
@@ -257,7 +257,7 @@ initializeWindows = function(){
 			id: 'containertest',
 			title: 'Container Test',
 			loadMethod: 'xhr',
-			content: { url: 'pages/lipsum.html' },
+			content: {url: 'pages/lipsum.html'},
 			container: 'pageWrapper',
 			width: 340,
 			height: 150,
@@ -299,9 +299,9 @@ initializeWindows = function(){
 				loadMethod: 'json',
 				onLoaded: function(el,cOptions,json){
 					MUI.create('MUI.Accordion',{
-						'container':id,
-						'idField':'value',
-						'panels':json
+						'container': id,
+						'idField': 'value',
+						'panels': json
 					});
 				}
 			},
@@ -324,7 +324,7 @@ initializeWindows = function(){
 			id: 'nocanvas',
 			title: 'No Canvas',
 			loadMethod: 'xhr',
-			content: { url:'pages/lipsum.html' },
+			content: {url: 'pages/lipsum.html'},
 			addClass: 'no-canvas',
 			width: 305,
 			height: 175,
@@ -383,7 +383,7 @@ initializeWindows = function(){
 			title: 'Window Builder',
 			icon: 'images/icons/page.gif',
 			loadMethod: 'xhr',
-			content: { url:'{plugins}windowform/' },
+			content: {url: '{plugins}windowform/'},
 			width: 370,
 			height: 410,
 			maximizable: false,
@@ -460,13 +460,13 @@ initializeWindows = function(){
 				section: 'toolbar',
 				url: 'pages/features-tabs.html',
 				onLoaded: function(){
-					MUI.create('MUI.Tabs',{
-						'id':'features_toolbar',
-						'container':'features',
+					MUI.create('MUI.Tabs', {
+						'id': 'features_toolbar',
+						'container': 'features',
 						'position': 'top',
-						'partner':'features',
-						'section':'toolbar'
-					},true);
+						'partner': 'features',
+						'section': 'toolbar'
+					}, true);
 				}
 			}]
 		});
@@ -484,12 +484,12 @@ initializeWindows = function(){
 			addClass: 'about',
 			title: 'MochaUI',
 			loadMethod: 'xhr',
-			content: { url:'pages/about.html' },
+			content: {url: 'pages/about.html'},
 			type: 'modal2',
 			width: 350,
 			height: 195,
-			padding: { top: 43, right: 12, bottom: 10, left: 12 },
-			scrollbars:  false
+			padding: {top: 43, right: 12, bottom: 10, left: 12},
+			scrollbars: false
 		});
 	};
 	if ($('aboutLink')){
@@ -504,10 +504,10 @@ initializeWindows = function(){
 		new MUI.Modal({
 			id: 'authorsWindow',
 			title: 'AUTHORS.txt',
-			content: { url:'scripts/AUTHORS.txt' },
+			content: {url: 'scripts/AUTHORS.txt'},
 			width: 400,
 			height: 250,
-			scrollbars:true
+			scrollbars: true
 		});
 	};
 	if ($('authorsLink')){
@@ -521,10 +521,10 @@ initializeWindows = function(){
 		new MUI.Modal({
 			id: 'License',
 			title: 'MIT-LICENSE.txt',
-			content: { url:'scripts/MIT-LICENSE.txt' },
+			content: {url:'scripts/MIT-LICENSE.txt'},
 			width: 580,
 			height: 350,
-			scrollbars:true
+			scrollbars: true
 		});
 	};
 	if ($('licenseLink')){
