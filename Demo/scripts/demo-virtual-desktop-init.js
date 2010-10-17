@@ -31,7 +31,7 @@
  3. Add link events to build future windows
 
  if ($('myWindowLink')){
- $('myWindowLink').addEvent('click', function(e) {
+ $('myWindowLink').addEvent('click', function(e){
  new Event(e).stop();
  jsonWindows();
  });
@@ -55,40 +55,42 @@
 
  -------------------------------------------------------------------- */
 
-initializeWindows = function() {
+initializeWindows = function(){
 
 	// change default setting - keep window within inside the main area.
 	MUI.Windows.options.container = 'pageWrapper';
 
 	// Examples
-	MUI.ajaxpageWindow = function() {
+	MUI.ajaxpageWindow = function(){
 		new MUI.Window({
 			id: 'ajaxpage',
-			loadMethod: 'xhr',
-			content: { url:'pages/lipsum.html' },
+			content: {
+				url:'pages/lipsum.html',
+				loadMethod: 'xhr'
+			},
 			width: 340,
 			height: 150
 		});
 	};
-	if ($('ajaxpageLinkCheck')) {
-		$('ajaxpageLinkCheck').addEvent('click', function(e) {
+	if ($('ajaxpageLinkCheck')){
+		$('ajaxpageLinkCheck').addEvent('click', function(e){
 			e.stop();
 			MUI.ajaxpageWindow();
 		});
 	}
 
-	MUI.jsonWindows = function() {
+	MUI.jsonWindows = function(){
 		var url = 'data/json-windows-data.js';
 		var request = new Request.JSON({
 			url: url,
 			method: 'get',
-			onComplete: function(properties) {
+			onComplete: function(properties){
 				MUI.Windows.newFromJSON(properties.windows);
 			}
 		}).send();
 	};
-	if ($('jsonLink')) {
-		$('jsonLink').addEvent('click', function(e) {
+	if ($('jsonLink')){
+		$('jsonLink').addEvent('click', function(e){
 			e.stop();
 			MUI.jsonWindows();
 		});
@@ -98,76 +100,93 @@ initializeWindows = function() {
 		new MUI.Window({
 			id: 'youtube',
 			title: 'YouTube in Iframe',
-			loadMethod: 'iframe',
 			width: 340,
 			height: 280,
 			resizeLimit: {'x': [330, 2500], 'y': [250, 2000]},
 			content: [
-				{ url: 'pages/youtube.html' },
 				{
-				'position': 'top',
-				section: 'toolbar',
-				loadMethod:'json',
-				content: [
-					{'text':'Zero 7','url':'pages/youtube.html','title':'Zero 7'},
-					{'text':'Fleet Foxes','url':'pages/youtube2.html','title':'Fleet Foxes'},
-					{'text':'Boards of Canada','url':'pages/youtube3.html','title':'Boards of Canada'}
-				],
-				onLoaded: function(element,uOptions,json) {
-					MUI.create('MUI.Tabs',{
-						'id':'youtube_toolbar',
-						'container':'youtube',
-						'position': 'top',
-						'tabs':json,
-						'partner':'youtube',
-						'section':'toolbar'
-					})
+					url: 'pages/youtube.html',
+					loadMethod: 'iframe'
+				},
+				{
+					'position': 'top',
+					section: 'toolbar',
+					loadMethod:'json',
+					content: [
+						{'text': 'Zero 7','url':'pages/youtube.html','title':'Zero 7'},
+						{'text': 'Fleet Foxes','url':'pages/youtube2.html','title':'Fleet Foxes'},
+						{'text': 'Boards of Canada','url':'pages/youtube3.html','title':'Boards of Canada'}
+					],
+					onLoaded: function(element,uOptions,json){
+						MUI.create('MUI.Tabs',{
+							'id': 'youtube_toolbar',
+							'container': 'youtube',
+							'position': 'top',
+							'tabs': json,
+							'partner': 'youtube',
+							'section': 'toolbar'
+						});
+					}
 				}
-			}]
+			]
 		});
 	};
-	if ($('youtubeLinkCheck')) {
-		$('youtubeLinkCheck').addEvent('click', function(e) {
+	if ($('youtubeLinkCheck')){
+		$('youtubeLinkCheck').addEvent('click', function(e){
 			e.stop();
 			MUI.youtubeWindow();
 		});
 	}
 
-	MUI.clockWindow = function() {
+	MUI.clockWindow = function(){
 		new MUI.Window({
 			id: 'clock',
 			title: 'Canvas Clock',
 			addClass: 'transparent',
-			loadMethod: 'xhr',
-			content: { url:'{plugins}coolclock/index.html' },
+			content: {
+				url:'{plugins}coolclock/index.html',
+				loadMethod: 'xhr',
+				require: {
+					js: ['{plugins}coolclock/scripts/coolclock.js'],
+					onload: function(){
+						if (CoolClock) new CoolClock();
+					}
+				}
+			},
 			shape: 'gauge',
 			headerHeight: 30,
 			width: 160,
 			height: 160,
 			x: 570,
 			y: 152,
-			padding: { top: 0, right: 0, bottom: 0, left: 0 },
-			require: {
-				js: ['{plugins}coolclock/scripts/coolclock.js'],
-				onload: function() {
-					if (CoolClock) new CoolClock();
-				}
-			}
+			padding: {top: 0, right: 0, bottom: 0, left: 0}
 		});
 	};
-	if ($('clockLinkCheck')) {
-		$('clockLinkCheck').addEvent('click', function(e) {
+	if ($('clockLinkCheck')){
+		$('clockLinkCheck').addEvent('click', function(e){
 			e.stop();
 			MUI.clockWindow();
 		});
 	}
 
-	MUI.parametricsWindow = function() {
+	MUI.parametricsWindow = function(){
 		new MUI.Window({
 			id: 'parametrics',
 			title: 'Window Parametrics',
-			loadMethod: 'xhr',
-			content: { url: '{plugins}parametrics/index.html' },
+			content: {
+				url: '{plugins}parametrics/index.html',
+				loadMethod: 'xhr',
+				require: {
+					css: ['{plugins}parametrics/css/style.css'],
+					js: ['{plugins}parametrics/scripts/parametrics.js'],
+					onload: function(){
+						if (MUI.addRadiusSlider) MUI.addRadiusSlider();
+						if (MUI.addShadowSlider) MUI.addShadowSlider();
+						if (MUI.addOffsetXSlider) MUI.addOffsetXSlider();
+						if (MUI.addOffsetYSlider) MUI.addOffsetYSlider();
+					}
+				}
+			},
 			width: 305,
 			height: 210,
 			x: 230,
@@ -175,27 +194,24 @@ initializeWindows = function() {
 			padding: { top: 12, right: 12, bottom: 10, left: 12 },
 			resizable: false,
 			maximizable: false,
-			require: {
-				css: ['{plugins}parametrics/css/style.css'],
-				js: ['{plugins}parametrics/scripts/parametrics.js'],
-				onload: function() {
-					if (MUI.addRadiusSlider) MUI.addRadiusSlider();
-					if (MUI.addShadowSlider) MUI.addShadowSlider();
-					if (MUI.addOffsetXSlider) MUI.addOffsetXSlider();
-					if (MUI.addOffsetYSlider) MUI.addOffsetYSlider();
-				}
+			onDragStart: function(instance){
+				if (!Browser.Engine.trident) instance.el.windowEl.setStyle('opacity', 0.5);
+				// VML doesn't render opacity nicely on the shadow
+			},
+			onDragComplete: function(instance){
+				if (!Browser.Engine.trident) instance.el.windowEl.setStyle('opacity', 1);
 			}
 		});
 	};
-	if ($('parametricsLinkCheck')) {
-		$('parametricsLinkCheck').addEvent('click', function(e) {
+	if ($('parametricsLinkCheck')){
+		$('parametricsLinkCheck').addEvent('click', function(e){
 			e.stop();
 			MUI.parametricsWindow();
 		});
 	}
 
 	// Examples > Tests
-	MUI.eventsWindow = function() {
+	MUI.eventsWindow = function(){
 		new MUI.Window({
 			id: 'windowevents',
 			title: 'Window Events',
@@ -203,40 +219,40 @@ initializeWindows = function() {
 			content: { url: 'pages/events.html' },
 			width: 340,
 			height: 250,
-			onLoaded: function() {
+			onLoaded: function(){
 				MUI.notification('Window content was loaded.');
 			},
-			onCloseComplete: function() {
+			onCloseComplete: function(){
 				MUI.notification('The window is closed.');
 			},
-			onMinimize: function() {
+			onMinimize: function(){
 				MUI.notification('Window was minimized.');
 			},
-			onMaximize: function() {
+			onMaximize: function(){
 				MUI.notification('Window was maximized.');
 			},
-			onRestore: function() {
+			onRestore: function(){
 				MUI.notification('Window was restored.');
 			},
-			onResize: function() {
+			onResize: function(){
 				MUI.notification('Window was resized.');
 			},
-			onFocus: function() {
+			onFocus: function(){
 				MUI.notification('Window was focused.');
 			},
-			onBlur: function() {
+			onBlur: function(){
 				MUI.notification('Window lost focus.');
 			}
 		});
 	};
-	if ($('windoweventsLinkCheck')) {
-		$('windoweventsLinkCheck').addEvent('click', function(e) {
+	if ($('windoweventsLinkCheck')){
+		$('windoweventsLinkCheck').addEvent('click', function(e){
 			e.stop();
 			MUI.eventsWindow();
 		});
 	}
 
-	MUI.containerTestWindow = function() {
+	MUI.containerTestWindow = function(){
 		new MUI.Window({
 			id: 'containertest',
 			title: 'Container Test',
@@ -249,23 +265,25 @@ initializeWindows = function() {
 			y: 100
 		});
 	};
-	if ($('containertestLinkCheck')) {
-		$('containertestLinkCheck').addEvent('click', function(e) {
+	if ($('containertestLinkCheck')){
+		$('containertestLinkCheck').addEvent('click', function(e){
 			e.stop();
 			MUI.containerTestWindow();
 		});
 	}
 
-	MUI.iframeTestsWindow = function() {
+	MUI.iframeTestsWindow = function(){
 		new MUI.Window({
 			id: 'iframetests',
 			title: 'Iframe Tests',
-			loadMethod: 'iframe',
-			content: { url: 'pages/iframetests.html' }
+			content: {
+				url: 'pages/iframetests.html',
+				loadMethod: 'iframe'
+			}
 		});
 	};
-	if ($('iframetestsLinkCheck')) {
-		$('iframetestsLinkCheck').addEvent('click', function(e) {
+	if ($('iframetestLinkCheck')){
+		$('iframetestLinkCheck').addEvent('click', function(e){
 			e.stop();
 			MUI.iframeTestsWindow();
 		});
@@ -294,14 +312,14 @@ initializeWindows = function() {
 			maximizable: false
 		});
 	};
-	if ($('accordiantestLinkCheck')) {
-		$('accordiantestLinkCheck').addEvent('click', function(e) {
+	if ($('accordiantestLinkCheck')){
+		$('accordiantestLinkCheck').addEvent('click', function(e){
 			e.stop();
 			MUI.accordionTestWindow();
 		});
 	}
 
-	MUI.noCanvasWindow = function() {
+	MUI.noCanvasWindow = function(){
 		new MUI.Window({
 			id: 'nocanvas',
 			title: 'No Canvas',
@@ -315,51 +333,51 @@ initializeWindows = function() {
 			useCanvas: false
 		});
 	};
-	if ($('noCanvasLinkCheck')) {
-		$('noCanvasLinkCheck').addEvent('click', function(e) {
+	if ($('noCanvasLinkCheck')){
+		$('noCanvasLinkCheck').addEvent('click', function(e){
 			e.stop();
 			MUI.noCanvasWindow();
 		});
 	}
 
 	// View
-	if ($('sidebarLinkCheck')) {
-		$('sidebarLinkCheck').addEvent('click', function(e) {
+	if ($('sidebarLinkCheck')){
+		$('sidebarLinkCheck').addEvent('click', function(e){
 			e.stop();
 			MUI.Desktop.sidebarToggle();
 		});
 	}
 
-	if ($('cascadeLink')) {
-		$('cascadeLink').addEvent('click', function(e) {
+	if ($('cascadeLink')){
+		$('cascadeLink').addEvent('click', function(e){
 			e.stop();
 			MUI.Windows.arrangeCascade();
 		});
 	}
 
-	if ($('tileLink')) {
-		$('tileLink').addEvent('click', function(e) {
+	if ($('tileLink')){
+		$('tileLink').addEvent('click', function(e){
 			e.stop();
 			MUI.Windows.arrangeTile();
 		});
 	}
 
-	if ($('closeLink')) {
-		$('closeLink').addEvent('click', function(e) {
+	if ($('closeLink')){
+		$('closeLink').addEvent('click', function(e){
 			e.stop();
 			MUI.Windows.closeAll();
 		});
 	}
 
-	if ($('minimizeLink')) {
-		$('minimizeLink').addEvent('click', function(e) {
+	if ($('minimizeLink')){
+		$('minimizeLink').addEvent('click', function(e){
 			e.stop();
 			MUI.Windows.minimizeAll();
 		});
 	}
 
 	// Tools
-	MUI.builderWindow = function() {
+	MUI.builderWindow = function(){
 		new MUI.Window({
 			id: 'builder',
 			title: 'Window Builder',
@@ -371,15 +389,15 @@ initializeWindows = function() {
 			maximizable: false,
 			resizable: false,
 			scrollbars: false,
-			onDrawBegin: function() {
+			onDrawBegin: function(){
 				if ($('builderStyle')) return;
 				new Asset.css(MUI.replacePaths('{plugins}windowform/css/style.css'), {id: 'builderStyle'});
 			},
-			onLoaded: function() {
+			onLoaded: function(){
 				new Asset.javascript(MUI.replacePaths('{plugins}windowform/scripts/window-from-form.js'), {
 					id: 'builderScript',
-					onload: function() {
-						$('newWindowSubmit').addEvent('click', function(e) {
+					onload: function(){
+						$('newWindowSubmit').addEvent('click', function(e){
 							new Event(e).stop();
 							new MUI.WindowForm();
 						});
@@ -388,8 +406,8 @@ initializeWindows = function() {
 			}
 		});
 	};
-	if ($('builderLinkCheck')) {
-		$('builderLinkCheck').addEvent('click', function(e) {
+	if ($('builderLinkCheck')){
+		$('builderLinkCheck').addEvent('click', function(e){
 			e.stop();
 			MUI.builderWindow();
 		});
@@ -399,29 +417,29 @@ initializeWindows = function() {
 
 	// Workspaces
 
-	if ($('saveWorkspaceLink')) {
-		$('saveWorkspaceLink').addEvent('click', function(e) {
+	if ($('saveWorkspaceLink')){
+		$('saveWorkspaceLink').addEvent('click', function(e){
 			e.stop();
 			MUI.Desktop.saveWorkspace();
 		});
 	}
 
-	if ($('loadWorkspaceLink')) {
-		$('loadWorkspaceLink').addEvent('click', function(e) {
+	if ($('loadWorkspaceLink')){
+		$('loadWorkspaceLink').addEvent('click', function(e){
 			e.stop();
 			MUI.Desktop.loadWorkspace();
 		});
 	}
 
-	if ($('toggleStdEffectsLinkCheck')) {
-		$('toggleStdEffectsLinkCheck').addEvent('click', function(e) {
+	if ($('toggleStdEffectsLinkCheck')){
+		$('toggleStdEffectsLinkCheck').addEvent('click', function(e){
 			e.stop();
 			MUI.toggleStandardEffects($('toggleStdEffectsLinkCheck'));
 		});
 	}
 
-	if ($('toggleAdvEffectsLinkCheck')) {
-		$('toggleAdvEffectsLinkCheck').addEvent('click', function(e) {
+	if ($('toggleAdvEffectsLinkCheck')){
+		$('toggleAdvEffectsLinkCheck').addEvent('click', function(e){
 			e.stop();
 			MUI.toggleAdvancedEffects($('toggleAdvEffectsLinkCheck'));
 		});
@@ -441,7 +459,7 @@ initializeWindows = function() {
 				'position': 'top',
 				section: 'toolbar',
 				url: 'pages/features-tabs.html',
-				onLoaded: function() {
+				onLoaded: function(){
 					MUI.create('MUI.Tabs',{
 						'id':'features_toolbar',
 						'container':'features',
@@ -453,14 +471,14 @@ initializeWindows = function() {
 			}]
 		});
 	};
-	if ($('featuresLinkCheck')) {
-		$('featuresLinkCheck').addEvent('click', function(e) {
+	if ($('featuresLinkCheck')){
+		$('featuresLinkCheck').addEvent('click', function(e){
 			e.stop();
 			MUI.featuresWindow();
 		});
 	}
 
-	MUI.aboutWindow = function() {
+	MUI.aboutWindow = function(){
 		new MUI.Modal({
 			id: 'about',
 			addClass: 'about',
@@ -474,15 +492,15 @@ initializeWindows = function() {
 			scrollbars:  false
 		});
 	};
-	if ($('aboutLink')) {
-		$('aboutLink').addEvent('click', function(e) {
+	if ($('aboutLink')){
+		$('aboutLink').addEvent('click', function(e){
 			e.stop();
 			MUI.aboutWindow();
 		});
 	}
 
 	// Misc
-	MUI.authorsWindow = function() {
+	MUI.authorsWindow = function(){
 		new MUI.Modal({
 			id: 'authorsWindow',
 			title: 'AUTHORS.txt',
@@ -492,14 +510,14 @@ initializeWindows = function() {
 			scrollbars:true
 		});
 	};
-	if ($('authorsLink')) {
-		$('authorsLink').addEvent('click', function(e) {
+	if ($('authorsLink')){
+		$('authorsLink').addEvent('click', function(e){
 			new Event(e).stop();
 			MUI.authorsWindow();
 		});
 	}
 
-	MUI.licenseWindow = function() {
+	MUI.licenseWindow = function(){
 		new MUI.Modal({
 			id: 'License',
 			title: 'MIT-LICENSE.txt',
@@ -509,15 +527,15 @@ initializeWindows = function() {
 			scrollbars:true
 		});
 	};
-	if ($('licenseLink')) {
-		$('licenseLink').addEvent('click', function(e) {
+	if ($('licenseLink')){
+		$('licenseLink').addEvent('click', function(e){
 			new Event(e).stop();
 			MUI.licenseWindow();
 		});
 	}
 
 	// Deactivate menu header links
-	$$('a.returnFalse').addEvent('click', function(e) {
+	$$('a.returnFalse').addEvent('click', function(e){
 		e.stop();
 	});
 
@@ -531,17 +549,17 @@ initializeWindows = function() {
 MUI.initialize();
 
 // Initialize MochaUI when the DOM is ready
-window.addEvent('load', function() {
+window.addEvent('load', function(){
 
 	MUI.myChain = new Chain();
 	MUI.myChain.chain(
-			function() {
+			function(){
 				MUI.Desktop.initialize();
 			},
-			function() {
+			function(){
 				initializeWindows();
 			},
-			function() {
+			function(){
 				// force checkbox on menu to be in correct state
 				MUI.options.standardEffects = !MUI.options.standardEffects;
 				MUI.toggleStandardEffects($('toggleStdEffectsLinkCheck'));
@@ -553,12 +571,12 @@ window.addEvent('load', function() {
 			).callChain();
 
 	// This is just for the demo. Running it onload gives pngFix time to replace the pngs in IE6.
-	$$('.desktopIcon').addEvent('click', function() {
+	$$('.desktopIcon').addEvent('click', function(){
 		MUI.notification('Do Something');
 	});
 
 });
 
-window.addEvent('unload', function() {
+window.addEvent('unload', function(){
 	// This runs when a user leaves your page.
 });
