@@ -129,7 +129,7 @@ var initializeWindows = function(){
 							'position': 'top',
 							'tabs': json,
 							'partner': 'youtube'
-						})
+						});
 					}
 				}
 			]
@@ -648,7 +648,7 @@ var initializeWindows = function(){
 			height: 250,
 			resizeLimit: {'x': [275, 2500], 'y': [125, 2000]},
 			content: [
-				{ url:'pages/features-layout.html' },
+				{url: 'pages/features-layout.html'},
 				{
 					position: 'top',
 					url: 'pages/features-tabs.html',
@@ -920,7 +920,7 @@ var initializeColumns = function(){
 		title: 'Lorem Ipsum',
 		column: 'mainColumn',
 		content: [
-			{ url:'pages/lipsum.html' },
+			{url:'pages/lipsum.html'},
 			{
 				position: 'headertool',
 				url: 'pages/toolbox-demo2.html',
@@ -1017,7 +1017,7 @@ var initializeColumns = function(){
 						'position': 'header',
 						'tabs': json,
 						'partner': 'help-panel'
-					})
+					}); 
 				}
 			}
 		]
