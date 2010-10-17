@@ -73,7 +73,7 @@ var initializeWindows = function(){
 	MUI.ajaxpageWindow = function(){
 		new MUI.Window({
 			id: 'ajaxpage',
-			content: { url:'pages/lipsum.html' },
+			content: {url: 'pages/lipsum.html'},
 			width: 340,
 			height: 150
 		});
@@ -110,24 +110,25 @@ var initializeWindows = function(){
 			content: [
 				{
 					url:'pages/youtube.html',
-					loadMethod: 'iframe'},
+					loadMethod: 'iframe'
+				},
 				{
 					position: 'top',
 					loadMethod:'json',
 					id: 'youtube_toolbar',
 					css: 'mochaToolbar',
 					content: [
-						{'text':'Zero 7','url':'pages/youtube.html','loadMethod':'iframe','title':'Zero 7'},
-						{'text':'Fleet Foxes','url':'pages/youtube2.html','loadMethod':'iframe','title':'Fleet Foxes'},
-						{'text':'Boards of Canada','url':'pages/youtube3.html','loadMethod':'iframe','title':'Boards of Canada'}
+						{'text': 'Zero 7', 'url': 'pages/youtube.html', 'loadMethod': 'iframe', 'title': 'Zero 7'},
+						{'text': 'Fleet Foxes', 'url': 'pages/youtube2.html', 'loadMethod': 'iframe', 'title': 'Fleet Foxes'},
+						{'text': 'Boards of Canada', 'url': 'pages/youtube3.html', 'loadMethod': 'iframe', 'title': 'Boards of Canada'}
 					],
 					onLoaded: function(element, uOptions, json){
 						MUI.create('MUI.Tabs', {
-							'id':'youtube_toolbar',
-							'container':'youtube',
+							'id': 'youtube_toolbar',
+							'container': 'youtube',
 							'position': 'top',
-							'tabs':json,
-							'partner':'youtube'
+							'tabs': json,
+							'partner': 'youtube'
 						})
 					}
 				}
@@ -147,7 +148,7 @@ var initializeWindows = function(){
 			title: 'Canvas Clock',
 			addClass: 'transparent',
 			content: {
-				url:'{plugins}coolclock/index.html',
+				url: '{plugins}coolclock/index.html',
 				require: {
 				js: ['{plugins}coolclock/scripts/coolclock.js'],
 				onload: function(){
@@ -175,7 +176,7 @@ var initializeWindows = function(){
 			id: 'parametrics',
 			title: 'Window Parametrics',
 			content: {
-				url:'{plugins}parametrics/index.html',
+				url: '{plugins}parametrics/index.html',
 				require: {
 					css: ['{plugins}parametrics/css/style.css'],
 					js: ['{plugins}parametrics/scripts/parametrics.js'],
@@ -241,7 +242,7 @@ var initializeWindows = function(){
 				new MUI.Panel({
 					header: false,
 					id: 'splitWindow_panel1',
-					content: { url:'license.html'},
+					content: {url: 'license.html'},
 					column: 'splitWindow_mainColumn',
 					panelBackground: '#fff'
 				});
@@ -250,7 +251,7 @@ var initializeWindows = function(){
 					header: false,
 					id: 'splitWindow_panel2',
 					addClass: 'panelAlt',
-					content: { url:'pages/lipsum.html' },
+					content: {url: 'pages/lipsum.html'},
 					column: 'splitWindow_sideColumn'
 				});
 
@@ -347,7 +348,7 @@ var initializeWindows = function(){
 		new MUI.Window({
 			id: 'containertest',
 			title: 'Container Test',
-			content: { url:'pages/lipsum.html' },
+			content: {url: 'pages/lipsum.html'},
 			container: 'pageWrapper',
 			width: 340,
 			height: 150,
@@ -367,7 +368,7 @@ var initializeWindows = function(){
 			id: 'iframetests',
 			title: 'Iframe Tests',
 			content: {
-				url:'pages/iframetests.html', 
+				url: 'pages/iframetests.html', 
 				loadMethod: 'iframe'
 			}
 		});
@@ -383,7 +384,7 @@ var initializeWindows = function(){
 		new MUI.Window({
 			id: 'formtests',
 			title: 'Form Tests',
-			content: { url:'pages/formtests.html' },
+			content: {url: 'pages/formtests.html'},
 			onLoaded: function(){
 				document.testForm.focusTest.focus();
 			}
@@ -401,18 +402,17 @@ var initializeWindows = function(){
 		new MUI.Window({
 			id: id,
 			title: 'Accordion',
-			content: { url:'pages/accordion-demo.json', loadMethod: 'json' },
+			content: {url: 'pages/accordion-demo.json', loadMethod: 'json'},
 			width: 300,
 			height: 200,
 			scrollbars: false,
 			resizable: false,
 			maximizable: false,
-
 			onLoaded: function(el, cOptions, json){
 				MUI.create('MUI.Accordion', {
-					'container':id,
-					'idField':'value',
-					'panels':json
+					'container': id,
+					'idField': 'value',
+					'panels': json
 				});
 			}
 		});
@@ -428,7 +428,7 @@ var initializeWindows = function(){
 		new MUI.Window({
 			id: 'nocanvas',
 			title: 'No Canvas',
-			content: { url:'pages/lipsum.html' },
+			content: {url: 'pages/lipsum.html'},
 			addClass: 'no-canvas',
 			width: 305,
 			height: 175,
@@ -449,7 +449,7 @@ var initializeWindows = function(){
 		new MUI.Window({
 			id: 'css3',
 			title: 'CSS3',
-			content: { url:'pages/lipsum.html' },
+			content: {url: 'pages/lipsum.html'},
 			addClass: 'no-canvas',
 			width: 305,
 			height: 175,
@@ -469,7 +469,7 @@ var initializeWindows = function(){
 		new MUI.Window({
 			id: 'css3fallback',
 			title: 'CSS3 with Fallback to Canvas',
-			content: { url:'pages/lipsum.html' },
+			content: {url: 'pages/lipsum.html'},
 			width: 305,
 			height: 175,
 			resizable: false,
@@ -488,7 +488,7 @@ var initializeWindows = function(){
 		new MUI.Window({
 			id: 'forceCanvas',
 			title: 'Force Canvas',
-			content: { url:'pages/lipsum.html' },
+			content: {url: 'pages/lipsum.html'},
 			width: 305,
 			height: 175,
 			resizable: false,
@@ -572,7 +572,7 @@ var initializeWindows = function(){
 			title: 'Window Builder',
 			icon: 'images/icons/16x16/page.gif',
 			content: {
-				url:'{plugins}windowform/',
+				url: '{plugins}windowform/',
 				require: {
 					css: ['{plugins}windowform/css/style.css'],
 					js: ['{plugins}windowform/scripts/window-from-form.js'],
@@ -654,10 +654,10 @@ var initializeWindows = function(){
 					url: 'pages/features-tabs.html',
 					onLoaded: function(){
 						MUI.create('MUI.Tabs', {
-							'id':'features_toolbar',
-							'container':'features',
+							'id': 'features_toolbar',
+							'container': 'features',
 							'position': 'top',
-							'partner':'features'
+							'partner': 'features'
 						}, true);
 					}
 				}
@@ -675,7 +675,7 @@ var initializeWindows = function(){
 		new MUI.Modal({
 			id: 'about',
 			title: 'MUI',
-			content: { url:'pages/about.html' },
+			content: {url: 'pages/about.html'},
 			type: 'modal2',
 			width: 350,
 			height: 195,
@@ -695,7 +695,7 @@ var initializeWindows = function(){
 		new MUI.Modal({
 			id: 'authorsWindow',
 			title: 'AUTHORS.txt',
-			content: { url:'scripts/AUTHORS.txt' },
+			content: {url: 'scripts/AUTHORS.txt'},
 			width: 400,
 			height: 250,
 			scrollbars: true
@@ -712,7 +712,7 @@ var initializeWindows = function(){
 		new MUI.Modal({
 			id: 'License',
 			title: 'MIT-LICENSE.txt',
-			content: { url:'scripts/MIT-LICENSE.txt' },
+			content: {url: 'scripts/MIT-LICENSE.txt'},
 			width: 580,
 			height: 350,
 			scrollbars: true
@@ -785,14 +785,14 @@ var initializeColumns = function(){
 		id: 'files-panel',
 		title: 'Examples',
 		content: {
-			url:'pages/file-tree.json',
-			loadMethod:'json',
+			url: 'pages/file-tree.json',
+			loadMethod: 'json',
 			onLoaded: function(el, options, json){
 				MUI.create('MUI.Tree', {
-					'container':'files-panel',
-					'idField':'value',
-					'nodes':options.content,
-					"onLoaded": function(){
+					'container': 'files-panel',
+					'idField': 'value',
+					'nodes': options.content,
+					'onLoaded': function(){
 						$('notesLink').addEvent('click', function(){
 							MUI.Content.update({
 								element: $('mainPanel'),
@@ -853,7 +853,7 @@ var initializeColumns = function(){
 									css: ['{controls}calendar/style.css'],
 									js: ['{controls}calendar/calendar.js'],
 									onload: function(){
-										new Calendar({ date1: 'd/m/Y' }, { direction: 1, tweak: {x: 6, y: 0}});
+										new Calendar({date1: 'd/m/Y'}, {direction: 1, tweak: {x: 6, y: 0}});
 									}
 								}
 							});
@@ -1008,15 +1008,15 @@ var initializeColumns = function(){
 				empty: true,
 				loadMethod:'json',
 				content: [
-					{'text':'Overview','url':'pages/overview.html','title':'Overview'},
-					{'text':'Download','url':'pages/download.html','title':'Download'}
+					{'text': 'Overview', 'url': 'pages/overview.html', 'title': 'Overview'},
+					{'text': 'Download', 'url': 'pages/download.html', 'title': 'Download'}
 				],
 				onLoaded: function(element, uOptions, json){
 					MUI.create('MUI.Tabs', {
-						'container':'help-panel',
+						'container': 'help-panel',
 						'position': 'header',
-						'tabs':json,
-						'partner':'help-panel'
+						'tabs': json,
+						'partner': 'help-panel'
 					})
 				}
 			}
@@ -1027,7 +1027,7 @@ var initializeColumns = function(){
 		id: 'panel3',
 		title: 'Panel',
 		content: {
-			url:'pages/lipsum.html',
+			url: 'pages/lipsum.html',
 			onLoaded: addResizeElements
 		},
 		column: 'sideColumn2',
@@ -1041,7 +1041,7 @@ var initializeColumns = function(){
 		column: 'sideColumn2',
 		height: 140,
 		content: [
-			{ url:'pages/tips.html' },
+			{url: 'pages/tips.html'},
 			{
 				position: 'footer',
 				url: 'pages/toolbox-demo.html',
@@ -1075,7 +1075,7 @@ var initializeColumns = function(){
 			new MUI.Panel({
 				header: false,
 				id: 'splitPanel_mainPanel',
-				content: {url:'license.html'},
+				content: {url: 'license.html'},
 				column: 'mainColumn2'
 			});
 
@@ -1083,7 +1083,7 @@ var initializeColumns = function(){
 				header: false,
 				id: 'splitPanel_sidePanel',
 				addClass: 'panelAlt',
-				content: {url:'pages/lipsum.html'},
+				content: {url: 'pages/lipsum.html'},
 				column: 'sideColumn3'
 			});
 		}
@@ -1099,14 +1099,14 @@ MUI.initialize();
 window.addEvent('load', function(){ //using load instead of domready for IE8
 	MUI.myChain = new Chain();
 	MUI.myChain.chain(
-			function(){
-				MUI.Desktop.initialize();
-			},
-			function(){
-				initializeColumns();
-			},
-			function(){
-				initializeWindows();
-			}
-			).callChain();
+		function(){
+			MUI.Desktop.initialize();
+		},
+		function(){
+			initializeColumns();
+		},
+		function(){
+			initializeWindows();
+		}
+	).callChain();
 });
