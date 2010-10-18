@@ -31,6 +31,7 @@ MUI.Modal = new NamedClass('MUI.Modal', {
 	},
 
 	initialize: function(options){
+		if(!options.type) options.type='modal';
 
 		if (!$('modalOverlay')){
 			this._modalInitialize();
@@ -39,7 +40,6 @@ MUI.Modal = new NamedClass('MUI.Modal', {
 			}.bind(this));
 		}
 		this.parent(options);
-
 	},
 
 	_modalInitialize: function(){

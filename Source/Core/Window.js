@@ -383,6 +383,8 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			}
 		});
 
+		if (this.options.type == 'modal' || this.options.type == 'modal2') this.el.windowEl.addClass('modal');
+
 		this.el.windowEl.store('instance', this);
 		this.el.windowEl.addClass(options.addClass);
 		if (options.type == 'modal2') this.el.windowEl.addClass('modal2');
@@ -792,12 +794,12 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		}
 
 		if (!MUI.options.advancedEffects){
-			if (this.options.type == 'modal' || this.options.type == 'modal2') $('modalOverlay').setStyle('opacity', 0);
+			if ((this.options.type == 'modal' || this.options.type == 'modal2') && $$('.modal').length<2) $('modalOverlay').setStyle('opacity', 0);
 			this._doClosingJobs();
 		} else {
 			// Redraws IE windows without shadows since IE messes up canvas alpha when you change element opacity
 			if (Browser.Engine.trident) this.redraw(false);
-			if (this.options.type == 'modal' || this.options.type == 'modal2'){
+			if ((this.options.type == 'modal' || this.options.type == 'modal2') && $$('.modal').length<2) {
 				MUI.Modal.modalOverlayCloseMorph.start({
 					'opacity': 0
 				});
@@ -1803,6 +1805,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		}
 
 		MUI.erase(this.options.id);
+		if (!MUI.Desktop) return;
 		if (MUI.Desktop.loadingWorkspace) MUI.Desktop.loadingCallChain();
 
 		if (MUI.dock && this.options.type == 'window'){
