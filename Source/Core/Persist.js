@@ -66,7 +66,7 @@ MUI.Persist = (MUI.Persist || $H({})).extend({
 			divID:		'_persist_flash_wrap',	// ID of wrapper element
 			id:			'_persist_flash',				// id of flash object/embed
 			path:		'persist.swf',					// default path to flash object
-			height:	1,
+			height:		1,
 			width:		1,
 			params:	{									// arguments passed to flash object
 				autostart: true
@@ -456,14 +456,14 @@ MUI.Persist.Providers.IE = new Class({
 
 		// create element to store keys in
 		this.id = this.options.prefix + this._safeKey(this.options.name);
-		this.el = new Element('div', {'id':this.id,styles:{'display':'none'}}).inject(document.body);
+		this.el = new Element('div', {'id': this.id, styles: {'display': 'none'}}).inject(document.body);
 	},
 
 	get: function(key){
 		key = this._safeKey(key);
 
 		var val = this.el.retrieve(key); // get current value
-		this.fireEvent('get', [this,val,key]);
+		this.fireEvent('get', [this, val, key]);
 
 		return val;
 	},
@@ -473,7 +473,7 @@ MUI.Persist.Providers.IE = new Class({
 
 		var old_val = this.el.retrieve(key);  // get previous value
 		this.el.store(key, val);  // store new value
-		this.fireEvent('set', [this,val,key,old_val]);
+		this.fireEvent('set', [this, val, key, old_val]);
 
 		return old_val;
 	},
@@ -483,7 +483,7 @@ MUI.Persist.Providers.IE = new Class({
 
 		var old_val = this.el.retrieve(key);  // get previous value
 		this.el.eliminate(key);  // remove key
-		this.fireEvent('remove', [this,old_val,key]);
+		this.fireEvent('remove', [this, old_val, key]);
 
 		return old_val;
 	},
@@ -496,7 +496,7 @@ MUI.Persist.Providers.IE = new Class({
 
 MUI.Persist.Providers.Cookie = new Class({
 
-	Implements: [Events,Options],
+	Implements: [Events, Options],
 
 	options: {
 		size:	4000,			// 4k limit (low-ball this limit to handle browser weirdness, and so we don't hose session cookies)
@@ -523,7 +523,7 @@ MUI.Persist.Providers.Cookie = new Class({
 		key = this._safeKey(key);
 
 		var val = Cookie.read(key);  // get current value
-		this.fireEvent('get', [this,val,key]);
+		this.fireEvent('get', [this, val, key]);
 
 		return val;
 	},
@@ -533,7 +533,7 @@ MUI.Persist.Providers.Cookie = new Class({
 
 		var old_val = Cookie.read(key);  //get previous value
 		Cookie.write(key, val, this.options);  // store new value
-		this.fireEvent('set', [this,val,key,old_val]);
+		this.fireEvent('set', [this, val, key, old_val]);
 
 		return old_value;
 	},
@@ -543,7 +543,7 @@ MUI.Persist.Providers.Cookie = new Class({
 
 		var old_val = Cookie.read(key); // get old value
 		Cookie.dispose(key, this.options); // remove key
-		this.fireEvent('remove', [this,old_val,key]);
+		this.fireEvent('remove', [this, old_val, key]);
 
 		return old_val;
 	},
@@ -567,7 +567,7 @@ MUI.Persist.Providers.Flash = new Class({
 		this.setOptions(options);
 		if (!MUI.Persist.options.flash.el){
 			var cfg = this.options.flash;
-			cfg.container = new Element('div', {'id':this.options.flash.divID}).inject(document.body);
+			cfg.container = new Element('div', {'id': this.options.flash.divID}).inject(document.body);
 			MUI.Persist.options.flash.el = new Swiff(cfg.path, cfg);
 		}
 		this.el = MUI.Persist.options.flash.el;
@@ -577,7 +577,7 @@ MUI.Persist.Providers.Flash = new Class({
 		key = this._safeKey(key);
 
 		var val = this.el.get(this.options.name, key);  // get current value
-		this.fireEvent('get', [this,val,key]);
+		this.fireEvent('get', [this, val, key]);
 
 		return val;
 	},
@@ -586,7 +586,7 @@ MUI.Persist.Providers.Flash = new Class({
 		key = this._safeKey(key);
 
 		var old_val = this.el.set(this.options.name, key, val);  // get previous value, set new value
-		this.fireEvent('set', [this,val,key,old_val]);
+		this.fireEvent('set', [this, val, key, old_val]);
 
 		return old_val;
 	},
@@ -595,7 +595,7 @@ MUI.Persist.Providers.Flash = new Class({
 		key = this._safeKey(key);
 
 		var old_val = this.el.remove(this.options.name, key);  // remove key, and return previous value
-		this.fireEvent('remove', [this,val,key]);
+		this.fireEvent('remove', [this, val, key]);
 
 		return old_val;
 	},

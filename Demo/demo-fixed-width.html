@@ -112,19 +112,21 @@
 			new MUI.Modal({
 				id: 'about',
 				title: 'MochaUI',
-				loadMethod: 'xhr',
-				contentURL: 'pages/about.html',
 				type: 'modal2',
 				width: 350,
 				height: 195,
 				contentBgColor: '#e5e5e5 url(images/logo2.gif) left 3px no-repeat',
 				padding: { top: 43, right: 12, bottom: 10, left: 12 },
-				scrollbars:  false
+				scrollbars:  false,
+				content: {
+					loadMethod: 'xhr',
+					url: 'pages/about.html'
+				}
 			});
 		};
 
 		window.addEvent('load', function() {
-			MUI.Windows.windowOptions.container = 'pageWrapper';
+			MUI.Windows.options.container = 'pageWrapper';
 			MUI.Desktop.initialize();
 			MUI.Windows.newFromHTML();
 

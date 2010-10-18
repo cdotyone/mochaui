@@ -34,8 +34,10 @@
 			new MUI.Window({
 				id: 'test',
 				title: 'Test',
-				loadMethod: 'xhr',
-				contentURL: 'pages/lipsum.html'
+				content: {
+					loadMethod: 'xhr',
+					url: 'pages/lipsum.html'
+				}
 			});
 		};
 

@@ -29,7 +29,7 @@
 var MochaUI;
 var MUI = MochaUI = (MUI || {});
 
-MUI.extend = function(hash) {
+MUI.extend = function(hash){
 	$extend(MUI,hash);
 }.bind(MUI);
 
@@ -68,19 +68,19 @@ MUI.extend({
 
 		if ($type(str) == 'string'){
 			var keys = str.match(/\{+(\w*)\}+/g);
-			if(keys==null) return str;
+			if (keys == null) return str;
 
 			keys.each(function(key){
-				var name=key.replace(/[\{\}]/g,"");
-				if (name==null || name=='') return;
+				var name = key.replace(/[\{\}]/g, '');
+				if (name == null || name == '') return;
 
-				var re = new RegExp("\\{"+name+"\\}","g");
+				var re = new RegExp('\\{' + name + '\\}', 'g');
 				str = str.replace(re,values[name]);
 			});
 			return str;
 		}
 		if ($type(str) == 'array'){
-			for(var i = 0; i < str.length; i++){
+			for (var i = 0; i < str.length; i++){
 				str[i] = MUI.replaceFields(str[i]);
 			}
 		}
@@ -125,11 +125,11 @@ MUI.extend({
 	},
 
 	create:function(type,options,fromHTML){
-		if(MUI.files['{controls}mui-controls.js'] != 'loaded') {
+		if (MUI.files['{controls}mui-controls.js'] != 'loaded'){
 			new MUI.Require({
 				'js':['{controls}mui-controls.js'],
-				'onload':function() {
-					MUI.create(type,options);
+				'onload':function(){
+					MUI.create(type, options);
 				}
 			});
 			return;
@@ -137,29 +137,29 @@ MUI.extend({
 
 		var name=type.replace(/(^MUI\.)/i,'');
 		var sname=name.toLowerCase();
-		if(MUI.classes[sname]==null) return null;
+		if (MUI.classes[sname] == null) return null;
 
-		var js=['{controls}'+sname+'/'+sname+'.js'];
+		var js=['{controls}' + sname + '/' + sname + '.js'];
 
-		if(MUI.files[js[0]]=='loaded' && !fromHTML) {
-			var klass=MUI[name];
+		if (MUI.files[js[0]] == 'loaded' && !fromHTML){
+			var klass = MUI[name];
 			return new klass(options);
 		}
 
-		if(fromHTML) js.push('{controls}'+sname+'/'+sname+'_html.js');
+		if (fromHTML) js.push('{controls}' + sname + '/' + sname + '_html.js');
 
-		var additionalOptions=MUI.classes[sname];
-		var css=[];
-		if(additionalOptions.css) css=additionalOptions.css;
+		var additionalOptions = MUI.classes[sname];
+		var css = [];
+		if (additionalOptions.css) css = additionalOptions.css;
 
 		var ret;
 		new MUI.Require({
 			'js':js,
 			'css':css,
-			'onload':function() {
-				var klass=MUI[name];
+			'onload':function(){
+				var klass = MUI[name];
 				ret = new klass(options);
-				if(fromHTML) ret.fromHTML();
+				if (fromHTML) ret.fromHTML();
 			}
 		});
 		return ret;
