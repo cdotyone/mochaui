@@ -153,7 +153,7 @@ MUI.Content = (MUI.Content || $H({})).extend({
 							if (Browser.Engine.presto) options.require.onload.delay(100);
 							else options.require.onload();
 							if (options.onLoaded && options.onLoaded != $empty){
-								options.onLoaded(element, options, json)
+								options.onLoaded(element, options, json);
 							} else {
 								if (instance) instance.fireEvent('loaded', [element, options, json]);
 							}
@@ -162,7 +162,7 @@ MUI.Content = (MUI.Content || $H({})).extend({
 				} else {
 					if (options.onLoaded && options.onLoaded != $empty){
 						// call onLoaded directly
-						options.onLoaded(element, options, json)
+						options.onLoaded(element, options, json);
 					} else {
 						// fire the event
 						if (instance) instance.fireEvent('loaded', [element, options, json]);
