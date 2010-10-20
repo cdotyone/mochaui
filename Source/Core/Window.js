@@ -1482,7 +1482,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		['', '-o-', '-webkit-', '-moz-'].each(function(pre){
 			this.el.windowEl.setStyle(pre + 'box-shadow', options.shadowOffset.x + 'px ' + options.shadowOffset.y + 'px ' + options.shadowBlur + 'px ' + color);
 			this.el.windowEl.setStyle(pre + 'border-radius', options.cornerRadius + 'px');
-			this.el.titleBar.setStyle(pre + 'border-radius', options.cornerRadius + 'px '+options.cornerRadius + 'px 0px 0px');
+			this.el.titleBar.setStyle(pre + 'border-radius', options.cornerRadius + 'px');
 		},this);
 	},
 
