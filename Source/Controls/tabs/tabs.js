@@ -148,8 +148,9 @@ MUI.Tabs = new Class({
 		if (!value) value = 'tab' + (++MUI.IDCount);
 		var text = self._getData(tab, o.textField);
 		var title = self._getData(tab, o.titleField);
+		var liClass = self._getData(tab, 'class');
 
-		var li = new Element('li').inject(ul);
+		var li = new Element('li', {'class':liClass}).inject(ul);
 		var a = new Element('a', {'text':text}).inject(li);
 		tab._element = li;
 

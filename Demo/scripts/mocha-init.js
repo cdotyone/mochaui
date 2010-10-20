@@ -118,9 +118,9 @@ var initializeWindows = function(){
 					id: 'youtube_toolbar',
 					css: 'mochaToolbar',
 					content: [
-						{'text': 'Zero 7', 'url': 'pages/youtube.html', 'loadMethod': 'iframe', 'title': 'Zero 7'},
+						{'text': 'Zero 7', 'url': 'pages/youtube.html', 'loadMethod': 'iframe', 'title': 'Zero 7', 'class': 'first'},
 						{'text': 'Fleet Foxes', 'url': 'pages/youtube2.html', 'loadMethod': 'iframe', 'title': 'Fleet Foxes'},
-						{'text': 'Boards of Canada', 'url': 'pages/youtube3.html', 'loadMethod': 'iframe', 'title': 'Boards of Canada'}
+						{'text': 'Boards of Canada', 'url': 'pages/youtube3.html', 'loadMethod': 'iframe', 'title': 'Boards of Canada', 'class': 'last'}
 					],
 					onLoaded: function(element, uOptions, json){
 						MUI.create('MUI.Tabs', {
