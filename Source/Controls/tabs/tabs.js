@@ -88,30 +88,30 @@ MUI.Tabs = new Class({
 		var div;
 		var instance=MUI.get(MUI.get($(containerEl ? containerEl : o.container)));
 
-		if(instance && instance.isTypeOf('MUI.Panel')) {
+		if (instance && instance.isTypeOf('MUI.Panel')){
 			instance.el.panelHeaderContent.addClass(o.cssClass);
 			div = instance.el.panelHeaderContent.getElement('div').empty();
-		} else if(instance && instance.isTypeOf('MUI.Window')) {
+		} else if (instance && instance.isTypeOf('MUI.Window')){
 			div = $(o.id);
-			if(div==null) div = new Element('div',{'id':o.id,'class':o.cssClass}).inject(instance.el.contentWrapper,'top');
+			if (div == null) div = new Element('div', {'id': o.id, 'class': o.cssClass}).inject(instance.el.contentWrapper, 'top');
 			div.addClass(o.cssClass);
 		} else {
 			div = $(o.id);
 			if (!div){
-				div = new Element('div',{'id':o.id,'class':o.cssClass});
+				div = new Element('div', {'id': o.id, 'class': o.cssClass});
 				isNew = true;
 			}
 		}
 
 		var ul = div.getElement('ul');
-		if (!ul) ul = new Element('ul',{'class':o.cssClass}).inject(div);
-		else ul.set('class',o.cssClass).empty();
+		if (!ul) ul = new Element('ul', {'class': o.cssClass}).inject(div);
+		else ul.set('class', o.cssClass).empty();
 		self.element = div;
 
 		// if no tab selected, then select first tab for them
-		if (o.tabs.length > 0 && (o.value == null || o.value == '')) {
+		if (o.tabs.length > 0 && (o.value == null || o.value == '')){
 			o.value = self._getData(o.tabs[0], o.valueField);
-			if(o.value == null || o.value == '') {
+			if (o.value == null || o.value == ''){
 				o.valueField = o.textField;
 				o.value = self._getData(o.tabs[0], o.valueField);
 			}
@@ -120,21 +120,21 @@ MUI.Tabs = new Class({
 		// build all tabs
 		$A(o.tabs).each(function(tab){
 			self._buildTab(tab, ul);
-			if(self._getData(tab, o.valueField)==o.value) o.selectedTab = tab;
+			if (self._getData(tab, o.valueField) == o.value) o.selectedTab = tab;
 		});
 
 		// add a formatting div
-		new Element('div', {'class':'clear'}).inject(ul);
+		new Element('div', {'class': 'clear'}).inject(ul);
 
-		if (!isNew) {
-			if(o.selectedTab) o.selectedTab._element.fireEvent('click');
+		if (!isNew){
+			if (o.selectedTab) o.selectedTab._element.fireEvent('click');
 			return this;
 		}
 
 		window.addEvent('domready', function(){
 			var container = $(containerEl ? containerEl : o.container);
 			container.appendChild(div);
-			if(o.selectedTab) o.selectedTab._element.fireEvent('click');
+			if (o.selectedTab) o.selectedTab._element.fireEvent('click');
 		});
 
 		return div;
@@ -150,8 +150,8 @@ MUI.Tabs = new Class({
 		var title = self._getData(tab, o.titleField);
 		var liClass = self._getData(tab, 'class');
 
-		var li = new Element('li', {'class':liClass}).inject(ul);
-		var a = new Element('a', {'text':text}).inject(li);
+		var li = new Element('li', {'class': liClass}).inject(ul);
+		var a = new Element('a', {'text': text}).inject(li);
 		tab._element = li;
 
 		li.addEvent('click', function(e){
@@ -169,7 +169,7 @@ MUI.Tabs = new Class({
 	_tabClick: function(tab, ul, e){
 		var self = this;
 		var o = self.options;
-		if(e) e.stopPropagation();
+		if (e) e.stopPropagation();
 
 		var value = self._getData(tab, o.valueField);
 		if (value == null) value = self._getData(tab, o.textField);
@@ -182,24 +182,24 @@ MUI.Tabs = new Class({
 		tab._element.addClass('sel');
 
 		var url = self._getData(tab, o.urlField);
-		if(o.partner && url) {
+		if (o.partner && url){
 			var content = self._getData(tab, o.contentField);
 
 			var uOptions = {
-				element:o.partner,
-				content:content,
+				element: o.partner,
+				content: content,
 				url:	url
 			};
-			if(o.updateOptions) $extend(uOptions,o.updateOptions);
+			if (o.updateOptions) $extend(uOptions,o.updateOptions);
 			else {
-				var instance=MUI.get(o.partner);
-				if(instance && instance.el && instance.el.iframe) uOptions.loadMethod='iframe';
+				var instance = MUI.get(o.partner);
+				if (instance && instance.el && instance.el.iframe) uOptions.loadMethod = 'iframe';
 			}
 
 			MUI.Content.update(uOptions);
 		}
 
-		self.fireEvent('tabSelected', [tab,value,self,e]);
+		self.fireEvent('tabSelected', [tab, value, self, e]);
 	}
 
 });
