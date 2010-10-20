@@ -33,27 +33,27 @@ MUI.Tabs = new Class({
 	Implements: [Events, Options],
 
 	options: {
-		 id:			''				// id of the primary element, and id os control that is registered with mocha
-		,container:		null			// the parent control in the document to add the control to
-		,drawOnInit:	true			// true to add tree to container when control is initialized
-		,cssClass:		'tabs'			// the primary css tag
+		id:				'',				// id of the primary element, and id os control that is registered with mocha
+		container:		null,			// the parent control in the document to add the control to
+		drawOnInit:		true,			// true to add tree to container when control is initialized
+		cssClass:		'tabs',			// the primary css tag
 
-		,tabs:			$A([])			// the list of tabs
+		tabs:			$A([]),			// the list of tabs
 
-		,textField:		'text'			// the name of the field that has the tab's text
-		,valueField:	'value'			// the name of the field that has the tab's value
-		,titleField:	'title'			// the name of the field that has the tab's tip text
+		textField:		'text',			// the name of the field that has the tab's text
+		valueField:		'value',		// the name of the field that has the tab's value
+		titleField:		'title',		// the name of the field that has the tab's tip text
 
-		,partner:		null			// element or id of
-		,urlField:		'url'			// the name of the field that has the tab's url to load content from and put content into options.partner
-		,contentField:	'content'		// the name of the field that has the tab's content insert into options.partner
-		,updateOptions:	null			// the options used to load the content into the partner element, panel, or window
+		partner:		null,			// element or id of
+		urlField:		'url',			// the name of the field that has the tab's url to load content from and put content into options.partner
+		contentField:	'content',		// the name of the field that has the tab's content insert into options.partner
+		updateOptions:	null,			// the options used to load the content into the partner element, panel, or window
 
-		,value:			''				// the currently selected tab's value
-		,selectedTab:	null			// the currently selected tab
-		,position:		null			// container is a panel or window this tell tabs where the tabs should go, 'header' or 'footer'
+		value:			'',				// the currently selected tab's value
+		selectedTab:	null,			// the currently selected tab
+		position:		null,			// container is a panel or window this tell tabs where the tabs should go, 'header' or 'footer'
 
-		,onTabSelected:	$empty			// event: when a node is checked
+		onTabSelected:	$empty			// event: when a node is checked
 	},
 
 	initialize: function(options){
