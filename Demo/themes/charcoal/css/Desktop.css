@@ -422,6 +422,7 @@ div.toolbox.divider {
 	background: #404040 url(../images/bg-panel-header.gif) repeat-x;
 	border: 1px solid #181818;
 	-moz-border-radius: 3px;
+	border-radius: 3px;
 }
 
 #spinnerWrapper {

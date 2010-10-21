@@ -430,6 +430,7 @@ div.toolbox.divider {
 .iconWrapper:hover {
 	border: 1px solid #a0a0a0;
 	-moz-border-radius: 3px;
+	border-radius: 3px;
 }
 
 #spinnerWrapper {
