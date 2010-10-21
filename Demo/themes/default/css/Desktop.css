@@ -453,13 +453,17 @@ div.panel div.pad.tree {
 	background-color: #f8f8f8;
 }
 
-div.panel div.pad.tree ul ul li.last {
+ul.tree li a:link {
+	color: #181818;
+}
+
+/*div.panel div.pad.tree ul ul li.last {
 	background-color: #f8f8f8;
 }
 
 div.panel div.pad.tree ul li.last {
 	background-color: #f8f8f8;
-}
+}*/
 
 ul.tree ul li.O.first {
 	background: transparent url(../images/tree_open_first.gif) no-repeat left top;
