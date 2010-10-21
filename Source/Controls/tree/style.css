@@ -7,9 +7,9 @@ ul.tree li { line-height:17px; padding:0 }
 ul.tree li a:link { text-decoration:none; vertical-align:middle;color:black }
 ul.tree li a:visited { text-decoration:none; vertical-align:middle;color:black }
 ul.tree li a:active { text-decoration:none; vertical-align:middle;color:black }
-ul.tree li a:hover { background-color:#000066; color:White; }
-ul.tree li a.lbl { background-color:transparent; color:WindowText; }
-ul.tree li a.sel { background-color:Highlight; color:CaptionText; }
+ul.tree li a:hover { text-decoration: underline; }
+ul.tree li a.lbl { color:WindowText; }
+ul.tree li a.sel { text-decoration: underline; color:CaptionText; }
 ul.tree ul li.O { padding-left: 18px; background: transparent url(images/tree_open.gif) no-repeat left top; }
 ul.tree ul li.C { padding-left: 18px; background: transparent url(images/tree_closed.gif) no-repeat left top; }
 ul.tree li.nochild { background: transparent url(images/tree_nochild.gif) no-repeat left top; }
