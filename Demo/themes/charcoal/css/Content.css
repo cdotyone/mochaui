@@ -164,6 +164,7 @@ form button {
 	vertical-align: middle;
 	border: 1px solid #181818;
 	-moz-border-radius: 3px;
+	border-radius: 3px;
 }
 
 * html .button {
@@ -181,11 +182,13 @@ form button {
 	vertical-align: middle;
 	-moz-border-radius-topleft: 3px;
 	-moz-border-radius-bottomleft: 3px;
+	border-radius: 3px 0 0 3px;
 }
 
 .searchButton {
 	-moz-border-radius-topleft: 0;
 	-moz-border-radius-bottomleft: 0;
+	border-radius: 0 3px 3px 0;
 }
 
 * html .toolbox .searchField, * html .toolbox .searchButton {
