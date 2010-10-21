@@ -872,7 +872,7 @@ var initializeColumns = function(){
 			}
 		},
 		column: 'sideColumn1',
-		padding: 3
+		padding: 8
 	});
 
 	new MUI.Panel({
