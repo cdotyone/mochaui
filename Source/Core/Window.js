@@ -1,4 +1,4 @@
-/*
+ /*
  ---
 
  script: Window.js
@@ -237,7 +237,7 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 
 });
 
-MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
+MUI.Window = (MUI.Window || new NamedClass('MUI.Window', {})).implement({
 
 	Implements: [Events, Options],
 
@@ -339,7 +339,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			// Expand and focus if collapsed
 			else if (this.isCollapsed){
 				this.collapseToggle();
-				this.focus.delay(10,this);
+				this.focus.delay(10, this);
 			} else if (this.el.windowEl.hasClass('windowClosed')){
 
 				if (this.el.check) this.el.check.show();
@@ -366,7 +366,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		} else MUI.set(options.id, this);
 
 		this.isClosing = false;
-		this.fireEvent('drawBegin',[this]);
+		this.fireEvent('drawBegin', [this]);
 
 		// Create window div
 		MUI.Windows.indexLevel++;
@@ -457,7 +457,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 
 		// Position window. If position not specified by user then center the window on the page.
 		var dimensions = (options.container == document.body || options.container == MUI.Desktop.desktop) ? window.getSize() : $(this.options.container).getSize();
-		var x,y;
+		var x, y;
 		if (options.y){
 			y = options.y - options.shadowBlur;
 		} else {
@@ -524,7 +524,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 
 		if (this.options.closeAfter) this.close.delay(this.options.closeAfter, this);
 		if (MUI.dock && this.options.type == 'window') MUI.dock.createDockTab(this);
-		this.fireEvent('drawEnd',[this]);
+		this.fireEvent('drawEnd', [this]);
 		return this;
 	},
 
@@ -794,12 +794,12 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		}
 
 		if (!MUI.options.advancedEffects){
-			if ((this.options.type == 'modal' || this.options.type == 'modal2') && $$('.modal').length<2) $('modalOverlay').setStyle('opacity', 0);
+			if ((this.options.type == 'modal' || this.options.type == 'modal2') && $$('.modal').length < 2) $('modalOverlay').setStyle('opacity', 0);
 			this._doClosingJobs();
 		} else {
 			// Redraws IE windows without shadows since IE messes up canvas alpha when you change element opacity
 			if (Browser.Engine.trident) this.redraw(false);
-			if ((this.options.type == 'modal' || this.options.type == 'modal2') && $$('.modal').length<2) {
+			if ((this.options.type == 'modal' || this.options.type == 'modal2') && $$('.modal').length < 2){
 				MUI.Modal.modalOverlayCloseMorph.start({
 					'opacity': 0
 				});
@@ -832,7 +832,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			});
 			if (this.sections){
 				this.sections.each(function(section){
-					if (section.position=='content') return;
+					if (section.position == 'content') return;
 					var el = section.wrap ? section.wrapperEl : section.element;
 					if (el) el.setStyles({
 						visibility: 'visible',
@@ -856,7 +856,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			});
 			if (this.sections){
 				this.sections.each(function(section){
-					if (section.position=='content') return;
+					if (section.position == 'content') return;
 					var el = section.wrap ? section.wrapperEl : section.element;
 					if (el) el.setStyles({
 						visibility: 'hidden',
@@ -979,81 +979,6 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			'top': top,
 			'left': left
 		});
-	},
-
-	_setColors: function(){
-		// Convert CSS colors to Canvas colors.
-		if (this.options.useCanvas && !this.useCSS3){
-
-			// Set TitlebarColor
-			var pattern = /\?(.*?)\)/;
-			if (this.el.titleBar.getStyle('backgroundImage') != 'none'){
-				var gradient = this.el.titleBar.getStyle('backgroundImage');
-				gradient = gradient.match(pattern)[1];
-				gradient = gradient.parseQueryString();
-				var gradientFrom = gradient.from;
-				var gradientTo = gradient.to.replace(/\"/, ''); // IE7 was adding a quotation mark in. No idea why.
-
-				this.headerStartColor = new Color(gradientFrom);
-				this.headerStopColor = new Color(gradientTo);
-				this.el.titleBar.addClass('replaced');
-			} else if (this.el.titleBar.getStyle('background-color') !== '' && this.el.titleBar.getStyle('background-color') !== 'transparent'){
-				this.headerStartColor = new Color(this.el.titleBar.getStyle('background-color')).mix('#fff', 20);
-				this.headerStopColor = new Color(this.el.titleBar.getStyle('background-color')).mix('#000', 20);
-				this.el.titleBar.addClass('replaced');
-			}
-
-			// Set BodyBGColor
-			if (this.el.windowEl.getStyle('background-color') !== '' && this.el.windowEl.getStyle('background-color') !== 'transparent'){
-				this.bodyBgColor = new Color(this.el.windowEl.getStyle('background-color'));
-				this.el.windowEl.addClass('replaced');
-			}
-
-			// Set resizableColor, the color of the SE corner resize handle
-			if (this.options.resizable && this.el.se.getStyle('background-color') !== '' && this.el.se.getStyle('background-color') !== 'transparent'){
-				this.resizableColor = new Color(this.el.se.getStyle('background-color'));
-				this.el.se.addClass('replaced');
-			}
-
-		}
-
-		if (this.options.useCanvasControls){
-			if (this.el.minimizeButton){
-				// Set Minimize Button Foreground Color
-				if (this.el.minimizeButton.getStyle('color') !== '' && this.el.minimizeButton.getStyle('color') !== 'transparent')
-					this.minimizeColor = new Color(this.el.minimizeButton.getStyle('color'));
-
-				// Set Minimize Button Background Color
-				if (this.el.minimizeButton.getStyle('background-color') !== '' && this.el.minimizeButton.getStyle('background-color') !== 'transparent'){
-					this.minimizeBgColor = new Color(this.el.minimizeButton.getStyle('background-color'));
-					this.el.minimizeButton.addClass('replaced');
-				}
-			}
-
-			if (this.el.maximizeButton){
-				// Set Maximize Button Foreground Color
-				if (this.el.maximizeButton.getStyle('color') !== '' && this.el.maximizeButton.getStyle('color') !== 'transparent')
-					this.maximizeColor = new Color(this.el.maximizeButton.getStyle('color'));
-
-				// Set Maximize Button Background Color
-				if (this.el.maximizeButton.getStyle('background-color') !== '' && this.el.maximizeButton.getStyle('background-color') !== 'transparent'){
-					this.maximizeBgColor = new Color(this.el.maximizeButton.getStyle('background-color'));
-					this.el.maximizeButton.addClass('replaced');
-				}
-			}
-
-			if (this.el.closeButton){
-				// Set Close Button Foreground Color
-				if (this.el.closeButton.getStyle('color') !== '' && this.el.closeButton.getStyle('color') !== 'transparent')
-					this.closeColor = new Color(this.el.closeButton.getStyle('color'));
-
-				// Set Close Button Background Color
-				if (this.el.closeButton.getStyle('background-color') !== '' && this.el.closeButton.getStyle('background-color') !== 'transparent'){
-					this.closeBgColor = new Color(this.el.closeButton.getStyle('background-color'));
-					this.el.closeButton.addClass('replaced');
-				}
-			}
-		}
 	},
 
 	_setMochaControlsWidth: function(){
@@ -1195,8 +1120,8 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			case 'string':
 				// was passed html, so make sure it is added
 				this.sections.push({
-					loadMethod:'html',
-					content:options.content
+					loadMethod: 'html',
+					content: options.content
 				});
 				break;
 			case 'array':
@@ -1236,7 +1161,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			var where = section.position == 'bottom' ? 'after' : 'before';
 			var empty = section.empty;
 			if (section.position == 'header' || section.position == 'footer'){
-				if (!section.css) section.css='mochaToolbar';
+				if (!section.css) section.css = 'mochaToolbar';
 				intoEl = section.position == 'header' ? cache.titleBar : cache.footer;
 				where = 'bottom';
 				wrap = false;
@@ -1245,7 +1170,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			if (wrap){
 				section.wrapperEl = new Element('div', {
 					'id': section.id + '_wrapper',
-					'class': section.css+'Wrapper',
+					'class': section.css + 'Wrapper',
 					'styles': {'height': section.height}
 				}).inject(intoEl, where);
 
@@ -1457,10 +1382,10 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			// IE cannot handle both element opacity and VML alpha at the same time.
 			if (Browser.Engine.trident) this.redraw(false);
 			this.opacityMorph.start({'opacity': 1});
-			this.focus.delay(10,this);
+			this.focus.delay(10, this);
 		} else {
 			this.el.windowEl.setStyle('opacity', 1);
-			this.focus.delay(10,this);
+			this.focus.delay(10, this);
 		}
 	},
 
@@ -1555,7 +1480,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		this.resizable2 = this.el.contentWrapper.makeResizable({
 			handle: [this.el.e, this.el.ne],
 			limit: {
-				x: [this.options.resizeLimit.x[0] - (this.options.shadowBlur * 2), this.options.resizeLimit.x[1] - (this.options.shadowBlur * 2) ]
+				x: [this.options.resizeLimit.x[0] - (this.options.shadowBlur * 2), this.options.resizeLimit.x[1] - (this.options.shadowBlur * 2)]
 			},
 			modifiers: {x: 'width', y: false},
 			onStart: function(){
@@ -1573,7 +1498,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			container: this.options.container ? $(this.options.container) : false,
 			handle: this.el.se,
 			limit: {
-				x: [this.options.resizeLimit.x[0] - (this.options.shadowBlur * 2), this.options.resizeLimit.x[1] - (this.options.shadowBlur * 2) ],
+				x: [this.options.resizeLimit.x[0] - (this.options.shadowBlur * 2), this.options.resizeLimit.x[1] - (this.options.shadowBlur * 2)],
 				y: [this.options.resizeLimit.y[0] - this.headerFooterShadow, this.options.resizeLimit.y[1] - this.headerFooterShadow]
 			},
 			modifiers: {x: 'width', y: 'height'},
@@ -1730,9 +1655,9 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 
 			// Part of the fix for IE6 select z-index bug
 			if (Browser.Engine.trident4) this.el.zIndexFix.setStyles({
-					'width': width,
-					'height': height
-				});
+				'width': width,
+				'height': height
+			});
 
 			// Draw Window
 			if (this.options.useCanvas){
@@ -1799,7 +1724,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		// Destroy throws an error in IE8
 		if (Browser.Engine.trident) windowEl.dispose();
 		else windowEl.destroy();
-		this.fireEvent('closeComplete',[this]);
+		this.fireEvent('closeComplete', [this]);
 
 		if (this.options.type != 'notification'){
 			var newFocus = MUI.Windows._getWithHighestZIndex();
@@ -1832,7 +1757,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			MUI.Desktop.setDesktopSize();
 		}
 
-		this.fireEvent('closeComplete',[this]);
+		this.fireEvent('closeComplete', [this]);
 
 		if (this.options.type != 'notification'){
 			var newFocus = MUI.Windows._getWithHighestZIndex();
@@ -1840,6 +1765,81 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		}
 
 		this.isClosing = false;
+	},
+
+	_setColors: function(){
+		// Convert CSS colors to Canvas colors.
+		if (this.options.useCanvas && !this.useCSS3){
+
+			// Set TitlebarColor
+			var pattern = /\?(.*?)\)/;
+			if (this.el.titleBar.getStyle('backgroundImage') != 'none'){
+				var gradient = this.el.titleBar.getStyle('backgroundImage');
+				gradient = gradient.match(pattern)[1];
+				gradient = gradient.parseQueryString();
+				var gradientFrom = gradient.from;
+				var gradientTo = gradient.to.replace(/\"/, ''); // IE7 was adding a quotation mark in. No idea why.
+
+				this.headerStartColor = new Color(gradientFrom);
+				this.headerStopColor = new Color(gradientTo);
+				this.el.titleBar.addClass('replaced');
+			} else if (this.el.titleBar.getStyle('background-color') !== '' && this.el.titleBar.getStyle('background-color') !== 'transparent'){
+				this.headerStartColor = new Color(this.el.titleBar.getStyle('background-color')).mix('#fff', 20);
+				this.headerStopColor = new Color(this.el.titleBar.getStyle('background-color')).mix('#000', 20);
+				this.el.titleBar.addClass('replaced');
+			}
+
+			// Set BodyBGColor
+			if (this.el.windowEl.getStyle('background-color') !== '' && this.el.windowEl.getStyle('background-color') !== 'transparent'){
+				this.bodyBgColor = new Color(this.el.windowEl.getStyle('background-color'));
+				this.el.windowEl.addClass('replaced');
+			}
+
+			// Set resizableColor, the color of the SE corner resize handle
+			if (this.options.resizable && this.el.se.getStyle('background-color') !== '' && this.el.se.getStyle('background-color') !== 'transparent'){
+				this.resizableColor = new Color(this.el.se.getStyle('background-color'));
+				this.el.se.addClass('replaced');
+			}
+
+		}
+
+		if (this.options.useCanvasControls){
+			if (this.el.minimizeButton){
+				// Set Minimize Button Foreground Color
+				if (this.el.minimizeButton.getStyle('color') !== '' && this.el.minimizeButton.getStyle('color') !== 'transparent')
+					this.minimizeColor = new Color(this.el.minimizeButton.getStyle('color'));
+
+				// Set Minimize Button Background Color
+				if (this.el.minimizeButton.getStyle('background-color') !== '' && this.el.minimizeButton.getStyle('background-color') !== 'transparent'){
+					this.minimizeBgColor = new Color(this.el.minimizeButton.getStyle('background-color'));
+					this.el.minimizeButton.addClass('replaced');
+				}
+			}
+
+			if (this.el.maximizeButton){
+				// Set Maximize Button Foreground Color
+				if (this.el.maximizeButton.getStyle('color') !== '' && this.el.maximizeButton.getStyle('color') !== 'transparent')
+					this.maximizeColor = new Color(this.el.maximizeButton.getStyle('color'));
+
+				// Set Maximize Button Background Color
+				if (this.el.maximizeButton.getStyle('background-color') !== '' && this.el.maximizeButton.getStyle('background-color') !== 'transparent'){
+					this.maximizeBgColor = new Color(this.el.maximizeButton.getStyle('background-color'));
+					this.el.maximizeButton.addClass('replaced');
+				}
+			}
+
+			if (this.el.closeButton){
+				// Set Close Button Foreground Color
+				if (this.el.closeButton.getStyle('color') !== '' && this.el.closeButton.getStyle('color') !== 'transparent')
+					this.closeColor = new Color(this.el.closeButton.getStyle('color'));
+
+				// Set Close Button Background Color
+				if (this.el.closeButton.getStyle('background-color') !== '' && this.el.closeButton.getStyle('background-color') !== 'transparent'){
+					this.closeBgColor = new Color(this.el.closeButton.getStyle('background-color'));
+					this.el.closeButton.addClass('replaced');
+				}
+			}
+		}
 	}
 
 }).implement(MUI.WindowPanelShared);
