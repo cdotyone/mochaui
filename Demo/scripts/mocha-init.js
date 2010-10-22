@@ -453,7 +453,7 @@ var initializeWindows = function(){
 			addClass: 'no-canvas',
 			width: 305,
 			height: 175,
-			resizable: false,
+			resizable: true,
 			useCanvas: false,
 			useCSS3: true
 		});
@@ -472,7 +472,7 @@ var initializeWindows = function(){
 			content: {url: 'pages/lipsum.html'},
 			width: 305,
 			height: 175,
-			resizable: false,
+			resizable: true,
 			useCanvas: true,
 			useCSS3: true
 		});

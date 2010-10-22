@@ -555,7 +555,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window', {})).implement({
 		var width = this.el.contentWrapper.getStyle('width').toInt() + shadowBlur2x;
 		var height = this.el.contentWrapper.getStyle('height').toInt() + this.headerFooterShadow + borderHeight;
 		if (this.sections) this.sections.each(function(section){
-			if (section.position=='content') return;
+			if (section.position == 'content') return;
 			var el = section.wrap ? section.wrapperEl : section.element;
 			height += el.getStyle('height').toInt() + el.getStyle('border-top').toInt();
 		} );
@@ -1408,7 +1408,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window', {})).implement({
 			this.el.windowEl.setStyle(pre + 'box-shadow', options.shadowOffset.x + 'px ' + options.shadowOffset.y + 'px ' + options.shadowBlur + 'px ' + color);
 			this.el.windowEl.setStyle(pre + 'border-radius', options.cornerRadius + 'px');
 			this.el.titleBar.setStyle(pre + 'border-radius', options.cornerRadius + 'px');
-		},this);
+		}, this);
 	},
 
 	_attachDraggable: function(){
