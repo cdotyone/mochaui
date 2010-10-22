@@ -289,6 +289,10 @@ div.mochaToolbarWrapper.bottom {
 	border: 1px solid #666;
 }
 
+.mocha.css3.no-canvas {
+	border: none;
+}
+
 .mochaCss3Shadow {
 	background-color: #000;
 }
