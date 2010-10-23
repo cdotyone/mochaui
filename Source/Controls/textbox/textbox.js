@@ -89,7 +89,7 @@ MUI.TextBox = new Class({
 			if (o.maskType == 'Password'){
 				new MUI.Require({js: ['PassShark.js'],
 					onload: function(){
-						var options = $H({});
+						var options = {};
 						options.extend(o.maskOptions);
 						options.maskType = o.maskType.toLowerCase();
 						new MUI.PassShark(self.element, options);
@@ -102,7 +102,7 @@ MUI.TextBox = new Class({
 							js: ['Mask.' + o.maskType.split('.')[0] + '.js'],
 							onload: function(){
 								var o = self.options;
-								var options = $H({});
+								var options = {};
 								options.extend(o.maskOptions);
 								options.maskType = o.maskType.toLowerCase();
 								var klass = self.getMaskClassOptions(o.maskType);

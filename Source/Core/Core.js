@@ -29,12 +29,14 @@
 var MochaUI;
 var MUI = MochaUI = (MUI || {});
 
-MUI.extend = function(hash){
-	$extend(MUI,hash);
+MUI.append = function(hash){
+    Object.append(MUI, hash);
 }.bind(MUI);
 
-MUI.extend({
-	'options': $H({
+Browser.webkit = (Browser.safari || Browser.chrome);
+
+MUI.append({
+	'options': {
 		theme: 'default',
 		advancedEffects: false, // Effects that require fast browsers and are cpu intensive.
 		standardEffects: true,  // Basic effects that tend to run smoothly.
@@ -45,10 +47,10 @@ MUI.extend({
 			themes:  '../Demo/themes/',		// Path to MochaUI Themes
 			plugins: '../Demo/plugins/'		// Path to Plugins
 		}
-	})
+	}
 });
 
-MUI.extend({
+MUI.append({
 	version: '1.0.0',
 	instances: new Hash(),
 	IDCount: 0,
@@ -58,7 +60,7 @@ MUI.extend({
 
 	initialize: function(options){
 		if (options){
-			if (options.path) options.path = $extend(MUI.options.path, options.path);
+			if (options.path) options.path = Object.append(MUI.options.path, options.path);
 			MUI.options.extend(options);
 		}
 	},
@@ -66,7 +68,7 @@ MUI.extend({
 	replaceFields: function(str,values){
 		if (values == null) return str;
 
-		if ($type(str) == 'string'){
+		if (typeOf(str) == 'string'){
 			var keys = str.match(/\{+(\w*)\}+/g);
 			if (keys == null) return str;
 
@@ -79,7 +81,7 @@ MUI.extend({
 			});
 			return str;
 		}
-		if ($type(str) == 'array'){
+		if (typeOf(str) == 'array'){
 			for (var i = 0; i < str.length; i++){
 				str[i] = MUI.replaceFields(str[i]);
 			}
@@ -88,7 +90,7 @@ MUI.extend({
 	},
 
 	replacePaths: function(files){
-		var paths = $extend({'theme':MUI.options.path.themes + MUI.options.theme + '/'}, MUI.options.path);
+		var paths = Object.append({'theme':MUI.options.path.themes + MUI.options.theme + '/'}, MUI.options.path);
 		return MUI.replaceFields(files,paths);
 	},
 
@@ -96,7 +98,7 @@ MUI.extend({
 
 	getID: function(el){
 		if (type == 'string') return el;
-		var type = $type(el);
+		var type = typeOf(el);
 		if (type == 'element') return el.id; 
 		else if (type == 'object' && el.id) return el.id;
 		else if (type == 'object' && el.options && el.options.id) return el.options.id;
@@ -167,7 +169,7 @@ MUI.extend({
 
 	reloadIframe: function(iframe){
 		var src = $(iframe).src;
-		Browser.Engine.gecko ? $(iframe).src = src : top.frames[iframe].location.reload(true);
+		Browser.firefox ? $(iframe).src = src : top.frames[iframe].location.reload(true);
 	},
 
 	notification: function(message){
@@ -228,7 +230,7 @@ var NamedClass = function(name, members){
 };
 
 function fixPNG(myImage){
-	if (Browser.Engine.trident4 && document.body.filters){
+	if (Browser.ie4 && document.body.filters){
 		var imgID = (myImage.id) ? "id='" + myImage.id + "' " : "";
 		var imgClass = (myImage.className) ? "class='" + myImage.className + "' " : "";
 		var imgTitle = (myImage.title) ? "title='" + myImage.title + "' " : "title='" + myImage.alt + "' ";
@@ -257,29 +259,33 @@ Element.implement({
 			this.setStyle('position', 'relative');
 			position = 'relative';
 		}
-		if (Browser.Engine.trident){
+		if (Browser.ie){
 			parent.setStyle('height', parent.getStyle('height'));
 		}
 		var coords = this.getPosition(parent);
-		if (position == 'relative' && !Browser.Engine.presto){
+		if (position == 'relative' && !Browser.opera){
 			coords.x -= parent.getStyle('paddingLeft').toInt();
 			coords.y -= parent.getStyle('paddingTop').toInt();
 		}
 		var morph = this.retrieve('morph');
+		var oldOptions;
 		if (morph){
 			morph.cancel();
-			var oldOptions = morph.options;
+			oldOptions = morph.options;
 		}
-		morph = this.get('morph', {
+
+		this.set('morph', {
 			duration:50,
 			link:'chain'
 		});
+
 		for (var i = 0; i < duration; i++){
 			morph.start({
-				top:coords.y + $random(-radius, radius),
-				left:coords.x + $random(-radius, radius)
+				top:coords.y + Number.random(-radius, radius),
+				left:coords.x + Number.random(-radius, radius)
 			});
 		}
+
 		morph.start({
 			top:coords.y,
 			left:coords.x
@@ -288,6 +294,7 @@ Element.implement({
 				this.set('morph', oldOptions);
 			}
 		}.bind(this));
+
 		return this;
 	},
 
@@ -397,8 +404,8 @@ MUI.Require = new Class({
 	options: {
 		css: [],
 		images: [],
-		js: [],
-		onload: $empty
+		js: []
+		//onload: null
 	},
 
 	initialize: function(options){
@@ -474,7 +481,7 @@ MUI.Require = new Class({
 			var checker = (function(){
 				tries++;
 				if (MUI.files[source] == 'loading' && tries < '100') return;
-				$clear(checker);
+				clearInterval(checker);
 				if (typeof onload == 'function'){
 					onload();
 				}
@@ -483,7 +490,7 @@ MUI.Require = new Class({
 			MUI.files[source] = 'loading';
 
 			properties = {
-				'onload': onload != 'undefined' ? onload : $empty
+				'onload': onload != 'undefined' ? onload : null
 			};
 
 			// Add to the onload function
@@ -507,13 +514,13 @@ MUI.Require = new Class({
 	}
 });
 
-$extend(Asset, {
+Object.append(Asset, {
 	// Get the CSS with XHR before appending it to document.head so that we can have an onload callback.
 	css: function(source, properties){
-		properties = $extend({
+		properties = Object.append({
 			id: null,
 			media: 'screen',
-			onload: $empty
+			onload: null
 		}, properties);
 
 		new Request({

@@ -27,7 +27,7 @@
  ...
  */
 
-MUI.extend({
+MUI.append({
 
 	addRadiusSlider: function(){
 		if ($('radiusSliderarea')){

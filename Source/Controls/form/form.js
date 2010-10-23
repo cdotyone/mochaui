@@ -35,21 +35,22 @@ MUI.files['{controls}Form/Form.js'] = 'loaded';
 MUI.Form = new Class({
 	Implements: [Events, Options],
 	options: {
-		id: ''
-		, title: false
-		, Padding: '0'
-		, Width: 0
-		, Height: 0
-		, SubItems: $A([])
-		, Rules: $H({})
-		, Prefix: ''
-		, HasRequired: false
-		, onEventHandler: $empty
+		id: '',
+		title: false,
+		Padding: '0',
+		Width: 0,
+		Height: 0,
+		SubItems: [],
+		Rules: {},
+		Prefix: '',
+		HasRequired: false
+        
+		//onEventHandler: null
 	},
 
 	initialize: function(json, ignoreSystem, prefix){
 		if (!MUI.FormRules){
-			MUI.extend({
+			MUI.append({
 				FormRules:{
 					Required : new MUI.FormRule({ 'Type': 'Required', 'LegendText': 'Required fields.',
 						'IconURL': 'images/required.gif',
@@ -72,7 +73,7 @@ MUI.Form = new Class({
 							var mochaForm = dom.getParent('.formBody');
 							var fields = mochaForm.getElements('input');
 							fields = fields.concat(mochaForm.getElements('select'));
-							fields = $A(fields.concat(mochaForm.getElements('textarea')));
+							fields = fields.concat(mochaForm.getElements('textarea'));
 
 							var isRequired = false;
 							var getValue = this.getValue;
@@ -127,7 +128,7 @@ MUI.Form = new Class({
 
 		this.start();
 		this.IgnoreSystem = ignoreSystem;
-		if ($type(json) == 'string') if (PO.RS['Forms'][json]) json = PO.RS['Forms'][json];
+		if (typeOf(json) == 'string') if (PO.RS['Forms'][json]) json = PO.RS['Forms'][json];
 		if (json){
 			this.fromJSON(json, !json.NoBuild, prefix);
 		}
@@ -153,7 +154,7 @@ MUI.Form = new Class({
 		var cssClass = '';
 
 		var o = this;
-		var keys = $H(o.options.Rules).getKeys();
+		var keys = o.options.Rules.getKeys();
 		for (var ii = 0; ii < keys.length; ii++){
 			var rules = o.options.Rules[keys[ii]];
 			for (var iii = 0; iii < rules.length; iii++){
@@ -169,7 +170,7 @@ MUI.Form = new Class({
 
 	createRuleIcons: function(fld, parent, err){
 		var o = this;
-		var keys = $H(o.options.Rules).getKeys();
+		var keys = o.options.Rules.getKeys();
 		for (var ii = 0; ii < keys.length; ii++){
 			var rules = o.options.Rules[keys[ii]];
 			for (var iii = 0; iii < rules.length; iii++){
@@ -186,7 +187,7 @@ MUI.Form = new Class({
 	validateItem: function(fld, dom){
 		var o = this;
 		var arval = [true];
-		var keys = $H(o.options.Rules).getKeys();
+		var keys = o.options.Rules.getKeys();
 		for (var ii = 0; ii < keys.length; ii++){
 			var rules = o.options.Rules[keys[ii]];
 			for (var iii = 0; iii < rules.length; iii++){
@@ -243,16 +244,16 @@ MUI.Form = new Class({
 						ctrl.set('value', val);
 					}
 					if (ctrl.nodeName == 'INPUT' && (typ == 'checkbox' || typ == 'radio')){
-						vals = $A(val.split(','));
+						vals = val.split(',');
 						if (vals.indexOf(ctrl.get('value', val)) > -1){
 							ctrl.checked = true;
 						}
 					}
 					if (ctrl.nodeName == 'SELECT'){
-						vals = $A(val.split(','));
+						vals = val.split(',');
 						vals.each(function(val){
 							if (val){
-								$A(ctrl.options).each(function(opt){
+								ctrl.options.each(function(opt){
 									if (opt.value == val){
 										opt.selected = true;
 									}
@@ -269,13 +270,13 @@ MUI.Form = new Class({
 		var o = this;
 		o.f = new Element('div', { 'id': o.options.id, 'class': 'form' });
 		o.DOM = o.f;
-		o.aEvent = $A([]);
-		o.Scripts = $A([]);
+		o.aEvent = [];
+		o.Scripts = [];
 
-		o.Panel = $A([]);
-		o.flds = $A([]);
-		o.fdef = $H({});
-		o.fldMap = $A([]);
+		o.Panel = [];
+		o.flds = [];
+		o.fdef = {};
+		o.fldMap = [];
 	},
 
 	buildForm: function(parentItem, prefix, exclude){
@@ -283,8 +284,8 @@ MUI.Form = new Class({
 		if (!parentItem) parentItem = this.options;
 		if (!parentItem || !parentItem.SubItems) return;
 
-		var subitems = $A(parentItem.SubItems);
-		var rules = $H(parentItem.Rules);
+		var subitems = parentItem.SubItems;
+		var rules = parentItem.Rules;
 		var processSubItems = true;
 
 		if (!prefix){
@@ -294,9 +295,9 @@ MUI.Form = new Class({
 			prefix = '';
 		}
 
-		if ($type(exclude) == 'string'){
-			var elist = $A([]);
-			$A(exclude.split(',')).each(function(id){
+		if (typeOf(exclude) == 'string'){
+			var elist = [];
+			exclude.split(',').each(function(id){
 				elist.push(id.toLowerCase());
 			});
 			exclude = elist;
@@ -304,7 +305,7 @@ MUI.Form = new Class({
 
 		rules.each(function(val, key){
 			for (var ii = 0; ii < val.length; ii++){
-				if ($type(val[ii].getClass) != "function"){
+				if (typeOf(val[ii].getClass) != "function"){
 					if (!val[ii].Type) val[ii].Type = val[ii].options.Type;
 					if (val[ii].Type){
 						val[ii] = MUI.FormRules[val[ii].Type].create(val[ii]);
@@ -390,7 +391,7 @@ MUI.Form = new Class({
 					o.addEvent(item);
 					break;
 				case 'form':
-					if ($type(exclude) == 'array'){
+					if (typeOf(exclude) == 'array'){
 						if (item.Exclude){
 							exclude.push(item.Exclude);
 						}
@@ -406,12 +407,12 @@ MUI.Form = new Class({
 	},
 
 	prefixFields: function(prefix, list){
-		if ($type(list) == 'string'){
-			list = $A(list.split(','));
+		if (typeOf(list) == 'string'){
+			list = list.split(',');
 		}
-		if ($type(list) == 'array'){
-			var alst = $A([]);
-			$A(list).each(function(f){
+		if (typeOf(list) == 'array'){
+			var alst = [];
+			list.each(function(f){
 				if (f.indexOf(prefix) < 0) f = prefix + f;
 				if (f) alst.push(f);
 			});
@@ -508,7 +509,7 @@ MUI.Form = new Class({
 	},
 
 	addRow: function(jus){
-		if ($type(jus) == 'object') jus = jus.Align;
+		if (typeOf(jus) == 'object') jus = jus.Align;
 		var o = this;
 		this.tableCheck();
 
@@ -543,7 +544,7 @@ MUI.Form = new Class({
 	},
 
 	addCol: function(jus){
-		if ($type(jus) == 'object') jus = jus.Align;
+		if (typeOf(jus) == 'object') jus = jus.Align;
 		var o = this;
 
 		this.tableCheck();
@@ -753,8 +754,8 @@ MUI.Form = new Class({
 			items = PO.RS[item.CacheName];
 		}
 
-		if ($type(items) == 'array'){
-			$A(items).each(function(row){
+		if (typeOf(items) == 'array'){
+			items.each(function(row){
 				if (item.CanAdd){
 					var opt = new Element('option', { 'value': row[item.ValueField], 'text': row[item.TextField] });
 					sel.appendChild(opt);
@@ -875,13 +876,13 @@ MUI.Form = new Class({
 
 	Execute: function(){
 		this.Scripts.each(function(script){
-			if ($type(script) == 'string') eval(script);
+			if (typeOf(script) == 'string') eval(script);
 			else script(this);
 		});
 	},
 
 	GetEventButtons: function(){
-		var btns = $A([]);
+		var btns = [];
 
 		this.aEvent.each(function(evt){
 			if (evt.IsButton){
@@ -921,7 +922,7 @@ MUI.Form = new Class({
 
 		var ev = o.GetEventButtons();
 		if (!ev) return o;
-		var done = $A([]);
+		var done = [];
 
 		if (empty && $(panelID + '_buttonHolder') != null) $(panelID + '_buttonHolder').empty();
 		ev.each(function(evt){
@@ -958,17 +959,12 @@ MUI.Form = new Class({
 
 	GetValues: function(h){
 		var o = this;
-		if (h == null){
-			h = $H({});
-		}
-		else {
-			h = $H(h);
-		}
+		if (h == null) h = {};
 
 		o.fldMap.each(function(map){
 			var fld = map[1];
 			if (fld){
-				var id = $A(map[0].id.split(':'));
+				var id = map[0].id.split(':');
 				var val = o.getValue(fld);
 				if (id.length == 1){
 					if (val != '') h[id[0]] = val;
@@ -1000,8 +996,8 @@ MUI.Form = new Class({
 	},
 
 	autoSize: function(id, p){
-		if ($type(p) == 'string') p = $(p);
-		if ($type(p) != 'element') p = $(id).getParent();
+		if (typeOf(p) == 'string') p = $(p);
+		if (typeOf(p) != 'element') p = $(id).getParent();
 		var c = p.getSize();
 		$(id).setStyles({ 'width': c.x, 'height': c.y });
 	},
@@ -1024,7 +1020,7 @@ MUI.FormRule = new Class({
 
 	initialize: function(json){
 		var o = this;
-		$H(json).each(function(val, key){
+		json.each(function(val, key){
 			o[key] = val;
 		});
 	},
@@ -1034,10 +1030,10 @@ MUI.FormRule = new Class({
 		var o = new MUI.FormRule(json);
 		o.Type = me.Type;
 
-		$H(me).each(function(val, key){
+		me.each(function(val, key){
 			o[key] = val;
 		});
-		$H(json).each(function(val, key){
+		json.each(function(val, key){
 			o[key] = val;
 		});
 		o.hasRule = function(fld){

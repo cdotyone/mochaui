@@ -42,7 +42,7 @@ MUI.Desktop = {
 	},
 
 	initialize: function(options){
-		if (options) $extend(MUI.Desktop.options,options);
+		if (options) Object.append(MUI.Desktop.options,options);
 
 		if (MUI.desktop) return;	// only one desktop allowed
 		MUI.desktop = this;
@@ -210,7 +210,7 @@ MUI.Desktop = {
 
 	_menuInitialize: function(){
 		// Fix for dropdown menus in IE6
-		if (Browser.Engine.trident4 && this.desktopNavBar){
+		if (Browser.ie4 && this.desktopNavBar){
 			this.desktopNavBar.getElements('li').each(function(element){
 				element.addEvent('mouseenter', function(){
 					this.addClass('ieHover');
@@ -266,7 +266,7 @@ MUI.Desktop = {
 
 };
 
-MUI.Windows = (MUI.Windows || $H({})).extend({
+MUI.Windows = Object.append((MUI.Windows || {}), {
 
 	arrangeCascade: function(){
 
@@ -378,7 +378,8 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 	}
 });
 
-MUI.Window = (MUI.Window || new NamedClass('MUI.Window', {})).implement({
+MUI.Window = (MUI.Window || new NamedClass('MUI.Window', {}));
+MUI.Window.implement({
 
 	maximize: function(){
 		if (this.isMinimized) this._restoreMinimized();
@@ -429,7 +430,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window', {})).implement({
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
 		if (this.el.iframe){
-			if (!Browser.Engine.trident) this.el.iframe.setStyle('visibility', 'hidden');
+			if (!Browser.ie) this.el.iframe.setStyle('visibility', 'hidden');
 			else this.el.iframe.hide();
 		}
 
@@ -481,7 +482,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window', {})).implement({
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
 		if (this.el.iframe){
-			if (!Browser.Engine.trident) this.el.iframe.setStyle('visibility', 'hidden');
+			if (!Browser.ie) this.el.iframe.setStyle('visibility', 'hidden');
 			else this.el.iframe.hide();
 		}
 
@@ -500,7 +501,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window', {})).implement({
 
 });
 
-MUI.extend({
+MUI.append({
 
 	// Panel Height
 	panelHeight: function(column, changing, action){
@@ -516,7 +517,7 @@ MUI.extend({
 	panelHeight2: function(column, changing, action){
 		var parent = column.getParent();
 		var columnHeight = parent.getStyle('height').toInt();
-		if (Browser.Engine.trident4 && parent == MUI.Desktop.pageWrapper){
+		if (Browser.ie4 && parent == MUI.Desktop.pageWrapper){
 			columnHeight -= 1;
 		}
 		column.setStyle('height', columnHeight);
@@ -551,7 +552,7 @@ MUI.extend({
 				instance.resize.attach();
 				instance.el.handle.setStyles({
 					'display': 'block',
-					'cursor': Browser.Engine.webkit ? 'row-resize' : 'n-resize'
+					'cursor': Browser.webkit ? 'row-resize' : 'n-resize'
 				}).removeClass('detached');
 			} else {
 				instance.resize.detach();
@@ -710,7 +711,7 @@ MUI.extend({
 			var parent = handle.getParent();
 			if (parent.getStyle('height').toInt() < 1) return; // Keeps IE7 and 8 from throwing an error when collapsing a panel within a panel
 			var handleHeight = parent.getStyle('height').toInt() - handle.getStyle('border-top').toInt() - handle.getStyle('border-bottom').toInt();
-			if (Browser.Engine.trident4 && parent == MUI.Desktop.pageWrapper){
+			if (Browser.ie4 && parent == MUI.Desktop.pageWrapper){
 				handleHeight -= 1;
 			}
 			handle.setStyle('height', handleHeight);
@@ -727,7 +728,7 @@ MUI.extend({
 		var contentWrapper = instance.el.contentWrapper;
 
 		if (instance.el.iframe){
-			if (!Browser.Engine.trident){
+			if (!Browser.ie){
 				instance.el.iframe.setStyles({
 					'height': contentWrapper.getStyle('height'),
 					'width': contentWrapper.offsetWidth - contentWrapper.getStyle('border-left').toInt() - contentWrapper.getStyle('border-right').toInt()

@@ -197,11 +197,11 @@ var initializeWindows = function(){
 			minimizable: true,
 			maximizable: false,
 			onDragStart: function(instance){
-				if (!Browser.Engine.trident) instance.el.windowEl.setStyle('opacity', 0.5);
+				if (!Browser.ie) instance.el.windowEl.setStyle('opacity', 0.5);
 				// VML doesn't render opacity nicely on the shadow
 			},
 			onDragComplete: function(instance){
-				if (!Browser.Engine.trident) instance.el.windowEl.setStyle('opacity', 1);
+				if (!Browser.ie) instance.el.windowEl.setStyle('opacity', 1);
 			}
 		});
 	};
@@ -651,14 +651,22 @@ var initializeWindows = function(){
 				{url: 'pages/features-layout.html'},
 				{
 					position: 'top',
-					url: 'pages/features-tabs.html',
-					onLoaded: function(){
+					loadMethod:'json',
+					id: 'features_toolbar',
+					css: 'mochaToolbar',
+					content: [
+						{'text': 'Layout', 'url': 'pages/features-layout.html', 'loadMethod': 'iframe', 'title': 'Features - Layout', 'class': 'first'},
+						{'text': 'Windows', 'url': 'pages/features-windows.html', 'loadMethod': 'iframe', 'title': 'Features - Windows'},
+						{'text': 'General', 'url': 'pages/features-general.html', 'loadMethod': 'iframe', 'title': 'Features - General', 'class': 'last'}
+					],
+					onLoaded: function(element, uOptions, json){
 						MUI.create('MUI.Tabs', {
 							'id': 'features_toolbar',
 							'container': 'features',
 							'position': 'top',
+							'tabs': json,
 							'partner': 'features'
-						}, true);
+						});
 					}
 				}
 			]
@@ -949,7 +957,7 @@ var initializeColumns = function(){
 							this.send();
 						});
 					}
-					addResizeElements.run(null, this);
+					addResizeElements.apply(this);
 				}
 			}
 		]

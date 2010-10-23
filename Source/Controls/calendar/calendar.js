@@ -1,6 +1,7 @@
 // Calendar: a Javascript class for Mootools that adds accessible and unobtrusive date pickers to your form elements <http://electricprism.com/aeron/calendar>
 // Calendar RC4, Copyright (c) 2007 Aeron Glemann <http://electricprism.com/aeron>, MIT Style License.
 // Mootools 1.2 compatibility by Davorin Å ego
+// Mootools 1.3 compatibility by Chris Doty
 
 var Calendar = new Class({
 
@@ -121,9 +122,9 @@ var Calendar = new Class({
 			// read in default value
 			cal.val = this.read(cal);
 
-			$extend(cal, this.bounds(cal)); // abs bounds of calendar
+			Object.append(cal, this.bounds(cal)); // abs bounds of calendar
 
-			$extend(cal, this.values(cal)); // valid days, months, years
+			Object.append(cal, this.values(cal)); // valid days, months, years
 
 			this.rebuild(cal);
 
@@ -241,13 +242,13 @@ var Calendar = new Class({
 					el.getChildren().each(function(option){ // get options
 						var values = this.unformat(option.value, el.format);
 
-						if ($type(values[0]) != 'number' || values[0] == years[0]){ // if it's a year / month combo for curr year, or simply a month select
+						if (typeOf(values[0]) != 'number' || values[0] == years[0]){ // if it's a year / month combo for curr year, or simply a month select
 							if (!months_start.contains(values[1])){
 								months_start.push(values[1]);
 							} // add to months array
 						}
 
-						if ($type(values[0]) != 'number' || values[0] == years.getLast()){ // if it's a year / month combo for curr year, or simply a month select
+						if (typeOf(values[0]) != 'number' || values[0] == years.getLast()){ // if it's a year / month combo for curr year, or simply a month select
 							if (!months_end.contains(values[1])){
 								months_end.push(values[1]);
 							} // add to months array
@@ -302,7 +303,7 @@ var Calendar = new Class({
 		}
 
 		// special case of improved navigation but months array with only 1 month we can disable all month navigation
-		if ($type(cal.months) == 'array'){
+		if (typeOf(cal.months) == 'array'){
 			if (cal.months.length == 1 && this.options.navigation == 2){
 				navigation.prev.month = navigation.next.month = false;
 			}
@@ -375,7 +376,7 @@ var Calendar = new Class({
 	changed: function(cal){
 		cal.val = this.read(cal); // update calendar val from inputs
 
-		$extend(cal, this.values(cal)); // update bounds - based on curr month
+		Object.append(cal, this.values(cal)); // update bounds - based on curr month
 
 		this.rebuild(cal); // rebuild days select
 
@@ -440,7 +441,7 @@ var Calendar = new Class({
 					kal.month = bound.getMonth();
 					kal.year = bound.getFullYear();
 
-					$extend(kal, this.values(kal));
+					Object.append(kal, this.values(kal));
 
 					// TODO - IN THE CASE OF SELECT MOVE TO NEAREST VALID VALUE
 					// IN THE CASE OF INPUT DISABLE
@@ -617,7 +618,7 @@ var Calendar = new Class({
 	// @param cal (obj)
 
 	element: function(el, f, cal){
-		if ($type(f) == 'object'){ // in the case of multiple inputs per calendar
+		if (typeOf(f) == 'object'){ // in the case of multiple inputs per calendar
 			for (var i in f){
 				if (!this.element(i, f[i], cal)){
 					return false;
@@ -750,7 +751,7 @@ var Calendar = new Class({
 		var i;
 		switch (type){
 			case 'm': // month
-				if ($type(cal.months) == 'array'){
+				if (typeOf(cal.months) == 'array'){
 					i = cal.months.indexOf(cal.month) + n; // index of current month
 
 					if (i < 0 || i == cal.months.length){ // out of range
@@ -779,7 +780,7 @@ var Calendar = new Class({
 				break;
 
 			case 'y': // year
-				if ($type(cal.years) == 'array'){
+				if (typeOf(cal.years) == 'array'){
 					i = cal.years.indexOf(cal.year) + n;
 					cal.year = cal.years[i];
 				}
@@ -789,9 +790,9 @@ var Calendar = new Class({
 				break;
 		}
 
-		$extend(cal, this.values(cal));
+		Object.append(cal, this.values(cal));
 
-		if ($type(cal.months) == 'array'){ // if the calendar has a months select
+		if (typeOf(cal.months) == 'array'){ // if the calendar has a months select
 			i = cal.months.indexOf(cal.month); // and make sure the curr months exists for the new year
 
 			if (i < 0){
@@ -816,24 +817,24 @@ var Calendar = new Class({
 			var values = this.unformat(el.value, el.format);
 
 			values.each(function(val, i){
-				if ($type(val) == 'number'){
+				if (typeOf(val) == 'number'){
 					arr[i] = val;
 				}
 			});
 		}, this);
 
 		// we can update the cals month and year values
-		if ($type(arr[0]) == 'number'){
+		if (typeOf(arr[0]) == 'number'){
 			cal.year = arr[0];
 		}
-		if ($type(arr[1]) == 'number'){
+		if (typeOf(arr[1]) == 'number'){
 			cal.month = arr[1];
 		}
 
 		var val = null;
 
 		if (arr.every(function(i){
-			return $type(i) == 'number';
+			return typeOf(i) == 'number';
 		})){ // if valid date
 			var last = new Date(arr[0], arr[1] + 1, 0).getDate(); // last day of month
 
@@ -913,7 +914,7 @@ var Calendar = new Class({
 		}
 		else { // otherwise show (may have to hide others)
 			// hide cal on out-of-bounds click
-			this.fn = function(e, cal){
+			this.fn = function(e){
 				var el = e.target;
 				var stop = false;
 
@@ -937,7 +938,7 @@ var Calendar = new Class({
 				}
 
 				this.toggle(cal);
-			}.create({ 'arguments': cal, 'bind': this, 'event': true });
+			}.bind(this);
 
 			document.addEvent('mousedown', this.fn);
 
@@ -1116,7 +1117,7 @@ var Calendar = new Class({
 					el.getChildren().each(function(option){ // get options
 						var values = this.unformat(option.value, el.format);
 
-						if ($type(values[0]) != 'number' || values[0] == cal.year){ // if it's a year / month combo for curr year, or simply a month select
+						if (typeOf(values[0]) != 'number' || values[0] == cal.year){ // if it's a year / month combo for curr year, or simply a month select
 							if (!months.contains(values[1])){
 								months.push(values[1]);
 							} // add to months array
@@ -1188,7 +1189,7 @@ var Calendar = new Class({
 		var blocked = this.blocked(cal);
 
 		// finally we can prepare all the valid days in a neat little array
-		if ($type(days) == 'array'){ // somewhere there was a days select
+		if (typeOf(days) == 'array'){ // somewhere there was a days select
 			days = days.filter(function(day){
 				if (day >= first && day <= last && !blocked.contains(day)){
 					return day;

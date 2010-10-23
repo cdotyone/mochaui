@@ -440,45 +440,136 @@ div.toolbox.divider {
 }
 
 /* tree */
+
+div.tree {
+	overflow: scroll;
+	overflow-x: auto;
+	font-size: 11px;
+}
+
+ul.tree {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+ul.tree ul, ul.tree li {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+ul.tree ul {
+	background: transparent url(../images/tree_vert.gif) repeat-y left center;
+}
+
+ul.tree li {
+	line-height: 18px;
+	padding: 0
+}
+
+ul.tree li a:link {
+	display: block;
+	text-decoration: none;
+	vertical-align: middle;
+}
+
+ul.tree li a:visited {
+	text-decoration: none;
+	vertical-align: middle;
+}
+
+ul.tree li a:active {
+	text-decoration: none;
+	vertical-align: middle;
+}
+
+ul.tree li a:hover span {
+	text-decoration: underline;
+}
+
+ul.tree li a.lbl {
+	color: WindowText;
+}
+
+ul.tree li a.sel span {
+	text-decoration: underline;
+}
+
+ul.tree ul li.O {
+	padding-left: 18px;
+	background: transparent url(../images/tree_open.gif) no-repeat left top;
+}
+
+ul.tree ul li.C {
+	padding-left: 18px;
+	background: transparent url(../images/tree_closed.gif) no-repeat left top;
+}
+
+ul.tree li.nochild {
+	background: transparent url(../images/tree_nochild.gif) no-repeat left top;
+}
+
+ul.tree ul li.nochild {
+	padding-left: 18px;
+	background: transparent url(../images/tree_nochild.gif) no-repeat left top;
+}
+
+ul.tree span.open {
+	padding-left: 17px;
+	background: transparent url(../images/open.gif) no-repeat left top;
+}
+
+ul.tree span.closed {
+	padding-left: 17px;
+	background: transparent url(../images/closed.gif) no-repeat left top;
+}
+
+ul.tree span.doc {
+	padding-left: 16px;
+	padding-bottom: 2px;
+	background: transparent url(../images/doc.gif) no-repeat left top;
+}
+
+ul.tree span.treeIcon {
+	float: left;
+	width: 16px;
+	height: 16px;
+	vertical-align: middle;
+	vertical-align: text-bottom;
+}
+
+ul.tree li.O span.treeIcon {
+	margin-right: 2px;
+	background: transparent url(../images/open.gif) no-repeat left top;
+}
+
+ul.tree li.C span.treeIcon {
+	margin-right: 2px;
+	background: transparent url(../images/closed.gif) no-repeat left top;
+}
+
+ul.tree li.O li span.treeIcon {
+	margin-right: 0;
+	background: transparent url(../images/doc.gif) no-repeat left top;
+}
+
 div.panel div.pad.tree {
 	overflow: hidden;
 	background-color: #303030;
 }
 
 ul.tree li a:link {
-	color: #D0D0D0;
+	color: #f8f8f8;
 }
 
-/*div.panel div.pad.tree ul ul li.last {
+div.panel div.pad.tree ul ul li.last {
 	background-color: #303030;
 }
-
-div.panel div.pad.tree ul li.last {
-	background-color: #303030;
-}
-
-div.panel div.pad.tree ul.tree li a:link {
-	text-decoration: none;
-	vertical-align: middle;
-	color: #CFCFCF
-}
-
-div.panel div.pad.tree ul.tree li a:visited {
-	text-decoration: none;
-	vertical-align: middle;
-	color: #CFCFCF
-}
-
-div.panel div.pad.tree ul.tree li a:active {
-	text-decoration: none;
-	vertical-align: middle;
-	color: #CFCFCF
-}
-
-div.panel div.pad.tree ul.tree li a:hover {
-	background-color: white;
-	color: black;
-}*/
 
 ul.tree ul li.O.first {
 	background: transparent url(../images/tree_open_first.gif) no-repeat left top;

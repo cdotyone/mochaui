@@ -34,17 +34,17 @@ MUI.ImageButton = new Class({
 	Implements: [Events, Options],
 
 	options: {
-		 id:			''		// id of the primary element, and id os control that is registered with mocha
-		,container:		null		// the parent control in the document to add the control to
-		,drawOnInit:	true		// true to add tree to container when control is initialized
-		,cssClass:		'imgButton'	// the primary css tag
+	    id:			    '',		    // id of the primary element, and id os control that is registered with mocha
+	    container:		null,		// the parent control in the document to add the control to
+	    drawOnInit:	    true,		// true to add tree to container when control is initialized
+	    cssClass:		'imgButton',// the primary css tag
 
-		,text:			null		// the text displayed on the button
-		,title:			null		// tool top text
-		,imageURL:		null		// the url to the image that will be displayed
-		,isDisabled:	false		// is the button disabled
+	    text:			null,		// the text displayed on the button
+	    title:			null,		// tool top text
+	    imageURL:		null,		// the url to the image that will be displayed
+	    isDisabled:	    false		// is the button disabled
 
-		,onClick:		$empty	 	// event: called when button is clicked
+	    //onClick:		null        // event: called when button is clicked
 	},
 
 	initialize: function(options){

@@ -14,7 +14,6 @@ ul.tree ul li.O { padding-left: 18px; background: transparent url(images/tree_op
 ul.tree ul li.C { padding-left: 18px; background: transparent url(images/tree_closed.gif) no-repeat left top; }
 ul.tree li.nochild { background: transparent url(images/tree_nochild.gif) no-repeat left top; }
 ul.tree ul li.nochild { padding-left: 18px; background: transparent url(images/tree_nochild.gif) no-repeat left top; }
-ul.tree ul li.last {  }
 ul.tree span.open { padding-left: 17px; background: transparent url(images/open.gif) no-repeat left top; }
 ul.tree span.closed { padding-left: 17px; background: transparent url(images/closed.gif) no-repeat left top; }
 ul.tree span.doc { padding-left: 16px; padding-bottom:2px; background: transparent url(images/doc.gif) no-repeat left top; }

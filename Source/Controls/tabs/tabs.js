@@ -38,7 +38,7 @@ MUI.Tabs = new Class({
 		drawOnInit:		true,			// true to add tree to container when control is initialized
 		cssClass:		'tabs',			// the primary css tag
 
-		tabs:			$A([]),			// the list of tabs
+		tabs:			[], 			// the list of tabs
 
 		textField:		'text',			// the name of the field that has the tab's text
 		valueField:		'value',		// the name of the field that has the tab's value
@@ -51,9 +51,9 @@ MUI.Tabs = new Class({
 
 		value:			'',				// the currently selected tab's value
 		selectedTab:	null,			// the currently selected tab
-		position:		null,			// container is a panel or window this tell tabs where the tabs should go, 'header' or 'footer'
+		position:		null			// container is a panel or window this tell tabs where the tabs should go, 'header' or 'footer'
 
-		onTabSelected:	$empty			// event: when a node is checked
+		//onTabSelected:null			// event: when a node is checked
 	},
 
 	initialize: function(options){
@@ -118,7 +118,7 @@ MUI.Tabs = new Class({
 		}
 
 		// build all tabs
-		$A(o.tabs).each(function(tab){
+		o.tabs.each(function(tab){
 			self._buildTab(tab, ul);
 			if (self._getData(tab, o.valueField) == o.value) o.selectedTab = tab;
 		});
@@ -190,7 +190,7 @@ MUI.Tabs = new Class({
 				content: content,
 				url:	url
 			};
-			if (o.updateOptions) $extend(uOptions,o.updateOptions);
+			if (o.updateOptions) Object.append(uOptions,o.updateOptions);
 			else {
 				var instance = MUI.get(o.partner);
 				if (instance && instance.el && instance.el.iframe) uOptions.loadMethod = 'iframe';

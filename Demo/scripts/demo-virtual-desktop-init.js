@@ -195,11 +195,11 @@ initializeWindows = function(){
 			resizable: false,
 			maximizable: false,
 			onDragStart: function(instance){
-				if (!Browser.Engine.trident) instance.el.windowEl.setStyle('opacity', 0.5);
+				if (!Browser.ie) instance.el.windowEl.setStyle('opacity', 0.5);
 				// VML doesn't render opacity nicely on the shadow
 			},
 			onDragComplete: function(instance){
-				if (!Browser.Engine.trident) instance.el.windowEl.setStyle('opacity', 1);
+				if (!Browser.ie) instance.el.windowEl.setStyle('opacity', 1);
 			}
 		});
 	};
@@ -454,21 +454,28 @@ initializeWindows = function(){
 			height: 250,
 			resizeLimit: {'x': [275, 2500], 'y': [125, 2000]},
 			content: [
-				{url:'pages/features-layout.html'},
+				{url: 'pages/features-layout.html'},
 				{
-				'position': 'top',
-				section: 'toolbar',
-				url: 'pages/features-tabs.html',
-				onLoaded: function(){
-					MUI.create('MUI.Tabs', {
-						'id': 'features_toolbar',
-						'container': 'features',
-						'position': 'top',
-						'partner': 'features',
-						'section': 'toolbar'
-					}, true);
+					position: 'top',
+					loadMethod:'json',
+					id: 'features_toolbar',
+					css: 'mochaToolbar',
+					content: [
+						{'text': 'Layout', 'url': 'pages/features-layout.html', 'loadMethod': 'iframe', 'title': 'Features - Layout', 'class': 'first'},
+						{'text': 'Windows', 'url': 'pages/features-windows.html', 'loadMethod': 'iframe', 'title': 'Features - Windows'},
+						{'text': 'General', 'url': 'pages/features-general.html', 'loadMethod': 'iframe', 'title': 'Features - General', 'class': 'last'}
+					],
+					onLoaded: function(element, uOptions, json){
+						MUI.create('MUI.Tabs', {
+							'id': 'features_toolbar',
+							'container': 'features',
+							'position': 'top',
+							'tabs': json,
+							'partner': 'features'
+						});
+					}
 				}
-			}]
+			]
 		});
 	};
 	if ($('featuresLinkCheck')){

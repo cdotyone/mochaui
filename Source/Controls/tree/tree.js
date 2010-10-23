@@ -33,34 +33,34 @@ MUI.Tree = new Class({
 	Implements: [Events, Options],
 
 	options: {
-		id:					''			// id of the primary element, and id os control that is registered with mocha
-		,container:			null		// the parent control in the document to add the control to
-		,drawOnInit:		true		// true to add tree to container when control is initialized
-		,cssClass:			'tree'		// the primary css tag
+		id:					'',			// id of the primary element, and id os control that is registered with mocha
+		container:			null,		// the parent control in the document to add the control to
+		drawOnInit:		    true,		// true to add tree to container when control is initialized
+		cssClass:			'tree',		// the primary css tag
 
-		,nodes:				$A([])		// the hierarchical list of nodes
+		nodes:				[],		    // the hierarchical list of nodes
 
-		,textField:			'text'		// the name of the field that has the node's text
-		,valueField:		'value'		// the name of the field that has the node's value
-		,idField:			'id'		// the name of the field that has anchors id value
-		,titleField:		'title'		// the name of the field that has the node's tip text
-		,isCheckedField:	'checked'	// the name of the field that has the node's isChecked state
-		,hasChildrenField:	'hasChildren'// the name of the field that has the node's hasChildren flag
-		,imageField:		'image'		// the name of the field that has the node's image if imageOpenField and imageClosedField are not defined
-		,imageOpenField:	'imageOpen'	// the name of the field that has the node's open image
-		,imageClosedField:	'imageClosed'// the name of the field that has the node's closed image
-		,showIcon:			true
+		textField:			'text',		// the name of the field that has the node's text
+		valueField:		    'value',		// the name of the field that has the node's value
+		idField:			'id',		// the name of the field that has anchors id value
+		titleField:		    'title',		// the name of the field that has the node's tip text
+		isCheckedField:	    'checked',	// the name of the field that has the node's isChecked state
+		hasChildrenField:	'hasChildren',// the name of the field that has the node's hasChildren flag
+		imageField:		    'image',		// the name of the field that has the node's image if imageOpenField and imageClosedField are not defined
+		imageOpenField:	    'imageOpen',	// the name of the field that has the node's open image
+		imageClosedField:	'imageClosed',// the name of the field that has the node's closed image
+		showIcon:			true,
 
-		,showCheckBox:		false		// true to show checkBoxes
-		,canSelect:			true		// can the user select a node by clicking it
-		,value:				''			// the currently selected node's value
-		,selectedNode:		null		// the currently selected node
-		,depth:				2			// how deep to expand the nodes to
+		showCheckBox:		false,		// true to show checkBoxes
+		canSelect:			true,		// can the user select a node by clicking it
+		value:				'',			// the currently selected node's value
+		selectedNode:		null,		// the currently selected node
+		depth:				2			// how deep to expand the nodes to
 
-		,onNodeExpanded:	$empty		// event: called when node is expanded
-		,onNodeChecked: 	$empty		// event: called when node's checkbox is checked
-		,onNodeSelected:	$empty		// event: when a node is checked
-		,onLoaded:			$empty		// event: called when tree is done building itself
+		//onNodeExpanded:	null		// event: called when node is expanded
+		//onNodeChecked: 	null		// event: called when node's checkbox is checked
+		//onNodeSelected:	null		// event: when a node is checked
+		//onLoaded:		    null		// event: called when tree is done building itself
 	},
 
 	initialize: function(options){

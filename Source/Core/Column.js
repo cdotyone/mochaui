@@ -34,19 +34,19 @@ MUI.Column = new NamedClass('MUI.Column', {
 		width:			null,
 		resizeLimit:	[],
 		sortable:		true,
-		isCollapsed:	false,
+		isCollapsed:	false
 
-		onDrawBegin:	$empty,
-		onDrawEnd:		$empty,
-		onResize:		$empty,
-		onCollapse:		$empty,
-		onExpand:		$empty
+		//onDrawBegin:	null,
+		//onDrawEnd:	null,
+		//onResize:		null,
+		//onCollapse:	null,
+		//onExpand:		null
 	},
 
 	initialize: function(options){
 		this.setOptions(options);
 
-		$extend(this, {
+		Object.append(this, {
 			isCollapsed: false,
 			oldWidth: 0,
 			el: {}
@@ -66,7 +66,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 		if (options.container == null) options.container = MUI.Desktop.pageWrapper;
 		else $(options.container).setStyle('overflow', 'hidden');
 
-		if ($type(options.container) == 'string') options.container = $(options.container);
+		if (typeOf(options.container) == 'string') options.container = $(options.container);
 
 		// Check if column already exists
 		if (this.el.column) return this;
@@ -215,7 +215,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 			this.collapse();
 		}.bind(this));
 		this.resize.attach();
-		this.el.handle.setStyle('cursor', Browser.Engine.webkit ? 'col-resize' : 'e-resize').addClass('attached');
+		this.el.handle.setStyle('cursor', Browser.webkit ? 'col-resize' : 'e-resize').addClass('attached');
 
 		MUI.rWidth();
 		this.fireEvent('expand', [this]);
@@ -239,7 +239,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 			panel.close();
 		}.bind(this));
 
-		if (Browser.Engine.trident){
+		if (Browser.ie){
 			self.el.column.dispose();
 			if (self.el.handle != null) self.el.handle.dispose();
 		} else {
@@ -252,7 +252,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 		var sortables = self.options.container.retrieve('sortables');
 		if (sortables) sortables.removeLists(this.el.column);
 
-		$each(this.el,function(el){el.destroy();});
+		Array.each(this.el,function(el){el.destroy();});
 		this.el = {};
 
 		MUI.erase(self.options.id);
@@ -265,10 +265,10 @@ MUI.Column = new NamedClass('MUI.Column', {
 		element = $(element);
 
 		var handle = element.getNext('.columnHandle');
-		handle.setStyle('cursor', Browser.Engine.webkit ? 'col-resize' : 'e-resize');
+		handle.setStyle('cursor', Browser.webkit ? 'col-resize' : 'e-resize');
 		if (!min) min = 50;
 		if (!max) max = 250;
-		if (Browser.Engine.trident){
+		if (Browser.ie){
 			handle.addEvents({
 				'mousedown': function(){
 					handle.setCapture();
@@ -293,7 +293,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 				element.getNext('.column').getElements('iframe').setStyle('visibility', 'hidden');
 			}.bind(this),
 			onDrag: function(){
-				if (Browser.Engine.gecko){
+				if (Browser.firefox){
 					$$('.panel').each(function(panel){
 						if (panel.getElements('.mochaIframe').length == 0){
 							panel.hide(); // Fix for a rendering bug in FF
@@ -301,10 +301,10 @@ MUI.Column = new NamedClass('MUI.Column', {
 					});
 				}
 				MUI.rWidth(element.getParent());
-				if (Browser.Engine.gecko){
+				if (Browser.firefox){
 					$$('.panel').show(); // Fix for a rendering bug in FF
 				}
-				if (Browser.Engine.trident4){
+				if (Browser.ie4){
 					element.getChildren().each(function(el){
 						var width = $(element).getStyle('width').toInt();
 						width -= el.getStyle('border-right').toInt();
@@ -341,12 +341,12 @@ MUI.Column = new NamedClass('MUI.Column', {
 		element = $(element);
 
 		var handle = element.getPrevious('.columnHandle');
-		handle.setStyle('cursor', Browser.Engine.webkit ? 'col-resize' : 'e-resize');
+		handle.setStyle('cursor', Browser.webkit ? 'col-resize' : 'e-resize');
 		var partner = element.getPrevious('.column');
 		var partnerInstance = MUI.get(partner);
 		if (!min) min = 50;
 		if (!max) max = 250;
-		if (Browser.Engine.trident){
+		if (Browser.ie){
 			handle.addEvents({
 				'mousedown': function(){
 					handle.setCapture();

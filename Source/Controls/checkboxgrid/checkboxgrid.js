@@ -34,26 +34,26 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 	Implements: [Events, Options],
 
 	options: {
-		id:					''			// id of the primary element, and id os control that is registered with mocha
-		,container:			null		// the parent control in the document to add the control to
-		,drawOnInit:		true		// true to add tree to container when control is initialized
-		,cssClass:			'cbg'		// the primary css tag
-		,title:				false		// the title to place above the controls
+		id:				'',			// id of the primary element, and id os control that is registered with mocha
+		container:		null,		// the parent control in the document to add the control to
+		drawOnInit:		true,		// true to add tree to container when control is initialized
+		cssClass:		'cbg',		// the primary css tag
+		title:			false,		// the title to place above the controls
 
-		,items:				$A([])		// the array list of nodes
+		items:			[],		// the array list of nodes
 
-		,textField:			'text'		// the name of the field that has the item's text
-		,valueField:		'value'		// the name of the field that has the item's value
-		,isSelectedField:	'selected'	// the name of the field that has the item's isSelected state
+		textField:		'text',		// the name of the field that has the item's text
+		valueField:		'value',		// the name of the field that has the item's value
+		isSelectedField:'selected',	// the name of the field that has the item's isSelected state
 
-		,width:				0			// width of the control
-		,height:			0			// height of the control when not in drop list mode, or height of drop
-		,type:				'checkbox'	// can be 'checkbox' or 'radio'
-		,labelPlacement:	'right'		// can be 'left' or 'right'
-		,value:				''			// the currently selected item's value
+		width:			0,			// width of the control
+		height:			0,			// height of the control when not in drop list mode, or height of drop
+		type:			'checkbox',	// can be 'checkbox' or 'radio'
+		labelPlacement:	'right',		// can be 'left' or 'right'
+		value:			''			// the currently selected item's value
 
-		,onItemClick:		$empty
-		,onValueChanged:	$empty
+		//onItemClick:	  null
+		//onValueChanged: null
 	},
 
 	initialize: function(options){
@@ -135,7 +135,7 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 
 		var o = self.options;
 		var values = [];
-		$A(o.items).each(function(item){
+		o.items.each(function(item){
 			if (item._input.checked) values.push(item._input.value);
 		});
 		o.value = values.join(',');
@@ -157,7 +157,7 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 			if (o.labelPlacement == 'left') pair[0]._td.setStyle('text-align', 'right');
 		};
 
-		var rows = $H({});
+		var rows = {};
 		o.items.each(function(item){
 			var c = item._span.getCoordinates();
 			if (!rows['row' + c.top]) rows['row' + c.top] = [];
@@ -174,8 +174,8 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 		});
 
 		// now get widths of the columns
-		var cols = $A([]),twidth = 0;
-		$A(rows[lk]).each(function(pair){
+		var cols = [],twidth = 0;
+		rows[lk].each(rows[lk],function(pair){
 			cols.push(pair[1]);
 			twidth += pair[1];
 		});
@@ -207,7 +207,7 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 
 			// determine colspan for this row
 			var i = 0,tspan = 0;
-			$A(row).each(function(col){
+			row.each(function(col){
 				var cwidth = col[1]
 						,twidth = 0
 						,colspan = 1;

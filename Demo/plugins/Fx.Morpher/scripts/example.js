@@ -11,7 +11,7 @@ function createCanvas(){
 		}
 	}).inject(animationWrapper);
 
-	if (Browser.Engine.trident){
+	if (Browser.ie){
 		G_vmlCanvasManager.initElement(this.canvasPath);
 	}
 
@@ -26,7 +26,7 @@ function createCanvas(){
 		}
 	}).inject(animationWrapper);
 
-	if (Browser.Engine.trident){
+	if (Browser.ie){
 		G_vmlCanvasManager.initElement(this.canvasSprite);
 	}
 

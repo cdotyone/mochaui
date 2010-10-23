@@ -19,7 +19,7 @@
 
 MUI.files['{source}Core/Content.js'] = 'loaded';
 
-MUI.Content = (MUI.Content || $H({})).extend({
+MUI.Content = Object.append((MUI.Content || {}), {
 
 	Providers: {},
 
@@ -28,7 +28,7 @@ MUI.Content = (MUI.Content || $H({})).extend({
 	update: function(options){
 
 		// set defaults for options
-		options = $extend({
+		options = Object.append({
 			instance:		null,			// the instance of the control to be updated, this is normally used internally only
 			element:		null,			// the element to inject into, or the instance name
 			method:			null,			// the method to use to make request, 'POST' or 'GET'
@@ -40,22 +40,22 @@ MUI.Content = (MUI.Content || $H({})).extend({
 			require:		{},				// used to add additional css, images, or javascript
 			paging:			{},				// used to specify paging parameters
 			filters:		[],				// used to make post request processing/filtering of data, can be used to convert request to JSON
-			persist:		false,			// true if you want to persist the request, false if you do not.
+			persist:		false			// true if you want to persist the request, false if you do not.
 			// if it is a string value the string will be used to persist the data instead of the request URL.
 			// if it is an array, it will assume the array is an array of strings and each string represents a cache key that is also the name of a hash value that needs to cached individually.
-			onLoaded:		$empty			// fired when content is loaded
+			//onLoaded:		null			// fired when content is loaded
 		}, options);
 
 		// set defaults for require option
-		options.require = $extend({
-			css: []		// the style sheets to load before the request is made
-			, images: []	// the images to preload before the request is made
-			, js: []		// the JavaScript that is loaded and called after the request is made
-			, onload: $empty // the event that is fired after all required files are loaded
+		options.require = Object.append({
+			css: [],		    // the style sheets to load before the request is made
+			images: [],         // the images to preload before the request is made
+            js: []              // the JavaScript that is loaded and called after the request is made
+			//, onload: null    // the event that is fired after all required files are loaded
 		}, options.require);
 
 		// set defaults for paging
-		options.paging = $extend({
+		options.paging = Object.append({
 			size:			0,			// if >0 then paging is turned on
 			index:			0,			// the page index offset (index*size)+1 = first record, (index*size)+size = last record
 			totalCount:		0,			// is set by return results, starts out as zero until filled in when data is received
@@ -85,7 +85,7 @@ MUI.Content = (MUI.Content || $H({})).extend({
 		// replace in path replacement fields,  and prepare the url
 		if (options.url){
 			// create standard field replacements from data, paging, and path hashes
-			var values = $H({}).combine(options.data).combine(options.paging).combine(MUI.options.path);
+			var values = Object.merge(options.data || {}, options.paging || {}, MUI.options.path || {});
 			// call the prepUrl callback if it was defined
 			if (options.prepUrl) options.url = options.prepUrl.run([options.url, values, instance], this);
 			options.url = MUI.replaceFields(options.url, values);
@@ -109,14 +109,14 @@ MUI.Content = (MUI.Content || $H({})).extend({
 		if (options.persist && MUI.Content.Providers[options.loadMethod].canPersist){
 			options.persistKey = options.url;
 			// if given string to use as persist key then use it
-			if ($type(options.persist) == 'string') options.persistKey = options.persist;
-			if ($type(options.persist) == 'array') options.persistKey = options.persist;
+			if (typeOf(options.persist) == 'string') options.persistKey = options.persist;
+			if (typeOf(options.persist) == 'array') options.persistKey = options.persist;
 			options.persist = true;
 		} else options.persist = false;
 
 		options.persistLoad = function(options){
 			if (options.persist){
-				if ($type(options.persistKey) == 'string'){
+				if (typeOf(options.persistKey) == 'string'){
 					// load the response
 					var content = MUI.Persist.get(options.persistKey);
 					if (content) return content;
@@ -129,8 +129,8 @@ MUI.Content = (MUI.Content || $H({})).extend({
 			if (!options.persist) return response;
 
 			// store the response
-			if ($type(options.persistKey) == 'string') MUI.Persist.set(options.persistKey, response);
-			if ($type(options.persistKey) == 'array'){
+			if (typeOf(options.persistKey) == 'string') MUI.Persist.set(options.persistKey, response);
+			if (typeOf(options.persistKey) == 'array'){
 				response = JSON.decode(response);
 				options.persistKey.each(function(key){
 					MUI.Persist.set(key, response[key]);
@@ -150,9 +150,9 @@ MUI.Content = (MUI.Content || $H({})).extend({
 					new MUI.Require({
 						js: options.require.js,
 						onload: function(){
-							if (Browser.Engine.presto) options.require.onload.delay(100);
+							if (Browser.opera) options.require.onload.delay(100);
 							else options.require.onload();
-							if (options.onLoaded && options.onLoaded != $empty){
+							if (options.onLoaded && options.onLoaded != null){
 								options.onLoaded(element, options, json);
 							} else {
 								if (instance) instance.fireEvent('loaded', [element, options, json]);
@@ -160,7 +160,7 @@ MUI.Content = (MUI.Content || $H({})).extend({
 						}.bind(this)
 					});
 				} else {
-					if (options.onLoaded && options.onLoaded != $empty){
+					if (options.onLoaded && options.onLoaded != null){
 						// call onLoaded directly
 						options.onLoaded(element, options, json);
 					} else {
@@ -236,7 +236,7 @@ MUI.Content.Filters.tree = function(response, options, node){
 	var usePaging = node == null && options.paging && options.paging.size > 0 && options.paging.recordsField;
 	var data = response, i;
 
-	if (node == null) options = $extend(options, {
+	if (node == null) options = Object.append(options, {
 		fieldParentID: 'parentID',
 		fieldID: 'ID',
 		fieldNodes: 'nodes',
@@ -282,7 +282,7 @@ MUI.Content.Providers.xhr = {
 		
 		// if js is required, but no url, fire loaded to proceed with js-only
 		if (options.url == null && options.require.js && options.require.js.length != 0){
-			Browser.Engine.trident4 ? fireLoaded.delay(50, this, [instance, options]) : fireLoaded(instance, options);
+			Browser.ie4 ? fireLoaded.delay(50, this, [instance, options]) : fireLoaded(instance, options);
 			return null;
 		}
 
@@ -292,7 +292,7 @@ MUI.Content.Providers.xhr = {
 		// process content passed to options.content or persisted data
 		if (content){
 			content = MUI.Content.processFilters(content, options);
-			Browser.Engine.trident4 ? fireLoaded.delay(50, this, [instance, options, content]) : fireLoaded(instance, options, content);
+			Browser.ie4 ? fireLoaded.delay(50, this, [instance, options, content]) : fireLoaded(instance, options, content);
 			return;
 		}
 		
@@ -342,7 +342,7 @@ MUI.Content.Providers.xhr = {
 					if (evalJS && js) Browser.exec(js);
 				}
 
-				Browser.Engine.trident4 ? fireLoaded.delay(50, this, [instance,options]) : fireLoaded(instance, options);
+				Browser.ie4 ? fireLoaded.delay(50, this, [instance,options]) : fireLoaded(instance, options);
 			},
 			onComplete: function(){
 			}
@@ -368,7 +368,7 @@ MUI.Content.Providers.json = {
 		// process content passed to options.content or persisted data
 		if (content){
 			content = MUI.Content.processFilters(content, options);
-			Browser.Engine.trident4 ? fireLoaded.delay(50, this, [instance, options, content]) : fireLoaded(instance, options, content);
+			Browser.ie4 ? fireLoaded.delay(50, this, [instance, options, content]) : fireLoaded(instance, options, content);
 			return;
 		}
 
@@ -405,7 +405,7 @@ MUI.Content.Providers.json = {
 				options.content = json;
 
 				if (contentContainer) contentContainer.hideSpinner(instance);
-				Browser.Engine.trident4 ? fireLoaded.delay(50, this, [instance, options, json]) : fireLoaded(instance, options, json);
+				Browser.ie4 ? fireLoaded.delay(50, this, [instance, options, json]) : fireLoaded(instance, options, json);
 			}.bind(this),
 			onComplete: function(){
 			}.bind(this)
@@ -447,7 +447,7 @@ MUI.Content.Providers.iframe = {
 			// Add onload event to iframe so we can hide the spinner and run fireLoaded()
 			iframeEl.addEvent('load', function(){
 				contentContainer.hideSpinner(instance);
-				Browser.Engine.trident4 ? fireLoaded.delay(50, this, [instance, options]) : fireLoaded(instance, options);
+				Browser.ie4 ? fireLoaded.delay(50, this, [instance, options]) : fireLoaded(instance, options);
 			}.bind(this));
 		}
 	}
@@ -469,17 +469,16 @@ MUI.Content.Providers.html = {
 		if (instance && instance.updateSetContent) updateSetContent = instance.updateSetContent(options);
 		var contentContainer = options.contentContainer;
 		if (updateSetContent && contentContainer){
-			if (elementTypes.contains($type(options.content))) options.content.inject(contentContainer);
+			if (elementTypes.contains(typeOf(options.content))) options.content.inject(contentContainer);
 			else contentContainer.set('html', options.content);
 		}
 
-		Browser.Engine.trident4 ? fireLoaded.delay(50, this, [instance, options]) : fireLoaded(instance, options);
+		Browser.ie4 ? fireLoaded.delay(50, this, [instance, options]) : fireLoaded(instance, options);
 	}
 
 };
 
-MUI.extend({
-
+MUI.append({
 	WindowPanelShared: {
 
 		/// intercepts workflow from MUI.Content.update
@@ -491,9 +490,9 @@ MUI.extend({
 				if (options.padding==null) options.padding = this.options.padding;
 				if (options.padding || options.padding==0){
 					// copy padding from main options if not passed in
-					if ($type(options.padding) != 'number')
-						options.padding = $extend(options, this.options.padding);
-					if ($type(options.padding) == 'number')
+					if (typeOf(options.padding) != 'number')
+						Object.append(options.padding, this.options.padding);
+					if (typeOf(options.padding) == 'number')
 						options.padding = {top: options.padding, left: options.padding, right: options.padding, bottom: options.padding};
 
 					// update padding if requested

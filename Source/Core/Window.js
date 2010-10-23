@@ -18,7 +18,7 @@
 
 MUI.files['{source}Core/Window.js'] = 'loaded';
 
-MUI.Windows = (MUI.Windows || $H({})).extend({
+MUI.Windows = Object.append((MUI.Windows || {}), {
 	indexLevel:	 100,			// Used for window z-Index
 	windowsVisible: true,		// Ctrl-Alt-Q to toggle window visibility
 	focusingWindow: false,
@@ -80,21 +80,21 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 		useCanvas:			true,
 		useCanvasControls:	true,
 		useCSS3:			true,
-		useSpinner:			true,
+		useSpinner:			true
 
 		// Events
-		onDrawBegin:		$empty,
-		onDrawEnd:			$empty,
-		onFocus:			$empty,
-		onBlur:				$empty,
-		onResize:			$empty,
-		onMinimize:			$empty,
-		onMaximize:			$empty,
-		onRestore:			$empty,
-		onClose:			$empty,
-		onCloseComplete:	$empty,
-		onDragStart:		$empty,
-		onDragComplete:		$empty
+		//onDrawBegin:		null,
+		//onDrawEnd:		null,
+		//onFocus:			null,
+		//onBlur:			null,
+		//onResize:			null,
+		//onMinimize:		null,
+		//onMaximize:		null,
+		//onRestore:		null,
+		//onClose:			null,
+		//onCloseComplete:	null,
+		//onDragStart:		null,
+		//onDragComplete:	null
 	},
 
 	closeAll: function(){
@@ -151,12 +151,12 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 
 		$$('.mocha').each(function(el){
 			// Get the window title and destroy that element, so it does not end up in window content
-			if (Browser.Engine.presto || Browser.Engine.trident5){
+			if (Browser.opera || Browser.ie5){
 				el.hide(); // Required by Opera, and probably IE7
 			}
 			var title = el.getElement('h3.mochaTitle');
 
-			if (Browser.Engine.presto) el.show();
+			if (Browser.opera) el.show();
 
 			var elDimensions = el.getStyles('height', 'width');
 			var properties = {
@@ -188,7 +188,7 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 			var temp = new Hash(options);
 
 			temp.each(function(value, key){
-				if ($type(value) != 'string') return;
+				if (typeOf(value) != 'string') return;
 				if (value.substring(0, 8) == 'function'){
 					eval("options." + key + " = " + value);
 				}
@@ -237,7 +237,8 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 
 });
 
-MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
+MUI.Window = (MUI.Window || new NamedClass('MUI.Window', {}));
+MUI.Window.implement({
 
 	Implements: [Events, Options],
 
@@ -250,7 +251,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		// Shorten object chain
 		options = this.options;
 
-		$extend(this, {
+		Object.append(this, {
 			mochaControlsWidth: 0,
 			minimizeButtonX: 0,  // Minimize button horizontal position
 			maximizeButtonX: 0,  // Maximize button horizontal position
@@ -314,9 +315,9 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 
 		// Condition under which to use CSS3, needs shadow, border-radius and gradient support
 		if (!options.useCSS3) this.useCSS3 = false;
-		else if (Browser.Engine.gecko && Browser.Engine.version >= 19) this.useCSS3 = true; // FF3.6
-		else if (Browser.Engine.webkit && Browser.Engine.version >= 525) this.useCSS3 = true; // S4
-		else this.useCSS3 = Browser.Engine.trident && Browser.Engine.version > 6;
+		else if (Browser.firefox && Browser.version >= 19) this.useCSS3 = true; // FF3.6
+		else if (Browser.webkit && Browser.version >= 525) this.useCSS3 = true; // S4
+		else this.useCSS3 = Browser.ie && Browser.version > 6;
 
 		// if somebody wants CSS3 but not canvas and condition are false for css3
 		// i.e. IE8 Test CSS3 Body
@@ -390,9 +391,9 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		if (options.type == 'modal2') this.el.windowEl.addClass('modal2');
 
 		// Fix a mouseover issue with gauges in IE7
-		if (Browser.Engine.trident && options.shape == 'gauge') this.el.windowEl.setStyle('backgroundImage', 'url(../images/spacer.gif)');
+		if (Browser.ie && options.shape == 'gauge') this.el.windowEl.setStyle('backgroundImage', 'url(../images/spacer.gif)');
 
-		if ((this.options.type == 'modal' || options.type == 'modal2' ) && Browser.Platform.mac && Browser.Engine.gecko){
+		if ((this.options.type == 'modal' || options.type == 'modal2' ) && Browser.Platform.mac && Browser.firefox){
 			if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent)){
 				var ffversion = new Number(RegExp.$1);
 				if (ffversion < 3) this.el.windowEl.setStyle('position', 'fixed');
@@ -485,7 +486,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			'duration': 350,
 			transition: Fx.Transitions.Sine.easeInOut,
 			onComplete: function(){
-				if (Browser.Engine.trident) this.redraw();
+				if (Browser.ie) this.redraw();
 			}.bind(this)
 		});
 
@@ -505,7 +506,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 				this.resizeAnimation = this.redraw.periodical(20, this);
 			}.bind(this),
 			onComplete: function(){
-				$clear(this.resizeAnimation);
+				clearInterval(this.resizeAnimation);
 				this.redraw();
 				// Show iframe
 				if (this.el.iframe) this.el.iframe.setStyle('visibility', 'visible');
@@ -578,7 +579,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			});
 
 			if (this.options.useCanvas){
-				if (Browser.Engine.trident){
+				if (Browser.ie){
 					this.el.canvas.height = 20000;
 					this.el.canvas.width = 50000;
 				}
@@ -587,7 +588,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			}
 
 			// Part of the fix for IE6 select z-index bug
-			if (Browser.Engine.trident4) this.el.zIndexFix.setStyles({'width': width, 'height': height});
+			if (Browser.ie4) this.el.zIndexFix.setStyles({'width': width, 'height': height});
 
 			// Make sure loading icon is placed correctly.
 			if (options.useSpinner && options.shape != 'gauge' && options.type != 'notification'){
@@ -614,7 +615,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 				if (options.resizable && !this.isMaximized){
 					MUI.Canvas.triangle(ctx, width - (shadowBlur + shadowOffset.x + 17), height - (shadowBlur + shadowOffset.y + 18), 11, 11, this.resizableColor, 1.0);
 					// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
-					if (Browser.Engine.trident) MUI.Canvas.triangle(ctx, 0, 0, 10, 10, this.resizableColor, 0);
+					if (Browser.ie) MUI.Canvas.triangle(ctx, 0, 0, 10, 10, this.resizableColor, 0);
 				}
 			}
 		}
@@ -642,7 +643,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 	center: function(){
 		var windowEl = this.el.windowEl;
 		var options = this.options;
-		var dimensions = options.container.getCoordinates();
+		var dimensions = $(options.container).getDimensions();
 
 		var windowPosTop = window.getScroll().y + (window.getSize().y * .5) - (windowEl.offsetHeight * .5);
 		if (windowPosTop < -options.shadowBlur) windowPosTop = -options.shadowBlur;
@@ -666,7 +667,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 	resize: function(options){
 		var windowEl = this.el.windowEl;
 
-		options = $extend({
+		options = Object.append({
 			width: null,
 			height: null,
 			top: null,
@@ -711,7 +712,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			this.redraw();
 			// Show iframe
 			if (this.el.iframe){
-				if (Browser.Engine.trident) this.el.iframe.show();
+				if (Browser.ie) this.el.iframe.show();
 				else this.el.iframe.setStyle('visibility', 'visible');
 			}
 		}
@@ -789,7 +790,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		}
 		if (this.check) this.check.destroy();
 
-		if ((this.options.type == 'modal' || this.options.type == 'modal2') && Browser.Engine.trident4){
+		if ((this.options.type == 'modal' || this.options.type == 'modal2') && Browser.ie4){
 			$('modalFix').hide();
 		}
 
@@ -798,7 +799,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			this._doClosingJobs();
 		} else {
 			// Redraws IE windows without shadows since IE messes up canvas alpha when you change element opacity
-			if (Browser.Engine.trident) this.redraw(false);
+			if (Browser.ie) this.redraw(false);
 			if ((this.options.type == 'modal' || this.options.type == 'modal2') && $$('.modal').length<2) {
 				MUI.Modal.modalOverlayCloseMorph.start({
 					'opacity': 0
@@ -889,7 +890,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 
 		if (this.options.type == 'window'){
 			windowEl.addEvent('mousedown', function(e){
-				if (Browser.Engine.trident) e.stop();
+				if (Browser.ie) e.stop();
 				this.focus();
 				if (windowEl.getStyle('top').toInt() < -this.options.shadowBlur){
 					windowEl.setStyle('top', -this.options.shadowBlur);
@@ -914,7 +915,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 				e.stop();
 			}.bind(this));
 
-			if (Browser.Engine.trident){
+			if (Browser.ie){
 				this.el.titleBar.addEvent('mousedown', function(){
 					this.el.title.setCapture();
 				}.bind(this));
@@ -1082,7 +1083,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 
 		var cache = {};
 
-		if (Browser.Engine.trident4){
+		if (Browser.ie4){
 			cache.zIndexFix = new Element('iframe', {
 				'id': id + '_zIndexFix',
 				'class': 'zIndexFix',
@@ -1150,14 +1151,14 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		}).inject(cache.contentWrapper);
 
 		if (this.options.useCanvas && !this.useCSS3){
-			if (!Browser.Engine.trident){
+			if (!Browser.ie){
 				cache.canvas = new Element('canvas', {
 					'id': id + '_canvas',
 					'class': 'mochaCanvas',
 					'width': 10,
 					'height': 10
 				}).inject(this.el.windowEl);
-			} else if (Browser.Engine.trident){
+			} else if (Browser.ie){
 				cache.canvas = new Element('canvas', {
 					'id': id + '_canvas',
 					'class': 'mochaCanvas',
@@ -1191,7 +1192,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		// make sure we have a content sections
 		this.sections = [];
 
-		switch ($type(options.content)){
+		switch (typeOf(options.content)){
 			case 'string':
 				// was passed html, so make sure it is added
 				this.sections.push({
@@ -1214,7 +1215,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			snum++;
 			var id = this.options.id + '_' + (section.section || 'section' + snum);
 
-			section = $extend({
+			section = Object.append({
 				'wrap': true,
 				'position': 'content',
 				'empty': false,
@@ -1274,7 +1275,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 				'height': 14
 			}).inject(this.el.windowEl);
 
-			if (Browser.Engine.trident && MUI.ieSupport == 'excanvas'){
+			if (Browser.ie && MUI.ieSupport == 'excanvas'){
 				G_vmlCanvasManager.initElement(cache.canvasControls);
 				cache.canvasControls = this.el.windowEl.getElement('.mochaCanvasControls');
 			}
@@ -1323,16 +1324,16 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 				'height': 26
 			}).inject(this.el.windowEl, 'bottom');
 
-			if (Browser.Engine.trident && MUI.ieSupport == 'excanvas'){
+			if (Browser.ie && MUI.ieSupport == 'excanvas'){
 				G_vmlCanvasManager.initElement(cache.canvasHeader);
 				cache.canvasHeader = this.el.windowEl.getElement('.mochaCanvasHeader');
 			}
 		}
 
-		if (Browser.Engine.trident) cache.overlay.setStyle('zIndex', 2);
+		if (Browser.ie) cache.overlay.setStyle('zIndex', 2);
 
 		// For Mac Firefox 2 to help reduce scrollbar bugs in that browser
-		if (Browser.Platform.mac && Browser.Engine.gecko){
+		if (Browser.Platform.mac && Browser.firefox){
 			if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent)){
 				var ffversion = new Number(RegExp.$1);
 				if (ffversion < 3){
@@ -1422,7 +1423,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 				}
 			}).inject(cache.overlay, 'after');
 		}
-		$extend(this.el, cache);
+		Object.append(this.el, cache);
 
 	},
 
@@ -1430,7 +1431,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		var options = this.options;
 		if (options.type == 'modal' || options.type == 'modal2'){
 			MUI.currentModal = this.el.windowEl;
-			if (Browser.Engine.trident4) $('modalFix').show();
+			if (Browser.ie4) $('modalFix').show();
 			$('modalOverlay').show();
 			if (MUI.options.advancedEffects){
 				MUI.Modal.modalOverlayCloseMorph.cancel();
@@ -1455,7 +1456,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 
 		} else if (MUI.options.advancedEffects){
 			// IE cannot handle both element opacity and VML alpha at the same time.
-			if (Browser.Engine.trident) this.redraw(false);
+			if (Browser.ie) this.redraw(false);
 			this.opacityMorph.start({'opacity': 1});
 			this.focus.delay(10,this);
 		} else {
@@ -1501,7 +1502,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 					$('windowUnderlay').show();
 				}
 				if (this.el.iframe){
-					if (!Browser.Engine.trident) this.el.iframe.setStyle('visibility', 'hidden');
+					if (!Browser.ie) this.el.iframe.setStyle('visibility', 'hidden');
 					else this.el.iframe.hide();
 				}
 				this.fireEvent('dragStart', [this]);
@@ -1511,7 +1512,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 					$('windowUnderlay').hide();
 
 				if (this.el.iframe){
-					if (!Browser.Engine.trident) this.el.iframe.setStyle('visibility', 'visible');
+					if (!Browser.ie) this.el.iframe.setStyle('visibility', 'visible');
 					else this.el.iframe.show();
 				}
 				// Store new position in options.
@@ -1637,14 +1638,14 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 	_resizeOnStart: function(){
 		$('windowUnderlay').show();
 		if (this.el.iframe){
-			if (Browser.Engine.trident) this.el.iframe.hide();
+			if (Browser.ie) this.el.iframe.hide();
 			else this.el.iframe.setStyle('visibility', 'hidden');
 		}
 	},
 
 	_resizeOnDrag: function(){
 		// Fix for a rendering glitch in FF when resizing a window with panels in it
-		if (Browser.Engine.gecko){
+		if (Browser.firefox){
 			this.el.windowEl.getElements('.panel').each(function(panel){
 				panel.store('oldOverflow', panel.getStyle('overflow'));
 				panel.setStyle('overflow', 'visible');
@@ -1652,7 +1653,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		}
 		this.redraw();
 		this._adjustHandles();
-		if (Browser.Engine.gecko){
+		if (Browser.firefox){
 			this.el.windowEl.getElements('.panel').each(function(panel){
 				panel.setStyle('overflow', panel.retrieve('oldOverflow')); // Fix for a rendering bug in FF
 			});
@@ -1662,7 +1663,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 	_resizeOnComplete: function(){
 		$('windowUnderlay').hide();
 		if (this.el.iframe){
-			if (Browser.Engine.trident){
+			if (Browser.ie){
 				this.el.iframe.show();
 				// The following hack is to get IE8 RC1 IE8 Standards Mode to properly resize an iframe
 				// when only the vertical dimension is changed.
@@ -1729,7 +1730,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			});
 
 			// Part of the fix for IE6 select z-index bug
-			if (Browser.Engine.trident4) this.el.zIndexFix.setStyles({
+			if (Browser.ie4) this.el.zIndexFix.setStyles({
 					'width': width,
 					'height': height
 				});
@@ -1746,7 +1747,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 				if (options.useCanvasControls) this._drawControls(width, height, shadows);
 
 				// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
-				if (Browser.Engine.trident) MUI.Canvas.triangle(ctx, 0, 0, 10, 10, [0, 0, 0], 0);
+				if (Browser.ie) MUI.Canvas.triangle(ctx, 0, 0, 10, 10, [0, 0, 0], 0);
 			}
 		}
 
@@ -1787,7 +1788,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 			MUI.Canvas.drawMinimizeButton(ctx2, this.minimizeButtonX, 7, this.minimizeBgColor, 1.0, this.minimizeColor, 1.0);
 
 			// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
-			if (Browser.Engine.trident){
+			if (Browser.ie){
 				MUI.Canvas.circle(ctx2, 0, 0, 3, this.minimizeBgColor, 0);
 			}
 		}
@@ -1797,7 +1798,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		var windowEl = this.el.windowEl;
 		windowEl.setStyle('visibility', 'hidden');
 		// Destroy throws an error in IE8
-		if (Browser.Engine.trident) windowEl.dispose();
+		if (Browser.ie) windowEl.dispose();
 		else windowEl.destroy();
 		this.fireEvent('closeComplete',[this]);
 
@@ -1844,7 +1845,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 
 }).implement(MUI.WindowPanelShared);
 
-MUI.extend({
+MUI.append({
 
 	dynamicResize: function(windowEl){
 		var instance = windowEl.retrieve('instance');

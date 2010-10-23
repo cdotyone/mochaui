@@ -17,7 +17,7 @@
 
 MUI.files['{controls}mui-controls.js'] = 'loaded';
 
-$extend(MUI.classes, {
+Object.append(MUI.classes, {
 
 	'accordion':{'samples':['html','js'],'description':'Accordion','isFormControl':true,'css':['{controls}accordion/style.css']},
 	'calender':{'samples':['html'],'description':'Calender','isFormControl':true},
@@ -29,7 +29,7 @@ $extend(MUI.classes, {
 	'tabs':{'samples':['html','js'],'description':'Tabs','isFormControl':true,'css':['{theme}css/tabs.css']},
 	'textarea':{'samples':['html','js'],'description':'Text Area','isFormControl':true},
 	'textbox':{'samples':['js'],'description':'Text Box','isFormControl':true},
-	'tree':{'samples':['js'],'description':'Tree','isFormControl':true,'css':['{controls}tree/style.css']},
+	'tree':{'samples':['js'],'description':'Tree','isFormControl':true},
 	'coolclock':{'samples':['js'],'location':'plugins','description':'Clock'}
 
 });

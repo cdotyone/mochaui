@@ -52,7 +52,7 @@ MUI.Modal = new NamedClass('MUI.Modal', {
 		}).inject(document.body);
 
 		modalOverlay.setStyles({
-			'position': Browser.Engine.trident4 ? 'absolute' : 'fixed'
+			'position': Browser.ie4 ? 'absolute' : 'fixed'
 		});
 
 		modalOverlay.addEvent('click', function(){
@@ -60,7 +60,7 @@ MUI.Modal = new NamedClass('MUI.Modal', {
 			if (instance.options.modalOverlayClose) MUI.currentModal.close();
 		});
 
-		if (Browser.Engine.trident4){
+		if (Browser.ie4){
 			var modalFix = new Element('iframe', {
 				'id': 'modalFix',
 				'scrolling': 'no',
@@ -80,7 +80,7 @@ MUI.Modal = new NamedClass('MUI.Modal', {
 			'duration': 150,
 			onComplete: function(){
 				$('modalOverlay').hide();
-				if (Browser.Engine.trident4){
+				if (Browser.ie4){
 					$('modalFix').hide();
 				}
 			}.bind(this)
@@ -89,7 +89,7 @@ MUI.Modal = new NamedClass('MUI.Modal', {
 
 	_setModalSize: function(){
 		$('modalOverlay').setStyle('height', document.getCoordinates().height);
-		if (Browser.Engine.trident4) $('modalFix').setStyle('height', document.getCoordinates().height);
+		if (Browser.ie4) $('modalFix').setStyle('height', document.getCoordinates().height);
 	}
 
 });

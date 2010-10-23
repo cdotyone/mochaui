@@ -18,7 +18,7 @@
 
 MUI.files['{source}Core/Canvas.js'] = 'loaded';
 
-MUI.Canvas = (MUI.Canvas || $H({})).extend({
+MUI.Canvas = Object.append((MUI.Canvas || {}), {
 
 	drawBox: function(ctx, width, height, shadowBlur, shadowOffset, shadows, headerHeight, cornerRadius, bodyBgColor, headerStartColor, headerStopColor){
 		var shadowBlur2x = shadowBlur * 2;
@@ -67,7 +67,7 @@ MUI.Canvas = (MUI.Canvas || $H({})).extend({
 
 	drawGauge: function(ctx, width, height, shadowBlur, shadowOffset, shadows, canvasHeader, headerHeight, bodyBgColor, useCSS3){
 		if (shadows && !useCSS3){
-			if (Browser.Engine.webkit){
+			if (Browser.webkit){
 				var color=Asset.getCSSRule('.mochaCss3Shadow').style.backgroundColor;
 				ctx.shadowColor = color.replace(/rgb/g,'rgba');
 				ctx.shadowOffsetX = shadowOffset.x;
@@ -93,7 +93,7 @@ MUI.Canvas = (MUI.Canvas || $H({})).extend({
 			1
 		);
 
-		if (Browser.Engine.webkit){
+		if (Browser.webkit){
 			ctx.shadowColor = "rgba(0,0,0,0)";
 			ctx.shadowOffsetX = 0;
 			ctx.shadowOffsetY = 0;

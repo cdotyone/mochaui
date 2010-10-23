@@ -761,7 +761,7 @@ var omniGrid = new NamedClass('omniGrid', {
 			var columnModel = this.options.columnModel[c];
 
 			var dragSt = cDrags[c];
-			dragSt.setStyle('left', dragTempWidth + columnModel.width + (Browser.Engine.trident ? 1 : 1 ) - scrollX);
+			dragSt.setStyle('left', dragTempWidth + columnModel.width + (Browser.ie ? 1 : 1 ) - scrollX);
 
 			if (!columnModel.hidden)dragTempWidth += columnModel.width;
 		}
@@ -784,7 +784,7 @@ var omniGrid = new NamedClass('omniGrid', {
 
 			if (c == colindex){
 				// adjust column position based on new width
-				var pos = dragSt.getStyle('left').toInt() + scrollX - this.sumWidth - (Browser.Engine.trident ? -1 : 1 );
+				var pos = dragSt.getStyle('left').toInt() + scrollX - this.sumWidth - (Browser.ie ? -1 : 1 );
 			} else if (!columnModel.hidden)
 				this.sumWidth += columnModel.width;
 		}
@@ -794,7 +794,7 @@ var omniGrid = new NamedClass('omniGrid', {
 		this.options.columnModel[colindex].width = pos;
 		this.sumWidth += pos;
 
-		this.ulBody.setStyle('width', this.sumWidth + this.visibleColumns * (Browser.Engine.trident ? 1 : 1 ));
+		this.ulBody.setStyle('width', this.sumWidth + this.visibleColumns * (Browser.ie ? 1 : 1 ));
 		var hDivBox = this.element.getElement('div.hDivBox');
 
 		hDivBox.setStyle('width', this.sumWidth + this.visibleColumns * 2);
@@ -803,7 +803,7 @@ var omniGrid = new NamedClass('omniGrid', {
 		var columns = hDivBox.getElements('div.th');
 		var columnObj = columns[colindex];
 
-		columnObj.setStyle('width', pos - (Browser.Engine.trident ? 6 : 6 ));
+		columnObj.setStyle('width', pos - (Browser.ie ? 6 : 6 ));
 
 		var visibleColumns = this.visibleColumns; // used in each below
 		var elements = this.ulBody.getElements('li.tr'); // for Accordion
@@ -815,7 +815,7 @@ var omniGrid = new NamedClass('omniGrid', {
 			if (!el.hasClass('section')){
 				var columns = el.getElements('div.td');
 				var columnObj = columns[colindex];
-				columnObj.setStyle('width', pos - (Browser.Engine.trident ? 6 : 6 ));
+				columnObj.setStyle('width', pos - (Browser.ie ? 6 : 6 ));
 			}
 
 		});
@@ -979,7 +979,7 @@ var omniGrid = new NamedClass('omniGrid', {
 		self.element = div.empty();
 
 		// --- common
-		var width = o.width - (Browser.Engine.trident ? 2 : 2 ); //-2 for the borders
+		var width = o.width - (Browser.ie ? 2 : 2 ); //-2 for the borders
 		var columnCount = o.columnModel ? o.columnModel.length : 0;
 		// --- common
 
@@ -994,11 +994,11 @@ var omniGrid = new NamedClass('omniGrid', {
 				'class':'tDiv',
 				'styles':{
 					'width':width,
-					'height': 25 + (Browser.Engine.trident ? 2 : 0 )
+					'height': 25 + (Browser.ie ? 2 : 0 )
 				}
 			}).inject(div);
 
-			$each(o.buttons, function(button){
+			Array.each(o.buttons, function(button){
 				var divBtn = new Element('div');
 				toolDiv.appendChild(divBtn);
 				if (button.separator){
@@ -1058,7 +1058,7 @@ var omniGrid = new NamedClass('omniGrid', {
 			columnDiv.store('column', c);
 			columnDiv.store('dataType', columnModel.dataType);
 			columnDiv.addClass('th');
-			columnDiv.setStyle('width', columnModel.width - (Browser.Engine.trident ? 6 : 6 ));
+			columnDiv.setStyle('width', columnModel.width - (Browser.ie ? 6 : 6 ));
 			headDivBox.appendChild(columnDiv);
 
 			if (columnModel.hidden) columnDiv.setStyle('display', 'none');
@@ -1124,7 +1124,7 @@ var omniGrid = new NamedClass('omniGrid', {
 		self.onBodyScrollBind = self._bodyScroll.bind(self);
 		bDiv.addEvent('scroll', self.onBodyScrollBind);
 		self.ulBody = new Element('ul');
-		self.ulBody.setStyle('width', self.sumWidth + self.visibleColumns * (Browser.Engine.trident ? 1 : 1 )); // not to see surplus, address the overflow hidden
+		self.ulBody.setStyle('width', self.sumWidth + self.visibleColumns * (Browser.ie ? 1 : 1 )); // not to see surplus, address the overflow hidden
 		bDiv.appendChild(self.ulBody);
 
 		if (o.pagination && !div.getElement('div.pDiv')){
@@ -1217,7 +1217,7 @@ var omniGrid = new NamedClass('omniGrid', {
 		var np = this.element.getElement('div.pDiv2 input').value;
 
 		if (np > 0 && np <= this.options.maxpage){
-			if (this.refreshDelayID) $clear(this.refreshDelayID);
+			if (this.refreshDelayID) clearTimeout(this.refreshDelayID);
 			this.options.page = np;
 			this.refreshDelayID = this.refresh.delay(1000, this);
 		}

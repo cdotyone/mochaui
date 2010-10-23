@@ -165,8 +165,8 @@ Fx.Morpher = new Class({
 		if (this.options.path && usepath.length){
 			//TODO: make it work with usepath[] and avoid that if/then crap...
 			//add dummy values to trigger compute
-			if (usepath.contains('top')) $extend(properties, {top:[0,1]});
-			if (usepath.contains('left')) $extend(properties, {left:[0,1]});
+			if (usepath.contains('top')) Object.append(properties, {top:[0,1]});
+			if (usepath.contains('left')) Object.append(properties, {left:[0,1]});
 		}
 
 		var from = {}, to = {};
@@ -185,7 +185,7 @@ Element.Properties.morpher = {
 	set: function(options){
 		var morph = this.retrieve('morpher');
 		if (morph) morph.cancel();
-		return this.eliminate('morpher').store('morpher:options', $extend({link: 'cancel'}, options));
+		return this.eliminate('morpher').store('morpher:options', Object.append({link: 'cancel'}, options));
 	},
 
 	get: function(options){

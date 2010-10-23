@@ -47,20 +47,20 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		padding:				8,				// default padding for the panel
 
 		// Other:
-		collapsible:			true,			// can the panel be collapsed
+		collapsible:			true			// can the panel be collapsed
 
 		// Events
-		onDrawBegin:			$empty,
-		onDrawEnd:				$empty,
-		onResize:				$empty,
-		onCollapse:				$empty,
-		onExpand:				$empty
+		//onDrawBegin:			null,
+		//onDrawEnd:			null,
+		//onResize:				null,
+		//onCollapse:			null,
+		//onExpand:				null
 	},
 
 	initialize: function(options){
 		this.setOptions(options);
 
-		$extend(this, {
+		Object.append(this, {
 			isCollapsed: false, // This is probably redundant since we can check for the class
 			oldHeight: 0,
 			partner: null,
@@ -110,7 +110,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		// make sure we have a content sections
 		this.sections = [];
 
-		switch ($type(options.content)){
+		switch (typeOf(options.content)){
 			case 'string':
 				// was passed html, so make sure it is added
 				this.sections.push({
@@ -212,7 +212,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 			snum++;
 			var id = options.id + '_' + (section.section || 'section' + snum);
 
-			section = $extend({
+			section = Object.append({
 				'element': this.el.panel,
 				'wrap': false,
 				'position': 'content',
@@ -265,7 +265,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				'id': section.id,
 				'class': section.css
 			}).inject(intoEl);
-			if (section.height || $type(section.height) == 'number') section.element.setStyle('height', section.height);
+			if (section.height || typeOf(section.height) == 'number') section.element.setStyle('height', section.height);
 
 			if (section.addClass) intoEl.addClass(section.addClass);
 
@@ -424,14 +424,14 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		var element = this.el.panel;
 
 		var handle = this.el.handle;
-		handle.setStyle('cursor', Browser.Engine.webkit ? 'row-resize' : 'n-resize');
+		handle.setStyle('cursor', Browser.webkit ? 'row-resize' : 'n-resize');
 		var partner = this.partner;
 		var min = 0;
 		var max = function(){
 			return element.getStyle('height').toInt() + partner.getStyle('height').toInt();
 		}.bind(this);
 
-		if (Browser.Engine.trident){
+		if (Browser.ie){
 			handle.addEvents({
 				'mousedown': function(){
 					handle.setCapture();
@@ -455,7 +455,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 			onStart: function(){
 				if (instance.el.iframe){
-					if (Browser.Engine.trident){
+					if (Browser.ie){
 						instance.el.iframe.hide();
 						partner.getElements('iframe').hide();
 					} else {
@@ -492,7 +492,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 					MUI.panelHeight(column);
 				});
 				if (instance.el.iframe){
-					if (Browser.Engine.trident){
+					if (Browser.ie){
 						instance.el.iframe.show();
 						partner.getElements('iframe').show();
 						// The following hack is to get IE8 Standards Mode to properly resize an iframe

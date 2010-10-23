@@ -20,12 +20,12 @@
 MUI.files['{controls}TextBox/Mask.js'] = 'loaded';
 
 // credits to Jan Kassens
-$extend(Element.NativeEvents, {
+Object.append(Element.NativeEvents, {
 	'paste': 2, 'input': 2
 });
 
 Element.Events.paste = {
-	base : (Browser.Engine.presto || (Browser.Engine.gecko && Browser.Engine.version < 19)) ? 'input' : 'paste',
+	base : (Browser.opera || (Browser.firefox && Browser.version < 19)) ? 'input' : 'paste',
 	condition: function(e){
 		this.fireEvent('paste', e, 1);
 		return false;
@@ -42,8 +42,8 @@ MUI.Mask = new Class({
 		selectOnFocus: true,
 		autoTab: false
 
-		//onInvalid: $empty,
-		//onValid: $empty,
+		//onInvalid: null,
+		//onValid: null,
 
 		//REVERSE MASK OPTIONS
 		//autoSetSize: false,
@@ -103,7 +103,7 @@ MUI.Mask = new Class({
 		o.range = this.element.getSelectedRange();
 		o.isSelection = (o.range.start !== o.range.end);
 		// 8 == backspace && 46 == delete && 127 == iphone's delete
-		o.isDelKey = (keyCode == 46 && !(Browser.Engine.trident && e.event.type == 'keypress'));
+		o.isDelKey = (keyCode == 46 && !(Browser.ie && e.event.type == 'keypress'));
 		o.isBksKey = (keyCode == 8 || (Browser.Platform.ipod && e.code == 127));
 		o.isRemoveKey = (o.isBksKey || o.isDelKey);
 		func && func.call(this, e, o);
@@ -175,7 +175,7 @@ MUI.Mask = new Class({
 	},
 
 	getNextInput: function(){
-		var fields = $A(this.element.form.elements), field;
+		var fields = this.element.form.elements, field;
 		for (var i = fields.indexOf(this.element) + 1, l = fields.length; i < l; i++){
 			field = fields[i];
 			if (this.isFocusableField(field)) return $(field);
@@ -203,7 +203,7 @@ MUI.Mask.extend({
 	},
 
 	setRules: function(rulesObj){
-		$extend(this.rules, rulesObj);
+		Object.append(this.rules, rulesObj);
 		var rulesKeys = [];
 		for (rule in rulesObj) rulesKeys.push(rule);
 		this.matchRules += rulesKeys.join('');
@@ -248,7 +248,7 @@ MUI.Mask.extend({
 	// http://unixpapa.com/js/key.html
 	// if only the keydown auto-repeats
 	// if you have a better implementation of this detection tell me
-	onlyKeyDownRepeat: (Browser.Engine.trident || (Browser.Engine.webkit && Browser.Engine.version >= 525))
+	onlyKeyDownRepeat: (Browser.ie || (Browser.webkit && Browser.version >= 525))
 
 }).extend(function(){
 	var ignoreKeys;

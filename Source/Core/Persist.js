@@ -39,7 +39,7 @@
 
 MUI.files['{source}Core/Persist.js'] = 'loaded';
 
-MUI.Persist = (MUI.Persist || $H({})).extend({
+MUI.Persist = (MUI.Persist || {}).extend({
 
 	options: {
 		name: 'MUI',								// Name added to keys in some of the providers.
@@ -72,11 +72,11 @@ MUI.Persist = (MUI.Persist || $H({})).extend({
 				autostart: true
 			}
 
-		},
+		}
 
-		onGet: $empty,
-		onSet: $empty,
-		onRemove: $empty
+		//onGet:      null,
+		//onSet:      null,
+		//onRemove:   null
 	},
 
 	Providers: {},						// hash used to store the providers initialized below.
@@ -128,7 +128,7 @@ MUI.Persist = (MUI.Persist || $H({})).extend({
 	initialize: function(options){
 
 		// set the options
-		if (options) $extend(MUI.Persist.options, options);
+		if (options) Object.append(MUI.Persist.options, options);
 		options = MUI.Persist.options;
 
 		// if provider is set to auto then set to false
@@ -186,7 +186,7 @@ MUI.Persist.Providers.Gears = new Class({
 
 	initialize: function(options){
 		// process options
-		this.options = $extend(this.options, MUI.Persist.options);
+		Object.append(this.options, MUI.Persist.options);
 		this.setOptions(options);
 
 		// create database and table
@@ -261,7 +261,7 @@ MUI.Persist.Providers.WhatWG = new Class({
 
 	initialize: function(options){
 		// process options
-		this.options = $extend(this.options, MUI.Persist.options);
+		Object.append(this.options, MUI.Persist.options);
 		this.setOptions(options);
 
 		// create the database
@@ -319,7 +319,7 @@ MUI.Persist.Providers.WhatWG = new Class({
 				t.executeSql(this.options.sql.create, [], function(){
 					this.db_created = true;
 				}.bind(this));
-			}.bind(this), $empty);
+			}.bind(this), function(){});
 		}
 		this.db._transaction(fn.bind(this));
 	},
@@ -340,7 +340,7 @@ MUI.Persist.Providers.GlobalStorage = new Class({
 
 	initialize: function(options){
 		// process options
-		this.options = $extend(this.options, MUI.Persist.options);
+		Object.append(this.options, MUI.Persist.options);
 		this.setOptions(options);
 
 		// cleanup domain option
@@ -399,7 +399,7 @@ MUI.Persist.Providers.LocalStorage = new Class({
 
 	initialize: function(options){
 		// process options
-		this.options = $extend(this.options, MUI.Persist.options);
+		Object.append(this.options, MUI.Persist.options);
 		this.setOptions(options);
 
 		this.store = localStorage;
@@ -451,7 +451,7 @@ MUI.Persist.Providers.IE = new Class({
 
 	initialize: function(options){
 		// process options
-		this.options = $extend(this.options, MUI.Persist.options);
+		Object.append(this.options, MUI.Persist.options);
 		this.setOptions(options);
 
 		// create element to store keys in
@@ -509,7 +509,7 @@ MUI.Persist.Providers.Cookie = new Class({
 
 	initialize: function(options){
 		// process options
-		this.options = $extend(this.options, MUI.Persist.options);
+		Object.append(this.options, MUI.Persist.options);
 		this.setOptions(options);
 
 		// cleanup domain option
@@ -563,7 +563,7 @@ MUI.Persist.Providers.Flash = new Class({
 	},
 
 	initialize: function(options){
-		this.options = $extend(this.options, MUI.Persist.options);
+		Object.append(this.options, MUI.Persist.options);
 		this.setOptions(options);
 		if (!MUI.Persist.options.flash.el){
 			var cfg = this.options.flash;

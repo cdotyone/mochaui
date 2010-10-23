@@ -33,9 +33,8 @@ MUI.PassShark = new Class({
 		replacement: '%u25CF',
 		prefix: 'password-',
 		debug: false
-		/*
-		 onStageChange: $empty
-		 */
+
+		//onStageChange: null
 	},
 
 	initialize: function(element, options){
@@ -101,14 +100,14 @@ MUI.PassShark = new Class({
 	start: function(event){
 		if (this.options.debug) this.log('Event:', event.type);
 		this.element.store('focus', 1);
-		$clear(this.checker);
+		clearTimeout(this.checker);
 		this.checker = this._check.delay(this.options.interval, this, '');
 	},
 
 	stop: function(event){
 		if (this.options.debug) this.log('Event:', event.type);
 		this.element.store('focus', 0);
-		this.checker = $clear(this.checker);
+		this.checker = clearTimeout(this.checker);
 	},
 
 	_onDeletion: function(caret, diff){
@@ -178,11 +177,11 @@ MUI.PassShark = new Class({
 				this.element.set('value', tmp);
 				this._correctCaret(caret);
 			}
-			$clear(this.timer);
+			clearTimeout(this.timer);
 			this.timer = this._convertLastChar.delay(this.options.duration, this);
 		}
 		if (!initialCall){
-			$clear(this.checker);
+			clearTimeout(this.checker);
 			this.checker = this._check.delay(this.options.interval, this, [this.element.get('value'), false, caret || this._getCaretRange()]);
 		}
 	},

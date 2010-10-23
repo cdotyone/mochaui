@@ -36,7 +36,7 @@ MUI.Tabs.implement({
 		else el = $(el);
 		if (!el) return;
 
-		var tabs = $A([]);
+		var tabs = [];
 		el.getElements('li').each(function(li){
 			var tab = {};
 

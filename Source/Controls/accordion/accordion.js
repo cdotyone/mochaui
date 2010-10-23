@@ -34,31 +34,31 @@ MUI.Accordion = new Class({
 	Implements: [Events, Options],
 
 	options: {
-		id:					''			// id of the primary element, and id os control that is registered with mocha
-		,container:			null		// the parent control in the document to add the control to
-		,drawOnInit:		true		// true to add accordion to container when control is initialized
-		,cssClass:			'accordian'	// the primary css tag
+		id:					'',			// id of the primary element, and id os control that is registered with mocha
+		container:			null,		// the parent control in the document to add the control to
+		drawOnInit:		    true,		// true to add accordion to container when control is initialized
+		cssClass:			'accordian',// the primary css tag
 
-		,panels:			$A([])		// the list of accordion panels
+		panels:			    [],		    // the list of accordion panels
 
-		,textField:			'text'		// the name of the field that has the panels toggler text
-		,valueField:		'value'		// the name of the field that has the panels toggler values
-		,titleField:		'title'		// the name of the field that has the panels tip text
-		,contentField:		'html'		// the field that contains the name of the field that has the content for the panel
+		textField:			'text',		// the name of the field that has the panels toggler text
+		valueField:		    'value',	// the name of the field that has the panels toggler values
+		titleField:		    'title',	// the name of the field that has the panels tip text
+		contentField:		'html',		// the field that contains the name of the field that has the content for the panel
 
-		,value:				''			// the currently selected panel's value
-		,selectedPanel:		null		// the currently selected panel
-		,height:			false		// If set, displayed elements will have a fixed height equal to the specified value.
-		,width:				false		// If set, displayed elements will have a fixed width equal to the specified value.
-		,insertTitle:		true		// If set, the title will be inserted into the panel html
+		value:				'',			// the currently selected panel's value
+		selectedPanel:		null,		// the currently selected panel
+		height:			    false,		// If set, displayed elements will have a fixed height equal to the specified value.
+		width:				false,		// If set, displayed elements will have a fixed width equal to the specified value.
+		insertTitle:		true,		// If set, the title will be inserted into the panel html
 
-		,heightFx:			true		// If set to true, a height transition effect will take place when switching between displayed elements.
-		,widthFx:			false		// If set to true, it will add a width transition to the accordion when switching between displayed elements. Warning: CSS mastery is required to make this work!
-		,opacity:			false		// If set to true, an opacity transition effect will take place when switching between displayed elements.
-		,alwaysHide:		false		// If set to true, it will be possible to close all displayable elements. Otherwise, one will remain open at all time.
-		,initialDisplayFx:	true		// If set to false, the initial item displayed will not display with an effect but will just be shown immediately.
+		heightFx:			true,		// If set to true, a height transition effect will take place when switching between displayed elements.
+		widthFx:			false,		// If set to true, it will add a width transition to the accordion when switching between displayed elements. Warning: CSS mastery is required to make this work!
+		opacity:			false,		// If set to true, an opacity transition effect will take place when switching between displayed elements.
+		alwaysHide:		    false,		// If set to true, it will be possible to close all displayable elements. Otherwise, one will remain open at all time.
+		initialDisplayFx:	true		// If set to false, the initial item displayed will not display with an effect but will just be shown immediately.
 
-		,onPanelSelected:   $empty		// event: when a panel is opened
+		//onPanelSelected:    null        // event: when a panel is opened
 	},
 
 	initialize: function(options){
@@ -122,7 +122,7 @@ MUI.Accordion = new Class({
 		// build all panels
 		self._togglers = [];
 		self._panels = [];
-		$A(o.panels).each(function(panel){
+		o.panels.each(function(panel){
 			self._buildPanel(panel, self._panelsElement);
 		});
 		if (self._panels.length > 1){
@@ -160,7 +160,7 @@ MUI.Accordion = new Class({
 					},
 					onComplete: function(){
 						var id=MUI.getID(self.options.container);
-						self.accordionTimer = $clear(self.accordionTimer);
+						self.accordionTimer = clearInterval(self.accordionTimer);
 						MUI.dynamicResize($(id)); // once more for good measure
 					}
 			});

@@ -112,7 +112,7 @@ CoolClock.prototype = {
 			}
 		}).inject($('clocker'));
 
-		if (MochaUI.ieSupport == 'excanvas' && Browser.Engine.trident){
+		if (MochaUI.ieSupport == 'excanvas' && Browser.ie){
 			G_vmlCanvasManager.initElement(this.canvas);
 		}
 
@@ -237,7 +237,7 @@ CoolClock.prototype = {
 		this.radialLineAtAngle((min + sec / 60) / 60, skin.minuteHand);
 		if (this.showSecondHand){
 			this.radialLineAtAngle(sec / 60, skin.secondHand);
-			if (!Browser.Engine.trident){
+			if (!Browser.ie){
 				this.radialLineAtAngle(sec / 60, skin.secondDecoration);
 			}
 		}

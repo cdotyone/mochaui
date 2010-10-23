@@ -40,7 +40,7 @@ MUI.Accordion.implement({
 
 		o.cssClass = el.get('class');
 
-		var panels = $A([]);
+		var panels = [];
 		var togglerEls = el.getElements('h3.toggler');
 		var panelEls = el.getElements('div.element');
 

@@ -33,32 +33,32 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 	Implements: [Events, Options],
 
 	options: {
-		id:					''				// id of the primary element, and id os control that is registered with mocha
-		,container:			null			// the parent control in the document to add the control to
-		,drawOnInit:		true			// true to add tree to container when control is initialized
-		,cssClass:			'clb'			// the primary css tag
+		id:					'',				// id of the primary element, and id os control that is registered with mocha
+		container:			null,			// the parent control in the document to add the control to
+		drawOnInit:		    true,			// true to add tree to container when control is initialized
+		cssClass:			'clb',			// the primary css tag
 
-		,items:				$A([])			// the array list of nodes
+		items:				[],			    // the array list of nodes
 
-		,textField:			'text'			// the name of the field that has the item's text
-		,valueField:		'value'			// the name of the field that has the item's value
-		,titleField:		'title'			// the name of the field that has the item's tip text
-		,isSelectedField:	'selected'		// the name of the field that has the item's isSelected state
+		textField:			'text',			// the name of the field that has the item's text
+		valueField:		    'value',			// the name of the field that has the item's value
+		titleField:		    'title',			// the name of the field that has the item's tip text
+		isSelectedField:	'selected',		// the name of the field that has the item's isSelected state
 
-		,isDropList:		true			// show this control as a drop list
-		,dropCssClass:		'dclb'			// the class to use when displaying the drop list parent control
-		,dropText:			'{$} Selected'	// the text to show on the drop list when items are selected
+		isDropList:		    true,			// show this control as a drop list
+		dropCssClass:		'dclb',			// the class to use when displaying the drop list parent control
+		dropText:			'{$} Selected',	// the text to show on the drop list when items are selected
 
-		,alternateRows:		false			// show the items with alternating background color
-		,width:				0				// width of the control
-		,height:			0				// height of the control when not in drop list mode, or height of drop
-		,canMultiSelect:	true			// can the user select multiple items
-		,showCheckBox:		true			// true to show checkBoxes
-		,value:				''				// the currently selected item's value
-		,selectedItem:		null			// the last selected item
-		,selectedItems:		$A([])			// all of the the currently selected item
+		alternateRows:		false,			// show the items with alternating background color
+		width:				0,				// width of the control
+		height:			    0,				// height of the control when not in drop list mode, or height of drop
+		canMultiSelect:	    true,			// can the user select multiple items
+		showCheckBox:		true,			// true to show checkBoxes
+		value:				'',				// the currently selected item's value
+		selectedItem:		null,			// the last selected item
+		selectedItems:		[]  			// all of the the currently selected item
 
-		,onItemSelected:	$empty			// event: when a node is selected
+		//onItemSelected:	null			// event: when a node is selected
 	},
 
 	initialize: function(options){

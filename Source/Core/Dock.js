@@ -20,7 +20,8 @@
 
 MUI.files['{source}Core/Dock.js'] = 'loaded';
 
-MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
+MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock', {}));
+MUI.Dock.implement({
 
 	Implements: [Events, Options],
 
@@ -33,15 +34,15 @@ MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
 		position:		'bottom',		// Position the dock starts in, top or bottom.
 		visible:		true,			// is the dock visible
 		autoHide: 		false,			// True when dock autohide is set to on, false if set to off
-		menuCheck:		'dockLinkCheck',// the name of the element in the menu that needs to be checked if dock is shown
+		menuCheck:		'dockLinkCheck' // the name of the element in the menu that needs to be checked if dock is shown
 
-		onDrawBegin:	$empty,
-		onDrawEnd:		$empty,
-		onMove:			$empty,
-		onTabCreated:	$empty,
-		onTabSet:		$empty,
-		onHide:			$empty,
-		onShow:			$empty
+		//onDrawBegin:	null,
+		//onDrawEnd:	null,
+		//onMove:		null,
+		//onTabCreated:	null,
+		//onTabSet:		null,
+		//onHide:		null,
+		//onShow:		null
 	},
 
 	initialize: function(options){
@@ -257,7 +258,7 @@ MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
 			}).inject(this.el.dock);
 
 			// Dynamically initialize canvas using excanvas. This is only required by IE
-			if (Browser.Engine.trident && MUI.ieSupport == 'excanvas'){
+			if (Browser.ie && MUI.ieSupport == 'excanvas'){
 				G_vmlCanvasManager.initElement(canvas);
 			}
 		}
@@ -357,7 +358,7 @@ MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock',{})).implement({
 
 });
 
-MUI.Windows = (MUI.Windows || $H({})).extend({
+MUI.Windows = Object.append((MUI.Windows || {}), {
 
 	minimizeAll: function(){
 		$$('.mocha').each(function(windowEl){
@@ -370,7 +371,8 @@ MUI.Windows = (MUI.Windows || $H({})).extend({
 
 });
 
-MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
+MUI.Window = (MUI.Window || new NamedClass('MUI.Window', {}));
+MUI.Window.implement({
 
 	minimize: function(){
 		if (this.isMinimized) return this;
@@ -380,14 +382,14 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
 		if (this.el.iframe){
 			// Some elements are still visible in IE8 in the iframe when the iframe's visibility is set to hidden.
-			if (!Browser.Engine.trident) this.el.iframe.setStyle('visibility', 'hidden');
+			if (!Browser.ie) this.el.iframe.setStyle('visibility', 'hidden');
 			else this.el.iframe.hide();
 		}
 
 		this.hide(); // Hide window and add to dock
 
 		// Fixes a scrollbar issue in Mac FF2
-		if (Browser.Platform.mac && Browser.Engine.gecko){
+		if (Browser.Platform.mac && Browser.firefox){
 			if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent)){
 				var ffversion = new Number(RegExp.$1);
 				if (ffversion < 3){
@@ -419,7 +421,7 @@ MUI.Window = (MUI.Window || new NamedClass('MUI.Window',{})).implement({
 		if (this.isCollapsed) this.collapseToggle();
 
 		if (this.el.iframe){  // Show iframe
-			if (!Browser.Engine.trident) this.el.iframe.setStyle('visibility', 'visible');
+			if (!Browser.ie) this.el.iframe.setStyle('visibility', 'visible');
 			else this.el.iframe.show();
 		}
 
