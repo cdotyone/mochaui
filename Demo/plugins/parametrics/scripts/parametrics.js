@@ -33,7 +33,7 @@ MUI.append({
 		if ($('radiusSliderarea')){
 			var windowOptions = MUI.Windows.options;
 			var sliderFirst = true;
-			var mochaSlide = new Slider($('radiusSliderarea'), $('radiusSliderknob'), {
+			var mochaSlide = new Slider('radiusSliderarea', 'radiusSliderknob', {
 				steps: 14,
 				offset: 0,
 				onChange: function(pos){
@@ -61,7 +61,7 @@ MUI.append({
 		if ($('shadowSliderarea')){
 			var windowOptions = MUI.Windows.options;
 			var sliderFirst = true;
-			var mochaSlide = new Slider($('shadowSliderarea'), $('shadowSliderknob'), {
+			var mochaSlide = new Slider('shadowSliderarea', 'shadowSliderknob', {
 				range: [1, 10],
 				offset: 0,
 				onChange: function(pos){
@@ -106,10 +106,12 @@ MUI.append({
 		if ($('offsetXSliderarea')){
 			var windowOptions = MUI.Windows.options;
 			var sliderFirst = true;
-			var mochaSlide = new Slider($('offsetXSliderarea'), $('offsetXSliderknob'), {
+			var mochaSlide = new Slider('offsetXSliderarea', 'offsetXSliderknob', {
 				range: [-5, 5],
 				offset: 0,
+				initialStep: 0,
 				onChange: function(pos){
+				console.log(pos);
 					$('offsetXUpdatevalue').set('text', pos);
 					windowOptions.shadowOffset.x = pos;
 					MUI.Window.implement({ options: windowOptions });
@@ -143,7 +145,7 @@ MUI.append({
 		if ($('offsetYSliderarea')){
 			var windowOptions = MUI.Windows.options;
 			var sliderFirst = true;
-			var mochaSlide = new Slider($('offsetYSliderarea'), $('offsetYSliderknob'), {
+			var mochaSlide = new Slider('offsetYSliderarea', 'offsetYSliderknob', {
 				range: [-5, 5],
 				offset: 0,
 				onChange: function(pos){
