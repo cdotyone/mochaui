@@ -111,7 +111,6 @@ MUI.append({
 				offset: 0,
 				initialStep: 0,
 				onChange: function(pos){
-				console.log(pos);
 					$('offsetXUpdatevalue').set('text', pos);
 					windowOptions.shadowOffset.x = pos;
 					MUI.Window.implement({ options: windowOptions });
