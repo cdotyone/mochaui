@@ -44,7 +44,7 @@ MUI.append({
 		path: {
 			source:  '../Source/',			// Path to MochaUI source JavaScript
 			controls:'../Source/Controls/',	// Path to Mocha Owned Plugins
-			themes:  '../Demo/themes/',		// Path to MochaUI Themes
+			themes:  '../Source/Themes/',	// Path to MochaUI Themes
 			plugins: '../Demo/plugins/'		// Path to Plugins
 		}
 	}
