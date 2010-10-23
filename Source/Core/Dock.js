@@ -135,7 +135,7 @@ MUI.Dock = {
 			}).inject(this.dock);
 
 			// Dynamically initialize canvas using excanvas. This is only required by IE
-			if (Browser.Engine.trident && MUI.ieSupport == 'excanvas'){
+			if (Browser.ie && MUI.ieSupport == 'excanvas'){
 				G_vmlCanvasManager.initElement(canvas);
 			}
 		}
@@ -302,11 +302,11 @@ MUI.Dock = {
 
 		dockTab.addEvent('mousedown', function(e){
 			new Event(e).stop();
-			this.timeDown = $time();
+			this.timeDown = Date.now();
 		});
 
 		dockTab.addEvent('mouseup', function(e){
-			this.timeUp = $time();
+			this.timeUp = Date.now();
 			if ((this.timeUp - this.timeDown) < 275){
 				// If the visibility of the windows on the page are toggled off, toggle visibility on.
 				if (MUI.Windows.windowsVisible == false) {
@@ -393,7 +393,7 @@ MUI.Dock = {
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
 		if ( instance.iframeEl ) {
 			// Some elements are still visible in IE8 in the iframe when the iframe's visibility is set to hidden.
-			if (!Browser.Engine.trident) {
+			if (!Browser.ie) {
 				instance.iframeEl.setStyle('visibility', 'hidden');
 			}
 			else {
@@ -409,7 +409,7 @@ MUI.Dock = {
 		windowEl.setStyle('visibility', 'hidden');
 
 		 // Fixes a scrollbar issue in Mac FF2
-		if (Browser.Platform.mac && Browser.Engine.gecko){
+		if (Browser.Platform.mac && Browser.firefox){
 			if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent)){
 				var ffversion = new Number(RegExp.$1);
 				if (ffversion < 3) {
@@ -459,7 +459,7 @@ MUI.Dock = {
 
 		// Show iframe
 		if (instance.iframeEl){
-			if (!Browser.Engine.trident){
+			if (!Browser.ie){
 				instance.iframeEl.setStyle('visibility', 'visible');
 			}
 			else {

@@ -32,12 +32,12 @@ MUI.extend({
 	newWindowsFromHTML: function(){
 		$$('.mocha').each(function(el) {
 			// Get the window title and destroy that element, so it does not end up in window content
-			if ( Browser.Engine.presto || Browser.Engine.trident5 ){
+			if ( Browser.opera || Browser.ie5 ){
 				el.hide(); // Required by Opera, and probably IE7
 			}
 			var title = el.getElement('h3.mochaTitle');
 
-			if(Browser.Engine.presto) el.show();
+			if(Browser.opera) el.show();
 
 			var elDimensions = el.getStyles('height', 'width');
 			var properties = {

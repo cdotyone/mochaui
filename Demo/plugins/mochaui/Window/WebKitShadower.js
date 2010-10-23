@@ -1,4 +1,4 @@
-if (Browser.Engine.webkit) {
+if (Browser.webkit) {
 	MUI.Window.implement({
 		shadowStart: function(ctx, shadowBlur, shadowOffset) {
 			ctx.shadowColor = "rgba(0, 0, 0, 0.85)";
