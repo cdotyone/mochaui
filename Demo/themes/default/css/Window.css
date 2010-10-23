@@ -137,6 +137,17 @@ div.mochaToolbarWrapper.bottom {
 	background: #fefefe; /* This is the color of the visible resize handle */
 }
 
+.mocha.css3 .cornerSE {
+	background: transparent;
+	border-color: transparent white white transparent;
+	border-style: solid;
+	border-width: 5px;
+	height: 0;
+	margin: 2px;
+	opacity: 1;
+	width: 0;
+}
+
 .mochaCanvasHeader {
 	position: absolute;
 	top: 0;
@@ -308,6 +319,10 @@ div.mochaToolbarWrapper.bottom {
 .mocha.no-canvas {
 	background: #e5e5e5;
 	border: 1px solid #555;
+}
+
+.mocha.css3.no-canvas {
+	border: none;
 }
 
 .mochaCss3Shadow {
