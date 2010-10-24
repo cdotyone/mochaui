@@ -50,8 +50,8 @@ MUI.Content = Object.append((MUI.Content || {}), {
 		options.require = Object.append({
 			css: [],		    // the style sheets to load before the request is made
 			images: [],         // the images to preload before the request is made
-            js: []              // the JavaScript that is loaded and called after the request is made
-			//, onload: null    // the event that is fired after all required files are loaded
+            js: [],             // the JavaScript that is loaded and called after the request is made
+			onload: function(){}// the event that is fired after all required files are loaded
 		}, options.require);
 
 		// set defaults for paging

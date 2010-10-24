@@ -61,7 +61,7 @@ MUI.append({
 	initialize: function(options){
 		if (options){
 			if (options.path) options.path = Object.append(MUI.options.path, options.path);
-			MUI.options.extend(options);
+			Object.append(MUI.options, options);
 		}
 	},
 

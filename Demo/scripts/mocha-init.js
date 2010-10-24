@@ -179,13 +179,8 @@ var initializeWindows = function(){
 				url: '{plugins}parametrics/index.html',
 				require: {
 					css: ['{plugins}parametrics/css/style.css'],
-					js: ['{plugins}parametrics/scripts/parametrics.js'],
-					onload: function(){
-						if (MUI.addRadiusSlider) MUI.addRadiusSlider();
-						if (MUI.addShadowSlider) MUI.addShadowSlider();
-						if (MUI.addOffsetXSlider) MUI.addOffsetXSlider();
-						if (MUI.addOffsetYSlider) MUI.addOffsetYSlider();
-					}
+					js: ['{plugins}parametrics/scripts/parametrics.js'] //,
+					// onload: function(){} // either use onload here or Window/onLoaded further down
 				}
 			},
 			width: 305,
@@ -202,6 +197,12 @@ var initializeWindows = function(){
 			},
 			onDragComplete: function(instance){
 				if (!Browser.ie) instance.el.windowEl.setStyle('opacity', 1);
+			},
+			onLoaded: function(){
+				if (MUI.addRadiusSlider) MUI.addRadiusSlider();
+				if (MUI.addShadowSlider) MUI.addShadowSlider();
+				if (MUI.addOffsetXSlider) MUI.addOffsetXSlider();
+				if (MUI.addOffsetYSlider) MUI.addOffsetYSlider();
 			}
 		});
 	};
