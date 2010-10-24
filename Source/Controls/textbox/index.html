@@ -15,7 +15,7 @@
 	<script type="text/javascript">
 
 		var ftypes = ['fixed.phone','fixed.phone-us','fixed.cpf','fixed.cnpj','fixed.date','fixed.date-us','fixed.cep','fixed.time','fixed.cc'];
-		ftypes.combine(['reverse.integer','reverse.decimal','reverse.decimal-us','reverse.reais','reverse.dollar','regexp.ip','regexp.email','password']);
+		Object.append(ftypes,['reverse.integer','reverse.decimal','reverse.decimal-us','reverse.reais','reverse.dollar','regexp.ip','regexp.email','password']);
 
 		var mtype;
 		ftypes.each(function(t) {

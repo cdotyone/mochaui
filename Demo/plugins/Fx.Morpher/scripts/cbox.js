@@ -119,24 +119,10 @@ Fx.Morpher = new Class({
 
 				case 'width':
 					now[p] = this.parent(from[p], to[p], delta);
-					//if we do not calc left motion, then do it here
-					/*
-					 if(!$defined(from['left'])) {
-					 var regx = this.element.retrieve('regx', parseInt(this.element.getStyle('left')));
-					 now['left'] = this.translate(regx, 'x', from[p]);
-					 }
-					 */
 					break;
 
 				case 'height':
 					now[p] = this.parent(from[p], to[p], delta);
-					/*
-					 if(!$defined(from['top'])) {
-					 var regy = this.element.retrieve('regy', parseInt(this.element.getStyle('top')));
-					 now['top'] = this.translate(regy, 'y', from[p]);
-					 }
-					 break;
-					 */
 					break;
 				default:
 					//standard mootools calculation

@@ -308,7 +308,7 @@ MUI.Form = new Class({
 				if (typeOf(val[ii].getClass) != "function"){
 					if (!val[ii].Type) val[ii].Type = val[ii].options.Type;
 					if (val[ii].Type){
-						val[ii] = MUI.FormRules[val[ii].Type].create(val[ii]);
+						val[ii] = MUI.FormRules[val[ii].Type].bind(val[ii]);
 					}
 				}
 			}

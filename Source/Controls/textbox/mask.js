@@ -74,7 +74,7 @@ MUI.Mask = new Class({
 		this.ignore = false;
 		this.maxlength = this.element.get('maxlength');
 		this.eventsToBind.each(function(evt){
-			this.element.addEvent(evt, this.onMask.bindWithEvent(this, this[evt]));
+			this.element.addEvent(evt, this.onMask.bind(this, this[evt]));
 		}, this);
 		this.element.store('meiomask', this).erase('maxlength');
 		var elementValue = this.element.get('value');

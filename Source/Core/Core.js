@@ -224,7 +224,7 @@ var NamedClass = function(name, members){
 	members.isTypeOf = function(cName){
 		if (cName == this.className) return true;
 		if (!this.constructor || !this.constructor.parent) return false;
-		return this.isTypeOf.run(cName, this.constructor.parent.prototype);
+		return this.isTypeOf.apply(this.constructor.parent.prototype,cName);
 	};
 	return new Class(members);
 };
@@ -388,7 +388,7 @@ if (location.protocol == 'file:'){
 	});
 
 	Browser.Request = function(){
-		return $try(function(){
+		return Function.attempt(function(){
 			return new ActiveXObject('MSXML2.XMLHTTP');
 		}, function(){
 			return new XMLHttpRequest();

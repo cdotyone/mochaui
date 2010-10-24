@@ -171,11 +171,11 @@ MUI.Dock.implement({
 
 		dockTab.addEvent('mousedown', function(e){
 			new Event(e).stop();
-			this.timeDown = $time();
+			this.timeDown = Date.now();
 		}.bind(instance));
 
 		dockTab.addEvent('mouseup', function(){
-			this.timeUp = $time();
+			this.timeUp = Date.now();
 			if ((this.timeUp - this.timeDown) < 275){
 				// If the visibility of the windows on the page are toggled off, toggle visibility on.
 				if (!MUI.Windows.windowsVisible){

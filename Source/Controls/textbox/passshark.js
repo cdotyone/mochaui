@@ -71,7 +71,7 @@ MUI.PassShark = new Class({
 		this.origElement.hide();
 		var standardMaxLength = 255;
 		var opts = this.options;
-		var attributes = (typeof params == 'object') ? $merge(params, {
+		var attributes = (typeof params == 'object') ? Object.merge(params, {
 			'type': 'text',
 			'name': opts.prefix + (params.name ? params.name : ''),
 			'id': opts.prefix + (params.id ? params.id : ''),

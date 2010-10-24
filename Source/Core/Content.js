@@ -48,10 +48,11 @@ MUI.Content = Object.append((MUI.Content || {}), {
 
 		// set defaults for require option
 		options.require = Object.append({
-			css: [],		    // the style sheets to load before the request is made
-			images: [],         // the images to preload before the request is made
-            js: [],             // the JavaScript that is loaded and called after the request is made
-			onload: function(){}// the event that is fired after all required files are loaded
+			css: [],			// the style sheets to load before the request is made
+			images: [],			// the images to preload before the request is made
+			js: [],				// the JavaScript that is loaded and called after the request is made
+			onload: function(){
+			}// the event that is fired after all required files are loaded
 		}, options.require);
 
 		// set defaults for paging
@@ -87,7 +88,7 @@ MUI.Content = Object.append((MUI.Content || {}), {
 			// create standard field replacements from data, paging, and path hashes
 			var values = Object.merge(options.data || {}, options.paging || {}, MUI.options.path || {});
 			// call the prepUrl callback if it was defined
-			if (options.prepUrl) options.url = options.prepUrl.run([options.url, values, instance], this);
+			if (options.prepUrl) options.url = options.prepUrl.apply(this,[options.url, values, instance]);
 			options.url = MUI.replaceFields(options.url, values);
 		}
 
@@ -279,7 +280,7 @@ MUI.Content.Providers.xhr = {
 	doRequest: function(instance, options){
 		var contentContainer = options.contentContainer;
 		var fireLoaded = options.fireLoaded;
-		
+
 		// if js is required, but no url, fire loaded to proceed with js-only
 		if (options.url == null && options.require.js && options.require.js.length != 0){
 			Browser.ie4 ? fireLoaded.delay(50, this, [instance, options]) : fireLoaded(instance, options);
@@ -295,7 +296,7 @@ MUI.Content.Providers.xhr = {
 			Browser.ie4 ? fireLoaded.delay(50, this, [instance, options, content]) : fireLoaded(instance, options, content);
 			return;
 		}
-		
+
 		new Request({
 			url: options.url,
 			method: options.method ? options.method : 'get',
@@ -347,7 +348,7 @@ MUI.Content.Providers.xhr = {
 			onComplete: function(){
 			}
 		}).send();
-	
+
 	}
 
 };
@@ -487,8 +488,8 @@ MUI.append({
 			if (!options.position) options.position = 'content';
 			if (options.position == 'content'){
 				options.contentContainer = this.el.content;
-				if (options.padding==null) options.padding = this.options.padding;
-				if (options.padding || options.padding==0){
+				if (options.padding == null) options.padding = this.options.padding;
+				if (options.padding || options.padding == 0){
 					// copy padding from main options if not passed in
 					if (typeOf(options.padding) != 'number')
 						Object.append(options.padding, this.options.padding);
