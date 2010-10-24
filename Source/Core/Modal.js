@@ -22,7 +22,7 @@ provides: [MUI.Modal]
 ...
 */
 
-MUI.files[MUI.path.source + 'Window/Modal.js'] = 'loaded';
+MUI.files[MUI.path.source + 'Modal.js'] = 'loaded';
 
 MUI.Modal = new Class({
 
@@ -57,9 +57,9 @@ MUI.Modal = new Class({
 				'position': Browser.ie4 ? 'absolute' : 'fixed'
 		});
 		
-		modalOverlay.addEvent('click', function(e){
-			var instance = MUI.Windows.instances.get(MUI.currentModal.id);
-			if (instance.options.modalOverlayClose == true) {
+		modalOverlay.addEvent('click', function(){
+			var instance = MUI.Windows.instances[MUI.currentModal.id];
+			if (instance.options.modalOverlayClose) {
 				MUI.closeWindow(MUI.currentModal);
 			}
 		});

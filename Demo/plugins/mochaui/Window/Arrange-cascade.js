@@ -21,7 +21,7 @@ Syntax:
 
 MUI.files[MUI.path.plugins + 'mochaui/Window/Arrange-cascade.js'] = 'loaded';
 
-MUI.extend({   
+MUI.extend({
 	arrangeCascade: function(){
 
 		var	viewportTopOffset = 30;    // Use a negative number if neccessary to place first window where you want it
@@ -33,22 +33,23 @@ MUI.extend({
 		var coordinates = document.getCoordinates();
 		
 		var openWindows = 0;
-		MUI.Windows.instances.each(function(instance){
+		Object.each(MUI.Windows.instances,function(instance){
 			if (!instance.isMinimized && instance.options.draggable) openWindows ++; 
 		});
-		
+
+		var topOffset,leftOffset;
 		if ((windowTopOffset * (openWindows + 1)) >= (coordinates.height - viewportTopOffset)) {
-			var topOffset = (coordinates.height - viewportTopOffset) / (openWindows + 1);
+			topOffset = (coordinates.height - viewportTopOffset) / (openWindows + 1);
 		}
 		else {
-			var topOffset = windowTopOffset;
+			topOffset = windowTopOffset;
 		}
 		
 		if ((windowLeftOffset * (openWindows + 1)) >= (coordinates.width - viewportLeftOffset - 20)) {
-			var leftOffset = (coordinates.width - viewportLeftOffset - 20) / (openWindows + 1);
+			leftOffset = (coordinates.width - viewportLeftOffset - 20) / (openWindows + 1);
 		}
 		else {
-			var leftOffset = windowLeftOffset;
+			leftOffset = windowLeftOffset;
 		}
 
 		var x = viewportLeftOffset;
@@ -61,7 +62,7 @@ MUI.extend({
 				x += leftOffset;
 				y += topOffset;
 
-				if (MUI.options.advancedEffects == false){
+				if (!MUI.options.advancedEffects){
 					windowEl.setStyles({
 						'top': y,
 						'left': x

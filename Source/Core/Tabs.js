@@ -22,7 +22,9 @@ provides: [MUI.initializeTabs]
 ...
 */
 
-MUI.extend({
+MUI.files[MUI.path.source + 'Tabs.js'] = 'loaded';
+
+MUI.append({
 	/*
 
 	Function: initializeTabs
@@ -35,7 +37,7 @@ MUI.extend({
 			var link = listitem.getFirst('a').addEvent('click', function(e){
 				e.preventDefault();
 			});
-			listitem.addEvent('click', function(e){
+			listitem.addEvent('click', function(){
 				MUI.updateContent({
 					'element':  $(target),
 					'url':      link.get('href')

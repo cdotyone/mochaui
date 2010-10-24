@@ -28,7 +28,7 @@ See Also:
 
 MUI.files[MUI.path.plugins + 'mochaui/Window/Windows-from-html.js'] = 'loaded';
 
-MUI.extend({
+MUI.append({
 	newWindowsFromHTML: function(){
 		$$('.mocha').each(function(el) {
 			// Get the window title and destroy that element, so it does not end up in window content

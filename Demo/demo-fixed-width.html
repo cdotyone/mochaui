@@ -8,12 +8,12 @@
 
 	<link rel="stylesheet" type="text/css" href="../Source/Themes/default/css/Content.css"/>
 	<link rel="stylesheet" type="text/css" href="../Source/Themes/default/css/Core.css"/>
-	<link rel="stylesheet" type="text/css" href="../Source/Themes/default/css/Layout.css"/>
+	<link rel="stylesheet" type="text/css" href="../Source/Themes/default/css/Desktop.css"/>
 	<link rel="stylesheet" type="text/css" href="../Source/Themes/default/css/Dock.css"/>
 	<link rel="stylesheet" type="text/css" href="../Source/Themes/default/css/Tabs.css"/>
 	<link rel="stylesheet" type="text/css" href="../Source/Themes/default/css/Window.css"/>
 
-	<style>
+	<style type="text\css">
 
 		#desktop {
 			visibility: visible;
@@ -96,7 +96,9 @@
 	<script type="text/javascript" src="../Source/Core/Window.js"></script>
 	<script type="text/javascript" src="../Source/Core/Modal.js"></script>
 	<script type="text/javascript" src="plugins/mochaui/Window/Windows-from-html.js"></script>
-	<script type="text/javascript" src="../Source/Core/Layout.js"></script>
+	<script type="text/javascript" src="../Source/Core/Desktop.js"></script>
+	<script type="text/javascript" src="../Source/Core/Panel.js"></script>
+	<script type="text/javascript" src="../Source/Core/Column.js"></script>
 	<script type="text/javascript" src="../Source/Core/Dock.js"></script>
 	<!--MOCHAUI-->
 
@@ -120,7 +122,7 @@
 		window.addEvent('load', function(){
 			MUI.Desktop.initialize();
 			MUI.Dock.initialize();
-			MUI.NewWindowsFromHTML = new MUI.NewWindowsFromHTML();
+			MUI.newWindowsFromHTML();
 
 			$('aboutLink').addEvent('click', function(e){
 				new Event(e).stop();

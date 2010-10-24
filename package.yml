@@ -23,6 +23,6 @@ sources:
   - "src/core/Core/Core.js"
   - "src/core/Window/Window.js"
   - "src/core/Window/Modal.js"
-  - "src/core/Layout/Layout.js"
+  - "src/core/Layout/Desktop.js"
   - "src/core/Layout/Dock.js"
   - "src/core/Components/Tabs.js"

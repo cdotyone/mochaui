@@ -19,7 +19,7 @@ To do:
 
 MUI.files[MUI.path.plugins + 'mochaui/Layout/Workspaces.js'] = 'loaded';
 
-MUI.extend({			   
+MUI.append({
 	/*
 	
 	Function: saveWorkspace
@@ -37,7 +37,7 @@ MUI.extend({
 	saveWorkspace: function(){
 		this.cookie = new Hash.Cookie('mochaUIworkspaceCookie', {duration: 3600});
 		this.cookie.empty();
-		MUI.Windows.instances.each(function(instance) {
+		Object.each(MUI.Windows.instances,function(instance) {
 			instance.saveValues();
 			this.cookie.set(instance.options.id, {
 				'id': instance.options.id,

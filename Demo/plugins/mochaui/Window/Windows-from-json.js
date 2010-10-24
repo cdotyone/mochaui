@@ -39,12 +39,11 @@ See Also:
 
 MUI.files[MUI.path.plugins + 'mochaui/Window/Windows-from-json.js'] = 'loaded';
 
-MUI.extend({	
+MUI.append({	
 	newWindowsFromJSON: function(newWindows){
 		newWindows.each(function(options) {
-			var temp = new Hash(options);
-			temp.each( function(value, key, hash) {
-				if ($type(value) != 'string') return;
+			Object.each(options,function(value, key) {
+				if (typeOf(value) != 'string') return;
 				if (value.substring(0,8) == 'function'){
 					eval("options." + key + " = " + value);
 				}

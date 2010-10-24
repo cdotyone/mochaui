@@ -19,13 +19,12 @@
  This documentation is taken directly from the javascript source files. It is built using Natural Docs.
 
  requires:
- - Core:1.2.4/Array
- - Core:1.2.4/Element
- - Core:1.2.4/Browser
- - Core:1.2.4/Request
- - Core:1.2.4/Request.HTML
- - Hash
- - More:1.2.4/Assets
+ - Core:1.3.0/Array
+ - Core:1.3.0/Element
+ - Core:1.3.0/Browser
+ - Core:1.3.0/Request
+ - Core:1.3.0/Request.HTML
+ - More:1.3.0/Assets
 
  provides: [MUI, MochaUI, MUI.Require]
 
@@ -34,20 +33,20 @@
 
 Browser.webkit = (Browser.safari || Browser.chrome);
 
-var MUI = MochaUI = new Hash({
+var MUI = MochaUI = {
 
 	version: '0.9.7',
 
-	options: new Hash({
+	options: {
 		theme: 'default',
-		advancedEffects: false, // Effects that require fast browsers and are cpu intensive.
-		standardEffects: true   // Basic effects that tend to run smoothly.
-	}),
+		advancedEffects: false,			// Effects that require fast browsers and are cpu intensive.
+		standardEffects: true			// Basic effects that tend to run smoothly.
+	},
 
 	path: {
-		source:  'scripts/source/', // Path to MochaUI source JavaScript
-		themes:  'themes/',		 // Path to MochaUI Themes
-		plugins: 'plugins/'		 // Path to Plugins
+		source:  '../Source/Core/',		// Path to MochaUI source JavaScript
+		themes:  '../Source/Themes/',	// Path to MochaUI Themes
+		plugins: 'plugins/'				// Path to Plugins
 	},
 
 	// Returns the path to the current theme directory
@@ -55,16 +54,21 @@ var MUI = MochaUI = new Hash({
 		return MUI.path.themes + MUI.options.theme + '/';
 	},
 
-	files: new Hash()
+	files: {}
 
-});
+};
 
-MUI.files[MUI.path.source + 'Core/Core.js'] = 'loaded';
+MUI.files[MUI.path.source + 'Core.js'] = 'loaded';
 
-MUI.extend({
+MUI.append = function(o) {
+	Object.append(MUI,o);
+	return MUI;
+};
+
+MUI.append({
 
 	Windows: {
-		instances: new Hash()
+		instances: {}
 	},
 
 	ieSupport: 'excanvas',  // Makes it easier to switch between Excanvas and Moocanvas for testing	
@@ -93,7 +97,7 @@ MUI.extend({
 	 */
 	updateContent: function(options){
 
-		var options = Object.append({
+		options = Object.merge({
 			element:	  null,
 			childElement: null,
 			method:	   null,
@@ -106,23 +110,18 @@ MUI.extend({
 			padding:	  null,
 			require:	  {}
 			//onContentLoaded: null
-		}, options);
+		},options);
 
-		Object.append(options.require,{
+		options.require = Object.merge({
 			css: [], images: [], js: [], onload: null
-		});
+		}, options.require);
 
 		var args = {};
 
 		if (!options.element) return;
 		var element = options.element;
 
-		if (MUI.Windows.instances.get(element.id)){
-			args.recipient = 'window';
-		}
-		else {
-			args.recipient = 'panel';
-		}
+		args.recipient = MUI.Windows.instances[element.id] ? 'window' : 'panel';
 
 		var instance = element.retrieve('instance');
 		if (options.title) instance.titleEl.set('html', options.title);
@@ -132,17 +131,7 @@ MUI.extend({
 		var contentWrapperEl = instance.contentWrapperEl;
 
 		if (!options.loadMethod){
-			if (!instance.options.loadMethod){
-				if (!options.url){
-					options.loadMethod = 'html';
-				}
-				else {
-					options.loadMethod = 'xhr';
-				}
-			}
-			else {
-				options.loadMethod = instance.options.loadMethod;
-			}
+			options.loadMethod = !instance.options.loadMethod ? !options.url ? 'html' : 'xhr' : instance.options.loadMethod;
 		}
 
 		// Set scrollbars if loading content in main content container.
@@ -236,7 +225,7 @@ MUI.extend({
 			url: options.url,
 			update: contentContainer,
 			method: options.method != null ? options.method : 'get',
-			data: options.data != null ? new Hash(options.data).toQueryString() : '',
+			data: options.data != null ? Object.toQueryString(options.data) : '',
 			evalScripts: false,
 			evalResponse: false,
 			headers: {'Content-Type':'application/json'},
@@ -277,7 +266,7 @@ MUI.extend({
 						if (args.recipient == 'window') instance.hideSpinner();
 						else if (args.recipient == 'panel' && $('spinner')) $('spinner').hide();
 					}
-					var json = JSON.decode(json);
+					json = JSON.decode(json);
 					// calls onLoaded event instead of onContentLoaded
 					// onLoaded - event should call updateContent again with loadMethod='html'
 					instance.fireEvent('loaded', [options.element, json, instance]);
@@ -296,7 +285,7 @@ MUI.extend({
 			url: options.url,
 			update: contentContainer,
 			method: options.method != null ? options.method : 'get',
-			data: options.data != null ? new Hash(options.data).toQueryString() : '',
+			data: options.data != null ? Object.toQueryString(options.data) : '',
 			evalScripts: instance.options.evalScripts,
 			evalResponse: instance.options.evalResponse,
 			onRequest: function(){
@@ -357,10 +346,10 @@ MUI.extend({
 				'height': contentWrapperEl.offsetHeight - contentWrapperEl.getStyle('border-top').toInt() - contentWrapperEl.getStyle('border-bottom').toInt(),
 				'width': instance.panelEl ? contentWrapperEl.offsetWidth - contentWrapperEl.getStyle('border-left').toInt() - contentWrapperEl.getStyle('border-right').toInt() : '100%'
 			}
-		}).injectInside(contentEl);
+		}).inject(contentEl);
 
 		// Add onload event to iframe so we can hide the spinner and run onContentLoaded()
-		instance.iframeEl.addEvent('load', function(e){
+		instance.iframeEl.addEvent('load', function(){
 			if (args.recipient == 'window') instance.hideSpinner();
 			else if (args.recipient == 'panel' && contentContainer == contentEl && $('spinner')) $('spinner').hide();
 			Browser.ie4 ? onContentLoaded.delay(50) : onContentLoaded();
@@ -376,7 +365,7 @@ MUI.extend({
 		var elementTypes = new Array('element', 'textnode', 'whitespace', 'collection');
 
 		contentEl.addClass("pad");
-		if (elementTypes.contains($type(options.content))){
+		if (elementTypes.contains(typeOf(options.content))){
 			options.content.inject(contentContainer);
 		} else {
 			contentContainer.set('html', options.content);
@@ -409,7 +398,8 @@ MUI.extend({
 
 	 */
 	reloadIframe: function(iframe){
-		Browser.firefox ? $(iframe).src = $(iframe).src : top.frames[iframe].location.reload(true);
+		var src = $(iframe).src;
+		Browser.firefox ? $(iframe).src = src : top.frames[iframe].location.reload(true);
 	},
 
 	roundedRect: function(ctx, x, y, width, height, radius, rgb, a){
@@ -466,7 +456,7 @@ MUI.extend({
 
 	 */
 	toggleAdvancedEffects: function(link){
-		if (MUI.options.advancedEffects == false){
+		if (!MUI.options.advancedEffects){
 			MUI.options.advancedEffects = true;
 			if (link){
 				this.toggleAdvancedEffectsLink = new Element('div', {
@@ -489,7 +479,7 @@ MUI.extend({
 
 	 */
 	toggleStandardEffects: function(link){
-		if (MUI.options.standardEffects == false){
+		if (!MUI.options.standardEffects){
 			MUI.options.standardEffects = true;
 			if (link){
 				this.toggleStandardEffectsLink = new Element('div', {
@@ -549,18 +539,17 @@ function fixPNG(myImage){
 		var imgClass = (myImage.className) ? "class='" + myImage.className + "' " : "";
 		var imgTitle = (myImage.title) ? "title='" + myImage.title + "' " : "title='" + myImage.alt + "' ";
 		var imgStyle = "display:inline-block;" + myImage.style.cssText;
-		var strNewHTML = "<span " + imgID + imgClass + imgTitle
+		myImage.outerHTML = "<span " + imgID + imgClass + imgTitle
 				+ " style=\"" + "width:" + myImage.width
 				+ "px; height:" + myImage.height
 				+ "px;" + imgStyle + ";"
 				+ "filter:progid:DXImageTransform.Microsoft.AlphaImageLoader"
 				+ "(src=\'" + myImage.src + "\', sizingMethod='scale');\"></span>";
-		myImage.outerHTML = strNewHTML;
 	}
 }
 
 // Blur all windows if user clicks anywhere else on the page
-document.addEvent('mousedown', function(event){
+document.addEvent('mousedown', function(){
 	MUI.blurAll.delay(50);
 });
 
@@ -626,20 +615,24 @@ Element.implement({
 			coords.y -= parent.getStyle('paddingTop').toInt();
 		}
 		var morph = this.retrieve('morph');
+		var oldOptions;
 		if (morph){
 			morph.cancel();
-			var oldOptions = morph.options;
+			oldOptions = morph.options;
 		}
-		var morph = this.get('morph', {
+
+		this.set('morph', {
 			duration:50,
 			link:'chain'
 		});
+
 		for (var i = 0; i < duration; i++){
 			morph.start({
-				top:coords.y + $random(-radius, radius),
-				left:coords.x + $random(-radius, radius)
+				top:coords.y + Number.random(-radius, radius),
+				left:coords.x + Number.random(-radius, radius)
 			});
 		}
+
 		morph.start({
 			top:coords.y,
 			left:coords.x
@@ -648,6 +641,7 @@ Element.implement({
 				this.set('morph', oldOptions);
 			}
 		}.bind(this));
+
 		return this;
 	}
 });
@@ -698,7 +692,7 @@ MUI.getCSSRule = function(selector){
 		}
 	}
 	return false;
-}
+};
 
 // This makes it so Request will work to some degree locally
 if (location.protocol == "file:"){
@@ -816,7 +810,7 @@ MUI.Require = new Class({
 			var checker = (function(){
 				tries++;
 				if (MUI.files[source] == 'loading' && tries < '100') return;
-				$clear(checker);
+				clearInterval(checker);
 				if (typeof onload == 'function'){
 					onload();
 				}
@@ -858,11 +852,11 @@ Object.append(Asset,{
 
 	/* Fix an Opera bug in Mootools 1.2 */
 	javascript: function(source, properties){
-		Object.append(properties,{
+		properties = Object.merge({
 			//onload: null,
 			document: document,
-			check: $lambda(true)
-		});
+			check: Function.from(true)
+		},properties);
 
 		if ($(properties.id)){
 			properties.onload();
@@ -888,7 +882,7 @@ Object.append(Asset,{
 		else {
 			var checker = (function(){
 				if (!$try(check)) return;
-				$clear(checker);
+				clearInterval(checker);
 				// Opera has difficulty with multiple scripts being injected into the head simultaneously. We need to give it time to catch up.
 				Browser.opera ? load.delay(500) : load();
 			}).periodical(50);
@@ -899,17 +893,17 @@ Object.append(Asset,{
 	// Get the CSS with XHR before appending it to document.head so that we can have an onload callback.
 	css: function(source, properties){
 
-		Object.append(properties,{
+		properties = Object.merge({
 			id: null,
 			media: 'screen'
 			//onload: null
-		});
+		},properties);
 
 		new Request({
 			method: 'get',
 			url: source,
-			onComplete: function(response){
-				var newSheet = new Element('link', {
+			onComplete: function(){
+				new Element('link', {
 					'id': properties.id,
 					'rel': 'stylesheet',
 					'media': properties.media,
@@ -918,7 +912,7 @@ Object.append(Asset,{
 				}).inject(document.head);
 				properties.onload();
 			}.bind(this),
-			onFailure: function(response){
+			onFailure: function(){
 			},
 			onSuccess: function(){
 			}.bind(this)
@@ -944,7 +938,7 @@ Object.append(Asset,{
 
  Example:
 
- MyPlugins.extend({
+ MyPlugins.append({
 
  MyGadget: function(arg){
  new MUI.Require({
@@ -961,7 +955,7 @@ Object.append(Asset,{
 
  -------------------------------------------------------------------- */
 
-MUI.extend({
+MUI.append({
 
 	newWindowsFromHTML: function(arg){
 		new MUI.Require({
@@ -1020,7 +1014,7 @@ MUI.extend({
 	Themes: {
 		init: function(arg){
 			new MUI.Require({
-				js: [MUI.path.plugins + 'mochaui/Utilities/Themes.js'],
+				js: [MUI.path.source + 'Themes.js'],
 				onload: function(){
 					MUI.Themes.init(arg);
 				}

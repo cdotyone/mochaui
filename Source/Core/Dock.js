@@ -1,33 +1,26 @@
 /*
----
+ ---
 
-name: Dock
+ script: Dock.js
 
-script: Dock.js
+ description: Implements the dock/taskbar. Enables window minimize.
 
-description: Implements the dock/taskbar. Enables window minimize.
+ copyright: (c) 2010 Contributors in (/AUTHORS.txt).
 
-copyright: (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.
+ license: MIT-style license in (/MIT-LICENSE.txt).
 
-license: MIT-style license.
+ requires:
+ - MochaUI/MUI
+ - MochaUI/MUI.Desktop
 
-todo:
-  - Make it so the dock requires no initial html markup.
+ provides: [MUI.Dock]
 
-requires:
-  - MochaUI/MUI
-  - MochaUI/MUI.Windows
-  - MochaUI/MUI.Column
-  - MochaUI/MUI.Panel
+ ...
+ */
 
-provides: [MUI.Dock]
+MUI.files[MUI.path.source + 'Dock.js'] = 'loaded';
 
-...
-*/
-
-MUI.files[MUI.path.source + 'Layout/Dock.js'] = 'loaded';
-
-MUI.options.extend({
+Object.append(MUI.options,{
 	// Naming options:
 	// If you change the IDs of the Mocha Desktop containers in your HTML, you need to change them here as well.
 	dockWrapper: 'dockWrapper',
@@ -35,7 +28,7 @@ MUI.options.extend({
 	dock:        'dock'
 });
 
-MUI.extend({
+MUI.append({
 	/*
 
 	Function: minimizeAll
@@ -45,7 +38,7 @@ MUI.extend({
 	minimizeAll: function() {
 		$$('.mocha').each(function(windowEl){
 			var instance = windowEl.retrieve('instance');
-			if (!instance.isMinimized && instance.options.minimizable == true){
+			if (!instance.isMinimized && instance.options.minimizable){
 				MUI.Dock.minimizeWindow(windowEl);
 			}
 		}.bind(this));
@@ -64,7 +57,7 @@ MUI.Dock = {
 		disabledButtonColor:  [170, 170, 170]
 	},
 
-	initialize: function(options){
+	initialize: function(){
 		// Stops if MUI.Desktop is not implemented
 		if (!MUI.Desktop) return;
 
@@ -155,7 +148,7 @@ MUI.Dock = {
 		dockAutoHide.setProperty('title','Turn Auto Hide On');
 
 		// Attach event Auto Hide
-		dockAutoHide.addEvent('click', function(event){
+		dockAutoHide.addEvent('click', function(){
 			if ( this.dockWrapper.getProperty('dockPosition') == 'top' )
 				return false;
 
@@ -170,12 +163,13 @@ MUI.Dock = {
 				this.autoHideEvent = function(event) {
 					if (!this.dockAutoHide)
 						return;
+					var dockHotspotHeight;
 					if (!MUI.Desktop.desktopFooter) {
-						var dockHotspotHeight = this.dockWrapper.offsetHeight;
+						dockHotspotHeight = this.dockWrapper.offsetHeight;
 						if (dockHotspotHeight < 25) dockHotspotHeight = 25;
 					}
 					else if (MUI.Desktop.desktopFooter) {
-						var dockHotspotHeight = this.dockWrapper.offsetHeight + MUI.Desktop.desktopFooter.offsetHeight;
+						dockHotspotHeight = this.dockWrapper.offsetHeight + MUI.Desktop.desktopFooter.offsetHeight;
 						if (dockHotspotHeight < 25) dockHotspotHeight = 25;
 					}
 					if (!MUI.Desktop.desktopFooter && event.client.y > (document.getCoordinates().height - dockHotspotHeight)){
@@ -305,13 +299,13 @@ MUI.Dock = {
 			this.timeDown = Date.now();
 		});
 
-		dockTab.addEvent('mouseup', function(e){
+		dockTab.addEvent('mouseup', function(){
 			this.timeUp = Date.now();
 			if ((this.timeUp - this.timeDown) < 275){
 				// If the visibility of the windows on the page are toggled off, toggle visibility on.
-				if (MUI.Windows.windowsVisible == false) {
+				if (!MUI.Windows.windowsVisible) {
 					MUI.toggleWindowVisibility();
-					if (instance.isMinimized == true) {
+					if (instance.isMinimized) {
 						MUI.Dock.restoreMinimized.delay(25, MUI.Dock, windowEl);
 					}
 					else {
@@ -320,12 +314,12 @@ MUI.Dock = {
 					return;
 				}
 				// If window is minimized, restore window.
-				if (instance.isMinimized == true) {
+				if (instance.isMinimized) {
 					MUI.Dock.restoreMinimized.delay(25, MUI.Dock, windowEl);
 				}
 				else{
 					// If window is not minimized and is focused, minimize window.
-					if (instance.windowEl.hasClass('isFocused') && instance.options.minimizable == true){
+					if (instance.windowEl.hasClass('isFocused') && instance.options.minimizable){
 						MUI.Dock.minimizeWindow(windowEl)
 					}
 					// If window is not minimized and is not focused, focus window.
@@ -345,20 +339,13 @@ MUI.Dock = {
 
 		var titleText = instance.titleEl.innerHTML;
 
-		var dockTabText = new Element('div', {
+		new Element('div', {
 			'id': instance.options.id + '_dockTabText',
 			'class': 'dockText'
 		}).set('html', titleText.substring(0,19) + (titleText.length > 19 ? '...' : '')).inject($(dockTab));
 
-		// If I implement this again, will need to also adjust the titleText truncate and the tab's
-		// left padding.
-		if (instance.options.icon != false){
-			// dockTabText.setStyle('background', 'url(' + instance.options.icon + ') 4px 4px no-repeat');
-		}
-
 		// Need to resize everything in case the dock wraps when a new tab is added
 		MUI.Desktop.setDesktopSize();
-
 	},
 
 	makeActiveTab: function(){
@@ -434,16 +421,16 @@ MUI.Dock = {
 
 		var instance = windowEl.retrieve('instance');
 
-		if (instance.isMinimized == false) return;
+		if (!instance.isMinimized) return;
 
-		if (MUI.Windows.windowsVisible == false){
+		if (!MUI.Windows.windowsVisible){
 			MUI.toggleWindowVisibility();
 		}
 
 		MUI.Desktop.setDesktopSize();
 
 		 // Part of Mac FF2 scrollbar fix
-		if (instance.options.scrollbars == true && !instance.iframeEl){
+		if (instance.options.scrollbars && !instance.iframeEl){
 			instance.contentWrapperEl.setStyle('overflow', 'auto');
 		}
 

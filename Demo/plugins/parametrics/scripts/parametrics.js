@@ -14,53 +14,55 @@ Requires:
 
 */
 
-MUI.extend({
+MUI.append({
 	addRadiusSlider: function(){
 		if ($('radiusSliderarea')) {
-			var windowOptions = MUI.Windows.windowOptions;
 			var sliderFirst = true;
 			var mochaSlide = new Slider($('radiusSliderarea'), $('radiusSliderknob'), {
 				steps: 14,
 				offset: 0,
 				onChange: function(pos){
-					$('radiusUpdatevalue').set('html', pos);
-					// Change default corner radius of the original class
-					windowOptions.cornerRadius = pos;
-					MUI.Window.implement({ options: windowOptions });
 					// Don't redraw windows the first time the slider is initialized
-					if (sliderFirst == true) {
+					if (sliderFirst) {
 						sliderFirst = false;
 						return;
 					}
+
+					$('radiusUpdatevalue').set('html', pos);
+					// Change default corner radius of the original class
+					MUI.Windows.options.cornerRadius = pos;
+					MUI.Window.implement({ options: MUI.Windows.options });
+
 					// Change corner radius of all active classes and their windows
-					MUI.Windows.instances.each(function(instance) {
+					Object.each(MUI.Windows.instances,function(instance) {
 						instance.options.cornerRadius = pos;
 						instance.drawWindow();
 					}.bind(this));
 				}.bind(this)
-			}).set(windowOptions.cornerRadius);
+			}).set(MUI.Windows.options.cornerRadius);
 		}
 	},
 	addShadowSlider: function(){
 		if ($('shadowSliderarea')){
-			var windowOptions = MUI.Windows.windowOptions;
 			var sliderFirst = true;
 			var mochaSlide = new Slider($('shadowSliderarea'), $('shadowSliderknob'), {
 				range: [1, 10],
 				offset: 0,
 				onChange: function(pos){
-					$('shadowUpdatevalue').set('html', pos);
-					// Change default shadow width of the original class
-					windowOptions.shadowBlur = pos;
-					MUI.Window.implement({ options: windowOptions });
 					// Don't redraw windows the first time the slider is initialized
 					// !!! Probably need to make this separate from the corner radius slider
-					if (sliderFirst == true) { 
+					if (sliderFirst) {
 						sliderFirst = false;
 						return;
 					}
+
+					$('shadowUpdatevalue').set('html', pos);
+					// Change default shadow width of the original class
+					MUI.Windows.options.shadowBlur = pos;
+					MUI.Window.implement({ options: MUI.Windows.options });
+
 					// Change shadow width of all active classes and their windows
-					MUI.Windows.instances.each(function(instance) {
+					Object.each(MUI.Windows.instances,function(instance) {
 						var oldshadowBlur = instance.options.shadowBlur;
 						instance.options.shadowBlur = pos;
 						instance.windowEl.setStyles({
@@ -71,13 +73,13 @@ MUI.extend({
 					}.bind(this));
 				}.bind(this),
 				onComplete: function(){
-					MUI.Windows.instances.each(function(instance) {
+					Object.each(MUI.Windows.instances,function(instance) {
 						if (instance.options.resizable){
 							instance.adjustHandles();
 						}
 					});
 				}
-			}).set(windowOptions.shadowBlur);
+			}).set(MUI.Windows.options.shadowBlur);
 		}
 	}
 });
