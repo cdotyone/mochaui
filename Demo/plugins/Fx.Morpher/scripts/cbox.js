@@ -21,15 +21,15 @@
  Common Regpoints 'Constant' used
  */
 Fx.RegPoint = {
-	'TopLeft':		{x:0,	 y:0},
-	'Top':			 {x:0.5, y:0},
-	'TopRight':		{x:1,	 y:0},
-	'Left':			{x:0,	 y:0.5},
-	'Center':		 {x:0.5, y:0.5},
-	'Right':		 {x:1,	 y:0.5},
-	'BottomLeft':	 {x:0,	 y:1},
-	'Bottom':		 {x:0.5, y:1},
-	'BottomRight':	 {x:1,	 y:1}
+	'TopLeft':		{x:0,	y:0},
+	'Top':			{x:0.5,	y:0},
+	'TopRight':		{x:1,	y:0},
+	'Left':			{x:0,	y:0.5},
+	'Center':		{x:0.5,	y:0.5},
+	'Right':		{x:1,	y:0.5},
+	'BottomLeft':	{x:0,	y:1},
+	'Bottom':		{x:0.5,	y:1},
+	'BottomRight':	{x:1,	y:1}
 };
 
 /*
@@ -83,7 +83,7 @@ Fx.Morpher = new Class({
 		var computed = [
 			{value: result, parser: from[0].parser}
 		];
-		computed.$family = {name: 'fx:css:value'};
+		computed.$family = function() { return 'fx:css:value'; };
 		return computed;
 	},
 
@@ -97,8 +97,7 @@ Fx.Morpher = new Class({
 
 		//if(!DEBUGGED) console.dir(from);
 
-		for (var p in from)
-		{
+		for (var p in from){
 			//Only calc coords if there's a path
 			//and only do it for the axis that can be morphes [x || y]
 			if (path && this.options.usepath.contains(p)){
@@ -255,91 +254,78 @@ Fx.Path = new Class({
 	Extends: Fx.BasePath,
 
 	options: {
-		axis: 'top',		  // [bottom|top]
+		axis: 'top',		// [bottom|top]
 		origin: {x:0, y:0}	// added to calculations [to use relative values]
 	},
 
-	initialize: function(segments, options)
-	{
-		var params = Array.link(arguments, {segments:Array.type, options:Object.type});
+	initialize: function(segments, options){
+		var params = Array.link(arguments, {segments:Type.isArray, options:Type.isObject});
 		this.parent(params.options || {});
-		this._segments = params.segments || [];
-		this._blocksize = segments ? (1 / this._segments.length) : 0;
+		this.segments = params.segments || [];
+		this.blocksize = segments ? (1 / this.segments.length) : 0;
 		this.setOrigin(this.options.origin);
-
 	},
 
 	//adds a segment at the end of this collection
-	addSegment: function(segment)
-	{
+	addSegment: function(segment){
 		segment.origin = this.options.origin;
-		this._segments.push(segment);
-		this._blocksize = (1 / this._segments.length);
+		this.segments.push(segment);
+		this.blocksize = (1 / this.segments.length);
 	},
 
 	//sets the origin of the whole bezier object
-	setOrigin: function(origin)
-	{
+	setOrigin: function(origin){
 		//store locally
 		this.setOptions({origin:origin});
 
 		//replicate to children
-		this._segments.each(function(el){
+		this.segments.each(function(el){
 			el.offset = origin;
 		});
 	},
 
 	//p[1 -> 0] ret[x]
-	x: function(p)
-	{
+	x: function(p){
 		//find the segment where this 'time' falls
 		var seg = this.getSegment(p);
-
-		var mapped = (((p % this._blocksize) * 100) / this._blocksize) / 100;
-
+		var mapped = (((p % this.blocksize) * 100) / this.blocksize) / 100;
 		return seg.x(mapped);
 	},
 
 	//p[1 -> 0] ret[y]
-	y: function(p)
-	{
+	y: function(p){
 		//find the segment where this 'time' falls
 		var seg = this.getSegment(p);
-
-		var mapped = (((p % this._blocksize) * 100) / this._blocksize) / 100;
-
+		var mapped = (((p % this.blocksize) * 100) / this.blocksize) / 100;
 		return seg.y(mapped);
-	},
+	}
+	,
 
 	//p[0 -> 1] ret[{x,y}]
-	getCoordinates: function(p)
-	{
+	getCoordinates: function(p){
 		//find the segment where this 'time' falls
 		var seg = this.getSegment(p);
-
-		var mapped = (((p % this._blocksize) * 100) / this._blocksize) / 100;
-
+		var mapped = (((p % this.blocksize) * 100) / this.blocksize) / 100;
 		return seg ? seg.getCoordinates(mapped) : null;
-	},
+	}
+	,
 
 	//p[0 -> 1] r[0-#elements]
-	getSegment: function(p)
-	{
-		var n = this._segments.length;
-
+	getSegment: function(p){
+		var n = this.segments.length;
 		var index = (n - Math.floor(p * n)) - 1;
-
-		return this._segments[index];
-	},
+		return this.segments[index];
+	}
+	,
 
 	//plot poly-path
-	plot: function(cb)
-	{
-		this._segments.each(function(el){
+	plot: function(cb){
+		this.segments.each(function(el){
 			el.plot(cb);
 		}, this);
 	}
-});
+})
+		;
 
 /*
  Class: CubicBezier
@@ -352,8 +338,7 @@ Fx.Path = new Class({
  */
 var CubicBezier = new Class({
 
-	initialize: function(p0, p1, c0, c1)
-	{
+	initialize: function(p0, p1, c0, c1){
 		this.x0 = p0[0]; // A x1
 		this.y0 = p0[1];
 		this.x1 = p1[0]; // D x4
@@ -381,38 +366,32 @@ var CubicBezier = new Class({
 	},
 
 	//p[1 -> 0] ret[x]
-	x: function(p)
-	{
+	x: function(p){
 		return this.x0 * this.f1(p) + this.cx0 * this.f2(p) + this.cx1 * this.f3(p) + this.x1 * this.f4(p);
 	},
 
 	//p[1 -> 0] ret[y]
-	y: function(p)
-	{
+	y: function(p){
 		return this.y0 * this.f1(p) + this.cy0 * this.f2(p) + this.cy1 * this.f3(p) + this.y1 * this.f4(p);
 	},
 
 	//p[0 -> 1] ret[{x,y}]
-	getCoordinates: function(p)
-	{
+	getCoordinates: function(p){
 		return { x: this.x(p) + this.offset.x, y: this.y(p) + this.offset.y };
 	},
 
 	//returns the controls points of this curve
-	getControls: function()
-	{
+	getControls: function(){
 		return {c0: {x:this.cx0, y:this.cy0}, c1: {x:this.cx1, y:this.cy1}};
 	},
 
 	//returns the start/end points of this curve REAL ABSOLUTE VALUES
-	getStartEnd: function()
-	{
+	getStartEnd: function(){
 		return {p0: {x:this.x0, y:this.y0}, p1: {x:this.x1, y:this.y1}};
 	},
 
 	//utility to plot the path for debugging purposes
-	plot: function(cb)
-	{
+	plot: function(cb){
 		for (var i = 0; i < 1000; i++) cb(this.getCoordinates(i / 1000), i);
 	}
 
@@ -431,8 +410,7 @@ var QuadBezier = new Class({
 
 	Extends: CubicBezier,
 
-	initialize: function(p0, p1, c)
-	{
+	initialize: function(p0, p1, c){
 		this.x0 = p0[0]; // A x1
 		this.y0 = p0[1];
 		this.x1 = p1[0]; // D x4
