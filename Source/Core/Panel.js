@@ -277,6 +277,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 		this._loadContent();
 
+		this.fireEvent('drawEnd', [this]);
 		return this;
 	},
 
