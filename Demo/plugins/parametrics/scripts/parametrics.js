@@ -37,15 +37,15 @@ MUI.append({
 				steps: 14,
 				offset: 0,
 				onChange: function(pos){
-					$('radiusUpdatevalue').set('html', pos);
-					// Change default corner radius of the original class
-					windowOptions.cornerRadius = pos;
-					MUI.Window.implement({ options: windowOptions });
 					// Don't redraw windows the first time the slider is initialized
 					if (sliderFirst){
 						sliderFirst = false;
 						return;
 					}
+					$('radiusUpdatevalue').set('html', pos);
+					// Change default corner radius of the original class
+					windowOptions.cornerRadius = pos;
+					MUI.Window.implement({ options: windowOptions });
 					// Change corner radius of all active classes and their windows
 					MUI.each(function(instance){
 						if (instance.className != 'MUI.Window') return;
@@ -65,15 +65,15 @@ MUI.append({
 				range: [1, 10],
 				offset: 0,
 				onChange: function(pos){
-					$('shadowUpdatevalue').set('html', pos);
-					// Change default shadow width of the original class
-					windowOptions.shadowBlur = pos;
-					MUI.Window.implement({ options: windowOptions });
 					// Don't redraw windows the first time the slider is initialized
 					if (sliderFirst){
 						sliderFirst = false;
 						return;
 					}
+					$('shadowUpdatevalue').set('html', pos);
+					// Change default shadow width of the original class
+					windowOptions.shadowBlur = pos;
+					MUI.Window.implement({ options: windowOptions });
 					// Change shadow width of all active classes and their windows
 					MUI.each(function(instance){
 						if (instance.className != 'MUI.Window') return;
@@ -110,14 +110,14 @@ MUI.append({
 				range: [-5, 5],
 				offset: 0,
 				onChange: function(pos){
-					$('offsetXUpdatevalue').set('text', pos);
-					windowOptions.shadowOffset.x = pos;
-					MUI.Window.implement({ options: windowOptions });
 					// Don't redraw windows the first time the slider is initialized
 					if (sliderFirst){
 						sliderFirst = false;
 						return;
 					}
+					$('offsetXUpdatevalue').set('text', pos);
+					windowOptions.shadowOffset.x = pos;
+					MUI.Window.implement({ options: windowOptions });
 					// Change shadow position of all active classes and their windows
 					MUI.each(function(instance){
 						if (instance.className != 'MUI.Window') return;
@@ -147,14 +147,14 @@ MUI.append({
 				range: [-5, 5],
 				offset: 0,
 				onChange: function(pos){
-					$('offsetYUpdatevalue').set('text', pos);
-					windowOptions.shadowOffset.y = pos;
-					MUI.Window.implement({ options: windowOptions });
 					// Don't redraw windows the first time the slider is initialized
 					if (sliderFirst){
 						sliderFirst = false;
 						return;
 					}
+					$('offsetYUpdatevalue').set('text', pos);
+					windowOptions.shadowOffset.y = pos;
+					MUI.Window.implement({ options: windowOptions });
 					// Change shadow position of all active classes and their windows
 					MUI.each(function(instance){
 						if (instance.className != 'MUI.Window') return;
@@ -175,5 +175,4 @@ MUI.append({
 			}).set(windowOptions.shadowOffset.y);
 		}
 	}
-
 });
