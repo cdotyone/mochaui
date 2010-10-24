@@ -1,21 +1,21 @@
 /*
 
-Script: Tree.js
-	Create folder trees.
+ Script: Tree.js
+ Create folder trees.
 
-Copyright:
-	Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
+ Copyright:
+ Copyright (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.
 
-License:
-	MIT-style license.	
+ License:
+ MIT-style license.
 
-*/
+ */
 
 function buildTree(treeID){
-	
-	var iconPath = "plugins/tree/images/"
 
-	$$('#'+treeID+' li.folder').each(function(folder){
+	var iconPath = "plugins/tree/images/";
+
+	$$('#' + treeID + ' li.folder').each(function(folder){
 		var folderContents = folder.getChildren('ul');
 		var folderImage = new Element('img', {
 			'src': iconPath + '_open.gif',
@@ -24,31 +24,36 @@ function buildTree(treeID){
 		}).inject(folder, 'top');
 
 		// Determine which open and close graphic each folder gets
-		
-		if (folder.hasClass('root')) {
-			folder.minus = iconPath + 'Rminus.gif'
-			folder.plus = iconPath + 'Rplus.gif'
+
+		if (folder.hasClass('root')){
+			folder.minus = iconPath + 'Rminus.gif';
+			folder.plus = iconPath + 'Rplus.gif';
 		}
-		else if (folder.hasClass('first')) {
-			folder.minus = iconPath + 'Fminus.gif'
-			folder.plus = iconPath + 'Fplus.gif'
-		}		
-		else 
-			if (folder.getNext()) {
-				folder.minus = iconPath + 'Tminus.gif'
-				folder.plus = iconPath + 'Tplus.gif'
+		else if (folder.hasClass('first')){
+			if (folder.getNext()){
+				folder.minus = iconPath + 'Fminus.gif';
+				folder.plus = iconPath + 'Fplus.gif';
 			}
 			else {
-				folder.minus = iconPath + 'Lminus.gif'
-				folder.plus = iconPath + 'Lplus.gif'
+				folder.minus = iconPath + 'Rminus.gif';
+				folder.plus = iconPath + 'Rplus.gif';
 			}
-		
+		} else
+		if (folder.getNext()){
+			folder.minus = iconPath + 'Tminus.gif';
+			folder.plus = iconPath + 'Tplus.gif';
+		}
+		else {
+			folder.minus = iconPath + 'Lminus.gif';
+			folder.plus = iconPath + 'Lplus.gif';
+		}
+
 		var image = new Element('img', {
 			'src': folder.minus,
 			'width': 18,
 			'height': 18
 		}).addEvent('click', function(){
-			if (folder.hasClass('f-open')) {
+			if (folder.hasClass('f-open')){
 				image.setProperty('src', folder.plus);
 				folderImage.setProperty('src', iconPath + '_closed.gif');
 				folderContents.each(function(el){
@@ -65,8 +70,8 @@ function buildTree(treeID){
 				folder.addClass('f-open');
 			}
 		}).inject(folder, 'top');
-		
-		if (!folder.hasClass('f-open')) {
+
+		if (!folder.hasClass('f-open')){
 			image.setProperty('src', folder.plus);
 			folderContents.each(function(el){
 				el.setStyle('display', 'none');
@@ -79,7 +84,7 @@ function buildTree(treeID){
 		folderContents.each(function(element){
 			var docs = element.getChildren('li.doc');
 			docs.each(function(el){
-				if (el == docs.getLast() && !el.getNext()) {
+				if (el == docs.getLast() && !el.getNext()){
 					new Element('img', {
 						'src': iconPath + 'L.gif',
 						'width': 18,
@@ -95,14 +100,14 @@ function buildTree(treeID){
 				}
 			});
 		});
-		
+
 	});
-	
+
 	// Add connecting branches to each node
 
-	$$('#'+treeID+' li').each(function(node){
+	$$('#' + treeID + ' li').each(function(node){
 		node.getParents('li').each(function(parent){
-			if (parent.getNext()) {
+			if (parent.getNext()){
 				new Element('img', {
 					'src': iconPath + 'I.gif',
 					'width': 18,
@@ -119,12 +124,12 @@ function buildTree(treeID){
 		});
 	});
 
-	$$('#'+treeID+' li.doc').each(function(el){
+	$$('#' + treeID + ' li.doc').each(function(el){
 		new Element('img', {
 			'src': iconPath + '_doc.gif',
 			'width': 18,
 			'height': 18
 		}).inject(el.getElement('span'), 'before');
 	});
-	
+
 }
