@@ -174,10 +174,10 @@ var initializeWindows = function(){
 	MUI.listPanel = function(){
 		//$('mochaConsole_pad').empty();
 
-		new MUI.List({
+		MUI.create('MUI.List',{
 			container:'mochaConsole',
 			id:'list1',
-			items:items,
+			content:{url:'data/page1.json',paging:{size:10,totalCount:200,recordsField:false}},
 			columns:[
 				{text:'First Name',name:'FirstName','value':'ID'},
 				{text:'Last Name',name:'LastName'}
@@ -186,13 +186,13 @@ var initializeWindows = function(){
 				{'text':'Cancel','name':'Cancel','image':'images/cancel.png'}
 			],
 			onItemCommand: function(item, self, cmd, img) {
-				alert('receieved ' + cmd.name + ' command on item ' + item.value)
+				alert('received ' + cmd.name + ' command on item ' + item.value)
 			},
 			onItemChecked: function(item, self, cmd, img) {
-				alert('receieved onItemChecked command on item ' + item.value)
+				alert('received onItemChecked command on item ' + item.value)
 			},
 			onItemSelected: function(item, self, cmd, img) {
-				alert('receieved onItemSelected command on item ' + item.value)
+				alert('received onItemSelected command on item ' + item.value)
 			},
 			onItemColumnBound: function(item, self, col, td) {
 			}
@@ -300,7 +300,6 @@ var initializeWindows = function(){
 			content: {
 				url:'{plugins}Fx.Morpher/example.html',
 				require: {
-					css: ['{plugins}Fx.Morpher/css/style.css'],
 					js: ['{plugins}Fx.Morpher/scripts/cbox.js', '{plugins}Fx.Morpher/scripts/example.js'],
 					onload: function(){
 						createCanvas();
@@ -602,7 +601,6 @@ var initializeWindows = function(){
 			content: {
 				url: '{plugins}windowform/',
 				require: {
-					css: ['{plugins}windowform/css/style.css'],
 					js: ['{plugins}windowform/scripts/window-from-form.js'],
 					onload: function(){
 						$('newWindowSubmit').addEvent('click', function(e){
@@ -892,7 +890,6 @@ var initializeColumns = function(){
 								title: 'Calendar Component',
 								padding: {top: 8, right: 8, bottom: 8, left: 8},
 								require: {
-									css: ['{controls}calendar/style.css'],
 									js: ['{controls}calendar/calendar.js'],
 									onload: function(){
 										new Calendar({date1: 'd/m/Y'}, {direction: 1, tweak: {x: 6, y: 0}});

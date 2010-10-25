@@ -69,9 +69,18 @@ MUI.List = new Class({
 			this.options.id = id;
 		}
 
+		if(options.content) {
+			options.content.loadMethod = 'json';
+			options.content.onLoaded = (function(element, options, json) {
+				this.options.items = MUI.Content.getRecords(options);
+				this.draw();
+			}).bind(this);
+			MUI.Content.update(options.content);
+		}
+
 		// create sub items if available
 		if (this.options.drawOnInit && this.options.items.length > 0) this.draw();
-		else if ($(id)) this.fromHTML(id);
+		//else if ($(id)) this.fromHTML(id);
 
 		MUI.set(id, this);
 	},
@@ -79,6 +88,17 @@ MUI.List = new Class({
 	draw: function(containerEl){
 		var self = this;
 		var o = self.options;
+
+		if(!o._container && typeof(o.container) == 'string') {
+			var instance = MUI.get(o.container);
+			if(instance) {
+				if(instance.el.pad) {
+					instance.el.pad.setStyle('padding','0');
+					o._container = instance.el.pad;
+				}
+			}
+			if(!o._container) o._container=$(containerEl ? containerEl : o.container);
+		}
 
 		// see if we need build columns automagically
 		if (o.columns == null || o.columns.length == 0){
@@ -161,8 +181,8 @@ MUI.List = new Class({
 
 		// add control to document
 		window.addEvent('domready', function(){
-			var container = $(containerEl ? containerEl : o.container);
-			container.appendChild(div);
+			o._container.empty();
+			o._container.appendChild(div);
 		});
 
 		return self;

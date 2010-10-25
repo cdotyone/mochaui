@@ -60,7 +60,7 @@ MUI.Content = Object.append((MUI.Content || {}), {
 			size:			0,			// if >0 then paging is turned on
 			index:			0,			// the page index offset (index*size)+1 = first record, (index*size)+size = last record
 			totalCount:		0,			// is set by return results, starts out as zero until filled in when data is received
-			sort:			'',			// fields to search by, comma seperated list of fields or array of strings.  Will be passed to server end-point.
+			sort:			'',			// fields to search by, comma separated list of fields or array of strings.  Will be passed to server end-point.
 			dir:			'asc',		// 'asc' ascending, 'desc' descending
 			recordsField:	'records',	// 'element' in the json hash that contains the data
 			lookAhead:		0,			// # of pages to request in the background and cache
@@ -146,7 +146,7 @@ MUI.Content = Object.append((MUI.Content || {}), {
 			var fireEvent = true;
 			if (instance && instance.updateEnd) fireEvent = instance.updateEnd(options);
 			if (fireEvent){
-				if (options.require.js.length || typeof options.require.onload == 'function'){
+				if (options.require.js.length){
 					// process javascript dependencies
 					new MUI.Require({
 						js: options.require.js,
@@ -225,8 +225,17 @@ MUI.Content = Object.append((MUI.Content || {}), {
 	},
 
 	getRecords: function(options){
-		if (!options.fireLoaded || !options.paging || !options.paging.recordsField || options.paging.size <= 0 || options.paging.totalCount == 0) return null;
-		return options.content[options.paging.recordsField];
+		var paging=options.paging;
+		if (!options.fireLoaded || !paging || paging.size <= 0 || paging.totalCount == 0) return null;
+		var records;
+		if(!paging.recordsField) records = options.content;
+		else records = options.content[paging.recordsField];
+
+		var retval=[];
+		for(var i=(paging.index*paging.size),t=0;i<paging.size;i++,t++) {
+			retval[t]=records[i];
+		}
+		return retval;
 	}
 
 });
