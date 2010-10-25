@@ -54,11 +54,50 @@
 
 /* Sliders */
 
+.slider {
+	clear: both;
+	position: relative;
+	font-size: 12px;
+	font-weight: bold;
+	width: 200px;
+	margin-bottom: 15px;
+}
+
+.sliderWrapper {
+	position: relative;
+	font-size: 1px;
+	line-height: 1px;
+	height: 9px;
+	width: 222px;
+}
+
 .sliderarea {
-	background: #292929 !important;
-	border: 1px solid #222 !important;
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 7px;
+	width: 220px;
+	font-size: 1px;
+	line-height: 1px;
+	background: #292929 url(../images/slider-area.gif) repeat-x;
+	border: 1px solid #222;
+	border-bottom: 1px solid #ccc;
+	border-left: 1px solid #ccc;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
 }
 
 .sliderknob {
-	background: url(../images/knob.gif) no-repeat !important;
-}	
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 9px;
+	width: 19px;
+	font-size: 1px;
+	line-height: 1px;
+	background: url(../images/knob.gif) no-repeat;
+	cursor: pointer;
+	overflow: hidden;
+	z-index: 2;
+}

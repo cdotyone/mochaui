@@ -206,7 +206,6 @@ var initializeWindows = function(){
 			content: {
 				url: '{plugins}parametrics/index.html',
 				require: {
-					css: ['{plugins}parametrics/css/style.css'],
 					js: ['{plugins}parametrics/scripts/parametrics.js'] //,
 					// onload: function(){} // either use onload here or Window/onLoaded further down
 				}

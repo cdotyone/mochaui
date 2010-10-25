@@ -177,7 +177,6 @@ initializeWindows = function(){
 				url: '{plugins}parametrics/index.html',
 				loadMethod: 'xhr',
 				require: {
-					css: ['{plugins}parametrics/css/style.css'],
 					js: ['{plugins}parametrics/scripts/parametrics.js'],
 					onload: function(){
 						if (MUI.addRadiusSlider) MUI.addRadiusSlider();
@@ -390,8 +389,10 @@ initializeWindows = function(){
 			resizable: false,
 			scrollbars: false,
 			onDrawBegin: function(){
+/*
 				if ($('builderStyle')) return;
-				new Asset.css(MUI.replacePaths('{plugins}windowform/css/style.css'), {id: 'builderStyle'});
+				new Asset.css(MUI.replacePaths('{theme}/css/Accordian.css'), {id: 'builderStyle'});
+*/
 			},
 			onLoaded: function(){
 				new Asset.javascript(MUI.replacePaths('{plugins}windowform/scripts/window-from-form.js'), {
