@@ -150,11 +150,11 @@ var initializeWindows = function(){
 			content: {
 				url: '{plugins}coolclock/index.html',
 				require: {
-				js: ['{plugins}coolclock/scripts/coolclock.js'],
-				onload: function(){
-					if (CoolClock) new CoolClock();
-				}
-			}},
+					js: ['{plugins}coolclock/scripts/coolclock.js'],
+					onload: function(){
+						if (CoolClock) new CoolClock();
+					}
+				}},
 			shape: 'gauge',
 			headerHeight: 30,
 			width: 160,
@@ -170,6 +170,34 @@ var initializeWindows = function(){
 			MUI.clockWindow();
 		});
 	}
+
+	MUI.listPanel = function(){
+		//$('mochaConsole_pad').empty();
+
+		new MUI.List({
+			container:'mochaConsole',
+			id:'list1',
+			items:items,
+			columns:[
+				{text:'First Name',name:'FirstName','value':'ID'},
+				{text:'Last Name',name:'LastName'}
+			],
+			commands:[
+				{'text':'Cancel','name':'Cancel','image':'images/cancel.png'}
+			],
+			onItemCommand: function(item, self, cmd, img) {
+				alert('receieved ' + cmd.name + ' command on item ' + item.value)
+			},
+			onItemChecked: function(item, self, cmd, img) {
+				alert('receieved onItemChecked command on item ' + item.value)
+			},
+			onItemSelected: function(item, self, cmd, img) {
+				alert('receieved onItemSelected command on item ' + item.value)
+			},
+			onItemColumnBound: function(item, self, col, td) {
+			}
+		});
+	};
 
 	MUI.parametricsWindow = function(){
 		new MUI.Window({
@@ -369,7 +397,7 @@ var initializeWindows = function(){
 			id: 'iframetests',
 			title: 'Iframe Tests',
 			content: {
-				url: 'pages/iframetests.html', 
+				url: 'pages/iframetests.html',
 				loadMethod: 'iframe'
 			}
 		});
@@ -809,6 +837,12 @@ var initializeColumns = function(){
 								title: 'Development Notes'
 							});
 						});
+						if ($('listLink')){
+							$('listLink').addEvent('click', function(e){
+								e.stop();
+								MUI.listPanel();
+							});
+						}
 						$('xhrLink').addEvent('click', function(){
 							MUI.Content.update({
 								element: $('mainPanel'),
@@ -1025,7 +1059,7 @@ var initializeColumns = function(){
 						'position': 'header',
 						'tabs': json,
 						'partner': 'help-panel'
-					}); 
+					});
 				}
 			}
 		]
@@ -1107,14 +1141,14 @@ MUI.initialize();
 window.addEvent('load', function(){ //using load instead of domready for IE8
 	MUI.myChain = new Chain();
 	MUI.myChain.chain(
-		function(){
-			MUI.Desktop.initialize();
-		},
-		function(){
-			initializeColumns();
-		},
-		function(){
-			initializeWindows();
-		}
-	).callChain();
+			function(){
+				MUI.Desktop.initialize();
+			},
+			function(){
+				initializeColumns();
+			},
+			function(){
+				initializeWindows();
+			}
+			).callChain();
 });

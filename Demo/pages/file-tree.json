@@ -15,7 +15,8 @@
 	]},
 	{'value':'item3','text':'Widgets','isChecked': false,'isSelected': false, imageOpen:'_open', imageClosed:'_closed','nodes':[
 		{'value':'calendarLink','text':'Calendar (Plugin)','isChecked': false,'isSelected': false, 'image':'_doc'},
-		{'value':'clockLink','text':'Clock','isChecked': false,'isSelected': false, 'image':'_doc'}
+		{'value':'clockLink','text':'Clock','isChecked': false,'isSelected': false, 'image':'_doc'},
+		{'value':'listLink','text':'Basic List','isChecked': false,'isSelected': false, 'image':'_doc'}
 	]},
 	{'value':'item11','text':'Tools','isChecked': false,'isSelected': false, imageOpen:'_open', imageClosed:'_closed', 'nodes':[
 		{'value':'fxmorpherLink','text':'Path Animation (Plugin)','isChecked': false,'isSelected': false, 'image':'_doc'}

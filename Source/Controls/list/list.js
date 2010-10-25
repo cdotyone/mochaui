@@ -33,17 +33,18 @@ MUI.List = new Class({
 	Implements: [Events, Options],
 
 	options: {
-		id:				    '',			// id of the primary element, and id os control that is registered with mocha
+		id:					'',			// id of the primary element, and id os control that is registered with mocha
 		container:			null,		// the parent control in the document to add the control to
-		drawOnInit:		    true,		// true to add tree to container when control is initialized
+		drawOnInit:			true,		// true to add tree to container when control is initialized
 		cssClass:			'list',		// the primary css tag
 
 		showCommand:		true,		// turns row commands on or off
-		commands:			[],		    // commands to be used
+		commands:			[],			// commands to be used
 		iconPath:			'',			// parent path to command icons
 
-		items:				[],		    // the array list of nodes
-		columns:			[],		    // the list of columns to be used
+		content:			false,		// used to load content
+		items:				[],			// the array list of nodes
+		columns:			[],			// the list of columns to be used
 
 		alternateRows:		false,		// show the items with alternating background color
 		showCheckBox:		false,		// true to show checkBoxes
