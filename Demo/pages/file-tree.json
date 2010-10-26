@@ -3,7 +3,8 @@
 		{'value':'notesLink',text:'Development Notes','isChecked': true,'isSelected': true, 'image':'_doc'},
 		{'value':'xhrLink',text:'XHR: Lorem Ipsum','isChecked': false,'isSelected': false, 'image':'_doc'},
 		{'value':'youtube4Link',text:'Iframe: YouTube','isChecked': false,'isSelected': false, 'image':'_doc'},
-		{'value':'splitPanelLink',text:'Split Panel','isChecked': false,'isSelected': false, 'image':'_doc'}
+		{'value':'splitPanelLink',text:'Split Panel','isChecked': false,'isSelected': false, 'image':'_doc'},
+		{'value':'listLink','text':'Basic List','isChecked': false,'isSelected': false, 'image':'_doc'}
 	]},
 	{'value':'item2',text:'Windows','isChecked': true,'isSelected': false, imageOpen:'_open', imageClosed:'_closed','nodes':[
 		{'value':'ajaxpageLink','text':'Ajax/XHR Demo','isChecked': false,'isSelected': false, 'image':'_doc'},
@@ -15,8 +16,7 @@
 	]},
 	{'value':'item3','text':'Widgets','isChecked': false,'isSelected': false, imageOpen:'_open', imageClosed:'_closed','nodes':[
 		{'value':'calendarLink','text':'Calendar (Plugin)','isChecked': false,'isSelected': false, 'image':'_doc'},
-		{'value':'clockLink','text':'Clock','isChecked': false,'isSelected': false, 'image':'_doc'},
-		{'value':'listLink','text':'Basic List','isChecked': false,'isSelected': false, 'image':'_doc'}
+		{'value':'clockLink','text':'Clock','isChecked': false,'isSelected': false, 'image':'_doc'}
 	]},
 	{'value':'item11','text':'Tools','isChecked': false,'isSelected': false, imageOpen:'_open', imageClosed:'_closed', 'nodes':[
 		{'value':'fxmorpherLink','text':'Path Animation (Plugin)','isChecked': false,'isSelected': false, 'image':'_doc'}
