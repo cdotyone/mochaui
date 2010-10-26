@@ -91,9 +91,9 @@ MUI.List = new Class({
 		if(!o._container && typeof(o.container) == 'string') {
 			var instance = MUI.get(o.container);
 			if(instance) {
-				if(instance.el.pad) {
-					instance.el.pad.setStyle('padding','0');
-					o._container = instance.el.pad;
+				if(instance.el.content) {
+					instance.el.content.setStyle('padding','0');
+					o._container = instance.el.content;
 				}
 			}
 			if(!o._container) o._container=$(containerEl ? containerEl : o.container);

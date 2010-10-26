@@ -171,12 +171,12 @@ var initializeWindows = function(){
 		});
 	}
 
-	MUI.listPanel = function(){
+	MUI.listBuilder = function(container){
 		//$('mochaConsole_pad').empty();
 
 		MUI.create('MUI.List',{
-			container:'mochaConsole',
-			id:'list1',
+			container:container,
+			id:container+'list1',
 			content:{url:'data/page1.json',paging:{size:10,totalCount:200,recordsField:false}},
 			columns:[
 				{text:'First Name',name:'FirstName','value':'ID'},
@@ -834,10 +834,23 @@ var initializeColumns = function(){
 								title: 'Development Notes'
 							});
 						});
-						if ($('listLink')){
-							$('listLink').addEvent('click', function(e){
+						if ($('plistLink')){
+							$('plistLink').addEvent('click', function(e){
 								e.stop();
-								MUI.listPanel();
+								MUI.listBuilder('mochaConsole');
+							});
+						}
+						if ($('wlistLink')){
+							$('wlistLink').addEvent('click', function(e){
+								e.stop();
+								new MUI.Window({
+									id: 'basicListWindow',
+									content: 'loading...',
+									title:'Basic List in Window',
+									width: 340,
+									height: 150
+								});
+								MUI.listBuilder('basicListWindow');
 							});
 						}
 						$('xhrLink').addEvent('click', function(){
