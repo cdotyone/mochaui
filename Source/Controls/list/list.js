@@ -142,7 +142,7 @@ MUI.List = new Class({
 			for (i = 0; i < cl.length; i++){
 				var td = new Element('td', {'html':cl[i].text.replace(new RegExp(/\|/g), '<br/>'),'valign':'bottom'}).inject(tr);
 				if (i == 0){
-					td.addClass('First');
+					td.addClass('first');
 				}
 				if (cl[i].align){
 					td.set('align', cl[i].align);
@@ -240,7 +240,7 @@ MUI.List = new Class({
 				}
 
 				if (o.canSelect){
-					a = new Element('a', { 'styles': { 'text-decoration': 'underline'} });
+					a = new Element('a');
 
 					// add tip
 					if (col.tipTitle){
@@ -278,13 +278,13 @@ MUI.List = new Class({
 							url = url.replace(/~/, o.navigateURL);
 							a.set('href', url);
 						}
-					} else a.setStyle('text-decoration', 'none');
+					}
 
 					// add image
 					if (img){
 						a.setStyle('text-decoration', 'none');
 						a.appendChild(img);
-						var s = new Element('a', { 'styles': { 'text-decoration': 'underline'} }).inject(a);
+						var s = new Element('a').inject(a);
 						s.appendChild(txt);
 					} else a.appendChild(txt);
 
