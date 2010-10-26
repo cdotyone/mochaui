@@ -17,7 +17,7 @@
 
 .omnigrid div.hDiv /* header div */
 {
-	background: #fafafa url(images/fhbg.gif) repeat-x bottom;
+	background: #fafafa url(images/o-fhbg.gif) repeat-x bottom;
 	position: relative;
 	border: 1px solid #ccc;
 	border-bottom: 0;
@@ -92,7 +92,7 @@
 
 /* accordion */
 .omnigrid div.bDiv .toggleicon {
-	background-image: url(images/plusminus.gif);
+	background-image: url(images/o-plusminus.gif);
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
@@ -111,7 +111,7 @@
 
 /* toolbar */
 .omnigrid div.tDiv {
-	background: #fafafa url(images/bg.gif) repeat-x top;
+	background: #fafafa url(images/o-bg.gif) repeat-x top;
 	position: relative;
 	border: 1px solid #ccc;
 	border-bottom: 0;
@@ -161,11 +161,11 @@
 }
 
 .omnigrid div.fbutton .add {
-	background:transparent url(images/add.png) no-repeat scroll left center;
+	background:transparent url(images/o-add.png) no-repeat scroll left center;
 }
 
 .omnigrid div.fbutton .delete {
-	background:transparent url(images/delete.png) no-repeat scroll left center;
+	background:transparent url(images/o-delete.png) no-repeat scroll left center;
 }
 /* toolbar */
 
@@ -201,19 +201,19 @@
 }
 
 .omnigrid div.cDrag div.dragging {
-	background: url(images/line.gif) repeat-y 2px center;
+	background: url(images/o-line.gif) repeat-y 2px center;
 }
 
 /* columns size drag */
 
 /* sort */
 .omnigrid div.hDiv div.DESC {
-	background: url(images/dn.png) no-repeat center top;
+	background: url(images/o-dn.png) no-repeat center top;
 	border-bottom: 1px solid orange !important;
 }
 
 .omnigrid div.hDiv  div.ASC {
-	background: url(images/up.png) no-repeat center top;
+	background: url(images/o-up.png) no-repeat center top;
 	border-bottom: 1px solid orange !important;
 }
 
@@ -221,7 +221,7 @@
 
 /* Pagination */
 .omnigrid div.pDiv {
-	background: url(images/wbg.gif) repeat-x 0 -1px;
+	background: url(images/o-wbg.gif) repeat-x 0 -1px;
 	border: 1px solid #ccc;
 	border-top: 0;
 	overflow: hidden;
@@ -288,38 +288,38 @@ div.pGroup {
 }
 
 .omnigrid .pSearch {
-	background: url(images/magnifier.png) no-repeat center;
+	background: url(images/o-magnifier.png) no-repeat center;
 }
 
 .omnigrid .pFirst {
-	background: url(images/first.gif) no-repeat;
+	background: url(images/o-first.gif) no-repeat;
 }
 
 .omnigrid .pPrev {
-	background: url(images/prev.gif) no-repeat;
+	background: url(images/o-prev.gif) no-repeat;
 }
 
 .omnigrid .pNext {
-	background: url(images/next.gif) no-repeat;
+	background: url(images/o-next.gif) no-repeat;
 }
 
 .omnigrid .pLast {
-	background: url(images/last.gif) no-repeat;
+	background: url(images/o-last.gif) no-repeat;
 }
 
 .omnigrid .pReload {
-	background: url(images/refresh.gif) no-repeat;
+	background: url(images/o-refresh.gif) no-repeat;
 }
 
 .omnigrid .pReload.loading {
-	background: url(images/load.gif) no-repeat;
+	background: url(images/o-load.gif) no-repeat;
 	background-position: 0 0 !important;
 }
 
 .omnigrid .elementloader {
 	width: 16px;
 	height: 16px;
-	background: url(images/load.gif) no-repeat;
+	background: url(images/o-load.gif) no-repeat;
 	position: absolute;
 }
 
