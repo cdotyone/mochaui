@@ -40,7 +40,6 @@ MUI.List = new Class({
 
 		showCommand:		true,		// turns row commands on or off
 		commands:			[],			// commands to be used
-		iconPath:			'',			// parent path to command icons
 
 		content:			false,		// used to load content
 		items:				[],			// the array list of nodes
@@ -236,7 +235,7 @@ MUI.List = new Class({
 				// create image if needed
 				if (col.image){
 					var cImage = self._getData(item, col.image);
-					cImage.replace(/~/g, o.iconPath);
+					cImage=MUI.replacePaths(cImage);
 					if (cImage) img = new Element('img', {'alt':'','src':cImage});
 				}
 
@@ -338,7 +337,7 @@ MUI.List = new Class({
 					if (cmd.image){
 						img = new Element('img');
 						img.alt = cmd.text;
-						img.src = o.iconPath + cmd.image;
+						img.src = cImage=MUI.replacePaths(cmd.image);
 						a.appendChild(img);
 					} else {
 						a.set('html', cmd.text);
