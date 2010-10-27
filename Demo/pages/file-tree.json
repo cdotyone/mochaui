@@ -5,7 +5,8 @@
 		{'value':'youtube4Link',text:'Iframe: YouTube','isChecked': false,'isSelected': false, 'image':'_doc'},
 		{'value':'splitPanelLink',text:'Split Panel','isChecked': false,'isSelected': false, 'image':'_doc'},
 		{'value':'panelControls', 'text':"Controls", 'isChecked':false, 'isSelected':false, imageOpen:'_open', imageClosed:'_closed','nodes':[
-			{'value':'plistLink','text':'Basic List','isChecked': false,'isSelected': false, 'image':'_doc'}
+			{'value':'plistLink','text':'Basic List','isChecked': false,'isSelected': false, 'image':'_doc'},
+			{'value':'pcbgLink','text':'Check Box Grid','isChecked': false,'isSelected': false, 'image':'_doc'}
 		]}
 	]},
 	{'value':'item2',text:'Windows','isChecked': true,'isSelected': false, imageOpen:'_open', imageClosed:'_closed','nodes':[
@@ -16,8 +17,9 @@
 		{'value':'parametricsLink','text':'Window Parametrics','isChecked': false,'isSelected': false, 'image':'_doc'},
 		{'value':'splitWindowLink','text':'Split Window','isChecked': false,'isSelected': false, 'image':'_doc'},
 		{'value':'panelControls', 'text':"Controls", 'isChecked':false, 'isSelected':false, imageOpen:'_open', imageClosed:'_closed','nodes':[
-			{'value':'wlistLink','text':'Basic List','isChecked': false,'isSelected': false, 'image':'_doc'}
-		]}	
+			{'value':'wlistLink','text':'Basic List','isChecked': false,'isSelected': false, 'image':'_doc'},
+			{'value':'wcbgLink','text':'Check Box Grid','isChecked': false,'isSelected': false, 'image':'_doc'}
+		]}
 	]},
 	{'value':'item3','text':'Widgets','isChecked': false,'isSelected': false, imageOpen:'_open', imageClosed:'_closed','nodes':[
 		{'value':'calendarLink','text':'Calendar (Plugin)','isChecked': false,'isSelected': false, 'image':'_doc'},

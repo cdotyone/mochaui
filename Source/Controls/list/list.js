@@ -70,7 +70,7 @@ MUI.List = new Class({
 
 		if(options.content) {
 			options.content.loadMethod = 'json';
-			options.content.onLoaded = (function(element, options, json) {
+			options.content.onLoaded = (function(element, options) {
 				this.options.items = MUI.Content.getRecords(options);
 				this.draw();
 			}).bind(this);
@@ -79,7 +79,6 @@ MUI.List = new Class({
 
 		// create sub items if available
 		if (this.options.drawOnInit && this.options.items.length > 0) this.draw();
-		//else if ($(id)) this.fromHTML(id);
 
 		MUI.set(id, this);
 	},
@@ -88,6 +87,7 @@ MUI.List = new Class({
 		var self = this;
 		var o = self.options;
 
+		// determine parent container object
 		if(!o._container && typeof(o.container) == 'string') {
 			var instance = MUI.get(o.container);
 			if(instance) {

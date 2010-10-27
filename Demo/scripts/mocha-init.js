@@ -172,8 +172,6 @@ var initializeWindows = function(){
 	}
 
 	MUI.listBuilder = function(container){
-		//$('mochaConsole_pad').empty();
-
 		MUI.create('MUI.List',{
 			container:container,
 			id:container+'list1',
@@ -195,6 +193,21 @@ var initializeWindows = function(){
 				alert('received onItemSelected command on item ' + item.value)
 			},
 			onItemColumnBound: function(item, self, col, td) {
+			}
+		});
+	};
+
+	MUI.cbgBuilder = function(container){
+		MUI.create('MUI.CheckBoxGrid',{
+			container:container,
+			width:260,
+			height:100,
+			id:container+'cbg1',
+			onItemClick: function(checked, inp, self, e) {
+				alert('receieved onItemClick command on item ' + inp.value);
+			},
+			onValueChanged: function(value, self, e) {
+				alert('receieved onValueChanged command, value = ' + self.options.value);
 			}
 		});
 	};
@@ -851,6 +864,25 @@ var initializeColumns = function(){
 									height: 150
 								});
 								MUI.listBuilder('basicListWindow');
+							});
+						}
+						if ($('pcbgLink')){
+							$('pcbgLink').addEvent('click', function(e){
+								e.stop();
+								MUI.listBuilder('mochaConsole');
+							});
+						}
+						if ($('wcbgLink')){
+							$('wcbgLink').addEvent('click', function(e){
+								e.stop();
+								new MUI.Window({
+									id: 'cbgWindow',
+									content: 'loading...',
+									title:'Check Box Grid in Window',
+									width: 340,
+									height: 150
+								});
+								MUI.listBuilder('cbgWindow');
 							});
 						}
 						$('xhrLink').addEvent('click', function(){
