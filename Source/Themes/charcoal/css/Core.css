@@ -1,6 +1,5 @@
 /*
  ---
-
  file: Core.css
 
  description: MUI - Create a window from a form.
@@ -9,95 +8,26 @@
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 
- note:
- This documentation is taken directly from the javascript source files. It is built using Natural Docs.
-
  provides: css for charcoal theme
-
  ...
  */
 
 /* Clears */
-
-.clear {
-	clear: both;
-	height: 0;
-}
-
-* html .clear {
-	font-size: 1px;
-	line-height: 1px;
-	overflow: hidden;
-	visibility: hidden;
-}
-
+.clear { clear: both; height: 0; }
+* html .clear { font-size: 1px; line-height: 1px; overflow: hidden; visibility: hidden; }
 /* Miscellaneous
 ---------------------------------------------------------------- */
 
-#themeControl {
-	margin-top: 2px;
-}
-
+#themeControl { margin-top: 2px; }
 /* Theme Specific Adjustments to Default Plugin Styles
 ---------------------------------------------------------------- */
 
 /* Accordian */
-
-.accordianToggler {
-	background: #4c4c4c url(../images/bg-panel-header.gif) repeat-x !important;
-	border-top: 1px solid #141414 !important;
-}
-
-.topToggler {
-	border-top: none !important;
-}
+.accordianToggler { background: #4c4c4c url(../images/bg-panel-header.gif) repeat-x !important; border-top: 1px solid #141414 !important; }
+.topToggler { border-top: none !important; }
 
 /* Sliders */
-
-.slider {
-	clear: both;
-	position: relative;
-	font-size: 12px;
-	font-weight: bold;
-	width: 200px;
-	margin-bottom: 15px;
-}
-
-.sliderWrapper {
-	position: relative;
-	font-size: 1px;
-	line-height: 1px;
-	height: 9px;
-	width: 222px;
-}
-
-.sliderarea {
-	position: absolute;
-	top: 0;
-	left: 0;
-	height: 7px;
-	width: 220px;
-	font-size: 1px;
-	line-height: 1px;
-	background: #292929 url(../images/slider-area.gif) repeat-x;
-	border: 1px solid #222;
-	border-bottom: 1px solid #ccc;
-	border-left: 1px solid #ccc;
-	margin: 0;
-	padding: 0;
-	overflow: hidden;
-}
-
-.sliderknob {
-	position: absolute;
-	top: 0;
-	left: 0;
-	height: 9px;
-	width: 19px;
-	font-size: 1px;
-	line-height: 1px;
-	background: url(../images/knob.gif) no-repeat;
-	cursor: pointer;
-	overflow: hidden;
-	z-index: 2;
-}
+.slider { clear: both; position: relative; font-size: 12px; font-weight: bold; width: 200px; margin-bottom: 15px; }
+.sliderWrapper { position: relative; font-size: 1px; line-height: 1px; height: 9px; width: 222px; }
+.sliderarea { position: absolute; top: 0; left: 0; height: 7px; width: 220px; font-size: 1px; line-height: 1px; background: #292929 url(../images/slider-area.gif) repeat-x; border: 1px solid #222; border-bottom: 1px solid #ccc; border-left: 1px solid #ccc; margin: 0; padding: 0; overflow: hidden; }
+.sliderknob { position: absolute; top: 0; left: 0; height: 9px; width: 19px; font-size: 1px; line-height: 1px; background: url(../images/knob.gif) no-repeat; cursor: pointer; overflow: hidden; z-index: 2; }
