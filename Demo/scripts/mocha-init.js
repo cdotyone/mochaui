@@ -173,8 +173,9 @@ var initializeWindows = function(){
 
 	MUI.listBuilder = function(container){
 		MUI.create('MUI.List',{
-			container:container,
 			id:container+'list1',
+			container:container,
+			clearContainer: true,
 			content:{url:'data/page1.json',paging:{size:10,totalCount:200,recordsField:false}},
 			columns:[
 				{text:'First Name',name:'FirstName','value':'ID'},
@@ -183,30 +184,53 @@ var initializeWindows = function(){
 			commands:[
 				{'text':'Cancel','name':'Cancel','image':'{theme}images/cancel.png'}
 			],
-			onItemCommand: function(item, self, cmd, img) {
+			onItemCommand: function(item, self, cmd) {
 				alert('received ' + cmd.name + ' command on item ' + item.value)
 			},
-			onItemChecked: function(item, self, cmd, img) {
+			onItemChecked: function(item) {
 				alert('received onItemChecked command on item ' + item.value)
 			},
-			onItemSelected: function(item, self, cmd, img) {
+			onItemSelected: function(item) {
 				alert('received onItemSelected command on item ' + item.value)
 			},
-			onItemColumnBound: function(item, self, col, td) {
+			onItemColumnBound: function() {
 			}
 		});
 	};
 
 	MUI.cbgBuilder = function(container){
 		MUI.create('MUI.CheckBoxGrid',{
+			id:container+'cbg1',
 			container:container,
+			clearContainer: true,
+			content:{url:'data/page1.json',paging:{size:10,totalCount:200,recordsField:false}},
 			width:260,
 			height:100,
-			id:container+'cbg1',
-			onItemClick: function(checked, inp, self, e) {
+			textField:'FirstName',
+			valueField:'ID',
+			value:'1,3,4',
+			onItemClick: function(checked, inp) {
 				alert('receieved onItemClick command on item ' + inp.value);
 			},
-			onValueChanged: function(value, self, e) {
+			onValueChanged: function(value, self) {
+				alert('receieved onValueChanged command, value = ' + self.options.value);
+			}
+		});
+		MUI.create('MUI.CheckBoxGrid',{
+			id:container+'cbg2',
+			container:container,
+			clearContainer: false,
+			content:{url:'data/page1.json',paging:{size:10,totalCount:200,recordsField:false}},
+			width:260,
+			height:100,
+			textField:'FirstName',
+			valueField:'ID',
+			value:'1',
+			type:'radio',
+			onItemClick: function(checked, inp) {
+				alert('receieved onItemClick command on item ' + inp.value);
+			},
+			onValueChanged: function(value, self) {
 				alert('receieved onValueChanged command, value = ' + self.options.value);
 			}
 		});
@@ -869,7 +893,7 @@ var initializeColumns = function(){
 						if ($('pcbgLink')){
 							$('pcbgLink').addEvent('click', function(e){
 								e.stop();
-								MUI.listBuilder('mochaConsole');
+								MUI.cbgBuilder('mochaConsole');
 							});
 						}
 						if ($('wcbgLink')){
@@ -882,7 +906,7 @@ var initializeColumns = function(){
 									width: 340,
 									height: 150
 								});
-								MUI.listBuilder('cbgWindow');
+								MUI.cbgBuilder('cbgWindow');
 							});
 						}
 						$('xhrLink').addEvent('click', function(){

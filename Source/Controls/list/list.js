@@ -35,6 +35,7 @@ MUI.List = new Class({
 	options: {
 		id:					'',			// id of the primary element, and id os control that is registered with mocha
 		container:			null,		// the parent control in the document to add the control to
+		clearContainer:		false,		// should the control clear its parent container before it appends itself
 		drawOnInit:			true,		// true to add tree to container when control is initialized
 		cssClass:			'list',		// the primary css tag
 
@@ -180,7 +181,7 @@ MUI.List = new Class({
 
 		// add control to document
 		window.addEvent('domready', function(){
-			o._container.empty();
+			if(o.clearContainer) o._container.empty();
 			o._container.appendChild(div);
 		});
 

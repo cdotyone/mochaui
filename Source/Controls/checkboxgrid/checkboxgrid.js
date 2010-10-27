@@ -36,6 +36,7 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 	options: {
 		id:					'',			// id of the primary element, and id os control that is registered with mocha
 		container:			null,		// the parent control in the document to add the control to
+		clearContainer:		false,		// should the control clear its parent container before it appends itself
 		drawOnInit:			true,		// true to add tree to container when control is initialized
 		cssClass:			'cbg',		// the primary css tag
 		title:				false,		// the title to place above the controls
@@ -45,7 +46,8 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 
 		textField:			'text',		// the name of the field that has the item's text
 		valueField:			'value',	// the name of the field that has the item's value
-		isSelectedField:	'selected',	// the name of the field that has the item's isSelected state
+		isSelectedField:	false,		// the name of the field that has the item's isSelected state
+										// if false, value will be treated as a comma seperated values list of selected items
 
 		width:				0,			// width of the control
 		height:				0,			// height of the control when not in drop list mode, or height of drop
@@ -103,6 +105,11 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 			if(!o._container) o._container=$(containerEl ? containerEl : o.container);
 		}
 
+		if(!o.isSelectedField && o.value) {
+			if(o.type=="checkbox") o._values = o.value.split(',');
+			else o._values=[o.value];
+		}
+
 		// create main wrapper control
 		var fs = $(o.id);
 		var isNew = false;
@@ -124,9 +131,8 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 
 		if (!isNew) return this;
 		window.addEvent('domready', function() {
-			self._container.empty();
-			self._container.appendChild(fs);
-
+			if(o.clearContainer) o._container.empty();
+			o._container.appendChild(fs);
 			self._convertToGrid.delay(1, self, [fs]);
 		});
 
@@ -141,7 +147,10 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 		var inp = new Element('input', {'id':o.id + num,'name':o.id,'type':o.type}).inject(item._span);
 		var value = self._getData(item, o.valueField);
 		if (value) inp.set('value', value);
-		var isSelected = self._getData(item, o.isSelectedField);
+		var isSelected = false;
+		if(o.isSelectedField) isSelected = self._getData(item, o.isSelectedField);
+		else if(o._values) { isSelected=o._values.indexOf(''+value)>-1; }
+
 		if (isSelected) inp.set('checked', 'true');
 		item._input = inp;
 		inp.addEvent('click', function(e) {
@@ -188,9 +197,9 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 			rows['row' + c.top].push([item,c.width]);
 		});
 
-		// find the row with the most columns
+		// find the row width the most columns
 		var lv = 0,lk;
-		rows.each(function(row, k) {
+		Object.each(rows,function(row, k) {
 			if (lv < row.length) {
 				lk = k;
 				lv = row.length;
@@ -199,9 +208,9 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 
 		// now get widths of the columns
 		var cols = [],twidth = 0;
-		rows[lk].each(rows[lk], function(pair) {
+		Object.each(rows[lk], function(pair) {
 			cols.push(pair[1]);
-			twidth += pair[1];
+			twidth += pair[1] + 3;
 		});
 
 		// check to make sure total width is used
@@ -217,7 +226,7 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 
 		// determine colspan for other columns in other rows
 		var clen = cols.length;
-		rows.each(function(row) {
+		Object.each(rows,function(row) {
 			// create table row for this row
 			var tr = new Element('tr').inject(self._tbody);
 
@@ -231,7 +240,7 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 
 			// determine colspan for this row
 			var i = 0,tspan = 0;
-			row.each(function(col) {
+			Object.each(row, function(col) {
 				var cwidth = col[1]
 						,twidth = 0
 						,colspan = 1;
@@ -266,6 +275,7 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 				}
 			}
 		});
-	}
 
+		self.element.setStyles({'width':null,'height':null});
+	}
 });
