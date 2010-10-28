@@ -52,7 +52,7 @@
 			"test":function() {
 				MUI.Content.update({
 					'loadMethod':'json',
-					'url':'../Demo/pages/employees.json',
+					'url':'../Demo/data/employees.json',
 					filters:[MUI.Content.Filters.tree],
 					onLoaded:function(element,options) {
 						this.lastResult=options.content.nodes.length>0;
