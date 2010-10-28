@@ -236,6 +236,26 @@ var initializeWindows = function(){
 		});
 	};
 
+	MUI.slBuilder = function(container) {
+		MUI.create('MUI.SelectList',{
+			id:container+'sl1',
+			container:container,
+			clearContainer:true,
+			content:{url:'data/employees.json',paging:{size:10,totalCount:200,recordsField:false}},
+			width:250,
+			height:100,
+			textField:'name',
+			valueField:'ID',
+			canSelect:true,
+			onItemChecked: function(node, checked) {
+				alert('receieved onItemChecked command on item ' + node.value + ', checked=' + checked);
+			},
+			onItemSelected: function(item, selected) {
+				alert('receieved onItemSelected command on item ' + item.value + ', selected=' + selected)
+			}
+		});
+	};
+
 	MUI.parametricsWindow = function(){
 		new MUI.Window({
 			id: 'parametrics',
@@ -466,7 +486,7 @@ var initializeWindows = function(){
 		new MUI.Window({
 			id: id,
 			title: 'Accordion',
-			content: {url: 'pages/accordion-demo.json', loadMethod: 'json'},
+			content: {url: 'data/accordion-demo.json', loadMethod: 'json'},
 			width: 300,
 			height: 200,
 			scrollbars: false,
@@ -856,7 +876,7 @@ var initializeColumns = function(){
 		id: 'files-panel',
 		title: 'Examples',
 		content: {
-			url: 'pages/file-tree.json',
+			url: 'data/file-tree.json',
 			loadMethod: 'json',
 			onLoaded: function(el, options, json){
 				MUI.create('MUI.Tree', {
@@ -907,6 +927,25 @@ var initializeColumns = function(){
 									height: 150
 								});
 								MUI.cbgBuilder('cbgWindow');
+							});
+						}
+						if ($('pslLink')){
+							$('pslLink').addEvent('click', function(e){
+								e.stop();
+								MUI.slBuilder('mochaConsole');
+							});
+						}
+						if ($('wslLink')){
+							$('wslLink').addEvent('click', function(e){
+								e.stop();
+								new MUI.Window({
+									id: 'slWindow',
+									content: 'loading...',
+									title:'Select List in Window',
+									width: 340,
+									height: 150
+								});
+								MUI.slBuilder('slWindow');
 							});
 						}
 						$('xhrLink').addEvent('click', function(){

@@ -28,17 +28,17 @@
 		doForm();
 	}}).get();
 
-	new Request.JSON({url: "../../../Demo/pages/data-country-state.json", onSuccess: function(json){
+	new Request.JSON({url: "../../../Demo/data/data-country-state.json", onSuccess: function(json){
 		Object.append(PO.RS,json);
 		doForm();
 	}}).get();
 
-	new Request.JSON({url: "../../../Demo/pages/data-prefix.json", onSuccess: function(json){
+	new Request.JSON({url: "../../../Demo/data/data-prefix.json", onSuccess: function(json){
 		Object.append(PO.RS,{Prefix:json});
 		doForm();
 	}}).get();
 
-	new Request.JSON({url: "../../../Demo/pages/data-suffix.json", onSuccess: function(json){
+	new Request.JSON({url: "../../../Demo/data/data-suffix.json", onSuccess: function(json){
 		Object.append(PO.RS,{Suffix:json});
 		doForm();
 	}}).get();

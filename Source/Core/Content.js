@@ -232,7 +232,7 @@ MUI.Content = Object.append((MUI.Content || {}), {
 		else records = options.content[paging.recordsField];
 
 		var retval=[];
-		for(var i=(paging.index*paging.size),t=0;i<paging.size;i++,t++) {
+		for(var i=(paging.index*paging.size),t=0;i<paging.size,i<records.length;i++,t++) {
 			retval[t]=records[i];
 		}
 		return retval;

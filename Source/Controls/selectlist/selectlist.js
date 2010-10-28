@@ -35,28 +35,30 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 	options: {
 		id:					'',				// id of the primary element, and id os control that is registered with mocha
 		container:			null,			// the parent control in the document to add the control to
-		drawOnInit:		    true,			// true to add tree to container when control is initialized
+		clearContainer:		false,			// should the control clear its parent container before it appends itself
+		drawOnInit:			true,			// true to add tree to container when control is initialized
 		cssClass:			'slb',			// the primary css tag
 
-		items:				[],			    // the array list of nodes
+		content:			false,			// used to load content
+		items:				[],				// the array list of nodes
 
 		textField:			'text',			// the name of the field that has the item's text
-		valueField:		    'value',			// the name of the field that has the item's value
-		titleField:		    'title',			// the name of the field that has the item's tip text
+		valueField:			'value',		// the name of the field that has the item's value
+		titleField:			'title',		// the name of the field that has the item's tip text
 		isSelectedField:	'selected',		// the name of the field that has the item's isSelected state
 
-		isDropList:		    true,			// show this control as a drop list
+		isDropList:			true,			// show this control as a drop list
 		dropCssClass:		'dclb',			// the class to use when displaying the drop list parent control
 		dropText:			'{$} Selected',	// the text to show on the drop list when items are selected
 
 		alternateRows:		false,			// show the items with alternating background color
 		width:				0,				// width of the control
-		height:			    0,				// height of the control when not in drop list mode, or height of drop
-		canMultiSelect:	    true,			// can the user select multiple items
+		height:				0,				// height of the control when not in drop list mode, or height of drop
+		canMultiSelect:		true,			// can the user select multiple items
 		showCheckBox:		true,			// true to show checkBoxes
 		value:				'',				// the currently selected item's value
 		selectedItem:		null,			// the last selected item
-		selectedItems:		[]  			// all of the the currently selected item
+		selectedItems:		[]				// all of the the currently selected item
 
 		//onItemSelected:	null			// event: when a node is selected
 	},
@@ -67,13 +69,21 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		// make sure this controls has an ID
 		var id = this.options.id;
 		if (!id){
-			id = 'checkedListBox' + (++MUI.IDCount);
+			id = 'selectList' + (++MUI.IDCount);
 			this.options.id = id;
+		}
+
+		if(options.content) {
+			options.content.loadMethod = 'json';
+			options.content.onLoaded = (function(element, options) {
+				this.options.items = MUI.Content.getRecords(options);
+				this.draw();
+			}).bind(this);
+			MUI.Content.update(options.content);
 		}
 
 		// create sub items if available
 		if (this.options.drawOnInit && this.options.items.length > 0) this.draw();
-		else if ($(id) && this.fromHTML!=null) this.fromHTML(id);
 
 		MUI.set(id, this);
 	},
@@ -87,6 +97,18 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 	draw: function(containerEl){
 		var o = this.options;
 		var self = this;
+
+		// determine parent container object
+		if(!o._container && typeof(o.container) == 'string') {
+			var instance = MUI.get(o.container);
+			if(instance) {
+				if(instance.el.content) {
+					instance.el.content.setStyle('padding','0');
+					o._container = instance.el.content;
+				}
+			}
+			if(!o._container) o._container=$(containerEl ? containerEl : o.container);
+		}
 
 		var id = o.id;
 		var drop;
@@ -134,20 +156,19 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		if (!isNew) return this;
 
 		window.addEvent('domready', function(){
-			var container = $(containerEl ? containerEl : o.container);
+			if(o.clearContainer) o._container.empty();
 			if (drop){
-
 				var selectText = self.options.dropText.replace('{$}', self.getSelectedCount());
 				self.textElement.set('text', selectText);
 				div.addEvent('click', function(e){
 					e.stop();
 				});
-				container.appendChild(drop);
+				o._container.appendChild(drop);
 				drop.appendChild(div);
 				div.addClass('notop');
 				div.setStyles({'display':'none','position':'absolute','z-index':999});
 			}
-			else container.appendChild(div);
+			else o._container.appendChild(div);
 		});
 
 		return this;

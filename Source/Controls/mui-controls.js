@@ -25,7 +25,7 @@ Object.append(MUI.classes, {
 	'imagebutton':{'samples':['js'],'description':'Image Button','isFormControl':true,'css':['{theme}css/ImageButton.css']},
 	'list':{'samples':['js'],'description':'List','isFormControl':true,'css':['{theme}css/List.css']},
 	'omnigrid':{'samples':['js'],'description':'OmniGrid','isFormControl':true,'css':['{theme}css/OmniGrid.css']},
-	'selectlist':{'samples':['html','js'],'description':'Radio/Checbox List','isFormControl':true,'css':['{theme}css/SelectList.css']},
+	'selectlist':{'samples':['html','js'],'description':'Select List','isFormControl':true,'css':['{theme}css/SelectList.css']},
 	'tabs':{'samples':['html','js'],'description':'Tabs','isFormControl':true,'css':['{theme}css/Tabs.css']},
 	'textarea':{'samples':['html','js'],'description':'Text Area','isFormControl':true,'css':['{theme}css/TextBox.css']},
 	'textbox':{'samples':['js'],'description':'Text Box','isFormControl':true,'css':['{theme}css/TextBox.css']},

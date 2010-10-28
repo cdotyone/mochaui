@@ -294,7 +294,7 @@ initializeWindows = function(){
 			id: id,
 			title: 'Accordion',
 			content: {
-				url: 'pages/accordion-demo.json',
+				url: 'data/accordion-demo.json',
 				loadMethod: 'json',
 				onLoaded: function(el,cOptions,json){
 					MUI.create('MUI.Accordion',{
