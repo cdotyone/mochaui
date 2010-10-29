@@ -45,7 +45,7 @@ MUI.append({
 			source:  '../Source/',			// Path to MochaUI source JavaScript
 			controls:'../Source/Controls/',	// Path to Mocha Owned Plugins
 			themes:  '../Source/Themes/',	// Path to MochaUI Themes
-			plugins: '../Demo/plugins/'		// Path to Plugins
+			plugins: '../Source/Plugins/'		// Path to Plugins
 		}
 	}
 });
