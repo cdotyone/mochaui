@@ -48,7 +48,7 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		isSelectedField:	'selected',		// the name of the field that has the item's isSelected state
 
 		isDropList:			true,			// show this control as a drop list
-		dropCssClass:		'dclb',			// the class to use when displaying the drop list parent control
+		dropCssClass:		'dslb',			// the class to use when displaying the drop list parent control
 		dropText:			'{$} Selected',	// the text to show on the drop list when items are selected
 
 		alternateRows:		false,			// show the items with alternating background color
@@ -98,17 +98,7 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		var o = this.options;
 		var self = this;
 
-		// determine parent container object
-		if(!o._container && typeof(o.container) == 'string') {
-			var instance = MUI.get(o.container);
-			if(instance) {
-				if(instance.el.content) {
-					instance.el.content.setStyle('padding','0');
-					o._container = instance.el.content;
-				}
-			}
-			if(!o._container) o._container=$(containerEl ? containerEl : o.container);
-		}
+		self._determineContainer(containerEl);
 
 		var id = o.id;
 		var drop;
@@ -156,6 +146,7 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		if (!isNew) return this;
 
 		window.addEvent('domready', function(){
+			self._determineContainer();
 			if(o.clearContainer) o._container.empty();
 			if (drop){
 				var selectText = self.options.dropText.replace('{$}', self.getSelectedCount());
@@ -164,7 +155,7 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 					e.stop();
 				});
 				o._container.appendChild(drop);
-				drop.appendChild(div);
+				document.body.appendChild(div);
 				div.addClass('notop');
 				div.setStyles({'display':'none','position':'absolute','z-index':999});
 			}
@@ -206,6 +197,21 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		var self = this;
 		self.options.items = items;
 		self.draw();
+	},
+
+	_determineContainer: function(containerEl) {
+		var o = this.options;
+		// determine parent container object
+		if(!o._container && typeof(o.container) == 'string') {
+			var instance = MUI.get(o.container);
+			if(instance) {
+				if(instance.el.content) {
+					instance.el.content.setStyle('padding','0');
+					o._container = instance.el.content;
+				}
+			}
+			if(!o._container) o._container=$(containerEl ? containerEl : o.container);
+		}
 	},
 
 	_selected: function(e, item){
