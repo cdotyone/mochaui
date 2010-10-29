@@ -144,7 +144,7 @@ initializeWindows = function(){
 			title: 'Canvas Clock',
 			addClass: 'transparent',
 			content: {
-				url: '{plugins}coolclock/index.html',
+				url: '{plugins}coolclock/demo.html',
 				loadMethod: 'xhr',
 				require: {
 					js: ['{plugins}coolclock/scripts/coolclock.js'],
@@ -174,7 +174,7 @@ initializeWindows = function(){
 			id: 'parametrics',
 			title: 'Window Parametrics',
 			content: {
-				url: '{plugins}parametrics/index.html',
+				url: '{plugins}parametrics/demo.html',
 				loadMethod: 'xhr',
 				require: {
 					js: ['{plugins}parametrics/scripts/parametrics.js'],

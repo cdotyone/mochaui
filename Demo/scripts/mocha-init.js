@@ -148,7 +148,7 @@ var initializeWindows = function(){
 			title: 'Canvas Clock',
 			addClass: 'transparent',
 			content: {
-				url: '{plugins}coolclock/index.html',
+				url: '{plugins}coolclock/demo.html',
 				require: {
 					js: ['{plugins}coolclock/scripts/coolclock.js'],
 					onload: function(){
@@ -261,7 +261,7 @@ var initializeWindows = function(){
 			id: 'parametrics',
 			title: 'Window Parametrics',
 			content: {
-				url: '{plugins}parametrics/index.html',
+				url: '{plugins}parametrics/demo.html',
 				require: {
 					js: ['{plugins}parametrics/scripts/parametrics.js'] //,
 					// onload: function(){} // either use onload here or Window/onLoaded further down
@@ -355,9 +355,9 @@ var initializeWindows = function(){
 			id: 'fxmorpherExample',
 			title: 'Path Animation Example',
 			content: {
-				url:'{plugins}Fx.Morpher/example.html',
+				url:'{plugins}Fx.Morpher/demo.html',
 				require: {
-					js: ['{plugins}Fx.Morpher/scripts/cbox.js', '{plugins}Fx.Morpher/scripts/example.js'],
+					js: ['{plugins}Fx.Morpher/scripts/cbox.js', '{plugins}Fx.Morpher/scripts/demo.js'],
 					onload: function(){
 						createCanvas();
 						myAnim.delay(250);
@@ -994,7 +994,7 @@ var initializeColumns = function(){
 						$('calendarLink').addEvent('click', function(e){
 							MUI.Content.update({
 								element: $('mainPanel'),
-								url: '{controls}calendar/example.html',
+								url: '{controls}calendar/demo.html',
 								title: 'Calendar Component',
 								padding: {top: 8, right: 8, bottom: 8, left: 8},
 								require: {
