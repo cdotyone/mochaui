@@ -188,7 +188,10 @@ MUI.Tabs = new Class({
 			var uOptions = {
 				element: o.partner,
 				content: content,
-				url:	url
+				url:	url,
+				onLoaded: function(){
+					self.fireEvent('tabSelected', [tab, value, self, e]);
+				}
 			};
 			if (o.updateOptions) Object.append(uOptions,o.updateOptions);
 			else {
@@ -197,9 +200,10 @@ MUI.Tabs = new Class({
 			}
 
 			MUI.Content.update(uOptions);
+		} else {
+			self.fireEvent('tabSelected', [tab, value, self, e]);
 		}
 
-		self.fireEvent('tabSelected', [tab, value, self, e]);
 	}
 
 });
