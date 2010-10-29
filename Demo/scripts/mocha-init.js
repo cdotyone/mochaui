@@ -171,6 +171,11 @@ var initializeWindows = function(){
 		});
 	}
 
+	MUI.writeConsole = function(message) {
+		var d=new Date().format('%H:%M:%S: ');
+		new Element('div',{text:d+message}).inject('mochaConsole','top'); 
+	};
+
 	MUI.listBuilder = function(container){
 		MUI.create('MUI.List',{
 			id:container+'list1',
@@ -185,15 +190,13 @@ var initializeWindows = function(){
 				{'text':'Cancel','name':'Cancel','image':'{theme}images/cancel.png'}
 			],
 			onItemCommand: function(item, self, cmd) {
-				alert('received ' + cmd.name + ' command on item ' + item.value)
+				MUI.writeConsole(self.options.id + ' received ' + cmd.name + ' command on item ' + item.value)
 			},
-			onItemChecked: function(item) {
-				alert('received onItemChecked command on item ' + item.value)
+			onItemChecked: function(item, self) {
+				MUI.writeConsole(self.options.id + ' received onItemChecked command on item ' + item.value)
 			},
-			onItemSelected: function(item) {
-				alert('received onItemSelected command on item ' + item.value)
-			},
-			onItemColumnBound: function() {
+			onItemSelected: function(item, self) {
+				MUI.writeConsole(self.options.id + ' received onItemSelected command on item ' + item.value)
 			}
 		});
 	};
@@ -209,11 +212,11 @@ var initializeWindows = function(){
 			textField:'FirstName',
 			valueField:'ID',
 			value:'1,3,4',
-			onItemClick: function(checked, inp) {
-				alert('receieved onItemClick command on item ' + inp.value);
+			onItemClick: function(checked, inp, self) {
+				MUI.writeConsole(self.options.id + ' received onItemClick command on item ' + inp.value);
 			},
 			onValueChanged: function(value, self) {
-				alert('receieved onValueChanged command, value = ' + self.options.value);
+				MUI.writeConsole(self.options.id + ' received onValueChanged command, value = ' + self.options.value);
 			}
 		});
 		MUI.create('MUI.CheckBoxGrid',{
@@ -227,11 +230,11 @@ var initializeWindows = function(){
 			valueField:'ID',
 			value:'1',
 			type:'radio',
-			onItemClick: function(checked, inp) {
-				alert('receieved onItemClick command on item ' + inp.value);
+			onItemClick: function(checked, inp, self) {
+				MUI.writeConsole(self.options.id + ' received onItemClick command on item ' + inp.value);
 			},
 			onValueChanged: function(value, self) {
-				alert('receieved onValueChanged command, value = ' + self.options.value);
+				MUI.writeConsole(self.options.id + ' received onValueChanged command, value = ' + self.options.value);
 			}
 		});
 	};
@@ -247,11 +250,8 @@ var initializeWindows = function(){
 			textField:'name',
 			valueField:'ID',
 			canSelect:true,
-			onItemChecked: function(node, checked) {
-				alert('receieved onItemChecked command on item ' + node.value + ', checked=' + checked);
-			},
-			onItemSelected: function(item, selected) {
-				alert('receieved onItemSelected command on item ' + item.value + ', selected=' + selected)
+			onItemSelected: function(item, selected, self) {
+				MUI.writeConsole(self.options.id + ' received onItemSelected command on item \'' + item.name + '\', selected=' + selected)
 			}
 		});
 	};
@@ -894,7 +894,7 @@ var initializeColumns = function(){
 						if ($('plistLink')){
 							$('plistLink').addEvent('click', function(e){
 								e.stop();
-								MUI.listBuilder('mochaConsole');
+								MUI.listBuilder('mainPanel');
 							});
 						}
 						if ($('wlistLink')){
@@ -913,7 +913,7 @@ var initializeColumns = function(){
 						if ($('pcbgLink')){
 							$('pcbgLink').addEvent('click', function(e){
 								e.stop();
-								MUI.cbgBuilder('mochaConsole');
+								MUI.cbgBuilder('mainPanel');
 							});
 						}
 						if ($('wcbgLink')){
@@ -932,7 +932,7 @@ var initializeColumns = function(){
 						if ($('pslLink')){
 							$('pslLink').addEvent('click', function(e){
 								e.stop();
-								MUI.slBuilder('mochaConsole');
+								MUI.slBuilder('mainPanel');
 							});
 						}
 						if ($('wslLink')){
@@ -1129,7 +1129,7 @@ var initializeColumns = function(){
 		column: 'mainColumn',
 		height: 200,
 		content: [
-			{url: 'pages/lipsum.html'},
+			{content:'pages/blank.html'},
 			{
 				position: 'headertool',
 				url: 'pages/console.toolbox.html',

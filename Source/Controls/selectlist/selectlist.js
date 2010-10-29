@@ -236,8 +236,7 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		if (item[o.isSelectedField]) item._element.addClass('C');
 		else item._element.removeClass('C');
 
-		//o.List.DoCommand('selected',o.Value+'#'+item.isSelected,null);
-		self.fireEvent('itemSelected', [item,item[o.isSelectedField],e]);
+		self.fireEvent('itemSelected', [item,item[o.isSelectedField],self,e]);
 
 		if (self.textElement){
 			var selectText = o.dropText.replace('{$}', self.getSelectedCount());
@@ -255,8 +254,7 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		if (checked) item._element.addClass('C');
 		else item._element.removeClass('C');
 
-		self.fireEvent('itemSelected', [item,checked,e]);
-		// o.List.DoCommand('Checked',o.Value+'#'+o.CheckBox.checked,null);
+		self.fireEvent('itemSelected', [item,checked,self,e]);
 		return true;
 	},
 

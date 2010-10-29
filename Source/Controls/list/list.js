@@ -229,9 +229,9 @@ MUI.List = new Class({
 						event.stopPropagation();
 						self.fireEvent('itemChecked', [item,self,parent]);
 					});
-				} else if (!self.value) td.addEvent('click', function(event){
+				} /*else if (!self.value) td.addEvent('click', function(event){
 					event.stopPropagation();
-				});
+				});*/
 
 				// create image if needed
 				if (col.image){
@@ -279,7 +279,7 @@ MUI.List = new Class({
 							url = url.replace(/~/, o.navigateURL);
 							a.set('href', url);
 						}
-					}
+					} else a.setStyle('text-decoration', 'none');
 
 					// add image
 					if (img){
