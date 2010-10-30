@@ -76,8 +76,6 @@ MUI.Desktop = {
 			this._onBrowserResize();
 		}.bind(this));
 
-		if (MUI.myChain) MUI.myChain.callChain();
-
 	},
 
 	setDesktopSize: function(){
