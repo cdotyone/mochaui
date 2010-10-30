@@ -196,7 +196,7 @@ MUI.Desktop = {
 
 	_menuInitialize: function(){
 		// Fix for dropdown menus in IE6
-		if (Browser.ie4 && this.desktopNavBar){
+		if (Browser.ie6 && this.desktopNavBar){
 			this.desktopNavBar.getElements('li').each(function(element){
 				element.addEvent('mouseenter', function(){
 					this.addClass('ieHover');
@@ -503,7 +503,7 @@ MUI.append({
 	panelHeight2: function(column, changing, action){
 		var parent = column.getParent();
 		var columnHeight = parent.getStyle('height').toInt();
-		if (Browser.ie4 && parent == MUI.Desktop.pageWrapper){
+		if (Browser.ie6 && parent == MUI.Desktop.pageWrapper){
 			columnHeight -= 1;
 		}
 		column.setStyle('height', columnHeight);
@@ -697,7 +697,7 @@ MUI.append({
 			var parent = handle.getParent();
 			if (parent.getStyle('height').toInt() < 1) return; // Keeps IE7 and 8 from throwing an error when collapsing a panel within a panel
 			var handleHeight = parent.getStyle('height').toInt() - handle.getStyle('border-top').toInt() - handle.getStyle('border-bottom').toInt();
-			if (Browser.ie4 && parent == MUI.Desktop.pageWrapper){
+			if (Browser.ie6 && parent == MUI.Desktop.pageWrapper){
 				handleHeight -= 1;
 			}
 			handle.setStyle('height', handleHeight);

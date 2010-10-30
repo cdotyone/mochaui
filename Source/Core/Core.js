@@ -230,7 +230,7 @@ var NamedClass = function(name, members){
 };
 
 function fixPNG(myImage){
-	if (Browser.ie4 && document.body.filters){
+	if (Browser.ie6 && document.body.filters){
 		var imgID = (myImage.id) ? "id='" + myImage.id + "' " : "";
 		var imgClass = (myImage.className) ? "class='" + myImage.className + "' " : "";
 		var imgTitle = (myImage.title) ? "title='" + myImage.title + "' " : "title='" + myImage.alt + "' ";

@@ -304,7 +304,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 				if (Browser.firefox){
 					$$('.panel').show(); // Fix for a rendering bug in FF
 				}
-				if (Browser.ie4){
+				if (Browser.ie6){
 					element.getChildren().each(function(el){
 						var width = $(element).getStyle('width').toInt();
 						width -= el.getStyle('border-right').toInt();
