@@ -54,18 +54,6 @@ MUI.Desktop = {
 		this.page = $(this.options.page);
 		this.desktopFooter = $(this.options.desktopFooter);
 
-		if (this.desktop){
-			$$('body').setStyles({
-				overflow: 'hidden',
-				height: '100%',
-				margin: 0
-			});
-			$$('html').setStyles({
-				overflow: 'hidden',
-				height: '100%'
-			});
-		}
-
 		if (!this.options.dockOptions.container) this.options.dockOptions.container = this.desktop;
 		if (this.options.createDock) this.dock = new MUI.Dock(this.options.dockOptions);
 		if (!this.dock) this.setDesktopSize();  // This is run on dock initialize so no need to do it twice.
