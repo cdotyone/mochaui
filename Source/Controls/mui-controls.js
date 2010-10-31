@@ -20,7 +20,7 @@ MUI.files['{controls}mui-controls.js'] = 'loaded';
 Object.append(MUI.controls, {
 
 	'accordion':{'samples':['index'],data:['json','html'],'description':'Accordion','isFormControl':true,'css':['{theme}css/Accordion.css']},
-	'calender':{'samples':['demo'],data:['json'],'description':'Calender','isFormControl':true,'css':['{theme}css/Calendar.css']},
+	'calendar':{'samples':['demo'],data:['json'],'description':'Calendar','isFormControl':true,'css':['{theme}css/Calendar.css']},
 	'checkboxgrid':{'samples':['index'],data:['json'],'description':'Check Box Grid','isFormControl':true,'css':['{theme}css/CheckBoxGrid.css']},
 	'imagebutton':{'samples':['index'],data:['json'],'description':'Image Button','isFormControl':true,'css':['{theme}css/ImageButton.css']},
 	'list':{'samples':['js'],data:['json'],'description':'Basic List','isFormControl':true,'css':['{theme}css/List.css']},

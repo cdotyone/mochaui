@@ -11,3 +11,4 @@ Joel Lindau
 Harry Roberts
 Marko Santic (marko@omnisdata.com) <http://www.omnisdata.com/omnigrid/>
 Paul Duncan (paul@pablotron.org) <http://github.com/jeremydurham/persist-js>
+Aeron Glemann (Calendar) <http://electricprism.com/aeron>
