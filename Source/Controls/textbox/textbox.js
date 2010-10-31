@@ -44,7 +44,7 @@ MUI.TextBox = new Class({
 
 		,valueField:		false		// defaults to the id on this field
 		,formTitleField:	false		// defaults to the id of this field
-		,formData:			  false		// used in conjunction with the above Fields to get/set value in an object
+		,formData:			false		// used in conjunction with the above Fields to get/set value in an object
 
 		,formTitle:			''			// defaults to the id of this field
 		,value:				''			// the currently textbox's value

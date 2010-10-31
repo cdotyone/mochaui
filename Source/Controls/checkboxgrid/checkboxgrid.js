@@ -93,18 +93,6 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 	draw: function(containerEl) {
 		var self = this,o = this.options;
 
-		// determine parent container object
-		if(!o._container && typeof(o.container) == 'string') {
-			var instance = MUI.get(o.container);
-			if(instance) {
-				if(instance.el.content) {
-					instance.el.content.setStyle('padding','0');
-					o._container = instance.el.content;
-				}
-			}
-			if(!o._container) o._container=$(containerEl ? containerEl : o.container);
-		}
-
 		if(!o.isSelectedField && o.value) {
 			if(o.type=="checkbox") o._values = o.value.split(',');
 			else o._values=[o.value];
@@ -131,6 +119,18 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 
 		if (!isNew) return this;
 		window.addEvent('domready', function() {
+			// determine parent container object
+			if(!o._container && typeof(o.container) == 'string') {
+				var instance = MUI.get(o.container);
+				if(instance) {
+					if(instance.el.content) {
+						instance.el.content.setStyle('padding','0');
+						o._container = instance.el.content;
+					}
+				}
+				if(!o._container) o._container=$(containerEl ? containerEl : o.container);
+			}
+
 			if(o.clearContainer) o._container.empty();
 			o._container.appendChild(fs);
 			self._convertToGrid.delay(1, self, [fs]);
