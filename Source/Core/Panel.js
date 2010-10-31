@@ -92,7 +92,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 		this.el.panel = new Element('div', {
 			'id': this.options.id,
-			'class': 'panel expanded',
+			'class': 'panel',
 			'styles': {
 				'height': options.height
 			}
