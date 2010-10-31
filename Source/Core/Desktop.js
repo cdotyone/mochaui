@@ -643,8 +643,10 @@ MUI.append({
 			}.bind(this));
 
 			panelsToResize.each(function(panel){
-				MUI.get(panel.id).fireEvent('resize',[this]);
+				var MUIPanel = MUI.get(panel.id);
+				MUIPanel.fireEvent('resize', [MUIPanel]);
 			});
+			
 		}.bind(this));
 
 		// Get the remaining height
@@ -761,11 +763,9 @@ MUI.append({
 
 			// fire all panel resize events and the column resize event
 			var instance = MUI.get(column.id);
-			[].include(instance)
-			  .combine(instance.getPanels())
-			  .each(function(panel){
-					panel.fireEvent('resize',[this])
-			  },this);
+			[instance].combine(instance.getPanels()).each(function(panel){
+				panel.fireEvent('resize', [panel]);
+			}, this);
 
 			column.getChildren('.panel').each(function(panel){
 				panel.setStyle('width', newWidth - panel.getStyle('border-left').toInt() - panel.getStyle('border-right').toInt());
