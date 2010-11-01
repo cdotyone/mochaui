@@ -998,7 +998,7 @@ var initializeColumns = function(){
 								title: 'Calendar Component',
 								padding: {top: 8, right: 8, bottom: 8, left: 8},
 								onLoaded:function() {
-									MUI.create('MUI.Calendar',{date1: 'd/m/Y', direction: 1, tweak: {x: 6, y: 0}});
+									MUI.create('MUI.Calendar',{'id':'date1', format:'d/m/Y', direction: 1, tweak: {x: 6, y: 0}});
 								}
 							});
 						});
