@@ -94,7 +94,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 
 		if (options.sortable){
 			if (!options.container.retrieve('sortables')){
-				var sortables = new Sortables(this.el.column,{
+				var sortables = new Sortables(this.el.column, {
 					opacity: 1,
 					handle: '.panel-header',
 					constrain: false,
@@ -252,7 +252,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 		var sortables = self.options.container.retrieve('sortables');
 		if (sortables) sortables.removeLists(this.el.column);
 
-		Array.each(this.el,function(el){el.destroy();});
+		Array.each(this.el, function(el){el.destroy();});
 		this.el = {};
 
 		MUI.erase(self.options.id);
@@ -304,7 +304,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 				if (Browser.firefox){
 					$$('.panel').show(); // Fix for a rendering bug in FF
 				}
-				if (Browser.ie4){
+				if (Browser.ie6){
 					element.getChildren().each(function(el){
 						var width = $(element).getStyle('width').toInt();
 						width -= el.getStyle('border-right').toInt();
@@ -328,7 +328,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 				  .include(partnerInstance)
 				  .combine(partnerInstance.getPanels())
 				  .each(function(panel){
-						panel.fireEvent('resize',[panel])
+						panel.fireEvent('resize', [panel]);
 				  });
 
 			}.bind(this)
@@ -360,7 +360,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 			handle: handle,
 			modifiers: {x: 'width' , y: false},
 			invert: true,
-			limit: { x: [min, max] },
+			limit: {x: [min, max]},
 			onStart: function(){
 				$(element).getElements('iframe').setStyle('visibility', 'hidden');
 				partner.getElements('iframe').setStyle('visibility', 'hidden');
@@ -378,7 +378,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 				  .include(instance)
 				  .combine(instance.getPanels())
 				  .each(function(panel){
-						panel.fireEvent('resize',[panel])
+						panel.fireEvent('resize', [panel]);
 				  });
 			}.bind(this)
 		});

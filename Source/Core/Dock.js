@@ -389,13 +389,8 @@ MUI.Window.implement({
 		this.hide(); // Hide window and add to dock
 
 		// Fixes a scrollbar issue in Mac FF2
-		if (Browser.Platform.mac && Browser.firefox){
-			if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent)){
-				var ffversion = new Number(RegExp.$1);
-				if (ffversion < 3){
-					this.el.contentWrapper.setStyle('overflow', 'hidden');
-				}
-			}
+		if (Browser.Platform.mac && Browser.firefox && Browser.version < 3){
+			this.el.contentWrapper.setStyle('overflow', 'hidden');
 		}
 
 		if (MUI.Desktop) MUI.Desktop.setDesktopSize();

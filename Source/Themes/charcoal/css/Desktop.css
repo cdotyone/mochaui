@@ -14,8 +14,7 @@
  
 /* Layout
 ---------------------------------------------------------------- */
-html, body { background: #222; }
-body { margin: 0; /* Required */ }
+html, body { overflow: hidden; height: 100%; margin: 0; background: #222; }
 #desktop { position: relative; min-width: 400px; /* Helps keep header content from wrapping */ height: 100%; min-height: 100%; overflow: hidden; cursor: default; /* Fix for issue in IE7. IE7 wants to use the I-bar text cursor */ }
 #desktopHeader { background: #f1f1f1; }
 #desktopTitlebarWrapper { position: relative; height: 45px; overflow: hidden; background: #303030 url(../images/bg-header.gif) repeat-x; }

@@ -30,7 +30,7 @@ MUI.Windows = Object.append((MUI.Windows || {}), {
 		type:				'window',
 
 		// content section update options
-		content:				false,			// used to update the content section of the panel.
+		content:			false,			// used to update the content section of the panel.
 		// if it is a string it assumes that the content is html and it will be injected into the content div.
 		// if it is an array then assume we need to update multiple sections of the panel
 		// if it is not a string or array it assumes that is a hash and just the content section will have .
@@ -151,7 +151,7 @@ MUI.Windows = Object.append((MUI.Windows || {}), {
 
 		$$('.mocha').each(function(el){
 			// Get the window title and destroy that element, so it does not end up in window content
-			if (Browser.opera || Browser.ie5){
+			if (Browser.opera || Browser.ie7){
 				el.hide(); // Required by Opera, and probably IE7
 			}
 			var title = el.getElement('h3.mochaTitle');
@@ -315,9 +315,9 @@ MUI.Window.implement({
 
 		// Condition under which to use CSS3, needs shadow, border-radius and gradient support
 		if (!options.useCSS3) this.useCSS3 = false;
-		else if (Browser.firefox && Browser.version >= 19) this.useCSS3 = true; // FF3.6
-		else if (Browser.webkit && Browser.version >= 525) this.useCSS3 = true; // S4
-		else this.useCSS3 = Browser.ie && Browser.version > 6;
+		else if (Browser.firefox && Browser.version >= 3.6) this.useCSS3 = true; // FF3.6
+		else if (Browser.webkit && Browser.version >= 4) this.useCSS3 = true; // S4
+		else this.useCSS3 = Browser.ie && Browser.version > 9; // ie9
 
 		// if somebody wants CSS3 but not canvas and condition are false for css3
 		// i.e. IE8 Test CSS3 Body
@@ -393,11 +393,8 @@ MUI.Window.implement({
 		// Fix a mouseover issue with gauges in IE7
 		if (Browser.ie && options.shape == 'gauge') this.el.windowEl.setStyle('backgroundImage', 'url(../images/spacer.gif)');
 
-		if ((this.options.type == 'modal' || options.type == 'modal2' ) && Browser.Platform.mac && Browser.firefox){
-			if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent)){
-				var ffversion = new Number(RegExp.$1);
-				if (ffversion < 3) this.el.windowEl.setStyle('position', 'fixed');
-			}
+		if ((this.options.type == 'modal' || options.type == 'modal2') && Browser.Platform.mac && Browser.firefox){
+			if (Browser.version < 3) this.el.windowEl.setStyle('position', 'fixed');
 		}
 
 		// Insert sub elements inside el.windowEl
@@ -588,7 +585,7 @@ MUI.Window.implement({
 			}
 
 			// Part of the fix for IE6 select z-index bug
-			if (Browser.ie4) this.el.zIndexFix.setStyles({'width': width, 'height': height});
+			if (Browser.ie6) this.el.zIndexFix.setStyles({'width': width, 'height': height});
 
 			// Make sure loading icon is placed correctly.
 			if (options.useSpinner && options.shape != 'gauge' && options.type != 'notification'){
@@ -790,7 +787,7 @@ MUI.Window.implement({
 		}
 		if (this.check) this.check.destroy();
 
-		if ((this.options.type == 'modal' || this.options.type == 'modal2') && Browser.ie4){
+		if ((this.options.type == 'modal' || this.options.type == 'modal2') && Browser.ie6){
 			$('modalFix').hide();
 		}
 
@@ -1083,7 +1080,7 @@ MUI.Window.implement({
 
 		var cache = {};
 
-		if (Browser.ie4){
+		if (Browser.ie6){
 			cache.zIndexFix = new Element('iframe', {
 				'id': id + '_zIndexFix',
 				'class': 'zIndexFix',
@@ -1333,13 +1330,8 @@ MUI.Window.implement({
 		if (Browser.ie) cache.overlay.setStyle('zIndex', 2);
 
 		// For Mac Firefox 2 to help reduce scrollbar bugs in that browser
-		if (Browser.Platform.mac && Browser.firefox){
-			if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent)){
-				var ffversion = new Number(RegExp.$1);
-				if (ffversion < 3){
-					cache.overlay.setStyle('overflow', 'auto');
-				}
-			}
+		if (Browser.Platform.mac && Browser.firefox && Browser.version < 3){
+			cache.overlay.setStyle('overflow', 'auto');
 		}
 
 		if (options.resizable){
@@ -1431,7 +1423,7 @@ MUI.Window.implement({
 		var options = this.options;
 		if (options.type == 'modal' || options.type == 'modal2'){
 			MUI.currentModal = this.el.windowEl;
-			if (Browser.ie4) $('modalFix').show();
+			if (Browser.ie6) $('modalFix').show();
 			$('modalOverlay').show();
 			if (MUI.options.advancedEffects){
 				MUI.Modal.modalOverlayCloseMorph.cancel();
@@ -1730,7 +1722,7 @@ MUI.Window.implement({
 			});
 
 			// Part of the fix for IE6 select z-index bug
-			if (Browser.ie4) this.el.zIndexFix.setStyles({
+			if (Browser.ie6) this.el.zIndexFix.setStyles({
 					'width': width,
 					'height': height
 				});

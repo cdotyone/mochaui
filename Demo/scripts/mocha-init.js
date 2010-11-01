@@ -1058,6 +1058,26 @@ var initializeColumns = function(){
 		height: 230
 	});
 
+	var addResizeElements = function(){
+		var panel = this.el.contentWrapper;
+		var pad = panel.getElement('.pad');
+		pad.appendText('Width: ');
+		this.displayWidthEl = new Element('span', {
+			'text': panel.getStyle('width')
+		}).inject(pad);
+		pad.appendText(' Height: ');
+		this.displayHeightEl = new Element('span', {
+			'text': panel.getStyle('height')
+		}).inject(pad);
+	};
+
+	var updateResizeElements = function(){
+		var newSize = this.el.contentWrapper.getStyles(['width', 'height']);
+		var pad = this.el.content;
+		if (this.displayWidthEl) this.displayWidthEl.set('text', newSize['width']);
+		if (this.displayHeightEl) this.displayHeightEl.set('text', newSize['height']);
+	};
+
 	// Add panels to main column
 	new MUI.Panel({
 		id: 'mainPanel',
@@ -1096,28 +1116,9 @@ var initializeColumns = function(){
 					addResizeElements.apply(this);
 				}
 			}
-		]
+		],
+		onResize: updateResizeElements
 	});
-
-	var addResizeElements = function(){
-		var panel = this.el.contentWrapper;
-		var pad = panel.getElement('.pad');
-		pad.appendText('Width: ');
-		this.displayWidthEl = new Element('span', {
-			'text': panel.getStyle('width')
-		}).inject(pad);
-		pad.appendText(' Height: ');
-		this.displayHeightEl = new Element('span', {
-			'text': panel.getStyle('height')
-		}).inject(pad);
-	};
-
-	var updateResizeElements = function(){
-		var newSize = this.el.contentWrapper.getStyles(['width', 'height']);
-		var pad = this.el.content;
-		if (this.displayWidthEl) this.displayWidthEl.set('text', newSize['width']);
-		if (this.displayHeightEl) this.displayHeightEl.set('text', newSize['height']);
-	};
 
 	new MUI.Panel({
 		id: 'mochaConsole',
@@ -1136,8 +1137,7 @@ var initializeColumns = function(){
 					});
 				}
 			}
-		],
-		onResize: updateResizeElements
+		]
 	});
 
 	// Add panels to second side column
@@ -1244,6 +1244,7 @@ window.addEvent('load', function(){ //using load instead of domready for IE8
 	MUI.myChain.chain(
 			function(){
 				MUI.Desktop.initialize();
+				MUI.myChain.callChain();
 			},
 			function(){
 				initializeColumns();

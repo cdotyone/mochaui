@@ -43,7 +43,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		// Style options:
 		height:					125,			// the desired height of the panel
 		addClass:				'',				// css class to add to the main panel div
-		scrollbars:				 true,			// true to allow scrollbars to be shown
+		scrollbars:				true,			// true to allow scrollbars to be shown
 		padding:				8,				// default padding for the panel
 
 		// Other:
@@ -92,7 +92,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 		this.el.panel = new Element('div', {
 			'id': this.options.id,
-			'class': 'panel expanded',
+			'class': 'panel',
 			'styles': {
 				'height': options.height
 			}

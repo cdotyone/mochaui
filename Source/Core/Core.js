@@ -254,8 +254,8 @@ var NamedClass = function(name, members) {
 	return new Class(members);
 };
 
-function fixPNG(myImage) {
-	if (Browser.ie4 && document.body.filters) {
+function fixPNG(myImage){
+	if (Browser.ie6 && document.body.filters){
 		var imgID = (myImage.id) ? "id='" + myImage.id + "' " : "";
 		var imgClass = (myImage.className) ? "class='" + myImage.className + "' " : "";
 		var imgTitle = (myImage.title) ? "title='" + myImage.title + "' " : "title='" + myImage.alt + "' ";

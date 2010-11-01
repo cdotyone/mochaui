@@ -25,7 +25,7 @@ Object.append(Element.NativeEvents, {
 });
 
 Element.Events.paste = {
-	base : (Browser.opera || (Browser.firefox && Browser.version < 19)) ? 'input' : 'paste',
+	base : (Browser.opera || (Browser.firefox && Browser.version < 4)) ? 'input' : 'paste',
 	condition: function(e){
 		this.fireEvent('paste', e, 1);
 		return false;
@@ -104,7 +104,7 @@ MUI.Mask = new Class({
 		o.isSelection = (o.range.start !== o.range.end);
 		// 8 == backspace && 46 == delete && 127 == iphone's delete
 		o.isDelKey = (keyCode == 46 && !(Browser.ie && e.event.type == 'keypress'));
-		o.isBksKey = (keyCode == 8 || (Browser.Platform.ipod && e.code == 127));
+		o.isBksKey = (keyCode == 8 || (Browser.Platform.ios && e.code == 127));
 		o.isRemoveKey = (o.isBksKey || o.isDelKey);
 		func && func.call(this, e, o);
 		return true;
@@ -116,7 +116,7 @@ MUI.Mask = new Class({
 			var keyRepresentation = MUI.Mask.ignoreKeys[e.code] || '';
 			this.fireEvent('valid', [this.element, e.code, keyRepresentation]);
 		}
-		return (Browser.Platform.ipod || (MUI.Mask.onlyKeyDownRepeat && o.isRemoveKey)) ? this.keypress(e, o) : true;
+		return (Browser.Platform.ios || (MUI.Mask.onlyKeyDownRepeat && o.isRemoveKey)) ? this.keypress(e, o) : true;
 	},
 
 	keypress: function(e, o){
@@ -248,7 +248,7 @@ MUI.Mask.extend({
 	// http://unixpapa.com/js/key.html
 	// if only the keydown auto-repeats
 	// if you have a better implementation of this detection tell me
-	onlyKeyDownRepeat: (Browser.ie || (Browser.webkit && Browser.version >= 525))
+	onlyKeyDownRepeat: (Browser.ie || (Browser.webkit && Browser.version >= 4))
 
 }).extend(function(){
 	var ignoreKeys;
@@ -277,7 +277,7 @@ MUI.Mask.extend({
 				127		: 'delete'
 			};
 
-	if (Browser.Platform.ipod){
+	if (Browser.Platform.ios){
 		ignoreKeys = iphoneIgnoreKeys;
 	} else {
 		// f1, f2, f3 ... f12

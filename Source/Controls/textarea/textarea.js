@@ -145,8 +145,7 @@ MUI.TextArea = new Class({
 			inp.setStyle('overflow', 'hidden');
 
 			// Firefox handles scroll heights differently than all other browsers -- from Amadeus Demarzi
-			if (Browser.firefox)
-			{
+			if (Browser.firefox){
 				o.offset = parseInt(inp.getStyle('padding-top'), 10) + parseInt(inp.getStyle('padding-bottom'), 10) + parseInt(inp.getStyle('border-bottom-width'), 10) + parseInt(inp.getStyle('border-top-width'), 10);
 				o.padding = 0;
 			} else {
@@ -157,7 +156,7 @@ MUI.TextArea = new Class({
 			// This is the only crossbrowser method to determine scrollheight of a single line in a textarea -- from Amadeus Demarzi
 			var backupString = inp.value;
 			inp.value = 'M';
-			inp.set("rows", 1);
+			inp.set('rows', 1);
 			o._lineHeight = (inp.measure(function(){
 				return this.getScrollSize().y;
 			})) + o.offset - o.padding;
@@ -199,10 +198,10 @@ MUI.TextArea = new Class({
 		var self = this;
 		if (!self.options.hasDynamicSize) return;
 		self.element.addEvents({
-			'keydown':self.keypress.bind(self),
-			'keypress':self.keypress.bind(self),
-			'blur':self.blur.bind(self),
-			'scroll':self.scroll.bind(self)
+			'keydown': self.keypress.bind(self),
+			'keypress': self.keypress.bind(self),
+			'blur': self.blur.bind(self),
+			'scroll': self.scroll.bind(self)
 		});
 	},
 
@@ -210,10 +209,10 @@ MUI.TextArea = new Class({
 		var self = this;
 		if (!self.options.hasDynamicSize) return;
 		self.element.removeEvents({
-			'keydown':self.keypress.bind(self),
-			'keypress':self.keypress.bind(self),
-			'blur':self.blur.bind(self),
-			'scroll':self.scroll.bind(self)
+			'keydown': self.keypress.bind(self),
+			'keypress': self.keypress.bind(self),
+			'blur': self.blur.bind(self),
+			'scroll': self.scroll.bind(self)
 		});
 	},
 

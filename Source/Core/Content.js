@@ -292,7 +292,7 @@ MUI.Content.Providers.xhr = {
 
 		// if js is required, but no url, fire loaded to proceed with js-only
 		if (options.url == null && options.require.js && options.require.js.length != 0){
-			Browser.ie4 ? fireLoaded.delay(50, this, [instance, options]) : fireLoaded(instance, options);
+			Browser.ie6 ? fireLoaded.delay(50, this, [instance, options]) : fireLoaded(instance, options);
 			return null;
 		}
 
@@ -302,7 +302,7 @@ MUI.Content.Providers.xhr = {
 		// process content passed to options.content or persisted data
 		if (content){
 			content = MUI.Content.processFilters(content, options);
-			Browser.ie4 ? fireLoaded.delay(50, this, [instance, options, content]) : fireLoaded(instance, options, content);
+			Browser.ie6 ? fireLoaded.delay(50, this, [instance, options, content]) : fireLoaded(instance, options, content);
 			return;
 		}
 
@@ -352,7 +352,7 @@ MUI.Content.Providers.xhr = {
 					if (evalJS && js) Browser.exec(js);
 				}
 
-				Browser.ie4 ? fireLoaded.delay(50, this, [instance,options]) : fireLoaded(instance, options);
+				Browser.ie6 ? fireLoaded.delay(50, this, [instance,options]) : fireLoaded(instance, options);
 			},
 			onComplete: function(){
 			}
@@ -378,7 +378,7 @@ MUI.Content.Providers.json = {
 		// process content passed to options.content or persisted data
 		if (content){
 			content = MUI.Content.processFilters(content, options);
-			Browser.ie4 ? fireLoaded.delay(50, this, [instance, options, content]) : fireLoaded(instance, options, content);
+			Browser.ie6 ? fireLoaded.delay(50, this, [instance, options, content]) : fireLoaded(instance, options, content);
 			return;
 		}
 
@@ -415,7 +415,7 @@ MUI.Content.Providers.json = {
 				options.content = json;
 
 				if (contentContainer) contentContainer.hideSpinner(instance);
-				Browser.ie4 ? fireLoaded.delay(50, this, [instance, options, json]) : fireLoaded(instance, options, json);
+				Browser.ie6 ? fireLoaded.delay(50, this, [instance, options, json]) : fireLoaded(instance, options, json);
 			}.bind(this),
 			onComplete: function(){
 			}.bind(this)
@@ -457,7 +457,7 @@ MUI.Content.Providers.iframe = {
 			// Add onload event to iframe so we can hide the spinner and run fireLoaded()
 			iframeEl.addEvent('load', function(){
 				contentContainer.hideSpinner(instance);
-				Browser.ie4 ? fireLoaded.delay(50, this, [instance, options]) : fireLoaded(instance, options);
+				Browser.ie6 ? fireLoaded.delay(50, this, [instance, options]) : fireLoaded(instance, options);
 			}.bind(this));
 		}
 	}
@@ -483,7 +483,7 @@ MUI.Content.Providers.html = {
 			else contentContainer.set('html', options.content);
 		}
 
-		Browser.ie4 ? fireLoaded.delay(50, this, [instance, options]) : fireLoaded(instance, options);
+		Browser.ie6 ? fireLoaded.delay(50, this, [instance, options]) : fireLoaded(instance, options);
 	}
 
 };
