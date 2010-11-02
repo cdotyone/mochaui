@@ -991,7 +991,7 @@ var initializeColumns = function(){
 						$('parametricsLink').addEvent('click', function(){
 							MUI.parametricsWindow();
 						});
-						$('calendarLink').addEvent('click', function(e){
+						$('pcalendarLink').addEvent('click', function(){
 							MUI.Content.update({
 								element: $('mainPanel'),
 								url: '{controls}calendar/demo.html',
@@ -999,6 +999,18 @@ var initializeColumns = function(){
 								padding: {top: 8, right: 8, bottom: 8, left: 8},
 								onLoaded:function() {
 									MUI.create('MUI.Calendar',{'id':'date1', format:'d/m/Y', direction: 1, tweak: {x: 6, y: 0}});
+								}
+							});
+						});
+						$('wcalendarLink').addEvent('click', function(){
+							new MUI.Window({
+								id: 'cslWindow',
+								content: 'Loading...',
+								title:'Calendar in Window',
+								width: 340,
+								height: 150,
+								onLoaded:function() {
+									MUI.create('MUI.Calendar',{'id':'wcalendarLink1','container':'cslWindow', format:'d/m/Y', direction: 1, tweak: {x: 6, y: 0}});
 								}
 							});
 						});

@@ -38,7 +38,7 @@ MUI.Calendar = new NamedClass('MUI.Calendar', {
 		format:			'd/m/Y',	// date format
 
 		container:		null,		// the parent control in the document to add the control to
-		clearContainer:	false,		// should the control clear its parent container before it appends itself
+		clearContainer:	true,		// should the control clear its parent container before it appends itself
 		drawOnInit:		true,		// true to add tree to container when control is initialized
 		cssClass:		'calendar',	// the primary css tag, added to the beginning of each css name
 		cssClasses:		{},			// ['calendar', 'prev', 'next', 'month', 'year', 'today', 'invalid', 'valid', 'inactive', 'active', 'hover', 'hilite']
@@ -116,7 +116,7 @@ MUI.Calendar = new NamedClass('MUI.Calendar', {
 				if (!o._container) o._container = $(containerEl ? containerEl : o.container);
 			}
 
-			if (o.clearContainer) o._container.empty();
+			if (o.clearContainer && o._container) o._container.empty();
 
 			self.el.input = $(o.id);
 			self.el.button = $(o.id + '_button');
