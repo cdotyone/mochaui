@@ -328,6 +328,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 				  .include(partnerInstance)
 				  .combine(partnerInstance.getPanels())
 				  .each(function(panel){
+						if (panel.el.panel && panel.el.panel.getElement('.mochaIframe') != null) MUI.resizeChildren(panel.el.panel);
 						panel.fireEvent('resize', [panel]);
 				  });
 
