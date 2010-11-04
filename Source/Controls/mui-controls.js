@@ -19,13 +19,13 @@ MUI.files['{controls}mui-controls.js'] = 'loaded';
 
 Object.append(MUI.controls, {
 
-	'accordion':{'samples':['index'],data:['json','html'],'description':'Accordion','isFormControl':true,'css':['{theme}css/Accordion.css']},
-	'calendar':{'samples':['demo'],data:['json'],'description':'Calendar','isFormControl':true,'css':['{theme}css/Calendar.css']},
-	'checkboxgrid':{'samples':['index'],data:['json'],'description':'Check Box Grid','isFormControl':true,'css':['{theme}css/CheckBoxGrid.css']},
+	'accordion':{'samples':[,'demo','index'],data:['json','html'],'description':'Accordion','isFormControl':true,'css':['{theme}css/Accordion.css']},
+	'calendar':{'samples':['demo','index'],data:['json'],'description':'Calendar','isFormControl':true,'css':['{theme}css/Calendar.css']},
+	'checkboxgrid':{'samples':['demo','index'],data:['json'],'description':'Check Box Grid','isFormControl':true,'css':['{theme}css/CheckBoxGrid.css']},
 	'imagebutton':{'samples':['index'],data:['json'],'description':'Image Button','isFormControl':true,'css':['{theme}css/ImageButton.css']},
-	'list':{'samples':['js'],data:['json'],'description':'Basic List','isFormControl':true,'css':['{theme}css/List.css']},
+	'list':{'samples':['demo','index'],data:['json'],'description':'Basic List','isFormControl':true,'css':['{theme}css/List.css']},
 	'omnigrid':{'samples':['index'],data:['json'],'description':'OmniGrid','isFormControl':true,'css':['{theme}css/OmniGrid.css']},
-	'selectlist':{'samples':['index'],data:['json','html'],'description':'Select List','isFormControl':true,'css':['{theme}css/SelectList.css']},
+	'selectlist':{'samples':['demo','index'],data:['json','html'],'description':'Select List','isFormControl':true,'css':['{theme}css/SelectList.css']},
 	'tabs':{'samples':['index'],data:['json','html'],'description':'Tabs','isFormControl':true,'css':['{theme}css/Tabs.css']},
 	'textarea':{'samples':['index'],data:['json','html'],'description':'Text Area','isFormControl':true,'css':['{theme}css/TextBox.css']},
 	'textbox':{'samples':['index'],data:['json'],'description':'Text Box','isFormControl':true,'css':['{theme}css/TextBox.css']},

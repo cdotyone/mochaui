@@ -277,6 +277,10 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 		this._loadContent();
 
+		Object.each(this.el,(function(ele) {
+			ele.store('instance',this);
+		}).bind(this));
+
 		this.fireEvent('drawEnd', [this]);
 		return this;
 	},

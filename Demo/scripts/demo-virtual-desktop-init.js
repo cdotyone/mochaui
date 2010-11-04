@@ -311,8 +311,8 @@ initializeWindows = function(){
 			maximizable: false
 		});
 	};
-	if ($('accordiantestLinkCheck')){
-		$('accordiantestLinkCheck').addEvent('click', function(e){
+	if ($('accordiontestLinkCheck')){
+		$('accordiontestLinkCheck').addEvent('click', function(e){
 			e.stop();
 			MUI.accordionTestWindow();
 		});
@@ -391,7 +391,7 @@ initializeWindows = function(){
 			onDrawBegin: function(){
 /*
 				if ($('builderStyle')) return;
-				new Asset.css(MUI.replacePaths('{theme}/css/Accordian.css'), {id: 'builderStyle'});
+				new Asset.css(MUI.replacePaths('{theme}/css/Accordion.css'), {id: 'builderStyle'});
 */
 			},
 			onLoaded: function(){

@@ -22,8 +22,8 @@
 /* Theme Specific Adjustments to Default Plugin Styles
 ---------------------------------------------------------------- */
 
-/* Accordian */
-.accordianToggler { background: #4c4c4c url(../images/bg-panel-header.gif) repeat-x !important; border-top: 1px solid #141414 !important; }
+/* Accordion */
+.accordionToggler { background: #4c4c4c url(../images/bg-panel-header.gif) repeat-x !important; border-top: 1px solid #141414 !important; }
 .topToggler { border-top: none !important; }
 
 /* Sliders */

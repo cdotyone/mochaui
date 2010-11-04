@@ -36,26 +36,27 @@ MUI.Accordion = new Class({
 	options: {
 		id:					'',			// id of the primary element, and id os control that is registered with mocha
 		container:			null,		// the parent control in the document to add the control to
-		drawOnInit:		    true,		// true to add accordion to container when control is initialized
-		cssClass:			'accordian',// the primary css tag
+		clearContainer:		true,		// should the control clear its parent container before it appends itself
+		drawOnInit:			true,		// true to add accordion to container when control is initialized
+		cssClass:			'accordion',// the primary css tag
 
-		panels:			    [],		    // the list of accordion panels
+		panels:				[],			// the list of accordion panels
 
 		textField:			'text',		// the name of the field that has the panels toggler text
-		valueField:		    'value',	// the name of the field that has the panels toggler values
-		titleField:		    'title',	// the name of the field that has the panels tip text
+		valueField:			'value',	// the name of the field that has the panels toggler values
+		titleField:			'title',	// the name of the field that has the panels tip text
 		contentField:		'html',		// the field that contains the name of the field that has the content for the panel
 
 		value:				'',			// the currently selected panel's value
 		selectedPanel:		null,		// the currently selected panel
-		height:			    false,		// If set, displayed elements will have a fixed height equal to the specified value.
+		height:				false,		// If set, displayed elements will have a fixed height equal to the specified value.
 		width:				false,		// If set, displayed elements will have a fixed width equal to the specified value.
 		insertTitle:		true,		// If set, the title will be inserted into the panel html
 
-		heightFx:			true,		// If set to true, a height transition effect will take place when switching between displayed elements.
+		heightFx:			true,		// If set to true, a height transition effect will take place when switching between displayed e7lements.
 		widthFx:			false,		// If set to true, it will add a width transition to the accordion when switching between displayed elements. Warning: CSS mastery is required to make this work!
 		opacity:			false,		// If set to true, an opacity transition effect will take place when switching between displayed elements.
-		alwaysHide:		    false,		// If set to true, it will be possible to close all displayable elements. Otherwise, one will remain open at all time.
+		alwaysHide:			false,		// If set to true, it will be possible to close all displayable elements. Otherwise, one will remain open at all time.
 		initialDisplayFx:	true		// If set to false, the initial item displayed will not display with an effect but will just be shown immediately.
 
 		//onPanelSelected:    null        // event: when a panel is opened
@@ -69,13 +70,13 @@ MUI.Accordion = new Class({
 		// make sure this controls has an ID
 		var id = o.id;
 		if (!id){
-			id = 'accordian' + (++MUI.IDCount);
+			id = 'accordion' + (++MUI.IDCount);
 			o.id = id;
 		}
 
 		// create sub items if available
 		if (o.drawOnInit && o.panels.length > 0) self.draw();
-		else if(self.fromHTML) {
+		else if (self.fromHTML){
 			window.addEvent('domready', function(){
 				var el = $(id);
 				if (el != null) self.fromHTML();
@@ -100,15 +101,8 @@ MUI.Accordion = new Class({
 		// build primary wrapper div
 		var div = $(o.id);
 		if (!div){
-			var instance=MUI.get(MUI.get($(containerEl ? containerEl : o.container)));
-			if(instance && (instance.isTypeOf('MUI.Panel') || instance.isTypeOf('MUI.Window'))) {
-				instance.el.content.setStyle('padding',0);
-				instance.options.padding=0;
-				div = instance.el.content.addClass(o.cssClass);
-			} else {
-				div = new Element('div',{'id':o.id});
-				isNew = true;
-			}
+			div = new Element('div', {'id':o.id});
+			isNew = true;
 		} else div.empty();
 		if (o.cssClass) div.set('class', o.cssClass);
 		self.element = div;
@@ -132,37 +126,53 @@ MUI.Accordion = new Class({
 
 
 		var attachToDOM = function(){
+			var instance;
 			if (isNew){
-				var container = $(containerEl ? containerEl : o.container);
-				container.appendChild(div);
+				// determine parent container object
+				if (!o._container && typeof(o.container) == 'object'){
+					o._container = o.container;
+					o.container = o.container.get('id');
+				}
+				if (!o._container && typeof(o.container) == 'string'){
+					instance = MUI.get(o.container);
+					if (instance && instance.el.content){
+						instance.el.content.setStyle('padding', '0');
+						o._container = instance.el.content;
+					}
+					if (!o._container) o._container = $(containerEl ? containerEl : o.container);
+				}
+
+				if (o._container){
+					if (o.clearContainer) o._container.empty();
+					o._container.appendChild(div);
+				}
 			}
 
-			self._accordian = new Fx.Accordion(self._togglers, self._panels, {
-					'height':o.heightFx
-					,'width':o.widthFx
-					,'opacity':o.opacity
-					,'fixedHeight':o.height
-					,'fixedWidth':o.width
-					,'alwaysHide':o.alwaysHide
-					,'initialDisplayFx':o.initialDisplayFx
-					,onActive: function(toggler){
-						toggler.addClass('open');
-					},
-					onBackground: function(toggler){
-						toggler.removeClass('open');
-					},
-					onStart: function(){
-						var id=MUI.getID(self.options.container);
-						self.accordionResize = function(){
-							MUI.dynamicResize($(id));
-						};
-						self.accordionTimer = self.accordionResize.periodical(10);
-					},
-					onComplete: function(){
-						var id=MUI.getID(self.options.container);
-						self.accordionTimer = clearInterval(self.accordionTimer);
-						MUI.dynamicResize($(id)); // once more for good measure
-					}
+			instance = MUI.get(o.container);
+			self._accordion = new Fx.Accordion(self._togglers, self._panels, {
+				'height':o.heightFx
+				,'width':o.widthFx
+				,'opacity':o.opacity
+				,'fixedHeight':o.height
+				,'fixedWidth':o.width
+				,'alwaysHide':o.alwaysHide
+				,'initialDisplayFx':o.initialDisplayFx
+				,onActive: function(toggler){
+					toggler.addClass('open');
+				},
+				onBackground: function(toggler){
+					toggler.removeClass('open');
+				},
+				onStart: function(){
+					self.accordionResize = function(){
+						if(instance && instance.dynamicResize) instance.dynamicResize(); // once more for good measure
+					};
+					self.accordionTimer = self.accordionResize.periodical(10);
+				},
+				onComplete: function(){
+					self.accordionTimer = clearInterval(self.accordionTimer);
+					if(instance.dynamicResize) instance.dynamicResize(); // once more for good measure
+				}
 			});
 		};
 
@@ -190,10 +200,10 @@ MUI.Accordion = new Class({
 		panel._element = new Element('div', {'id':value + '_panel','class':'element'}).inject(div);
 		panel._contentEl = new Element('div', {'class':'content'}).inject(panel._element);
 
-		if(o.insertTitle) {
+		if (o.insertTitle){
 			new Element('h3', {'html':title}).inject(panel._contentEl);
 			new Element('p', {'html':html}).inject(panel._contentEl);
-		} else panel._contentEl.set('html',html);
+		} else panel._contentEl.set('html', html);
 
 		self._togglers.push(panel._togglerEl);
 		self._panels.push(panel._element);

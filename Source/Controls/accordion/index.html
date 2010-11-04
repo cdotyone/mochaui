@@ -15,7 +15,7 @@
 	<script type="text/javascript">
 		new MUI.Accordion({
 			container:'page',
-			id:'accordian1',
+			id:'accordion1',
 			panels:[
 				{text:'Lorem Ipsum',value:'panel0','html':'<h3>Lorem Ipsum Dolor Sit Amet</h3><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean consequat dignissim pede. Aliquam erat volutpat. In ac nulla. Phasellus sapien.</p>'},
 				{text:'Dolor Sit','html':'<h3>Lorem Ipsum Dolor Sit Amet</h3><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean consequat dignissim pede. Aliquam erat volutpat. In ac nulla. Phasellus sapien.</p>'},
@@ -23,13 +23,13 @@
 			]
 		});
 		new MUI.Accordion({
-			id:'accordian2',
+			id:'accordion2',
 			onPanelSelected: function(tab, value, self, e) {
 				alert('receieved onPanelSelected command on panel ' + value);
 			}
 		});
 	</script>
-	<link rel="stylesheet" type="text/css" href="../../Themes/default/css/Accordian.css"/>
+	<link rel="stylesheet" type="text/css" href="../../Themes/default/css/Accordion.css"/>
 
 </head>
 
@@ -43,7 +43,7 @@
 <div id="page2">
 	<div>load from html</div>
 
-	<div class="accordian" id="accordian2">
+	<div class="accordion" id="accordion2">
 		<div>
 			<h3 class="toggler first">Lorem Ipsum</h3>
 

@@ -501,12 +501,6 @@ var initializeWindows = function(){
 			}
 		});
 	};
-	if ($('accordiontestLinkCheck')){
-		$('accordiontestLinkCheck').addEvent('click', function(e){
-			e.stop();
-			MUI.accordionTestWindow();
-		});
-	}
 
 	MUI.noCanvasWindow = function(){
 		new MUI.Window({
@@ -982,9 +976,6 @@ var initializeColumns = function(){
 						$('youtubeLink').addEvent('click', function(){
 							MUI.youtubeWindow();
 						});
-						$('accordiontestLink').addEvent('click', function(){
-							MUI.accordionTestWindow();
-						});
 						$('clockLink').addEvent('click', function(){
 							MUI.clockWindow();
 						});
@@ -1022,6 +1013,24 @@ var initializeColumns = function(){
 								padding: {top: 8, right: 8, bottom: 8, left: 8}
 							});
 							MUI.fxmorpherWindow();
+						});
+
+						$('paccordiontestLink').addEvent('click', function(e){
+							e.stop();
+							MUI.create('MUI.Accordion',{
+								container:'mainPanel',
+								id:'accordionMainPanel1',
+								panels:[
+									{text:'Lorem Ipsum',value:'panel0','html':'<h3>Lorem Ipsum Dolor Sit Amet</h3><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean consequat dignissim pede. Aliquam erat volutpat. In ac nulla. Phasellus sapien.</p>'},
+									{text:'Dolor Sit','html':'<h3>Lorem Ipsum Dolor Sit Amet</h3><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean consequat dignissim pede. Aliquam erat volutpat. In ac nulla. Phasellus sapien.</p>'},
+									{text:'Amet','html':'<h3>Lorem Ipsum Dolor Sit Amet</h3><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean consequat dignissim pede. Aliquam erat volutpat. In ac nulla. Phasellus sapien.</p>'}
+								]
+							});
+						});
+
+						$('waccordiontestLink').addEvent('click', function(e){
+							e.stop();
+							MUI.accordionTestWindow();
 						});
 					}
 				});
