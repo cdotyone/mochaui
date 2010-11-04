@@ -263,7 +263,7 @@ var initializeWindows = function(){
 			content: {
 				url: '{plugins}parametrics/demo.html',
 				require: {
-					js: ['{plugins}parametrics/scripts/parametrics.js'] //,
+					js: ['{plugins}parametrics/parametrics.js'] //,
 					// onload: function(){} // either use onload here or Window/onLoaded further down
 				}
 			},

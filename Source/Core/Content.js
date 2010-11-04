@@ -419,7 +419,7 @@ MUI.Content.Providers.json = {
 			}.bind(this),
 			onComplete: function(){
 			}.bind(this)
-		}).get();
+		}).send();
 	}
 
 };
