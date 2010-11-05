@@ -84,7 +84,7 @@ li.divider { margin-top: 2px; padding-top: 3px; border-top: 1px solid #e0e0e0; }
 /* Toolboxes */
 .toolbox { float: right; margin-top: 3px; padding: 0 5px; height: 24px; overflow: hidden; text-align: right; }
 .panel-header-toolbox { }
-div.toolbox.divider { /* Have to specify div here for IE6's sake */ padding-left: 8px; border-left: 1px solid #282828; }
+div.toolbox div.divider { /* Have to specify div here for IE6's sake */ padding-left: 8px; border-left: 1px solid #282828;  float:right; }
 .toolbox img.disabled { cursor: default; }
 .iconWrapper { display: inline-block; height: 22px; min-width: 22px; overflow: hidden; border: 1px solid transparent; }
 * html .iconWrapper { padding: 1px; border: 0; }

@@ -236,6 +236,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 					break;
 				case 'headertool':
 					intoEl = this.el.panelHeaderToolbox;
+					if (section.css == '') section.css = 'toolbox';
 					if (!this.options.header) return;
 					break;
 				case 'footer':
@@ -277,8 +278,8 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 		this._loadContent();
 
-		Object.each(this.el,(function(ele) {
-			ele.store('instance',this);
+		Object.each(this.el, (function(ele){
+			ele.store('instance', this);
 		}).bind(this));
 
 		this.fireEvent('drawEnd', [this]);

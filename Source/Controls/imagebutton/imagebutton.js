@@ -34,17 +34,18 @@ MUI.ImageButton = new Class({
 	Implements: [Events, Options],
 
 	options: {
-	    id:			    '',		    // id of the primary element, and id os control that is registered with mocha
-	    container:		null,		// the parent control in the document to add the control to
-	    drawOnInit:	    true,		// true to add tree to container when control is initialized
-	    cssClass:		'imgButton',// the primary css tag
+		id:				'',			// id of the primary element, and id os control that is registered with mocha
+		container:		null,		// the parent control in the document to add the control to
+		section:		false,		// name of section in panel/window to add this control  
+		drawOnInit:		true,		// true to add tree to container when control is initialized
+		cssClass:		'imgButton',// the primary css tag
 
-	    text:			null,		// the text displayed on the button
-	    title:			null,		// tool top text
-	    imageURL:		null,		// the url to the image that will be displayed
-	    isDisabled:	    false		// is the button disabled
+		text:			null,		// the text displayed on the button
+		title:			null,		// tool top text
+		image:			null,		// the url to the image that will be displayed
+		isDisabled:		false		// is the button disabled
 
-	    //onClick:		null        // event: called when button is clicked
+		//onClick:		null        // event: called when button is clicked
 	},
 
 	initialize: function(options){
@@ -84,11 +85,11 @@ MUI.ImageButton = new Class({
 			self.fireEvent("click", self)
 		});
 
-		if (o.imageURL){
+		if (o.image){
 			var tle = o.title;
 			if (!tle) tle = o.text;
 			var si = new Element('span').inject(a);
-			new Element('img', {'src':o.imageURL,'alt':tle}).inject(si);
+			new Element('img', {'src':MUI.replacePaths(o.image),'alt':tle}).inject(si);
 		}
 		if (o.text){
 			a.appendChild(new Element('span', {'text':o.text,'class':'t'}));
@@ -99,22 +100,24 @@ MUI.ImageButton = new Class({
 		if (!isNew) return self;
 
 		window.addEvent('domready', function(){
-			var container = $(self.options.container);
-			if (container != null && container.options && container.options.id){
-				var muiControl = MUI.get(container.options.id);
-				if (muiControl && muiControl.isTypeOf('MUI.Panel')){
-					var panelID = container.options.id;
-					var div = $(panelID + '_headerToolbox').getElement('#' + panelID + '_buttonHolder');
-					if (div == null){
-						div = new Element('div', { 'id': panelID + '_buttonHolder', 'styles': { 'float': 'right'} });
-						$(panelID + '_headerToolbox').appendChild(div);
+			var instance = MUI.get(o.container);
+			if (!o._container && typeof(o.container) == 'string'){
+				if (instance){
+					if (o.section && instance.getSection){
+						var section = instance.getSection(o.section);
+						if(section) {
+							var bholder = section.element.getElement('#' + section.id + '_buttonHolder');
+							if (!bholder) bholder = new Element('div', { 'id': section.id + '_buttonHolder', 'class':'divider nobr'}).inject(section.element);
+							o._container = bholder;
+						}
 					}
-					div.appendChild(s1);
-					return self;
-				}
-			}
 
-			if (container) container.appendChild(s1);
+					if (!o._container && o.section && instance.el) o._container = instance.el[o.section];
+					if (!o._container && instance.el.content) o._container = instance.el.content;
+				}
+				if (!o._container) o._container = $(o.container);
+			}
+			if (o._container) o._container.appendChild(s1);
 		});
 
 		return self;

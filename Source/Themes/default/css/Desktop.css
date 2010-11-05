@@ -92,7 +92,7 @@ li.divider { margin-top: 2px; padding-top: 3px; border-top: 1px solid #ebebeb; }
 /* Toolboxes */
 .toolbox { float: right; margin-top: 3px; padding: 0 5px; height: 24px; overflow: hidden; text-align: right; }
 .panel-header-toolbox { }
-div.toolbox.divider { /* Have to specify div here for IE6's sake */ background: url(../images/toolbox-divider.gif) repeat-y; padding-left: 8px; }
+div.toolbox div.divider { /* Have to specify div here for IE6's sake */ background: url(../images/toolbox-divider.gif) repeat-y; padding-left: 8px; float:right; }
 .toolbox img.disabled { cursor: default; }
 .iconWrapper { display: inline-block; height: 22px; min-width: 22px; overflow: hidden; border: 1px solid transparent; }
 * html .iconWrapper { padding: 1px; border: 0; }

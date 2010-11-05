@@ -88,7 +88,7 @@ MUI.Content = Object.append((MUI.Content || {}), {
 			// create standard field replacements from data, paging, and path hashes
 			var values = Object.merge(options.data || {}, options.paging || {}, MUI.options.path || {});
 			// call the prepUrl callback if it was defined
-			if (options.prepUrl) options.url = options.prepUrl.apply(this,[options.url, values, instance]);
+			if (options.prepUrl) options.url = options.prepUrl.apply(this, [options.url, values, instance]);
 			options.url = MUI.replaceFields(options.url, values);
 		}
 
@@ -225,15 +225,15 @@ MUI.Content = Object.append((MUI.Content || {}), {
 	},
 
 	getRecords: function(options){
-		var paging=options.paging;
+		var paging = options.paging;
 		if (!options.fireLoaded || !paging || paging.size <= 0 || paging.totalCount == 0) return null;
 		var records;
-		if(!paging.recordsField) records = options.content;
+		if (!paging.recordsField) records = options.content;
 		else records = options.content[paging.recordsField];
 
-		var retval=[];
-		for(var i=(paging.index*paging.size),t=0;i<paging.size && i<records.length;i++,t++) {
-			retval[t]=records[i];
+		var retval = [];
+		for (var i = (paging.index * paging.size),t = 0; i < paging.size && i < records.length; i++,t++){
+			retval[t] = records[i];
 		}
 		return retval;
 	}
@@ -489,6 +489,7 @@ MUI.Content.Providers.html = {
 };
 
 MUI.append({
+
 	WindowPanelShared: {
 
 		/// intercepts workflow from MUI.Content.update
@@ -497,22 +498,7 @@ MUI.append({
 			if (!options.position) options.position = 'content';
 			if (options.position == 'content'){
 				options.contentContainer = this.el.content;
-				if (options.padding == null) options.padding = this.options.padding;
-				if (options.padding || options.padding == 0){
-					// copy padding from main options if not passed in
-					if (typeOf(options.padding) != 'number')
-						Object.append(options.padding, this.options.padding);
-					if (typeOf(options.padding) == 'number')
-						options.padding = {top: options.padding, left: options.padding, right: options.padding, bottom: options.padding};
-
-					// update padding if requested
-					this.el.content.setStyles({
-						'padding-top': options.padding.top,
-						'padding-bottom': options.padding.bottom,
-						'padding-left': options.padding.left,
-						'padding-right': options.padding.right
-					});
-				}
+				this.addPadding(options);
 
 				// set title if given option to do so
 				if (options.title && this.el && this.el.title){
@@ -555,8 +541,46 @@ MUI.append({
 				}
 			}
 			return true;	// tells MUI.Content.update to update the content
+		},
+
+		addPadding: function(options){
+			if (!options) options = Object.clone(this.options);
+
+			if (options.padding == null) options.padding = this.options.padding;
+			if (options.padding || options.padding == 0){
+				// copy padding from main options if not passed in
+				if (typeOf(options.padding) != 'number')
+					Object.append(options.padding, this.options.padding);
+				if (typeOf(options.padding) == 'number')
+					options.padding = {top: options.padding, left: options.padding, right: options.padding, bottom: options.padding};
+
+				// update padding if requested
+				this.el.content.setStyles({
+					'padding-top': options.padding.top,
+					'padding-bottom': options.padding.bottom,
+					'padding-left': options.padding.left,
+					'padding-right': options.padding.right
+				});
+			}
+			return this;
+		},
+
+		removePadding: function(){
+			this.el.content.setStyle('padding', 0);
+			return this;
+		},
+
+		empty: function(){
+			this.el.content.empty();
+			return this;
+		},
+
+		getSection: function(section){
+			var retval;
+			this.sections.each(function(s){
+				if (s.section == section) retval = s;
+			});
+			return retval;
 		}
-
 	}
-
 });

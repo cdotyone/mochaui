@@ -171,14 +171,14 @@ var initializeWindows = function(){
 		});
 	}
 
-	MUI.writeConsole = function(message) {
-		var d=new Date().format('%H:%M:%S: ');
-		new Element('div',{text:d+message}).inject('mochaConsole','top'); 
+	MUI.writeConsole = function(message){
+		var d = new Date().format('%H:%M:%S: ');
+		new Element('div', {text:d + message}).inject('mochaConsole', 'top');
 	};
 
 	MUI.listBuilder = function(container){
-		MUI.create('MUI.List',{
-			id:container+'list1',
+		MUI.create('MUI.List', {
+			id:container + 'list1',
 			container:container,
 			clearContainer: true,
 			content:{url:'data/page1.json',paging:{size:10,totalCount:200,recordsField:false}},
@@ -189,21 +189,21 @@ var initializeWindows = function(){
 			commands:[
 				{'text':'Cancel','name':'Cancel','image':'{theme}images/cancel.png'}
 			],
-			onItemCommand: function(item, self, cmd) {
+			onItemCommand: function(item, self, cmd){
 				MUI.writeConsole(self.options.id + ' received ' + cmd.name + ' command on item ' + item.value)
 			},
-			onItemChecked: function(item, self) {
+			onItemChecked: function(item, self){
 				MUI.writeConsole(self.options.id + ' received onItemChecked command on item ' + item.value)
 			},
-			onItemSelected: function(item, self) {
+			onItemSelected: function(item, self){
 				MUI.writeConsole(self.options.id + ' received onItemSelected command on item ' + item.value)
 			}
 		});
 	};
 
 	MUI.cbgBuilder = function(container){
-		MUI.create('MUI.CheckBoxGrid',{
-			id:container+'cbg1',
+		MUI.create('MUI.CheckBoxGrid', {
+			id:container + 'cbg1',
 			container:container,
 			clearContainer: true,
 			content:{url:'data/page1.json',paging:{size:10,totalCount:200,recordsField:false}},
@@ -212,15 +212,15 @@ var initializeWindows = function(){
 			textField:'FirstName',
 			valueField:'ID',
 			value:'1,3,4',
-			onItemClick: function(checked, inp, self) {
+			onItemClick: function(checked, inp, self){
 				MUI.writeConsole(self.options.id + ' received onItemClick command on item ' + inp.value);
 			},
-			onValueChanged: function(value, self) {
+			onValueChanged: function(value, self){
 				MUI.writeConsole(self.options.id + ' received onValueChanged command, value = ' + self.options.value);
 			}
 		});
-		MUI.create('MUI.CheckBoxGrid',{
-			id:container+'cbg2',
+		MUI.create('MUI.CheckBoxGrid', {
+			id:container + 'cbg2',
 			container:container,
 			clearContainer: false,
 			content:{url:'data/page1.json',paging:{size:10,totalCount:200,recordsField:false}},
@@ -230,18 +230,18 @@ var initializeWindows = function(){
 			valueField:'ID',
 			value:'1',
 			type:'radio',
-			onItemClick: function(checked, inp, self) {
+			onItemClick: function(checked, inp, self){
 				MUI.writeConsole(self.options.id + ' received onItemClick command on item ' + inp.value);
 			},
-			onValueChanged: function(value, self) {
+			onValueChanged: function(value, self){
 				MUI.writeConsole(self.options.id + ' received onValueChanged command, value = ' + self.options.value);
 			}
 		});
 	};
 
-	MUI.slBuilder = function(container) {
-		MUI.create('MUI.SelectList',{
-			id:container+'sl1',
+	MUI.slBuilder = function(container){
+		MUI.create('MUI.SelectList', {
+			id:container + 'sl1',
 			container:container,
 			clearContainer:true,
 			content:{url:'data/employees.json',paging:{size:10,totalCount:200,recordsField:false}},
@@ -250,8 +250,37 @@ var initializeWindows = function(){
 			textField:'name',
 			valueField:'ID',
 			canSelect:true,
-			onItemSelected: function(item, selected, self) {
+			onItemSelected: function(item, selected, self){
 				MUI.writeConsole(self.options.id + ' received onItemSelected command on item \'' + item.name + '\', selected=' + selected)
+			}
+		});
+	};
+
+	MUI.ibBuilder = function(container){
+		MUI.get(container).el.content.empty();
+		MUI.create('MUI.ImageButton', {
+			cssClass:	'imgButton',
+			text:		'Accept',
+			title:		'Accept Order',
+			image:		'{theme}images/accept.png',
+			id:			container + 'btnAccept',
+			container:	container,
+			section:	(container !='mainPanel' ? 'footer' : 'search'),
+			onClick:	function(){
+				if (container != 'mainPanel') MUI.get(container).close();
+				else alert('do something');
+			}
+		});
+		MUI.create('MUI.ImageButton', {
+			cssClass:	'imgButton',
+			text:		'Cancel',
+			title:		'Cancel Order',
+			image:		'{theme}images/cancel.png',
+			id:		container + 'btnCancel',
+			container:	container,
+			onClick:	function(){
+				if (container != 'mainPanel') MUI.get(container).close();
+				else alert('do something');
 			}
 		});
 	};
@@ -942,6 +971,25 @@ var initializeColumns = function(){
 								MUI.slBuilder('slWindow');
 							});
 						}
+						if ($('pibLink')){
+							$('pibLink').addEvent('click', function(e){
+								e.stop();
+								MUI.ibBuilder('mainPanel');
+							});
+						}
+						if ($('wibLink')){
+							$('wibLink').addEvent('click', function(e){
+								e.stop();
+								new MUI.Window({
+									id: 'wiWindow',
+									content: 'loading...',
+									title:'Image Button in Window',
+									width: 340,
+									height: 150
+								});
+								MUI.ibBuilder('wiWindow');
+							});
+						}
 						$('xhrLink').addEvent('click', function(){
 							MUI.Content.update({
 								element: $('mainPanel'),
@@ -988,8 +1036,8 @@ var initializeColumns = function(){
 								url: '{controls}calendar/demo.html',
 								title: 'Calendar Component',
 								padding: {top: 8, right: 8, bottom: 8, left: 8},
-								onLoaded:function() {
-									MUI.create('MUI.Calendar',{'id':'date1', format:'d/m/Y', direction: 1, tweak: {x: 6, y: 0}});
+								onLoaded:function(){
+									MUI.create('MUI.Calendar', {'id':'date1', format:'d/m/Y', direction: 1, tweak: {x: 6, y: 0}});
 								}
 							});
 						});
@@ -1000,8 +1048,8 @@ var initializeColumns = function(){
 								title:'Calendar in Window',
 								width: 340,
 								height: 150,
-								onLoaded:function() {
-									MUI.create('MUI.Calendar',{'id':'wcalendarLink1','container':'cslWindow', format:'d/m/Y', direction: 1, tweak: {x: 6, y: 0}});
+								onLoaded:function(){
+									MUI.create('MUI.Calendar', {'id':'wcalendarLink1','container':'cslWindow', format:'d/m/Y', direction: 1, tweak: {x: 6, y: 0}});
 								}
 							});
 						});
@@ -1017,7 +1065,7 @@ var initializeColumns = function(){
 
 						$('paccordiontestLink').addEvent('click', function(e){
 							e.stop();
-							MUI.create('MUI.Accordion',{
+							MUI.create('MUI.Accordion', {
 								container:'mainPanel',
 								id:'accordionMainPanel1',
 								panels:[
@@ -1107,6 +1155,7 @@ var initializeColumns = function(){
 		content: [
 			{url:'pages/lipsum.html'},
 			{
+				section:'search',
 				position: 'headertool',
 				url: 'pages/toolbox-demo2.html',
 				onLoaded: function(){
