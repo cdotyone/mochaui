@@ -286,6 +286,12 @@ var initializeWindows = function(){
 		});
 	};
 
+	MUI.taBuilder = function(container){
+		MUI.get(container).el.content.empty();
+		MUI.create('MUI.TextArea',{container:container,rows:5,id:container+'textarea1'});
+		MUI.create('MUI.TextArea',{container:container,id:container+'textarea2',hasDynamicSize:true});
+	};
+
 	MUI.parametricsWindow = function(){
 		new MUI.Window({
 			id: 'parametrics',
@@ -991,6 +997,27 @@ var initializeColumns = function(){
 								MUI.ibBuilder('wiWindow');
 							});
 						}
+
+						if ($('ptaLink')){
+							$('ptaLink').addEvent('click', function(e){
+								e.stop();
+								MUI.taBuilder('mainPanel');
+							});
+						}
+						if ($('wtaLink')){
+							$('wtaLink').addEvent('click', function(e){
+								e.stop();
+								new MUI.Window({
+									id: 'taWindow',
+									content: 'loading...',
+									title:'TextArea in Window',
+									width: 340,
+									height: 150
+								});
+								MUI.taBuilder('taWindow');
+							});
+						}
+
 						$('xhrLink').addEvent('click', function(){
 							MUI.Content.update({
 								element: $('mainPanel'),

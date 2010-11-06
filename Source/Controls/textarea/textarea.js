@@ -15,9 +15,6 @@
  - Chris Doty (http://polaropposite.com/)
  - Amadeus Demarzi (http://enmassellc.com/)
 
- note:
- This documentation is taken directly from the javascript source files. It is built using Natural Docs.
-
  credits:
  All of the textarea scroll detection and sizing code came from DynamicTextArea by Amadeus Demarzi
  the code is marked as such as best as I could, and any copyrights to those sections of code belong
@@ -94,7 +91,7 @@ MUI.TextArea = new Class({
 		return o.id;
 	},
 
-	draw: function(containerEl){
+	draw: function(){
 		var self = this,o = this.options;
 
 		var isNew = false;
@@ -137,8 +134,20 @@ MUI.TextArea = new Class({
 		if (!isNew) return inp;
 
 		window.addEvent('domready', function(){
-			var container = $(containerEl ? containerEl : o.container);
-			self._wrapper.inject(container);
+			// determine parent container object
+			if(!o._container && typeof(o.container) == 'string') {
+				var instance = MUI.get(o.container);
+				if(instance) {
+					if(instance.el.content) {
+						instance.el.content.setStyle('padding','0');
+						o._container = instance.el.content;
+					}
+				}
+				if(!o._container) o._container=$(o.container);
+			}
+			if(!o._container) o._container=$(containerEl ? containerEl : o.container);
+			if(!o._container) return;
+			self._wrapper.inject(o._container);
 
 			if (!o.width) o.width = inp.getSize().x;
 			if (!o.hasDynamicSize) return;
@@ -178,7 +187,7 @@ MUI.TextArea = new Class({
 		o.value = self.element.get('value');
 		if (o.value != o._prevValue){
 			o._prevValue = o.value;
-			o.fireEvent('valueChanged', [o.value,self]);
+			self.fireEvent('valueChanged', [o.value,self]);
 		}
 
 		if (e.key == 'backspace' || e.key == 'delete'){
