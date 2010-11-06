@@ -1,6 +1,6 @@
 /* Image Buttons */
-span.imgButton { margin-right:2px; }
-span.imgButton .imgButton { display:table-cell; display:inline-block; background-color:white;border: solid 1px #DDDDDD; cursor: pointer; padding:0px 2px 0px 4px; margin:0; vertical-align:middle; font-family: Sans-Serif; font-size: 11px;}
+span.imgButton { margin-right:2px; line-height:16px; padding-top:1px; }
+span.imgButton .imgButton { display:inline-block; background-color:#404040;border: solid 1px #000000; cursor: pointer; padding:0 2px 0 4px; margin:0; vertical-align:middle; font-family: Sans-Serif; font-size: 11px;}
 span.imgButton .imgButton span span { background-color:Transparent; border:none; color: #AAAAAA; position:relative; top:-6px; padding:0 2px 0 2px;   }
 span.imgButton .imgButton:hover { border:solid 1px #790000;text-decoration: none; color: #790000; }
 span.imgButton .imgButton:hover span { text-decoration: none; color: #790000; }
@@ -13,4 +13,13 @@ span.imgButton .imgButton span { padding:0 4px 0 2px; color: #AAAAAA; position:r
 span.imgButton .imgButton.imgOnly { background-color:Transparent; border:none; padding:0; }
 span.imgButton .imgButton.imgOnly span { padding:0 0 0 2px; }
 span.imgButton .imgButton.imgOnly:hover { background-color:Transparent; border:none;  }
+
+div.toolbox div span.imgButton { line-height:14px; }
+div.toolbox div span.imgButton .imgButton {background-color:transparent }
+div.toolbox div span.imgButton .imgButton span img { padding:0 0 3px 0;position:relative; top:6px }
+
+div.mochaWindowFooter span.imgButton { line-height:14px; }
+div.mochaWindowFooter span.imgButton .imgButton {background-color:#303030; border: solid 1px #000000; }
+div.mochaWindowFooter span.imgButton .imgButton span img { padding:0 0 2px 0;position:relative; top:5px }
+div.mochaWindowFooter span.imgButton .imgButton span span { color: #BBBBBB; }
 /* Image Buttons */

@@ -258,6 +258,7 @@ var initializeWindows = function(){
 
 	MUI.ibBuilder = function(container){
 		MUI.get(container).el.content.empty();
+		if($('mainPanel_search_buttonHolder')) $('mainPanel_search_buttonHolder').empty();
 		MUI.create('MUI.ImageButton', {
 			cssClass:	'imgButton',
 			text:		'Accept',

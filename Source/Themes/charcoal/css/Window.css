@@ -11,9 +11,9 @@
  provides: css for charcoal theme
  ...
  */
+
 /* Windows
 ---------------------------------------------------------------- */
-
 .mocha { display: none; overflow: hidden; background-color: #404040; }
 .mocha.css3 { overflow: visible; }
 .mocha.isFocused { }
@@ -27,7 +27,7 @@ div.mochaToolbarWrapper.bottom { border: 0; border-bottom: 1px solid #222; }
 .mochaContentBorder { border-top: 1px solid #282828; border-bottom: 1px solid #282828; }
 .mochaContentWrapper { /* Has a fixed height and scrollbars if required. */ font-size: 12px; overflow: auto; background: #303030; }
 .mochaContent { padding: 10px 12px; }
-.mochaWindowFooter { height: 26px; padding-left: 30px; }
+.mochaWindowFooter { height: 26px; padding-left: 20px; padding-top:1px; }
 .mocha .handle { position: absolute; background: #0f0; width: 3px; height: 3px; z-index: 2; -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */ filter: progid:DXImageTransform.Microsoft.Alpha(Opacity = 0); /* IE6 and 7*/ opacity: .0; -moz-opacity: .0; overflow: hidden; font-size: 1px; /* For IE6 */ }
 .mocha .corner { /* Corner resize handles */ width: 10px; height: 10px; background: #f00; }
 .mocha .cornerSE { /* Bottom right resize handle */ width: 20px; height: 20px; background: #646464; /* This is the color of the visible resize handle */ }
