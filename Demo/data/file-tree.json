@@ -11,7 +11,8 @@
 			{'value':'pcbgLink','text':'Check Box Grid','isChecked': false,'isSelected': false, 'image':'_doc'},
 			{'value':'pibLink','text':'Image Button','isChecked': false,'isSelected': false, 'image':'_doc'},
 			{'value':'pslLink','text':'Select List','isChecked': false,'isSelected': false, 'image':'_doc'},
-			{'value':'ptaLink','text':'Text Area','isChecked': false,'isSelected': false, 'image':'_doc'}
+			{'value':'ptaLink','text':'Text Area','isChecked': false,'isSelected': false, 'image':'_doc'},
+			{'value':'ptbLink','text':'Text Box','isChecked': false,'isSelected': false, 'image':'_doc'}
 		]}
 	]},
 	{'value':'item2',text:'Windows','isChecked': true,'isSelected': false, imageOpen:'_open', imageClosed:'_closed','nodes':[
@@ -27,7 +28,8 @@
 			{'value':'wcbgLink','text':'Check Box Grid','isChecked': false,'isSelected': false, 'image':'_doc'},
 			{'value':'wibLink','text':'Image Button','isChecked': false,'isSelected': false, 'image':'_doc'},
 			{'value':'wslLink','text':'Select List','isChecked': false,'isSelected': false, 'image':'_doc'},
-			{'value':'wtaLink','text':'Text Area','isChecked': false,'isSelected': false, 'image':'_doc'}
+			{'value':'wtaLink','text':'Text Area','isChecked': false,'isSelected': false, 'image':'_doc'},
+			{'value':'wtbLink','text':'Text Box','isChecked': false,'isSelected': false, 'image':'_doc'}
 		]}
 	]},
 	{'value':'item3','text':'Plugins','isChecked': false,'isSelected': false, imageOpen:'_open', imageClosed:'_closed','nodes':[

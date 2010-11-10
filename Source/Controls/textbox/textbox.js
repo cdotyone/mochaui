@@ -26,14 +26,14 @@
  ...
  */
 
-MUI.files['{controls}TextBox/TextBox.js'] = 'loaded';
+MUI.files['{controls}textbox/textbox.js'] = 'loaded';
 
 MUI.TextBox = new Class({
 
 	Implements: [Events, Options],
 
 	options: {
-		 id:				''			// id of the primary element, and id os control that is registered with mocha
+		id:				''			// id of the primary element, and id os control that is registered with mocha
 		,container:			null		// the parent control in the document to add the control to
 		,drawOnInit:		true		// true to add textbox to container when control is initialized
 		,cssClass:			'form'		// the primary css tag
@@ -66,15 +66,6 @@ MUI.TextBox = new Class({
 
 		// create sub items if available
 		if (o.drawOnInit && o.container != null) this.draw();
-		else {
-			window.addEvent('domready', function(){
-				var el = $(id);
-				if (el != null){
-					self.fromHTML();
-					self.checkForMask();
-				}
-			});
-		}
 
 		MUI.set(id, this);
 	},
@@ -87,27 +78,25 @@ MUI.TextBox = new Class({
 			o.maskType = o.maskType.camelCase().capitalize();
 
 			if (o.maskType == 'Password'){
-				new MUI.Require({js: ['PassShark.js'],
+				new MUI.Require({js: ['{controls}textbox/passshark.js'],
 					onload: function(){
-						var options = {};
-						options.extend(o.maskOptions);
+						var options = Object.clone(o.maskOptions);
 						options.maskType = o.maskType.toLowerCase();
 						new MUI.PassShark(self.element, options);
 					}
 				});
 			} else {
-				new MUI.Require({js: ['Mask.js'],
+				new MUI.Require({js: ['{controls}textbox/mask.js'],
 					onload: function(){
 						new MUI.Require({
-							js: ['Mask.' + o.maskType.split('.')[0] + '.js'],
+							js: ['{controls}textbox/mask.' + o.maskType.split('.')[0].toLowerCase() + '.js'],
 							onload: function(){
 								var o = self.options;
-								var options = {};
-								options.extend(o.maskOptions);
+								var options = Object.clone(o.maskOptions);
 								options.maskType = o.maskType.toLowerCase();
 								var klass = self.getMaskClassOptions(o.maskType);
 								if (!klass) return;
-								new klass(self.element, options);
+								new klass(options).link(self.element);
 							}
 						});
 					}
@@ -136,6 +125,7 @@ MUI.TextBox = new Class({
 
 		if (o.formTitleField) return self._getData(o.formData, o.formTitleField);
 		if (o.formData) return self._getData(o.formData, o.id);
+		if (o.formTitle) return o.formTitle;
 		return o.id;
 	},
 
@@ -164,7 +154,7 @@ MUI.TextBox = new Class({
 		if (!inp){
 			self._wrapper = new Element('fieldset', {'id':o.id});
 
-			var tle = self._getData(o.formData, o.formTitleField);
+			var tle = self.getFieldTitle();
 			if (!tle) tle = o.id;
 			self._label = new Element('label', {'text':tle}).inject(self._wrapper);
 
@@ -187,8 +177,21 @@ MUI.TextBox = new Class({
 		if (!isNew) return inp;
 
 		window.addEvent('domready', function(){
-			var container = $(containerEl ? containerEl : o.container);
-			self._wrapper.inject(container);
+			// determine parent container object
+			if (!o._container && typeof(o.container) == 'string'){
+				var instance = MUI.get(o.container);
+				if (instance){
+					if (instance.el.content){
+						instance.el.content.setStyle('padding', '0');
+						o._container = instance.el.content;
+					}
+				}
+				if (!o._container) o._container = $(o.container);
+			}
+			if (!o._container) o._container = $(containerEl ? containerEl : o.container);
+			if (!o._container) return;
+
+			self._wrapper.inject(o._container);
 		});
 
 		return inp;

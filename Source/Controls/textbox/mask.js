@@ -1,14 +1,18 @@
 /*
  ---
 
+ name: MUI.Mask
+
  description: The base component for the MUI.Mask plugin.
 
  authors:
  - Fábio Miranda Costa
 
  requires:
- - core/1.2.4: [Class.Extras, Element.Event, Element.Style]
- - more/1.2.4: [Element.Forms]
+ - Core/Class.Extras
+ - Core/Element.Event
+ - Core/Element.Style
+ - More/Element.Forms
 
  license: MIT-style license
 
@@ -17,13 +21,12 @@
  ...
  */
 
-MUI.files['{controls}TextBox/Mask.js'] = 'loaded';
+MUI.files['{controls}textbox/mask.js'] = 'loaded';
 
 // credits to Jan Kassens
 Object.append(Element.NativeEvents, {
 	'paste': 2, 'input': 2
 });
-
 Element.Events.paste = {
 	base : (Browser.opera || (Browser.firefox && Browser.version < 4)) ? 'input' : 'paste',
 	condition: function(e){
@@ -35,8 +38,6 @@ Element.Events.paste = {
 MUI.Mask = new Class({
 
 	Implements: [Options, Events],
-
-	eventsToBind: ['focus', 'blur', 'keydown', 'keypress', 'paste'],
 
 	options: {
 		selectOnFocus: true,
@@ -54,6 +55,7 @@ MUI.Mask = new Class({
 		//decimal: ',',
 		//thousands: '.',
 		//maxLength: 18
+
 		//REPEAT MASK OPTIONS
 		//mask: '',
 		//maxLength: 0 // 0 for infinite
@@ -62,48 +64,59 @@ MUI.Mask = new Class({
 		//regex: null
 	},
 
-	initialize: function(el, options){
-		this.element = $(el);
-		if (this.element.get('tag') !== 'input' || !(this.element.get('type') == 'text' || (this.element.get('type') == 'password') && options.maskType == 'password')) return;
-		this.setup(options);
+	initialize: function(options){
+		this.setOptions(options);
+		this.ignore = false;
+		this.bound = {'focus': 0, 'blur': 0, 'keydown': 0, 'keypress': 0, 'paste': 0};
 	},
 
-	setup: function(options){
-		this.setOptions(options);
-		if (this.element.retrieve('meiomask')) this.remove();
-		this.ignore = false;
-		this.maxlength = this.element.get('maxlength');
-		this.eventsToBind.each(function(evt){
-			this.element.addEvent(evt, this.onMask.bind(this, this[evt]));
-		}, this);
-		this.element.store('meiomask', this).erase('maxlength');
-		var elementValue = this.element.get('value');
-		if (elementValue != ''){
-			this.element.set('value', elementValue.meiomask(this.constructor, this.options));
+	link: function(element){
+		element = $(element);
+		if (element.get('tag') != 'input' || element.get('type') != 'text') return;
+		if (this.element) this.unlink();
+		this.element = element;
+		return this.attach();
+	},
+
+	unlink: function(){
+		return this.detach();
+	},
+
+	attach: function(){
+		var self = this;
+		if (this.maxlength == null) this.maxlength = this.element.get('maxLength');
+		this.element.removeAttribute('maxLength');
+		for (var evt in this.bound){
+			this.bound[evt] = (function(onmask, func){
+				return function(e){
+					return onmask.apply(self, [e,func]);
+				}
+			})(this.onMask, this[evt]);
+			this.element.addEvent(evt, this.bound[evt]);
 		}
+		var elementValue = this.element.get('value');
+		if (elementValue != '') this.element.set('value', this.mask(elementValue));
 		return this;
 	},
 
-	remove: function(){
-		var mask = this.element.retrieve('meiomask');
-		if (mask){
-			var maxlength = mask.maxlength;
-			if (maxlength !== null) this.element.set('maxlength', maxlength);
-			mask.eventsToBind.each(function(evt){
-				this.element.removeEvent(evt, this[evt]);
-			}, mask);
-			this.element.eliminate('meiomask');
+	detach: function(){
+		var maxlength = this.maxlength;
+		if (maxlength != null) this.element.set('maxlength', maxlength);
+		for (var evt in this.bound){
+			this.element.removeEvent(evt, this.bound[evt]);
+			this.bound[evt] = 0;
 		}
+		this.element = null;
 		return this;
 	},
 
 	onMask: function(e, func){
 		if (this.element.get('readonly')) return true;
-		var o = {}, keyCode = (e.type == 'paste') ? null : e.event.keyCode;
+		var o = {}, event = e.event, keyCode = (e.type == 'paste') ? null : event.keyCode;
 		o.range = this.element.getSelectedRange();
 		o.isSelection = (o.range.start !== o.range.end);
 		// 8 == backspace && 46 == delete && 127 == iphone's delete
-		o.isDelKey = (keyCode == 46 && !(Browser.ie && e.event.type == 'keypress'));
+		o.isDelKey = (keyCode == 46 && (event.type != 'keypress' || ((Browser.firefox || Browser.opera) && !event.which)));
 		o.isBksKey = (keyCode == 8 || (Browser.Platform.ios && e.code == 127));
 		o.isRemoveKey = (o.isBksKey || o.isDelKey);
 		func && func.call(this, e, o);
@@ -119,32 +132,25 @@ MUI.Mask = new Class({
 		return (Browser.Platform.ios || (MUI.Mask.onlyKeyDownRepeat && o.isRemoveKey)) ? this.keypress(e, o) : true;
 	},
 
-	keypress: function(e, o){
-		if (this.options.autoTab){
-			if (this.shouldFocusNext()){
-				var nextField = this.getNextInput();
-				if (nextField){
-					nextField.focus();
-					if (nextField.select) nextField.select();
-				}
+	keypress: function(){
+		if (this.options.autoTab && this.shouldFocusNext()){
+			var nextField = this.getNextInput();
+			if (nextField){
+				nextField.focus();
+				if (nextField.select) nextField.select();
 			}
 		}
 		return true;
 	},
 
-	focus: function(e, o){
+	focus: function(){
 		var element = this.element;
 		element.store('meiomask:focusvalue', element.get('value'));
 	},
 
-	shouldFocusNext: function(){
-		var maxLength = this.options.maxLength;
-		return maxLength && this.element.get('value').length >= maxLength;
-	},
-
-	blur: function(e, o){
+	blur: function(e){
 		var element = this.element;
-		if (element.retrieve('meiomask:focusvalue') != element.get('value')){
+		if (e && element.retrieve('meiomask:focusvalue') != element.get('value')){
 			element.fireEvent('change');
 		}
 	},
@@ -162,20 +168,13 @@ MUI.Mask = new Class({
 		if (!this.element.get('size')) this.element.set('size', this.maskArray.length);
 	},
 
-	isFixedChar: function(_char){
-		return !MUI.Mask.matchRules.contains(_char);
-	},
-
-	mask: function(str){
-		return str;
-	},
-
-	unmask: function(str){
-		return str;
+	shouldFocusNext: function(){
+		var maxLength = this.options.maxLength;
+		return maxLength && this.element.get('value').length >= maxLength;
 	},
 
 	getNextInput: function(){
-		var fields = this.element.form.elements, field;
+		var fields = $A(this.element.form.elements), field;
 		for (var i = fields.indexOf(this.element) + 1, l = fields.length; i < l; i++){
 			field = fields[i];
 			if (this.isFocusableField(field)) return $(field);
@@ -186,71 +185,86 @@ MUI.Mask = new Class({
 	isFocusableField: function(field){
 		return (field.offsetWidth > 0 || field.offsetHeight > 0) // is it visible?
 				&& field.nodeName != 'FIELDSET';
+	},
+
+	isFixedChar: function(_char){
+		return !MUI.Mask.matchRules.contains(_char);
+	},
+
+	mask: function(str){
+		return str;
+	},
+
+	unmask: function(str){
+		return str;
 	}
 
 });
 
-MUI.Mask.extend({
 
-	matchRules: '',
+Object.append(MUI.Mask,
+		Object.append(MUI.Mask, {
 
-	rulesRegex: new RegExp(''),
+			matchRules: '',
 
-	rules: {},
+			rulesRegex: new RegExp(''),
 
-	setRule: function(ruleKey, properties){
-		this.setRules({ruleKey: properties});
-	},
+			rules: {},
 
-	setRules: function(rulesObj){
-		Object.append(this.rules, rulesObj);
-		var rulesKeys = [];
-		for (rule in rulesObj) rulesKeys.push(rule);
-		this.matchRules += rulesKeys.join('');
-		this.recompileRulesRegex();
-	},
+			setRule: function(ruleKey, properties){
+				this.setRules({ruleKey: properties});
+			},
 
-	removeRule: function(rule){
-		delete this.rules[rule];
-		this.matchRules = this.matchRules.replace(rule, '');
-		this.recompileRulesRegex();
-	},
+			setRules: function(rulesObj){
+				Object.append(this.rules, rulesObj);
+				var rulesKeys = [];
+				for (rule in rulesObj) rulesKeys.push(rule);
+				this.matchRules += rulesKeys.join('');
+				this.recompileRulesRegex();
+			},
 
-	removeRules: function(){
-		var rulesToRemove = Array.flatten(arguments);
-		for (var i = rulesToRemove.length; i--;) this.removeRule(rulesToRemove[i]);
-	},
+			removeRule: function(rule){
+				delete this.rules[rule];
+				this.matchRules = this.matchRules.replace(rule, '');
+				this.recompileRulesRegex();
+			},
 
-	recompileRulesRegex: function(){
-		this.rulesRegex.compile('[' + this.matchRules.escapeRegExp() + ']', 'g');
-	},
+			removeRules: function(){
+				var rulesToRemove = Array.flatten(arguments);
+				for (var i = rulesToRemove.length; i--;) this.removeRule(rulesToRemove[i]);
+			},
 
-	createMasks: function(type, masks){
-		type = type.capitalize();
-		for (mask in masks){
-			this[type][mask.camelCase().capitalize()] = new Class({
-				Extends: this[type],
-				options: masks[mask]
-			});
-		}
-	},
+			recompileRulesRegex: function(){
+				this.rulesRegex.compile('[' + this.matchRules.escapeRegExp() + ']', 'g');
+			},
 
-	// credits to Christoph Pojer's (cpojer) http://cpojer.net/
-	upTo: function(number){
-		number = '' + number;
-		return function(value, index, _char){
-			if (value.charAt(index - 1) == number[0])
-				return (_char <= number[1]);
-			return true;
-		};
-	},
+			createMasks: function(type, masks){
+				type = type.capitalize();
+				for (mask in masks){
+					this[type][mask.camelCase().capitalize()] = new Class({
+						Extends: this[type],
+						options: masks[mask]
+					});
+				}
+			},
 
-	// http://unixpapa.com/js/key.html
-	// if only the keydown auto-repeats
-	// if you have a better implementation of this detection tell me
-	onlyKeyDownRepeat: (Browser.ie || (Browser.webkit && Browser.version >= 4))
+			// credits to Christoph Pojer's (cpojer) http://cpojer.net/
+			upTo: function(number){
+				number = '' + number;
+				return function(value, index, _char){
+					if (value.charAt(index - 1) == number[0])
+						return (_char <= number[1]);
+					return true;
+				};
+			},
 
-}).extend(function(){
+			// http://unixpapa.com/js/key.html
+			// if only the keydown auto-repeats
+			// if you have a better implementation of this detection tell me
+			onlyKeyDownRepeat: (Browser.ie || (Browser.webkit && Browser.version >= 4))
+
+		})
+		, function(){
 	var ignoreKeys;
 	var desktopIgnoreKeys = {
 		8		: 'backspace',
@@ -292,7 +306,7 @@ MUI.Mask.extend({
 		'Z': {regex: /[A-Z]/},
 		'a': {regex: /[a-zA-Z]/},
 		'*': {regex: /[0-9a-zA-Z]/},
-		'@': {regex: /[0-9a-zA-ZçáàãâéèêíìóòõôúùüñÇÁÀÃÂÉÈÊÍÌÓÒÕÔÚÙÜÑ]/}, // 'i' doesnt work here
+		'@': {regex: /[0-9a-zA-ZçáàãâéèêíìóòõôúùüñÇÁÀÃÂÉÈÊÍÌÓÒÕÔÚÙÜÑ]/}, // 'i' regex modifier doesnt work well with unicode chars
 		'h': {regex: /[0-9]/, check: MUI.Mask.upTo(23)},
 		'd': {regex: /[0-9]/, check: MUI.Mask.upTo(31)},
 		'm': {regex: /[0-9]/, check: MUI.Mask.upTo(12)}

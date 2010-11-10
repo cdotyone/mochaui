@@ -292,6 +292,28 @@ var initializeWindows = function(){
 		MUI.create('MUI.TextArea',{container:container,id:container+'textarea2',hasDynamicSize:true});
 	};
 
+	MUI.tbBuilder = function(container){
+		var content = MUI.get(container).el.content;
+		content.empty();
+
+		var ftypes = ['fixed.phone','fixed.phone-us','fixed.cpf','fixed.cnpj','fixed.date','fixed.date-us','fixed.cep','fixed.time','fixed.cc'];
+		Object.append(ftypes,['reverse.integer','reverse.decimal','reverse.decimal-us','reverse.reais','reverse.dollar','regexp.ip','regexp.email','password']);
+
+		var mtype;
+		ftypes.each(function(t) {
+			var s=t.split('.');
+			var ttype = s[0].capitalize();
+			if (mtype != ttype) {
+				mtype = ttype;
+				window.addEvent('domready', function() {
+					new Element('div', {'text':ttype,'id':container+ttype}).inject(content);
+				});
+			}
+			if(s.length<2) s[1]=ttype;
+			MUI.create('MUI.TextBox',{container:container+ttype,id:container+t,formTitle:s[1].capitalize(),maskType:t,autoTab:true});
+		});
+	};
+
 	MUI.parametricsWindow = function(){
 		new MUI.Window({
 			id: 'parametrics',
@@ -1015,6 +1037,26 @@ var initializeColumns = function(){
 									height: 150
 								});
 								MUI.taBuilder('taWindow');
+							});
+						}
+
+						if ($('ptbLink')){
+							$('ptbLink').addEvent('click', function(e){
+								e.stop();
+								MUI.tbBuilder('mainPanel');
+							});
+						}
+						if ($('wtbLink')){
+							$('wtbLink').addEvent('click', function(e){
+								e.stop();
+								new MUI.Window({
+									id: 'tbWindow',
+									content: 'loading...',
+									title:'TextBox in Window',
+									width: 340,
+									height: 150
+								});
+								MUI.tbBuilder('tbWindow');
 							});
 						}
 

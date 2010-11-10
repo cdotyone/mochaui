@@ -1,22 +1,24 @@
 /*
  ---
 
+ name: MUI.Mask.Regexp
+
  description: A mask that is defined by a regular expression.
 
  authors:
  - Fábio Miranda Costa
 
  requires:
- - Meio.Mask
+ - MUI.Mask
 
  license: MIT-style license
 
- provides: [Meio.Mask.Regexp]
+ provides: [MUI.Mask.Regexp]
 
  ...
  */
 
-MUI.files['{controls}TextBox/Mask.Regexp.js'] = 'loaded';
+MUI.files['{controls}textbox/mask.regexp.js'] = 'loaded';
 
 MUI.Mask.Regexp = new Class({
 
@@ -48,7 +50,7 @@ MUI.Mask.Regexp = new Class({
 		return true;
 	},
 
-	paste: function(e, o){
+	paste: function(){
 		var masked = this.applyMask(this.element.get('value'), true);
 		this.element.set('value', masked.value).setCaretPosition(masked.index);
 	},

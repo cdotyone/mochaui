@@ -14,16 +14,16 @@
  dependencies:
  - MooTools-Core
  - MooTools-More > Class.Occlude.js
- - MooTools-More > Log.js
  - MooTools-More > Class.Binds.js
+
  ...
  */
 
-MUI.files['{controls}TextBox/PassShark.js'] = 'loaded';
+MUI.files['{controls}textbox/passshark.js'] = 'loaded';
 
 MUI.PassShark = new Class({
 
-	Implements: [Options, Events, Log, Class.Occlude],
+	Implements: [Options, Events, Class.Occlude],
 
 	Binds: ['start', 'stop', '_check'],
 
@@ -31,8 +31,7 @@ MUI.PassShark = new Class({
 		interval: 200,
 		duration: 2000,
 		replacement: '%u25CF',
-		prefix: 'password-',
-		debug: false
+		prefix: 'password-'
 
 		//onStageChange: null
 	},
@@ -48,7 +47,6 @@ MUI.PassShark = new Class({
 	},
 
 	_setup: function(){
-		if (this.options.debug) this.enableLog();
 		var attributes = this.origElement.getProperties(
 				'name',
 				'id',
@@ -81,10 +79,8 @@ MUI.PassShark = new Class({
 		}) : {};
 		// Adding the new text field.
 		var input = new Element('input', attributes).inject(this.origElement, 'after');
-		// Log if injection in the DOM was right.
-		this.log('inject element: ', input);
 		// Adapt label to new field.
-		$pick(this.$E('label[for=' + params.id + ']'), new Element('label')).setProperty('for', opts.prefix + params.id);
+		//$pick(this.$E('label[for=' + params.id + ']'), new Element('label')).setProperty('for', opts.prefix + params.id);
 		// Disable tabindex.
 		this.origElement.setProperty('tabindex', '');
 		// Disable accesskey.
@@ -97,15 +93,13 @@ MUI.PassShark = new Class({
 		this._check.delay(opts.interval, this, ['', true]);
 	}.protect(),
 
-	start: function(event){
-		if (this.options.debug) this.log('Event:', event.type);
+	start: function(){
 		this.element.store('focus', 1);
 		clearTimeout(this.checker);
 		this.checker = this._check.delay(this.options.interval, this, '');
 	},
 
-	stop: function(event){
-		if (this.options.debug) this.log('Event:', event.type);
+	stop: function(){
 		this.element.store('focus', 0);
 		this.checker = clearTimeout(this.checker);
 	},
@@ -114,11 +108,11 @@ MUI.PassShark = new Class({
 		var value = this.origElement.get('value');
 		var split = caret;
 		if ((typeof caret == 'number') && (this.element.getCaretPosition() < caret)){
-			// Need for cheking if the key 'backspace' was hit, since it changes the caret position whereas 'delete/supr' does not.
+			// Need for checking if the key 'backspace' was hit, since it changes the caret position whereas 'delete/supr' does not.
 			split = caret - diff;
 		}
 		else if (typeof caret != 'object'){
-			// Apply if 'delete' key was hit and the deletion didn't happen from a textSeletion.
+			// Apply if 'delete' key was hit and the deletion didn't happen from a textSelection.
 			caret = caret + diff;
 		}
 		var str1 = value.slice(0, caret.start || split);
@@ -127,7 +121,6 @@ MUI.PassShark = new Class({
 	}.protect(),
 
 	_setPassword: function(str){
-		if (this.options.debug) this.log('_setPassword:', str);
 		var tmp = '';
 		var add = 0;
 		for (var i = 0; i < str.length; i++){
@@ -157,7 +150,6 @@ MUI.PassShark = new Class({
 	},
 
 	_check: function(oldValue, initialCall, posCaret){
-		if (this.options.debug) this.log('_check:', oldValue);
 		var bullets = this.element.get('value');
 		// Check if there is an inferior number of characters AND it's not the last char, hence, deletion...
 		if (bullets.length < oldValue.length){
