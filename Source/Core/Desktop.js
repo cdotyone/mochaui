@@ -644,7 +644,7 @@ MUI.append({
 
 			panelsToResize.each(function(panel){
 				var MUIPanel = MUI.get(panel.id);
-				MUIPanel.fireEvent('resize', [MUIPanel]);
+				if (action != 'new') MUIPanel.fireEvent('resize', [MUIPanel]);
 			});
 			
 		}.bind(this));
