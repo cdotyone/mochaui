@@ -1179,7 +1179,6 @@ var initializeColumns = function(){
 	};
 
 	var updateResizeElements = function(){
-	console.log(this.id);
 		countResizeEvents[this.id]++
 		if (this.countEvents) this.countEvents.set('text', countResizeEvents[this.id]);
 		var newSize = this.el.contentWrapper.getStyles(['width', 'height']);
