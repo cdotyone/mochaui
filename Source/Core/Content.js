@@ -226,7 +226,7 @@ MUI.Content = Object.append((MUI.Content || {}), {
 
 	getRecords: function(options){
 		var paging = options.paging;
-		if (!options.fireLoaded || !paging || paging.size <= 0 || paging.totalCount == 0) return null;
+		if (!options.fireLoaded || !paging || paging.size <= 0 || paging.totalCount == 0) return options.content;
 		var records;
 		if (!paging.recordsField) records = options.content;
 		else records = options.content[paging.recordsField];

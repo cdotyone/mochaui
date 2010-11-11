@@ -268,8 +268,7 @@ var initializeWindows = function(){
 			container:	container,
 			section:	(container !='mainPanel' ? 'footer' : 'search'),
 			onClick:	function(){
-				if (container != 'mainPanel') MUI.get(container).close();
-				else alert('do something');
+				MUI.writeConsole(self.options.id + ' clicked');
 			}
 		});
 		MUI.create('MUI.ImageButton', {
@@ -280,8 +279,7 @@ var initializeWindows = function(){
 			id:		container + 'btnCancel',
 			container:	container,
 			onClick:	function(){
-				if (container != 'mainPanel') MUI.get(container).close();
-				else alert('do something');
+				MUI.writeConsole(self.options.id + ' clicked');
 			}
 		});
 	};
@@ -311,6 +309,23 @@ var initializeWindows = function(){
 			}
 			if(s.length<2) s[1]=ttype;
 			MUI.create('MUI.TextBox',{container:container+ttype,id:container+t,formTitle:s[1].capitalize(),maskType:t,autoTab:true});
+		});
+	};
+
+	MUI.treeBuilder = function(container) {
+		MUI.create('MUI.Tree',{
+			container:container,
+			id:container+'tree1',
+			content: {url: 'data/tree-testdata.json'},
+			onNodeExpanded: function(node, isExpanded, self) {
+				MUI.writeConsole(self.options.id + ' receieved onNodeExpanded command on node ' + node.value + ', isExpanded=' + isExpanded)
+			},
+			onNodeChecked: function(node, checked, self) {
+				MUI.writeConsole(self.options.id + ' receieved onNodeChecked command on node ' + node.value + ', checked=' + checked);
+			},
+			onNodeSelected: function(node, self) {
+				MUI.writeConsole(self.options.id + ' receieved onNodeSelected command on node ' + node.value)
+			}
 		});
 	};
 
@@ -1057,6 +1072,26 @@ var initializeColumns = function(){
 									height: 150
 								});
 								MUI.tbBuilder('tbWindow');
+							});
+						}
+
+						if ($('ptreeLink')){
+							$('ptreeLink').addEvent('click', function(e){
+								e.stop();
+								MUI.treeBuilder('mainPanel');
+							});
+						}
+						if ($('wtreeLink')){
+							$('wtreeLink').addEvent('click', function(e){
+								e.stop();
+								new MUI.Window({
+									id: 'wtreeLinkWindow',
+									content: 'loading...',
+									title:'Tree in Window',
+									width: 340,
+									height: 150
+								});
+								MUI.treeBuilder('wtreeLinkWindow');
 							});
 						}
 

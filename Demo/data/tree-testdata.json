@@ -1,0 +1,16 @@
+[
+	{value:'item1',text:"Item 1",isChecked: false,isSelected: false,nodes:[
+		{value:'item4',text:"Item 4",isChecked: true,isSelected: true},
+		{value:'item5',text:"Item 5",isChecked: false,isSelected: false},
+		{value:'item6',text:"Item 6",isChecked: false,isSelected: false}
+	]},
+	{value:'item2',text:"Item 2",isChecked: true,isSelected: false,nodes:[
+		{value:'item7',text:"Item 7",isChecked: false,isSelected: false},
+		{value:'item8',text:"Item 8",isChecked: false,isSelected: false},
+		{value:'item9',text:"Item 9",isChecked: false,isSelected: false}
+	]},
+	{value:'item3',text:"Item 3",isChecked: false,isSelected: false,nodes:[
+		{value:'item10',text:"Item 10",isChecked: false,isSelected: false}
+	]},
+	{value:'item11',text:"Item 11",isChecked: false,isSelected: false}
+]

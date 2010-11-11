@@ -27,9 +27,9 @@ Object.append(MUI.controls, {
 	'omnigrid':{'samples':['index'],data:['json'],'description':'OmniGrid','isFormControl':true,'css':['{theme}css/OmniGrid.css']},
 	'selectlist':{'samples':['demo','index'],data:['json','html'],'description':'Select List','isFormControl':true,'css':['{theme}css/SelectList.css']},
 	'tabs':{'samples':['index'],data:['json','html'],'description':'Tabs','isFormControl':true,'css':['{theme}css/Tabs.css']},
-	'textarea':{'samples':['index'],data:['json','html'],'description':'Text Area','isFormControl':true,'css':['{theme}css/TextBox.css']},
-	'textbox':{'samples':['index'],data:['json'],'description':'Text Box','isFormControl':true,'css':['{theme}css/TextBox.css']},
-	'tree':{'samples':['js'],data:['json'],'description':'Tree','isFormControl':true,'css':['{theme}css/Tree.css']}
+	'textarea':{'samples':['index','demo'],data:['json','html'],'description':'Text Area','isFormControl':true,'css':['{theme}css/TextBox.css']},
+	'textbox':{'samples':['index','demo'],data:['json'],'description':'Text Box','isFormControl':true,'css':['{theme}css/TextBox.css']},
+	'tree':{'samples':['index','demo'],data:['json'],'description':'Tree','isFormControl':true,'css':['{theme}css/Tree.css']}
 
 });
 
