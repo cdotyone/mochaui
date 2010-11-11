@@ -142,7 +142,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 					'class': 'handleIcon'
 				}).inject(this.el.handle);
 
-				this._addResizeRight(this.el.column, options.resizeLimit[0], options.resizeLimit[1]);
+				this._addResize(this.el.column, options.resizeLimit[0], options.resizeLimit[1], 'right');
 				break;
 			case 'right':
 				this.el.handle = new Element('div', {
@@ -154,7 +154,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 					'id': options.id + '_handle_icon',
 					'class': 'handleIcon'
 				}).inject(this.el.handle);
-				this._addResizeLeft(this.el.column, options.resizeLimit[0], options.resizeLimit[1]);
+				this._addResize(this.el.column, options.resizeLimit[0], options.resizeLimit[1], 'left');
 				break;
 		}
 
@@ -258,14 +258,19 @@ MUI.Column = new NamedClass('MUI.Column', {
 		MUI.erase(self.options.id);
 		return this;
 	},
-
-	_addResizeRight: function(element, min, max){
+	
+	_addResize: function(element, min, max, where){
 		var instance = this;
 		if (!$(element)) return;
-		element = $(element);
+		var element = $(element);
 
-		var handle = element.getNext('.columnHandle');
+		if (where == 'left'){
+			var handle = element.getPrevious('.columnHandle');
+		} else {
+			var handle = element.getNext('.columnHandle');
+		}
 		handle.setStyle('cursor', Browser.webkit ? 'col-resize' : 'e-resize');
+
 		if (!min) min = 50;
 		if (!max) max = 250;
 		if (Browser.ie){
@@ -285,12 +290,17 @@ MUI.Column = new NamedClass('MUI.Column', {
 				x: 'width',
 				y: false
 			},
+			invert: (where == 'left') ? true : false,
 			limit: {
 				x: [min, max]
 			},
 			onStart: function(){
 				element.getElements('iframe').setStyle('visibility', 'hidden');
-				element.getNext('.column').getElements('iframe').setStyle('visibility', 'hidden');
+				if (where == 'left'){
+					element.getPrevious('.column').getElements('iframe').setStyle('visibility', 'hidden');
+				} else {
+					element.getNext('.column').getElements('iframe').setStyle('visibility', 'hidden');
+				}
 			}.bind(this),
 			onDrag: function(){
 				if (Browser.firefox){
@@ -316,70 +326,22 @@ MUI.Column = new NamedClass('MUI.Column', {
 				}
 			}.bind(this),
 			onComplete: function(){
-				var partner = element.getNext('.column');
-				var partnerInstance = MUI.get(partner);
-
+				var partner = (where == 'left') ? element.getPrevious('.column') : element.getNext('.column'),
+					partnerInstance = MUI.get(partner);
+				
+				
 				MUI.rWidth(element.getParent());
 				element.getElements('iframe').setStyle('visibility', 'visible');
 				partner.getElements('iframe').setStyle('visibility', 'visible');
 
-				[].include(instance)
-				  .combine(instance.getPanels())
+				[instance].combine(instance.getPanels())
 				  .include(partnerInstance)
 				  .combine(partnerInstance.getPanels())
 				  .each(function(panel){
+						if (panel.el.panel && panel.el.panel.getElement('.mochaIframe') != null) MUI.resizeChildren(panel.el.panel);
 						panel.fireEvent('resize', [panel]);
 				  });
 
-			}.bind(this)
-		});
-	},
-
-	_addResizeLeft: function(element, min, max){
-		var instance = this;
-		if (!$(element)) return;
-		element = $(element);
-
-		var handle = element.getPrevious('.columnHandle');
-		handle.setStyle('cursor', Browser.webkit ? 'col-resize' : 'e-resize');
-		var partner = element.getPrevious('.column');
-		var partnerInstance = MUI.get(partner);
-		if (!min) min = 50;
-		if (!max) max = 250;
-		if (Browser.ie){
-			handle.addEvents({
-				'mousedown': function(){
-					handle.setCapture();
-				},
-				'mouseup': function(){
-					handle.releaseCapture();
-				}
-			});
-		}
-		this.resize = element.makeResizable({
-			handle: handle,
-			modifiers: {x: 'width' , y: false},
-			invert: true,
-			limit: {x: [min, max]},
-			onStart: function(){
-				$(element).getElements('iframe').setStyle('visibility', 'hidden');
-				partner.getElements('iframe').setStyle('visibility', 'hidden');
-			}.bind(this),
-			onDrag: function(){
-				MUI.rWidth(element.getParent());
-			}.bind(this),
-			onComplete: function(){
-				MUI.rWidth(element.getParent());
-				$(element).getElements('iframe').setStyle('visibility', 'visible');
-				partner.getElements('iframe').setStyle('visibility', 'visible');
-
-				[].include(partnerInstance)
-				  .combine(partnerInstance.getPanels())
-				  .include(instance)
-				  .combine(instance.getPanels())
-				  .each(function(panel){
-						panel.fireEvent('resize', [panel]);
-				  });
 			}.bind(this)
 		});
 	}

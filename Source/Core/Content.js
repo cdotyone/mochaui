@@ -310,7 +310,7 @@ MUI.Content.Providers.xhr = {
 			url: options.url,
 			method: options.method ? options.method : 'get',
 			data: options.data ? new Hash(options.data).toQueryString() : '',
-			evalScripts: false,
+			evalScripts: function(script){options.javascript = script;},
 			evalResponse: false,
 			onRequest: function(){
 				if (contentContainer) contentContainer.showSpinner(instance);
@@ -334,10 +334,7 @@ MUI.Content.Providers.xhr = {
 				text = MUI.Content.processFilters(text, options);
 				if (contentContainer) contentContainer.hideSpinner(instance);
 
-				var js;
-				var html = text.stripScripts(function(script){
-					js = script;
-				});
+				var js = options.javascript, html = text;
 
 				// convert text files to html
 				if (this.getHeader('Content-Type') == 'text/plain') html = html.replace(/\n/g, '<br>');
