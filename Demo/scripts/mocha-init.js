@@ -178,16 +178,16 @@ var initializeWindows = function(){
 
 	MUI.listBuilder = function(container){
 		MUI.create('MUI.List', {
-			id:container + 'list1',
-			container:container,
+			id: container + 'list1',
+			container: container,
 			clearContainer: true,
-			content:{url:'data/page1.json',paging:{size:10,totalCount:200,recordsField:false}},
-			columns:[
-				{text:'First Name',name:'FirstName','value':'ID'},
-				{text:'Last Name',name:'LastName'}
+			content: {url: 'data/page1.json', paging: {size: 10, totalCount: 200, recordsField: false}},
+			columns: [
+				{text: 'First Name', name: 'FirstName', 'value': 'ID'},
+				{text: 'Last Name', name: 'LastName'}
 			],
 			commands:[
-				{'text':'Cancel','name':'Cancel','image':'{theme}images/cancel.png'}
+				{'text': 'Cancel', 'name': 'Cancel', 'image': '{theme}images/cancel.png'}
 			],
 			onItemCommand: function(item, self, cmd){
 				MUI.writeConsole(self.options.id + ' received ' + cmd.name + ' command on item ' + item.value)
@@ -203,15 +203,15 @@ var initializeWindows = function(){
 
 	MUI.cbgBuilder = function(container){
 		MUI.create('MUI.CheckBoxGrid', {
-			id:container + 'cbg1',
-			container:container,
+			id: container + 'cbg1',
+			container: container,
 			clearContainer: true,
-			content:{url:'data/page1.json',paging:{size:10,totalCount:200,recordsField:false}},
-			width:260,
-			height:100,
-			textField:'FirstName',
-			valueField:'ID',
-			value:'1,3,4',
+			content: {url: 'data/page1.json', paging: {size: 10, totalCount:200, recordsField: false}},
+			width: 260,
+			height: 100,
+			textField: 'FirstName',
+			valueField: 'ID',
+			value: '1,3,4',
 			onItemClick: function(checked, inp, self){
 				MUI.writeConsole(self.options.id + ' received onItemClick command on item ' + inp.value);
 			},
@@ -220,16 +220,16 @@ var initializeWindows = function(){
 			}
 		});
 		MUI.create('MUI.CheckBoxGrid', {
-			id:container + 'cbg2',
-			container:container,
+			id: container + 'cbg2',
+			container: container,
 			clearContainer: false,
-			content:{url:'data/page1.json',paging:{size:10,totalCount:200,recordsField:false}},
-			width:260,
-			height:100,
-			textField:'FirstName',
-			valueField:'ID',
-			value:'1',
-			type:'radio',
+			content: {url: 'data/page1.json', paging: {size: 10, totalCount: 200, recordsField: false}},
+			width: 260,
+			height: 100,
+			textField: 'FirstName',
+			valueField: 'ID',
+			value: '1',
+			type: 'radio',
 			onItemClick: function(checked, inp, self){
 				MUI.writeConsole(self.options.id + ' received onItemClick command on item ' + inp.value);
 			},
@@ -241,15 +241,15 @@ var initializeWindows = function(){
 
 	MUI.slBuilder = function(container){
 		MUI.create('MUI.SelectList', {
-			id:container + 'sl1',
-			container:container,
-			clearContainer:true,
-			content:{url:'data/employees.json',paging:{size:10,totalCount:200,recordsField:false}},
-			width:250,
-			height:100,
-			textField:'name',
-			valueField:'ID',
-			canSelect:true,
+			id: container + 'sl1',
+			container: container,
+			clearContainer: true,
+			content: {url: 'data/employees.json', paging: {size: 10, totalCount: 200, recordsField: false}},
+			width: 250,
+			height: 100,
+			textField: 'name',
+			valueField: 'ID',
+			canSelect: true,
 			onItemSelected: function(item, selected, self){
 				MUI.writeConsole(self.options.id + ' received onItemSelected command on item \'' + item.name + '\', selected=' + selected)
 			}
@@ -258,7 +258,7 @@ var initializeWindows = function(){
 
 	MUI.ibBuilder = function(container){
 		MUI.get(container).el.content.empty();
-		if($('mainPanel_search_buttonHolder')) $('mainPanel_search_buttonHolder').empty();
+		if ($('mainPanel_search_buttonHolder')) $('mainPanel_search_buttonHolder').empty();
 		MUI.create('MUI.ImageButton', {
 			cssClass:	'imgButton',
 			text:		'Accept',
@@ -288,8 +288,8 @@ var initializeWindows = function(){
 
 	MUI.taBuilder = function(container){
 		MUI.get(container).el.content.empty();
-		MUI.create('MUI.TextArea',{container:container,rows:5,id:container+'textarea1'});
-		MUI.create('MUI.TextArea',{container:container,id:container+'textarea2',hasDynamicSize:true});
+		MUI.create('MUI.TextArea', {container: container, rows: 5, id:container + 'textarea1'});
+		MUI.create('MUI.TextArea', {container: container, id: container + 'textarea2', hasDynamicSize: true});
 	};
 
 	MUI.tbBuilder = function(container){
@@ -1197,6 +1197,12 @@ var initializeColumns = function(){
 		height: 230
 	});
 
+	// we want to all resize events also the ones that get fired before onLoaded/addResizeElements
+	var countResizeEvents = {
+		mainPanel: 0,
+		panel3: 0
+	};
+	
 	var addResizeElements = function(){
 		var panel = this.el.contentWrapper;
 		var pad = panel.getElement('.pad');
@@ -1208,11 +1214,16 @@ var initializeColumns = function(){
 		this.displayHeightEl = new Element('span', {
 			'text': panel.getStyle('height')
 		}).inject(pad);
+		pad.appendText(' Resize Events fired: ');
+		this.countEvents = new Element('span', {
+			'text': countResizeEvents[this.id]
+		}).inject(pad);
 	};
 
 	var updateResizeElements = function(){
+		countResizeEvents[this.id]++
+		if (this.countEvents) this.countEvents.set('text', countResizeEvents[this.id]);
 		var newSize = this.el.contentWrapper.getStyles(['width', 'height']);
-		var pad = this.el.content;
 		if (this.displayWidthEl) this.displayWidthEl.set('text', newSize['width']);
 		if (this.displayHeightEl) this.displayHeightEl.set('text', newSize['height']);
 	};
