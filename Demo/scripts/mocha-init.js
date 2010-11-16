@@ -181,7 +181,7 @@ var initializeWindows = function(){
 			id: container + 'list1',
 			container: container,
 			clearContainer: true,
-			content: {url: 'data/page1.json', paging: {size: 10, totalCount: 200, recordsField: false}},
+			content: {url: 'data/person.json', paging: {size: 10, totalCount: 200, recordsField: false}},
 			columns: [
 				{text: 'First Name', name: 'FirstName', 'value': 'ID'},
 				{text: 'Last Name', name: 'LastName'}
@@ -206,7 +206,7 @@ var initializeWindows = function(){
 			id: container + 'cbg1',
 			container: container,
 			clearContainer: true,
-			content: {url: 'data/page1.json', paging: {size: 10, totalCount:200, recordsField: false}},
+			content: {url: 'data/person.json', paging: {size: 10, totalCount:200, recordsField: false}},
 			width: 260,
 			height: 100,
 			textField: 'FirstName',
@@ -223,7 +223,7 @@ var initializeWindows = function(){
 			id: container + 'cbg2',
 			container: container,
 			clearContainer: false,
-			content: {url: 'data/page1.json', paging: {size: 10, totalCount: 200, recordsField: false}},
+			content: {url: 'data/person.json', paging: {size: 10, totalCount: 200, recordsField: false}},
 			width: 260,
 			height: 100,
 			textField: 'FirstName',
@@ -267,7 +267,7 @@ var initializeWindows = function(){
 			id:			container + 'btnAccept',
 			container:	container,
 			section:	(container !='mainPanel' ? 'footer' : 'search'),
-			onClick:	function(){
+			onClick:	function(self){
 				MUI.writeConsole(self.options.id + ' clicked');
 			}
 		});
@@ -278,7 +278,7 @@ var initializeWindows = function(){
 			image:		'{theme}images/cancel.png',
 			id:		container + 'btnCancel',
 			container:	container,
-			onClick:	function(){
+			onClick:	function(self){
 				MUI.writeConsole(self.options.id + ' clicked');
 			}
 		});

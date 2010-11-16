@@ -202,7 +202,7 @@ MUI.Accordion = new Class({
 
 		if (o.insertTitle){
 			new Element('h3', {'html':title}).inject(panel._contentEl);
-			new Element('p', {'html':html}).inject(panel._contentEl);
+			new Element('div', {'html':html}).inject(panel._contentEl);
 		} else panel._contentEl.set('html', html);
 
 		self._togglers.push(panel._togglerEl);

@@ -1,0 +1,35 @@
+{
+	name: "Prefix",
+	page: 1,
+	pageSize: 10,
+	pageMax: 1,
+	total: 6,
+	first: 1,
+	last: 6,
+	data: [
+		{
+		prefix: "Dr." ,
+			isActive: true
+		},
+		{
+		prefix: "Miss",
+			isActive: true
+		},
+		{
+		prefix: "Mr.",
+			isActive: true
+		},
+		{
+		prefix: "Mrs.",
+			isActive: true
+		},
+		{
+		prefix: "Ms.",
+			isActive: true
+		},
+		{
+		prefix: "N/A",
+			isActive: true
+		}
+	]
+}
