@@ -319,9 +319,7 @@ MUI.List = new Class({
 				tr.appendChild(td);
 			}
 
-			for (i = 0; i < cm.length; i++){
-				var cmd = cm[i];
-
+			Object.each(cm,function(cmd) {
 				// show event is used to determine if commands should be displayed
 				var showEvt = self.canShowEvent(self, item, cmd.name);
 				if (showEvt){
@@ -344,7 +342,7 @@ MUI.List = new Class({
 						a.set('html', cmd.text);
 					}
 				}
-			}
+			});
 		}
 
 		// add select events

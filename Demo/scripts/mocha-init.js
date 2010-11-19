@@ -187,6 +187,7 @@ var initializeWindows = function(){
 				{text: 'Last Name', name: 'LastName'}
 			],
 			commands:[
+				{'text': 'Ok', 'name': 'Ok', 'image': '{theme}images/accept.png'},
 				{'text': 'Cancel', 'name': 'Cancel', 'image': '{theme}images/cancel.png'}
 			],
 			onItemCommand: function(item, self, cmd){
