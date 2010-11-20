@@ -50,6 +50,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		collapsible:			true			// can the panel be collapsed
 
 		// Events
+		//onLoaded:				null, // called every time content is loaded using MUI.Content
 		//onDrawBegin:			null,
 		//onDrawEnd:			null,
 		//onResize:				null,

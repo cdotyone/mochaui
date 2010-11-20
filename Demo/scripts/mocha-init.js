@@ -267,7 +267,7 @@ var initializeWindows = function(){
 			image:		'{theme}images/accept.png',
 			id:			container + 'btnAccept',
 			container:	container,
-			section:	(container !='mainPanel' ? 'footer' : 'search'),
+			section:	(container != 'mainPanel' ? 'footer' : 'search'),
 			onClick:	function(self){
 				MUI.writeConsole(self.options.id + ' clicked');
 			}
@@ -296,35 +296,35 @@ var initializeWindows = function(){
 		content.empty();
 
 		var ftypes = ['fixed.phone','fixed.phone-us','fixed.cpf','fixed.cnpj','fixed.date','fixed.date-us','fixed.cep','fixed.time','fixed.cc'];
-		Object.append(ftypes,['reverse.integer','reverse.decimal','reverse.decimal-us','reverse.reais','reverse.dollar','regexp.ip','regexp.email','password']);
+		Object.append(ftypes, ['reverse.integer','reverse.decimal','reverse.decimal-us','reverse.reais','reverse.dollar','regexp.ip','regexp.email','password']);
 
 		var mtype;
-		ftypes.each(function(t) {
-			var s=t.split('.');
+		ftypes.each(function(t){
+			var s = t.split('.');
 			var ttype = s[0].capitalize();
-			if (mtype != ttype) {
+			if (mtype != ttype){
 				mtype = ttype;
-				window.addEvent('domready', function() {
-					new Element('div', {'text':ttype,'id':container+ttype}).inject(content);
+				window.addEvent('domready', function(){
+					new Element('div', {'text':ttype,'id':container + ttype}).inject(content);
 				});
 			}
-			if(s.length<2) s[1]=ttype;
-			MUI.create('MUI.TextBox',{container:container+ttype,id:container+t,formTitle:s[1].capitalize(),maskType:t,autoTab:true});
+			if (s.length < 2) s[1] = ttype;
+			MUI.create('MUI.TextBox', {container:container + ttype,id:container + t,formTitle:s[1].capitalize(),maskType:t,autoTab:true});
 		});
 	};
 
-	MUI.treeBuilder = function(container) {
-		MUI.create('MUI.Tree',{
+	MUI.treeBuilder = function(container){
+		MUI.create('MUI.Tree', {
 			container:container,
-			id:container+'tree1',
+			id:container + 'tree1',
 			content: {url: 'data/tree-testdata.json'},
-			onNodeExpanded: function(node, isExpanded, self) {
+			onNodeExpanded: function(node, isExpanded, self){
 				MUI.writeConsole(self.options.id + ' receieved onNodeExpanded command on node ' + node.value + ', isExpanded=' + isExpanded)
 			},
-			onNodeChecked: function(node, checked, self) {
+			onNodeChecked: function(node, checked, self){
 				MUI.writeConsole(self.options.id + ' receieved onNodeChecked command on node ' + node.value + ', checked=' + checked);
 			},
-			onNodeSelected: function(node, self) {
+			onNodeSelected: function(node, self){
 				MUI.writeConsole(self.options.id + ' receieved onNodeSelected command on node ' + node.value)
 			}
 		});
@@ -635,6 +635,31 @@ var initializeWindows = function(){
 			MUI.css3fallbackWindow();
 		});
 	}
+
+	MUI.modalCount = 0;
+	MUI.CreateModal = function(){
+		MUI.modalCount++;
+		var content = 'Your modal window content';
+		if (MUI.modalCount < 3) content += '<br/><br/><a id="createModal' + MUI.modalCount + '">Create Another Modal</a>';
+		new MUI.Modal({
+			id: 'modalDemo' + MUI.modalCount,
+			title: 'A Modal Window ' + MUI.modalCount,
+			content: content,
+			width: 400,
+			height: 250,
+			x:70 + (MUI.modalCount * 30),
+			y:70 + (MUI.modalCount * 30),
+			onClose:function(){
+				MUI.modalCount--;
+			},
+			onLoaded:function(){
+				if($('createModal' + MUI.modalCount)) $('createModal' + MUI.modalCount).addEvent('click',function(e){
+					e.stop();
+					MUI.CreateModal();
+				});
+			}
+		});
+	};
 
 	MUI.forceCanvasWindow = function(){
 		new MUI.Window({
@@ -1186,6 +1211,11 @@ var initializeColumns = function(){
 							e.stop();
 							MUI.accordionTestWindow();
 						});
+
+						$('modalLink').addEvent('click', function(e){
+							e.stop();
+							MUI.CreateModal();
+						});
 					}
 				});
 			}
@@ -1238,7 +1268,7 @@ var initializeColumns = function(){
 		mainPanel: 0,
 		panel3: 0
 	};
-	
+
 	var addResizeElements = function(){
 		var panel = this.el.contentWrapper;
 		var pad = panel.getElement('.pad');
@@ -1257,7 +1287,7 @@ var initializeColumns = function(){
 	};
 
 	var updateResizeElements = function(){
-		countResizeEvents[this.id]++
+		countResizeEvents[this.id]++;
 		if (this.countEvents) this.countEvents.set('text', countResizeEvents[this.id]);
 		var newSize = this.el.contentWrapper.getStyles(['width', 'height']);
 		if (this.displayWidthEl) this.displayWidthEl.set('text', newSize['width']);

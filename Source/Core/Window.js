@@ -83,6 +83,7 @@ MUI.Windows = Object.append((MUI.Windows || {}), {
 		useSpinner:			true
 
 		// Events
+		//onLoaded:			null, // called every time content is loaded using MUI.Content
 		//onDrawBegin:		null,
 		//onDrawEnd:		null,
 		//onFocus:			null,
