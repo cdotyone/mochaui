@@ -10,7 +10,6 @@
 	<script type="text/javascript" src="../../Core/Dock.js"></script>
 	<script type="text/javascript" src="../../Core/Window.js"></script>
 	<script type="text/javascript" src="../../Core/Modal.js"></script>
-	script>
 	<!--MOCHAUI-->
 	<script type="text/javascript" src="list.js"></script>
 	<script type="text/javascript">
@@ -42,7 +41,7 @@
 				{text:'isSelected',name:'isSelected','type':'checkbox'}
 			],
 			commands:[
-				{'text':'Cancel','name':'Cancel','image':'images/cancel.png'}
+				{'text':'Cancel','name':'Cancel','image':'../../Themes/default/images/cancel.png'}
 			],
 			onItemCommand: function(item, self, cmd, img) {
 				alert('receieved ' + cmd.name + ' command on item ' + item.value)
@@ -70,7 +69,7 @@
 				{text:'isSelected',name:'isSelected','type':'checkbox'}
 			],
 			commands:[
-				{'text':'Cancel','name':'Cancel','image':'images/cancel.png'}
+				{'text':'Cancel','name':'Cancel','image':'../../Themes/default/images/cancel.png'}
 			],
 			onItemCommand: function(item, self, cmd, img) {
 				alert('receieved ' + cmd.name + ' command on item ' + item.value)

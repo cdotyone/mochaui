@@ -88,24 +88,12 @@ MUI.List = new Class({
 		var self = this;
 		var o = self.options;
 
-		// determine parent container object
-		if(!o._container && typeof(o.container) == 'string') {
-			var instance = MUI.get(o.container);
-			if(instance) {
-				if(instance.el.content) {
-					instance.el.content.setStyle('padding','0');
-					o._container = instance.el.content;
-				}
-			}
-			if(!o._container) o._container=$(containerEl ? containerEl : o.container);
-		}
-
 		// see if we need build columns automagically
 		if (o.columns == null || o.columns.length == 0){
 			var ii = 0;
 			o.columns = [];
 			var first = o.items[0];
-			first.each(function(value, key){
+			Object.each(first,function(value, key){
 				var h = {'text':key,'name':key};
 				if (typeOf(value) == 'boolean') h.type = 'checkbox';
 				if (ii == 0) h['value'] = key;
@@ -181,6 +169,18 @@ MUI.List = new Class({
 
 		// add control to document
 		window.addEvent('domready', function(){
+			// determine parent container object
+			if(!o._container && typeof(o.container) == 'string') {
+				var instance = MUI.get(o.container);
+				if(instance) {
+					if(instance.el.content) {
+						instance.el.content.setStyle('padding','0');
+						o._container = instance.el.content;
+					}
+				}
+				if(!o._container) o._container=$(containerEl ? containerEl : o.container);
+			}
+
 			if(o.clearContainer) o._container.empty();
 			o._container.appendChild(div);
 		});
