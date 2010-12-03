@@ -25,239 +25,303 @@ MUI.Content = Object.append((MUI.Content || {}), {
 
 	Filters: {},
 
-	update: function(options){
+	update: function(content){
 
 		// set defaults for options
-		options = Object.append({
-			instance:		null,			// the instance of the control to be updated, this is normally used internally only
-			element:		null,			// the element to inject into, or the instance name
-			method:			null,			// the method to use to make request, 'POST' or 'GET'
-			data:			null,			// the data payload to send to the url
-			content:		null,			// used to feed content instead of requesting from a url endpoint
-			loadMethod:		null,			// the provider that will be used to make the request
-			url:			null,			// the url endpoint to make the request to
-			prepUrl:		null,			// callback that is executed to prepare the url. syntax: prepUrl.run([url,values,instance],this) return url;
-			require:		{},				// used to add additional css, images, or javascript
-			paging:			{},				// used to specify paging parameters
-			filters:		[],				// used to make post request processing/filtering of data, can be used to convert request to JSON
-			persist:		false			// true if you want to persist the request, false if you do not.
-			// if it is a string value the string will be used to persist the data instead of the request URL.
-			// if it is an array, it will assume the array is an array of strings and each string represents a cache key that is also the name of a hash value that needs to cached individually.
-			//onLoaded:		null			// fired when content is loaded
-		}, options);
+		/*		content = Object.append({
+		 instance:		null,			// the instance of the control to be updated, this is normally used internally only
+		 element:		null,			// the element to inject into, or the instance name
+		 method:		null,			// the method to use to make request, 'POST' or 'GET'
+		 data:			null,			// the data payload to send to the url
+		 content:		null,			// used to feed content instead of requesting from a url endpoint
+		 loadMethod:	null,			// the provider that will be used to make the request
+		 url:			null,			// the url endpoint to make the request to
+		 prepUrl:		null,			// callback that is executed to prepare the url. syntax: prepUrl.run([url,values,instance],this) return url;
+		 require:		{},				// used to add additional css, images, or javascript
+		 paging:		{},				// used to specify paging parameters
+		 filters:		[],				// used to make post request processing/filtering of data, can be used to convert request to JSON
+		 persist:		false			// true if you want to persist the request, false if you do not.
+		 // if it is a string value the string will be used to persist the data instead of the request URL.
+		 // if it is an array, it will assume the array is an array of strings and each string represents a cache key that is also the name of a hash value that needs to cached individually.
+		 //onLoaded:		null			// fired when content is loaded
+		 }, content);*/
 
 		// set defaults for require option
-		options.require = Object.append({
+		content.require = Object.append({
 			css: [],			// the style sheets to load before the request is made
 			images: [],			// the images to preload before the request is made
 			js: [],				// the JavaScript that is loaded and called after the request is made
 			onload: function(){
 			}// the event that is fired after all required files are loaded
-		}, options.require);
+		}, content.require);
 
 		// set defaults for paging
-		options.paging = Object.append({
-			size:			0,			// if >0 then paging is turned on
-			index:			0,			// the page index offset (index*size)+1 = first record, (index*size)+size = last record
-			totalCount:		0,			// is set by return results, starts out as zero until filled in when data is received
-			sort:			'',			// fields to search by, comma separated list of fields or array of strings.  Will be passed to server end-point.
-			dir:			'asc',		// 'asc' ascending, 'desc' descending
-			recordsField:	'records',	// 'element' in the json hash that contains the data
-			lookAhead:		0,			// # of pages to request in the background and cache
-			wrap:			false		// true if you want paging to wrap when user hits nextpage and they are at the last page, or from the first to the last page
-		}, options.paging);
+		content.paging = Object.append(MUI.Content.PagingOptions, content.paging);
 
 		// make sure loadMethod has a value
-		if (!options.loadMethod){
+		if (!content.loadMethod){
 			if (instance == null || instance.options == null || !instance.options.loadMethod){
-				if (!options.url) options.loadMethod = 'html';
-				else options.loadMethod = 'xhr';
+				if (!content.url) content.loadMethod = 'html';
+				else content.loadMethod = 'xhr';
 			} else {
-				options.loadMethod = instance.options.loadMethod;
+				content.loadMethod = instance.options.loadMethod;
 			}
 		}
 
-		var element,instance = options.instance;
-		if (options.element){
-			element = $(options.element);
+		var element,instance = content.instance;
+		if (content.element){
+			element = $(content.element);
 			if (!instance) instance = element.retrieve('instance');
 		}
 
 		// replace in path replacement fields,  and prepare the url
-		if (options.url){
-			// create standard field replacements from data, paging, and path hashes
-			var values = Object.merge(options.data || {}, options.paging || {}, MUI.options.path || {});
-			// call the prepUrl callback if it was defined
-			if (options.prepUrl) options.url = options.prepUrl.apply(this, [options.url, values, instance]);
-			options.url = MUI.replaceFields(options.url, values);
-		}
+		content.doPrepUrl = (function(prepUrl){
+			return function(content){
+				if (content.url){
+					// create standard field replacements from data, paging, and path hashes
+					var values = Object.merge(content.data || {}, content.paging || {}, MUI.options.path || {});
+					// call the prepUrl callback if it was defined
+					if (prepUrl) return prepUrl.apply(this, [content.url, values, instance]);
+					return MUI.replaceFields(content.url, values);
+				}
+			};
+		})(content.prepUrl);
 
-		options.contentContainer = element;
+		content.contentContainer = element;
 
 		// -- argument pre-processing override --
 		// allow controls to process any custom arguments, titles, scrollbars, etc..
-		if (instance && instance.updateStart) instance.updateStart(options);
+		if (instance && instance.updateStart) instance.updateStart(content);
 
 		// -- content removal --
 		// allow controls option to clear their own content
 		var removeContent = true;
-		if (instance && instance.updateClear) removeContent = instance.updateClear(options);
+		if (instance && instance.updateClear) removeContent = instance.updateClear(content);
 
 		// Remove old content.
-		if (removeContent && element) options.contentContainer.empty().show();
+		if (removeContent && element) element.empty().show();
 
 		// prepare function to persist the data
-		if (options.persist && MUI.Content.Providers[options.loadMethod].canPersist){
-			options.persistKey = options.url;
+		if (content.persist && MUI.Content.Providers[content.loadMethod].canPersist){
 			// if given string to use as persist key then use it
-			if (typeOf(options.persist) == 'string') options.persistKey = options.persist;
-			if (typeOf(options.persist) == 'array') options.persistKey = options.persist;
-			options.persist = true;
-		} else options.persist = false;
+			if (typeOf(content.persist) == 'string') content.persistKey = content.persist;
+			if (typeOf(content.persist) == 'array') content.persistKey = content.persist;
+			content.persist = true;
+		} else content.persist = false;
 
-		options.persistLoad = function(options){
-			if (options.persist){
-				if (typeOf(options.persistKey) == 'string'){
+		content.persistLoad = function(){
+			this.persistKey = this.doPrepUrl(this);
+			if (this.persist){
+				if (typeOf(this.persistKey) == 'string'){
 					// load the response
-					var content = MUI.Persist.get(options.persistKey);
+					var content = MUI.Persist.get(this.persistKey, this.url);
 					if (content) return content;
 				}
 			}
-			return options.content;
-		};
+			return this.content;
+		}.bind(content);
 
-		options.persistStore = function(options, response){
-			if (!options.persist) return response;
+		content.persistStore = function(response){
+			if (!this.persist) return response;
 
 			// store the response
-			if (typeOf(options.persistKey) == 'string') MUI.Persist.set(options.persistKey, response);
-			if (typeOf(options.persistKey) == 'array'){
+			if (typeOf(this.persistKey) == 'string') MUI.Persist.set(this.persistKey, response, this.url);
+			if (typeOf(this.persistKey) == 'array'){
 				response = JSON.decode(response);
-				options.persistKey.each(function(key){
-					MUI.Persist.set(key, response[key]);
-				});
+				this.persistKey.each(function(key){
+					MUI.Persist.set(key, response[key], this.url);
+				}, this);
 				return null;
 			}
 			return response;
-		};
+		}.bind(content);
 
 		// prepare function to fire onLoaded event
-		options.fireLoaded = function(instance, options, json){
+		content.fireLoaded = function(){
 			var fireEvent = true;
-			if (instance && instance.updateEnd) fireEvent = instance.updateEnd(options);
+			var instance = this.instance;
+			if (instance && instance.updateEnd) fireEvent = instance.updateEnd(this);
 			if (fireEvent){
-				if (options.require.js.length){
+				if (this.require.js.length){
 					// process javascript dependencies
 					new MUI.Require({
-						js: options.require.js,
+						js: this.require.js,
 						onload: function(){
-							if (Browser.opera) options.require.onload.delay(100);
-							else options.require.onload();
-							if (options.onLoaded && options.onLoaded != null){
-								options.onLoaded(element, options, json);
+							if (Browser.opera) this.require.onload.delay(100);
+							else this.require.onload();
+							if (this.onLoaded && this.onLoaded != null){
+								this.onLoaded(element, this);
 							} else {
-								if (instance) instance.fireEvent('loaded', [element, options, json]);
+								if (instance) instance.fireEvent('loaded', [element, this]);
 							}
 						}.bind(this)
 					});
 				} else {
-					if (options.onLoaded && options.onLoaded != null){
+					if (this.onLoaded && this.onLoaded != null){
 						// call onLoaded directly
-						options.onLoaded(element, options, json);
+						this.onLoaded(element, this);
 					} else {
 						// fire the event
-						if (instance) instance.fireEvent('loaded', [element, options, json]);
+						if (instance) instance.fireEvent('loaded', [element, this]);
 					}
 				}
 			}
-		};
+		}.bind(content);
 
 		// now perform dependencies requests for images and style sheets
-		if (options.require.css.length || options.require.images.length){
+		if (content.require.css.length || content.require.images.length){
 			new MUI.Require({
-				css: options.require.css,
-				images: options.require.images,
+				css: content.require.css,
+				images: content.require.images,
 				onload: function(){
-					MUI.Content.Providers[options.loadMethod].doRequest(instance, options);
-				}.bind(this)
+					MUI.Content.Providers[this.loadMethod].doRequest(this);
+				}.bind(content)
 			});
 		} else {
-			MUI.Content.Providers[options.loadMethod].doRequest(instance, options);
+			MUI.Content.Providers[content.loadMethod].doRequest(content);
 		}
 
-		return options;
+		return content;
 	},
 
-	processFilters: function(response, options){
-		options.filters.each(function(filter){
-			response = filter(response, options);
+	processFilters: function(content){
+		if (typeof content == 'string') return content;
+		Object.each(content.filters, function(filter){
+			content.content = filter(content.content, content);
 		});
-		return response;
+		return content.content;
 	},
 
-	firstPage: function(options){
-		if (!options.fireLoaded || !options.paging || options.paging.size <= 0 || options.paging.totalCount == 0) return options;
-		options.paging.index = 0;
-		MUI.Content.Providers[options.loadMethod].doRequest(instance, options);
+	canPage:function(content){
+		return !(!content || !content.fireLoaded || !content.paging || content.paging.pageSize <= 0 || content.paging.total == 0);
 	},
 
-	prevPage: function(options){
-		if (!options.fireLoaded || !options.paging || options.paging.size <= 0 || options.paging.totalCount == 0) return options;
-		options.paging.index--;
-		if (options.paging.index < 1 && options.paging.wrap) return this.lastPage(options);
-		if (options.paging.index < 1) options.paging.index = 1;
-		MUI.Content.Providers[options.loadMethod].doRequest(instance, options);
+	firstPage: function(content){
+		if (!MUI.Content.canPage(content)) return this;
+		content.paging.page = 1;
+		if (content.instance && content.instance.updateStart) content.instance.updateStart(content);
+		MUI.Content.Providers[content.loadMethod].doRequest(content);
+		return this;
 	},
 
-	nextPage: function(options){
-		if (!options.fireLoaded || !options.paging || options.paging.size <= 0 || options.paging.totalCount == 0) return options;
-		options.paging.index++;
-		var lastPage = Math.round(options.paging.totalCount / options.paging.size);
-		if (options.paging.index > lastPage && options.paging.wrap) return this.firstPage();
-		if (options.paging.index > lastPage) options.paging.index = lastPage;
-		MUI.Content.Providers[options.loadMethod].doRequest(instance, options);
+	prevPage: function(content){
+		if (!MUI.Content.canPage(content)) return this;
+		content.paging.page--;
+		if (content.paging.page < 1 && content.paging.wrap) return this.lastPage(content);
+		if (content.paging.page < 1) content.paging.page = 1;
+		if (content.instance && content.instance.updateStart) content.instance.updateStart(content);
+		MUI.Content.Providers[content.loadMethod].doRequest(content);
+		return this;
 	},
 
-	lastPage: function(options){
-		if (!options.fireLoaded || !options.paging || options.paging.size <= 0 || options.paging.totalCount == 0) return options;
-		options.paging.index = Math.round(options.paging.totalCount / options.paging.size);
-		MUI.Content.Providers[options.loadMethod].doRequest(instance, options);
+	nextPage: function(content){
+		if (!MUI.Content.canPage(content)) return this;
+		content.paging.page++;
+		var lastPage = Math.round(content.paging.total / content.paging.pageSize);
+		if (content.paging.page > lastPage && content.paging.wrap) return this.firstPage();
+		if (content.paging.page > lastPage) content.paging.page = lastPage;
+		if (content.instance && content.instance.updateStart) content.instance.updateStart(content);
+		MUI.Content.Providers[content.loadMethod].doRequest(content);
+		return this;
 	},
 
-	getRecords: function(options){
-		var paging = options.paging;
-		if (!options.fireLoaded || !paging || paging.size <= 0 || paging.totalCount == 0) return options.content;
+	lastPage: function(content){
+		if (!MUI.Content.canPage(content)) return this;
+		content.paging.page = Math.round(content.paging.total / content.paging.pageSize);
+		if (content.instance && content.instance.updateStart) content.instance.updateStart(content);
+		MUI.Content.Providers[content.loadMethod].doRequest(content);
+		return this;
+	},
+
+	gotoPage: function(content, page){
+		if (!MUI.Content.canPage(content)) return this;
+		if (!page) page = 1;
+		page = parseInt('' + page);
+		var lastPage = parseInt(content.paging.total / content.paging.pageSize);
+		if (page > lastPage) page = lastPage;
+		if (page < 1) page = 1;
+		content.paging.page = page;
+		if (content.instance && content.instance.updateStart) content.instance.updateStart(content);
+		MUI.Content.Providers[content.loadMethod].doRequest(content);
+		return this;
+	},
+
+	setPageSize: function(content, max){
+		var paging = content.paging;
+		if (!MUI.Content.canPage(content)) return this;
+		max = parseInt('' + max);
+		if (max <= 0) return this;
+		paging.pageSize = max;
+		paging.page = 1;
+		paging.pageMax = parseInt(paging.total / paging.pageSize);
+		if (content.instance && content.instance.updateStart) content.instance.updateStart(content);
+		MUI.Content.Providers[content.loadMethod].doRequest(content);
+		return this;
+	},
+
+	setRecords: function(content){
+		if (!content.content) return null;
+		var paging = content.paging;
+		if (!content.fireLoaded || !paging || paging.pageSize <= 0) return content.content;
+
 		var records;
-		if (!paging.recordsField) records = options.content;
-		else records = options.content[paging.recordsField];
+		if (!paging.recordsField) records = content.content;
+		else records = content.content[paging.recordsField];
+
+		['total','page','pageMax','pageSize','page','last','first'].each(function(options, name){
+			options.paging[name] = MUI.Content.getData(options.content, options.paging[name + 'Field']);
+		}.bind(this, content));
+
+		if (!content.records) content.records = records;
+		else {
+			for (var i = 0,t = ((paging.page - 1) * paging.pageSize); i < records.length; i++,t++){
+				content.records[t] = records[i];
+			}
+		}
+
+		delete content.content;
+	},
+
+	getRecords: function(content){
+		var records = content.records;
+		if (!records) return null;
+		var paging = content.paging;
+
+		if (!content.fireLoaded || !paging || paging.pageSize <= 0) return records;
 
 		var retval = [];
-		for (var i = (paging.index * paging.size),t = 0; i < paging.size && i < records.length; i++,t++){
+		for (var i = ((paging.page - 1) * paging.pageSize),t = 0; t < paging.pageSize && i < records.length; i++,t++){
 			retval[t] = records[i];
 		}
 		return retval;
+	},
+
+	getData: function(item, property){
+		if (!item || !property) return '';
+		if (item[property] == null) return '';
+		return item[property];
 	}
 
 });
 
 MUI.updateContent = MUI.Content.update;
 
-MUI.Content.Filters.tree = function(response, options, node){
-	var usePaging = node == null && options.paging && options.paging.size > 0 && options.paging.recordsField;
+MUI.Content.Filters.tree = function(response, content, node){
+	var usePaging = node == null && content.paging && content.paging.size > 0 && content.paging.recordsField;
 	var data = response, i;
 
-	if (node == null) options = Object.append(options, {
+	if (node == null) content = Object.append(content, {
 		fieldParentID: 'parentID',
 		fieldID: 'ID',
 		fieldNodes: 'nodes',
 		topID: '0'
 	});
 
-	if (usePaging) data = response[options.paging.recordsField];
+	if (usePaging) data = response[content.paging.recordsField];
 
 	if (node == null){
 		for (i = 0; i < data.length; i++){
-			if (data[i][options.fieldID] == options.topID){
+			if (data[i][content.fieldID] == content.topID){
 				node = data[i];
 				break;
 			}
@@ -265,17 +329,17 @@ MUI.Content.Filters.tree = function(response, options, node){
 	}
 
 	if (node != null){
-		var id = node[options.fieldID];
-		node[options.fieldNodes] = [];
+		var id = node[content.fieldID];
+		node[content.fieldNodes] = [];
 		for (i = 0; i < data.length; i++){
-			if (data[i][options.fieldParentID] == id && data[i][options.fieldID] != id){
-				node[options.fieldNodes].push(data[i]);
-				MUI.Content.Filters.tree(data, options, data[i]);
+			if (data[i][content.fieldParentID] == id && data[i][content.fieldID] != id){
+				node[content.fieldNodes].push(data[i]);
+				MUI.Content.Filters.tree(data, content, data[i]);
 			}
 		}
 	}
 
-	if (usePaging) response[options.paging.recordsField] = node;
+	if (usePaging) response[content.paging.recordsField] = node;
 
 	return node;
 };
@@ -286,70 +350,72 @@ MUI.Content.Providers.xhr = {
 
 	canPage:		false,
 
-	doRequest: function(instance, options){
-		var contentContainer = options.contentContainer;
-		var fireLoaded = options.fireLoaded;
-
+	doRequest: function(content){
 		// if js is required, but no url, fire loaded to proceed with js-only
-		if (options.url == null && options.require.js && options.require.js.length != 0){
-			Browser.ie6 ? fireLoaded.delay(50, this, [instance, options]) : fireLoaded(instance, options);
+		if (content.url == null && content.require.js && content.require.js.length != 0){
+			Browser.ie6 ? content.fireLoaded.delay(50, content) : content.fireLoaded();
 			return null;
 		}
 
 		// load persisted data if it exists
-		var content = options.persistLoad(options);
+		content.content = content.persistLoad(content);
 
 		// process content passed to options.content or persisted data
-		if (content){
-			content = MUI.Content.processFilters(content, options);
-			Browser.ie6 ? fireLoaded.delay(50, this, [instance, options, content]) : fireLoaded(instance, options, content);
+		if (content.content){
+			content.content = MUI.Content.processFilters(content);
+			Browser.ie6 ? content.fireLoaded.delay(50, content) : content.fireLoaded();
 			return;
 		}
 
 		new Request({
-			url: options.url,
-			method: options.method ? options.method : 'get',
-			data: options.data ? new Hash(options.data).toQueryString() : '',
-			evalScripts: function(script){options.javascript = script;},
+			url: content.persistKey,
+			method: content.method ? content.method : 'get',
+			data: content.data ? new Hash(content.data).toQueryString() : '',
+			evalScripts: function(script){
+				content.javascript = script;
+			},
 			evalResponse: false,
 			onRequest: function(){
-				if (contentContainer) contentContainer.showSpinner(instance);
-			},
+				if (this.contentContainer) this.contentContainer.showSpinner(this.instance);
+			}.bind(content),
 			onFailure: function(response){
+				var content = this;
+				var instance = this.instance;
 				var getTitle = new RegExp('<title>[\n\r\s]*(.*)[\n\r\s]*</title>', 'gmi');
 				var error = getTitle.exec(response.responseText);
 				if (!error) error = [500, 'Unknown'];
 
 				var updateSetContent = true;
-				options.error = error;
-				options.errorMessage = '<h3>Error: ' + error[1] + '</h3>';
-				if (instance && instance.updateSetContent) updateSetContent = instance.updateSetContent(options);
-				if (contentContainer){
-					if (updateSetContent) contentContainer.set('html', options.errorMessage);
-					contentContainer.hideSpinner(instance);
+				content.error = error;
+				content.errorMessage = '<h3>Error: ' + error[1] + '</h3>';
+				if (instance && instance.updateSetContent) updateSetContent = instance.updateSetContent(content);
+				if (this.contentContainer){
+					if (updateSetContent) this.contentContainer.set('html', content.errorMessage);
+					this.contentContainer.hideSpinner(instance);
 				}
-			},
+			}.bind(content),
 			onSuccess: function(text){
-				text = options.persistStore(options, text);
-				text = MUI.Content.processFilters(text, options);
-				if (contentContainer) contentContainer.hideSpinner(instance);
+				var instance = content.instance;
+				text = content.persistStore(text);
+				text = MUI.Content.processFilters(text, content);
+				if (this.contentContainer) this.contentContainer.hideSpinner(instance);
 
-				var js = options.javascript, html = text;
+				var js = content.javascript, html = text;
 
 				// convert text files to html
 				if (this.getHeader('Content-Type') == 'text/plain') html = html.replace(/\n/g, '<br>');
 
 				var updateSetContent = true;
-				options.content = html;
-				if (instance && instance.updateSetContent) updateSetContent = instance.updateSetContent(options);
+				content.content = html;
+				if (instance && instance.updateSetContent) updateSetContent = instance.updateSetContent(content);
 				if (updateSetContent){
-					if (contentContainer) contentContainer.set('html', options.content);
+					if (content.contentContainer) content.contentContainer.set('html', content.content);
 					var evalJS = true;
 					if (instance && instance.options && instance.options.evalScripts) evalJS = instance.options.evalScripts;
 					if (evalJS && js) Browser.exec(js);
 				}
 
-				Browser.ie6 ? fireLoaded.delay(50, this, [instance,options]) : fireLoaded(instance, options);
+				Browser.ie6 ? content.fireLoaded.delay(50, content) : content.fireLoaded();
 			},
 			onComplete: function(){
 			}
@@ -365,60 +431,78 @@ MUI.Content.Providers.json = {
 
 	canPage:		 true,
 
-	doRequest: function(instance, options){
-		var fireLoaded = options.fireLoaded;
-		var contentContainer = options.contentContainer;
-
-		// load persisted data if it exists
-		var content = options.persistLoad(options);
-
-		// process content passed to options.content or persisted data
-		if (content){
-			content = MUI.Content.processFilters(content, options);
-			Browser.ie6 ? fireLoaded.delay(50, this, [instance, options, content]) : fireLoaded(instance, options, content);
-			return;
+	_checkRecords: function(content){  // check to see if records already downloaded and fir onLoaded if it does
+		var paging = content.paging;
+		if (content.records && paging.pageSize == 0){
+			Browser.ie6 ? content.fireLoaded.delay(50, content) : content.fireLoaded();
+			return true;	// return them all if they exists and paging is turned off
 		}
-
-		new Request({
-			url: options.url,
-			update: contentContainer,
-			method: options.method ? options.method : 'get',
-			data: options.data ? new Hash(options.data).toQueryString() : '',
-			evalScripts: false,
-			evalResponse: false,
-			headers: {'Content-Type':'application/json'},
-			onRequest: function(){
-				if (contentContainer) contentContainer.showSpinner(instance);
-			}.bind(this),
-			onFailure: function(){
-				var updateSetContent = true;
-				options.error = [500, 'Error Loading XMLHttpRequest'];
-				options.errorMessage = '<p><strong>Error Loading XMLHttpRequest</strong></p>';
-				if (instance && instance.updateSetContent) updateSetContent = instance.updateSetContent(options);
-
-				if (contentContainer){
-					if (updateSetContent) contentContainer.set('html', options.errorMessage);
-					contentContainer.hideSpinner(instance);
+		if (content.records && paging.pageSize > 0){							// if paging is on make sure we have that page
+			var first = ((paging.page - 1) * paging.pageSize);
+			var last = first + paging.pageSize - 1;
+			var total = content.records.length;
+			//if (!paging.pageMax) paging.pageMax = parseInt(paging.total / paging.pageSize);
+			if (total > first && total > last){
+				for (var i = first; i <= last; i++){
+					if (!content.records[i]) return false;
 				}
-			}.bind(this),
-			onException: function(){
-			}.bind(this),
-			onSuccess: function(json){
-				json = options.persistStore(options, json);
-				if (json != null){	// when multiple results are persisted, null is returned.  decoding takes place in persistStore instead, and filtering is not allowed
-					json = JSON.decode(json);
-					json = MUI.Content.processFilters(json, options);
-				}
-				options.content = json;
+				// if in scope then fire loaded to make control know we have the records
+				Browser.ie6 ? content.fireLoaded.delay(50, content) : content.fireLoaded();
+				return true
+			}
+		}
+		return false;
+	},
 
-				if (contentContainer) contentContainer.hideSpinner(instance);
-				Browser.ie6 ? fireLoaded.delay(50, this, [instance, options, json]) : fireLoaded(instance, options, json);
-			}.bind(this),
-			onComplete: function(){
-			}.bind(this)
-		}).send();
+	doRequest: function(content){
+		if (!this._checkRecords(content)){
+			// load persisted data if it exists
+			content.content = JSON.decode(content.persistLoad(content));
+			MUI.Content.setRecords(content);												// see if any records are there
+		} else content.persistKey = content.doPrepUrl(content);
+
+		if (!this._checkRecords(content)){
+			// still not found so load
+			new Request({
+				url: content.persistKey,
+				update: content.contentContainer,
+				method: content.method ? content.method : 'get',
+				data: content.data ? new Hash(content.data).toQueryString() : '',
+				evalScripts: false,
+				evalResponse: false,
+				headers: {'Content-Type':'application/json'},
+				onRequest: function(){
+					if (this.contentContainer) this.contentContainer.showSpinner(this.instance);
+				}.bind(content),
+				onFailure: function(){
+					var updateSetContent = true;
+					this.error = [500, 'Error Loading XMLHttpRequest'];
+					this.errorMessage = '<p><strong>Error Loading XMLHttpRequest</strong></p>';
+					if (this.instance && this.instance.updateSetContent) updateSetContent = this.instance.updateSetContent(this);
+
+					if (this.contentContainer){
+						if (updateSetContent) this.contentContainer.set('html', this.errorMessage);
+						this.contentContainer.hideSpinner(this.instance);
+					}
+				}.bind(content),
+				onException: function(){
+				}.bind(content),
+				onSuccess: function(json){
+					this.persistStore(json);
+					if (json != null){	// when multiple results are persisted, null is returned.  decoding takes place in persistStore instead, and filtering is not allowed
+						json = JSON.decode(json);
+						this.content = json;
+						MUI.Content.setRecords(this);
+						json = MUI.Content.processFilters(this);
+					}
+					if (this.contentContainer) this.contentContainer.hideSpinner(content.instance);
+					Browser.ie6 ? this.fireLoaded.delay(50, this) : this.fireLoaded();
+				}.bind(content),
+				onComplete: function(){
+				}.bind(content)
+			}).send();
+		}
 	}
-
 };
 
 MUI.Content.Providers.iframe = {
@@ -427,26 +511,25 @@ MUI.Content.Providers.iframe = {
 
 	canPage:		false,
 
-	doRequest: function(instance, options){
-		var fireLoaded = options.fireLoaded;
-
+	doRequest: function(content){
 		var updateSetContent = true;
-		if (instance && instance.updateSetContent) updateSetContent = instance.updateSetContent(options);
-		var contentContainer = options.contentContainer;
+		var instance = content.instance;
+		if (instance && instance.updateSetContent) updateSetContent = instance.updateSetContent(content);
+		var contentContainer = content.contentContainer;
 
 		if (updateSetContent && contentContainer){
 			var iframeEl = new Element('iframe', {
-				'id': options.element.id + '_iframe',
-				'name': options.element.id + '_iframe',
-				'class': 'mochaIframe',
-				'src': options.url,
-				'marginwidth': 0,
-				'marginheight': 0,
-				'frameBorder': 0,
-				'scrolling': 'auto',
-				'styles': {
-					'height': contentContainer.offsetHeight - contentContainer.getStyle('border-top').toInt() - contentContainer.getStyle('border-bottom').toInt(),
-					'width': instance && instance.el.panel ? contentContainer.offsetWidth - contentContainer.getStyle('border-left').toInt() - contentContainer.getStyle('border-right').toInt() : '100%'
+				id: content.element.id + '_iframe',
+				name: content.element.id + '_iframe',
+				class: 'mochaIframe',
+				src: content.doPrepUrl(content),
+				marginwidth: 0,
+				marginheight: 0,
+				frameBorder: 0,
+				scrolling: 'auto',
+				styles: {
+					height: contentContainer.offsetHeight - contentContainer.getStyle('border-top').toInt() - contentContainer.getStyle('border-bottom').toInt(),
+					width: instance && instance.el.panel ? contentContainer.offsetWidth - contentContainer.getStyle('border-left').toInt() - contentContainer.getStyle('border-right').toInt() : '100%'
 				}
 			}).inject(contentContainer);
 			if (instance) instance.el.iframe = iframeEl;
@@ -454,8 +537,8 @@ MUI.Content.Providers.iframe = {
 			// Add onload event to iframe so we can hide the spinner and run fireLoaded()
 			iframeEl.addEvent('load', function(){
 				contentContainer.hideSpinner(instance);
-				Browser.ie6 ? fireLoaded.delay(50, this, [instance, options]) : fireLoaded(instance, options);
-			}.bind(this));
+				Browser.ie6 ? this.fireLoaded.delay(50, this) : this.fireLoaded();
+			}.bind(content));
 		}
 	}
 
@@ -467,20 +550,17 @@ MUI.Content.Providers.html = {
 
 	canPage:		false,
 
-	doRequest: function(instance, options){
-		var fireLoaded = options.fireLoaded;
+	doRequest: function(content){
 		var elementTypes = new Array('element', 'textnode', 'whitespace', 'collection');
 
-
 		var updateSetContent = true;
-		if (instance && instance.updateSetContent) updateSetContent = instance.updateSetContent(options);
-		var contentContainer = options.contentContainer;
-		if (updateSetContent && contentContainer){
-			if (elementTypes.contains(typeOf(options.content))) options.content.inject(contentContainer);
-			else contentContainer.set('html', options.content);
+		if (content.instance && content.instance.updateSetContent) updateSetContent = content.instance.updateSetContent(content);
+		if (updateSetContent && content.contentContainer){
+			if (elementTypes.contains(typeOf(content.content))) content.content.inject(content.contentContainer);
+			else content.contentContainer.set('html', content.content);
 		}
 
-		Browser.ie6 ? fireLoaded.delay(50, this, [instance, options]) : fireLoaded(instance, options);
+		Browser.ie6 ? content.fireLoaded.delay(50, content) : content.fireLoaded();
 	}
 
 };
@@ -581,3 +661,30 @@ MUI.append({
 		}
 	}
 });
+
+MUI.Content.PagingOptions = {
+	// main paging options
+	pageSize:		0,			// if >0 then paging is turned on
+	page:			0,			// the page index offset (index*size)+1 = first record, (index*size)+size = last record
+	pageMax:		0,			// the last page in the that (largest value of index).
+
+	// informational values, set by return results, if they are change after contents are returned, they can be used to change what the pager is displaying
+	total:			0,			// starts out as zero until filled in when data is received
+	first:			1,			// first record showing in current page
+	last:			10,			// last record showing in current page
+
+	// additional options
+	sort:			'',			// fields to search by, comma separated list of fields or array of strings.  Will be passed to server end-point.
+	dir:			'asc',		// 'asc' ascending, 'desc' descending
+	recordsField:	'data',		// 'element' in the json hash that contains the data
+	totalField:		'total',	// 'element' in the json hash that contains the total records in the overall set
+	pageField:		'page',		// 'element' in the json hash that contains the maximum pages that can be selected
+	pageMaxField:	'pageMax',	// 'element' in the json hash that contains the maximum pages that can be selected
+	pageSizeField:	'pageSize',	// 'element' in the json hash that contains the size of the page
+	firstField:		'first',	// 'element' in the json hash that contains the size of the page
+	lastField:		'last',		// 'element' in the json hash that contains the maximum pages that can be selected
+	lookAhead:		0,			// # of pages to request in the background and cache
+	wrap:			false,		// true if you want paging to wrap when user hits next page and they are at the last page, or from the first to the last page
+
+	pageOptions:	[10, 20, 50, 100, 200]	// per page options available to user
+};

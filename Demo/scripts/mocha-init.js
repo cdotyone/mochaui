@@ -122,12 +122,12 @@ var initializeWindows = function(){
 						{'text': 'Fleet Foxes', 'url': 'pages/youtube2.html', 'loadMethod': 'iframe', 'title': 'Fleet Foxes'},
 						{'text': 'Boards of Canada', 'url': 'pages/youtube3.html', 'loadMethod': 'iframe', 'title': 'Boards of Canada', 'class': 'last'}
 					],
-					onLoaded: function(element, uOptions, json){
+					onLoaded: function(element, content){
 						MUI.create('MUI.Tabs', {
 							'id': 'youtube_toolbar',
 							'container': 'youtube',
 							'position': 'top',
-							'tabs': json,
+							'tabs': content.content,
 							'partner': 'youtube'
 						});
 					}
@@ -566,11 +566,11 @@ var initializeWindows = function(){
 			scrollbars: false,
 			resizable: false,
 			maximizable: false,
-			onLoaded: function(el, cOptions, json){
+			onLoaded: function(el, content){
 				MUI.create('MUI.Accordion', {
 					'container': id,
 					'idField': 'value',
-					'panels': json
+					'panels': content.content
 				});
 			}
 		});
@@ -835,12 +835,12 @@ var initializeWindows = function(){
 						{'text': 'Windows', 'url': 'pages/features-windows.html', 'loadMethod': 'iframe', 'title': 'Features - Windows'},
 						{'text': 'General', 'url': 'pages/features-general.html', 'loadMethod': 'iframe', 'title': 'Features - General', 'class': 'last'}
 					],
-					onLoaded: function(element, uOptions, json){
+					onLoaded: function(element, content){
 						MUI.create('MUI.Tabs', {
 							'id': 'features_toolbar',
 							'container': 'features',
 							'position': 'top',
-							'tabs': json,
+							'tabs': content.content,
 							'partner': 'features'
 						});
 					}
@@ -971,11 +971,11 @@ var initializeColumns = function(){
 		content: {
 			url: 'data/file-tree.json',
 			loadMethod: 'json',
-			onLoaded: function(el, options, json){
+			onLoaded: function(el, content){
 				MUI.create('MUI.Tree', {
 					'container': 'files-panel',
 					'idField': 'value',
-					'nodes': options.content,
+					'nodes': content.content,
 					'onLoaded': function(){
 						$('notesLink').addEvent('click', function(){
 							MUI.Content.update({
@@ -1371,11 +1371,11 @@ var initializeColumns = function(){
 					{'text': 'Overview', 'url': 'pages/overview.html', 'title': 'Overview'},
 					{'text': 'Download', 'url': 'pages/download.html', 'title': 'Download'}
 				],
-				onLoaded: function(element, uOptions, json){
+				onLoaded: function(element, content){
 					MUI.create('MUI.Tabs', {
 						'container': 'help-panel',
 						'position': 'header',
-						'tabs': json,
+						'tabs': content.content,
 						'partner': 'help-panel'
 					});
 				}
