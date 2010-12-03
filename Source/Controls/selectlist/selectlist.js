@@ -74,11 +74,7 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		}
 
 		if(options.content) {
-			options.content.loadMethod = 'json';
-			options.content.onLoaded = (function(element, options) {
-				this.options.items = MUI.Content.getRecords(options);
-				this.draw();
-			}).bind(this);
+			options.content.instance = this;
 			MUI.Content.update(options.content);
 		}
 
@@ -328,6 +324,15 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		item._element = $(li);
 		new Element('hr').inject(li);
 		return li;
+	},
+
+	updateStart: function(content) {
+		content.loadMethod = 'json';
+	},
+
+	updateEnd: function(content) {
+		this.options.items = MUI.Content.getRecords(content);
+		if(this.options.items) this.draw();
 	}
 
 });
