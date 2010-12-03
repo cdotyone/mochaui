@@ -39,8 +39,7 @@
 
 MUI.files['{source}Core/Persist.js'] = 'loaded';
 
-MUI.Persist = (MUI.Persist || {}).extend({
-
+MUI.Persist = Object.append((MUI.Persist || {}), {
 	options: {
 		name: 'MUI',								// Name added to keys in some of the providers.
 		provider: 'auto',							// The name of the provider to use, defaults to auto.
@@ -156,13 +155,40 @@ MUI.Persist = (MUI.Persist || {}).extend({
 		}
 	},
 
-	get: function(key){
+	get: function(key, group){
+		if(group && !MUI.Persist.hasGroupKey(group,key)) return null;
 		// get a provider if needed and get the requested value
 		if (!this.currentProvider) this.initialize();
 		return this.currentProvider.get(key);
 	},
 
-	set: function(key, val){
+	hasGroupKey: function(group,key) {
+		var keys = MUI.Persist.getGroupKeys(group);
+		if(!key && keys!=null) return true;
+		if(keys && key) {
+			for(var i=0;i<keys.length;i++) {
+				if(keys[i]==key) return true;
+			}
+		}
+		return false;
+	},
+
+	getGroupKeys: function(group) {
+		var keys = MUI.Persist.get(group);
+		if (keys) return keys = keys.split('|');
+		return null;
+	},
+
+	addGroupKey: function(group,key) {
+		var keys = MUI.Persist.getGroupKeys(group);
+		if (keys) keys.push();
+		else keys = [key];
+		MUI.Persist.set(group, keys.join('|'));
+	},
+
+	set: function(key, val, group){
+		if (group) MUI.Persist.addGroupKey(group,key);
+
 		// get a provider if needed and set the requested value
 		if (!this.currentProvider) this.initialize();
 		return this.currentProvider.set(key, val);
@@ -171,9 +197,18 @@ MUI.Persist = (MUI.Persist || {}).extend({
 	remove: function(key){
 		// get a provider if needed and remove the requested value
 		if (!this.currentProvider) this.initialize();
-		return this.currentProvider.remove(key, val);
-	}
+		return this.currentProvider.remove(key);
+	},
 
+	clear: function(group){
+		var keys = MUI.Persist.get(group);
+		if (keys){
+			keys = keys.split('|');
+			keys.each(function(key){
+				MUI.Persist.remove(key);
+			});
+		}
+	}
 });
 
 MUI.Persist.Providers.Gears = new Class({
@@ -319,7 +354,8 @@ MUI.Persist.Providers.WhatWG = new Class({
 				t.executeSql(this.options.sql.create, [], function(){
 					this.db_created = true;
 				}.bind(this));
-			}.bind(this), function(){});
+			}.bind(this), function(){
+			});
 		}
 		this.db._transaction(fn.bind(this));
 	},
@@ -347,7 +383,7 @@ MUI.Persist.Providers.GlobalStorage = new Class({
 		var o = this.options;
 		o.domain = o.domain || location.host || 'localhost';
 		o.domain = o.domain.replace(/:\d+$/, '');
-		
+
 		// create data store
 		this.store = globalStorage[o.domain];
 	},
@@ -633,7 +669,7 @@ MUI.Persist.Providers.Flash = new Class({
 		} catch (e){
 			// Safari
 			if ((typeof navigator.mimeTypes != 'undefined') && navigator.mimeTypes["application/x-googlegears"]){
-				F = new Element('object',{width:0,height:0,type:'pplication/x-googlegears',styles:{display:'name'}}).inject(document.documentElement);
+				F = new Element('object', {width:0,height:0,type:'pplication/x-googlegears',styles:{display:'name'}}).inject(document.documentElement);
 			}
 		}
 	}
