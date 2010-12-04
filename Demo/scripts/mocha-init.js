@@ -1,7 +1,7 @@
 /* 
 
  In this file we setup our Windows, Columns and Panels,
- and then inititialize MochaUI.
+ and then initialize MochaUI.
 
  At the bottom of Core.js you can see how to setup lazy loading for your
  own plugins.

@@ -193,7 +193,7 @@ MUI.Tabs = new Class({
 					self.fireEvent('tabSelected', [tab, value, self, e]);
 				}
 			};
-			if (o.updateOptions) Object.append(uOptions,o.updateOptions);
+			if (o.updateOptions) uOptions=Object.merge(uOptions,o.updateOptions);
 			else {
 				var instance = MUI.get(o.partner);
 				if (instance && instance.el && instance.el.iframe) uOptions.loadMethod = 'iframe';

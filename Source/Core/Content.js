@@ -458,6 +458,11 @@ MUI.Content.Providers.json = {
 	},
 
 	doRequest: function(content){
+		if(content.content && !content.url) {
+			Browser.ie6 ? content.fireLoaded.delay(50, this) : content.fireLoaded();
+			return;
+		}
+
 		if (!this._checkRecords(content)){
 			// load persisted data if it exists
 			content.content = JSON.decode(content.persistLoad(content));
