@@ -47,7 +47,8 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		padding:				8,				// default padding for the panel
 
 		// Other:
-		collapsible:			true			// can the panel be collapsed
+		collapsible:			true,			// can the panel be collapsed
+		isCollapsed: 			false
 
 		// Events
 		//onLoaded:				null, // called every time content is loaded using MUI.Content
@@ -62,7 +63,6 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		this.setOptions(options);
 
 		Object.append(this, {
-			isCollapsed: false, // This is probably redundant since we can check for the class
 			oldHeight: 0,
 			partner: null,
 			el: {}
@@ -88,8 +88,9 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 		this.el.panelWrapper = new Element('div', {
 			'id': this.options.id + '_wrapper',
-			'class': 'panelWrapper expanded'
+			'class': 'panelWrapper expanded'  
 		}).inject($(options.column));
+
 
 		this.el.panel = new Element('div', {
 			'id': this.options.id,
@@ -283,6 +284,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 			ele.store('instance', this);
 		}).bind(this));
 
+		if(options.isCollapsed) this._collapse();		
 		this.fireEvent('drawEnd', [this]);
 		return this;
 	},
@@ -312,7 +314,6 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 	collapse: function(){
 		var panelWrapper = this.el.panelWrapper;
-		var panel = this.el.panel;
 		var options = this.options;
 
 		// Get siblings and make sure they are not all collapsed.
@@ -333,7 +334,6 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				expandedSiblings.push(sibling.getElement('.panel').id);
 		});
 
-		// Collapse Panel
 		var currentColumn = MUI.get($(options.column).id);
 
 		if (expandedSiblings.length == 0 && currentColumn.options.placement != 'main'){
@@ -343,6 +343,18 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		} else if (expandedSiblings.length == 0 && currentColumn.options.placement == 'main'){
 			return;
 		}
+
+		this._collapse(true);
+		
+		return this;
+	},
+
+	_collapse: function(fireevent) {
+		var panelWrapper = this.el.panelWrapper;
+		var options = this.options;
+
+		// Collapse Panel
+		var panel = this.el.panel;
 		this.oldHeight = panel.getStyle('height').toInt();
 		if (this.oldHeight < 10) this.oldHeight = 20;
 		this.el.content.setStyle('position', 'absolute'); // This is so IE6 and IE7 will collapse the panel all the way
@@ -355,7 +367,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		this.el.collapseToggle.removeClass('panel-collapsed');
 		this.el.collapseToggle.addClass('panel-expand');
 		this.el.collapseToggle.setProperty('title', 'Expand Panel');
-		this.fireEvent('collapse', [this]);
+		if(fireevent) this.fireEvent('collapse', [this]);
 
 		return this;
 	},

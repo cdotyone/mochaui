@@ -74,6 +74,15 @@ MUI.Content = Object.append((MUI.Content || {}), {
 			if (!instance) instance = element.retrieve('instance');
 		}
 
+		content.contentContainer = element;
+
+		// -- argument pre-processing override --
+		// allow controls to process any custom arguments, titles, scrollbars, etc..
+		if (instance && instance.updateStart) instance.updateStart(content);
+
+		// no content or url?  nothing else to do beyond this point
+		if(!content.url && !content.content) return content;
+
 		// replace in path replacement fields,  and prepare the url
 		content.doPrepUrl = (function(prepUrl){
 			return function(content){
@@ -86,12 +95,6 @@ MUI.Content = Object.append((MUI.Content || {}), {
 				}
 			};
 		})(content.prepUrl);
-
-		content.contentContainer = element;
-
-		// -- argument pre-processing override --
-		// allow controls to process any custom arguments, titles, scrollbars, etc..
-		if (instance && instance.updateStart) instance.updateStart(content);
 
 		// -- content removal --
 		// allow controls option to clear their own content

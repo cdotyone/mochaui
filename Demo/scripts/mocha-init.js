@@ -1385,14 +1385,21 @@ var initializeColumns = function(){
 
 	var panel3 = new MUI.Panel({
 		id: 'panel3',
-		title: 'Panel',
+		title: 'Collapsed Panel',
+		isCollapsed: true,
 		content: {
 			url: 'pages/lipsum.html',
 			onLoaded: addResizeElements
 		},
 		column: 'sideColumn2',
 		height: 120,
-		onResize: updateResizeElements
+		onResize: updateResizeElements,
+		onCollapse: function() {
+			MUI.Content.update({element:'panel3',title:'Collapsed Panel'});
+		},
+		onExpand: function() {
+			MUI.Content.update({element:'panel3',title:'Expanded Panel'});
+		}
 	});
 
 	new MUI.Panel({

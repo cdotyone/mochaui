@@ -91,7 +91,7 @@ MUI.Desktop = {
 	},
 
 	resizePanels: function(){
-		MUI.panelHeight();
+		MUI.panelHeight(null,null,'all');
 		MUI.rWidth();
 	},
 
@@ -495,7 +495,7 @@ MUI.append({
 			MUI.panelHeight2($(column), changing, action);
 		} else {
 			$$('.column').each(function(column){
-				MUI.panelHeight2(column);
+				MUI.panelHeight2(column,null,action);
 			}.bind(this));
 		}
 	},
@@ -519,6 +519,17 @@ MUI.append({
 		column.getChildren('.expanded').each(function(panelWrapper){
 			panelsExpanded.push(panelWrapper.getElement('.panel'));
 		}.bind(this));
+
+		// makes sure at least one panel is expanded for the
+		if(action=='all' && panelsExpanded.length==0 && panels.length>0) {
+			MUI.get(panels[0]).expand();
+
+			// if this is not the main column than we can collapse the column to get desired effect
+			var columnInstance=MUI.get(column);
+			if(columnInstance.options.position != 'main') {
+				columnInstance.collapse();
+			}
+		}
 
 		// All the panels in the column whose height will be effected.
 		var panelsToResize = [];
@@ -646,7 +657,7 @@ MUI.append({
 				var MUIPanel = MUI.get(panel.id);
 				if (action != 'new') MUIPanel.fireEvent('resize', [MUIPanel]);
 			});
-			
+
 		}.bind(this));
 
 		// Get the remaining height
