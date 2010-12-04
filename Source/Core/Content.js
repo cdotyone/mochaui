@@ -73,7 +73,6 @@ MUI.Content = Object.append((MUI.Content || {}), {
 			element = $(content.element);
 			if (!instance) instance = element.retrieve('instance');
 		}
-
 		content.contentContainer = element;
 
 		// -- argument pre-processing override --
@@ -102,7 +101,7 @@ MUI.Content = Object.append((MUI.Content || {}), {
 		if (instance && instance.updateClear) removeContent = instance.updateClear(content);
 
 		// Remove old content.
-		if (removeContent && element) element.empty().show();
+		if (removeContent && element) content.contentContainer.empty().show();
 
 		// prepare function to persist the data
 		if (content.persist && MUI.Content.Providers[content.loadMethod].canPersist){
@@ -401,7 +400,7 @@ MUI.Content.Providers.xhr = {
 				var instance = content.instance;
 				text = content.persistStore(text);
 				text = MUI.Content.processFilters(text, content);
-				if (this.contentContainer) this.contentContainer.hideSpinner(instance);
+				if (content.contentContainer) content.contentContainer.hideSpinner(instance);
 
 				var js = content.javascript, html = text;
 

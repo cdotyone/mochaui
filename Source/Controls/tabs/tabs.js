@@ -184,8 +184,10 @@ MUI.Tabs = new Class({
 		var url = self._getData(tab, o.urlField);
 		if (o.partner && url){
 			var content = self._getData(tab, o.contentField);
+			var instance = MUI.get(o.partner);
 
 			var uOptions = {
+				instance: instance,
 				element: o.partner,
 				content: content,
 				url:	url,
@@ -193,9 +195,9 @@ MUI.Tabs = new Class({
 					self.fireEvent('tabSelected', [tab, value, self, e]);
 				}
 			};
+
 			if (o.updateOptions) uOptions=Object.merge(uOptions,o.updateOptions);
 			else {
-				var instance = MUI.get(o.partner);
 				if (instance && instance.el && instance.el.iframe) uOptions.loadMethod = 'iframe';
 			}
 
