@@ -53,12 +53,6 @@ textarea, input, select { font-family: Arial, Helvetica, sans-serif; font-size: 
 form button { vertical-align: middle; }
 .button { height: 24px; margin: 0; padding: 3px 6px; background: #f1f1f1 url(../images/bg-panel-header.gif) left bottom repeat-x; font-size: 12px; font-weight: bold; cursor: pointer; vertical-align: middle; border: 1px solid #808080; -moz-border-radius: 3px; border-radius: 3px; }
 * html .button { padding: 3px 1px; }
-.searchField { width: 150px; overflow: hidden; line-height: 15px; margin: 0; padding: 4px 0 3px 5px; border: 1px solid #808080; border-right: 0; vertical-align: middle; -moz-border-radius-topleft: 3px; -moz-border-radius-bottomleft: 3px; border-radius: 3px 0 0 3px; }
-.searchButton { -moz-border-radius-topleft: 0; -moz-border-radius-bottomleft: 0; border-radius: 0 3px 3px 0; }
-* html .toolbox .searchField, * html .toolbox .searchButton { /* IE6 Hack */ margin-top: -1px; }
-* html .toolbox .button { /* IE6 Hack */ vertical-align: top; margin-top: 0; }
-*:first-child + html .toolbox .searchField, *:first-child + html .toolbox .searchButton { /* IE7 Hack */ margin-top: -1px; }
-*:first-child + html .toolbox .button { /* IE7 Hack */ vertical-align: top; margin-top: 0; }
 .formRow { margin: 0 0 8px 0; }
 .buttonRow { margin-bottom: 10px; }
 

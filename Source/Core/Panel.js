@@ -166,7 +166,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		if (this.hasHeaderTool){
 			this.el.panelHeaderToolbox = new Element('div', {
 				'id': options.id + '_headerToolbox',
-				'class': 'panel-header-toolbox'
+				'class': 'panel-header-toolbar'
 			}).inject(this.el.panelHeader);
 		}
 
@@ -238,7 +238,8 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 					break;
 				case 'headertool':
 					intoEl = this.el.panelHeaderToolbox;
-					if (section.css == '') section.css = 'toolbox';
+					if (section.css == '') section.css = 'toolbar';
+					if (section.css == '') section.css = 'toolbar';
 					if (!this.options.header) return;
 					break;
 				case 'footer':
@@ -418,7 +419,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 		this.el.panelHeaderCollapseBox = new Element('div', {
 			'id': options.id + '_headerCollapseBox',
-			'class': 'toolbox'
+			'class': 'toolbar'
 		}).inject(this.el.panelHeader);
 
 		if (this.hasHeaderTool) this.el.panelHeaderCollapseBox.addClass('divider');

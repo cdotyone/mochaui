@@ -1,0 +1,35 @@
+/*
+ ---
+ file: Toolbar.css
+
+ description: MUI - Toolbar css.
+
+ copyright: (c) 2010 Contributors in (/AUTHORS.txt).
+
+ license: MIT-style license in (/MIT-LICENSE.txt).
+
+ provides: css for charcoal theme
+ ...
+ */
+
+/* Toolbar */
+.toolbar { float: right; margin-top: 3px; padding: 0 5px; height: 24px; overflow: hidden; text-align: right; }
+.panel-header-toolbar { }
+div.toolbar div.divider { /* Have to specify div here for IE6's sake */ background: url(../images/toolbar-divider.gif) repeat-y; padding-left: 8px; float:right; }
+.toolbar img.disabled { cursor: default; }
+.iconWrapper { display: inline-block; height: 22px; min-width: 22px; overflow: hidden; border: 1px solid transparent; }
+* html .iconWrapper { padding: 1px; border: 0; }
+.iconWrapper img { cursor: pointer; margin: 0; padding: 3px; }
+.iconWrapper:hover { border: 1px solid #a0a0a0; -moz-border-radius: 3px; border-radius: 3px; }
+#spinnerWrapper { width: 16px; height: 16px; background: url(../images/spinner-placeholder.gif) no-repeat; margin: 4px 5px 0 5px; }
+#spinner { display: none; background: url(../images/spinner.gif) no-repeat; width: 16px; height: 16px; }
+.panel-footer div div.toolbar { margin: -3px 0 0; }
+
+/* search fields toolbar */
+.searchField { width: 150px; overflow: hidden; line-height: 15px; margin: 0; padding: 4px 0 3px 5px; border: 1px solid #808080; border-right: 0; vertical-align: middle; -moz-border-radius-topleft: 3px; -moz-border-radius-bottomleft: 3px; border-radius: 3px 0 0 3px; }
+.searchButton { -moz-border-radius-topleft: 0; -moz-border-radius-bottomleft: 0; border-radius: 0 3px 3px 0; }
+* html .toolbar .searchField, * html .toolbar .searchButton { /* IE6 Hack */ margin-top: -1px; }
+* html .toolbar .button { /* IE6 Hack */ vertical-align: top; margin-top: 0; }
+*:first-child + html .toolbar .searchField, *:first-child + html .toolbar .searchButton { /* IE7 Hack */ margin-top: -1px; }
+*:first-child + html .toolbar .button { /* IE7 Hack */ vertical-align: top; margin-top: 0; }
+

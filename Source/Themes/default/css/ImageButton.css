@@ -14,9 +14,9 @@ span.imgButton .imgButton.imgOnly { background-color:Transparent; border:none; p
 span.imgButton .imgButton.imgOnly span { padding:0 0 0 2px; }
 span.imgButton .imgButton.imgOnly:hover { background-color:transparent; border:none;  }
 
-div.toolbox div span.imgButton { line-height:14px; }
-div.toolbox div span.imgButton .imgButton {background-color:transparent }
-div.toolbox div span.imgButton .imgButton span img { padding:0 0 3px 0;position:relative; top:6px }
+div.toolbar div span.imgButton { line-height:14px; }
+div.toolbar div span.imgButton .imgButton {background-color:transparent }
+div.toolbar div span.imgButton .imgButton span img { padding:0 0 3px 0;position:relative; top:6px }
 
 div.mochaWindowFooter span.imgButton { line-height:14px; }                                               
 div.mochaWindowFooter span.imgButton .imgButton {background-color:transparent; border: solid 1px #BBBBBB; }

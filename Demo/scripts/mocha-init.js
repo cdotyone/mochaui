@@ -1304,7 +1304,7 @@ var initializeColumns = function(){
 			{
 				section:'search',
 				position: 'headertool',
-				url: 'pages/toolbox-demo2.html',
+				url: 'pages/toolbar-demo2.html',
 				onLoaded: function(){
 					if ($('demoSearch')){
 						$('demoSearch').addEvent('submit', function(e){
@@ -1347,7 +1347,7 @@ var initializeColumns = function(){
 			{content:'pages/blank.html'},
 			{
 				position: 'headertool',
-				url: 'pages/console.toolbox.html',
+				url: 'pages/toolbar-console.html',
 				onLoaded: function(){
 					this.el.panelHeader.getElements('.demoAction').removeEvents().addEvent('click', function(){
 						MUI.notification('Do Something');
@@ -1411,7 +1411,7 @@ var initializeColumns = function(){
 			{url: 'pages/tips.html'},
 			{
 				position: 'footer',
-				url: 'pages/toolbox-demo.html',
+				url: 'pages/toolbar-demo.html',
 				onLoaded: function(){
 					this.el.footer.getElements('.demoAction').removeEvents().addEvent('click', function(){
 						MUI.notification('Do Something');
