@@ -58,6 +58,14 @@ MUI.Content = Object.append((MUI.Content || {}), {
 		// set defaults for paging
 		content.paging = Object.append(MUI.Content.PagingOptions, content.paging);
 
+		// detect subcontrol content
+		if (content.control){
+		  if (!content.options) content.options = {};
+		  if (content.url) content.options.url = content.url;
+		  if (content.loadMethod) content.options.loadMethod = content.loadMethod;
+		  content.loadMethod = 'control';
+		}
+
 		// make sure loadMethod has a value
 		if (!content.loadMethod){
 			if (instance == null || instance.options == null || !instance.options.loadMethod){
@@ -79,8 +87,8 @@ MUI.Content = Object.append((MUI.Content || {}), {
 		// allow controls to process any custom arguments, titles, scrollbars, etc..
 		if (instance && instance.updateStart) instance.updateStart(content);
 
-		// no content or url?  nothing else to do beyond this point
-		if(!content.url && !content.content) return content;
+		// no content or url and not a subcontrol? nothing else to do beyond this point
+		if(!content.url && !content.content && content.loadMethod!='control') return content;
 
 		// replace in path replacement fields,  and prepare the url
 		content.doPrepUrl = (function(prepUrl){
@@ -568,6 +576,34 @@ MUI.Content.Providers.html = {
 		}
 
 		Browser.ie6 ? content.fireLoaded.delay(50, content) : content.fireLoaded();
+	}
+
+};
+
+MUI.Content.Providers.control = {
+
+	canPersist:		false,
+
+	canPage:		false,
+
+	doRequest: function(content){
+		var options2 = content.options;
+		var type = content.control;
+
+		// remove unneeded items that cause recursion
+		delete content.options;
+		delete content.instance;
+		delete content.control;
+
+		// create a new options hash for new control
+		var options = Object.merge({}, options2);
+
+		if (content.contentContainer){
+			options._container = content.contentContainer;
+			options.container = content.contentContainer.id;
+			delete options.contentContainer;
+		}
+		MUI.create(type, options);
 	}
 
 };

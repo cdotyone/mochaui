@@ -1367,17 +1367,12 @@ var initializeColumns = function(){
 				position: 'header',
 				empty: true,
 				loadMethod:'json',
-				content: [
-					{'text': 'Overview', 'url': 'pages/overview.html', 'title': 'Overview'},
-					{'text': 'Download', 'url': 'pages/download.html', 'title': 'Download'}
-				],
-				onLoaded: function(element, content){
-					MUI.create('MUI.Tabs', {
-						'container': 'help-panel',
-						'position': 'header',
-						'tabs': content.content,
-						'partner': 'help-panel'
-					});
+				control:'MUI.Tabs',
+				options: {
+						tabs:[
+							{'text': 'Overview', 'url': 'pages/overview.html', 'title': 'Overview'},
+							{'text': 'Download', 'url': 'pages/download.html', 'title': 'Download'}
+						]
 				}
 			}
 		]

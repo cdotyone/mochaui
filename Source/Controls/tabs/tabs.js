@@ -86,11 +86,12 @@ MUI.Tabs = new Class({
 
 		var isNew = false;
 		var div;
-		var instance=MUI.get(MUI.get($(containerEl ? containerEl : o.container)));
+		var instance=MUI.get($(containerEl ? containerEl : o.container));
 
 		if (instance && instance.isTypeOf('MUI.Panel')){
 			instance.el.panelHeaderContent.addClass(o.cssClass);
 			div = instance.el.panelHeaderContent.getElement('div').empty();
+			o.partner = instance.id;
 		} else if (instance && instance.isTypeOf('MUI.Window')){
 			div = $(o.id);
 			if (div == null) div = new Element('div', {'id': o.id, 'class': o.cssClass}).inject(instance.el.contentWrapper, 'top');

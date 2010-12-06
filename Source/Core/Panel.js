@@ -175,7 +175,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 			'class': 'panel-headerContent'
 		}).inject(this.el.panelHeader);
 
-		if (columnInstance.options.sortable){
+		if (columnInstance && columnInstance.options.sortable){
 			this.el.panelHeader.setStyle('cursor', 'move');
 			columnInstance.options.container.retrieve('sortables').addItems(this.el.panelWrapper);
 			if (this.el.panelHeaderToolbox){
@@ -239,7 +239,6 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				case 'headertool':
 					intoEl = this.el.panelHeaderToolbox;
 					if (section.css == '') section.css = 'toolbar';
-					if (section.css == '') section.css = 'toolbar';
 					if (!this.options.header) return;
 					break;
 				case 'footer':
@@ -262,6 +261,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 				if (section.position == 'bottom') section.wrapperEl.addClass('bottom');
 				intoEl = section.wrapperEl;
+				this.el[section.id + '_wrapper'] = intoEl;
 			}
 
 			if (empty) intoEl.empty();
@@ -269,6 +269,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				'id': section.id,
 				'class': section.css
 			}).inject(intoEl);
+			this.el[section.id] = section.element;
 			if (section.height || typeOf(section.height) == 'number') section.element.setStyle('height', section.height);
 
 			if (section.addClass) intoEl.addClass(section.addClass);

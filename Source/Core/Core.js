@@ -106,8 +106,10 @@ MUI.append({
 	},
 
 	get: function(el) {
-		el = this.getID(el);
-		return this.instances[el];
+		var id = this.getID(el);
+		el=$(id);
+		if(el && el.retrieve('instance')) return el.retrieve('instance');
+		return this.instances[id];
 	},
 
 	set: function(el, instance) {
