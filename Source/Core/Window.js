@@ -1267,6 +1267,7 @@ MUI.Window.implement({
 
 				if (section.position == 'bottom') section.wrapperEl.addClass('bottom');
 				intoEl = section.wrapperEl;
+				cache[section.wrapperEl.id] = intoEl;
 			}
 
 			if (empty) intoEl.empty();
@@ -1280,6 +1281,7 @@ MUI.Window.implement({
 			if (section.wrap && section.position == 'bottom') section.element.addClass('bottom');
 
 			this.sections[idx] = section;
+			cache[section.element.id]=section.element;
 		}, this);
 
 		if (options.useCanvasControls){
