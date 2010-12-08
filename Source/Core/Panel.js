@@ -38,6 +38,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 		// header
 		header:					true,			// true to create a panel header when panel is created
+		headerTool:				false,			// true to create a toolbar dock in the header of the panel
 		title:					'New Panel',	// the title inserted into the panel's header
 
 		// Style options:
@@ -129,10 +130,8 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 		// determine of this panel has a footer
 		this.hasFooter = false;
-		this.hasHeaderTool = false;
 		this.sections.each(function(section){
 			if (section.position == 'footer') this.hasFooter = true;
-			if (section.position == 'headertool') this.hasHeaderTool = true;
 		}, this);
 
 		if (this.hasFooter){
@@ -163,11 +162,18 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 		if (this.options.collapsible) this._collapseToggleInit();
 
-		if (this.hasHeaderTool){
+		if (this.options.hasHeaderTool){
 			this.el.panelHeaderToolbox = new Element('div', {
 				'id': options.id + '_headerToolbox',
 				'class': 'panel-header-toolbar'
 			}).inject(this.el.panelHeader);
+
+			MUI.create('MUI.ToolbarDock',{
+				container:options.id + '_header',
+				_container:this.el.panelHeader,
+				id:options.id + '_headerToolbox',
+				cssClass: 'panel-header-toolbar'
+			});
 		}
 
 		this.el.panelHeaderContent = new Element('div', {
@@ -178,13 +184,13 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		if (columnInstance && columnInstance.options.sortable){
 			this.el.panelHeader.setStyle('cursor', 'move');
 			columnInstance.options.container.retrieve('sortables').addItems(this.el.panelWrapper);
-			if (this.el.panelHeaderToolbox){
+/*			if (this.el.panelHeaderToolbox){
 				this.el.panelHeaderToolbox.addEvent('mousedown', function(e){
 					e = e.stop();
 					e.target.focus();
 				});
 				this.el.panelHeaderToolbox.setStyle('cursor', 'default');
-			}
+			}*/
 		}
 
 		this.el.title = new Element('h2', {
@@ -236,11 +242,11 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 					intoEl = this.el.panelHeaderContent;
 					if (!this.options.header) return;
 					break;
-				case 'headertool':
+/*				case 'headertool':
 					intoEl = this.el.panelHeaderToolbox;
 					if (section.css == '') section.css = 'toolbar';
 					if (!this.options.header) return;
-					break;
+					break;*/
 				case 'footer':
 					intoEl = this.el.footer; break;
 					break;
@@ -283,10 +289,10 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		this._loadContent();
 
 		Object.each(this.el, (function(ele){
-			ele.store('instance', this);
+			if(ele!=this.el.panelHeaderToolbox) ele.store('instance', this);
 		}).bind(this));
 
-		if(options.isCollapsed) this._collapse();		
+		if(options.isCollapsed) this._collapse();
 		this.fireEvent('drawEnd', [this]);
 		return this;
 	},

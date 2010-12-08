@@ -18,15 +18,23 @@
 			new MUI.Panel({
 				id:'panel1',
 				column:'place1',
-				content:[{
-					
-				}]
+				hasHeaderTool: true,
+				content:[
+					{
+						position:'headertool',
+						control:'MUI.ToolbarDock',
+						id:'tdock1'
+					}
+				]
 			});
-			/*new MUI.Toolbar({
+			new MUI.Toolbar({
 				container:'panel1',
 				id:'toolbar1',
-				element:'page2'
-			});*/
+				items:[
+					{name:"Edit",title:'click to edit selected item',image:'{theme}/images/accept.png'},
+					{name:"Cancel",title:'click to cancel changes',image:'{theme}/images/cancel.png'}
+				]
+			});
 		});
 	</script>
 	<link rel="stylesheet" type="text/css" href="../../Themes/default/css/Core.css"/>

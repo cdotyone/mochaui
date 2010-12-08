@@ -29,7 +29,9 @@ Object.append(MUI.controls, {
 	'tabs':{'samples':['index'],data:['json','html'],'description':'Tabs','isFormControl':true,'css':['{theme}css/Tabs.css']},
 	'textarea':{'samples':['index','demo'],data:['json','html'],'description':'Text Area','isFormControl':true,'css':['{theme}css/TextBox.css']},
 	'textbox':{'samples':['index','demo'],data:['json'],'description':'Text Box','isFormControl':true,'css':['{theme}css/TextBox.css']},
-	'tree':{'samples':['index','demo'],data:['json'],'description':'Tree','isFormControl':true,'css':['{theme}css/Tree.css']}
+	'tree':{'samples':['index','demo'],data:['json'],'description':'Tree','isFormControl':true,'css':['{theme}css/Tree.css']},
+	'toolbar':{'samples':['index'],data:['json'],'description':'Toolbar','isFormControl':true,'css':['{theme}css/Toolbar.css']},
+	'toolbardock':{'samples':['index'],data:['json'],'description':'Toolbar Dock','isFormControl':true,'css':['{theme}css/Toolbar.css'],script:'toolbar/toolbar.js'}
 
 });
 

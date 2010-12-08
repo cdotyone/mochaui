@@ -28,6 +28,61 @@
 
 MUI.files['{controls}toolbar/toolbar.js'] = 'loaded';
 
+MUI.ToolbarDock = new Class({
+
+	Implements: [Events, Options],
+
+	options: {
+		id:				'',				// id of the primary element, and id os control that is registered with mocha
+		container:		null,			// the parent control in the document to add the control to
+		drawOnInit:		true,			// true to add tree to container when control is initialized
+		cssClass:		'toolbar',		// the primary css tag
+
+		docked:			[]				// items that are docked currently
+	},
+	
+	initialize: function(options){
+		var self = this;
+		self.setOptions(options);
+		var o = self.options;
+		self.el={};
+
+		// make sure this controls has an ID
+		var id = o.id;
+		if (!id){
+			id = 'toolbarDock' + (++MUI.IDCount);
+			o.id = id;
+		}
+
+		this.draw();
+
+		MUI.set(id, this);
+	},
+
+	draw: function(containerEl){
+		var self = this;
+		var o = self.options;
+
+		var isNew = false;
+		var div;
+
+		div = $(o.id);
+		if (!div){
+			div = new Element('div', {'id': o.id, 'class': o.cssClass});
+			isNew = true;
+		}
+
+		self.el.element = div;
+
+		window.addEvent('domready', function(){
+			if(!o._container) o._container = $(containerEl ? containerEl : o.container);
+			o._container.appendChild(div);
+		});
+
+		return div;
+	}
+});
+
 MUI.Toolbar = new Class({
 
 	Implements: [Events, Options],
@@ -47,6 +102,7 @@ MUI.Toolbar = new Class({
 		var self = this;
 		self.setOptions(options);
 		var o = self.options;
+		self.el={};
 
 		// make sure this controls has an ID
 		var id = o.id;
@@ -70,27 +126,17 @@ MUI.Toolbar = new Class({
 		var div;
 		var instance=MUI.get($(containerEl ? containerEl : o.container));
 
-		if (instance && instance.isTypeOf('MUI.Panel')){
-			instance.el.panelHeaderToolbox.addClass(o.cssClass);
-			div = instance.el.panelHeaderToolbox.getElement('div').empty();
-		} else if (instance && instance.isTypeOf('MUI.Window')){
-			div = $(o.id);
-			if (div == null) div = new Element('div', {'id': o.id, 'class': o.cssClass}).inject(instance.el.contentWrapper, 'top');
-			div.addClass(o.cssClass);
-		} else {
-			div = $(o.id);
-			if (!div){
-				div = new Element('div', {'id': o.id, 'class': o.cssClass});
-				isNew = true;
-			}
+		div = $(o.id);
+		if (!div){
+			div = new Element('div', {'id': o.id, 'class': o.cssClass});
+			isNew = true;
 		}
 
-		self.element = div;
+		self.el.element = div;
 
 		window.addEvent('domready', function(){
 			var container = $(containerEl ? containerEl : o.container);
 			container.appendChild(div);
-			if (o.selectedTab) o.selectedTab._element.fireEvent('click');
 		});
 
 		return div;
