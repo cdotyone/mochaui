@@ -168,8 +168,11 @@ MUI.append({
 		}
 		if (config == null) return;
 
-		if (!config.script) config.script = sname + '/' + sname + '.js';
-		var js = ['{' + pgName + '}' + config.script];
+		var js;
+		if (!config.js){
+			if (!config.location) config.location = sname;
+			js = ['{' + pgName + '}' + config.location + '/' + sname + '.js'];
+		} else js = config.js;
 
 		if (MUI.files[js[0]] == 'loaded' && !fromHTML){
 			var klass = MUI[name];

@@ -1299,6 +1299,7 @@ var initializeColumns = function(){
 		id: 'mainPanel',
 		title: 'Lorem Ipsum',
 		column: 'mainColumn',
+		hasHeaderTool: true,
 		content: [
 			{url:'pages/lipsum.html'},
 			{

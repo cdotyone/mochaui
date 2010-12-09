@@ -49,7 +49,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 		// Other:
 		collapsible:			true,			// can the panel be collapsed
-		isCollapsed: 			false
+		isCollapsed:			 false
 
 		// Events
 		//onLoaded:				null, // called every time content is loaded using MUI.Content
@@ -89,7 +89,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 		this.el.panelWrapper = new Element('div', {
 			'id': this.options.id + '_wrapper',
-			'class': 'panelWrapper expanded'  
+			'class': 'panelWrapper expanded'
 		}).inject($(options.column));
 
 
@@ -132,6 +132,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		this.hasFooter = false;
 		this.sections.each(function(section){
 			if (section.position == 'footer') this.hasFooter = true;
+			if (section.position == 'headertool') this.options.hasHeaderTool = true;
 		}, this);
 
 		if (this.hasFooter){
@@ -164,14 +165,14 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 		if (this.options.hasHeaderTool){
 			this.el.panelHeaderToolbox = new Element('div', {
-				'id': options.id + '_headerToolbox',
-				'class': 'panel-header-toolbar'
+				'id': options.id + '_headerToolbar',
+				'class': 'panel-header-toolbar' //
 			}).inject(this.el.panelHeader);
 
-			MUI.create('MUI.ToolbarDock',{
+			MUI.create('MUI.ToolbarDock', {
 				container:options.id + '_header',
 				_container:this.el.panelHeader,
-				id:options.id + '_headerToolbox',
+				id:options.id + '_headerToolbar',
 				cssClass: 'panel-header-toolbar'
 			});
 		}
@@ -184,13 +185,13 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		if (columnInstance && columnInstance.options.sortable){
 			this.el.panelHeader.setStyle('cursor', 'move');
 			columnInstance.options.container.retrieve('sortables').addItems(this.el.panelWrapper);
-/*			if (this.el.panelHeaderToolbox){
+			if (this.el.panelHeaderToolbox){
 				this.el.panelHeaderToolbox.addEvent('mousedown', function(e){
 					e = e.stop();
 					e.target.focus();
 				});
 				this.el.panelHeaderToolbox.setStyle('cursor', 'default');
-			}*/
+			}
 		}
 
 		this.el.title = new Element('h2', {
@@ -242,11 +243,13 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 					intoEl = this.el.panelHeaderContent;
 					if (!this.options.header) return;
 					break;
-/*				case 'headertool':
-					intoEl = this.el.panelHeaderToolbox;
-					if (section.css == '') section.css = 'toolbar';
-					if (!this.options.header) return;
-					break;*/
+				case 'headertool':
+					//intoEl = this.el.panelHeaderToolbox;
+					//if (section.css == '') section.css = 'toolbar';
+					section._container = this.el.panelHeaderToolbox;
+					section.container = section._container.id;
+					MUI.create('MUI.ToolbarHtml', section);
+					return;
 				case 'footer':
 					intoEl = this.el.footer; break;
 					break;
@@ -289,10 +292,10 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		this._loadContent();
 
 		Object.each(this.el, (function(ele){
-			if(ele!=this.el.panelHeaderToolbox) ele.store('instance', this);
+			if (ele != this.el.panelHeaderToolbox) ele.store('instance', this);
 		}).bind(this));
 
-		if(options.isCollapsed) this._collapse();
+		if (options.isCollapsed) this._collapse();
 		this.fireEvent('drawEnd', [this]);
 		return this;
 	},
@@ -353,11 +356,11 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		}
 
 		this._collapse(true);
-		
+
 		return this;
 	},
 
-	_collapse: function(fireevent) {
+	_collapse: function(fireevent){
 		var panelWrapper = this.el.panelWrapper;
 		var options = this.options;
 
@@ -375,7 +378,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		this.el.collapseToggle.removeClass('panel-collapsed');
 		this.el.collapseToggle.addClass('panel-expand');
 		this.el.collapseToggle.setProperty('title', 'Expand Panel');
-		if(fireevent) this.fireEvent('collapse', [this]);
+		if (fireevent) this.fireEvent('collapse', [this]);
 
 		return this;
 	},
@@ -411,7 +414,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		this.sections.each(function(section){
 			if (!options.header && (section.position == 'header' || section.position == 'headertool')) return;
 			if (section.onLoaded) section.onLoaded = section.onLoaded.bind(this);
-			section.instance = this;
+			if (!section.instance) section.instance = this;
 			MUI.Content.update(section);
 		}, this);
 

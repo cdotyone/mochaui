@@ -1,11 +1,11 @@
 /*
  ---
 
- name: Toolbar
+ name: ToolbarDock
 
- script: toolbar.js
+ script: toolbardock.js
 
- description: MUI - Creates a toolbar control.
+ description: MUI - Creates a toolbar dock control.
 
  copyright: (c) 2010 Contributors in (/AUTHORS.txt).
 
@@ -26,9 +26,9 @@
  ...
  */
 
-MUI.files['{controls}toolbar/toolbar.js'] = 'loaded';
+MUI.files['{controls}toolbar/toolbardock.js'] = 'loaded';
 
-MUI.Toolbar = new Class({
+MUI.ToolbarDock = new Class({
 
 	Implements: [Events, Options],
 
@@ -38,11 +38,9 @@ MUI.Toolbar = new Class({
 		drawOnInit:		true,			// true to add tree to container when control is initialized
 		cssClass:		'toolbar',		// the primary css tag
 
-		controls:		[]
-
-		//onTabSelected:null			// event: when a node is checked
+		docked:			[]				// items that are docked currently
 	},
-
+	
 	initialize: function(options){
 		var self = this;
 		self.setOptions(options);
@@ -52,12 +50,10 @@ MUI.Toolbar = new Class({
 		// make sure this controls has an ID
 		var id = o.id;
 		if (!id){
-			id = 'tabs' + (++MUI.IDCount);
+			id = 'toolbarDock' + (++MUI.IDCount);
 			o.id = id;
 		}
 
-		// create sub items if available
-		//if (o.drawOnInit && o.controls.length > 0) 
 		this.draw();
 
 		MUI.set(id, this);
@@ -69,7 +65,6 @@ MUI.Toolbar = new Class({
 
 		var isNew = false;
 		var div;
-		var instance=MUI.get($(containerEl ? containerEl : o.container));
 
 		div = $(o.id);
 		if (!div){
@@ -79,13 +74,14 @@ MUI.Toolbar = new Class({
 
 		self.el.element = div;
 
-		window.addEvent('domready', function(){
-			var container = $(containerEl ? containerEl : o.container);
-			container.appendChild(div);
+		if(!isNew) return;
+		if(o._container) o._container.appendChild(div);
+		else window.addEvent('domready', function(){
+			if(!o._container) o._container = $(containerEl ? containerEl : o.container);
+			o._container.appendChild(div);
 		});
 
 		return div;
 	}
 });
 
-MUI.Toolbar.targets = [];
