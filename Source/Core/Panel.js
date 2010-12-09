@@ -244,12 +244,17 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 					if (!this.options.header) return;
 					break;
 				case 'headertool':
+					intoEl = this.el.panelHeaderToolbox;
+					if (section.css == '') section.css = 'toolbar';
+					if (!this.options.header) return;
+					break;
+				/*case 'headertool':
 					//intoEl = this.el.panelHeaderToolbox;
 					//if (section.css == '') section.css = 'toolbar';
 					section._container = this.el.panelHeaderToolbox;
 					section.container = section._container.id;
 					MUI.create('MUI.ToolbarHtml', section);
-					return;
+					return;*/
 				case 'footer':
 					intoEl = this.el.footer; break;
 					break;
