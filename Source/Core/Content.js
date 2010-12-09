@@ -536,7 +536,7 @@ MUI.Content.Providers.iframe = {
 			var iframeEl = new Element('iframe', {
 				id: content.element.id + '_iframe',
 				name: content.element.id + '_iframe',
-				class: 'mochaIframe',
+				'class': 'mochaIframe',
 				src: content.doPrepUrl(content),
 				marginwidth: 0,
 				marginheight: 0,
