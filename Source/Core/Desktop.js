@@ -42,7 +42,7 @@ MUI.Desktop = {
 	},
 
 	initialize: function(options){
-		if (options) Object.append(MUI.Desktop.options,options);
+		if (options) Object.append(MUI.Desktop.options, options);
 
 		if (MUI.desktop) return;	// only one desktop allowed
 		MUI.desktop = this;
@@ -91,7 +91,7 @@ MUI.Desktop = {
 	},
 
 	resizePanels: function(){
-		MUI.panelHeight(null,null,'all');
+		MUI.panelHeight(null, null, 'all');
 		MUI.rWidth();
 	},
 
@@ -222,7 +222,7 @@ MUI.Desktop = {
 
 					var resizeDimensions;
 					if (options.container) resizeDimensions = $(options.container).getCoordinates();
-					else resizeDimensions=document.getCoordinates();
+					else resizeDimensions = document.getCoordinates();
 					var shadowBlur = options.shadowBlur;
 					var shadowOffset = options.shadowOffset;
 					var newHeight = resizeDimensions.height - options.headerHeight - options.footerHeight;
@@ -372,7 +372,7 @@ MUI.Window.implement({
 
 		var options = this.options;
 		var windowDrag = this.windowDrag;
-	   	var windowEl = this.el.windowEl;
+		var windowEl = this.el.windowEl;
 
 		// If window no longer exists or is maximized, stop
 		if (this.isMaximized) return this;
@@ -494,7 +494,7 @@ MUI.append({
 			MUI.panelHeight2($(column), changing, action);
 		} else {
 			$$('.column').each(function(column){
-				MUI.panelHeight2(column,null,action);
+				MUI.panelHeight2(column, null, action);
 			}.bind(this));
 		}
 	},
@@ -520,12 +520,12 @@ MUI.append({
 		}.bind(this));
 
 		// makes sure at least one panel is expanded for the
-		if(action=='all' && panelsExpanded.length==0 && panels.length>0) {
+		if (action == 'all' && panelsExpanded.length == 0 && panels.length > 0){
 			MUI.get(panels[0]).expand();
 
 			// if this is not the main column than we can collapse the column to get desired effect
-			var columnInstance=MUI.get(column);
-			if(columnInstance.options.position != 'main') {
+			var columnInstance = MUI.get(column);
+			if (columnInstance.options.position != 'main'){
 				columnInstance.collapse();
 			}
 		}
