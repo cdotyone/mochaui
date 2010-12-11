@@ -445,7 +445,6 @@ MUI.Window.implement({
 	},
 
 	_restoreMaximized: function(){
-		var windowEl = this.el.windowEl;
 		var options = this.options;
 
 		// Window exists and is maximized ?
