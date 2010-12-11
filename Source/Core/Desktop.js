@@ -779,7 +779,6 @@ MUI.append({
 			}, this);
 
 			column.getElements('.panel').each(function(panel){
-				panel.setStyle('width', newWidth - panel.getStyle('border-left').toInt() - panel.getStyle('border-right').toInt());
 				MUI.resizeChildren(panel);
 			}.bind(this));
 
