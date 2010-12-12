@@ -42,10 +42,11 @@ MUI.append({
 		standardEffects: true,  // Basic effects that tend to run smoothly.
 
 		path: {
-			source:  '../Source/',			// Path to MochaUI source JavaScript
-			controls:'../Source/Controls/',	// Path to Mocha Owned Controls
-			themes:  '../Source/Themes/',	// Path to MochaUI Themes
-			plugins: '../Source/Plugins/'	// Path to Mocha Owned Plugins
+			root:		'../',						// Path to root of other source folders
+			source:		'{root}Source/',			// Path to MochaUI source JavaScript
+			controls:	'{root}Source/Controls/',	// Path to Mocha Owned Controls
+			themes:		'{root}Source/Themes/',		// Path to MochaUI Themes
+			plugins:	'{root}Source/Plugins/'		// Path to Mocha Owned Plugins
 		}
 	}
 });
@@ -71,6 +72,7 @@ MUI.append({
 		if (typeOf(str) == 'string'){
 			var keys = str.match(/\{+(\w*)\}+/g);
 			if (keys == null) return str;
+			keys.push('{root}');
 
 			keys.each(function(key){
 				var name = key.replace(/[\{\}]/g, '');
