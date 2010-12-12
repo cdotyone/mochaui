@@ -166,7 +166,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		if (this.options.hasHeaderTool){
 			this.el.panelHeaderToolbox = new Element('div', {
 				'id': options.id + '_headerToolbar',
-				'class': 'panel-header-toolbar' //
+				'class': 'panel-header-toolbar toolbar'
 			}).inject(this.el.panelHeader);
 
 			MUI.create('MUI.ToolbarDock', {
@@ -244,17 +244,8 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 					if (!this.options.header) return;
 					break;
 				case 'headertool':
-					intoEl = this.el.panelHeaderToolbox;
-					if (section.css == '') section.css = 'toolbar';
-					if (!this.options.header) return;
-					break;
-				/*case 'headertool':
-					//intoEl = this.el.panelHeaderToolbox;
-					//if (section.css == '') section.css = 'toolbar';
-					section._container = this.el.panelHeaderToolbox;
-					section.container = section._container.id;
-					MUI.create('MUI.ToolbarHtml', section);
-					return;*/
+					this._createToolbarSection(section, this.el.panelHeaderToolbox);
+					return;
 				case 'footer':
 					intoEl = this.el.footer; break;
 					break;
@@ -417,7 +408,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 		// load/build all of the additional  content sections
 		this.sections.each(function(section){
-			if (!options.header && (section.position == 'header' || section.position == 'headertool')) return;
+			if ((!options.header && section.position == 'header') || section.position == 'headertool') return;
 			if (section.onLoaded) section.onLoaded = section.onLoaded.bind(this);
 			if (!section.instance) section.instance = this;
 			MUI.Content.update(section);
@@ -546,6 +537,19 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				MUI.get(partner).fireEvent('resize', [this]);
 			}.bind(this)
 		});
+	},
+
+	_createToolbarSection:function(section, element){
+		if (!section.control) section.control = 'MUI.ToolbarHtml';
+		section._container = element;
+		section.container = section._container.id;
+		var content = {};
+		Object.each(section, function(val, key){
+			if (['loadmethod', 'method', 'url', 'content', 'onloaded'].indexOf(key) > -1)
+				content[key] = val;
+		});
+		section.content = content;
+		MUI.create(section.control, section);
 	}
 
 }).implement(MUI.WindowPanelShared);

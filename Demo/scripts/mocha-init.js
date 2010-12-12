@@ -86,7 +86,7 @@ var initializeWindows = function(){
 	}
 
 	MUI.jsonWindows = function(){
-		var request = new Request.JSON({
+		new Request.JSON({
 			url: 'data/json-windows-data.js',
 			onComplete: function(properties){
 				MUI.Windows.newFromJSON(properties.windows);
@@ -1314,7 +1314,8 @@ var initializeColumns = function(){
 							if ($('postContent') && MUI.options.standardEffects) $('postContent').setStyle('opacity', 0);
 							else $('mainPanel_pad').empty();
 
-							this.set('send', {
+							var form=$('demoSearch');
+							form.set('send', {
 								onComplete: function(response){
 									MUI.Content.update({
 										'element': $('mainPanel'),
@@ -1328,10 +1329,10 @@ var initializeColumns = function(){
 										$('postContent').setStyle('opacity', 0).get('morph').start({'opacity': 1});
 								}
 							});
-							this.send();
+							form.send();
 						});
 					}
-					addResizeElements.apply(this);
+					addResizeElements.apply(MUI.get('mainPanel'));
 				}
 			}
 		],
@@ -1350,7 +1351,7 @@ var initializeColumns = function(){
 				position: 'headertool',
 				url: 'pages/toolbar-console.html',
 				onLoaded: function(){
-					this.el.panelHeader.getElements('.demoAction').removeEvents().addEvent('click', function(){
+					this.el.element.getElements('.demoAction').removeEvents().addEvent('click', function(){
 						MUI.notification('Do Something');
 					});
 				}

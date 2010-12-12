@@ -69,7 +69,6 @@ MUI.Toolbar = new Class({
 
 		var isNew = false;
 		var div;
-		var instance=MUI.get($(containerEl ? containerEl : o.container));
 
 		div = $(o.id);
 		if (!div){

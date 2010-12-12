@@ -36,18 +36,17 @@ MUI.ToolbarHtml = new Class({
 		id:				'',				// id of the primary element, and id os control that is registered with mocha
 		container:		null,			// the parent control in the document to add the control to
 		drawOnInit:		true,			// true to add tree to container when control is initialized
-		cssClass:		'toolbar',		// the primary css tag
+		cssClass:		'divider',		// the primary css tag
 
-		docked:			[]				// items that are docked currently
+		content:		false			// used to load content
 	},
 
 	initialize: function(options){
 		options.instance = this;
+		this.setOptions(options);
 
-		var self = this;
-		self.setOptions(options);
-		var o = self.options;
-		self.el = {};
+		var o = this.options;
+		this.el = {};
 
 		// make sure this controls has an ID
 		var id = o.id;
@@ -56,6 +55,7 @@ MUI.ToolbarHtml = new Class({
 			o.id = id;
 		}
 
+		if (o.content) o.content.instance=this;
 		this.draw();
 
 		MUI.set(id, this);
@@ -73,23 +73,27 @@ MUI.ToolbarHtml = new Class({
 			div = new Element('div', {'id': o.id});
 			isNew = true;
 		}
-		div.set('class', 'divider ' + o.cssClass);
+		div.set('class', o.cssClass);
 
-		o.contentContainer = div;
 		self.el.element = div;
 
 		if (!isNew) return;
 		if (o._container) o._container.appendChild(div);
-		else window.addEvent('domready', function(){
-			if (!o._container) o._container = $(containerEl ? containerEl : o.container);
-			o._container.appendChild(div);
+
+		window.addEvent('domready', function(){
+			if (!o._container){
+				o._container = $(containerEl ? containerEl : o.container);
+				o._container.appendChild(div);
+			}
+			if (o.content) MUI.Content.update(o.content);
 		});
 
 		return div;
 	},
 
-	updateStart: function(content) {
-		content.element = o._container;
+	updateSetContent: function(content) {
+		this.el.element.set('html',content.content);
+		return false;
 	}
 });
 
