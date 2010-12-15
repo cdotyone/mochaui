@@ -380,7 +380,7 @@ Element.implement({
 			(function(){
 				var count = this.retrieve("count");
 				this.store("count", count ? count - 1 : 0);
-				if (count <= 1) this.hide();
+				if (count <= 1) this.setStyle('display', 'none');
 			}).delay(500, spinner);
 			return;
 		}
