@@ -44,9 +44,12 @@ MUI.append({
 		path: {
 			root:		'../',						// Path to root of other source folders
 			source:		'{root}Source/',			// Path to MochaUI source JavaScript
-			controls:	'{root}Source/Controls/',	// Path to Mocha Owned Controls
-			themes:		'{root}Source/Themes/',		// Path to MochaUI Themes
-			plugins:	'{root}Source/Plugins/'		// Path to Mocha Owned Plugins
+			themes:		'{root}Source/Themes/'		// Path to MochaUI Themes
+		},
+
+		pluginGroups: {
+			'controls':{path:'{root}Source/Controls/',singularName:'control'},
+			'plugins':{path:'{root}Source/Plugins/',singularName:'plugin'}
 		}
 	}
 });
@@ -55,15 +58,17 @@ MUI.append({
 	version: '1.0.0',
 	instances: new Hash(),
 	IDCount: 0,
-	ieSupport: 'excanvas',		// Makes it easier to switch between Excanvas and Moocanvas for testing
-	pluginGroups: ['controls','plugins'],
-	path: MUI.options.path,		// depreciated, will be removed
+	ieSupport: 'excanvas',					// Makes it easier to switch between Excanvas and Moocanvas for testing
+	//pluginGroups: ['controls','plugins'],
+	path: MUI.options.path,					// depreciated, will be removed
 
 	initialize: function(options){
 		if (options){
 			if (options.path) options.path = Object.append(MUI.options.path, options.path);
+			if (options.pluginGroups) options.pluginGroups = Object.append(MUI.options.pluginGroups, options.pluginGroups);
 			Object.append(MUI.options, options);
 		}
+		Object.each(MUI.options.pluginGroups, MUI.addPluginGroup);
 	},
 
 	replaceFields: function(str, values){
@@ -78,6 +83,7 @@ MUI.append({
 				var name = key.replace(/[\{\}]/g, '');
 				if (name == null || name == '') return;
 
+				if (!values[name]) return;
 				var re = new RegExp('\\{' + name + '\\}', 'g');
 				str = str.replace(re, values[name]);
 			});
@@ -85,7 +91,7 @@ MUI.append({
 		}
 		if (typeOf(str) == 'array'){
 			for (var i = 0; i < str.length; i++){
-				str[i] = MUI.replaceFields(str[i]);
+				str[i] = MUI.replaceFields(str[i], values);
 			}
 		}
 		return str;
@@ -130,16 +136,14 @@ MUI.append({
 		return this;
 	},
 
-	addPluginGroup: function(name, path){
-		if (!MUI[name]){
-			MUI[name] = [];
-			MUI.options.path[name] = path;
-		}
+	addPluginGroup: function(group, name){
+		MUI.options.pluginGroups[name] = group;
+		MUI.options.path[name] = group.path;
 	},
 
 	loadPluginGroups:function(onload){
 		var js = [];
-		Object.each(MUI.pluginGroups, function(name){
+		Object.each(MUI.options.pluginGroups, function(group, name){
 			if (MUI.files['{' + name + '}mui-' + name + '.js'] != 'loaded'){
 				MUI[name] = [];
 				Object.append(js, ['{' + name + '}mui-' + name + '.js']);
@@ -150,54 +154,63 @@ MUI.append({
 		return true;   // returns true to signal that it loading something
 	},
 
-	create:function(type, options, fromHTML){
+	load:function(type, loadScriptHTML){
+		MUI.create(type, null, loadScriptHTML, true);
+	},
+
+	create:function(type, options, fromHTML, loadOnly){
 		if (this.loadPluginGroups(function(){
 			MUI.create(type, options);
 		})) return;
 
 		var name = type.replace(/(^MUI\.)/i, '');
-		var sname = name.toLowerCase();
+		var cname = name.toLowerCase();
 
 		// try and locate the requested item
 		var config;
 		var pgName;
-		for (var i = 0; i < MUI.pluginGroups.length; i++){
-			pgName = MUI.pluginGroups[i];
-			if (MUI[pgName][sname] != null){
-				config = MUI[pgName][sname];
-				break;
+		Object.each(MUI.options.pluginGroups, function(group, name){
+			if (MUI[name][cname] != null){
+				pgName = name;
+				config = MUI[name][cname];
 			}
-		}
+		});
 		if (config == null) return;
 
-		var js;
-		if (!config.js){
-			if (!config.location) config.location = sname;
-			js = ['{' + pgName + '}' + config.location + '/' + sname + '.js'];
-		} else js = config.js;
+		var path = {};
+		var sname = MUI.options.pluginGroups[pgName].singularName;
+		if (!config.location) config.location = cname;
+		path[sname] = '{' + pgName + '}' + config.location + '/';
 
-		if (MUI.files[js[0]] == 'loaded' && !fromHTML){
+		var js;
+		if (!config.js) js = [path[sname] + cname + '.js'];
+		else js = config.js;
+
+		js = MUI.replaceFields(js, path);
+
+		if (js.length > 0 && MUI.files[js[0]] == 'loaded' && !fromHTML){
+			if (config.loadOnly || loadOnly) return null;
 			var klass = MUI[name];
 			return new klass(options);
 		}
 
-		if (fromHTML) js.push('{' + pgName + '}' + sname + '/' + sname + '_html.js');
+		if (fromHTML) js.push(path[sname] + cname + '_html.js');
 
 		var css = [];
 		if (config.css) css = config.css;
-		if (config.js) Object.append(js, config.js);
+		css = MUI.replaceFields(css, path);
 
-		var ret;
 		new MUI.Require({
 			'js':js,
 			'css':css,
 			'onload':function(){
+				if (config.loadOnly || loadOnly) return;
 				var klass = MUI[name];
-				ret = new klass(options);
+				new klass(options);
 				if (fromHTML) ret.fromHTML();
 			}
 		});
-		return ret;
+		return null;
 	},
 
 	reloadIframe: function(iframe){
