@@ -36,12 +36,12 @@ MUI.ImageButton = new Class({
 	options: {
 		id:				'',			// id of the primary element, and id os control that is registered with mocha
 		container:		null,		// the parent control in the document to add the control to
-		section:		false,		// name of section in panel/window to add this control  
+		section:		false,		// name of section in panel/window to add this control
 		drawOnInit:		true,		// true to add tree to container when control is initialized
 		cssClass:		'imgButton',// the primary css tag
 
 		text:			null,		// the text displayed on the button
-		title:			null,		// tool top text
+		title:			null,		// tool tip text
 		image:			null,		// the url to the image that will be displayed
 		isDisabled:		false		// is the button disabled
 
@@ -50,6 +50,7 @@ MUI.ImageButton = new Class({
 
 	initialize: function(options){
 		this.setOptions(options);
+		this.el = {};
 
 		// make sure this controls has an ID
 		var id = this.options.id;
@@ -69,46 +70,51 @@ MUI.ImageButton = new Class({
 		var o = self.options;
 
 		var isNew = true;
-		var s1 = self.element;
-		if (s1 == null) s1 = new Element('span', {'class':o.cssClass,'id':o.id});
+		var div = self.el.element;
+		if (div == null) div = new Element('span', {'class':o.cssClass,'id':o.id});
 		else {
-			s1.empty();
+			div.empty();
 			isNew = false;
 		}
 
-		s1.setStyle('opacity', o.isDisabled ? '0.25' : '1.0');
+		div.setStyle('opacity', o.isDisabled ? '0.25' : '1.0');
 
-		var a = new Element('a', {'class':o.cssClass,'title':o.title}).inject(s1);
+		var a = new Element('a', {id:o.id + '_click','class':o.cssClass,'title':o.title}).inject(div);
+		self.el[a.id] = a;
 
-		s1.removeEvents('click');
-		s1.addEvent('click', function(){
+		div.removeEvents('click');
+		div.addEvent('click', function(){
 			self.fireEvent("click", self)
 		});
 
 		if (o.image){
 			var tle = o.title;
 			if (!tle) tle = o.text;
-			var si = new Element('span').inject(a);
-			new Element('img', {'src':MUI.replacePaths(o.image),'alt':tle}).inject(si);
+			var si = new Element('span', {id:o.id + '_imageWrapper'}).inject(a);
+			var img = new Element('img', {id:o.id + '_image','src':MUI.replacePaths(o.image),'alt':tle}).inject(si);
+			self.el[si.id] = si;
+			self.el[img.id] = img;
 		}
 		if (o.text){
 			a.appendChild(new Element('span', {'text':o.text,'class':'t'}));
 		}
 
-		self.element = s1;
+		self.el.element = div;
 
 		if (!isNew) return self;
 
-		window.addEvent('domready', function(){
+		if (o._container) this._addToContainer(o._container, div);
+		else window.addEvent('domready', function(){
 			var instance = MUI.get(o.container);
 			if (!o._container && typeof(o.container) == 'string'){
 				if (instance){
 					if (o.section && instance.getSection){
 						var section = instance.getSection(o.section);
-						if(section) {
+						if (section){
 							var bholder = section.element.getElement('#' + section.id + '_buttonHolder');
 							if (!bholder) bholder = new Element('div', { 'id': section.id + '_buttonHolder', 'class':'divider nobr'}).inject(section.element);
 							o._container = bholder;
+							self.el[bholder.id] = bholder;
 						}
 					}
 
@@ -117,7 +123,7 @@ MUI.ImageButton = new Class({
 				}
 				if (!o._container) o._container = $(o.container);
 			}
-			if (o._container) o._container.appendChild(s1);
+			if (o._container) this._addToContainer(o._container, div);
 		});
 
 		return self;
@@ -127,6 +133,11 @@ MUI.ImageButton = new Class({
 		this.options.isDisabled = disabled;
 		this.draw();
 		return disabled;
+	},
+
+	_addToContainer: function(container, element){
+		var instance = container.retrieve('instance');
+		element.inject(container, instance != null && instance.options.orientation == 'right' ? 'bottom' : 'top');
 	}
 
 });

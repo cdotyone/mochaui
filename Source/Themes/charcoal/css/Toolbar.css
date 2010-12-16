@@ -15,7 +15,7 @@
 /* Toolbar */
 .toolbar { float: right; margin-top: 3px; padding: 0 5px; height: 24px; overflow: hidden; text-align: right; }
 .panel-header-toolbar { }
-div.toolbar div.divider { /* Have to specify div here for IE6's sake */ padding-left: 8px; border-left: 1px solid #282828;  float:right; }
+div.toolbar div.divider { /* Have to specify div here for IE6's sake */ background: url(../images/toolbar-divider.gif) repeat-y; padding-left: 6px; padding-right:3px; float:right; }
 .toolbar img.disabled { cursor: default; }
 .iconWrapper { display: inline-block; height: 22px; min-width: 22px; overflow: hidden; border: 1px solid transparent; }
 * html .iconWrapper { padding: 1px; border: 0; }
@@ -24,6 +24,7 @@ div.toolbar div.divider { /* Have to specify div here for IE6's sake */ padding-
 #spinnerWrapper { width: 16px; height: 16px; background: url(../images/spinner-placeholder.gif) no-repeat; margin: 4px 5px 0 5px; }
 #spinner { display: none; background: url(../images/spinner.gif) no-repeat; width: 16px; height: 16px; }
 .panel-footer div div.toolbar { margin: -3px 0 0; }
+.toolbar .button { vertical-align: top; margin-top:0; margin-right:3px; }
 
 /* search fields toolbar */
 .searchField { width: 150px; overflow: hidden; line-height: 15px; margin: 0; padding: 4px 0 3px 5px; border: 1px solid #181818; border-right: 0; vertical-align: middle; -moz-border-radius-topleft: 3px; -moz-border-radius-bottomleft: 3px; border-radius: 3px 0 0 3px; }
@@ -31,4 +32,3 @@ div.toolbar div.divider { /* Have to specify div here for IE6's sake */ padding-
 * html .toolbar .searchField, * html .toolbar .searchButton { /* IE6 Hack */ margin-top: -1px; }
 ml .toolbar .button { /* IE6 Hack */ vertical-align: top; margin-top: 0; }
 first-child + html .toolbar .searchField, *:first-child + html .toolbar .searchButton { /* IE7 Hack */ margin-top: -1px; }
-*:first-child + html .toolbar .button { /* IE7 Hack */ vertical-align: top; margin-top: 0; }

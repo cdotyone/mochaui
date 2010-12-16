@@ -37,6 +37,7 @@ MUI.ToolbarDock = new Class({
 		container:		null,			// the parent control in the document to add the control to
 		drawOnInit:		true,			// true to add tree to container when control is initialized
 		cssClass:		'toolbar',		// the primary css tag
+		orientation:	'left',			// toolbars are listed from left to right or right to left
 
 		docked:			[]				// items that are docked currently
 	},
@@ -73,6 +74,7 @@ MUI.ToolbarDock = new Class({
 		}
 
 		self.el.element = div;
+		div.store('instance',this);
 
 		if(!isNew) return;
 		if(o._container) o._container.appendChild(div);

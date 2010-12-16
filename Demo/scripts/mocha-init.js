@@ -653,7 +653,7 @@ var initializeWindows = function(){
 				MUI.modalCount--;
 			},
 			onLoaded:function(){
-				if($('createModal' + MUI.modalCount)) $('createModal' + MUI.modalCount).addEvent('click',function(e){
+				if ($('createModal' + MUI.modalCount)) $('createModal' + MUI.modalCount).addEvent('click', function(e){
 					e.stop();
 					MUI.CreateModal();
 				});
@@ -1318,7 +1318,7 @@ var initializeColumns = function(){
 							if ($('postContent') && MUI.options.standardEffects) $('postContent').setStyle('opacity', 0);
 							else $('mainPanel_pad').empty();
 
-							var form=$('demoSearch');
+							var form = $('demoSearch');
 							form.set('send', {
 								onComplete: function(response){
 									MUI.Content.update({
@@ -1351,13 +1351,22 @@ var initializeColumns = function(){
 		height: 200,
 		content: [
 			{content:'pages/blank.html'},
-			{
-				position: 'headertool',
-				url: 'pages/toolbar-console.html',
-				onLoaded: function(){
-					this.el.element.getElements('.demoAction').removeEvents().addEvent('click', function(){
-						MUI.notification('Do Something');
-					});
+			{ section:'search', position:'headertool', control:'famfamfam'},
+			{ section:'buttons1', position:'headertool', element:'mainPanel', control:'MUI.Toolbar', buttons:[
+				{id:'button',type:'image',text:'Button 1',title:'Click to do something 1',image:'{fff}accept.png'},
+				{id:'button',type:'image',text:'Button 2',title:'Click to do something 2'}
+			]},
+			{ section:'buttons2', position:'headertool', element:'mainPanel', control:'MUI.Toolbar', buttons:[
+				{id:'button',type:'html',text:'Button 3',title:'Click to do something 3'},
+				{id:'go',cssClass:'icon_application_go',title:'Go'},
+				{id:'get',cssClass:'icon_application_get'},
+				{id:'home',cssClass:'icon_application_home',onClick:function(){
+						MUI.notification('Do Something Else');
+					}
+				}],
+				onClick:function(){
+					MUI.notification('Do Something');
+					return true;
 				}
 			}
 		]
@@ -1375,10 +1384,10 @@ var initializeColumns = function(){
 				loadMethod:'json',
 				control:'MUI.Tabs',
 				options: {
-						tabs:[
-							{'text': 'Overview', 'url': 'pages/overview.html', 'title': 'Overview'},
-							{'text': 'Download', 'url': 'pages/download.html', 'title': 'Download'}
-						]
+					tabs:[
+						{'text': 'Overview', 'url': 'pages/overview.html', 'title': 'Overview'},
+						{'text': 'Download', 'url': 'pages/download.html', 'title': 'Download'}
+					]
 				}
 			}
 		]
@@ -1395,10 +1404,10 @@ var initializeColumns = function(){
 		column: 'sideColumn2',
 		height: 120,
 		onResize: updateResizeElements,
-		onCollapse: function() {
+		onCollapse: function(){
 			MUI.Content.update({element:'panel3',title:'Collapsed Panel'});
 		},
-		onExpand: function() {
+		onExpand: function(){
 			MUI.Content.update({element:'panel3',title:'Expanded Panel'});
 		}
 	});
@@ -1467,15 +1476,15 @@ MUI.initialize();
 window.addEvent('load', function(){ //using load instead of domready for IE8
 	MUI.myChain = new Chain();
 	MUI.myChain.chain(
-			function(){
-				MUI.Desktop.initialize();
-				MUI.myChain.callChain();
-			},
-			function(){
-				initializeColumns();
-			},
-			function(){
-				initializeWindows();
-			}
+					 function(){
+						 MUI.Desktop.initialize();
+						 MUI.myChain.callChain();
+					 },
+					 function(){
+						 initializeColumns();
+					 },
+					 function(){
+						 initializeWindows();
+					 }
 			).callChain();
 });

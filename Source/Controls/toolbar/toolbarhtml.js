@@ -26,7 +26,7 @@
  ...
  */
 
-MUI.files['{controls}toolbar/toolbardock.js'] = 'loaded';
+MUI.files['{controls}toolbar/toolbarhtml.js'] = 'loaded';
 
 MUI.ToolbarHtml = new Class({
 
@@ -51,11 +51,11 @@ MUI.ToolbarHtml = new Class({
 		// make sure this controls has an ID
 		var id = o.id;
 		if (!id){
-			id = 'toolbarDock' + (++MUI.IDCount);
+			id = 'toolbarHtml' + (++MUI.IDCount);
 			o.id = id;
 		}
 
-		if (o.content) o.content.instance=this;
+		if (o.content) o.content.instance = this;
 		this.draw();
 
 		MUI.set(id, this);
@@ -78,12 +78,11 @@ MUI.ToolbarHtml = new Class({
 		self.el.element = div;
 
 		if (!isNew) return;
-		if (o._container) o._container.appendChild(div);
-
-		window.addEvent('domready', function(){
+		if (o._container) this._addToContainer(o._container, div);
+		else window.addEvent('domready', function(){
 			if (!o._container){
 				o._container = $(containerEl ? containerEl : o.container);
-				o._container.appendChild(div);
+				if (o._container) this._addToContainer(o._container, div);
 			}
 			if (o.content) MUI.Content.update(o.content);
 		});
@@ -91,9 +90,15 @@ MUI.ToolbarHtml = new Class({
 		return div;
 	},
 
-	updateSetContent: function(content) {
-		this.el.element.set('html',content.content);
+	updateSetContent: function(content){
+		this.el.element.set('html', content.content);
 		return false;
+	},
+
+	_addToContainer: function(container, element){
+		var instance = container.retrieve('instance');
+		element.inject(container, (instance != null && instance.options.orientation == 'right') ? (Browser.ie ? 'top' : 'bottom') : (Browser.ie ? 'bottom' : 'top'));
 	}
+
 });
 
