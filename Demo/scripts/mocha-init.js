@@ -1301,11 +1301,7 @@ var initializeColumns = function(){
 		column: 'mainColumn',
 		content: [
 			{url:'pages/lipsum.html'},
-			{
-				section:'search',
-				position: 'headertool',
-				control:'famfamfam'
-			},
+			{ section:'search', position:'headertool', control:'famfamfam'},
 			{
 				section:'search',
 				position: 'headertool',

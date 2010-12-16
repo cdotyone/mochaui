@@ -77,6 +77,9 @@ MUI.append({
 		if (typeOf(str) == 'string'){
 			var keys = str.match(/\{+(\w*)\}+/g);
 			if (keys == null) return str;
+
+			// make sure root path and plugin package paths are always checked for
+			Object.each(MUI.options.pluginGroups,function(g,name) { keys.push('{'+name+'}')});
 			keys.push('{root}');
 
 			keys.each(function(key){
@@ -181,6 +184,10 @@ MUI.append({
 		var sname = MUI.options.pluginGroups[pgName].singularName;
 		if (!config.location) config.location = cname;
 		path[sname] = '{' + pgName + '}' + config.location + '/';
+
+		if (config.paths) Object.each(config.paths, function(tpath, name){
+			MUI.options.path[name] = MUI.replaceFields(tpath, path);
+		});
 
 		var js;
 		if (!config.js) js = [path[sname] + cname + '.js'];
