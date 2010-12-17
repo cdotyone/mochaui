@@ -1351,7 +1351,12 @@ var initializeColumns = function(){
 			{ section:'buttons1', position:'headertool', element:'mainPanel', control:'MUI.Toolbar', buttons:[
 				{id:'button',type:'image',text:'Button 1',title:'Click to do something 1',image:'{fff}accept.png'},
 				{id:'button',type:'image',text:'Button 2',title:'Click to do something 2'}
-			]},
+			],
+			onClick:function(){
+					MUI.notification('Do Something');
+					return true;
+				}
+			},
 			{ section:'buttons2', position:'headertool', element:'mainPanel', control:'MUI.Toolbar', buttons:[
 				{id:'button',type:'html',text:'Button 3',title:'Click to do something 3'},
 				{id:'go',cssClass:'icon_application_go',title:'Go'},

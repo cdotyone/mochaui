@@ -105,7 +105,7 @@ MUI.Toolbar = new Class({
 			var css = button.cssClass;
 			var where = Browser.ie ? 'top' : 'bottom';
 			var onclick = function(e){
-				e.stop();
+				if(e.stop) e.stop();
 				var fireClick = true;
 				if (this.onClick) fireClick = this.onClick(this, self);
 				if (fireClick) self.fireEvent('click', [this,self]);
@@ -126,6 +126,7 @@ MUI.Toolbar = new Class({
 					delete options.content;
 					options._container = div;
 					options.container = div.id;
+					options.onClick = onclick;
 					MUI.create('MUI.ImageButton', options);
 					break;
 				default:
