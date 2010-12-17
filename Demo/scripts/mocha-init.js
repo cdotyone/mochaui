@@ -18,7 +18,7 @@
  new MUI.Window({
  id: 'mywindow',
  title: 'My Window',
- content: {url:'pages/lipsum.html'},
+ content: {url: 'pages/lipsum.html'},
  width: 340,
  height: 150
  });
@@ -109,12 +109,12 @@ var initializeWindows = function(){
 			resizeLimit: {'x': [330, 2500], 'y': [250, 2000]},
 			content: [
 				{
-					url:'pages/youtube.html',
+					url: 'pages/youtube.html',
 					loadMethod: 'iframe'
 				},
 				{
 					position: 'top',
-					loadMethod:'json',
+					loadMethod: 'json',
 					id: 'youtube_toolbar',
 					css: 'mochaToolbar',
 					content: [
@@ -173,7 +173,7 @@ var initializeWindows = function(){
 
 	MUI.writeConsole = function(message){
 		var d = new Date().format('%H:%M:%S: ');
-		new Element('div', {text:d + message}).inject('mochaConsole', 'top');
+		new Element('div', {text: d + message}).inject('mochaConsole', 'top');
 	};
 
 	MUI.listBuilder = function(container){
@@ -186,7 +186,7 @@ var initializeWindows = function(){
 				{text: 'First Name', name: 'FirstName', 'value': 'ID'},
 				{text: 'Last Name', name: 'LastName'}
 			],
-			commands:[
+			commands: [
 				{'text': 'Ok', 'name': 'Ok', 'image': '{theme}images/accept.png'},
 				{'text': 'Cancel', 'name': 'Cancel', 'image': '{theme}images/cancel.png'}
 			],
@@ -295,8 +295,8 @@ var initializeWindows = function(){
 		var content = MUI.get(container).el.content;
 		content.empty();
 
-		var ftypes = ['fixed.phone','fixed.phone-us','fixed.cpf','fixed.cnpj','fixed.date','fixed.date-us','fixed.cep','fixed.time','fixed.cc'];
-		Object.append(ftypes, ['reverse.integer','reverse.decimal','reverse.decimal-us','reverse.reais','reverse.dollar','regexp.ip','regexp.email','password']);
+		var ftypes = ['fixed.phone', 'fixed.phone-us', 'fixed.cpf', 'fixed.cnpj', 'fixed.date', 'fixed.date-us', 'fixed.cep', 'fixed.time', 'fixed.cc'];
+		Object.append(ftypes, ['reverse.integer', 'reverse.decimal', 'reverse.decimal-us', 'reverse.reais', 'reverse.dollar', 'regexp.ip', 'regexp.email', 'password']);
 
 		var mtype;
 		ftypes.each(function(t){
@@ -305,11 +305,11 @@ var initializeWindows = function(){
 			if (mtype != ttype){
 				mtype = ttype;
 				window.addEvent('domready', function(){
-					new Element('div', {'text':ttype,'id':container + ttype}).inject(content);
+					new Element('div', {'text': ttype, 'id': container + ttype}).inject(content);
 				});
 			}
 			if (s.length < 2) s[1] = ttype;
-			MUI.create('MUI.TextBox', {container:container + ttype,id:container + t,formTitle:s[1].capitalize(),maskType:t,autoTab:true});
+			MUI.create('MUI.TextBox', {container: container + ttype, id: container + t, formTitle: s[1].capitalize(), maskType: t, autoTab: true});
 		});
 	};
 
@@ -429,7 +429,7 @@ var initializeWindows = function(){
 			id: 'fxmorpherExample',
 			title: 'Path Animation Example',
 			content: {
-				url:'{plugins}Fx.Morpher/demo.html',
+				url: '{plugins}Fx.Morpher/demo.html',
 				require: {
 					js: ['{plugins}Fx.Morpher/scripts/cbox.js', '{plugins}Fx.Morpher/scripts/demo.js'],
 					onload: function(){
@@ -460,7 +460,7 @@ var initializeWindows = function(){
 		new MUI.Window({
 			id: 'windowevents',
 			title: 'Window Events',
-			content: { url:'pages/events.html' },
+			content: {url: 'pages/events.html'},
 			width: 340,
 			height: 255,
 			onLoaded: function(){
@@ -827,7 +827,7 @@ var initializeWindows = function(){
 				{url: 'pages/features-layout.html'},
 				{
 					position: 'top',
-					loadMethod:'json',
+					loadMethod: 'json',
 					id: 'features_toolbar',
 					css: 'mochaToolbar',
 					content: [
@@ -972,6 +972,7 @@ var initializeColumns = function(){
 			url: 'data/file-tree.json',
 			loadMethod: 'json',
 			onLoaded: function(el, content){
+				var mainPanel = $('mainPanel');
 				MUI.create('MUI.Tree', {
 					'container': 'files-panel',
 					'idField': 'value',
@@ -979,7 +980,7 @@ var initializeColumns = function(){
 					'onLoaded': function(){
 						$('notesLink').addEvent('click', function(){
 							MUI.Content.update({
-								element: $('mainPanel'),
+								element: mainPanel,
 								url: 'pages/notes.html',
 								title: 'Development Notes'
 							});
@@ -996,7 +997,7 @@ var initializeColumns = function(){
 								new MUI.Window({
 									id: 'basicListWindow',
 									content: 'loading...',
-									title:'Basic List in Window',
+									title: 'Basic List in Window',
 									width: 340,
 									height: 150
 								});
@@ -1015,7 +1016,7 @@ var initializeColumns = function(){
 								new MUI.Window({
 									id: 'cbgWindow',
 									content: 'loading...',
-									title:'Check Box Grid in Window',
+									title: 'Check Box Grid in Window',
 									width: 340,
 									height: 150
 								});
@@ -1034,7 +1035,7 @@ var initializeColumns = function(){
 								new MUI.Window({
 									id: 'slWindow',
 									content: 'loading...',
-									title:'Select List in Window',
+									title: 'Select List in Window',
 									width: 340,
 									height: 150
 								});
@@ -1053,7 +1054,7 @@ var initializeColumns = function(){
 								new MUI.Window({
 									id: 'wiWindow',
 									content: 'loading...',
-									title:'Image Button in Window',
+									title: 'Image Button in Window',
 									width: 340,
 									height: 150
 								});
@@ -1073,7 +1074,7 @@ var initializeColumns = function(){
 								new MUI.Window({
 									id: 'taWindow',
 									content: 'loading...',
-									title:'TextArea in Window',
+									title: 'TextArea in Window',
 									width: 340,
 									height: 150
 								});
@@ -1093,7 +1094,7 @@ var initializeColumns = function(){
 								new MUI.Window({
 									id: 'tbWindow',
 									content: 'loading...',
-									title:'TextBox in Window',
+									title: 'TextBox in Window',
 									width: 340,
 									height: 150
 								});
@@ -1113,7 +1114,7 @@ var initializeColumns = function(){
 								new MUI.Window({
 									id: 'wtreeLinkWindow',
 									content: 'loading...',
-									title:'Tree in Window',
+									title: 'Tree in Window',
 									width: 340,
 									height: 150
 								});
@@ -1123,14 +1124,14 @@ var initializeColumns = function(){
 
 						$('xhrLink').addEvent('click', function(){
 							MUI.Content.update({
-								element: $('mainPanel'),
+								element: mainPanel,
 								url: 'pages/lipsum.html',
 								title: 'Lorem Ipsum'
 							});
 						});
 						$('youtube4Link').addEvent('click', function(){
 							MUI.Content.update({
-								element: $('mainPanel'),
+								element: mainPanel,
 								loadMethod: 'iframe',
 								url: 'pages/youtube.html',
 								title: 'Iframe: YouTube'
@@ -1138,7 +1139,7 @@ var initializeColumns = function(){
 						});
 						$('splitPanelLink').addEvent('click', function(){
 							MUI.Content.update({
-								element: $('mainPanel'),
+								element: mainPanel,
 								title: 'Split Panel'
 							});
 							MUI.splitPanelPanel(); // This is initialized in mocha-init.js just like the windows.
@@ -1163,12 +1164,12 @@ var initializeColumns = function(){
 						});
 						$('pcalendarLink').addEvent('click', function(){
 							MUI.Content.update({
-								element: $('mainPanel'),
+								element: mainPanel,
 								url: '{controls}calendar/demo.html',
 								title: 'Calendar Component',
 								padding: {top: 8, right: 8, bottom: 8, left: 8},
 								onLoaded:function(){
-									MUI.create('MUI.Calendar', {'id':'date1', format:'d/m/Y', direction: 1, tweak: {x: 6, y: 0}});
+									MUI.create('MUI.Calendar', {'id': 'date1', format: 'd/m/Y', direction: 1, tweak: {x: 6, y: 0}});
 								}
 							});
 						});
@@ -1176,17 +1177,17 @@ var initializeColumns = function(){
 							new MUI.Window({
 								id: 'cslWindow',
 								content: 'Loading...',
-								title:'Calendar in Window',
+								title: 'Calendar in Window',
 								width: 340,
 								height: 150,
 								onLoaded:function(){
-									MUI.create('MUI.Calendar', {'id':'wcalendarLink1','container':'cslWindow', format:'d/m/Y', direction: 1, tweak: {x: 6, y: 0}});
+									MUI.create('MUI.Calendar', {'id': 'wcalendarLink1', 'container': 'cslWindow', format: 'd/m/Y', direction: 1, tweak: {x: 6, y: 0}});
 								}
 							});
 						});
 						$('fxmorpherLink').addEvent('click', function(){
 							MUI.Content.update({
-								element: $('mainPanel'),
+								element: mainPanel,
 								url: '{plugins}Fx.Morpher/',
 								title: 'Fx.Morpher Path Animation',
 								padding: {top: 8, right: 8, bottom: 8, left: 8}
@@ -1197,12 +1198,12 @@ var initializeColumns = function(){
 						$('paccordiontestLink').addEvent('click', function(e){
 							e.stop();
 							MUI.create('MUI.Accordion', {
-								container:'mainPanel',
-								id:'accordionMainPanel1',
-								panels:[
-									{text:'Lorem Ipsum',value:'panel0','html':'<h3>Lorem Ipsum Dolor Sit Amet</h3><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean consequat dignissim pede. Aliquam erat volutpat. In ac nulla. Phasellus sapien.</p>'},
-									{text:'Dolor Sit','html':'<h3>Lorem Ipsum Dolor Sit Amet</h3><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean consequat dignissim pede. Aliquam erat volutpat. In ac nulla. Phasellus sapien.</p>'},
-									{text:'Amet','html':'<h3>Lorem Ipsum Dolor Sit Amet</h3><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean consequat dignissim pede. Aliquam erat volutpat. In ac nulla. Phasellus sapien.</p>'}
+								container: mainPanel,
+								id: 'accordionMainPanel1',
+								panels: [
+									{text: 'Lorem Ipsum', value: 'panel0', 'html': '<h3>Lorem Ipsum Dolor Sit Amet</h3><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean consequat dignissim pede. Aliquam erat volutpat. In ac nulla. Phasellus sapien.</p>'},
+									{text: 'Dolor Sit', 'html': '<h3>Lorem Ipsum Dolor Sit Amet</h3><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean consequat dignissim pede. Aliquam erat volutpat. In ac nulla. Phasellus sapien.</p>'},
+									{text: 'Amet', 'html': '<h3>Lorem Ipsum Dolor Sit Amet</h3><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean consequat dignissim pede. Aliquam erat volutpat. In ac nulla. Phasellus sapien.</p>'}
 								]
 							});
 						});
@@ -1228,7 +1229,7 @@ var initializeColumns = function(){
 		id: 'panel2',
 		title: 'Ajax Form',
 		content: {
-			url:'pages/ajax.form.html',
+			url: 'pages/ajax.form.html',
 			onLoaded: function(){
 				$('myForm').addEvent('submit', function(e){
 					e.stop();
@@ -1243,7 +1244,7 @@ var initializeColumns = function(){
 					this.set('send', {
 						onComplete: function(response){
 							MUI.Content.update({
-								'element': $('mainPanel'),
+								'element': 'mainPanel',
 								'content': response,
 								'title': 'Ajax Response',
 								'padding': {top: 8, right: 8, bottom: 8, left: 8}
@@ -1300,10 +1301,10 @@ var initializeColumns = function(){
 		title: 'Lorem Ipsum',
 		column: 'mainColumn',
 		content: [
-			{url:'pages/lipsum.html'},
-			{ section:'search', position:'headertool', control:'famfamfam'},
+			{url: 'pages/lipsum.html'},
+			{section: 'search', position: 'headertool', control: 'famfamfam'},
 			{
-				section:'search',
+				section: 'search',
 				position: 'headertool',
 				url: 'pages/toolbar-demo2.html',
 				onLoaded: function(){
@@ -1318,7 +1319,7 @@ var initializeColumns = function(){
 							form.set('send', {
 								onComplete: function(response){
 									MUI.Content.update({
-										'element': $('mainPanel'),
+										'element': 'mainPanel',
 										'content': response,
 										'title': 'Ajax Response',
 										'padding': {top: 8, right: 8, bottom: 8, left: 8}
@@ -1346,22 +1347,22 @@ var initializeColumns = function(){
 		column: 'mainColumn',
 		height: 200,
 		content: [
-			{content:'pages/blank.html'},
-			{ section:'search', position:'headertool', control:'famfamfam'},
-			{ section:'buttons1', position:'headertool', element:'mainPanel', control:'MUI.Toolbar', buttons:[
-				{id:'button',type:'image',text:'Button 1',title:'Click to do something 1',image:'{fff}accept.png'},
-				{id:'button',type:'image',text:'Button 2',title:'Click to do something 2'}
+			{content: 'pages/blank.html'},
+			{section: 'search', position: 'headertool', control: 'famfamfam'},
+			{section: 'buttons1', position: 'headertool', element: 'mainPanel', control: 'MUI.Toolbar', buttons: [
+				{id: 'button', type: 'image', text: 'Button 1', title: 'Click to do something 1', image: '{fff}accept.png'},
+				{id: 'button', type: 'image', text: 'Button 2', title: 'Click to do something 2'}
 			],
-			onClick:function(){
+			onClick: function(){
 					MUI.notification('Do Something');
 					return true;
 				}
 			},
-			{ section:'buttons2', position:'headertool', element:'mainPanel', control:'MUI.Toolbar', buttons:[
-				{id:'button',type:'html',text:'Button 3',title:'Click to do something 3'},
-				{id:'go',cssClass:'icon_application_go',title:'Go'},
-				{id:'get',cssClass:'icon_application_get'},
-				{id:'home',cssClass:'icon_application_home',onClick:function(){
+			{section: 'buttons2', position: 'headertool', element: 'mainPanel', control: 'MUI.Toolbar', buttons: [
+				{id: 'button', type: 'html', text: 'Button 3', title: 'Click to do something 3'},
+				{id: 'go', cssClass: 'icon_application_go', title: 'Go'},
+				{id: 'get', cssClass: 'icon_application_get'},
+				{id: 'home', cssClass: 'icon_application_home', onClick: function(){
 						MUI.notification('Do Something Else');
 					}
 				}],
@@ -1382,10 +1383,10 @@ var initializeColumns = function(){
 			{
 				position: 'header',
 				empty: true,
-				loadMethod:'json',
-				control:'MUI.Tabs',
+				loadMethod: 'json',
+				control: 'MUI.Tabs',
 				options: {
-					tabs:[
+					tabs: [
 						{'text': 'Overview', 'url': 'pages/overview.html', 'title': 'Overview'},
 						{'text': 'Download', 'url': 'pages/download.html', 'title': 'Download'}
 					]
@@ -1406,10 +1407,10 @@ var initializeColumns = function(){
 		height: 120,
 		onResize: updateResizeElements,
 		onCollapse: function(){
-			MUI.Content.update({element:'panel3',title:'Collapsed Panel'});
+			MUI.Content.update({element: 'panel3', title: 'Collapsed Panel'});
 		},
 		onExpand: function(){
-			MUI.Content.update({element:'panel3',title:'Expanded Panel'});
+			MUI.Content.update({element: 'panel3', title: 'Expanded Panel'});
 		}
 	});
 
