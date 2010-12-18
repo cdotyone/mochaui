@@ -80,14 +80,14 @@ MUI.Toolbar = new Class({
 		if (o.content) o.content.instance = this;
 		MUI.set(id, this);
 
-		if (options.content){
+		if (options.content && options.content.url){
 			options.content.loadMethod = 'json';
 			options.content.onLoaded = (function(element, options){
 				this.options.buttons = MUI.Content.getRecords(options);
 				this.draw();
 			}).bind(this);
 			MUI.Content.update(options.content);
-		}
+		} else this.draw();
 	},
 
 	draw: function(containerEl){
@@ -148,6 +148,7 @@ MUI.Toolbar = new Class({
 
 	_buildButton: function(button){
 		var self = this;
+		var div=self.el.element;
 		self.buttonCount++;
 		if (!button.name) button.name = 'button' + self.buttonCount;
 		if (!button.id) button.id = o.id + '_' + button.name;
