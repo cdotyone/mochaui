@@ -78,7 +78,10 @@ MUI.ToolbarHtml = new Class({
 		self.el.element = div;
 
 		if (!isNew) return;
-		if (o._container) this._addToContainer(o._container, div);
+		if (o._container) {
+			this._addToContainer(o._container, div);
+			if (o.content) MUI.Content.update(o.content);
+		}
 		else window.addEvent('domready', function(){
 			if (!o._container){
 				o._container = $(containerEl ? containerEl : o.container);
