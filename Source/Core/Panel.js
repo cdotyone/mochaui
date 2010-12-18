@@ -43,7 +43,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 		// Style options:
 		height:					125,			// the desired height of the panel
-		addClass:				'',				// css class to add to the main panel div
+		cssClass:				'',				// css class to add to the main panel div
 		scrollbars:				true,			// true to allow scrollbars to be shown
 		padding:				8,				// default padding for the panel
 
@@ -99,11 +99,8 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 			'styles': {
 				'height': options.height
 			}
-		}).inject(this.el.panelWrapper);
-
-		this.el.panel.store('instance', this);
-
-		this.el.panel.addClass(options.addClass);
+		}).inject(this.el.element);
+		this.el.panel.addClass(options.cssClass);
 
 		this.el.content = new Element('div', {
 			'id': options.id + '_pad',
@@ -226,7 +223,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				'wrap': false,
 				'position': 'content',
 				'empty': false,
-				'addClass': false,
+				'cssClass': false,
 				'height': false,
 				'id': id,
 				'css': '',
@@ -277,7 +274,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 			this.el[section.id] = section.element;
 			if (section.height || typeOf(section.height) == 'number') section.element.setStyle('height', section.height);
 
-			if (section.addClass) intoEl.addClass(section.addClass);
+			if (section.cssClass) intoEl.addClass(section.cssClass);
 
 			section.wrapperEl = intoEl;
 			if (section.wrap && section.position == 'bottom') section.element.addClass('bottom');
@@ -543,6 +540,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		if (!section.control) section.control = 'MUI.ToolbarHtml';
 		section._container = element;
 		section.container = section._container.id;
+		if(!section.cssClass) delete section.cssClass;
 		var content = {};
 		Object.each(section, function(val, key){
 			if (['loadmethod', 'method', 'url', 'content', 'onloaded'].indexOf(key) > -1)

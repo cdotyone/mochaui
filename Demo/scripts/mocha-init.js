@@ -146,7 +146,7 @@ var initializeWindows = function(){
 		new MUI.Window({
 			id: 'clock',
 			title: 'Canvas Clock',
-			addClass: 'transparent',
+			cssClass: 'transparent',
 			content: {
 				url: '{plugins}coolclock/demo.html',
 				require: {
@@ -409,7 +409,7 @@ var initializeWindows = function(){
 				new MUI.Panel({
 					header: false,
 					id: 'splitWindow_panel2',
-					addClass: 'panelAlt',
+					cssClass: 'panelAlt',
 					content: {url: 'pages/lipsum.html'},
 					column: 'splitWindow_sideColumn'
 				});
@@ -581,7 +581,7 @@ var initializeWindows = function(){
 			id: 'nocanvas',
 			title: 'No Canvas',
 			content: {url: 'pages/lipsum.html'},
-			addClass: 'no-canvas',
+			cssClass: 'no-canvas',
 			width: 305,
 			height: 175,
 			shadowBlur: 0,
@@ -602,7 +602,7 @@ var initializeWindows = function(){
 			id: 'css3',
 			title: 'CSS3',
 			content: {url: 'pages/lipsum.html'},
-			addClass: 'no-canvas',
+			cssClass: 'no-canvas',
 			width: 305,
 			height: 175,
 			resizable: true,
@@ -1342,7 +1342,7 @@ var initializeColumns = function(){
 
 	new MUI.Panel({
 		id: 'mochaConsole',
-		addClass: 'mochaConsole',
+		cssClass: 'mochaConsole',
 		title: 'Console',
 		column: 'mainColumn',
 		height: 200,
@@ -1461,7 +1461,7 @@ var initializeColumns = function(){
 			new MUI.Panel({
 				header: false,
 				id: 'splitPanel_sidePanel',
-				addClass: 'panelAlt',
+				cssClass: 'panelAlt',
 				content: {url: 'pages/lipsum.html'},
 				column: 'sideColumn3'
 			});

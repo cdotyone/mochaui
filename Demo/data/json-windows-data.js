@@ -2,7 +2,7 @@
 
 	{
 		"id": "json01",
-		"addClass": "jsonExample",
+		"cssClass": "jsonExample",
 		"title":"Window Created with Json Data",
 		"content":"First window",
 		"maximizable": false,
@@ -12,7 +12,7 @@
 	},
 	{
 		"id": "json02",
-		"addClass": "jsonExample",		
+		"cssClass": "jsonExample",
 		"title":"Another Window Created with Json",
 		"content":"Second window",
 		"maximizable": false,
@@ -22,7 +22,7 @@
 	},
 	{
 		"id": "json03",
-		"addClass": "jsonExample",		
+		"cssClass": "jsonExample",
 		"title":"And Another ...",
 		"content":"Third",
 		"maximizable": false,

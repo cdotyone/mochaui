@@ -142,7 +142,7 @@ initializeWindows = function(){
 		new MUI.Window({
 			id: 'clock',
 			title: 'Canvas Clock',
-			addClass: 'transparent',
+			cssClass: 'transparent',
 			content: {
 				url: '{plugins}coolclock/demo.html',
 				loadMethod: 'xhr',
@@ -324,7 +324,7 @@ initializeWindows = function(){
 			title: 'No Canvas',
 			loadMethod: 'xhr',
 			content: {url: 'pages/lipsum.html'},
-			addClass: 'no-canvas',
+			cssClass: 'no-canvas',
 			width: 305,
 			height: 175,
 			shadowBlur: 0,
@@ -489,7 +489,7 @@ initializeWindows = function(){
 	MUI.aboutWindow = function(){
 		new MUI.Modal({
 			id: 'about',
-			addClass: 'about',
+			cssClass: 'about',
 			title: 'MochaUI',
 			loadMethod: 'xhr',
 			content: {url: 'pages/about.html'},

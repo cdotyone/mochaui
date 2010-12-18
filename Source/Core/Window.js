@@ -63,7 +63,7 @@ MUI.Windows = Object.append((MUI.Windows || {}), {
 		resizeLimit:		{'x': [250, 2500], 'y': [125, 2000]},
 
 		// Style options:
-		addClass:			'',
+		cssClass:			'',
 		width:				300,
 		height:				125,
 		headerHeight:		25,
@@ -388,7 +388,7 @@ MUI.Window.implement({
 		if (this.options.type == 'modal' || this.options.type == 'modal2') this.el.windowEl.addClass('modal');
 
 		this.el.windowEl.store('instance', this);
-		this.el.windowEl.addClass(options.addClass);
+		this.el.windowEl.addClass(options.cssClass);
 		if (options.type == 'modal2') this.el.windowEl.addClass('modal2');
 
 		// Fix a mouseover issue with gauges in IE7
