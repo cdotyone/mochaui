@@ -89,12 +89,6 @@ MUI.Tree = new Class({
 		if (this.options.drawOnInit && this.options.nodes.length > 0) this.draw();
 	},
 
-	_getData: function(item, property){
-		if (!item || !property) return '';
-		if (item[property] == null) return '';
-		return item[property];
-	},
-
 	draw: function(containerEl){
 		var self = this;
 		var o = self.options;
@@ -181,7 +175,7 @@ MUI.Tree = new Class({
 		var self = this;
 		var o = self.options;
 		var n = node;
-		if (!node._element) n = self.nodeFind(self._getData(node, o.valueField));
+		if (!node._element) n = self.nodeFind(MUI.getData(node, o.valueField));
 		if (n){
 			var el = n._element;
 			if (el){
@@ -197,7 +191,7 @@ MUI.Tree = new Class({
 		if (!depth) depth = 1;
 
 		var a, span, ul, li;
-		var id = self._getData(node, o.idField);
+		var id = MUI.getData(node, o.idField);
 		if (!id) id = 'tn' + (++MUI.IDCount);
 
 		if (node._element != null) li = node._element;
@@ -209,15 +203,15 @@ MUI.Tree = new Class({
 			else li.inject(parent);
 		}
 
-		var value = self._getData(node, o.valueField);
-		var text = self._getData(node, o.textField);
+		var value = MUI.getData(node, o.valueField);
+		var text = MUI.getData(node, o.textField);
 		if (o.showCheckBox) node._checkbox = new Element('INPUT', {'type': 'checkbox', 'value': value, 'id': id + '_cb'}).inject(li);
 		node._a = new Element('a', {'href': '#' + value, 'id': id}).inject(li);
 		node._span = new Element('span', {'text': text, 'id': id + '_tle'}).inject(node._a);
 		if (o.showIcon) node._icon = new Element('span', {'class': 'treeIcon'}).inject(node._a, 'top');
 
 		node._element = li;
-		var title = self._getData(node, o.titleField);
+		var title = MUI.getData(node, o.titleField);
 		if (title) node._a.title = title;
 
 		if (o.value == value){
@@ -244,12 +238,12 @@ MUI.Tree = new Class({
 		// add image to node if necessary
 		this._nodeSetImage(node);
 
-		var hasChildren = self._getData(node, o.hasChildrenField);
+		var hasChildren = MUI.getData(node, o.hasChildrenField);
 		if (hasChildren && li.hasClass('nochild')) li.removeClass('nochild').addClass('C');
 
 		// set events
 		if (node._checkbox){
-			var isChecked = self._getData(node, o.isCheckedField);
+			var isChecked = MUI.getData(node, o.isCheckedField);
 			if (isChecked != null) node._checkbox.checked = isChecked;
 			node._checkbox.removeEvents('click');
 			node._checkbox.addEvent('click', function(e){
@@ -272,7 +266,7 @@ MUI.Tree = new Class({
 		var self = this;
 		var o = self.options;
 		if (node != null){
-			var value = self._getData(node, o.valueField);
+			var value = MUI.getData(node, o.valueField);
 			if (value && value + '' == val + '') return node;
 		} else node = self;
 		var nodes;
@@ -297,7 +291,7 @@ MUI.Tree = new Class({
 	nodeGetPath: function(node){
 		var self = this;
 		var o = self.options;
-		var value = self._getData(node, o.valueField);
+		var value = MUI.getData(node, o.valueField);
 
 		if (!node._parent) return value;
 		return this.getPath(node._parent) + '/' + value;
@@ -356,9 +350,9 @@ MUI.Tree = new Class({
 	_nodeSetImage: function(node){
 		var o = this.options;
 		var span = node._span;
-		var def = this._getData(node, o.imageField);
-		var open = this._getData(node, o.imageOpenField) || def;
-		var closed = this._getData(node, o.imageClosedField) || def;
+		var def = MUI.getData(node, o.imageField);
+		var open = MUI.getData(node, o.imageOpenField) || def;
+		var closed = MUI.getData(node, o.imageClosedField) || def;
 
 		span.removeClass(closed).removeClass(open);
 
@@ -376,7 +370,7 @@ MUI.Tree = new Class({
 		var self = this;
 		var o = self.options;
 		e = new Event(e).stop();
-		self.selectValue(self._getData(node, o.valueField), e);
+		self.selectValue(MUI.getData(node, o.valueField), e);
 	},
 
 	onNodeCheck: function(node, e){

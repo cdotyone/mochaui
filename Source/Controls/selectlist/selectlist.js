@@ -84,12 +84,6 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		MUI.set(id, this);
 	},
 
-	_getData: function(item, property){
-		if (!item || !property) return '';
-		if (item[property] == null) return '';
-		return item[property];
-	},
-
 	draw: function(containerEl){
 		var o = this.options;
 		var self = this;
@@ -166,7 +160,7 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		var o = self.options;
 		var selectCount = 0;
 		for (var i = 0; i < o.items.length; i++){
-			var isSelected = self._getData(o.items[i], o.isSelectedField);
+			var isSelected = MUI.getData(o.items[i], o.isSelectedField);
 			if (isSelected) selectCount++;
 		}
 		return selectCount;
@@ -176,7 +170,7 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		var self = this;
 		var o = self.options;
 
-		var isSelected = self._getData(item, o.isSelectedField);
+		var isSelected = MUI.getData(item, o.isSelectedField);
 		if (!isSelected) item[o.isSelectedField] = false;
 
 		this.options.items.push(item);
@@ -218,7 +212,7 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		if (!o.canMultiSelect){
 			var items = this.options.items;
 			for (var i = 0; i < items.length; i++){
-				var isSelected = self._getData(items[i], o.isSelectedField);
+				var isSelected = MUI.getData(items[i], o.isSelectedField);
 				if (isSelected && item != items[i]){
 					items[i][o.isSelectedField] = false;
 					items[i]._element.removeClass('C');
@@ -286,10 +280,10 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		var o = self.options;
 
 		var li = new Element('li', {'class':'item'}).inject(ul);
-		var title = self._getData(item, o.titleField);
+		var title = MUI.getData(item, o.titleField);
 		if (title) li.set('title', title);
 		if (alt && o.alternateRows) li.addClass('alt');
-		var isSelected = self._getData(item, o.isSelectedField);
+		var isSelected = MUI.getData(item, o.isSelectedField);
 		if (isSelected) li.addClass('C');
 		li.addEvent('click', function(e){
 			self._selected(e, item);
@@ -303,7 +297,7 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		item._element = li;
 
 		if (o.showCheckBox){
-			var value = self._getData(item, o.valueField);
+			var value = MUI.getData(item, o.valueField);
 			var id = o.id + '$' + value;
 			var input = new Element('input', { 'type': 'checkbox', 'name': id, 'id': id, 'value':value }).inject(li);
 			if (isSelected) input.checked = true;
@@ -313,7 +307,7 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 			item._checkBox = input;
 		}
 
-		var text = self._getData(item, o.textField);
+		var text = MUI.getData(item, o.textField);
 		new Element('span', {'text':text}).inject(li);
 
 		return li;

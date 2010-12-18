@@ -77,17 +77,11 @@ MUI.TextArea = new Class({
 		MUI.set(id, this);
 	},
 
-	_getData: function(item, property){
-		if (!item || !property) return '';
-		if (item[property] == null) return '';
-		return item[property];
-	},
-
 	getFieldTitle: function(){
 		var self = this,o = this.options;
 
-		if (o.formTitleField) return self._getData(o.formData, o.formTitleField);
-		if (o.formData) return self._getData(o.formData, o.id);
+		if (o.formTitleField) return MUI.getData(o.formData, o.formTitleField);
+		if (o.formData) return MUI.getData(o.formData, o.id);
 		return o.id;
 	},
 
@@ -108,7 +102,7 @@ MUI.TextArea = new Class({
 				}
 			});
 
-			var tle = self._getData(o.formData, o.formTitleField);
+			var tle = MUI.getData(o.formData, o.formTitleField);
 			if (!tle) tle = o.id;
 			self._label = new Element('label', {'text':tle}).inject(self._wrapper);
 
@@ -126,8 +120,8 @@ MUI.TextArea = new Class({
 		inp.addEvent('focus', self.focus.bind(self));
 
 		var value = o.value;
-		if (o.valueField) value = self._getData(o.formData, o.valueField);
-		else if (o.formData) value = self._getData(o.formData, o.id);
+		if (o.valueField) value = MUI.getData(o.formData, o.valueField);
+		else if (o.formData) value = MUI.getData(o.formData, o.id);
 		inp.set('value', value);
 		o._prevValue = value;
 

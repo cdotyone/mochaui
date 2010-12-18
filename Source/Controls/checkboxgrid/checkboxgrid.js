@@ -69,6 +69,8 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 			this.options.id = id;
 		}
 
+		MUI.set(id, this);
+
 		if(options.content) {
 			options.content.loadMethod = 'json';
 			options.content.onLoaded = (function(element, options) {
@@ -76,18 +78,9 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 				this.draw();
 			}).bind(this);
 			MUI.Content.update(options.content);
-		}
-
+		} else
 		// create sub items if available
 		if (this.options.drawOnInit && this.options.items.length > 0) this.draw();
-
-		MUI.set(id, this);
-	},
-
-	_getData: function(item, property) {
-		if (!item || !property) return '';
-		if (item[property] == null) return '';
-		return item[property];
 	},
 
 	draw: function(containerEl) {
@@ -145,10 +138,10 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 		item._span = new Element('span', {'id':o.id + num + '_field',styles:{'textAlign':o.labelPlacement == 'left' ? 'right' : 'left'}}).inject(fs);
 
 		var inp = new Element('input', {'id':o.id + num,'name':o.id,'type':o.type}).inject(item._span);
-		var value = self._getData(item, o.valueField);
+		var value = MUI.getData(item, o.valueField);
 		if (value) inp.set('value', value);
 		var isSelected = false;
-		if(o.isSelectedField) isSelected = self._getData(item, o.isSelectedField);
+		if(o.isSelectedField) isSelected = MUI.getData(item, o.isSelectedField);
 		else if(o._values) { isSelected=o._values.indexOf(''+value)>-1; }
 
 		if (isSelected) inp.set('checked', 'true');
@@ -157,7 +150,7 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 			self._click(inp, self, e);
 		});
 
-		var text = self._getData(item, o.textField);
+		var text = MUI.getData(item, o.textField);
 		item._label = new Element('label', {'text':text,'for':o.id + num}).inject(item._span, o.labelPlacement == 'left' ? 'top' : 'bottom');
 
 		return inp;

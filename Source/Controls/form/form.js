@@ -228,11 +228,11 @@ MUI.Form = new Class({
 
 		o.flds.each(function(fld){
 			if (fld.id){
-				var val = this._getData(data, fld.id);
+				var val = MUI.getData(data, fld.id);
 				var ctrl = o.DOM.getElementById(fld.id);
 				if (val == '' || val == null){
 					val = o.fdef[fld.id.toLowerCase()];
-					if (val != null && val.indexOf('{') > -1) val = this._getData(data, val);
+					if (val != null && val.indexOf('{') > -1) val = MUI.getData(data, val);
 				}
 				if (ctrl != null && val != null){
 					var typ = ctrl.get('type');
@@ -1000,12 +1000,6 @@ MUI.Form = new Class({
 		if (typeOf(p) != 'element') p = $(id).getParent();
 		var c = p.getSize();
 		$(id).setStyles({ 'width': c.x, 'height': c.y });
-	},
-
-	_getData: function(item, property){
-		if (!item || !property) return '';
-		if (item[property] == null) return '';
-		return item[property];
 	}
 
 });

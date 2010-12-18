@@ -113,18 +113,12 @@ MUI.TextBox = new Class({
 		return (classNames[1] ? MUI.Mask[name][classNames[1].camelCase().capitalize()] : MUI.Mask[name]);
 	},
 
-	_getData: function(item, property){
-		if (!item || !property) return '';
-		if (item[property] == null) return '';
-		return item[property];
-	},
-
 	getFieldTitle: function(){
 		var self = this;
 		var o = self.options;
 
-		if (o.formTitleField) return self._getData(o.formData, o.formTitleField);
-		if (o.formData) return self._getData(o.formData, o.id);
+		if (o.formTitleField) return MUI.getData(o.formData, o.formTitleField);
+		if (o.formData) return MUI.getData(o.formData, o.id);
 		if (o.formTitle) return o.formTitle;
 		return o.id;
 	},
@@ -169,8 +163,8 @@ MUI.TextBox = new Class({
 		self.element = inp;
 
 		var value = o.value;
-		if (o.valueField) value = self._getData(o.formData, o.valueField);
-		else if (o.formData) value = self._getData(o.formData, o.id);
+		if (o.valueField) value = MUI.getData(o.formData, o.valueField);
+		else if (o.formData) value = MUI.getData(o.formData, o.id);
 		inp.set('value', value);
 
 		self.checkForMask();

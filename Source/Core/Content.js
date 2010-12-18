@@ -279,7 +279,7 @@ MUI.Content = Object.append((MUI.Content || {}), {
 		else records = content.content[paging.recordsField];
 
 		['total','page','pageMax','pageSize','page','last','first'].each(function(options, name){
-			options.paging[name] = MUI.Content.getData(options.content, options.paging[name + 'Field']);
+			options.paging[name] = MUI.getData(options.content, options.paging[name + 'Field']);
 		}.bind(this, content));
 
 		if (!content.records) content.records = records;
@@ -304,12 +304,6 @@ MUI.Content = Object.append((MUI.Content || {}), {
 			retval[t] = records[i];
 		}
 		return retval;
-	},
-
-	getData: function(item, property){
-		if (!item || !property) return '';
-		if (item[property] == null) return '';
-		return item[property];
 	}
 
 });

@@ -86,12 +86,6 @@ MUI.Accordion = new Class({
 		MUI.set(id, self);
 	},
 
-	_getData: function(item, property){
-		if (!item || !property) return '';
-		if (item[property] == null) return '';
-		return item[property];
-	},
-
 	draw: function(containerEl){
 		var self = this;
 		var o = self.options;
@@ -111,7 +105,7 @@ MUI.Accordion = new Class({
 		self._panelsElement = new Element('div', {'class':'panels'}).inject(div);
 
 		// if no tab selected, then select first tab for them
-		if (o.panels.length > 0 && (o.value == null || o.value == '')) o.value = self._getData(o.panels[0], o.valueField);
+		if (o.panels.length > 0 && (o.value == null || o.value == '')) o.value = MUI.getData(o.panels[0], o.valueField);
 
 		// build all panels
 		self._togglers = [];
@@ -190,11 +184,11 @@ MUI.Accordion = new Class({
 		var self = this;
 		var o = self.options;
 
-		var value = self._getData(panel, o.valueField);
+		var value = MUI.getData(panel, o.valueField);
 		if (!value) value = 'apanel' + (++MUI.IDCount);
-		var text = self._getData(panel, o.textField);
-		var title = self._getData(panel, o.titleField);
-		var html = self._getData(panel, o.contentField);
+		var text = MUI.getData(panel, o.textField);
+		var title = MUI.getData(panel, o.titleField);
+		var html = MUI.getData(panel, o.contentField);
 
 		panel._togglerEl = new Element('h3', {'id':value,'class':'toggler','text':text,'title':title}).inject(div);
 		panel._element = new Element('div', {'id':value + '_panel','class':'element'}).inject(div);

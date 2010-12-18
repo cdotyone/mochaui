@@ -74,12 +74,6 @@ MUI.Tabs = new Class({
 		MUI.set(id, this);
 	},
 
-	_getData: function(item, property){
-		if (!item || !property) return '';
-		if (item[property] == null) return '';
-		return item[property];
-	},
-
 	draw: function(containerEl){
 		var self = this;
 		var o = self.options;
@@ -111,17 +105,17 @@ MUI.Tabs = new Class({
 
 		// if no tab selected, then select first tab for them
 		if (o.tabs.length > 0 && (o.value == null || o.value == '')){
-			o.value = self._getData(o.tabs[0], o.valueField);
+			o.value = MUI.getData(o.tabs[0], o.valueField);
 			if (o.value == null || o.value == ''){
 				o.valueField = o.textField;
-				o.value = self._getData(o.tabs[0], o.valueField);
+				o.value = MUI.getData(o.tabs[0], o.valueField);
 			}
 		}
 
 		// build all tabs
 		o.tabs.each(function(tab){
 			self._buildTab(tab, ul);
-			if (self._getData(tab, o.valueField) == o.value) o.selectedTab = tab;
+			if (MUI.getData(tab, o.valueField) == o.value) o.selectedTab = tab;
 		});
 
 		// add a formatting div
@@ -145,11 +139,11 @@ MUI.Tabs = new Class({
 		var self = this;
 		var o = self.options;
 
-		var value = self._getData(tab, o.valueField);
+		var value = MUI.getData(tab, o.valueField);
 		if (!value) value = 'tab' + (++MUI.IDCount);
-		var text = self._getData(tab, o.textField);
-		var title = self._getData(tab, o.titleField);
-		var liClass = self._getData(tab, 'class');
+		var text = MUI.getData(tab, o.textField);
+		var title = MUI.getData(tab, o.titleField);
+		var liClass = MUI.getData(tab, 'class');
 
 		var li = new Element('li', {'class': liClass}).inject(ul);
 		var a = new Element('a', {'text': text}).inject(li);
@@ -172,8 +166,8 @@ MUI.Tabs = new Class({
 		var o = self.options;
 		if (e) e.stopPropagation();
 
-		var value = self._getData(tab, o.valueField);
-		if (value == null) value = self._getData(tab, o.textField);
+		var value = MUI.getData(tab, o.valueField);
+		if (value == null) value = MUI.getData(tab, o.textField);
 		o.value = value;
 		o.selectedTab = tab;
 
@@ -182,9 +176,9 @@ MUI.Tabs = new Class({
 		});
 		tab._element.addClass('sel');
 
-		var url = self._getData(tab, o.urlField);
+		var url = MUI.getData(tab, o.urlField);
 		if (o.partner && url){
-			var content = self._getData(tab, o.contentField);
+			var content = MUI.getData(tab, o.contentField);
 			var instance = MUI.get(o.partner);
 
 			var uOptions = {
