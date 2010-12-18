@@ -38,14 +38,16 @@ MUI.Toolbar = new Class({
 		drawOnInit:		true,			// true to add tree to container when control is initialized
 		cssClass:		'divider',		// the primary css tag
 
+		content:		false,			// used to load content
 		buttons:		[				// the buttons to add to the toolbar
 			/*
 			 {
+			 name:		'name of button',		// the name of the button
 			 id:		'id of button',			// the id of the button
 			 cssClass:'icon_application_home',	// css name to add to the button
 			 content:{}							// generic MUI.Content.update structure to execute on when onclick isn null or returns true.
 			 type:'icon'						// can be:
-			 // icon = simple icon button (default)
+			 // icon = simple icon button 		(default)
 			 // html = html button
 			 // image = MUI.ImageButton
 			 text:null,							// the text displayed on the button (html and image types only)
@@ -66,6 +68,7 @@ MUI.Toolbar = new Class({
 		self.setOptions(options);
 		var o = self.options;
 		self.el = {};
+		self.buttonCount = 0;
 
 		// make sure this controls has an ID
 		var id = o.id;
@@ -75,9 +78,16 @@ MUI.Toolbar = new Class({
 		}
 
 		if (o.content) o.content.instance = this;
-		this.draw();
-
 		MUI.set(id, this);
+
+		if (options.content){
+			options.content.loadMethod = 'json';
+			options.content.onLoaded = (function(element, options){
+				this.options.buttons = MUI.Content.getRecords(options);
+				this.draw();
+			}).bind(this);
+			MUI.Content.update(options.content);
+		}
 	},
 
 	draw: function(containerEl){
@@ -93,49 +103,10 @@ MUI.Toolbar = new Class({
 			isNew = true;
 		}
 		div.set('class', o.cssClass);
+		self.el.element = div.store('instance', this);
 
-		self.el.element = div;
-
-		//<span class="icon icon_application_go demoAction">&nbsp;</span>
-		var i = 0;
-		Object.each(o.buttons, function(button){
-			var self = this;
-			i++;
-			if (!button.id) button.id = o.id + 'button' + i;
-			var css = button.cssClass;
-			var where = Browser.ie ? 'top' : 'bottom';
-			var onclick = function(e){
-				if(e.stop) e.stop();
-				var fireClick = true;
-				if (this.onClick) fireClick = this.onClick(this, self);
-				if (fireClick) self.fireEvent('click', [this,self]);
-				if (this.content) MUI.Content.update(this.content);
-			}.bind(button);
-
-			if (button.type == 'image' && !button.image) button.type = 'html';
-			switch (button.type){
-				case 'html':
-					if (!css) css = 'button';
-					else css = 'button ' + css;
-					new Element('input', {id:button.id,'class':css,type:'button','value':button.text,title:button.title}).inject(div, where).addEvent('click', onclick);
-					break;
-				case 'image':
-					var options = Object.clone(button);
-					delete options.type;
-					delete options.position;
-					delete options.content;
-					options._container = div;
-					options.container = div.id;
-					options.onClick = onclick;
-					MUI.create('MUI.ImageButton', options);
-					break;
-				default:
-					if (!css) css = 'icon';
-					else css = 'icon ' + css;
-
-					new Element('span', {id:button.id,'class':css,html:'&nbsp;',title:button.title}).inject(div, where).addEvent('click', onclick);
-			}
-		}, this);
+		self.buttonCount = 0;
+		Object.each(o.buttons, this._buildButton, this);
 
 		if (!isNew) return;
 		if (o._container) this._addToContainer(o._container, div);
@@ -148,6 +119,71 @@ MUI.Toolbar = new Class({
 		}.bind(this));
 
 		return div;
+	},
+
+	refresh:function(init){
+		var options = this.options;
+		if (!init) init = false;
+		if (options.content){
+			// handle force refresh
+			if (!init){
+				options.content.records = [];
+				if (options.content.persist) MUI.Persist.clear(options.content.url);
+			}
+
+			options.content.instance = this;
+			options.content.loadMethod = 'json';
+			options.content.onLoaded = (function(element, options){
+				this.options.buttons = MUI.Content.getRecords(options);
+				this.draw();
+			}).bind(this);
+			MUI.Content.update(options.content);
+		}
+	},
+
+	addButton: function(button){
+		this.options.button.push(button);
+		this._buildButton(button);
+	},
+
+	_buildButton: function(button){
+		var self = this;
+		self.buttonCount++;
+		if (!button.name) button.name = 'button' + self.buttonCount;
+		if (!button.id) button.id = o.id + '_' + button.name;
+		var css = button.cssClass;
+		var where = Browser.ie ? 'top' : 'bottom';
+		var onclick = function(e){
+			if (e.stop) e.stop();
+			var fireClick = true;
+			if (this.onClick) fireClick = this.onClick(this, self);
+			if (fireClick) self.fireEvent('click', [this,self]);
+			if (this.content) MUI.Content.update(this.content);
+		}.bind(button);
+
+		if (button.type == 'image' && !button.image) button.type = 'html';
+		switch (button.type){
+			case 'html':
+				if (!css) css = 'button';
+				else css = 'button ' + css;
+				this.el[button.id] = new Element('input', {id:button.id,'class':css,type:'button','value':button.text,title:button.title}).inject(div, where).addEvent('click', onclick).store('instance', this);
+				break;
+			case 'image':
+				var options = Object.clone(button);
+				delete options.type;
+				delete options.position;
+				delete options.content;
+				options._container = div;
+				options.container = div.id;
+				options.onClick = onclick;
+				MUI.create('MUI.ImageButton', options);
+				break;
+			default:
+				if (!css) css = 'icon';
+				else css = 'icon ' + css;
+
+				this.el[button.id] = new Element('span', {id:button.id,'class':css,html:'&nbsp;',title:button.title}).inject(div, where).addEvent('click', onclick).store('instance', this);
+		}
 	},
 
 	_addToContainer: function(container, element){
