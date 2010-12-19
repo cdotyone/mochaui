@@ -1302,11 +1302,11 @@ var initializeColumns = function(){
 		column: 'mainColumn',
 		content: [
 			{url: 'pages/lipsum.html'},
-			{section: 'search', position: 'headertool', control: 'famfamfam'},
+			{section: 'search', position: 'header', control: 'famfamfam'},
 			{
 				section: 'search',
-				position: 'headertool',
-				url: 'pages/toolbar-demo2.html',
+				position: 'header',
+				url: 'pages/toolbar-search.html',
 				onLoaded: function(){
 					if ($('demoSearch')){
 						$('demoSearch').addEvent('submit', function(e){
@@ -1348,24 +1348,25 @@ var initializeColumns = function(){
 		height: 200,
 		content: [
 			{content: 'pages/blank.html'},
-			{section: 'search', position: 'headertool', control: 'famfamfam'},
-			{section: 'buttons1', position: 'headertool', element: 'mainPanel', control: 'MUI.Toolbar', buttons: [
+			{section: 'search', position: 'header', control: 'famfamfam'},
+			{section: 'buttons1', position: 'header', control: 'MUI.Toolbar', buttons: [
 				{id: 'button', type: 'image', text: 'Button 1', title: 'Click to do something 1', image: '{fff}accept.png'},
 				{id: 'button', type: 'image', text: 'Button 2', title: 'Click to do something 2'}
 			],
-			onClick: function(){
+				onClick: function(){
 					MUI.notification('Do Something');
 					return true;
 				}
 			},
-			{section: 'buttons2', position: 'headertool', element: 'mainPanel', control: 'MUI.Toolbar', buttons: [
+			{section: 'buttons2', position: 'header', control: 'MUI.Toolbar', buttons: [
 				{id: 'button', type: 'html', text: 'Button 3', title: 'Click to do something 3'},
 				{id: 'go', cssClass: 'icon_application_go', title: 'Go'},
 				{id: 'get', cssClass: 'icon_application_get'},
 				{id: 'home', cssClass: 'icon_application_home', onClick: function(){
-						MUI.notification('Do Something Else');
-					}
-				}],
+					MUI.notification('Do Something Else');
+				}
+				}
+			],
 				onClick:function(){
 					MUI.notification('Do Something');
 					return true;
@@ -1382,15 +1383,12 @@ var initializeColumns = function(){
 		content: [
 			{
 				position: 'header',
-				empty: true,
 				loadMethod: 'json',
 				control: 'MUI.Tabs',
-				options: {
-					tabs: [
-						{'text': 'Overview', 'url': 'pages/overview.html', 'title': 'Overview'},
-						{'text': 'Download', 'url': 'pages/download.html', 'title': 'Download'}
-					]
-				}
+				tabs: [
+					{'text': 'Overview', 'url': 'pages/overview.html', 'title': 'Overview'},
+					{'text': 'Download', 'url': 'pages/download.html', 'title': 'Download'}
+				]
 			}
 		]
 	});
@@ -1421,13 +1419,14 @@ var initializeColumns = function(){
 		height: 140,
 		content: [
 			{url: 'pages/tips.html'},
-			{
-				position: 'footer',
-				url: 'pages/toolbar-demo.html',
-				onLoaded: function(){
-					this.el.footer.getElements('.demoAction').removeEvents().addEvent('click', function(){
-						MUI.notification('Do Something');
-					});
+			{section: 'buttons', position: 'footer', control: 'MUI.Toolbar', buttons: [
+				{id: 'page0', image:'images/icons/16x16/page_green.gif'},
+				{id: 'page1', image:'images/icons/16x16/page_red.gif'},
+				{id: 'page2', image:'images/icons/16x16/page.gif'}
+			],
+				onClick:function(){
+					MUI.notification('Do Something');
+					return true;
 				}
 			}
 		]

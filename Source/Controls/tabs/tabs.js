@@ -79,23 +79,10 @@ MUI.Tabs = new Class({
 		var o = self.options;
 
 		var isNew = false;
-		var div;
-		var instance=MUI.get($(containerEl ? containerEl : o.container));
-
-		if (instance && instance.isTypeOf('MUI.Panel')){
-			instance.el.panelHeaderContent.addClass(o.cssClass);
-			div = instance.el.panelHeaderContent.getElement('div').empty();
-			o.partner = instance.id;
-		} else if (instance && instance.isTypeOf('MUI.Window')){
-			div = $(o.id);
-			if (div == null) div = new Element('div', {'id': o.id, 'class': o.cssClass}).inject(instance.el.contentWrapper, 'top');
-			div.addClass(o.cssClass);
-		} else {
-			div = $(o.id);
-			if (!div){
-				div = new Element('div', {'id': o.id, 'class': o.cssClass});
-				isNew = true;
-			}
+		var div = $(o.id);
+		if (!div){
+			div = new Element('div', {'id': o.id, 'class': o.cssClass});
+			isNew = true;
 		}
 
 		var ul = div.getElement('ul');
@@ -126,11 +113,15 @@ MUI.Tabs = new Class({
 			return this;
 		}
 
-		window.addEvent('domready', function(){
-			var container = $(containerEl ? containerEl : o.container);
-			container.appendChild(div);
+		if(this.options._container) {
+			this.options._container.removeClass('toolbar').appendChild(div);
 			if (o.selectedTab) o.selectedTab._element.fireEvent('click');
-		});
+		}
+		else window.addEvent('domready', function(){
+			this.options._container = $(containerEl ? containerEl : o.container);
+			this.options._container.appendChild(div);
+			if (o.selectedTab) o.selectedTab._element.fireEvent('click');
+		}.bind(this));
 
 		return div;
 	},
@@ -185,7 +176,7 @@ MUI.Tabs = new Class({
 				instance: instance,
 				element: o.partner,
 				content: content,
-				url:	url,
+				url: url,
 				onLoaded: function(){
 					self.fireEvent('tabSelected', [tab, value, self, e]);
 				}

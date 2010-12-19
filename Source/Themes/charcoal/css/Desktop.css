@@ -60,15 +60,14 @@ li.divider { margin-top: 2px; padding-top: 3px; border-top: 1px solid #e0e0e0; }
 #mainPanel { }
 .panel-header { position: relative; background: #404040 url(../images/bg-panel-header.gif) repeat-x; height: 30px; overflow: hidden; border-bottom: 1px solid #282828; }
 .panel-headerContent { padding-top: 2px; }
-.panel-headerContent.tabs { background: url(../images/tabs.gif) repeat-x; background-position: left -68px; padding-top: 0; }
 .panel-header h2 { display: inline-block; font-size: 12px; margin: 0; padding: 3px 8px 0 8px; height: 22px; overflow: hidden; color: #B3D9FF; }
 .panel-collapse { background: url(../images/collapse-expand.gif) left top no-repeat; }
 .panel-expand { background: url(../images/collapse-expand.gif) left -16px no-repeat; }
 .icon16 { margin: 4px 0 0 2px; cursor: pointer; }
-.panel-footerWrapper { position: relative; width: 100%; background: #404040; height: 30px; overflow: hidden; border-bottom: 1px solid #222; }
-.bottomPanel .panel-footerWrapper { border-top: 1px solid #222; border-bottom: 0; }
-.collapsed .panel-footerWrapper { display: none; }
-.panel-footer { padding: 0 0 0 8px; }
+
+.panel-footer { position: relative; width: 100%; background: #404040; height: 30px; overflow: hidden; border-bottom: 1px solid #222; padding: 0 0 0 8px; }
+.bottomPanel .panel-footer { border-top: 1px solid #222; border-bottom: 0; }
+.collapsed .panel-footer { display: none; }
 .panel-footerContent { margin-top: 6px; }
 
 /* Column and Panel Handles */

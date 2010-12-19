@@ -6,3 +6,4 @@ div.tabs ul li.sel { background: url(../images/tabs.gif) repeat-x left 0; }
 div.tabs ul li a { display: block; margin-left: 8px; padding: 6px 15px 5px 9px; text-align: center; font-weight: normal; color: #d0d0d0; background: url(../images/tabs.gif) repeat-x right -35px; }
 div.tabs ul li.sel a { color: #B3D9FF; font-weight: bold; background: url(../images/tabs.gif) repeat-x right 0; }
 div.mochaToolbar.tabs ul { padding: 0; }
+div.panel-header div.panel-header-toolbar div.tabs { background: url(../images/tabs.gif) repeat-x left -68px; padding-top: 0; }

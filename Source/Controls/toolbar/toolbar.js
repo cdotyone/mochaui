@@ -52,7 +52,7 @@ MUI.Toolbar = new Class({
 			 // image = MUI.ImageButton
 			 text:null,							// the text displayed on the button (html and image types only)
 			 title:null,						// tool tip text
-			 image:null,						// the url to the image that will be displayed (image types only)
+			 image:null,						// the url to the image that will be displayed (image and icon types only)
 			 isDisabled:false					// is the button disabled
 			 onClick: function() {				// overrides toolbar function, return true to also fire main toolbar onclick
 			 // do something
@@ -61,6 +61,7 @@ MUI.Toolbar = new Class({
 			 */
 		]
 		//onClick:null					// event: when a button is clicked, default for all buttons , will not fire if button has its own onclick
+		//onClose:null					// event
 	},
 
 	initialize: function(options){
@@ -111,10 +112,8 @@ MUI.Toolbar = new Class({
 		if (!isNew) return;
 		if (o._container) this._addToContainer(o._container, div);
 		else window.addEvent('domready', function(){
-			if (!o._container){
-				o._container = $(containerEl ? containerEl : o.container);
-				if (o._container) this._addToContainer(o._container, div);
-			}
+			o._container = $(containerEl ? containerEl : o.container);
+			if (o._container) this._addToContainer(o._container, div);
 			if (o.content) MUI.Content.update(o.content);
 		}.bind(this));
 
@@ -146,9 +145,22 @@ MUI.Toolbar = new Class({
 		this._buildButton(button);
 	},
 
+	close: function(){
+		var div = this.el.element;
+		delete this.el.element;
+		Object.each(this.el, function(val){
+			val.destroy();
+		});
+		div.destroy();
+
+		MUI.erase(this.options.id);
+		this.fireEvent('close', [this]);
+		return this;
+	},
+
 	_buildButton: function(button){
 		var self = this;
-		var div=self.el.element;
+		var div = self.el.element;
 		self.buttonCount++;
 		if (!button.name) button.name = 'button' + self.buttonCount;
 		if (!button.id) button.id = o.id + '_' + button.name;
@@ -159,7 +171,6 @@ MUI.Toolbar = new Class({
 			var fireClick = true;
 			if (this.onClick) fireClick = this.onClick(this, self);
 			if (fireClick) self.fireEvent('click', [this,self]);
-			if (this.content) MUI.Content.update(this.content);
 		}.bind(button);
 
 		if (button.type == 'image' && !button.image) button.type = 'html';
@@ -182,8 +193,8 @@ MUI.Toolbar = new Class({
 			default:
 				if (!css) css = 'icon';
 				else css = 'icon ' + css;
-
 				this.el[button.id] = new Element('span', {id:button.id,'class':css,html:'&nbsp;',title:button.title}).inject(div, where).addEvent('click', onclick).store('instance', this);
+				if (button.image) this.el[button.id].setStyle('backgroundImage', "url('" + button.image + "')");
 		}
 	},
 

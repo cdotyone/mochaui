@@ -234,7 +234,7 @@ window.addEvent('load', function(){ //using load instead of domready for IE8
 			function(){
 				var spin = $('spinnerWrapper').dispose();
 				spin.setStyles({'display':'block','float':'left'});
-				spin.inject($('test-panel_headerCollapseBox'), 'top');
+				spin.inject($('test-panel_collapseBox'), 'top');
 				$('test-panel_collapseToggle').setStyle('float', 'right');
 			}
 			).callChain();

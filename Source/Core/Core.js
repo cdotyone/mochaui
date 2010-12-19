@@ -230,7 +230,7 @@ MUI.append({
 			loadMethod: 'html',
 			closeAfter: 1500,
 			type: 'notification',
-			addClass: 'notification',
+			cssClass: 'notification',
 			content: message,
 			width: 220,
 			height: 40,
