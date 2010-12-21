@@ -33,6 +33,8 @@ Object.append(MUI.controls, {
 	'toolbar':{'samples':['index'],data:['json'],'description':'Toolbar','isFormControl':true,'css':['{theme}css/Toolbar.css']},
 	'toolbardock':{'samples':['index'],data:['json'],'description':'Toolbar Dock','isFormControl':false,'css':['{theme}css/Toolbar.css'],location:'toolbar'},
 	'toolbarhtml':{'samples':['index'],data:['json'],'description':'Toolbar HTML Block','isFormControl':false,'css':['{theme}css/Toolbar.css'],location:'toolbar'},
+	'toolbarmenu':{'samples':['index'],data:['json'],'description':'Toolbar Menu','isFormControl':false,'css':['{theme}css/Toolbar.css'],location:'toolbar'},
+	'toolbarspinner':{'samples':['index'],data:['json'],'description':'Toolbar Menu','isFormControl':false,'css':['{theme}css/Toolbar.css'],location:'toolbar'},
 	'toolbarthemechange':{'samples':['index'],data:['json'],'description':'Toolbar Menu','isFormControl':false,'css':['{theme}css/Toolbar.css'],location:'toolbar'}
 
 });
