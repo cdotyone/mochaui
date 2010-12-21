@@ -11,9 +11,6 @@
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 
- note:
- This documentation is taken directly from the JavaScript source files. It is built using Natural Docs.
-
  requires:
  - Core/Element
  - Core/Class
@@ -22,7 +19,7 @@
  - MUI
  - MUI.Core
 
- provides: [MUI.Tabs]
+ provides: [MUI.Toolbar]
  ...
  */
 

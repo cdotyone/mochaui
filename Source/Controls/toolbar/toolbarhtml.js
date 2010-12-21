@@ -1,18 +1,15 @@
 /*
  ---
 
- name: ToolbarDock
+ name: ToolbarHtml
 
- script: toolbardock.js
+ script: toolbarhtml.js
 
- description: MUI - Creates a toolbar dock control.
+ description: MUI - Creates a toolbar control that contains generic html.
 
  copyright: (c) 2010 Contributors in (/AUTHORS.txt).
 
  license: MIT-style license in (/MIT-LICENSE.txt).
-
- note:
- This documentation is taken directly from the JavaScript source files. It is built using Natural Docs.
 
  requires:
  - Core/Element
@@ -22,7 +19,7 @@
  - MUI
  - MUI.Core
 
- provides: [MUI.Tabs]
+ provides: [MUI.ToolbarHtml]
  ...
  */
 
