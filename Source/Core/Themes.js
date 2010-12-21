@@ -53,22 +53,21 @@ MUI.Themes = {
 
 		this.oldURIs = [];
 		this.oldSheets = [];
+		var themesPath = MUI.replacePaths(MUI.options.path.themes);
 
 		$$('link').each(function(link){
 			var href = link.get('href');
-			if (href.contains(MUI.options.path.themes + MUI.options.theme)){
+			if (href.contains(themesPath + MUI.options.theme)){
 				this.oldURIs.push(href);
 				this.oldSheets.push(link);
 			}
 		}.bind(this));
 
-		/*
-		 MUI.files.each( function(value, key, hash){
-		 if (key.contains(MUI.options.path.themes + MUI.options.theme)){
-		 this.oldURIs.push(key);
-		 }
-		 }.bind(this));
-		 */
+		Object.each(MUI.files, function(value, key){
+			if (key.contains(themesPath + MUI.options.theme)){
+				this.oldURIs.push(key);
+			}
+		}.bind(this));
 
 		this.newSheetURLs = this.oldURIs.map(function(item, index){
 			return item.replace('/' + MUI.options.theme + '/', '/' + MUI.Themes.newTheme + '/');
