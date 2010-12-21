@@ -50,7 +50,9 @@ MUI.append({
 		pluginGroups: {
 			'controls':{path:'{root}Source/Controls/',singularName:'control'},
 			'plugins':{path:'{root}Source/Plugins/',singularName:'plugin'}
-		}
+		},
+
+		themes: ['Default','Charcoal']
 	}
 });
 
@@ -79,7 +81,9 @@ MUI.append({
 			if (keys == null) return str;
 
 			// make sure root path and plugin package paths are always checked for
-			Object.each(MUI.options.pluginGroups,function(g,name) { keys.push('{'+name+'}')});
+			Object.each(MUI.options.pluginGroups, function(g, name){
+				keys.push('{' + name + '}')
+			});
 			keys.push('{root}');
 
 			keys.each(function(key){

@@ -41,13 +41,9 @@ MUI.files['{source}Core/Themes.js'] = 'loaded';
 
 MUI.Themes = {
 
-	/*
-	 Function: themeInit
-	 Initialize a theme. This is experimental and not fully implemented yet.
-	 */
 	init: function(newTheme){
 		this.newTheme = newTheme.toLowerCase();
-		if (!this.newTheme || this.newTheme == null || this.newTheme == MUI.options.theme.toLowerCase()) return;
+		if (!this.newTheme || this.newTheme == null || this.newTheme == MUI.options.theme.toLowerCase()) return false;
 
 		if ($('spinner')) $('spinner').show();
 
@@ -69,7 +65,7 @@ MUI.Themes = {
 			}
 		}.bind(this));
 
-		this.newSheetURLs = this.oldURIs.map(function(item, index){
+		this.newSheetURLs = this.oldURIs.map(function(item){
 			return item.replace('/' + MUI.options.theme + '/', '/' + MUI.Themes.newTheme + '/');
 		}.bind(this));
 
@@ -80,15 +76,11 @@ MUI.Themes = {
 		this.newSheets = [];
 		this.newSheetURLs.each(function(link){
 			var href = link;
-
-			//var id = link.id;
-
 			var cssRequest = new Request({
 				method: 'get',
 				url: href,
-				onComplete: function(response){
+				onComplete: function(){
 					var newSheet = new Element('link', {
-						//'id': id,
 						'rel': 'stylesheet',
 						'media': 'screen',
 						'type': 'text/css',
@@ -96,7 +88,7 @@ MUI.Themes = {
 					});
 					this.newSheets.push(newSheet);
 				}.bind(this),
-				onFailure: function(response){
+				onFailure: function(){
 					this.themeLoadSuccess = false;
 					if ($('spinner')) $('spinner').hide();
 					MUI.notification('Stylesheets did not load.');
@@ -113,6 +105,7 @@ MUI.Themes = {
 
 		}.bind(this));
 
+		return true;
 	},
 
 	updateThemeStylesheets: function(){
