@@ -351,7 +351,7 @@ MUI.Dock.implement({
 		ctx.clearRect(0, 0, 100, 100);
 		MUI.Canvas.circle(ctx, 5, 4, 3, this.enabledButtonColor, 1.0);
 
-		if (this.el.wrapper.getProperty('position') == 'top') MUI.Canvas.circle(ctx, 5, 14, 3, this.disabledButtonColor, 1.0)
+		if (this.el.wrapper.getProperty('position') == 'top') MUI.Canvas.circle(ctx, 5, 14, 3, this.disabledButtonColor, 1.0);
 		else if (this.options.autoHide) MUI.Canvas.circle(ctx, 5, 14, 3, this.trueButtonColor, 1.0);
 		else MUI.Canvas.circle(ctx, 5, 14, 3, this.enabledButtonColor, 1.0);
 	}

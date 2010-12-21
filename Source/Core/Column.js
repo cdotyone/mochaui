@@ -262,13 +262,9 @@ MUI.Column = new NamedClass('MUI.Column', {
 	_addResize: function(element, min, max, where){
 		var instance = this;
 		if (!$(element)) return;
-		var element = $(element);
+		element = $(element);
 
-		if (where == 'left'){
-			var handle = element.getPrevious('.columnHandle');
-		} else {
-			var handle = element.getNext('.columnHandle');
-		}
+		var handle = (where == 'left') ? element.getPrevious('.columnHandle') : element.getNext('.columnHandle');
 		handle.setStyle('cursor', Browser.webkit ? 'col-resize' : 'e-resize');
 
 		if (!min) min = 50;
@@ -290,7 +286,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 				x: 'width',
 				y: false
 			},
-			invert: (where == 'left') ? true : false,
+			invert: (where == 'left'),
 			limit: {
 				x: [min, max]
 			},
@@ -327,20 +323,20 @@ MUI.Column = new NamedClass('MUI.Column', {
 			}.bind(this),
 			onComplete: function(){
 				var partner = (where == 'left') ? element.getPrevious('.column') : element.getNext('.column'),
-					partnerInstance = MUI.get(partner);
-				
-				
+						partnerInstance = MUI.get(partner);
+
+
 				MUI.rWidth(element.getParent());
 				element.getElements('iframe').setStyle('visibility', 'visible');
 				partner.getElements('iframe').setStyle('visibility', 'visible');
 
 				[instance].combine(instance.getPanels())
-				  .include(partnerInstance)
-				  .combine(partnerInstance.getPanels())
-				  .each(function(panel){
-						if (panel.el.panel && panel.el.panel.getElement('.mochaIframe') != null) MUI.resizeChildren(panel.el.panel);
-						panel.fireEvent('resize', [panel]);
-				  });
+						.include(partnerInstance)
+						.combine(partnerInstance.getPanels())
+						.each(function(panel){
+					if (panel.el.panel && panel.el.panel.getElement('.mochaIframe') != null) MUI.resizeChildren(panel.el.panel);
+					panel.fireEvent('resize', [panel]);
+				});
 
 			}.bind(this)
 		});

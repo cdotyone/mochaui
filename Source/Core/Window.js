@@ -1535,7 +1535,6 @@ MUI.Window.implement({
 	},
 
 	_attachResizable: function(){
-		var windowEl = this.el.windowEl;
 		if (!this.options.resizable) return;
 		this.resizable1 = this.el.windowEl.makeResizable({
 			handle: [this.el.n, this.el.ne, this.el.nw],
