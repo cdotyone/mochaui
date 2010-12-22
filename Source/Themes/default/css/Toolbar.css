@@ -17,7 +17,8 @@
 .toolbar div.divider { /* Have to specify div here for IE6's sake */ background: url(../images/toolbar-divider.gif) repeat-y; padding-left: 6px; padding-right:3px; float:right; }
 .toolbar img.disabled { cursor: default; }
 .toolbar .button { vertical-align: top; margin-top:0; }
-.toolbar span.icon { line-height:24px; font-size:14px; background-repeat: no-repeat; padding-left: 20px; background-position: 4px center; }
+.toolbar span.icon { line-height:24px; font-size:14px; background-repeat: no-repeat; padding: 3px 9px; background-position: center; border: 1px solid transparent; }
+.toolbar span.icon:hover { border: 1px solid #a0a0a0; -moz-border-radius: 3px; border-radius: 3px; }
 .toolbar div select.theme { line-height:24px; margin: 3px 0 4px 0; }
 * html .toolbar .searchField, * html .toolbar .searchButton { /* IE6 Hack */ margin-top: -1px; }
 * html .toolbar .button { /* IE6 Hack */ vertical-align: top; margin-top: 0; }
