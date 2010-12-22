@@ -14,7 +14,7 @@ span.imgButton .imgButton.imgOnly { background-color: transparent; border: none;
 span.imgButton .imgButton.imgOnly span { padding: 0 0 0 2px; }
 span.imgButton .imgButton.imgOnly:hover { background-color: transparent; border: none;  }
 
-div.toolbar div span.imgButton { line-height: 14px; }
+div.toolbar div span.imgButton { line-height: 12px; }
 div.toolbar div span.imgButton .imgButton {background-color: transparent; }
 div.toolbar div span.imgButton .imgButton span img { padding: 0 0 3px 0; position: relative; top: 6px; }
 
