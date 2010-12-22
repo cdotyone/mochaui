@@ -46,7 +46,7 @@ div.mochaToolbarWrapper.bottom { border: 0; border-bottom: 1px solid #222; }
 .mochaMinimizeButton { margin-left: 0; }
 .mochaMaximizeButton { }
 .mochaCloseButton { }
-.mochaSpinner { display: none; position: absolute; bottom: 5px; left: 6px; width: 16px; height: 16px; background: url(../images/spinner.gif) no-repeat; }
+.mochaWindowFooter .spinner { display: none; position: absolute; bottom: 5px; left: 6px; width: 16px; height: 16px }
 .mochaIframe { width: 100%; }
 /* Fix for IE6 select z-index issue */
 .zIndexFix { display: block; position: absolute; top: 0; left: 0; z-index: -1; filter: mask(); width: 100px; height: 100px; border: 1px solid transparent; }

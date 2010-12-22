@@ -522,7 +522,7 @@ MUI.Window.implement({
 		}
 
 		Object.each(this.el, (function(ele){
-			ele.store('instance', this);
+			if(ele!=this.el.spinner) ele.store('instance', this);
 		}).bind(this));
 
 		if (this.options.closeAfter) this.close.delay(this.options.closeAfter, this);
@@ -1325,7 +1325,7 @@ MUI.Window.implement({
 		if (options.useSpinner && options.shape != 'gauge' && options.type != 'notification'){
 			cache.spinner = new Element('div', {
 				'id': id + '_spinner',
-				'class': 'mochaSpinner',
+				'class': 'spinner',
 				'styles': {
 					'width': 16,
 					'height': 16

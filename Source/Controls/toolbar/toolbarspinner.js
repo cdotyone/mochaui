@@ -65,14 +65,14 @@ MUI.ToolbarSpinner = new Class({
 		var isNew = false;
 		var div = $(o.id);
 		if (!div){
-			div = new Element('div', {'id': o.id,'class':'toolbar'});
+			div = new Element('div', {'id': o.id});
 			isNew = true;
 		}
 		if (o.cssClass) div.addClass(o.cssClass);
 		div.empty();
 
-		new Element('div',{'id':'spinner'}).inject(
-			new Element('div',{'id':'spinnerWrapper'}).inject(div)
+		self.el.spinner = new Element('div', {'id':o.id + '_spinner',class:'spinner'}).inject(
+			new Element('div', {'id':o.id + 'spinnerWrapper',class:'spinnerWrapper'}).inject(div)
 		);
 
 		self.el.element = div;
@@ -89,6 +89,16 @@ MUI.ToolbarSpinner = new Class({
 		});
 
 		return div;
+	},
+
+	hide: function(){
+		if (this.el.spinner) this.el.spinner.hide();
+		return this;
+	},
+
+	show: function(){
+		if (this.el.spinner) this.el.spinner.show();
+		return this;
 	},
 
 	_addToContainer: function(container, element){

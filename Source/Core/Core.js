@@ -139,7 +139,7 @@ MUI.append({
 	},
 
 	each: function(func){
-		this.instances.each(func);
+		Object.each(this.instances, func);
 		return this;
 	},
 
@@ -278,6 +278,45 @@ MUI.append({
 		if (!item || !property) return '';
 		if (item[property] == null) return '';
 		return item[property];
+	},
+
+	hideSpinner: function(instance){
+		if (instance == null) instance = MUI.get(this.id);
+		var spinner = $$('.spinner');
+		if (instance && instance.el && instance.el.spinner) spinner = instance.el.spinner;
+		if ((instance == null || (instance && instance.showSpinner == null)) && spinner){
+			var t = (typeof spinner);
+			if (t == 'array' || t == 'object') spinner = spinner[0];
+			if(spinner) MUI.each(function(instance) {
+				if(instance.isTypeOf && instance.isTypeOf('MUI.ToolbarSpinner')) spinner = instance.el.spinner;
+			});
+			if (!spinner) return;
+			(function(){
+				var count = this.retrieve("count");
+				this.store("count", count ? count - 1 : 0);
+				if (count <= 1) this.setStyle('display', 'none');
+			}).delay(500, spinner);
+			return;
+		}
+		if (instance && instance.hideSpinner) instance.hideSpinner();
+	},
+
+	showSpinner: function(instance){
+		if (instance == null) instance = MUI.get(this.id);
+		var spinner = $$('.spinner');
+		if (instance && instance.el && instance.el.spinner) spinner = instance.el.spinner;
+		if ((instance == null || (instance && instance.showSpinner == null)) && spinner){
+			var t = (typeof spinner);
+			if (t == 'array' || t == 'object') spinner = spinner[0];
+			if(spinner) MUI.each(function(instance) {
+				if(instance.isTypeOf && instance.isTypeOf('MUI.ToolbarSpinner')) spinner = instance.el.spinner;
+			});
+			if (!spinner) return;
+			var count = spinner.retrieve("count");
+			spinner.store("count", count ? count + 1 : 1).show();
+			return;
+		}
+		if (instance && instance.showSpinner) instance.showSpinner();
 	}
 
 });
@@ -387,35 +426,6 @@ Element.implement({
 		var instance = MUI.get(this.id);
 		if (instance == null || instance.isClosing || instance.close == null) return;
 		instance.close();
-	},
-
-	hideSpinner: function(instance){
-		if (instance == null) instance = MUI.get(this.id);
-		var spinner = $('spinner');
-		if (instance && instance.el && instance.el.spinner) spinner = instance.el.spinner;
-		if ((instance == null || (instance && instance.hideSpinner == null) || spinner) && spinner){
-			(function(){
-				var count = this.retrieve("count");
-				this.store("count", count ? count - 1 : 0);
-				if (count <= 1) this.setStyle('display', 'none');
-			}).delay(500, spinner);
-			return;
-		}
-		if (instance && instance.hideSpinner) instance.hideSpinner();
-		return this;
-	},
-
-	showSpinner: function(instance){
-		if (instance == null) instance = MUI.get(this.id);
-		var spinner = $('spinner');
-		if (instance && instance.el && instance.el.spinner) spinner = instance.el.spinner;
-		if ((instance == null || (instance && instance.hideSpinner == null) || spinner) && spinner){
-			var count = spinner.retrieve("count");
-			spinner.store("count", count ? count + 1 : 1).show();
-			return;
-		}
-		if (instance && instance.hideSpinner) instance.showSpinner();
-		return this;
 	},
 
 	resize: function(options){

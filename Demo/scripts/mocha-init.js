@@ -1234,7 +1234,7 @@ var initializeColumns = function(){
 				$('myForm').addEvent('submit', function(e){
 					e.stop();
 
-					$('spinner').show();
+					MUI.showSpinner();
 					if ($('postContent') && MUI.options.standardEffects){
 						$('postContent').setStyle('opacity', 0);
 					} else {
@@ -1273,18 +1273,21 @@ var initializeColumns = function(){
 	var addResizeElements = function(){
 		var panel = this.el.contentWrapper;
 		var pad = panel.getElement('.pad');
-		pad.appendText('Width: ');
+		var resize = pad.getElement('.resizeInfo');
+		if(!resize) resize = new Element('div',{'class':'resizeInfo'}).inject(pad);
+		resize.empty();
+		resize.appendText('Width: ');
 		this.displayWidthEl = new Element('span', {
 			'text': panel.getStyle('width')
-		}).inject(pad);
-		pad.appendText(' Height: ');
+		}).inject(resize);
+		resize.appendText(' Height: ');
 		this.displayHeightEl = new Element('span', {
 			'text': panel.getStyle('height')
-		}).inject(pad);
-		pad.appendText(' Resize Events fired: ');
+		}).inject(resize);
+		resize.appendText(' Resize Events fired: ');
 		this.countEvents = new Element('span', {
 			'text': countResizeEvents[this.id]
-		}).inject(pad);
+		}).inject(resize);
 	};
 
 	var updateResizeElements = function(){
@@ -1311,7 +1314,7 @@ var initializeColumns = function(){
 					if ($('demoSearch')){
 						$('demoSearch').addEvent('submit', function(e){
 							e.stop();
-							$('spinner').setStyle('visibility', 'visible');
+							MUI.showSpinner();
 							if ($('postContent') && MUI.options.standardEffects) $('postContent').setStyle('opacity', 0);
 							else $('mainPanel_pad').empty();
 

@@ -27,8 +27,9 @@
 .panel-footer div div.toolbar { margin: -3px 0 0; }
 
 /* spinner */
-#spinnerWrapper { width: 16px; height: 16px; background: url(../images/spinner-placeholder.gif) no-repeat; margin: 4px 5px 0 5px; }
-#spinner { display: none; background: url(../images/spinner.gif) no-repeat; width: 16px; height: 16px; }
+.spinnerWrapper { width: 16px; height: 16px; background: url(../images/spinner-placeholder.gif) no-repeat; margin: 4px 5px 0 5px; }
+.spinner { display: none; background: url(../images/spinner.gif) no-repeat; width: 16px; height: 16px; }
+.toolbar .spinnerWrapper { margin: 4px 0 2px 0; height:24px;};
 
 /* search fields toolbar */
 .searchField { width: 150px; overflow: hidden; line-height: 15px; margin: 0; padding: 4px 0 3px 5px; border: 1px solid #808080; border-right: 0; vertical-align: middle; -moz-border-radius-topleft: 3px; -moz-border-radius-bottomleft: 3px; border-radius: 3px 0 0 3px; }

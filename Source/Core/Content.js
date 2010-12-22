@@ -380,7 +380,7 @@ MUI.Content.Providers.xhr = {
 			},
 			evalResponse: false,
 			onRequest: function(){
-				if (this.contentContainer) this.contentContainer.showSpinner(this.instance);
+				MUI.showSpinner(this.instance);
 			}.bind(content),
 			onFailure: function(response){
 				var content = this;
@@ -395,14 +395,14 @@ MUI.Content.Providers.xhr = {
 				if (instance && instance.updateSetContent) updateSetContent = instance.updateSetContent(content);
 				if (this.contentContainer){
 					if (updateSetContent) this.contentContainer.set('html', content.errorMessage);
-					this.contentContainer.hideSpinner(instance);
+					MUI.hideSpinner(instance);
 				}
 			}.bind(content),
 			onSuccess: function(text){
 				var instance = content.instance;
 				text = content.persistStore(text);
 				text = MUI.Content.processFilters(text, content);
-				if (content.contentContainer) content.contentContainer.hideSpinner(instance);
+				MUI.hideSpinner(instance);
 
 				var js = content.javascript, html = text;
 
@@ -481,7 +481,7 @@ MUI.Content.Providers.json = {
 				evalResponse: false,
 				headers: {'Content-Type':'application/json'},
 				onRequest: function(){
-					if (this.contentContainer) this.contentContainer.showSpinner(this.instance);
+					MUI.showSpinner(this.instance);
 				}.bind(content),
 				onFailure: function(){
 					var updateSetContent = true;
@@ -504,7 +504,7 @@ MUI.Content.Providers.json = {
 						MUI.Content.setRecords(this);
 						json = MUI.Content.processFilters(this);
 					}
-					if (this.contentContainer) this.contentContainer.hideSpinner(content.instance);
+					MUI.hideSpinner(content.instance);
 					Browser.ie6 ? this.fireLoaded.delay(50, this) : this.fireLoaded();
 				}.bind(content),
 				onComplete: function(){
@@ -545,7 +545,7 @@ MUI.Content.Providers.iframe = {
 
 			// Add onload event to iframe so we can hide the spinner and run fireLoaded()
 			iframeEl.addEvent('load', function(){
-				contentContainer.hideSpinner(instance);
+				MUI.hideSpinner(instance);
 				Browser.ie6 ? this.fireLoaded.delay(50, this) : this.fireLoaded();
 			}.bind(content));
 		}
