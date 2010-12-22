@@ -95,10 +95,21 @@ MUI.Column = new NamedClass('MUI.Column', {
 		if (options.sortable){
 			if (!options.container.retrieve('sortables')){
 				var sortables = new Sortables(this.el.column, {
-					opacity: 1,
+					opacity: 0.2,
 					handle: '.panel-header',
 					constrain: false,
 					revert: false,
+					clone: true,
+					revert: { duration: 500, transition: 'quad:in'},
+					onStart: function(element, clone){
+						var pos = element.getPosition(document.body);
+						clone.inject(document.body).setStyles({
+							'z-index': 1999,
+							'opacity': 0.65,
+							'margin-left': pos.x,
+							'margin-top': pos.y - clone.getStyle('top').toInt()
+						});
+					},
 					onSort: function(){
 						$$('.column').each(function(column){
 							column.getChildren('.panelWrapper').removeClass('bottomPanel');
