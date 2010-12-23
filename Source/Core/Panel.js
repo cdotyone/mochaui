@@ -132,13 +132,6 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		}, this);
 
 		if (this.hasFooter){
-/*
-			this.el.footerWrapper = new Element('div', {
-				'id': options.id + '_panelFooterWrapper',
-				'class': 'panel-footerWrapper'
-			}).inject(this.el.element);
-*/
-
 			this.el.footer = new Element('div', {
 				'id': options.id + '_panelFooter',
 				'class': 'panel-footer'
@@ -421,7 +414,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 		this.el.collapseBox = new Element('div', {
 			'id': options.id + '_collapseBox',
-			'class': 'toolbar'
+			'class': 'panel-collapseBox toolbar'
 		}).inject(this.el.header);
 
 		if (this.hasHeaderTool) this.el.collapseBox.addClass('divider');

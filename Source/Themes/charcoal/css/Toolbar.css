@@ -23,7 +23,7 @@
 * html .toolbar .searchField, * html .toolbar .searchButton { /* IE6 Hack */ margin-top: -1px; }
 * html .toolbar .button { /* IE6 Hack */ vertical-align: top; margin-top: 0; }
 
-.panel-header-toolbar { }
+.panel-header-toolbar { display: table-cell }
 .panel-footer div div.toolbar { margin: -3px 0 0; }
 
 /* spinner */
