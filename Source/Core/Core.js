@@ -58,6 +58,7 @@ MUI.append({
 
 MUI.append({
 	version: '1.0.0',
+	initialized: false,
 	instances: new Hash(),
 	IDCount: 0,
 	ieSupport: 'excanvas',					// Makes it easier to switch between Excanvas and Moocanvas for testing
@@ -71,6 +72,7 @@ MUI.append({
 			Object.append(MUI.options, options);
 		}
 		Object.each(MUI.options.pluginGroups, MUI.addPluginGroup);
+		MUI.initialized = true;
 	},
 
 	replaceFields: function(str, values){
@@ -105,6 +107,7 @@ MUI.append({
 	},
 
 	replacePaths: function(files){
+		if (!MUI.initialized) MUI.initialize();
 		var paths = Object.append({'theme':MUI.options.path.themes + MUI.options.theme + '/'}, MUI.options.path);
 		return MUI.replaceFields(files, paths);
 	},
@@ -166,6 +169,7 @@ MUI.append({
 	},
 
 	create:function(type, options, fromHTML, loadOnly){
+		if (!MUI.initialized) MUI.initialize();
 		if (this.loadPluginGroups(function(){
 			MUI.create(type, options);
 		})) return;
@@ -287,8 +291,8 @@ MUI.append({
 		if ((instance == null || (instance && instance.showSpinner == null)) && spinner){
 			var t = (typeof spinner);
 			if (t == 'array' || t == 'object') spinner = spinner[0];
-			if(spinner) MUI.each(function(instance) {
-				if(instance.isTypeOf && instance.isTypeOf('MUI.ToolbarSpinner')) spinner = instance.el.spinner;
+			if (spinner) MUI.each(function(instance){
+				if (instance.isTypeOf && instance.isTypeOf('MUI.ToolbarSpinner')) spinner = instance.el.spinner;
 			});
 			if (!spinner) return;
 			(function(){
@@ -308,8 +312,8 @@ MUI.append({
 		if ((instance == null || (instance && instance.showSpinner == null)) && spinner){
 			var t = (typeof spinner);
 			if (t == 'array' || t == 'object') spinner = spinner[0];
-			if(spinner) MUI.each(function(instance) {
-				if(instance.isTypeOf && instance.isTypeOf('MUI.ToolbarSpinner')) spinner = instance.el.spinner;
+			if (spinner) MUI.each(function(instance){
+				if (instance.isTypeOf && instance.isTypeOf('MUI.ToolbarSpinner')) spinner = instance.el.spinner;
 			});
 			if (!spinner) return;
 			var count = spinner.retrieve("count");
