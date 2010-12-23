@@ -98,7 +98,6 @@ MUI.Column = new NamedClass('MUI.Column', {
 					opacity: 0.2,
 					handle: '.panel-header',
 					constrain: false,
-					revert: false,
 					clone: true,
 					revert: { duration: 500, transition: 'quad:in'},
 					onStart: function(element, clone){
