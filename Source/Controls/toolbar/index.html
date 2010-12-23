@@ -15,7 +15,8 @@
 	<!--MOCHAUI-->
 	<script type="text/javascript">
 		window.addEvent('load', function(){
-			MUI.options.path.root='../../../';
+			MUI.options.path.root = '../../../';
+			MUI.options.path.demo = '{root}Demo/';
 			new MUI.Panel({
 				id:'panel1',
 				column:'place1',
@@ -23,6 +24,58 @@
 				content: [
 					{content: 'pages/blank.html'},
 					{section: 'search', position: 'header', control: 'famfamfam'},
+					{section: 'menu', position: 'header', control: 'MUI.ToolbarMenu',items:[
+							{text:'File',items:[
+								{text:'Open',items:[]},
+								{text:'Tests',items:[
+									{text:'Window Events',id:'windoweventsLinkCheck', url:'{demo}pages/events.html' },
+									{text:'Container Test',id:'containertestLinkCheck', url:'{demo}pages/lipsum.html' },
+									{text:'Iframe Tests',id:'iframetestsLinkCheck', url:'{demo}pages/iframetests.html' },
+									{text:'Form Tests',id:'formtestsLinkCheck', url:'{demo}pages/formtests.html' },
+									{text:'No Canvas Body',id:'noCanvasLinkCheck', url:'{demo}pages/lipsum.html' },
+									{text:'CSS3 Body',id:'CSS3LinkCheck', url:'{demo}pages/lipsum.html' },
+									{text:'CSS3 Canvas Fallback',id:'CSS3fallbackLinkCheck', url:'{demo}pages/lipsum.html' },
+									{text:'Force Canvas',id:'forceCanvasLinkCheck', url:'{demo}pages/lipsum.html' },
+									{text:'Close Panel',id:'closePanelCheck' },
+									{text:'Close Column',id:'closeColumnCheck' }
+								]},
+								{text:'Starters',items:[
+									{text:'Virtual Desktop',url:'{demo}demo-virtual-desktop.html'},
+									{text:'Fixed Width',url:'{demo}demo-fixed-width.html'},
+									{text:'Fixed Width 2',url:'{demo}demo-dock-only.html'},
+									{text:'No Toolbars',url:'{demo}demo-no-toolbars.html'},
+									{text:'No Desktop',url:'{demo}demo-no-desktop.html'},
+									{text:'Modal Only',url:'{demo}demo-modal-only.html'}
+								]}
+							]},
+							{text:'View',items:[
+								{text:'Cascade Windows',id:'cascadeLink'},
+								{text:'Tile Windows',id:'tileLink'},
+								{type:'divider'},
+								{text:'Minimize All Windows',id:'minimizeLink'},
+								{text:'Close All Windows',id:'closeLink'}
+							]},
+							{text:'Tools',items:[
+								{text:'Window Builder',id:'builderLinkCheck',url:'{plugins}/windowform/'},
+								{type:'divider'},
+								{text:'Options',items:[
+									{text:'Standard Effects',id:'minimizeLink',type:'radio',group:'effects'},
+									{text:'Advanced Effects',id:'closeLink',type:'radio',group:'effects'}
+								]}
+							]},
+							{text:'Workspace',items:[
+								{text:'Save Workspace',id:'saveWorkspaceLink'},
+								{text:'Load Workspace',id:'loadWorkspaceLink'}
+							]},
+							{text:'Help',items:[
+								{text:'Features',id:'featuresLinkCheck',url:'{demo}pages/features.html'},
+								{type:'divider'},
+								{text:'Documentation',id:'loadWorkspaceLink',target:'_blank',url:'http://mochaui.org/docs/'},
+								{type:'divider'},
+								{text:'About',id:'aboutLink',url:'{demo}pages/about.html'}
+							]}
+						]
+					},
 					{section: 'theme', position: 'header', control: 'MUI.ToolbarThemeChange'},
 					{section: 'spinner', position: 'header', control: 'MUI.ToolbarSpinner'},
 					{section: 'buttons1', position: 'header', control: 'MUI.Toolbar', buttons: [
@@ -63,7 +116,6 @@
 <body>
 
 <div id="place1" class="panel-header">
-	<div id="headerContent" class="panel-headerContent"></div>
 </div>
 
 </body>

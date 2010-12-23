@@ -36,3 +36,6 @@
 .searchButton { -moz-border-radius-topleft: 0; -moz-border-radius-bottomleft: 0; border-radius: 0 3px 3px 0; }
 *:first-child + html .toolbar .searchField, *:first-child + html .toolbar .searchButton { /* IE7 Hack */ margin-top: -1px; }
 
+/* misc */
+.toolbar div.left { float: left }
+.toolbar div.right { float: right }

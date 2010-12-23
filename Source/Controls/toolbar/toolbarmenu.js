@@ -34,8 +34,10 @@ MUI.ToolbarMenu = new Class({
 		container:		null,			// the parent control in the document to add the control to
 		drawOnInit:		true,			// true to add tree to container when control is initialized
 		cssClass:		'divider',		// the primary css tag
+		orientation:	'left',
 
-		content:		false			// used to load content
+		content:		false,			// used to load content
+		items:			{}
 	},
 
 	initialize: function(options){
@@ -71,6 +73,7 @@ MUI.ToolbarMenu = new Class({
 			isNew = true;
 		}
 		div.set('class', o.cssClass);
+		div.addClass(o.orientation);
 
 		self.el.element = div;
 
