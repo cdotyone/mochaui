@@ -267,7 +267,6 @@ var initializeWindows = function(){
 			image:		'{theme}images/accept.png',
 			id:			container + 'btnAccept',
 			container:	container,
-			section:	(container != 'mainPanel' ? 'footer' : 'search'),
 			onClick:	function(self){
 				MUI.writeConsole(self.options.id + ' clicked');
 			}
@@ -1274,7 +1273,7 @@ var initializeColumns = function(){
 		var panel = this.el.contentWrapper;
 		var pad = panel.getElement('.pad');
 		var resize = pad.getElement('.resizeInfo');
-		if(!resize) resize = new Element('div',{'class':'resizeInfo'}).inject(pad);
+		if (!resize) resize = new Element('div', {'class':'resizeInfo'}).inject(pad);
 		resize.empty();
 		resize.appendText('Width: ');
 		this.displayWidthEl = new Element('span', {
@@ -1305,9 +1304,8 @@ var initializeColumns = function(){
 		column: 'mainColumn',
 		content: [
 			{url: 'pages/lipsum.html'},
-			{section: 'search', position: 'header', control: 'famfamfam'},
 			{
-				section: 'search',
+				name: 'search',
 				position: 'header',
 				url: 'pages/toolbar-search.html',
 				onLoaded: function(){
@@ -1350,9 +1348,8 @@ var initializeColumns = function(){
 		column: 'mainColumn',
 		height: 200,
 		content: [
-			{content: 'pages/blank.html'},
-			{section: 'search', position: 'header', control: 'famfamfam'},
-			{section: 'buttons1', position: 'header', control: 'MUI.Toolbar', buttons: [
+			{url: 'pages/blank.html'},
+			{name: 'buttons1', position: 'header', control: 'MUI.Toolbar', buttons: [
 				{id: 'button', type: 'image', text: 'Button 1', title: 'Click to do something 1', image: '{fff}accept.png'},
 				{id: 'button', type: 'image', text: 'Button 2', title: 'Click to do something 2'}
 			],
@@ -1361,7 +1358,7 @@ var initializeColumns = function(){
 					return true;
 				}
 			},
-			{section: 'buttons2', position: 'header', control: 'MUI.Toolbar', buttons: [
+			{name: 'buttons2', position: 'header', control: 'MUI.Toolbar', buttons: [
 				{id: 'button', type: 'html', text: 'Button 3', title: 'Click to do something 3'},
 				{id: 'go', cssClass: 'icon_application_go', title: 'Go'},
 				{id: 'get', cssClass: 'icon_application_get'},
@@ -1420,9 +1417,10 @@ var initializeColumns = function(){
 		title: 'Tips',
 		column: 'sideColumn2',
 		height: 140,
+		footer:true,
 		content: [
 			{url: 'pages/tips.html'},
-			{section: 'buttons', position: 'footer', control: 'MUI.Toolbar', buttons: [
+			{name: 'buttons', position: 'footer', control: 'MUI.Toolbar', buttons: [
 				{id: 'page0', image:'images/icons/16x16/page_green.gif'},
 				{id: 'page1', image:'images/icons/16x16/page_red.gif'},
 				{id: 'page2', image:'images/icons/16x16/page.gif'}
@@ -1480,6 +1478,10 @@ MUI.initialize();
 window.addEvent('load', function(){ //using load instead of domready for IE8
 	MUI.myChain = new Chain();
 	MUI.myChain.chain(
+					 function(){
+						 MUI.create('famfamfam');
+						 MUI.myChain.callChain();
+					 },
 					 function(){
 						 MUI.Desktop.initialize();
 						 MUI.myChain.callChain();

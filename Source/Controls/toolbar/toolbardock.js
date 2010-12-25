@@ -33,17 +33,19 @@ MUI.ToolbarDock = new Class({
 		id:				'',				// id of the primary element, and id os control that is registered with mocha
 		container:		null,			// the parent control in the document to add the control to
 		drawOnInit:		true,			// true to add tree to container when control is initialized
-		cssClass:		'toolbar',		// the primary css tag
+		cssClass:		false,			// additional css tag
 		orientation:	'left',			// toolbars are listed from left to right or right to left
+
+		partner:		false,			// default partner panel to pass docked controls
 
 		docked:			[]				// items that are docked currently
 	},
-	
+
 	initialize: function(options){
 		var self = this;
 		self.setOptions(options);
 		var o = self.options;
-		self.el={};
+		self.el = {};
 
 		// make sure this controls has an ID
 		var id = o.id;
@@ -51,6 +53,7 @@ MUI.ToolbarDock = new Class({
 			id = 'toolbarDock' + (++MUI.IDCount);
 			o.id = id;
 		}
+		this.id = id;
 
 		this.draw();
 
@@ -66,21 +69,44 @@ MUI.ToolbarDock = new Class({
 
 		div = $(o.id);
 		if (!div){
-			div = new Element('div', {'id': o.id, 'class': o.cssClass});
+			div = new Element('div', {'id': o.id});
 			isNew = true;
 		}
+		div.addClass('toolbardock');
+		if (o.cssClass) div.addClass(o.cssClass);
+		self.el.element = div.store('instance', this);
 
-		self.el.element = div;
-		div.store('instance',this);
-
-		if(!isNew) return;
-		if(o._container) o._container.appendChild(div);
+		if (!isNew || o._container) this._addToContainer(o._container, div);
 		else window.addEvent('domready', function(){
-			if(!o._container) o._container = $(containerEl ? containerEl : o.container);
-			o._container.appendChild(div);
+			if (!o._container) o._container = $(containerEl ? containerEl : o.container);
+			this._addToContainer(o._container, div);
 		});
 
 		return div;
-	}
-});
+	},
 
+	_addToContainer: function(container){
+		if(this.el.element.getParent()==null) this.el.element.inject(container);
+		Object.each(this.options.docked, this._createToolbar.bind(this));
+	},
+
+	_createToolbar:function(toolbar, idx){
+		if (!toolbar.control) toolbar.control = 'MUI.ToolbarHtml';
+		if (!toolbar.id) toolbar.id = this.id + 'Toolbar' + idx;
+		new Element('div', {'id':toolbar.id,'class':'toolbar'}).inject(this.el.element);
+		/*
+		 toolbar._container = this.el.element;
+		 toolbar.container = toolbar._container.id;
+		 */
+		if (!toolbar.partner) toolbar.partner = this.options.partner;
+		this.options.docked[idx] = toolbar;
+		var content = {};
+		Object.each(toolbar, function(val, key){
+			if (['loadmethod', 'method', 'url', 'content', 'onloaded'].indexOf(key) > -1)
+				content[key] = val;
+		});
+		toolbar.content = content;
+		MUI.create(toolbar.control, toolbar);
+	}
+
+});

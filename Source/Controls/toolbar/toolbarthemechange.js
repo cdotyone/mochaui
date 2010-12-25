@@ -33,9 +33,10 @@ MUI.ToolbarThemeChange = new Class({
 		id:				'',				// id of the primary element, and id os control that is registered with mocha
 		container:		null,			// the parent control in the document to add the control to
 		drawOnInit:		true,			// true to add tree to container when control is initialized
-		cssClass:		'divider',		// the primary css tag
+		cssClass:		false,			// css tag to add to control
 
-		addTitle:		true			// true if 'Choose Theme:' is shown in the drop down
+		addTitle:		true,			// true if 'Choose Theme:' is shown in the drop down
+		divider:		true			// true if this toolbar has a divider
 
 		//onChange:null					// event: theme was changed
 	},
@@ -53,6 +54,7 @@ MUI.ToolbarThemeChange = new Class({
 			id = 'toolbarThemeChange' + (++MUI.IDCount);
 			o.id = id;
 		}
+		this.id = id;
 
 		if (o.content) o.content.instance = this;
 		this.draw();
@@ -70,10 +72,13 @@ MUI.ToolbarThemeChange = new Class({
 			div = new Element('div', {'id': o.id});
 			isNew = true;
 		}
-		if (o.cssClass) div.addClass(o.cssClass);
 		div.empty();
 
-		self.el.element = div;
+		div.addClass('toolbar');
+		if(o.cssClass) div.addClass(o.cssClass);
+		if(o.divider) div.addClass('divider');
+
+		self.el.element = div.store('instance', this);
 
 		self.el.list = new Element('select', {'id':o.id + 'ThemeList', 'class':'theme'}).inject(div).addEvent('change', this._themeChanged.bind(this));
 
@@ -85,20 +90,15 @@ MUI.ToolbarThemeChange = new Class({
 		});
 
 		if (!isNew) return;
-		if (o._container) this._addToContainer(o._container, div);
+		if (o._container) o._container.inject(div);
 		else window.addEvent('domready', function(){
 			if (!o._container){
 				o._container = $(containerEl ? containerEl : o.container);
-				if (o._container) this._addToContainer(o._container, div);
+				if (o._container) o._container.inject(div);
 			}
 		});
 
 		return div;
-	},
-
-	_addToContainer: function(container, element){
-		var instance = container.retrieve('instance');
-		element.inject(container, (instance != null && instance.options.orientation == 'right') ? (Browser.ie ? 'top' : 'bottom') : (Browser.ie ? 'bottom' : 'top'));
 	},
 
 	_themeChanged: function(e){

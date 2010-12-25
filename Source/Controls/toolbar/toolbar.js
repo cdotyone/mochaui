@@ -31,11 +31,12 @@ MUI.Toolbar = new Class({
 
 	options: {
 		id:				'',				// id of the primary element, and id os control that is registered with mocha
-		container:		null,			// the parent control in the document to add the control to
+		container:		null,			// the parent toolbar doc
 		drawOnInit:		true,			// true to add tree to container when control is initialized
-		cssClass:		'divider',		// the primary css tag
+		cssClass:		false,			// css tag to add to control
 
 		content:		false,			// used to load content
+		divider:		true,			// true if this toolbar has a divider
 		buttons:		[				// the buttons to add to the toolbar
 			/*
 			 {
@@ -74,6 +75,7 @@ MUI.Toolbar = new Class({
 			id = 'toolbar' + (++MUI.IDCount);
 			o.id = id;
 		}
+		this.id = id;
 
 		if (o.content) o.content.instance = this;
 		MUI.set(id, this);
@@ -100,17 +102,21 @@ MUI.Toolbar = new Class({
 			div = new Element('div', {'id': o.id});
 			isNew = true;
 		}
-		div.set('class', o.cssClass);
+
+		div.addClass('toolbar');
+		if (o.cssClass) div.addClass(o.cssClass);
+		if (o.divider) div.addClass('divider');
+
 		self.el.element = div.store('instance', this);
 
 		self.buttonCount = 0;
 		Object.each(o.buttons, this._buildButton, this);
 
 		if (!isNew) return;
-		if (o._container) this._addToContainer(o._container, div);
+		if (o._container) o._container.inject(div);
 		else window.addEvent('domready', function(){
 			o._container = $(containerEl ? containerEl : o.container);
-			if (o._container) this._addToContainer(o._container, div);
+			if (o._container) o._container.inject(div);
 			if (o.content) MUI.Content.update(o.content);
 		}.bind(this));
 
@@ -191,13 +197,8 @@ MUI.Toolbar = new Class({
 				if (!css) css = 'icon';
 				else css = 'icon ' + css;
 				this.el[button.id] = new Element('span', {id:button.id,'class':css,html:'&nbsp;',title:button.title}).inject(div, where).addEvent('click', onclick).store('instance', this);
-				if (button.image) this.el[button.id].setStyle('backgroundImage', "url('" + button.image + "')");
+				if (button.image) this.el[button.id].setStyle('backgroundImage', "url('" + MUI.replacePaths(button.image) + "')");
 		}
-	},
-
-	_addToContainer: function(container, element){
-		var instance = container.retrieve('instance');
-		element.inject(container, (instance != null && instance.options.orientation == 'right') ? (Browser.ie ? 'top' : 'bottom') : (Browser.ie ? 'bottom' : 'top'));
 	}
 });
 

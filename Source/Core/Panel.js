@@ -38,7 +38,10 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 		// header
 		header:					true,			// true to create a panel header when panel is created
-		title:					'New Panel',	// the title inserted into the panel's header
+		title:					false,			// the title inserted into the panel's header
+
+		// footer
+		footer:					false,			// true to create a panel footer when panel is created
 
 		// Style options:
 		height:					125,			// the desired height of the panel
@@ -78,6 +81,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 	draw: function(){
 		var options = this.options;
+		var columnInstance = MUI.get(options.column);
 
 		// Check if panel already exists
 		if (this.el.panel) return this;
@@ -86,19 +90,19 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		this.showHandle = $(options.column).getChildren().length != 0;
 
 		this.el.element = new Element('div', {
-			'id': this.options.id + '_wrapper',
+			'id': options.id + '_wrapper',
 			'class': 'panelWrapper expanded'
 		}).inject($(options.column));
 
 		this.el.panel = new Element('div', {
-			'id': this.options.id,
+			'id': options.id,
 			'class': 'panel',
 			'styles': {
 				'height': options.height
 			}
 		}).inject(this.el.element)
-		.addClass(options.cssClass)
-		.store('instance',this);
+				.addClass(options.cssClass)
+				.store('instance', this);
 
 		this.el.content = new Element('div', {
 			'id': options.id + '_pad',
@@ -123,60 +127,85 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				this.sections.push(options.content);
 		}
 
-		// determine of this panel has a footer
-		this.hasFooter = false;
-		this.hasHeaderTool = false;
-		this.sections.each(function(section){
-			if (section.position == 'footer' || section.position == 'footertool') this.hasFooter = true;
-			if (section.position == 'header') this.hasHeaderTool = true;
-		}, this);
-
-		if (this.hasFooter){
-			this.el.footer = new Element('div', {
-				'id': options.id + '_panelFooter',
-				'class': 'panel-footer'
-			}).inject(this.el.element);
-		}
-
 		// This is in order to use the same variable as the windows do in MUI.Content.update.
 		// May rethink this.
 		this.el.contentWrapper = this.el.panel;
 
-		this.el.header = new Element('div', {
-			'id': this.options.id + '_header',
-			'class': 'panel-header',
-			'styles': {
-				'display': options.header ? 'block' : 'none'
+		var headerItems = [];
+		var footerItems = [];
+		var snum = 0;
+		this.sections.each(function(section, idx){
+			if (!section.position || section.position == 'content'){
+				if (section.loadMethod == 'iframe') section.padding = 0;  // Iframes have their own padding.
+				section.element = this.el.content;
+				this.sections[idx] = section;
+				return;
 			}
-		}).inject(this.el.panel, 'before');
+			var id = options.id + '_' + (section.name || 'section' + (snum++));
+			if (!section.control) section.control = 'MUI.ToolbarHtml';
+			if (!section.id) section.id = id;
+			section.partner = this.id;
+			this.sections[idx] = section;
+			if (section.position == 'header') headerItems.unshift(section);
+			if (section.position == 'footer') footerItems.unshift(section);
+		}, this);
 
-		var columnInstance = MUI.get(this.options.column);
+		if (options.header){
+			this.el.header = new Element('div', {
+				'id': options.id + '_header',
+				'class': 'panel-header',
+				'styles': { 'display': options.header ? 'block' : 'none' }
+			}).inject(this.el.panel, 'before');
 
-		if (this.options.collapsible) this._collapseToggleInit();
-		if (this.hasHeaderTool) this._addToolbar('header');
-		if (this.hasFooter) this._addToolbar('footer');
+			if (options.collapsible){
+				this._collapseToggleInit();
+				headerItems.unshift({content:this.el.collapseToggle, divider:false});
+			}
 
-		this.el.headerContent = new Element('div', {
-			'id': options.id + '_headerContent',
-			'class': 'panel-headerContent'
-		}).inject(this.el.header);
+			if (options.title){
+				this.el.title = new Element('h2', {
+					'id': options.id + '_title',
+					'html': options.title
+				});
+				headerItems.push({id:options.id + 'headerContent',content:this.el.title,orientation:'left', divider:false});
+			}
+
+			MUI.create('MUI.ToolbarDock', {
+				container:this.el.panel,
+				_container:this.el.panel.id,
+				id:options.id + '_header',
+				cssClass: 'panel-header',
+				docked:headerItems
+			});
+		}
+
+		if (options.footer){
+			this.el.footer = new Element('div', {
+				'id': options.id + '_footer',
+				'class': 'panel-footer',
+				'styles': { 'display': options.footer ? 'block' : 'none' }
+			}).inject(this.el.panel,'after');
+
+			MUI.create('MUI.ToolbarDock', {
+				container:this.el.element,
+				_container:this.el.element.id,
+				id:options.id + '_footer',
+				cssClass: 'panel-footer',
+				docked:footerItems
+			});
+		}
 
 		if (columnInstance && columnInstance.options.sortable){
 			this.el.header.setStyle('cursor', 'move');
 			columnInstance.options.container.retrieve('sortables').addItems(this.el.element);
-			if (this.el.headerToolbox){
-				this.el.headerToolbox.addEvent('mousedown', function(e){
+			if (this.el.header){
+				this.el.header.addEvent('mousedown', function(e){
 					e = e.stop();
 					e.target.focus();
 				});
-				this.el.headerToolbox.setStyle('cursor', 'default');
+				this.el.header.setStyle('cursor', 'default');
 			}
 		}
-
-		this.el.title = new Element('h2', {
-			'id': options.id + '_title',
-			'html': options.title
-		}).inject(this.el.headerContent);
 
 		this.el.handle = new Element('div', {
 			'id': options.id + '_handle',
@@ -193,74 +222,18 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 		this._addResizeBottom();
 
-		var snum = 0;
-		this.sections.each(function(section, idx){
-			var intoEl = this.el.panel;
-
-			snum++;
-			var id = options.id + '_' + (section.section || 'section' + snum);
-
-			section = Object.append({
-				'element': this.el.panel,
-				'wrap': false,
-				'position': 'content',
-				'empty': false,
-				'cssClass': false,
-				'height': false,
-				'id': id,
-				'css': '',
-				'loadMethod': 'xhr',
-				'method': 'get'
-			}, section);
-
-			var wrap = section.wrap;
-			var empty = section.empty;
-			var where = section.position == 'bottom' ? 'after' : 'before';
-
-			switch (section.position){
-				case 'header':
-					this._createToolbarSection(section, this.el.headerToolbox);
-					return;
-				case 'footer':
-					this._createToolbarSection(section, this.el.footerToolbox);
-					return;
-				case 'content':
-					if (section.loadMethod == 'iframe') section.padding = 0;  // Iframes have their own padding.
-					section.element = this.el.content;
-					this.sections[idx] = section;
-					return;
-			}
-
-			if (wrap){
-				section.wrapperEl = new Element('div', {
-					'id': section.id + '_wrapper',
-					'class': section.css + 'Wrapper'
-				}).inject(intoEl, where);
-
-				if (section.height) section.wrapperEl.setStyle('height', section.height);
-
-				if (section.position == 'bottom') section.wrapperEl.addClass('bottom');
-				intoEl = section.wrapperEl;
-				this.el[section.id + '_wrapper'] = intoEl;
-			}
-
-			if (empty) intoEl.empty();
-			section.element = new Element('div', {
-				'id': section.id,
-				'class': section.css
-			}).inject(intoEl);
-			this.el[section.id] = section.element;
-			if (section.height || typeOf(section.height) == 'number') section.element.setStyle('height', section.height);
-
-			if (section.cssClass) intoEl.addClass(section.cssClass);
-
-			section.wrapperEl = intoEl;
-			if (section.wrap && section.position == 'bottom') section.element.addClass('bottom');
-
-			this.sections[idx] = section;
+		// load/build all of the additional  content sections
+		this.sections.each(function(section){
+			if (section.position == 'header' || section.position == 'footer') return;
+			if (section.onLoaded) section.onLoaded = section.onLoaded.bind(this);
+			if (!section.instance) section.instance = this;
+			MUI.Content.update(section);
 		}, this);
 
-		this._loadContent();
+		// Do this when creating and removing panels
+		if (!options.column) return;
+		$(options.column).getChildren('.panelWrapper').removeClass('bottomPanel').getLast().addClass('bottomPanel');
+		MUI.panelHeight(options.column, this.el.panel, 'new');
 
 		Object.each(this.el, (function(ele){
 			if (ele != this.el.headerToolbox) ele.store('instance', this);
@@ -271,26 +244,11 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		return this;
 	},
 
-	_addToolbar: function(where) {
-		this.el[where+'Toolbox'] = new Element('div', {
-			'id': this.options.id + '_'+where+'Toolbar',
-			'class': 'panel-'+where+'-toolbar toolbar'
-		}).inject(this.el[where]);
-
-		MUI.create('MUI.ToolbarDock', {
-			container:this.options.id + '_'+where,
-			_container:this.el[where],
-			id:this.options.id + '_'+where+'Toolbar',
-			cssClass: 'panel-'+where+'-toolbar'
-		});
-	},
-
 	close: function(){
 		var column = this.options.column;
 		this.isClosing = true;
 
 		var columnInstance = MUI.get(column);
-
 		if (columnInstance.options.sortable)
 			columnInstance.options.container.retrieve('sortables').removeItems(this.el.element);
 
@@ -320,20 +278,16 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		panelWrapper.getAllPrevious('.panelWrapper').each(function(sibling){
 			var panel = sibling.getElement('.panel');
 			if (!panel) return;
-			var instance = MUI.get(panel.id);
-			if (!instance.isCollapsed) expandedSiblings.push(panel.id);
+			if (!MUI.get(panel.id).isCollapsed) expandedSiblings.push(panel.id);
 		});
 
 		panelWrapper.getAllNext('.panelWrapper').each(function(sibling){
-			var instance = MUI.get(sibling.getElement('.panel').id);
-			if (!instance.isCollapsed)
+			if (!MUI.get(sibling.getElement('.panel').id).isCollapsed)
 				expandedSiblings.push(sibling.getElement('.panel').id);
 		});
 
 		var currentColumn = MUI.get($(options.column).id);
-
 		if (expandedSiblings.length == 0 && currentColumn.options.placement != 'main'){
-			currentColumn = MUI.get($(options.column).id);
 			currentColumn.toggle();
 			return;
 		} else if (expandedSiblings.length == 0 && currentColumn.options.placement == 'main'){
@@ -356,13 +310,13 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		this.el.content.setStyle('position', 'absolute'); // This is so IE6 and IE7 will collapse the panel all the way
 		panel.setStyle('height', 0);
 		this.isCollapsed = true;
-		panelWrapper.addClass('collapsed');
-		panelWrapper.removeClass('expanded');
+		panelWrapper.addClass('collapsed')
+				.removeClass('expanded');
 		MUI.panelHeight(options.column, panel, 'collapsing');
 		MUI.panelHeight(); // Run this a second time for panels within panels
-		this.el.collapseToggle.removeClass('panel-collapsed');
-		this.el.collapseToggle.addClass('panel-expand');
-		this.el.collapseToggle.setProperty('title', 'Expand Panel');
+		this.el.collapseToggle.removeClass('panel-collapsed')
+				.addClass('panel-expand')
+				.setProperty('title', 'Expand Panel');
 		if (fireevent) this.fireEvent('collapse', [this]);
 
 		return this;
@@ -374,13 +328,13 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		this.el.content.setStyle('position', null); // This is so IE6 and IE7 will collapse the panel all the way
 		this.el.panel.setStyle('height', this.oldHeight);
 		this.isCollapsed = false;
-		this.el.element.addClass('expanded');
-		this.el.element.removeClass('collapsed');
+		this.el.element.addClass('expanded')
+				.removeClass('collapsed');
 		MUI.panelHeight(this.options.column, this.el.panel, 'expanding');
 		MUI.panelHeight(); // Run this a second time for panels within panels
-		this.el.collapseToggle.removeClass('panel-expand');
-		this.el.collapseToggle.addClass('panel-collapsed');
-		this.el.collapseToggle.setProperty('title', 'Collapse Panel');
+		this.el.collapseToggle.removeClass('panel-expand')
+				.addClass('panel-collapsed')
+				.setProperty('title', 'Collapse Panel');
 		this.fireEvent('expand', [this]);
 
 		return this;
@@ -392,44 +346,16 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		return this;
 	},
 
-	_loadContent: function(){
-		var options = this.options;
-
-		// load/build all of the additional  content sections
-		this.sections.each(function(section){
-			if ((!options.header && section.position == 'header') || section.position == 'headertool') return;
-			if (section.onLoaded) section.onLoaded = section.onLoaded.bind(this);
-			if (!section.instance) section.instance = this;
-			MUI.Content.update(section);
-		}, this);
-
-		// Do this when creating and removing panels
-		$(options.column).getChildren('.panelWrapper').removeClass('bottomPanel').getLast().addClass('bottomPanel');
-
-		MUI.panelHeight(options.column, this.el.panel, 'new');
-	},
-
-	_collapseToggleInit: function(options){
-		options = this.options;
-
-		this.el.collapseBox = new Element('div', {
-			'id': options.id + '_collapseBox',
-			'class': 'panel-collapseBox toolbar'
-		}).inject(this.el.header);
-
-		if (this.hasHeaderTool) this.el.collapseBox.addClass('divider');
-
+	_collapseToggleInit: function(){
 		this.el.collapseToggle = new Element('div', {
-			'id': options.id + '_collapseToggle',
+			'id': this.options.id + '_collapseToggle',
 			'class': 'panel-collapse icon16',
 			'styles': {
 				'width': 16,
 				'height': 16
 			},
 			'title': 'Collapse Panel'
-		}).inject(this.el.collapseBox);
-
-		this.el.collapseToggle.addEvent('click', function(){
+		}).addEvent('click', function(){
 			this.toggle();
 		}.bind(this));
 	},
@@ -526,22 +452,6 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				MUI.get(partner).fireEvent('resize', [this]);
 			}.bind(this)
 		});
-	},
-
-	_createToolbarSection:function(section, element){
-		if (!section.control) section.control = 'MUI.ToolbarHtml';
-		element.store('instance',this);
-		section._container = element;
-		section.container = section._container.id;
-		section.partner = this.id;
-		if(!section.cssClass) delete section.cssClass;
-		var content = {};
-		Object.each(section, function(val, key){
-			if (['loadmethod', 'method', 'url', 'content', 'onloaded'].indexOf(key) > -1)
-				content[key] = val;
-		});
-		section.content = content;
-		MUI.create(section.control, section);
 	}
 
 }).implement(MUI.WindowPanelShared);

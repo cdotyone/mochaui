@@ -107,24 +107,11 @@ MUI.ImageButton = new Class({
 		else window.addEvent('domready', function(){
 			var instance = MUI.get(o.container);
 			if (!o._container && typeof(o.container) == 'string'){
-				if (instance){
-					if (o.section && instance.getSection){
-						var section = instance.getSection(o.section);
-						if (section){
-							var bholder = section.element.getElement('#' + section.id + '_buttonHolder');
-							if (!bholder) bholder = new Element('div', { 'id': section.id + '_buttonHolder', 'class':'divider nobr'}).inject(section.element);
-							o._container = bholder;
-							self.el[bholder.id] = bholder;
-						}
-					}
-
-					if (!o._container && o.section && instance.el) o._container = instance.el[o.section];
-					if (!o._container && instance.el.content) o._container = instance.el.content;
-				}
+				if (instance && !o._container && instance.el.content) o._container = instance.el.content;
 				if (!o._container) o._container = $(o.container);
 			}
 			if (o._container) this._addToContainer(o._container, div);
-		});
+		}.bind(this));
 
 		return self;
 	},

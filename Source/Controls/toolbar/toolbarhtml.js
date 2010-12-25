@@ -33,9 +33,12 @@ MUI.ToolbarHtml = new Class({
 		id:				'',				// id of the primary element, and id os control that is registered with mocha
 		container:		null,			// the parent control in the document to add the control to
 		drawOnInit:		true,			// true to add tree to container when control is initialized
-		cssClass:		'divider',		// the primary css tag
 
-		content:		false			// used to load content
+		content:		false,			// used to load content
+
+		cssClass:		false,			// css tag to add to control
+		divider:		true,			// true if this toolbar has a divider
+		orientation:	false			// left or right side of dock.  default is right
 	},
 
 	initialize: function(options){
@@ -51,6 +54,7 @@ MUI.ToolbarHtml = new Class({
 			id = 'toolbarHtml' + (++MUI.IDCount);
 			o.id = id;
 		}
+		this.id = id;
 
 		if (o.content) o.content.instance = this;
 		this.draw();
@@ -70,20 +74,24 @@ MUI.ToolbarHtml = new Class({
 			div = new Element('div', {'id': o.id});
 			isNew = true;
 		}
-		div.set('class', o.cssClass);
 
-		self.el.element = div;
+		div.addClass('toolbar');
+		if(o.cssClass) div.addClass(o.cssClass);
+		if(o.divider) div.addClass('divider');
+		if(o.orientation) div.addClass(o.orientation);
 
-		if (!isNew) return;
-		if (o._container) {
-			this._addToContainer(o._container, div);
-			if (o.content) MUI.Content.update(o.content);
+		self.el.element = div.store('instance', this);
+
+		if (!isNew || o._container) {
+			if(isNew) o._container.inject(div);
+			if (o.content) {
+				if(o.content==null || o.content.content==null || o.content.content.style==null)  MUI.Content.update(o.content);
+				else o.content.content.inject(div);
+			}
 		}
 		else window.addEvent('domready', function(){
-			if (!o._container){
-				o._container = $(containerEl ? containerEl : o.container);
-				if (o._container) this._addToContainer(o._container, div);
-			}
+			if (!o._container) o._container = $(containerEl ? containerEl : o.container);
+			if (o._container) o._container.inject(div);
 			if (o.content) MUI.Content.update(o.content);
 		});
 
@@ -93,11 +101,6 @@ MUI.ToolbarHtml = new Class({
 	updateSetContent: function(content){
 		this.el.element.set('html', content.content);
 		return false;
-	},
-
-	_addToContainer: function(container, element){
-		var instance = container.retrieve('instance');
-		element.inject(container, (instance != null && instance.options.orientation == 'right') ? (Browser.ie ? 'top' : 'bottom') : (Browser.ie ? 'bottom' : 'top'));
 	}
 
 });

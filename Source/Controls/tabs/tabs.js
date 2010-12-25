@@ -38,7 +38,7 @@ MUI.Tabs = new Class({
 		drawOnInit:		true,			// true to add tree to container when control is initialized
 		cssClass:		'tabs',			// the primary css tag
 
-		tabs:			[], 			// the list of tabs
+		tabs:			[],			 // the list of tabs
 
 		textField:		'text',			// the name of the field that has the tab's text
 		valueField:		'value',		// the name of the field that has the tab's value
@@ -60,6 +60,7 @@ MUI.Tabs = new Class({
 		var self = this;
 		self.setOptions(options);
 		var o = self.options;
+		this.el = {};
 
 		// make sure this controls has an ID
 		var id = o.id;
@@ -67,6 +68,7 @@ MUI.Tabs = new Class({
 			id = 'tabs' + (++MUI.IDCount);
 			o.id = id;
 		}
+		this.id = id;
 
 		// create sub items if available
 		if (o.drawOnInit && o.tabs.length > 0) this.draw();
@@ -81,14 +83,15 @@ MUI.Tabs = new Class({
 		var isNew = false;
 		var div = $(o.id);
 		if (!div){
-			div = new Element('div', {'id': o.id, 'class': o.cssClass});
+			div = new Element('div', {'id': o.id});
 			isNew = true;
 		}
+		div.addClass(o.cssClass);
 
 		var ul = div.getElement('ul');
 		if (!ul) ul = new Element('ul', {'class': o.cssClass}).inject(div);
 		else ul.set('class', o.cssClass).empty();
-		self.element = div;
+		self.el.element = div;
 
 		// if no tab selected, then select first tab for them
 		if (o.tabs.length > 0 && (o.value == null || o.value == '')){
@@ -109,12 +112,13 @@ MUI.Tabs = new Class({
 		new Element('div', {'class': 'clear'}).inject(ul);
 
 		if (!isNew){
+			div.removeClass('toolbar');
 			if (o.selectedTab) o.selectedTab._element.fireEvent('click');
 			return this;
 		}
 
-		if(this.options._container) {
-			this.options._container.removeClass('toolbar').appendChild(div);
+		if (this.options._container){
+			this.options._container.appendChild(div);
 			if (o.selectedTab) o.selectedTab._element.fireEvent('click');
 		}
 		else window.addEvent('domready', function(){
@@ -182,7 +186,7 @@ MUI.Tabs = new Class({
 				}
 			};
 
-			if (o.updateOptions) uOptions=Object.merge(uOptions,o.updateOptions);
+			if (o.updateOptions) uOptions = Object.merge(uOptions, o.updateOptions);
 			else {
 				if (instance && instance.el && instance.el.iframe) uOptions.loadMethod = 'iframe';
 			}
@@ -191,7 +195,6 @@ MUI.Tabs = new Class({
 		} else {
 			self.fireEvent('tabSelected', [tab, value, self, e]);
 		}
-
 	}
 
 });
