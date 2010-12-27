@@ -31,7 +31,7 @@ html, body { overflow: hidden; height: 100%; margin: 0; background: #fff; }
 #topNav a:hover { text-decoration: none; }
 
 /* Navbar */
-#desktopNavbar { background: #f2f2f2; height: 30px; margin: 0 0px; overflow: hidden; /* Remove this line if you want the menu to be backward compatible with Firefox 2 */ }
+#desktopNavbar { background: #f2f2f2; height: 30px; margin: 0 0; overflow: hidden; /* Remove this line if you want the menu to be backward compatible with Firefox 2 */ }
 #desktopNavbar ul { padding: 0; margin: 0; list-style: none; font-size: 12px; }
 #desktopNavbar li { float: left; }
 #desktopNavbar a { display: block; }
@@ -47,6 +47,7 @@ html, body { overflow: hidden; height: 100%; margin: 0; background: #fff; }
 #desktopNavbar li ul li a:hover .check { background: #fff; }
 #desktopNavbar li:hover ul, #desktopNavbar li.ieHover ul, #desktopNavbar li li.ieHover ul, #desktopNavbar li li li.ieHover ul, #desktopNavbar li li:hover ul, #desktopNavbar li li li:hover ul { /* lists nested under hovered list items */ left: auto; }
 #desktopNavbar li:hover { /* For IE7 */ position: static; }
+
 li.divider { margin-top: 2px; padding-top: 3px; border-top: 1px solid #ebebeb; }
 #pageWrapper { position: relative; overflow: hidden; /* This can be set to hidden or auto */ border-top: 1px solid #909090; border-bottom: 1px solid #909090; }
 

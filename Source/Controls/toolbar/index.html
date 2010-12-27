@@ -23,8 +23,8 @@
 				footer: true,
 				content: [
 					{url: '{demo}pages/blank.html'},
-					{section: 'search', position: 'header', control: 'famfamfam'},
-					{section: 'buttons', position: 'footer', control: 'MUI.Toolbar', buttons: [
+					{name: 'search', position: 'header', control: 'famfamfam'},
+					{name: 'buttons', position: 'footer', control: 'MUI.Toolbar', buttons: [
 						{id: 'page0', image:'{demo}images/icons/16x16/page_green.gif'},
 						{id: 'page1', image:'{demo}images/icons/16x16/page_red.gif'},
 						{id: 'page2', image:'{demo}images/icons/16x16/page.gif'}
@@ -34,7 +34,7 @@
 							return true;
 						}
 					},
-					{section: 'menu', position: 'header', control: 'MUI.ToolbarMenu',items:[
+					{name: 'menu', position: 'header', control: 'MUI.ToolbarMenu',items:[
 						{text:'File',items:[
 							{text:'Open',items:[]},
 							{text:'Tests',items:[
@@ -86,9 +86,9 @@
 						]}
 					]
 					},
-					{section: 'theme', position: 'header', control: 'MUI.ToolbarThemeChange'},
-					{section: 'spinner', position: 'header', control: 'MUI.ToolbarSpinner'},
-					{section: 'buttons1', position: 'header', control: 'MUI.Toolbar', buttons: [
+					{name: 'theme', position: 'header', control: 'MUI.ToolbarThemeChange'},
+					{name: 'spinner', position: 'header', control: 'MUI.ToolbarSpinner'},
+					{name: 'buttons1', position: 'header', control: 'MUI.Toolbar', buttons: [
 						{id: 'button', type: 'image', text: 'Button 1', title: 'Click to do something 1', image: '{fff}accept.png'},
 						{id: 'button', type: 'image', text: 'Button 2', title: 'Click to do something 2'}
 					],
@@ -97,7 +97,7 @@
 							return true;
 						}
 					},
-					{section: 'buttons2', position: 'header', control: 'MUI.Toolbar', buttons: [
+					{name: 'buttons2', position: 'header', control: 'MUI.Toolbar', buttons: [
 						{id: 'button', type: 'html', text: 'Button 3', title: 'Click to do something 3'},
 						{id: 'go', cssClass: 'icon_application_go', title: 'Go'},
 						{id: 'get', cssClass: 'icon_application_get'},

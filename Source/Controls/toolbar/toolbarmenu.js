@@ -37,12 +37,13 @@ MUI.ToolbarMenu = new Class({
 		content:		false,			// used to load content
 		items:			{},				// menu items for the menu to draw
 
-		cssClass:		false,			// css tag to add to control
+		cssClass:		'toolMenu',		// css tag to add to control
 		divider:		true,			// true if this toolbar has a divider
 		orientation:	'left'			// left or right side of dock.  default is left
 	},
 
-	initialize: function(options){
+	initialize: function(options)
+	{
 		options.instance = this;
 		this.setOptions(options);
 
@@ -63,7 +64,8 @@ MUI.ToolbarMenu = new Class({
 		MUI.set(id, this);
 	},
 
-	draw: function(containerEl){
+	draw: function(containerEl)
+	{
 		var self = this;
 		var o = self.options;
 
@@ -75,6 +77,7 @@ MUI.ToolbarMenu = new Class({
 			div = new Element('div', {'id': o.id});
 			isNew = true;
 		}
+		div.empty();
 
 		div.addClass('toolbar');
 		if (o.cssClass) div.addClass(o.cssClass);
@@ -82,10 +85,14 @@ MUI.ToolbarMenu = new Class({
 		if (o.orientation) div.addClass(o.orientation);
 
 		self.el.element = div.store('instance', this);
+		var ul = new Element('ul').inject(div);
+
+		this._buildItems(ul, o.items);
 
 		if (!isNew) return;
 		if (o._container) o._container.inject(div);
-		else window.addEvent('domready', function(){
+		else window.addEvent('domready', function()
+		{
 			if (!o._container){
 				o._container = $(containerEl ? containerEl : o.container);
 				if (o._container) o._container.inject(div);
@@ -93,6 +100,29 @@ MUI.ToolbarMenu = new Class({
 		});
 
 		return div;
+	},
+
+	_buildItems:function(ul, items)
+	{
+		for (var i = 0; i < items.length; i++){
+			var item = items[i];
+			var li = new Element('li').inject(ul);
+			var a = new Element('a', {text:item.text}).inject(li);
+			var url = item.url;
+			if (!url) {
+				url = '';
+				a.addClass('returnFalse');
+			}
+			a.setAttribute('href', url);
+
+			li.addEvent('mouseenter', function(){this.getElement('ul').setStyle('left','auto')});
+			 // .addEvent('mouseleave', function(){this.getElement('ul').setStyle('left','-999em')});
+
+			if (item.items && item.items.length > 0){
+				var ul2 = new Element('ul').inject(li);
+				this._buildItems(ul2, item.items);
+			}
+		}
 	}
 
 });
