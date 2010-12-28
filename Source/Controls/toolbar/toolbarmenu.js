@@ -87,7 +87,7 @@ MUI.ToolbarMenu = new Class({
 		self.el.element = div.store('instance', this);
 		var ul = new Element('ul').inject(div);
 
-		this._buildItems(ul, o.items);
+		this._buildItems(ul, o.items, false);
 
 		if (!isNew) return;
 		if (o._container) o._container.inject(div);
@@ -102,12 +102,15 @@ MUI.ToolbarMenu = new Class({
 		return div;
 	},
 
-	_buildItems:function(ul, items)
+	_buildItems:function(ul, items, addArrow)
 	{
 		for (var i = 0; i < items.length; i++){
 			var item = items[i];
 			var li = new Element('li').inject(ul);
 			var a = new Element('a', {text:item.text}).inject(li);
+			if(item.type=='radio') new Element('div',{'class':(item.selected?'check':'nocheck')}).inject(a);
+			if(item.type=='check') new Element('div',{'class':(item.selected?'check':'nocheck')}).inject(a);
+
 			var url = item.url;
 			if (!url) {
 				url = '';
@@ -119,8 +122,9 @@ MUI.ToolbarMenu = new Class({
 			 // .addEvent('mouseleave', function(){this.getElement('ul').setStyle('left','-999em')});
 
 			if (item.items && item.items.length > 0){
+				if(addArrow) a.addClass('arrow-right');
 				var ul2 = new Element('ul').inject(li);
-				this._buildItems(ul2, item.items);
+				this._buildItems(ul2, item.items, true);
 			}
 		}
 	}

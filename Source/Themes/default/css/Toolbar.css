@@ -57,7 +57,8 @@
 .toolMenu  li ul { padding: 2px; border: 1px solid #3f3f3f; background: #fff url(../images/bg-dropdown.gif) repeat-y; position: absolute; width: 164px; left: -999em; z-index: 8000; }
 .toolMenu  li:hover ul ul, .toolMenu  li.ieHover ul ul, .toolMenu  li:hover ul ul ul, .toolMenu  li.ieHover ul ul ul { left: -999em; }
 .toolMenu  li ul ul { /* third-and-above-level lists */ margin: -22px 0 0 163px; }
-.toolMenu  li ul li .check { position: absolute; top: 8px; left: 6px; width: 5px; height: 5px; background: #555; overflow: hidden; line-height: 1px; font-size: 1px; }
+.toolMenu  li ul li .check { position: absolute; top: 8px; left: 6px; width: 5px; height: 5px; border:solid 1px; background: #555; overflow: hidden; line-height: 1px; font-size: 1px; }
+.toolMenu  li ul li .nocheck { position: absolute; top: 8px; left: 6px; width: 5px; height: 5px; border:solid 1px #555; overflow: hidden; line-height: 1px; font-size: 1px; }
 .toolMenu  li ul li a { position: relative; padding: 1px 9px 1px 25px; width: 130px; color: #3f3f3f; font-weight: normal; }
 .toolMenu  li ul li a:hover { background: #6C98D9; color: #fff; -moz-border-radius: 2px; }
 .toolMenu  li ul li a:hover .check { background: #fff; }
