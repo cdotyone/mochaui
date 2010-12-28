@@ -17,7 +17,7 @@
 .toolbardock div.divider { /* Have to specify div here for IE6's sake */ background: url(../images/toolbar-divider.gif) repeat-y; padding-left: 6px; padding-right:3px; float:right; }
 .toolbardock div.left { float: left }
 .toolbardock div.right { float: right }
-.toolbardock div.tabs ul { padding-top:0px; }
+.toolbardock div.tabs ul { padding-top:0; }
 .toolbardock div.tabs { margin-top:2px; }
 
 /* Toolbar */
@@ -45,22 +45,23 @@
 
 /* menu */
 /*
-#panel1_menu { background: #f2f2f2; height: 30px; margin:0; overflow: hidden;}
+.toolMenu  { background: #f2f2f2; height: 30px; margin:0; overflow: hidden;}
 */
-#panel1_menu ul { padding: 0; margin: 0; list-style: none; font-size: 12px; }
-#panel1_menu li { float: left; }
-#panel1_menu a { display: block; }
-#panel1_menu ul li a { padding: 6px 10px 6px 10px; color: #333; font-weight: normal; }
-#panel1_menu ul li a:hover { color: #333; }
-#panel1_menu ul li a.arrow-right, #panel1_menu ul li a:hover.arrow-right { background-image: url(../images/arrow-right.gif); background-repeat: no-repeat; background-position: right 7px; }
-#panel1_menu li ul { padding: 2px; border: 1px solid #3f3f3f; background: #fff url(../images/bg-dropdown.gif) repeat-y; position: absolute; width: 164px; left: -999em; z-index: 8000; }
-#panel1_menu li:hover ul ul, #panel1_menu li.ieHover ul ul, #panel1_menu li:hover ul ul ul, #panel1_menu li.ieHover ul ul ul { left: -999em; }
-#panel1_menu li ul ul { /* third-and-above-level lists */ margin: -22px 0 0 163px; }
-#panel1_menu li ul li .check { position: absolute; top: 8px; left: 6px; width: 5px; height: 5px; background: #555; overflow: hidden; line-height: 1px; font-size: 1px; }
-#panel1_menu li ul li a { position: relative; padding: 1px 9px 1px 25px; width: 130px; color: #3f3f3f; font-weight: normal; }
-#panel1_menu li ul li a:hover { background: #6C98D9; color: #fff; -moz-border-radius: 2px; }
-#panel1_menu li ul li a:hover .check { background: #fff; }
-#panel1_menu li:hover ul, #panel1_menu li.ieHover ul, #panel1_menu li li.ieHover ul, #panel1_menu li li li.ieHover ul, #panel1_menu li li:hover ul, #panel1_menu li li li:hover ul { /* lists nested under hovered list items */ left: auto; }
-#panel1_menu li:hover { /* For IE7 */ position: static; }
+.toolbardock .toolMenu { margin:0; padding:0; height:30px; }
+.toolMenu  ul { padding: 0; margin: 0; list-style: none; font-size: 12px; text-align:left; }
+.toolMenu  li { float: left; }
+.toolMenu  a { display: block; }
+.toolMenu  ul li a { padding: 6px 10px 6px 10px; color: #333; font-weight: normal; }
+.toolMenu  ul li a:hover { color: #333; }
+.toolMenu  ul li a.arrow-right, .toolMenu  ul li a:hover.arrow-right { background-image: url(../images/arrow-right.gif); background-repeat: no-repeat; background-position: right 7px; }
+.toolMenu  li ul { padding: 2px; border: 1px solid #3f3f3f; background: #fff url(../images/bg-dropdown.gif) repeat-y; position: absolute; width: 164px; left: -999em; z-index: 8000; }
+.toolMenu  li:hover ul ul, .toolMenu  li.ieHover ul ul, .toolMenu  li:hover ul ul ul, .toolMenu  li.ieHover ul ul ul { left: -999em; }
+.toolMenu  li ul ul { /* third-and-above-level lists */ margin: -22px 0 0 163px; }
+.toolMenu  li ul li .check { position: absolute; top: 8px; left: 6px; width: 5px; height: 5px; background: #555; overflow: hidden; line-height: 1px; font-size: 1px; }
+.toolMenu  li ul li a { position: relative; padding: 1px 9px 1px 25px; width: 130px; color: #3f3f3f; font-weight: normal; }
+.toolMenu  li ul li a:hover { background: #6C98D9; color: #fff; -moz-border-radius: 2px; }
+.toolMenu  li ul li a:hover .check { background: #fff; }
+.toolMenu  li:hover ul, .toolMenu  li.ieHover ul, .toolMenu  li li.ieHover ul, .toolMenu  li li li.ieHover ul, .toolMenu  li li:hover ul, .toolMenu  li li li:hover ul { /* lists nested under hovered list items */ left: auto; }
+.toolMenu  li:hover { /* For IE7 */ position: static; }
 
 li.divider { margin-top: 2px; padding-top: 3px; border-top: 1px solid #ebebeb; }

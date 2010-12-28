@@ -115,7 +115,7 @@ MUI.ToolbarMenu = new Class({
 			}
 			a.setAttribute('href', url);
 
-			li.addEvent('mouseenter', function(){this.getElement('ul').setStyle('left','auto')});
+			//li.addEvent('mouseenter', function(){this.getElement('ul').setStyle('left','auto')});
 			 // .addEvent('mouseleave', function(){this.getElement('ul').setStyle('left','-999em')});
 
 			if (item.items && item.items.length > 0){
