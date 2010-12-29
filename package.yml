@@ -27,4 +27,4 @@ sources:
   - "src/mui/Desktop.js"
   - "src/mui/Column.js"
   - "src/mui/Panel.js"
-  - "src/mui/Dock.js"
+  - "src/mui/Taskbar.js"

@@ -17,7 +17,7 @@
 .toolbardock div.divider { /* Have to specify div here for IE6's sake */ background: url(../images/toolbar-divider.gif) repeat-y; padding-left: 6px; padding-right:3px; float:right; }
 .toolbardock div.left { float: left }
 .toolbardock div.right { float: right }
-.toolbardock div.tabs ul { padding-top:0px; }
+.toolbardock div.tabs ul { padding-top:0; }
 .toolbardock div.tabs { margin-top:2px; }
 
 /* Toolbar */

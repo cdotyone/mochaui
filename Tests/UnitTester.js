@@ -223,7 +223,7 @@ window.addEvent('load', function(){ //using load instead of domready for IE8
 	MUI.myChain = new Chain();
 	MUI.myChain.chain(
 			function(){
-				MUI.Desktop.initialize({'createDock':false});
+				MUI.Desktop.initialize({'createTaskbar':false});
 			},
 			function(){
 				initializeColumns();

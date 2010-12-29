@@ -4,12 +4,12 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=8"/>
 
-	<title>Mootools MochaUI - Fixed Width with Dock</title>
+	<title>Mootools MochaUI - Fixed Width with Taskbar</title>
 
 	<link rel="stylesheet" type="text/css" href="../Source/Themes/default/css/Content.css"/>
 	<link rel="stylesheet" type="text/css" href="../Source/Themes/default/css/Core.css"/>
 	<link rel="stylesheet" type="text/css" href="../Source/Themes/default/css/Desktop.css"/>
-	<link rel="stylesheet" type="text/css" href="../Source/Themes/default/css/Dock.css"/>
+	<link rel="stylesheet" type="text/css" href="../Source/Themes/default/css/Taskbar.css"/>
 	<link rel="stylesheet" type="text/css" href="../Source/Themes/default/css/Window.css"/>
 
 	<style type="text/css">
@@ -72,12 +72,12 @@
 			padding: 10px 20px;
 		}
 
-		#dockWrapper {
+		#taskbarWrapper {
 			border-top: 1px solid #222;
 			border-bottom: 0;
 		}
 
-		#dockWrapper.top {
+		#taskbarWrapper.top {
 			border-top: 0;
 			border-bottom: 1px solid #222;
 		}
@@ -97,7 +97,7 @@
 	<script type="text/javascript" src="../Source/Core/Desktop.js"></script>
 	<script type="text/javascript" src="../Source/Core/Column.js"></script>
 	<script type="text/javascript" src="../Source/Core/Panel.js"></script>
-	<script type="text/javascript" src="../Source/Core/Dock.js"></script>
+	<script type="text/javascript" src="../Source/Core/Taskbar.js"></script>
 	<script type="text/javascript" src="../Source/Core/Window.js"></script>
 	<script type="text/javascript" src="../Source/Core/Modal.js"></script>
 <!--
@@ -161,12 +161,12 @@
 			</div>
 		</div>
 	</div>
-	<div id="dockWrapper">
-		<div id="dock">
-			<div id="dockPlacement"></div>
-			<div id="dockAutoHide"></div>
-			<div id="dockSort">
-				<div id="dockClear" class="clear"></div>
+	<div id="taskbarWrapper">
+		<div id="taskbar">
+			<div id="taskbarPlacement"></div>
+			<div id="taskbarAutoHide"></div>
+			<div id="taskbarSort">
+				<div id="taskbarClear" class="clear"></div>
 			</div>
 		</div>
 	</div>

@@ -60,7 +60,7 @@ li.divider { margin-top: 2px; padding-top: 3px; border-top: 1px solid #ebebeb; }
 .column { position: relative; float: left; overflow: hidden; /* Required by IE6 */ }
 
 /* Panels */
-.panel { position: relative; overflow: auto; background: #f8f8f8; border-bottom: 1px solid #b9b9b9; }
+.panel { position: relative; overflow: auto; background: #f8f8f8; border-bottom: 1px solid #b9b9b9; clear:both; }
 .panelWrapper.collapsed .panel-header { border-bottom: 0; }
 .panelAlt { background: #f2f2f2; }
 .bottomPanel .panel { border-bottom: 0; }

@@ -52,7 +52,7 @@ li.divider { margin-top: 2px; padding-top: 3px; border-top: 1px solid #e0e0e0; }
 .column { position: relative; float: left; overflow: hidden; /* Required by IE6 */ }
 
 /* Panels */
-.panel { position: relative; overflow: auto; background: #303030; border-bottom: 1px solid #282828; }
+.panel { position: relative; overflow: auto; background: #303030; border-bottom: 1px solid #282828; clear:both; }
 .panelWrapper.collapsed .panel-header { border-bottom: 0; }
 .panelAlt { background: #353535; }
 .bottomPanel .panel { border-bottom: 0; }

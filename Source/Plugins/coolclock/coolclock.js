@@ -290,8 +290,8 @@ CoolClock.prototype = {
 		}
 		if (seconds == 0 || this.initializing){
 			$('clock_title').set('html', hours + ":" + minutes + time);
-			if ($('clock_dockTabText')){
-				$('clock_dockTabText').set('html', hours + ":" + minutes + time);
+			if ($('clock_taskbarTabText')){
+				$('clock_taskbarTabText').set('html', hours + ":" + minutes + time);
 			}
 			this.initializing = false;
 		}

@@ -144,7 +144,7 @@ MUI.Windows = Object.append((MUI.Windows || {}), {
 					windowEl.removeClass('isFocused');
 				}
 			});
-			$$('.dockTab').removeClass('activeDockTab');
+			$$('.taskbarTab').removeClass('activetaskbarTab');
 		}
 	},
 
@@ -292,8 +292,8 @@ MUI.Window.implement({
 			options.headerHeight = 0;
 		}
 
-		// Minimizable, dock is required and window cannot be modal
-		if (MUI.dock){
+		// Minimizable, taskbar is required and window cannot be modal
+		if (MUI.taskbar){
 			if (options.type != 'modal' && options.type != 'modal2') this.options.minimizable = options.minimizable;
 		} else options.minimizable = false;
 
@@ -350,8 +350,8 @@ MUI.Window.implement({
 				this.el.windowEl.setStyle('opacity', 0);
 				this.el.windowEl.addClass('mocha');
 
-				if (MUI.dock && options.type == 'window'){
-					var currentButton = $(options.id + '_dockTab');
+				if (MUI.taskbar && options.type == 'window'){
+					var currentButton = $(options.id + '_taskbarTab');
 					if (currentButton) currentButton.show();
 					MUI.Desktop.setDesktopSize();
 				}
@@ -526,7 +526,7 @@ MUI.Window.implement({
 		}).bind(this));
 
 		if (this.options.closeAfter) this.close.delay(this.options.closeAfter, this);
-		if (MUI.dock && this.options.type == 'window') MUI.dock.createDockTab(this);
+		if (MUI.taskbar && this.options.type == 'window') MUI.taskbar.createTab(this);
 		this.fireEvent('drawEnd', [this]);
 		return this;
 	},
@@ -766,7 +766,7 @@ MUI.Window.implement({
 			instance.el.windowEl.removeClass('isFocused');
 		});
 
-		if (MUI.dock && this.options.type == 'window') MUI.dock.makeActiveTab();
+		if (MUI.taskbar && this.options.type == 'window') MUI.taskbar.makeTabActive();
 		windowEl.addClass('isFocused');
 
 		if (fireEvent) this.fireEvent('focus', [this]);
@@ -1462,7 +1462,7 @@ MUI.Window.implement({
 				});
 			}
 
-			$$('.dockTab').removeClass('activeDockTab');
+			$$('.taskbarTab').removeClass('activetaskbarTab');
 			$$('.mocha').removeClass('isFocused');
 			this.el.windowEl.addClass('isFocused');
 
@@ -1822,10 +1822,10 @@ MUI.Window.implement({
 		if (!MUI.Desktop) return;
 		if (MUI.Desktop.loadingWorkspace) MUI.Desktop.loadingCallChain();
 
-		if (MUI.dock && this.options.type == 'window'){
-			var currentButton = $(this.options.id + '_dockTab');
-			if (currentButton) MUI.dock.dockSortables.removeItems(currentButton).destroy();
-			// Need to resize everything in case the dock becomes smaller when a tab is removed
+		if (MUI.taskbar && this.options.type == 'window'){
+			var currentButton = $(this.options.id + '_taskbarTab');
+			if (currentButton) MUI.taskbar.taskbarSortables.removeItems(currentButton).destroy();
+			// Need to resize everything in case the taskbar becomes smaller when a tab is removed
 			MUI.Desktop.setDesktopSize();
 		}
 	},
@@ -1838,8 +1838,8 @@ MUI.Window.implement({
 		windowEl.addClass('windowClosed');
 		windowEl.removeClass('mocha');
 
-		if (MUI.dock && this.options.type == 'window'){
-			var currentButton = $(this.options.id + '_dockTab');
+		if (MUI.taskbar && this.options.type == 'window'){
+			var currentButton = $(this.options.id + '_taskbarTab');
 			if (currentButton) currentButton.hide();
 			MUI.Desktop.setDesktopSize();
 		}

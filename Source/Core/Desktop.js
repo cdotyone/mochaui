@@ -6,7 +6,7 @@
  description: Create web application layouts. Enables window maximize.
 
  todo:
- - Make it so the dock requires no initial html markup.
+ - Make it so the taskbar requires no initial html markup.
 
  copyright: (c) 2010 Contributors in (/AUTHORS.txt).
 
@@ -37,8 +37,8 @@ MUI.Desktop = {
 		page:				'page',
 		desktopFooterWrapper:'desktopFooterWrapper',
 
-		createDock:			true,
-		dockOptions:		{}
+		createTaskbar:			true,
+		taskbarOptions:		{}
 	},
 
 	initialize: function(options){
@@ -54,9 +54,9 @@ MUI.Desktop = {
 		this.page = $(this.options.page);
 		this.desktopFooter = $(this.options.desktopFooter);
 
-		if (!this.options.dockOptions.container) this.options.dockOptions.container = this.desktop;
-		if (this.options.createDock) this.dock = new MUI.Dock(this.options.dockOptions);
-		if (!this.dock) this.setDesktopSize();  // This is run on dock initialize so no need to do it twice.
+		if (!this.options.taskbarOptions.container) this.options.taskbarOptions.container = this.desktop;
+		if (this.options.createTaskbar) this.taskbar = new MUI.Taskbar(this.options.taskbarOptions);
+		if (!this.taskbar) this.setDesktopSize();  // This is run on taskbar initialize so no need to do it twice.
 		this._menuInitialize();
 
 		// Resize desktop, page wrapper, modal overlay, and maximized windows when browser window is resized
@@ -72,15 +72,15 @@ MUI.Desktop = {
 		// Setting the desktop height may only be needed by IE7
 		if (this.desktop) this.desktop.setStyle('height', windowDimensions.height);
 
-		// Set pageWrapper height so the dock doesn't cover the pageWrapper scrollbars.
+		// Set pageWrapper height so the taskbar doesn't cover the pageWrapper scrollbars.
 		if (this.pageWrapper){
-			var dockOffset = this.dock ? this.dock.getHeight() : 0;
+			var taskbarOffset = this.taskbar ? this.taskbar.getHeight() : 0;
 			var pageWrapperHeight = windowDimensions.height;
 			pageWrapperHeight -= this.pageWrapper.getStyle('border-top').toInt();
 			pageWrapperHeight -= this.pageWrapper.getStyle('border-bottom').toInt();
 			if (this.desktopHeader) pageWrapperHeight -= this.desktopHeader.offsetHeight;
 			if (this.desktopFooter) pageWrapperHeight -= this.desktopFooter.offsetHeight;
-			pageWrapperHeight -= dockOffset;
+			pageWrapperHeight -= taskbarOffset;
 			if (pageWrapperHeight < 0) pageWrapperHeight = 0;
 			this.pageWrapper.setStyle('height', pageWrapperHeight);
 		}

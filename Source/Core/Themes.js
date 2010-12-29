@@ -141,7 +141,7 @@ MUI.Themes = {
 			instance.redraw();
 		});
 
-		if (MUI.dock) MUI.dock.setDockColors();
+		if (MUI.taskbar) MUI.taskbar.setTaskbarColors();
 
 		// Reformat layout
 		if (MUI.Desktop && MUI.Desktop.desktop){

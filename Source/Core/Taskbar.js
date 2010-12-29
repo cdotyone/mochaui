@@ -1,9 +1,9 @@
 /*
  ---
 
- script: Dock.js
+ script: Taskbar.js
 
- description: Implements the dock/taskbar. Enables window minimize.
+ description: Implements the taskbar. Enables window minimize.
 
  copyright: (c) 2010 Contributors in (/AUTHORS.txt).
 
@@ -13,28 +13,28 @@
  - MochaUI/MUI
  - MochaUI/MUI.Desktop
 
- provides: [MUI.Dock]
+ provides: [MUI.Taskbar]
 
  ...
  */
 
-MUI.files['{source}Core/Dock.js'] = 'loaded';
+MUI.files['{source}Core/Taskbar.js'] = 'loaded';
 
-MUI.Dock = (MUI.Dock || new NamedClass('MUI.Dock', {}));
-MUI.Dock.implement({
+MUI.Taskbar = (MUI.Taskbar || new NamedClass('MUI.Taskbar', {}));
+MUI.Taskbar.implement({
 
 	Implements: [Events, Options],
 
 	options: {
-		id:				'dock',
+		id:				'taskbar',
 		container:		null,
 		drawOnInit:		true,
 
-		useControls:	true,			// Toggles autohide and dock placement controls.
-		position:		'bottom',		// Position the dock starts in, top or bottom.
-		visible:		true,			// is the dock visible
-		autoHide: 		false,			// True when dock autohide is set to on, false if set to off
-		menuCheck:		'dockLinkCheck' // the name of the element in the menu that needs to be checked if dock is shown
+		useControls:	true,			// Toggles autohide and taskbar placement controls.
+		position:		'bottom',		// Position the taskbar starts in, top or bottom.
+		visible:		true,			// is the taskbar visible
+		autoHide: 		false,			// True when taskbar autohide is set to on, false if set to off
+		menuCheck:		'taskbarCheck'	// the name of the element in the menu that needs to be checked if taskbar is shown
 
 		//onDrawBegin:	null,
 		//onDrawEnd:	null,
@@ -48,17 +48,17 @@ MUI.Dock.implement({
 	initialize: function(options){
 		this.setOptions(options);
 
-		if (MUI.dock != null) return false;  // only one dock allowed
+		if (MUI.taskbar != null) return false;  // only one taskbar allowed
 		else MUI.set(this.options.id, this);
-		MUI.dock = this;
+		MUI.taskbar = this;
 
 		if (!this.options.container) this.options.container = 'desktop';
 		this.container = $(this.options.container);
 
 		this.el = {};
-		this.el.dock = $(this.options.id);
-		if (!this.el.dock && this.options.drawOnInit) this.draw();
-		else if (this.el.dock){
+		this.el.taskbar = $(this.options.id);
+		if (!this.el.taskbar && this.options.drawOnInit) this.draw();
+		else if (this.el.taskbar){
 			this.el.wrapper = $(this.options.id + 'Wrapper');
 
 			if (!this.options.useControls){
@@ -74,7 +74,7 @@ MUI.Dock.implement({
 				'left':		0
 			});
 
-			if (this.options.useControls) this._initializeDockControls();
+			if (this.options.useControls) this._initialize();
 		}
 	},
 
@@ -88,43 +88,43 @@ MUI.Dock.implement({
 				'bottom':	MUI.Desktop.desktopFooter ? MUI.Desktop.desktopFooter.offsetHeight : 0,
 				'left':		0
 			}}).inject(this.container);
-		this.el.dock = new Element('div', {'id': this.options.id}).inject(this.el.wrapper);
+		this.el.taskbar = new Element('div', {'id': this.options.id}).inject(this.el.wrapper);
 
 		if (this.options.useControls){
-			this.el.dockPlacement = new Element('div', {'id': this.options.id + 'Placement'}).inject(this.el.dock).setStyle('cursor', 'default');
-			this.el.dockAutoHide = new Element('div', {'id': this.options.id + 'AutoHide'}).inject(this.el.dock).setStyle('cursor', 'default');
+			this.el.taskbarPlacement = new Element('div', {'id': this.options.id + 'Placement'}).inject(this.el.taskbar).setStyle('cursor', 'default');
+			this.el.taskbarAutoHide = new Element('div', {'id': this.options.id + 'AutoHide'}).inject(this.el.taskbar).setStyle('cursor', 'default');
 		}
 
-		this.el.dockSort = new Element('div', {'id': this.options.id + 'Sort'}).inject(this.el.dock);
-		this.el.dockClear = new Element('div', {'id': this.options.id + 'Clear', 'class': 'clear'}).inject(this.el.dockSort);
+		this.el.taskbarSort = new Element('div', {'id': this.options.id + 'Sort'}).inject(this.el.taskbar);
+		this.el.taskbarClear = new Element('div', {'id': this.options.id + 'Clear', 'class': 'clear'}).inject(this.el.taskbarSort);
 
-		this._initializeDockControls();
+		this._initialize();
 		this.fireEvent('drawEnd', [this]);
 	},
 
-	setDockColors: function(){
-		var dockButtonEnabled = Asset.getCSSRule('.dockButtonEnabled');
-		if (dockButtonEnabled && dockButtonEnabled.style.backgroundColor)
-			this.enabledButtonColor = new Color(dockButtonEnabled.style.backgroundColor);
+	setTaskbarColors: function(){
+		var taskbarButtonEnabled = Asset.getCSSRule('.taskbarButtonEnabled');
+		if (taskbarButtonEnabled && taskbarButtonEnabled.style.backgroundColor)
+			this.enabledButtonColor = new Color(taskbarButtonEnabled.style.backgroundColor);
 
-		var dockButtonDisabled = Asset.getCSSRule('.dockButtonDisabled');
-		if (dockButtonDisabled && dockButtonDisabled.style.backgroundColor)
-			this.disabledButtonColor = new Color(dockButtonDisabled.style.backgroundColor);
+		var taskbarButtonDisabled = Asset.getCSSRule('.taskbarButtonDisabled');
+		if (taskbarButtonDisabled && taskbarButtonDisabled.style.backgroundColor)
+			this.disabledButtonColor = new Color(taskbarButtonDisabled.style.backgroundColor);
 
-		var trueButtonColor = Asset.getCSSRule('.dockButtonTrue');
+		var trueButtonColor = Asset.getCSSRule('.taskbarButtonTrue');
 		if (trueButtonColor && trueButtonColor.style.backgroundColor)
 			this.trueButtonColor = new Color(trueButtonColor.style.backgroundColor);
 
-		this._renderDockControls();
+		this._renderTaskControls();
 	},
 
 	getHeight: function(){
 		return this.el.wrapper.offsetHeight;
 	},
 
-	moveDock: function(position){
+	move: function(position){
 		var ctx = $(this.options.id+'Canvas').getContext('2d');
-		// Move dock to top position
+		// Move taskbar to top position
 		if (position=='top' || this.el.wrapper.getStyle('position') != 'relative'){
 			if (position=='top') return;
 
@@ -137,14 +137,14 @@ MUI.Dock.implement({
 			ctx.clearRect(0, 0, 100, 100);
 			MUI.Canvas.circle(ctx, 5, 4, 3, this.enabledButtonColor, 1.0);
 			MUI.Canvas.circle(ctx, 5, 14, 3, this.disabledButtonColor, 1.0);
-			$(this.options.id + 'Placement').setProperty('title', 'Position Dock Bottom');
-			$(this.options.id + 'AutoHide').setProperty('title', 'Auto Hide Disabled in Top Dock Position');
+			$(this.options.id + 'Placement').setProperty('title', 'Position Taskbar Bottom');
+			$(this.options.id + 'AutoHide').setProperty('title', 'Auto Hide Disabled in Top Taskbar Position');
 			this.options.autoHide = false;
 			this.options.position = 'top';
 		} else {
 			if (position=='bottom') return;
 
-			// Move dock to bottom position
+			// Move taskbar to bottom position
 			this.el.wrapper.setStyles({
 				'position':	'absolute',
 				'bottom':	MUI.Desktop.desktopFooter ? MUI.Desktop.desktopFooter.offsetHeight : 0
@@ -154,7 +154,7 @@ MUI.Dock.implement({
 			ctx.clearRect(0, 0, 100, 100);
 			MUI.Canvas.circle(ctx, 5, 4, 3, this.enabledButtonColor, 1.0);
 			MUI.Canvas.circle(ctx, 5, 14, 3, this.enabledButtonColor, 1.0);
-			$(this.options.id + 'Placement').setProperty('title', 'Position Dock Top');
+			$(this.options.id + 'Placement').setProperty('title', 'Position Taskbar Top');
 			$(this.options.id + 'AutoHide').setProperty('title', 'Turn Auto Hide On');
 			this.options.position = 'bottom';
 		}
@@ -162,19 +162,19 @@ MUI.Dock.implement({
 		this.fireEvent('move', [this, this.options.position]);
 	},
 
-	createDockTab: function(instance){
-		var dockTab = new Element('div', {
-			'id': instance.options.id + '_dockTab',
-			'class': 'dockTab',
+	createTab: function(instance){
+		var taskbarTab = new Element('div', {
+			'id': instance.options.id + '_taskbarTab',
+			'class': 'taskbarTab',
 			'title': titleText
 		}).inject($(this.options.id + 'Clear'), 'before');
 
-		dockTab.addEvent('mousedown', function(e){
+		taskbarTab.addEvent('mousedown', function(e){
 			new Event(e).stop();
 			this.timeDown = Date.now();
 		}.bind(instance));
 
-		dockTab.addEvent('mouseup', function(){
+		taskbarTab.addEvent('mouseup', function(){
 			this.timeUp = Date.now();
 			if ((this.timeUp - this.timeDown) < 275){
 				// If the visibility of the windows on the page are toggled off, toggle visibility on.
@@ -199,32 +199,32 @@ MUI.Dock.implement({
 			}
 		}.bind(instance));
 
-		this.dockSortables.addItems(dockTab);
+		this.taskbarSortables.addItems(taskbarTab);
 
 		var titleText = instance.el.title.innerHTML;
 
 		new Element('div', {
-			'id': instance.options.id + '_dockTabText',
-			'class': 'dockText'
-		}).set('html', titleText.substring(0, 19) + (titleText.length > 19 ? '...' : '')).inject($(dockTab));
+			'id': instance.options.id + '_taskbarTabText',
+			'class': 'taskbarText'
+		}).set('html', titleText.substring(0, 19) + (titleText.length > 19 ? '...' : '')).inject($(taskbarTab));
 
-		// Need to resize everything in case the dock wraps when a new tab is added
+		// Need to resize everything in case the taskbar wraps when a new tab is added
 		MUI.Desktop.setDesktopSize();
 		this.fireEvent('tabCreated', [this, instance]);
 	},
 
-	makeActiveTab: function(instance){
+	makeTabActive: function(instance){
 		if (!instance){
 			// getWindowWithHighestZindex is used in case the currently focused window is closed.
 			var windowEl = MUI.Windows._getWithHighestZIndex();
 			instance = windowEl.retrieve('instance');
 		}
 
-		$$('.dockTab').removeClass('activeDockTab');
+		$$('.taskbarTab').removeClass('activetaskbarTab');
 		if (instance.isMinimized != true){
 			instance.el.windowEl.addClass('isFocused');
-			var currentButton = $(instance.options.id + '_dockTab');
-			if (currentButton != null) currentButton.addClass('activeDockTab');
+			var currentButton = $(instance.options.id + '_taskbarTab');
+			if (currentButton != null) currentButton.addClass('activetaskbarTab');
 		} else instance.el.windowEl.removeClass('isFocused');
 		this.fireEvent('tabSet',[this,instance]);
 	},
@@ -248,14 +248,14 @@ MUI.Dock.implement({
 		else this.hide();
 	},
 
-	_initializeDockControls: function(){
+	_initialize: function(){
 		if (this.options.useControls){
 			// Insert canvas
 			var canvas = new Element('canvas', {
 				'id':	 this.options.id + 'Canvas',
 				'width':  '15',
 				'height': '18'
-			}).inject(this.el.dock);
+			}).inject(this.el.taskbar);
 
 			// Dynamically initialize canvas using excanvas. This is only required by IE
 			if (Browser.ie && MUI.ieSupport == 'excanvas'){
@@ -263,28 +263,28 @@ MUI.Dock.implement({
 			}
 		}
 
-		var dockPlacement = $(this.options.id + 'Placement');
-		var dockAutoHide = $(this.options.id + 'AutoHide');
+		var placement = $(this.options.id + 'Placement');
+		var autohide = $(this.options.id + 'AutoHide');
 
 		// Position top or bottom selector
-		dockPlacement.setProperty('title', 'Position Dock Top');
+		placement.setProperty('title', 'Position Taskbar Top');
 
 		// Attach event
-		dockPlacement.addEvent('click', function(){
-			this.moveDock();
+		placement.addEvent('click', function(){
+			this.move();
 		}.bind(this));
 
 		// Auto Hide toggle switch
-		dockAutoHide.setProperty('title', 'Turn Auto Hide On');
+		autohide.setProperty('title', 'Turn Auto Hide On');
 
 		// Attach event Auto Hide
-		dockAutoHide.addEvent('click', function(){
+		autohide.addEvent('click', function(){
 			this._doAutoHide();
 		}.bind(this));
 
-		this.setDockColors();
+		this.setTaskbarColors();
 
-		if (this.options.position == 'top') this.moveDock();
+		if (this.options.position == 'top') this.move();
 
 		// Add check mark to menu if link exists in menu
 		if ($(this.options.menuCheck)) this.sidebarCheck = new Element('div', {
@@ -292,7 +292,7 @@ MUI.Dock.implement({
 			'id': this.options.id + '_check'
 		}).inject($(this.options.menuCheck));
 
-		this.dockSortables = new Sortables('#dockSort', {
+		this.taskbarSortables = new Sortables('#taskbarSort', {
 			opacity: 1,
 			constrain: true,
 			clone: false,
@@ -327,26 +327,26 @@ MUI.Dock.implement({
 
 	_autoHideEvent: function(event){
 		if (!this.options.autoHide) return;
-		var dockHotspotHeight;
+		var hotspotHeight;
 		if (!MUI.Desktop.desktopFooter){
-			dockHotspotHeight = this.el.wrapper.offsetHeight;
-			if (dockHotspotHeight < 25) dockHotspotHeight = 25;
+			hotspotHeight = this.el.wrapper.offsetHeight;
+			if (hotspotHeight < 25) hotspotHeight = 25;
 		}
 		else if (MUI.Desktop.desktopFooter){
-			dockHotspotHeight = this.el.wrapper.offsetHeight + MUI.Desktop.desktopFooter.offsetHeight;
-			if (dockHotspotHeight < 25) dockHotspotHeight = 25;
+			hotspotHeight = this.el.wrapper.offsetHeight + MUI.Desktop.desktopFooter.offsetHeight;
+			if (hotspotHeight < 25) hotspotHeight = 25;
 		}
-		if (!MUI.Desktop.desktopFooter && event.client.y > (document.getCoordinates().height - dockHotspotHeight)){
+		if (!MUI.Desktop.desktopFooter && event.client.y > (document.getCoordinates().height - hotspotHeight)){
 			if (!this.options.visible) this.show();
 		}
-		else if (MUI.Desktop.desktopFooter && event.client.y > (document.getCoordinates().height - dockHotspotHeight)){
+		else if (MUI.Desktop.desktopFooter && event.client.y > (document.getCoordinates().height - hotspotHeight)){
 			if (!this.options.visible) this.show();
 		}
 		else if (this.options.visible) this.hide();
 	},
 
-	_renderDockControls: function(){
-		// Draw dock controls
+	_renderTaskControls: function(){
+		// Draw taskbar controls
 		var ctx = $(this.options.id + 'Canvas').getContext('2d');
 		ctx.clearRect(0, 0, 100, 100);
 		MUI.Canvas.circle(ctx, 5, 4, 3, this.enabledButtonColor, 1.0);
@@ -386,7 +386,7 @@ MUI.Window.implement({
 			else this.el.iframe.hide();
 		}
 
-		this.hide(); // Hide window and add to dock
+		this.hide(); // Hide window and add to taskbar
 
 		// Fixes a scrollbar issue in Mac FF2
 		if (Browser.Platform.mac && Browser.firefox && Browser.version < 3){
@@ -399,7 +399,7 @@ MUI.Window.implement({
 		setTimeout(function(){
 			//this.el.windowEl.setStyle('zIndex', 1);
 			this.el.windowEl.removeClass('isFocused');
-			MUI.dock.makeActiveTab();
+			MUI.taskbar.makeTabActive();
 		}.bind(this), 100);
 
 		this.fireEvent('minimize', [this]);
