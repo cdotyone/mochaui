@@ -42,8 +42,7 @@ MUI.ToolbarMenu = new Class({
 		orientation:	'left'			// left or right side of dock.  default is left
 	},
 
-	initialize: function(options)
-	{
+	initialize: function(options){
 		options.instance = this;
 		this.setOptions(options);
 
@@ -64,8 +63,7 @@ MUI.ToolbarMenu = new Class({
 		MUI.set(id, this);
 	},
 
-	draw: function(containerEl)
-	{
+	draw: function(containerEl){
 		var self = this;
 		var o = self.options;
 
@@ -91,8 +89,7 @@ MUI.ToolbarMenu = new Class({
 
 		if (!isNew) return;
 		if (o._container) o._container.inject(div);
-		else window.addEvent('domready', function()
-		{
+		else window.addEvent('domready', function(){
 			if (!o._container){
 				o._container = $(containerEl ? containerEl : o.container);
 				if (o._container) o._container.inject(div);
@@ -102,27 +99,32 @@ MUI.ToolbarMenu = new Class({
 		return div;
 	},
 
-	_buildItems:function(ul, items, addArrow)
-	{
+	_buildItems:function(ul, items, addArrow){
 		for (var i = 0; i < items.length; i++){
 			var item = items[i];
 			var li = new Element('li').inject(ul);
 			var a = new Element('a', {text:item.text}).inject(li);
-			if(item.type=='radio') new Element('div',{'class':(item.selected?'check':'nocheck')}).inject(a);
-			if(item.type=='check') new Element('div',{'class':(item.selected?'check':'nocheck')}).inject(a);
+			if (item.type == 'radio') new Element('div', {'class':(item.selected ? 'radio' : 'noradio')}).inject(a);
+			if (item.type == 'check') new Element('div', {'class':(item.selected ? 'check' : 'nocheck')}).inject(a);
 
 			var url = item.url;
-			if (!url) {
+			if (!url){
 				url = '';
-				a.addClass('returnFalse');
+				a.addEvent('click',function(){return false;})
 			}
-			a.setAttribute('href', url);
+			a.setAttribute('href', MUI.replacePaths(url));
 
-			//li.addEvent('mouseenter', function(){this.getElement('ul').setStyle('left','auto')});
-			 // .addEvent('mouseleave', function(){this.getElement('ul').setStyle('left','-999em')});
+			if (Browser.ie6){
+				li.addEvent('mouseenter', function(){
+					this.addClass('ieHover');
+				})
+						.addEvent('mouseleave', function(){
+					this.removeClass('ieHover');
+				});
+			}
 
 			if (item.items && item.items.length > 0){
-				if(addArrow) a.addClass('arrow-right');
+				if (addArrow) a.addClass('arrow-right');
 				var ul2 = new Element('ul').inject(li);
 				this._buildItems(ul2, item.items, true);
 			}
