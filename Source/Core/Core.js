@@ -292,7 +292,7 @@ MUI.append({
 			var t = (typeof spinner);
 			if (t == 'array' || t == 'object') spinner = spinner[0];
 			if (spinner) MUI.each(function(instance){
-				if (instance.isTypeOf && instance.isTypeOf('MUI.ToolbarSpinner')) spinner = instance.el.spinner;
+				if (instance.isTypeOf && instance.isTypeOf('MUI.Spinner')) spinner = instance.el.spinner;
 			});
 			if (!spinner) return;
 			(function(){
@@ -313,7 +313,7 @@ MUI.append({
 			var t = (typeof spinner);
 			if (t == 'array' || t == 'object') spinner = spinner[0];
 			if (spinner) MUI.each(function(instance){
-				if (instance.isTypeOf && instance.isTypeOf('MUI.ToolbarSpinner')) spinner = instance.el.spinner;
+				if (instance.isTypeOf && instance.isTypeOf('MUI.Spinner')) spinner = instance.el.spinner;
 			});
 			if (!spinner) return;
 			var count = spinner.retrieve("count");

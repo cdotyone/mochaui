@@ -35,11 +35,11 @@ Object.append(MUI.controls, {
 	'textbox':{'samples':['index','demo'],data:['json'],'description':'Text Box','isFormControl':true,'css':['{theme}css/TextBox.css']},
 	'tree':{'samples':['index','demo'],data:['json'],'description':'Tree','isFormControl':true,'css':['{theme}css/Tree.css']},
 	'toolbar':{'samples':['index'],data:['json'],'description':'Toolbar','isFormControl':true,'css':['{theme}css/Toolbar.css']},
-	'toolbardock':{'samples':['index'],data:['json'],'description':'Toolbar Dock','isFormControl':false,'css':['{theme}css/Toolbar.css'],location:'toolbar'},
-	'toolbarhtml':{'samples':['index'],data:['json'],'description':'Toolbar HTML Block','isFormControl':false,'css':['{theme}css/Toolbar.css'],location:'toolbar'},
-	'toolbarmenu':{'samples':['index'],data:['json'],'description':'Toolbar Menu','isFormControl':false,'css':['{theme}css/Toolbar.css'],location:'toolbar'},
-	'toolbarspinner':{'samples':['index'],data:['json'],'description':'Toolbar Spinner','isFormControl':false,'css':['{theme}css/Toolbar.css'],location:'toolbar'},
-	'toolbarthemechange':{'samples':['index'],data:['json'],'description':'Toolbar Menu','isFormControl':false,'css':['{theme}css/Toolbar.css'],'js':['{control}toolbarthemechange.js','{source}Core/Themes.js'],location:'toolbar'},
+	'dock':{'samples':['index'],data:['json'],'description':'Toolbar Dock','isFormControl':false,'css':['{theme}css/Toolbar.css']},
+	'dockhtml':{'samples':['index'],data:['json'],'description':'Toolbar HTML Block','isFormControl':false,'css':['{theme}css/Toolbar.css']},
+	'menu':{'samples':['index'],data:['json'],'description':'Toolbar Menu','isFormControl':false,'css':['{theme}css/Menu.css']},
+	'spinner':{'samples':['index'],data:['json'],'description':'Toolbar Spinner','isFormControl':false,'css':['{theme}css/Toolbar.css']},
+	'themechange':{'samples':['index'],data:['json'],'description':'Toolbar Menu','isFormControl':false,'css':['{theme}css/Toolbar.css'],'js':['{control}themechange.js','{source}Core/Themes.js']},
 	'window':{'samples':['demo'],data:['json'],'description':'Modal','isFormControl':true,'css':['{theme}css/Desktop.css']}
 
 });

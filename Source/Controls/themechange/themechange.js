@@ -19,13 +19,13 @@
  - MUI
  - MUI.Core
 
- provides: [MUI.ToolbarThemeChange]
+ provides: [MUI.ThemeChange]
  ...
  */
 
 MUI.files['{controls}toolbar/toolbarthemechange.js'] = 'loaded';
 
-MUI.ToolbarThemeChange = new Class({
+MUI.ThemeChange = new Class({
 
 	Implements: [Events, Options],
 

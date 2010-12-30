@@ -19,13 +19,13 @@
  - MUI
  - MUI.Core
 
- provides: [MUI.ToolbarDock]
+ provides: [MUI.Dock]
  ...
  */
 
 MUI.files['{controls}toolbar/toolbardock.js'] = 'loaded';
 
-MUI.ToolbarDock = new Class({
+MUI.Dock = new Class({
 
 	Implements: [Events, Options],
 
@@ -91,7 +91,7 @@ MUI.ToolbarDock = new Class({
 	},
 
 	_createToolbar:function(toolbar, idx){
-		if (!toolbar.control) toolbar.control = 'MUI.ToolbarHtml';
+		if (!toolbar.control) toolbar.control = 'MUI.DockHtml';
 		if (!toolbar.id) toolbar.id = this.id + 'Toolbar' + idx;
 		new Element('div', {'id':toolbar.id,'class':'toolbar'}).inject(this.el.element);
 		/*

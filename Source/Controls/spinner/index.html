@@ -22,40 +22,8 @@
 				footer: true,
 				content: [
 					{url: '{demo}pages/blank.html'},
-					{name: 'search', position: 'header', control: 'famfamfam'},
-					{name: 'buttons', position: 'footer', control: 'MUI.Toolbar', buttons: [
-						{id: 'page0', image:'{demo}images/icons/16x16/page_green.gif'},
-						{id: 'page1', image:'{demo}images/icons/16x16/page_red.gif'},
-						{id: 'page2', image:'{demo}images/icons/16x16/page.gif'}
-					],
-						onClick:function(){
-							MUI.notification('Do Something');
-							return true;
-						}
-					},
-					{name: 'buttons1', position: 'header', control: 'MUI.Toolbar', buttons: [
-						{id: 'button', type: 'image', text: 'Button 1', title: 'Click to do something 1', image: '{fff}accept.png'},
-						{id: 'button', type: 'image', text: 'Button 2', title: 'Click to do something 2'}
-					],
-						onClick: function(){
-							MUI.notification('Do Something');
-							return true;
-						}
-					},
-					{name: 'buttons2', position: 'header', control: 'MUI.Toolbar', buttons: [
-						{id: 'button', type: 'html', text: 'Button 3', title: 'Click to do something 3'},
-						{id: 'go', cssClass: 'icon_application_go', title: 'Go'},
-						{id: 'get', cssClass: 'icon_application_get'},
-						{id: 'home', cssClass: 'icon_application_home', onClick: function(){
-							MUI.notification('Do Something Else');
-						}
-						}
-					],
-						onClick:function(){
-							MUI.notification('Do Something');
-							return true;
-						}
-					}
+					{name: 'theme', position: 'header', control: 'MUI.ThemeChange'},
+					{name: 'spinner', position: 'header', control: 'MUI.Spinner'}
 				]
 			});
 		});
@@ -64,7 +32,6 @@
 	<link rel="stylesheet" type="text/css" href="../../../Source/Themes/default/css/Content.css"/>
 	<link rel="stylesheet" type="text/css" href="../../../Source/Themes/default/css/Desktop.css"/>
 	<link rel="stylesheet" type="text/css" href="../../../Source/Themes/default/css/Window.css"/>
-	<link rel="stylesheet" type="text/css" href="../../../Source/Themes/default/css/Toolbar.css"/>
 
 </head>
 

@@ -19,13 +19,13 @@
  - MUI
  - MUI.Core
 
- provides: [MUI.ToolbarMenu]
+ provides: [MUI.Menu]
  ...
  */
 
 MUI.files['{controls}toolbar/toolbarmenu.js'] = 'loaded';
 
-MUI.ToolbarMenu = new Class({
+MUI.Menu = new Class({
 
 	Implements: [Events, Options],
 

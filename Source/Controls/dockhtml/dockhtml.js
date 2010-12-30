@@ -19,13 +19,13 @@
  - MUI
  - MUI.Core
 
- provides: [MUI.ToolbarHtml]
+ provides: [MUI.DockHtml]
  ...
  */
 
 MUI.files['{controls}toolbar/toolbarhtml.js'] = 'loaded';
 
-MUI.ToolbarHtml = new Class({
+MUI.DockHtml = new Class({
 
 	Implements: [Events, Options],
 

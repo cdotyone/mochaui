@@ -142,7 +142,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				return;
 			}
 			var id = options.id + '_' + (section.name || 'section' + (snum++));
-			if (!section.control) section.control = 'MUI.ToolbarHtml';
+			if (!section.control) section.control = 'MUI.DockHtml';
 			if (!section.id) section.id = id;
 			section.partner = this.id;
 			this.sections[idx] = section;
@@ -170,7 +170,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				headerItems.push({id:options.id + 'headerContent',content:this.el.title,orientation:'left', divider:false});
 			}
 
-			MUI.create('MUI.ToolbarDock', {
+			MUI.create('MUI.Dock', {
 				container:this.el.panel,
 				_container:this.el.panel.id,
 				id:options.id + '_header',
@@ -186,7 +186,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				'styles': { 'display': options.footer ? 'block' : 'none' }
 			}).inject(this.el.panel,'after');
 
-			MUI.create('MUI.ToolbarDock', {
+			MUI.create('MUI.Dock', {
 				container:this.el.element,
 				_container:this.el.element.id,
 				id:options.id + '_footer',

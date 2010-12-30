@@ -19,13 +19,13 @@
  - MUI
  - MUI.Core
 
- provides: [MUI.ToolbarSpinner]
+ provides: [MUI.Spinner]
  ...
  */
 
 MUI.files['{controls}toolbar/toolbarspinner.js'] = 'loaded';
 
-MUI.ToolbarSpinner = new Class({
+MUI.Spinner = new Class({
 
 	Implements: [Events, Options],
 
