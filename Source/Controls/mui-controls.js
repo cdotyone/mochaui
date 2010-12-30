@@ -26,7 +26,7 @@ Object.append(MUI.controls, {
 	'imagebutton':{'samples':['demo','index'],data:['json'],'description':'Image Button','isFormControl':true,'css':['{theme}css/ImageButton.css']},
 	'list':{'samples':['demo','index'],data:['json'],'description':'Basic List','isFormControl':true,'css':['{theme}css/List.css']},
 	'modal':{'samples':['demo'],data:['json'],'description':'Modal','isFormControl':true,'css':['{theme}css/Desktop.css'],location:'window'},
-	'omnigrid':{'samples':['index'],data:['json'],'description':'OmniGrid','isFormControl':true,'css':['{theme}css/OmniGrid.css']},
+	'grid':{'samples':['index'],data:['json'],'description':'Grid','isFormControl':true,'css':['{theme}css/Grid.css']},
 	'panel':{'samples':['demo'],data:['json'],'description':'Panel','isFormControl':true,'css':['{theme}css/Desktop.css']},
 	'selectlist':{'samples':['demo','index'],data:['json','html'],'description':'Select List','isFormControl':true,'css':['{theme}css/SelectList.css']},
 	'tabs':{'samples':['index'],data:['json','html'],'description':'Tabs','isFormControl':true,'css':['{theme}css/Tabs.css']},

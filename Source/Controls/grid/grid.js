@@ -1,22 +1,24 @@
 /*
  ---
 
- name: OmniGrid
+ name: Grid
 
- script: omnigrid.js
+ script: grid.js
 
- description: MUI - Create a list with check boxes next to each item.
+ description: MUI - Create a grid list.
 
  copyright: (c) 2010 Contributors in (/AUTHORS.txt).
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 
  authors:
- Marko Å antiÄ‡	original <http://www.omnisdata.com/omnigrid/>
  Chris Doty		MochaUI Version
+ Marko Ã…Â antiÃ„â€¡	original <http://www.omnisdata.com/omnigrid/>
 
  note:
- This documentation is taken directly from the javascript source files. It is built using Natural Docs.
+ This started out as OmniGrid and got modified so to much to work like a Mocha control.
+ It was renamed to just grid because it departs to much from OmniGrid.  This Grid is not
+ designed to work outside of the Mocha framework.
 
  requires:
  - Core/Element
@@ -26,13 +28,13 @@
  - MUI
  - MUI.Core
 
- provides: [omniGrid]
+ provides: [Grid]
  ...
  */
 
-MUI.files['{controls}omnigrid/omnigrid.js'] = 'loaded';
+MUI.files['{controls}grid/grid.js'] = 'loaded';
 
-MUI.OmniGrid = new NamedClass('omniGrid', {
+MUI.Grid = new NamedClass('Grid', {
 
 	Implements: [Events,Options],
 
@@ -71,7 +73,7 @@ MUI.OmniGrid = new NamedClass('omniGrid', {
 		// make sure this controls has an ID
 		var id = this.options.id;
 		if (!id){
-			id = 'omnigrid' + (++MUI.IDCount);
+			id = 'grid' + (++MUI.IDCount);
 			this.options.id = id;
 		}
 		this.id = id;
@@ -889,7 +891,7 @@ MUI.OmniGrid = new NamedClass('omniGrid', {
 
 		// --- container
 		if (o.width)	self.element.setStyle('width', o.width);
-		div.addClass('omnigrid');
+		div.addClass('grid');
 		// --- container
 
 		// --- toolbar
