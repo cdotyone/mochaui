@@ -22,11 +22,15 @@ Object.append(MUI.controls, {
 	'accordion':{'samples':[,'demo','index'],data:['json','html'],'description':'Accordion','isFormControl':true,'css':['{theme}css/Accordion.css']},
 	'calendar':{'samples':['demo','index'],data:['json'],'description':'Calendar','isFormControl':true,'css':['{theme}css/Calendar.css']},
 	'checkboxgrid':{'samples':['demo','index'],data:['json'],'description':'Check Box Grid','isFormControl':true,'css':['{theme}css/CheckBoxGrid.css']},
+	'column':{'samples':['demo'],data:['json'],'description':'Column','isFormControl':true,'css':['{theme}css/Desktop.css']},
 	'imagebutton':{'samples':['demo','index'],data:['json'],'description':'Image Button','isFormControl':true,'css':['{theme}css/ImageButton.css']},
 	'list':{'samples':['demo','index'],data:['json'],'description':'Basic List','isFormControl':true,'css':['{theme}css/List.css']},
+	'modal':{'samples':['demo'],data:['json'],'description':'Modal','isFormControl':true,'css':['{theme}css/Desktop.css'],location:'window'},
 	'omnigrid':{'samples':['index'],data:['json'],'description':'OmniGrid','isFormControl':true,'css':['{theme}css/OmniGrid.css']},
+	'panel':{'samples':['demo'],data:['json'],'description':'Panel','isFormControl':true,'css':['{theme}css/Desktop.css']},
 	'selectlist':{'samples':['demo','index'],data:['json','html'],'description':'Select List','isFormControl':true,'css':['{theme}css/SelectList.css']},
 	'tabs':{'samples':['index'],data:['json','html'],'description':'Tabs','isFormControl':true,'css':['{theme}css/Tabs.css']},
+	'taskbar':{'samples':['demo'],data:['json'],'description':'Taskbar','isFormControl':true,'css':['{theme}css/Taskbar.css']},
 	'textarea':{'samples':['index','demo'],data:['json','html'],'description':'Text Area','isFormControl':true,'css':['{theme}css/TextBox.css']},
 	'textbox':{'samples':['index','demo'],data:['json'],'description':'Text Box','isFormControl':true,'css':['{theme}css/TextBox.css']},
 	'tree':{'samples':['index','demo'],data:['json'],'description':'Tree','isFormControl':true,'css':['{theme}css/Tree.css']},
@@ -35,7 +39,8 @@ Object.append(MUI.controls, {
 	'toolbarhtml':{'samples':['index'],data:['json'],'description':'Toolbar HTML Block','isFormControl':false,'css':['{theme}css/Toolbar.css'],location:'toolbar'},
 	'toolbarmenu':{'samples':['index'],data:['json'],'description':'Toolbar Menu','isFormControl':false,'css':['{theme}css/Toolbar.css'],location:'toolbar'},
 	'toolbarspinner':{'samples':['index'],data:['json'],'description':'Toolbar Spinner','isFormControl':false,'css':['{theme}css/Toolbar.css'],location:'toolbar'},
-	'toolbarthemechange':{'samples':['index'],data:['json'],'description':'Toolbar Menu','isFormControl':false,'css':['{theme}css/Toolbar.css'],'js':['{control}toolbarthemechange.js','{source}Core/Themes.js'],location:'toolbar'}
+	'toolbarthemechange':{'samples':['index'],data:['json'],'description':'Toolbar Menu','isFormControl':false,'css':['{theme}css/Toolbar.css'],'js':['{control}toolbarthemechange.js','{source}Core/Themes.js'],location:'toolbar'},
+	'window':{'samples':['demo'],data:['json'],'description':'Modal','isFormControl':true,'css':['{theme}css/Desktop.css']}
 
 });
 
