@@ -1,7 +1,7 @@
 /*
  ---
 
- script: Desktop.js
+ script: desktop.js
 
  description: Create web application layouts. Enables window maximize.
 
@@ -22,7 +22,7 @@
  ...
  */
 
-MUI.files['{source}Core/Desktop.js'] = 'loaded';
+MUI.files['{source}Core/desktop.js'] = 'loaded';
 
 MUI.Desktop = {
 

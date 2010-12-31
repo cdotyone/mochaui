@@ -1,3 +1,19 @@
+/*
+ ---
+
+ file: list.css
+
+ description: MUI - List control css.
+
+ copyright: (c) 2010 Contributors in (/AUTHORS.txt).
+
+ license: MIT-style license in (/MIT-LICENSE.txt).
+
+ provides: css for default theme
+
+ ...
+ */
+
 /* List */
 .list { background-color: White; border: solid 1px black; margin: 20px; }
 div.list { overflow: auto; background-color: White; border: solid 1px #dddddd; margin: 0; }

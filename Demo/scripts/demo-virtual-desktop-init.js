@@ -391,7 +391,7 @@ initializeWindows = function(){
 			onDrawBegin: function(){
 /*
 				if ($('builderStyle')) return;
-				new Asset.css(MUI.replacePaths('{theme}/css/Accordion.css'), {id: 'builderStyle'});
+				new Asset.css(MUI.replacePaths('{theme}/css/accordion.css'), {id: 'builderStyle'});
 */
 			},
 			onLoaded: function(){

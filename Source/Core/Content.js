@@ -1,7 +1,7 @@
 /*
  ---
 
- script: Content.js
+ script: content.js
 
  description: core content update routines
 
@@ -17,7 +17,7 @@
  ...
  */
 
-MUI.files['{source}Core/Content.js'] = 'loaded';
+MUI.files['{source}Core/content.js'] = 'loaded';
 
 MUI.Content = Object.append((MUI.Content || {}), {
 

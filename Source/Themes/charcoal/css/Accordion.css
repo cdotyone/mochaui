@@ -1,3 +1,19 @@
+/*
+ ---
+
+ file: accordian.css
+
+ description: MUI - Accordian CSS.
+
+ copyright: (c) 2010 Contributors in (/AUTHORS.txt).
+
+ license: MIT-style license in (/MIT-LICENSE.txt).
+
+ provides: css for charcoal theme
+
+ ...
+ */
+
 /* Accordion */
 div.accordion { padding: 0;} /* background: #f00; Uncomment this if you want to change the background of the accordion sections. */
 div.accordion div h3.toggler { margin: 0; padding: 6px 10px; background: #f1f1f1 url(../images/bg-panel-header.gif) repeat-x; font-size: 12px; cursor: pointer; border-top: 1px solid #e3e3e3; }

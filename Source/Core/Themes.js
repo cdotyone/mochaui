@@ -1,7 +1,7 @@
 /*
  ---
 
- script: Themes.js
+ script: themes.js
 
  description: MUI - Allows for switching themes dynamically.
 
@@ -37,7 +37,7 @@
  ...
  */
 
-MUI.files['{source}Core/Themes.js'] = 'loaded';
+MUI.files['{source}Core/themes.js'] = 'loaded';
 
 MUI.Themes = {
 

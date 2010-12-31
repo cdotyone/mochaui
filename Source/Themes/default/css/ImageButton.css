@@ -1,4 +1,20 @@
-/* Image Buttons */
+/*
+ ---
+
+ file: imagebutton.css
+
+ description: MUI - Image Button control css.
+
+ copyright: (c) 2010 Contributors in (/AUTHORS.txt).
+
+ license: MIT-style license in (/MIT-LICENSE.txt).
+
+ provides: css for default theme
+
+ ...
+ */
+
+ /* Image Buttons */
 span.imgButton { margin-right: 2px; line-height: 16px; padding-top: 1px; }
 span.imgButton .imgButton { display: inline-block; background-color: white; border: solid 1px #DDDDDD; cursor: pointer; padding: 0 2px 0 4px; margin: 0; vertical-align: middle; font-family: Sans-Serif; font-size: 11px;}
 span.imgButton .imgButton span span { background-color: transparent; border: none; color: #AAAAAA; position: relative; top: -6px; padding: 0 2px 0 2px;   }

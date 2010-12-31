@@ -3,7 +3,7 @@
 
  name: Persist
 
- script: Persist.js
+ script: persist.js
 
  description: MUI - Provides the ability to cache data in the browser
 
@@ -37,7 +37,7 @@
  ...
  */
 
-MUI.files['{source}Core/Persist.js'] = 'loaded';
+MUI.files['{source}Core/persist.js'] = 'loaded';
 
 MUI.Persist = Object.append((MUI.Persist || {}), {
 	options: {

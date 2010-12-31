@@ -1,3 +1,19 @@
+/*
+ ---
+
+ file: selectlist.css
+
+ description: MUI - Select List control css.
+
+ copyright: (c) 2010 Contributors in (/AUTHORS.txt).
+
+ license: MIT-style license in (/MIT-LICENSE.txt).
+
+ provides: css for default theme
+
+ ...
+ */
+
 /* SelectListBox */
 div.dslb { margin:0; height:20px;  }
 div.dslb div.text { height:20px;background-color:#eeeeee; border:solid 1px #bbbbbb; -moz-border-radius-bottomleft:.5em; -moz-border-radius-topleft:.5em; font: normal 9pt Sans-Serif, Arial; float:left; margin:0;padding:0;line-height:21px; padding-left:3px; }

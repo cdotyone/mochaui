@@ -1,7 +1,7 @@
 /*
  ---
 
- script: Canvas.js
+ script: canvas.js
 
  description: Namespace for all canvas drawing functions.
 
@@ -16,7 +16,7 @@
  ...
  */
 
-MUI.files['{source}Core/Canvas.js'] = 'loaded';
+MUI.files['{source}Core/canvas.js'] = 'loaded';
 
 MUI.Canvas = Object.append((MUI.Canvas || {}), {
 
