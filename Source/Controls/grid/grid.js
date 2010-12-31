@@ -13,7 +13,7 @@
 
  authors:
  Chris Doty		MochaUI Version
- Marko Ã…Â antiÃ„â€¡	original <http://www.omnisdata.com/omnigrid/>
+ Marko Ãƒâ€¦Ã‚Â antiÃƒâ€žÃ¢â‚¬Â¡	original <http://www.omnisdata.com/omnigrid/>
 
  note:
  This started out as OmniGrid and got modified so to much to work like a Mocha control.
@@ -34,7 +34,7 @@
 
 MUI.files['{controls}grid/grid.js'] = 'loaded';
 
-MUI.Grid = new NamedClass('Grid', {
+MUI.Grid = new NamedClass('MUI.Grid', {
 
 	Implements: [Events,Options],
 

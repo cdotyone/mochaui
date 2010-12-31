@@ -28,7 +28,7 @@
 
 MUI.files['{controls}Tree/Tree.js'] = 'loaded';
 
-MUI.Tree = new Class({
+MUI.Tree = new NamedClass('MUI.Tree', {
 
 	Implements: [Events, Options],
 

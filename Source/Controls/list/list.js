@@ -28,7 +28,7 @@
 
 MUI.files['{controls}list/list.js'] = 'loaded';
 
-MUI.List = new Class({
+MUI.List = new NamedClass('MUI.List', {
 
 	Implements: [Events, Options],
 

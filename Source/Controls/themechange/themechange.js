@@ -25,7 +25,7 @@
 
 MUI.files['{controls}toolbar/toolbarthemechange.js'] = 'loaded';
 
-MUI.ThemeChange = new Class({
+MUI.ThemeChange = new NamedClass('MUI.ThemeChange', {
 
 	Implements: [Events, Options],
 

@@ -25,7 +25,7 @@
 
 MUI.files['{controls}toolbar/toolbarspinner.js'] = 'loaded';
 
-MUI.Spinner = new Class({
+MUI.Spinner = new NamedClass('MUI.Spinner', {
 
 	Implements: [Events, Options],
 

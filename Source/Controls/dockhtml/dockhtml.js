@@ -25,7 +25,7 @@
 
 MUI.files['{controls}toolbar/toolbarhtml.js'] = 'loaded';
 
-MUI.DockHtml = new Class({
+MUI.DockHtml = new NamedClass('MUI.DockHtml', {
 
 	Implements: [Events, Options],
 

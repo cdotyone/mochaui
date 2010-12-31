@@ -28,7 +28,7 @@
 
 MUI.files['{controls}tabs/tabs.js'] = 'loaded';
 
-MUI.Tabs = new Class({
+MUI.Tabs = new NamedClass('MUI.Tabs', {
 
 	Implements: [Events, Options],
 
