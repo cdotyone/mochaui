@@ -234,7 +234,7 @@ MUI.append({
 	},
 
 	notification: function(message){
-		new MUI.Window({
+		MUI.create('MUI.Window',{
 			loadMethod: 'html',
 			closeAfter: 1500,
 			type: 'notification',
