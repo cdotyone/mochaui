@@ -52,6 +52,9 @@ li.divider { margin-top: 2px; padding-top: 3px; border-top: 1px solid #ebebeb; }
 #desktopFooterWrapper { position: absolute; left: 0; bottom: 0; width: 100%; height: 30px; overflow: hidden; }
 #desktopFooter { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10px; height: 24px; padding: 6px 8px 0 8px; background: #f2f2f2; }
 
+/* new desktop stuff */
+
+
 /* Panel Layout */
 /* Columns */
 .column { position: relative; float: left; overflow: hidden; /* Required by IE6 */ }
