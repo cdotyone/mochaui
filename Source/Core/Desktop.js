@@ -256,7 +256,7 @@ MUI.Windows = Object.append((MUI.Windows || {}), {
 
 	arrangeCascade: function(){
 
-		var viewportTopOffset = 30;    // Use a negative number if neccessary to place first window where you want it
+		var viewportTopOffset = 30;    // Use a negative number if necessary to place first window where you want it
 		var viewportLeftOffset = 20;
 		var windowTopOffset = 50;    // Initial vertical spacing of each window
 		var windowLeftOffset = 40;
