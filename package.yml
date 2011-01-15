@@ -20,11 +20,15 @@ authors:
   - "Harry Roberts"
 
 sources:
-  - "src/mui/Core.js"
-  - "src/mui/Content.js"
-  - "src/mui/Window.js"
-  - "src/mui/Modal.js"
-  - "src/mui/Desktop.js"
-  - "src/mui/Column.js"
-  - "src/mui/Panel.js"
-  - "src/mui/Taskbar.js"
+  - "Source/Core/Core.js"
+  - "Source/Core/Canvas.js"
+  - "Source/Core/Content.js"
+  - "Source/Core/Desktop.js"
+  - "Source/Controls/column/Column.js"
+  - "Source/Controls/panel/Panel.js"
+  - "Source/Controls/taskbar/Taskbar.js"
+  - "Source/Controls/window/Window.js"
+  - "Source/Controls/window/Modal.js"
+  - "Source/Core/Themes.js"
+  
+  
