@@ -171,7 +171,7 @@ MUI.append({
 	create:function(type, options, fromHTML, loadOnly){
 		if (!MUI.initialized) MUI.initialize();
 		if (this.loadPluginGroups(function(){
-			MUI.create(type, options);
+			MUI.create(type, options, fromHTML, loadOnly);  // [i_a] make sure all args get through to the next invocation when the plugins are loaded!
 		})) return;
 
 		var name = type.replace(/(^MUI\.)/i, '');
