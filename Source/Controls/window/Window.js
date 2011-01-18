@@ -615,6 +615,10 @@ MUI.Window.implement({
 				}
 
 				if (options.resizable && !this.isMaximized){
+					if (!this.resizableColor)
+					{
+						alert('resizableColor not set!');
+					}
 					MUI.Canvas.triangle(ctx, width - (shadowBlur + shadowOffset.x + 17), height - (shadowBlur + shadowOffset.y + 18), 11, 11, this.resizableColor, 1.0);
 					// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
 					if (Browser.ie) MUI.Canvas.triangle(ctx, 0, 0, 10, 10, this.resizableColor, 0);
@@ -1018,30 +1022,59 @@ MUI.Window.implement({
 				this.headerStopColor = new Color(this.el.titleBar.getStyle('background-color')).mix('#000', 20);
 				this.el.titleBar.addClass('replaced');
 			}
+			else
+			{
+				this.headerStartColor = new Color('#ff0');
+				this.headerStopColor = new Color('#ff0');
+				this.el.titleBar.addClass('replaced');
+			}
 
 			// Set BodyBGColor
 			if (this.el.windowEl.getStyle('background-color') !== '' && this.el.windowEl.getStyle('background-color') !== 'transparent'){
 				this.bodyBgColor = new Color(this.el.windowEl.getStyle('background-color'));
 				this.el.windowEl.addClass('replaced');
 			}
-
-			// Set resizableColor, the color of the SE corner resize handle
-			if (this.options.resizable && this.el.se.getStyle('background-color') !== '' && this.el.se.getStyle('background-color') !== 'transparent'){
-				this.resizableColor = new Color(this.el.se.getStyle('background-color'));
-				this.el.se.addClass('replaced');
+			else
+			{
+				this.bodyBgColor = new Color('#ff0');
+				this.el.windowEl.addClass('replaced');
 			}
 
+			// Set resizableColor, the color of the SE corner resize handle
+			if (this.options.resizable)
+			{
+				if (this.el.se.getStyle('background-color') !== '' && this.el.se.getStyle('background-color') !== 'transparent'){
+					this.resizableColor = new Color(this.el.se.getStyle('background-color'));
+					this.el.se.addClass('replaced');
+				}
+				else
+				{
+					this.resizableColor = new Color('#ff0');
+					this.el.se.addClass('replaced');
+				}
+			}
 		}
 
 		if (this.options.useCanvasControls){
 			if (this.el.minimizeButton){
 				// Set Minimize Button Foreground Color
 				if (this.el.minimizeButton.getStyle('color') !== '' && this.el.minimizeButton.getStyle('color') !== 'transparent')
+				{
 					this.minimizeColor = new Color(this.el.minimizeButton.getStyle('color'));
+				}
+				else
+				{
+					this.minimizeColor = new Color('#ff0');
+				}
 
 				// Set Minimize Button Background Color
 				if (this.el.minimizeButton.getStyle('background-color') !== '' && this.el.minimizeButton.getStyle('background-color') !== 'transparent'){
 					this.minimizeBgColor = new Color(this.el.minimizeButton.getStyle('background-color'));
+					this.el.minimizeButton.addClass('replaced');
+				}
+				else
+				{
+					this.minimizeBgColor = new Color('#ff0');
 					this.el.minimizeButton.addClass('replaced');
 				}
 			}
@@ -1049,11 +1082,23 @@ MUI.Window.implement({
 			if (this.el.maximizeButton){
 				// Set Maximize Button Foreground Color
 				if (this.el.maximizeButton.getStyle('color') !== '' && this.el.maximizeButton.getStyle('color') !== 'transparent')
+				{
 					this.maximizeColor = new Color(this.el.maximizeButton.getStyle('color'));
+				}
+				else
+				{
+					this.maximizeColor = new Color('#ff0');
+					this.el.minimizeButton.addClass('replaced');
+				}
 
 				// Set Maximize Button Background Color
 				if (this.el.maximizeButton.getStyle('background-color') !== '' && this.el.maximizeButton.getStyle('background-color') !== 'transparent'){
 					this.maximizeBgColor = new Color(this.el.maximizeButton.getStyle('background-color'));
+					this.el.maximizeButton.addClass('replaced');
+				}
+				else
+				{
+					this.maximizeBgColor = new Color('#ff0');
 					this.el.maximizeButton.addClass('replaced');
 				}
 			}
@@ -1061,11 +1106,22 @@ MUI.Window.implement({
 			if (this.el.closeButton){
 				// Set Close Button Foreground Color
 				if (this.el.closeButton.getStyle('color') !== '' && this.el.closeButton.getStyle('color') !== 'transparent')
+				{
 					this.closeColor = new Color(this.el.closeButton.getStyle('color'));
+				}
+				else
+				{
+					this.closeColor = new Color('#ff0');
+				}
 
 				// Set Close Button Background Color
 				if (this.el.closeButton.getStyle('background-color') !== '' && this.el.closeButton.getStyle('background-color') !== 'transparent'){
 					this.closeBgColor = new Color(this.el.closeButton.getStyle('background-color'));
+					this.el.closeButton.addClass('replaced');
+				}
+				else
+				{
+					this.closeBgColor = new Color('#ff0');
 					this.el.closeButton.addClass('replaced');
 				}
 			}
