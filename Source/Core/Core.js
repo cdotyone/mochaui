@@ -298,7 +298,7 @@ MUI.append({
 			}.bind(this),
 			onFailure: function(response){
 				if (contentContainer == contentEl){
-					var getTitle = new RegExp("<title>[\n\r\s]*(.*)[\n\r\s]*</title>", "gmi");
+					var getTitle = new RegExp("<title>[\n\r\\s]*(.*)[\n\r\\s]*</title>", "gmi");
 					var error = getTitle.exec(response.responseText);
 					if (!error) error = 'Unknown';
 					contentContainer.set('html', '<h3>Error: ' + error[1] + '</h3>');
