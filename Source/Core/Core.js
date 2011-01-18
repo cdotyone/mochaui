@@ -115,8 +115,8 @@ MUI.append({
 	files: new Hash({'{source}Core/Core.js': 'loaded'}),
 
 	getID: function(el){
-		if (type == 'string') return el;
 		var type = typeOf(el);
+		if (type == 'string') return el;    // [i_a] statement order: typeof, the string check
 		if (type == 'element') return el.id;
 		else if (type == 'object' && el.id) return el.id;
 		else if (type == 'object' && el.options && el.options.id) return el.options.id;
