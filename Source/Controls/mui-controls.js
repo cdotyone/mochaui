@@ -23,6 +23,7 @@ Object.append(MUI.controls, {
 	'calendar':{'samples':['demo','index'],data:['json'],'description':'Calendar','isFormControl':true,'css':['{theme}css/calendar.css']},
 	'checkboxgrid':{'samples':['demo','index'],data:['json'],'description':'Check Box Grid','isFormControl':true,'css':['{theme}css/checkboxgrid.css']},
 	'column':{'samples':['demo'],data:['json'],'description':'Column','isFormControl':true,'css':['{theme}css/desktop.css']},
+	'desktop':{'samples':['demo'],data:['json'],'description':'Desktop','isFormControl':true,'css':['{theme}css/desktop.css','{theme}css/dock.css'],'js':['{controls}/dock/dock.js','{control}desktop.js']},
 	'imagebutton':{'samples':['demo','index'],data:['json'],'description':'Image Button','isFormControl':true,'css':['{theme}css/imagebutton.css']},
 	'list':{'samples':['demo','index'],data:['json'],'description':'Basic List','isFormControl':true,'css':['{theme}css/list.css']},
 	'modal':{'samples':['demo'],data:['json'],'description':'Modal','isFormControl':true,'css':['{theme}css/desktop.css'],location:'window'},

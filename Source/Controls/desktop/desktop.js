@@ -1,368 +1,159 @@
 /*
  ---
 
+ name: Desktop
+
  script: desktop.js
 
- description: Create web application layouts. Enables window maximize.
-
- todo:
- - Make it so the taskbar requires no initial html markup.
+ description: MUI - Creates main desktop control that loads rest of desktop.
 
  copyright: (c) 2010 Contributors in (/AUTHORS.txt).
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 
  requires:
- - MochaUI/MUI
- - MUI.Column
- - MUI.Panel
+ - Core/Element
+ - Core/Class
+ - Core/Options
+ - Core/Events
+ - MUI
+ - MUI.Core
 
- provides: [MUI.Desktop]
-
+ provides: [MUI.Dock]
  ...
  */
 
-MUI.files['{source}Core/desktop.js'] = 'loaded';
+MUI.files['{controls}desktop/desktop.js'] = 'loaded';
 
-MUI.Desktop = {
+MUI.Desktop = new NamedClass('MUI.Desktop', {
+
+	Implements: [Events, Options],
 
 	options: {
-		// Naming options:
-		// If you change the IDs of the MochaUI Desktop containers in your HTML, you need to change them here as well.
-		desktop:			'desktop',
-		desktopHeader:		'desktopHeader',
-		desktopFooter:		'desktopFooter',
-		desktopNavBar:		'desktopNavbar',
-		pageWrapper:		'pageWrapper',
-		page:				'page',
-		desktopFooterWrapper:'desktopFooterWrapper',
+		id:				'',				// id of the primary element, and id os control that is registered with mocha
+		container:		null,			// the parent control in the document to add the control to
+		drawOnInit:		true,			// true to add tree to container when control is initialized
+		cssClass:		false,			// additional css tag
+		orientation:	'left',			// toolbars are listed from left to right or right to left
 
-		createTaskbar:			true,
-		taskbarOptions:		{}
+		partner:		false,			// default partner panel to pass docked controls
+		header:			true,			// has a header section
+		footer:			true,			// has a footer section
+
+		sections:		[]				// sections that make up desktop, section names can be 'header','content','footer'
 	},
 
-	initialize: function(options){
-		if (options) Object.append(MUI.Desktop.options, options);
+	initialize: function(options)
+	{
+		var self = this;
+		self.setOptions(options);
+		var o = self.options;
+		self.el = {};
 
-		if (MUI.desktop) return;	// only one desktop allowed
-		MUI.desktop = this;
+		// make sure this controls has an ID
+		var id = o.id;
+		if (!id){
+			id = 'desktop' + (++MUI.IDCount);
+			o.id = id;
+		}
+		this.id = id;
+		MUI.set(id, this);
 
-		this.desktop = $(this.options.desktop);
-		this.desktopHeader = $(this.options.desktopHeader);
-		this.desktopNavBar = $(this.options.desktopNavBar);
-		this.pageWrapper = $(this.options.pageWrapper);
-		this.page = $(this.options.page);
-		this.desktopFooter = $(this.options.desktopFooter);
+		this.draw();
+	},
 
-		if (!this.options.taskbarOptions.container) this.options.taskbarOptions.container = this.desktop;
-		if (this.options.createTaskbar) this.taskbar = new MUI.Taskbar(this.options.taskbarOptions);
-		if (!this.taskbar) this.setDesktopSize();  // This is run on taskbar initialize so no need to do it twice.
-		this._menuInitialize();
+	draw: function(containerEl)
+	{
+		var self = this;
+		var o = self.options;
 
-		// Resize desktop, page wrapper, modal overlay, and maximized windows when browser window is resized
-		window.addEvent('resize', function(){
-			this._onBrowserResize();
-		}.bind(this));
+		var isNew = false;
+		var div;
 
+		div = $(o.id);
+		if (!div){
+			div = new Element('div', {'id': o.id});
+			isNew = true;
+		}
+		div.addClass('desktop');
+		div.empty();
+		if (o.cssClass) div.addClass(o.cssClass);
+		self.el.element = div.store('instance', this);
+
+		if (o.header) this.el.header = new Element('div', {'id':o.id + 'Header','class':'desktopHeader'}).inject(this.el.element);
+		this.el.page = new Element('div', {'id':o.id + 'Page','class':'desktopPage'}).inject(this.el.element);
+		if (o.footer) this.el.footer = new Element('div', {'id':o.id + 'Footer','class':'desktopFooter'}).inject(this.el.element);
+
+		if (!isNew || o._container){
+			if (this.el.element.getParent() == null) this.el.element.inject(o._container);
+			this.setDesktopSize();
+		} else window.addEvent('domready', function()
+		{
+			if (!o._container) o._container = $(containerEl ? containerEl : o.container);
+			if (!o._container) o._container = document.body;
+			if (this.el.element.getParent() == null) this.el.element.inject(o._container);
+			this.setDesktopSize();
+		});
+
+		return div;
+	},
+
+	_createSection:function(sectionName)
+	{
+		var lname = sectionName.toLowerCase();
+		var dock = new MUI.Dock({'id':this.id + sectionName,container:this.el.element});
+		this[lname] = dock;
+
+		Object.each(this.options.sections, function(section, idx)
+		{
+			if (section.name == lname) return;
+			if (!section.control) section.control = 'MUI.Dock';
+			if (!section.id) section.id = this.id + 'Section' + idx;
+			this.el[section.id] = new Element('div', {'id':section.id}).inject(this.el.element);
+			section.container = dock.el.element;
+
+			if (!section.partner) section.partner = this.options.partner;
+			this.options.sections[idx] = section;
+			var content = {};
+			Object.each(section, function(val, key)
+			{
+				if (['loadmethod', 'method', 'url', 'content', 'onloaded'].indexOf(key) > -1)
+					content[key] = val;
+			});
+			section.content = content;
+			MUI.create(section.control, section);
+		}, bind(this));
 	},
 
 	setDesktopSize: function(){
 		var windowDimensions = window.getCoordinates();
 
 		// Setting the desktop height may only be needed by IE7
-		if (this.desktop) this.desktop.setStyle('height', windowDimensions.height);
+		if (this.el.element) this.el.element.setStyle('height', windowDimensions.height);
 
 		// Set pageWrapper height so the taskbar doesn't cover the pageWrapper scrollbars.
-		if (this.pageWrapper){
+		if (this.el.page){
 			var taskbarOffset = this.taskbar ? this.taskbar.getHeight() : 0;
 			var pageWrapperHeight = windowDimensions.height;
-			pageWrapperHeight -= this.pageWrapper.getStyle('border-top').toInt();
-			pageWrapperHeight -= this.pageWrapper.getStyle('border-bottom').toInt();
-			if (this.desktopHeader) pageWrapperHeight -= this.desktopHeader.offsetHeight;
-			if (this.desktopFooter) pageWrapperHeight -= this.desktopFooter.offsetHeight;
+			pageWrapperHeight -= this.el.page.getStyle('border-top').toInt();
+			pageWrapperHeight -= this.el.page.getStyle('border-bottom').toInt();
+			if (this.el.header) pageWrapperHeight -= this.el.header.offsetHeight;
+			if (this.el.footer) pageWrapperHeight -= this.el.footer.offsetHeight;
 			pageWrapperHeight -= taskbarOffset;
 			if (pageWrapperHeight < 0) pageWrapperHeight = 0;
-			this.pageWrapper.setStyle('height', pageWrapperHeight);
+			this.el.page.setStyle('height', pageWrapperHeight);
 		}
 
-		///*		if (MUI.Columns.instances.getKeys().length > 0){ // Conditional is a fix for a bug in IE6 in the no toolbars demo.
-		MUI.Desktop.resizePanels();
-		//}*/
+		this.resizePanels();
 	},
 
 	resizePanels: function(){
 		MUI.panelHeight(null, null, 'all');
-		MUI.rWidth();
-	},
-
-	saveWorkspace: function(){
-		this.cookie = new Hash.Cookie('mochaUIworkspaceCookie', {duration: 3600});
-		this.cookie.empty();
-
-		MUI.each(function(instance){
-			if (instance.className != 'MUI.Window') return;
-			instance._saveValues();
-			this.cookie.set(instance.options.id, {
-				'id': instance.options.id,
-				'top': instance.options.y,
-				'left': instance.options.x,
-				'width': instance.el.contentWrapper.getStyle('width').toInt(),
-				'height': instance.el.contentWrapper.getStyle('height').toInt()
-			});
-		}.bind(this));
-		this.cookie.save();
-
-		new MUI.Window({
-			loadMethod: 'html',
-			type: 'notification',
-			addClass: 'notification',
-			content: 'Workspace saved.',
-			closeAfter: '1400',
-			width: 200,
-			height: 40,
-			y: 53,
-			padding: {top: 10, right: 12, bottom: 10, left: 12},
-			shadowBlur: 5
-		});
-	},
-
-	loadingCallChain: function(){
-		if ($$('.mocha').length == 0 && this.myChain){
-			this.myChain.callChain();
-		}
-	},
-
-	loadWorkspace: function(){
-		var cookie = new Hash.Cookie('mochaUIworkspaceCookie', {duration: 3600});
-		var workspaceWindows = cookie.load();
-
-		if (!cookie.getKeys().length){
-			new MUI.Window({
-				loadMethod: 'html',
-				type: 'notification',
-				addClass: 'notification',
-				content: 'You have no saved workspace.',
-				closeAfter: '1400',
-				width: 220,
-				height: 40,
-				y: 25,
-				padding: {top: 10, right: 12, bottom: 10, left: 12},
-				shadowBlur: 5
-			});
-			return;
-		}
-
-		var doLoadWorkspace = (function(workspaceWindows){
-			workspaceWindows.each(function(workspaceWindow){
-				windowFunction = MUI[workspaceWindow.id + 'Window'];
-				if (windowFunction) windowFunction();
-				// currently disabled positioning of windows, that would need to be passed to the MUI.Window call
-				/*if (windowFunction){
-				 windowFunction({
-				 width: workspaceWindow.width,
-				 height: workspaceWindow.height
-				 });
-				 var windowEl = $(workspaceWindow.id);
-				 windowEl.setStyles({
-				 'top': workspaceWindow.top,
-				 'left': workspaceWindow.left
-				 });
-				 var instance = windowEl.retrieve('instance');
-				 instance.el.contentWrapper.setStyles({
-				 'width': workspaceWindow.width,
-				 'height': workspaceWindow.height
-				 });
-				 instance.redraw();
-				 }*/
-			}.bind(this));
-			this.loadingWorkspace = false;
-		}).bind(this);
-
-		if ($$('.mocha').length != 0){
-			this.loadingWorkspace = true;
-			this.myChain = new Chain();
-			this.myChain.chain(
-					function(){
-						$$('.mocha').each(function(el){
-							el.close();
-						});
-						this.myChain.callChain();
-					}.bind(this),
-					doLoadWorkspace
-					);
-			this.myChain.callChain();
-		} else doLoadWorkspace(workspaceWindows);
-	},
-
-	_menuInitialize: function(){
-		// Fix for dropdown menus in IE6
-		if (Browser.ie6 && this.desktopNavBar){
-			this.desktopNavBar.getElements('li').each(function(element){
-				element.addEvent('mouseenter', function(){
-					this.addClass('ieHover');
-				});
-				element.addEvent('mouseleave', function(){
-					this.removeClass('ieHover');
-				});
-			});
-		}
-	},
-
-	_onBrowserResize: function(){
-		this.setDesktopSize();
-		// Resize maximized windows to fit new browser window size
-		setTimeout(function(){
-			MUI.each(function(instance){
-				var options = instance.options;
-				if (instance.className != 'MUI.Window') return;
-				if (instance.isMaximized){
-
-					// Hide iframe while resize for better performance
-					if (instance.el.iframe) instance.el.iframe.setStyle('visibility', 'hidden');
-
-					var resizeDimensions;
-					if (options.container) resizeDimensions = $(options.container).getCoordinates();
-					else resizeDimensions = document.getCoordinates();
-					var shadowBlur = options.shadowBlur;
-					var shadowOffset = options.shadowOffset;
-					var newHeight = resizeDimensions.height - options.headerHeight - options.footerHeight;
-					newHeight -= instance.el.contentBorder.getStyle('border-top').toInt();
-					newHeight -= instance.el.contentBorder.getStyle('border-bottom').toInt();
-					newHeight -= instance._getAllSectionsHeight();
-
-					instance.resize({
-						width: resizeDimensions.width,
-						height: newHeight,
-						top: resizeDimensions.top + shadowOffset.y - shadowBlur,
-						left: resizeDimensions.left + shadowOffset.x - shadowBlur
-					});
-
-					instance.redraw();
-					if (instance.el.iframe){
-						instance.el.iframe.setStyles({
-							'height': instance.el.contentWrapper.getStyle('height')
-						});
-						instance.el.iframe.setStyle('visibility', 'visible');
-					}
-
-				}
-			}.bind(this));
-		}.bind(this), 100);
+		MUI.rWidth(this.el.page);
 	}
 
-};
-
-MUI.Windows = Object.append((MUI.Windows || {}), {
-
-	arrangeCascade: function(){
-
-		var viewportTopOffset = 30;    // Use a negative number if necessary to place first window where you want it
-		var viewportLeftOffset = 20;
-		var windowTopOffset = 50;    // Initial vertical spacing of each window
-		var windowLeftOffset = 40;
-
-		// See how much space we have to work with
-		var coordinates = document.getCoordinates();
-
-		var openWindows = 0;
-		MUI.each(function(instance){
-			if (instance.className != 'MUI.Window') return;
-			if (!instance.isMinimized && instance.options.draggable) openWindows ++;
-		});
-
-		var topOffset = ((windowTopOffset * (openWindows + 1)) >= (coordinates.height - viewportTopOffset)) ?
-				(coordinates.height - viewportTopOffset) / (openWindows + 1) : windowTopOffset;
-		var leftOffset = ((windowLeftOffset * (openWindows + 1)) >= (coordinates.width - viewportLeftOffset - 20)) ?
-				(coordinates.width - viewportLeftOffset - 20) / (openWindows + 1) : windowLeftOffset;
-
-		var x = viewportLeftOffset;
-		var y = viewportTopOffset;
-		$$('.mocha').each(function(windowEl){
-			var instance = windowEl.retrieve('instance');
-			if (!instance.isMinimized && !instance.isMaximized && instance.options.draggable){
-				instance.focus();
-				x += leftOffset;
-				y += topOffset;
-
-				if (!MUI.options.advancedEffects){
-					windowEl.setStyles({
-						'top': y,
-						'left': x
-					});
-				} else {
-					var cascadeMorph = new Fx.Morph(windowEl, {
-						'duration': 550
-					});
-					cascadeMorph.start({
-						'top': y,
-						'left': x
-					});
-				}
-			}
-		}.bind(this));
-	},
-
-	arrangeTile: function(){
-
-		var viewportTopOffset = 30;    // Use a negative number if neccessary to place first window where you want it
-		var viewportLeftOffset = 20;
-
-		var x = 10;
-		var y = 80;
-
-		var windowsNum = 0;
-
-		MUI.each(function(instance){
-			if (instance.className != 'MUI.Window') return;
-			if (!instance.isMinimized && !instance.isMaximized){
-				windowsNum++;
-			}
-		});
-
-		var cols = 3;
-		var rows = Math.ceil(windowsNum / cols);
-
-		var coordinates = document.getCoordinates();
-
-		var col_width = ((coordinates.width - viewportLeftOffset) / cols);
-		var col_height = ((coordinates.height - viewportTopOffset) / rows);
-
-		var row = 0;
-		var col = 0;
-
-		MUI.each(function(instance){
-			if (instance.className != 'MUI.Window') return;
-			if (!instance.isMinimized && !instance.isMaximized && instance.options.draggable){
-
-				var left = (x + (col * col_width));
-				var top = (y + (row * col_height));
-
-				instance.redraw();
-				instance.focus();
-
-				if (MUI.options.advancedEffects){
-					var tileMorph = new Fx.Morph(instance.el.windowEl, {
-						'duration': 550
-					});
-					tileMorph.start({
-						'top': top,
-						'left': left
-					});
-				} else {
-					instance.el.windowEl.setStyles({
-						'top': top,
-						'left': left
-					});
-				}
-
-				if (++col === cols){
-					row++;
-					col = 0;
-				}
-			}
-		}.bind(this));
-	}
 });
+
 
 MUI.Window = (MUI.Window || new NamedClass('MUI.Window', {}));
 MUI.Window.implement({

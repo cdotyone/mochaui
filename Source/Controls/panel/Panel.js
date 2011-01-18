@@ -196,9 +196,9 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		}
 
 		if (columnInstance && columnInstance.options.sortable){
-			this.el.header.setStyle('cursor', 'move');
 			columnInstance.options.container.retrieve('sortables').addItems(this.el.element);
 			if (this.el.header){
+				this.el.header.setStyle('cursor', 'move');
 				this.el.header.addEvent('mousedown', function(e){
 					e = e.stop();
 					e.target.focus();

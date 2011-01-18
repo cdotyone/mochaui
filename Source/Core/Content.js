@@ -385,7 +385,7 @@ MUI.Content.Providers.xhr = {
 			onFailure: function(response){
 				var content = this;
 				var instance = this.instance;
-				var getTitle = new RegExp('<title>[\n\r\s]*(.*)[\n\r\s]*</title>', 'gmi');
+				var getTitle = new RegExp('<title>[\n\r\\s]*(.*)[\n\r\\s]*</title>', 'gmi');
 				var error = getTitle.exec(response.responseText);
 				if (!error) error = [500, 'Unknown'];
 
