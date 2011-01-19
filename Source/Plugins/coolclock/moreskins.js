@@ -1,3 +1,10 @@
+/*
+Because these OVERRIDE the skin(s) defined in coolclock.js itself, we make sure the 'default skin' is also
+adjusted accordingly.
+*/
+CoolClock.config.defaultSkin = 'chunkySwiss';
+
+
 CoolClock.config.skins = {
 
 	swissRail: {
@@ -205,23 +212,42 @@ CoolClock.config.skins = {
 		smallIndicator:   { lineWidth: 2, startAt: 50, endAt: 70, color: "#d93d04", alpha: 5 },
 		largeIndicator:   { lineWidth: 2, startAt: 45, endAt: 94, color: "#a9bf04", alpha: 1 },
 		hourHand:         { lineWidth: 5, startAt: -20, endAt: 80, color: "#8c0d17", alpha: 1 },
-		minuteHand:       { lineWidth: 2, startAt: -20, endAt: 80, color: "#7c8c03", alpha: .9 },
-		secondHand:       { lineWidth: 2, startAt: 70, endAt: 94, color: "#d93d04", alpha: .85 },
-		secondDecoration: { lineWidth: 1, startAt: 70, radius: 3, fillColor: "red", color: "black", alpha: .7 }
+		minuteHand:       { lineWidth: 2, startAt: -20, endAt: 80, color: "#7c8c03", alpha: 0.9 },
+		secondHand:       { lineWidth: 2, startAt: 70, endAt: 94, color: "#d93d04", alpha: 0.85 },
+		secondDecoration: { lineWidth: 1, startAt: 70, radius: 3, fillColor: "red", color: "black", alpha: 0.7 }
 	},
 
-	default_v1: {
-		outerBorder: { lineWidth: 0, radius:99, fillColor: "#90D224", color: "#fff", alpha: 0 },
-		smallIndicator: { lineWidth: 6, startAt: 82, endAt: 89, color: "#fff", alpha: .15 },
-		largeIndicator: { lineWidth: 6, startAt: 82, endAt: 89, color: "#fff", alpha: .50 },
+	swissRail_ccms: {
+		outerBorder:      { lineWidth: 2, radius: 95, fillColor: "#E6F5D6", color: "90D224", alpha: 1 },
+		smallIndicator:   { lineWidth: 2, startAt: 88, endAt: 92, color: "90D224", alpha: 1 },
+		largeIndicator:   { lineWidth: 4, startAt: 79, endAt: 92, color: "90D224", alpha: 1 },
+		hourHand:         { lineWidth: 8, startAt: -15, endAt: 50, color: "90D224", alpha: 1 },
+		minuteHand:       { lineWidth: 7, startAt: -15, endAt: 75, color: "90D224", alpha: 1 },
+		secondHand:       { lineWidth: 1, startAt: -20, endAt: 85, color: "red", alpha: 1 },
+		secondDecoration: { lineWidth: 1, startAt: 70, radius: 4, fillColor: "red", color: "red", alpha: 1 }
+	},
+	default_mui: {
+		outerBorder: { lineWidth: 1, radius:99, fillColor: "#577a9e", color: "#fff", alpha: 1 },
+		smallIndicator: { lineWidth: 6, startAt: 82, endAt: 89, color: "#fff", alpha: 0.15 },
+		largeIndicator: { lineWidth: 6, startAt: 82, endAt: 89, color: "#fff", alpha: 0.50 },
 		hourHand: { lineWidth: 6, startAt: 0, endAt: 53, color: "#fff", alpha: 1 },
 		minuteHand: { lineWidth: 6, startAt: 0, endAt: 80, color: "#fff", alpha: 1 },
 		secondHand: { lineWidth: 2, startAt: -18, endAt: 88, color: "#fff", alpha: 1 },
-		secondDecoration: { lineWidth: 0, startAt: 79, radius: 5, fillColor: "#fff", color: "#fff", alpha: 1 }
+		secondDecoration: { lineWidth: 0, startAt: 72, radius: 5, fillColor: "#fff", alpha: 1 }
+		// secondDecoration2: { lineWidth: 2, startAt: 0, radius: 8, fillColor: "#577a9e", color: "#fff", alpha: 1 }
+	},
+	default_v1: {
+		outerBorder: { lineWidth: 2, radius:99, fillColor: "#90D224", color: "#fff", alpha: 1 },
+		smallIndicator: { lineWidth: 6, startAt: 82, endAt: 89, color: "#fff", alpha: 0.15 },
+		largeIndicator: { lineWidth: 6, startAt: 82, endAt: 89, color: "#fff", alpha: 0.50 },
+		hourHand: { lineWidth: 6, startAt: 0, endAt: 53, color: "#fff", alpha: 1 },
+		minuteHand: { lineWidth: 6, startAt: 0, endAt: 80, color: "#fff", alpha: 1 },
+		secondHand: { lineWidth: 2, startAt: -18, endAt: 88, color: "#fff", alpha: 1 },
+		secondDecoration: { lineWidth: 0, startAt: 72, radius: 5, fillColor: "#fff", alpha: 1 }
 		// secondDecoration2: { lineWidth: 2, startAt: 0, radius: 8, fillColor: "#90D224", color: "#fff", alpha: 1 }
 	},
 	defaultOld: {
-		outerBorder: { lineWidth: 6, radius:98, color: "#fff", alpha: 0 },
+		outerBorder: { lineWidth: 6, radius:98, color: "#fff", alpha: 1 },
 		smallIndicator: { lineWidth: 2, startAt: 86, endAt: 91, color: "#555", alpha: 1 },
 		largeIndicator: { lineWidth: 3, startAt: 80, endAt: 91, color: "#555", alpha: 1 },
 		hourHand: { lineWidth: 4, startAt: -1, endAt: 56, color: "#141414", alpha: 1 },
@@ -230,7 +256,7 @@ CoolClock.config.skins = {
 		secondDecoration: { lineWidth: 2, startAt: 0, radius: 7, fillColor: "#fff", color: "#ce1717", alpha: 0 }
 	},
 	mochaUI1: {
-		outerBorder: { lineWidth: 185, radius:1, color: "#000", alpha: 0 },
+		outerBorder: { lineWidth: 185, radius:1, color: "#000", alpha: 1 },
 		smallIndicator: { lineWidth: 3, startAt: 88, endAt: 94, color: "#595959", alpha: 1 },
 		largeIndicator: { lineWidth: 3, startAt: 82, endAt: 94, color: "#ddd", alpha: 1 },
 		hourHand: { lineWidth: 4, startAt: 0, endAt: 58, color: "#fff", alpha: 1 },
@@ -239,21 +265,21 @@ CoolClock.config.skins = {
 		secondDecoration: { lineWidth: 3, startAt: 0, radius: 6, fillColor: "white", color: "white", alpha: 1 }
 	},
 	mochaUI2: {
-		outerBorder: { lineWidth: 185, radius:1, color: "#000", alpha: 0 },
+		outerBorder: { lineWidth: 185, radius:1, color: "#000", alpha: 1 },
 		smallIndicator: { lineWidth: 3, startAt: 88, endAt: 94, color: "#2CC2D1", alpha: 1 },
 		largeIndicator: { lineWidth: 3, startAt: 82, endAt: 94, color: "#1BFFD9", alpha: 1 },
 		hourHand: { lineWidth: 4, startAt: 0, endAt: 58, color: "#fff", alpha: 1 },
 		minuteHand: { lineWidth: 4, startAt: 0, endAt: 78, color: "#fff", alpha: 1 },
 		secondHand: { lineWidth: 4, startAt: 82, endAt: 94, color: "#EFCD5F", alpha: 1 },
-		secondDecoration: { lineWidth: 0, startAt: 0, radius: 6, fillColor: "#fff", color: "#000", alpha: 1 }
+		secondDecoration: { lineWidth: 0, startAt: 0, radius: 6, fillColor: "#fff", alpha: 1 }
 	},
 	mochaUI3: {
-		outerBorder: { lineWidth: 185, radius:1, color: "#000", alpha: 0 },
+		outerBorder: { lineWidth: 185, radius:1, color: "#000", alpha: 1 },
 		smallIndicator: { lineWidth: 3, startAt: 88, endAt: 94, color: "#C7C3B7", alpha: 1 },
 		largeIndicator: { lineWidth: 3, startAt: 82, endAt: 94, color: "#C7C3B7", alpha: 1 },
 		hourHand: { lineWidth: 4, startAt: -1, endAt: 58, color: "#C7C3B7", alpha: 1 },
 		minuteHand: { lineWidth: 4, startAt: -1, endAt: 78, color: "#C7C3B7", alpha: 1 },
 		secondHand: { lineWidth: 3, startAt: 82, endAt: 94, color: "#ce1717", alpha: 1 },
-		secondDecoration: { lineWidth: 0, startAt: 0, radius: 6, fillColor: "#999", color: "#000", alpha: 0 }
+		secondDecoration: { lineWidth: 0, startAt: 0, radius: 6, fillColor: "#999", alpha: 0 }
 	}
 };
