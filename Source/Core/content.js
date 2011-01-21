@@ -424,9 +424,7 @@ MUI.Content.Providers.xhr = {
 			onComplete: function(){
 			}
 		}).send();
-
 	}
-
 };
 
 MUI.Content.Providers.json = {

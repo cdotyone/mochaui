@@ -5,7 +5,7 @@ individuals. For exact contribution history, see the revision history
 and logs, available at http://github.com/cdotyone/mochaui
 
 Chris Doty (cdotyone@gmail.com)
-Greg Houstan (greg.houston@gmail.com)
+Greg Houstan (gregory.houston@gmail.com)
 Scott F. Frederick
 Joel Lindau
 Harry Roberts

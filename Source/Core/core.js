@@ -60,6 +60,7 @@ MUI.append({
 	version: '1.0.0',
 	initialized: false,
 	instances: new Hash(),
+	registered: new Hash(),
 	IDCount: 0,
 	ieSupport: 'excanvas',					// Makes it easier to switch between Excanvas and Moocanvas for testing
 	//pluginGroups: ['controls','plugins'],
@@ -321,6 +322,22 @@ MUI.append({
 			return;
 		}
 		if (instance && instance.showSpinner) instance.showSpinner();
+	},
+
+	register: function(namespace, funcs, depth){
+		try{
+			if (depth == null) depth = 4;
+			if (depth < 0) return;
+			Object.each(funcs, function(func, name){
+				if (typeOf(func) != 'function') return;
+				if (typeOf(func) != 'object'){
+					MUI.register(namespace + '.' + name, func, depth - 1);
+					return;
+				}
+				MUI.registered[namespace + '.' + name] = func;
+			}).bind(this);
+		} catch(e){
+		}
 	}
 
 });
