@@ -92,7 +92,7 @@ MUI.append({
 				var name = key.replace(/[\{\}]/g, '');
 				if (name == null || name == '') return;
 
-				if (!values[name]) return;
+				if (values[name] == null) return;
 				var re = new RegExp('\\{' + name + '\\}', 'g');
 				str = str.replace(re, values[name]);
 			});
@@ -234,7 +234,7 @@ MUI.append({
 	},
 
 	notification: function(message){
-		MUI.create('MUI.Window',{
+		MUI.create('MUI.Window', {
 			loadMethod: 'html',
 			closeAfter: 1500,
 			type: 'notification',
