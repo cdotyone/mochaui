@@ -580,12 +580,10 @@ MUI.Content.Providers.control = {
 
 	doRequest: function(content){
 		var options2 = content.options;
-		var type = content.control;
 
 		// remove unneeded items that cause recursion
 		delete content.options;
 		delete content.instance;
-		delete content.control;
 
 		// create a new options hash for new control
 		var options = Object.merge({}, options2);
@@ -595,7 +593,7 @@ MUI.Content.Providers.control = {
 			options.container = content.contentContainer.id;
 			delete options.contentContainer;
 		}
-		MUI.create(type, options);
+		MUI.create(options);
 	}
 
 };

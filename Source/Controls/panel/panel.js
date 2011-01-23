@@ -170,10 +170,11 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				headerItems.push({id:options.id + 'headerContent',content:this.el.title,orientation:'left', divider:false});
 			}
 
-			MUI.create('MUI.Dock', {
-				container:this.el.panel,
-				_container:this.el.panel.id,
-				id:options.id + '_header',
+			MUI.create({
+				control: 'MUI.Dock',
+				container: this.el.panel,
+				_container: this.el.panel.id,
+				id: options.id + '_header',
 				cssClass: 'panel-header',
 				docked:headerItems
 			});
@@ -186,12 +187,13 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				'styles': { 'display': options.footer ? 'block' : 'none' }
 			}).inject(this.el.panel,'after');
 
-			MUI.create('MUI.Dock', {
-				container:this.el.element,
-				_container:this.el.element.id,
-				id:options.id + '_footer',
+			MUI.create({
+				control: 'MUI.Dock',
+				container: this.el.element,
+				_container: this.el.element.id,
+				id: options.id + '_footer',
 				cssClass: 'panel-footer',
-				docked:footerItems
+				docked: footerItems
 			});
 		}
 

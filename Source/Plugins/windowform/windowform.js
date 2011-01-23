@@ -3,7 +3,7 @@
 
  name: WindowForm
 
- script: Window-from-form.js
+ script: windowform.js
 
  description: MUI - Create a window from a form.
 

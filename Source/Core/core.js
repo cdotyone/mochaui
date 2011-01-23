@@ -165,17 +165,19 @@ MUI.append({
 		return true;   // returns true to signal that it loading something
 	},
 
-	load:function(type, loadScriptHTML){
-		MUI.create(type, null, loadScriptHTML, true);
+	load:function(options){
+		options.loadOnly = true;
+		MUI.create(options);
 	},
 
-	create:function(type, options, fromHTML, loadOnly){
+	create:function(options){
+		if (typeOf(options) == 'string') options = {control:options};
 		if (!MUI.initialized) MUI.initialize();
 		if (this.loadPluginGroups(function(){
-			MUI.create(type, options);
+			MUI.create(options);
 		})) return;
 
-		var name = type.replace(/(^MUI\.)/i, '');
+		var name = options.control.replace(/(^MUI\.)/i, '');
 		var cname = name.toLowerCase();
 
 		// try and locate the requested item
@@ -204,13 +206,13 @@ MUI.append({
 
 		js = MUI.replaceFields(js, path);
 
-		if (js.length > 0 && MUI.files[js[0]] == 'loaded' && !fromHTML){
-			if (config.loadOnly || loadOnly) return null;
+		if (js.length > 0 && MUI.files[js[0]] == 'loaded' && !options.fromHTML){
+			if (config.loadOnly || options.loadOnly) return null;
 			var klass = MUI[name];
 			return new klass(options);
 		}
 
-		if (fromHTML) js.push(path[sname] + cname + '_html.js');
+		if (options.fromHTML) js.push(path[sname] + cname + '_html.js');
 
 		var css = [];
 		if (config.css) css = config.css;
@@ -220,10 +222,10 @@ MUI.append({
 			'js':js,
 			'css':css,
 			'onload':function(){
-				if (config.loadOnly || loadOnly) return;
+				if (config.loadOnly || options.loadOnly) return;
 				var klass = MUI[name];
 				new klass(options);
-				if (fromHTML) ret.fromHTML();
+				if (options.fromHTML) ret.fromHTML();
 			}
 		});
 		return null;
@@ -235,7 +237,8 @@ MUI.append({
 	},
 
 	notification: function(message){
-		MUI.create('MUI.Window', {
+		MUI.create({
+			control: 'MUI.Window',
 			loadMethod: 'html',
 			closeAfter: 1500,
 			type: 'notification',

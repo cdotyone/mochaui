@@ -77,10 +77,10 @@ MUI.Dock = new NamedClass('MUI.Dock', {
 		self.el.element = div.store('instance', this);
 
 		if (!isNew || o._container) this._addToContainer(o._container, div);
-		else window.addEvent('domready', function(){
+		else window.addEvent('domready', (function(){
 			if (!o._container) o._container = $(containerEl ? containerEl : o.container);
 			this._addToContainer(o._container, div);
-		});
+		}).bind(this));
 
 		return div;
 	},
@@ -106,7 +106,7 @@ MUI.Dock = new NamedClass('MUI.Dock', {
 				content[key] = val;
 		});
 		toolbar.content = content;
-		MUI.create(toolbar.control, toolbar);
+		MUI.create(toolbar);
 	}
 
 });

@@ -184,14 +184,16 @@ MUI.Toolbar = new NamedClass('MUI.Toolbar', {
 				this.el[button.id] = new Element('input', {id:button.id,'class':css,type:'button','value':button.text,title:button.title}).inject(div, where).addEvent('click', onclick).store('instance', this);
 				break;
 			case 'image':
-				var options = Object.clone(button);
+				var options = Object.clone(button).merge({
+					_container:div,
+					container:div.id,
+					onClick:onclick,
+					control:'MUI.ImageButton'
+				});
 				delete options.type;
 				delete options.position;
 				delete options.content;
-				options._container = div;
-				options.container = div.id;
-				options.onClick = onclick;
-				MUI.create('MUI.ImageButton', options);
+				MUI.create(options);
 				break;
 			default:
 				if (!css) css = 'icon';

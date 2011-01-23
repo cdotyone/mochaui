@@ -56,11 +56,12 @@ var initializeColumns = function(){
 					{'text':'Interactive','title':'Interactive Unit Tests'}
 				],
 				onLoaded: function(element, uOptions, json){
-					MUI.create('MUI.Tabs', {
-						'container':'test-panel',
-						'position': 'header',
-						'tabs':json,
-						'partner':'test-panel',
+					MUI.create({
+						control: 'MUI.Tabs',
+						container:'test-panel',
+						position: 'header',
+						tabs:json,
+						partner:'test-panel',
 						onTabSelected: function(tab, value){
 							buildTestTree(value);
 							if(!testPeriodId) testPeriodId = doAutomatedTests.periodical(1000);
@@ -152,14 +153,15 @@ var buildTestTree = function(testType){
 	if(tests.length==0) return;
 	var testTree=MUI.get('testTree');
 	if(!testTree) {
-		MUI.create('MUI.Tree', {
-			'id':'testTree',
-			'container':'test-panel',
-			'idField':'title',
-			'textField':'title',
-			'valueField':'title',
-			'titleField':'error',
-			'nodes':tests,
+		MUI.create({
+			control: 'MUI.Tree',
+			id: 'testTree',
+			container: 'test-panel',
+			idField: 'title',
+			textField: 'title',
+			valueField: 'title',
+			titleField: 'error',
+			nodes: tests,
 			onLoaded: function() {
 				testTree=MUI.get('testTree');
 			}
