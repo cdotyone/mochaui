@@ -51,7 +51,7 @@ MUI.DockHtml = new NamedClass('MUI.DockHtml', {
 		// make sure this controls has an ID
 		var id = o.id;
 		if (!id){
-			id = 'toolbarHtml' + (++MUI.IDCount);
+			id = 'toolbarHtml' + (++MUI.idCount);
 			o.id = id;
 		}
 		this.id = id;

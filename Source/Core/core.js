@@ -61,7 +61,7 @@ MUI.append({
 	initialized: false,
 	instances: new Hash(),
 	registered: new Hash(),
-	IDCount: 0,
+	idCount: 0,
 	ieSupport: 'excanvas',					// Makes it easier to switch between Excanvas and Moocanvas for testing
 	//pluginGroups: ['controls','plugins'],
 	path: MUI.options.path,					// depreciated, will be removed
@@ -113,7 +113,7 @@ MUI.append({
 		return MUI.replaceFields(files, paths);
 	},
 
-	files: new Hash({'{source}Core/Core.js': 'loaded'}),
+	files: new Hash({'{source}Core/core.js': 'loaded'}),
 
 	getID: function(el){
 		if (type == 'string') return el;

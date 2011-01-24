@@ -50,7 +50,7 @@ MUI.Dock = new NamedClass('MUI.Dock', {
 		// make sure this controls has an ID
 		var id = o.id;
 		if (!id){
-			id = 'toolbarDock' + (++MUI.IDCount);
+			id = 'toolbarDock' + (++MUI.idCount);
 			o.id = id;
 		}
 		this.id = id;

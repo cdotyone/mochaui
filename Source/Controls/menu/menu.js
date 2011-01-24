@@ -52,7 +52,7 @@ MUI.Menu = new NamedClass('MUI.Menu', {
 		// make sure this controls has an ID
 		var id = o.id;
 		if (!id){
-			id = 'toolbarMenu' + (++MUI.IDCount);
+			id = 'toolbarMenu' + (++MUI.idCount);
 			o.id = id;
 		}
 		this.id = id;

@@ -70,7 +70,7 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 		// make sure this controls has an ID
 		var id = o.id;
 		if (!id){
-			id = 'accordion' + (++MUI.IDCount);
+			id = 'accordion' + (++MUI.idCount);
 			o.id = id;
 		}
 
@@ -185,7 +185,7 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 		var o = self.options;
 
 		var value = MUI.getData(panel, o.valueField);
-		if (!value) value = 'apanel' + (++MUI.IDCount);
+		if (!value) value = 'apanel' + (++MUI.idCount);
 		var text = MUI.getData(panel, o.textField);
 		var title = MUI.getData(panel, o.titleField);
 		var html = MUI.getData(panel, o.contentField);

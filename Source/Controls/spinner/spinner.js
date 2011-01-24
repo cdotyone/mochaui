@@ -51,7 +51,7 @@ MUI.Spinner = new NamedClass('MUI.Spinner', {
 		// make sure this controls has an ID
 		var id = o.id;
 		if (!id){
-			id = 'toolbarSpinner' + (++MUI.IDCount);
+			id = 'toolbarSpinner' + (++MUI.idCount);
 			o.id = id;
 		}
 		this.id = id;

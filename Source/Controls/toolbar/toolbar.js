@@ -72,7 +72,7 @@ MUI.Toolbar = new NamedClass('MUI.Toolbar', {
 		// make sure this controls has an ID
 		var id = o.id;
 		if (!id){
-			id = 'toolbar' + (++MUI.IDCount);
+			id = 'toolbar' + (++MUI.idCount);
 			o.id = id;
 		}
 		this.id = id;

@@ -65,7 +65,7 @@ MUI.Tabs = new NamedClass('MUI.Tabs', {
 		// make sure this controls has an ID
 		var id = o.id;
 		if (!id){
-			id = 'tabs' + (++MUI.IDCount);
+			id = 'tabs' + (++MUI.idCount);
 			o.id = id;
 		}
 		this.id = id;

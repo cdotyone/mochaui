@@ -53,8 +53,9 @@ MUI.Column = new NamedClass('MUI.Column', {
 		});
 
 		// If column has no ID, give it one.
-		if (this.options.id == null) this.options.id = 'column' + (++MUI.IDCount);
+		if (this.options.id == null) this.options.id = 'column' + (++MUI.idCount);
 		this.id = this.options.id;
+		MUI.set(this.id, this);
 
 		if (this.options.drawOnInit) this.draw();
 	},

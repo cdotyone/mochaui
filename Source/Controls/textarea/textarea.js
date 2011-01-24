@@ -67,7 +67,7 @@ MUI.TextArea = new NamedClass('MUI.TextArea', {
 		// make sure this controls has an ID
 		var id = o.id;
 		if (!id){
-			id = 'textbox' + (++MUI.IDCount);
+			id = 'textbox' + (++MUI.idCount);
 			o.id = id;
 		}
 

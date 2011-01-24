@@ -55,7 +55,7 @@ MUI.ImageButton = new NamedClass('MUI.ImageButton', {
 		// make sure this controls has an ID
 		var id = this.options.id;
 		if (!id){
-			id = 'imageButton' + (++MUI.IDCount);
+			id = 'imageButton' + (++MUI.idCount);
 			this.options.id = id;
 		}
 

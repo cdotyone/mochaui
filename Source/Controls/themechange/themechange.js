@@ -51,7 +51,7 @@ MUI.ThemeChange = new NamedClass('MUI.ThemeChange', {
 		// make sure this controls has an ID
 		var id = o.id;
 		if (!id){
-			id = 'toolbarThemeChange' + (++MUI.IDCount);
+			id = 'toolbarThemeChange' + (++MUI.idCount);
 			o.id = id;
 		}
 		this.id = id;

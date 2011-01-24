@@ -65,7 +65,7 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 		// make sure this controls has an ID
 		var id = this.options.id;
 		if (!id) {
-			id = 'checkBoxGrid' + (++MUI.IDCount);
+			id = 'checkBoxGrid' + (++MUI.idCount);
 			this.options.id = id;
 		}
 

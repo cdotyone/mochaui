@@ -73,7 +73,7 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 		// make sure this controls has an ID
 		var id = this.options.id;
 		if (!id){
-			id = 'grid' + (++MUI.IDCount);
+			id = 'grid' + (++MUI.idCount);
 			this.options.id = id;
 		}
 		this.id = id;

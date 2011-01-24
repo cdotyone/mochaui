@@ -310,7 +310,7 @@ MUI.Window.implement({
 		}
 
 		// If window has no ID, give it one.
-		options.id = options.id || 'win' + (++MUI.IDCount);
+		options.id = options.id || 'win' + (++MUI.idCount);
 
 		this.el.windowEl = $(options.id);
 

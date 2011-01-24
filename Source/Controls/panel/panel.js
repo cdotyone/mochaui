@@ -72,7 +72,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		});
 
 		// If panel has no ID, give it one.
-		if (this.options.id == null) this.options.id = 'panel' + (++MUI.IDCount);
+		if (this.options.id == null) this.options.id = 'panel' + (++MUI.idCount);
 		this.id = this.options.id;
 		MUI.set(this.id, this);
 

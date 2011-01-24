@@ -26,7 +26,7 @@
  ...
  */
 
-MUI.files['{controls}Tree/Tree.js'] = 'loaded';
+MUI.files['{controls}tree/tree.js'] = 'loaded';
 
 MUI.Tree = new NamedClass('MUI.Tree', {
 
@@ -67,13 +67,15 @@ MUI.Tree = new NamedClass('MUI.Tree', {
 
 	initialize: function(options){
 		this.setOptions(options);
+		this.el = {};
 
 		// make sure this controls has an ID
 		var id = this.options.id;
 		if (!id){
-			id = 'tree' + (++MUI.IDCount);
+			id = 'tree' + (++MUI.idCount);
 			this.options.id = id;
 		}
+		this.id=id;
 		MUI.set(id, this);
 
 		if (options.content){
@@ -83,10 +85,10 @@ MUI.Tree = new NamedClass('MUI.Tree', {
 				this.draw();
 			}).bind(this);
 			MUI.Content.update(options.content);
+		} else {
+			// create sub items if available
+			if (this.options.drawOnInit && this.options.nodes.length > 0) this.draw();
 		}
-
-		// create sub items if available
-		if (this.options.drawOnInit && this.options.nodes.length > 0) this.draw();
 	},
 
 	draw: function(containerEl){

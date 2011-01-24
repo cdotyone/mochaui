@@ -69,7 +69,7 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		// make sure this controls has an ID
 		var id = this.options.id;
 		if (!id){
-			id = 'selectList' + (++MUI.IDCount);
+			id = 'selectList' + (++MUI.idCount);
 			this.options.id = id;
 		}
 

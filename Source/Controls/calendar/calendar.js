@@ -68,7 +68,7 @@ MUI.Calendar = new NamedClass('MUI.Calendar', {
 		var o = this.options;
 
 		// make sure this controls has an ID
-		if (!o.id) o.id = 'calendar' + (++MUI.IDCount);
+		if (!o.id) o.id = 'calendar' + (++MUI.idCount);
 
 		// create our classes array
 		var keys = [o.cssClass, 'prev', 'next', 'month', 'year', 'today', 'invalid', 'valid', 'inactive', 'active', 'hover', 'hilite'];
