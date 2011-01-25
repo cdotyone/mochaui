@@ -2,7 +2,7 @@ MochaUI Authors
 
 This software consists of voluntary contributions made by many
 individuals. For exact contribution history, see the revision history
-and logs, available at http://github.com/cdotyone/mochaui
+and logs, available at http://github.com/mui/mochaui
 
 Chris Doty (cdotyone@gmail.com)
 Greg Houstan (gregory.houston@gmail.com)
