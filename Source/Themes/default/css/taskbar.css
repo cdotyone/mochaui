@@ -15,18 +15,18 @@
  */
 
 /* Taskbar */
-#taskbarWrapper { display: none; width: 100%; }
-#taskbarWrapper.top { }
-#taskbar { position: relative; padding: 3px 16px 0 6px; bottom: 0; left: 0; background: #f2f2f2; min-height: 27px; height: auto; }
-* html #taskbar { height: 30px; /* Used for IE 6.0 since it does not support min-height */ }
+.taskbarWrapper { display: none; width: 100%; }
+.taskbarWrapper.top { }
+.taskbar { position: relative; padding: 3px 16px 0 6px; bottom: 0; left: 0; background: #f2f2f2; min-height: 27px; height: auto; }
+* html .taskbar { height: 30px; /* Used for IE 6.0 since it does not support min-height */ }
 .taskbarTab { float: left; position: relative; font-size: 11px; width: 150px; height: 24px; margin: 0 3px 2px 0; overflow: hidden; cursor: pointer; background: url(../images/taskbar-tabs.gif) left top no-repeat; }
-.taskbarTab.activetaskbarTab { background-position: left -24px; }
+.taskbarTab.activeTab { background-position: left -24px; }
 .taskbarText { position: absolute; top: 0; left: 0; display: block; font-weight: bold; color: #555; text-align: left; padding: 4px 10px 2px 10px; width: 130px; height: 19px; overflow: hidden; }
 .taskbarText:hover { color: #333; }
-.taskbarTab.activetaskbarTab .taskbarText { color: #333; }
-#taskbarCanvas { position: absolute; top: 5px; right: 3px; z-index: 2; }
-#taskbarPlacement { position: absolute; top: 4px; right: 8px; width: 10px; height: 9px; opacity: 0; cursor: pointer; z-index: 3; /* for IE */ text-align: right; }
-#taskbarAutoHide { position: absolute; top: 14px; right: 8px; width: 10px; height: 9px; opacity: 0; cursor: pointer; z-index: 3; /* for IE */ text-align: right; }
+.taskbarTab.activeTab .taskbarText { color: #333; }
+.taskbarCanvas { position: absolute; top: 5px; right: 3px; z-index: 2; }
+.taskbarPlacement { position: absolute; top: 4px; right: 8px; width: 10px; height: 9px; opacity: 0; cursor: pointer; z-index: 3; /* for IE */ text-align: right; }
+.taskbarAutoHide { position: absolute; top: 14px; right: 8px; width: 10px; height: 9px; opacity: 0; cursor: pointer; z-index: 3; /* for IE */ text-align: right; }
 .taskbarButtonEnabled { background-color: #7399bf; }
 .taskbarButtonDisabled { background-color: #aaa; }
 .taskbarButtonTrue { background-color: #33cc33; }

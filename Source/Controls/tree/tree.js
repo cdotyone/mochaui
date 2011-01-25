@@ -67,16 +67,12 @@ MUI.Tree = new NamedClass('MUI.Tree', {
 
 	initialize: function(options){
 		this.setOptions(options);
+		options = this.options;
 		this.el = {};
 
-		// make sure this controls has an ID
-		var id = this.options.id;
-		if (!id){
-			id = 'tree' + (++MUI.idCount);
-			this.options.id = id;
-		}
-		this.id=id;
-		MUI.set(id, this);
+		// If tree has no ID, give it one.
+		this.id = options.id = options.id || 'tree' + (++MUI.idCount);
+		MUI.set(this.id, this);
 
 		if (options.content){
 			options.content.loadMethod = 'json';
@@ -87,26 +83,24 @@ MUI.Tree = new NamedClass('MUI.Tree', {
 			MUI.Content.update(options.content);
 		} else {
 			// create sub items if available
-			if (this.options.drawOnInit && this.options.nodes.length > 0) this.draw();
+			if (options.drawOnInit && options.nodes.length > 0) this.draw();
 		}
 	},
 
-	draw: function(containerEl){
-		var self = this;
-		var o = self.options;
+	draw: function(container){
+		var o = this.options;
+		if(!container) container=o.container;
 
 		var isNew = false;
-		var div = $(o.id);
+		var div = o.element ? o.element : $(o.id);
 		var ul;
 		if (!div){
 			div = new Element('div', {'id': o.id, 'class': o.cssClass});
 			isNew = true;
 		} else ul = div.getElement('ul');
-		if (!ul){
-			div.empty();
-			ul = new Element('ul', {'class': o.cssClass}).inject(div);
-		} else ul.empty();
-		self.element = div;
+		if (!ul) ul = new Element('ul', {'class': o.cssClass}).inject(div.empty());
+		else ul.empty();
+		this.el.element = div;
 
 		var nodes = o.nodes;
 		if (o.nodes.length > 1){
@@ -114,8 +108,8 @@ MUI.Tree = new NamedClass('MUI.Tree', {
 			ul = new Element('ul').inject(li);
 		}
 		nodes.each(function(node){
-			self.buildNode(node, ul, 1);
-		});
+			this.buildNode(node, ul, 1);
+		},this);
 		var first = ul.getFirst();
 		if (first) first.addClass('first');
 		var last = ul.getChildren().getLast();
@@ -124,28 +118,33 @@ MUI.Tree = new NamedClass('MUI.Tree', {
 		o.depth = 0;
 
 		if (!isNew){
-			self.fireEvent('loaded', [self]);
+			this.fireEvent('loaded', [this]);
 			return this;
 		}
 
-		window.addEvent('domready', function(){
+		var addToContainer = function() {
+			if (o.clearContainer) container.empty();
+			div.inject(container);
+			this.fireEvent('loaded', [this]);
+		}.bind(this);
+
+		if(typeof(container)=='element') {
+			addToContainer();
+			return this;
+		} else window.addEvent('domready', function(){
 			// determine parent container object
-			if (!o._container && typeof(o.container) == 'string'){
-				var instance = MUI.get(o.container);
+			if (typeof(container) == 'string'){
+				container = $(container);
+				var instance = MUI.get(container);
 				if (instance){
 					div.setStyle('overflow', 'auto');
-					if (instance.el.content) o._container = instance.el.content;
+					if (instance.el.content) container = instance.el.content;
 				}
-				if (!o._container) o._container = $(containerEl ? containerEl : o.container);
 			}
+			addToContainer();
+		}.bind(this));
 
-			if (o.clearContainer) o._container.empty();
-			o._container.appendChild(div);
-
-			self.fireEvent('loaded', [self]);
-		});
-
-		return div;
+		return this;
 	},
 
 	selectValue: function(val, e, suppressEvent){
@@ -188,13 +187,12 @@ MUI.Tree = new NamedClass('MUI.Tree', {
 	},
 
 	buildNode: function(node, parent, depth){
-		var self = this;
 		var o = this.options;
 		if (!depth) depth = 1;
 
 		var a, span, ul, li;
 		var id = MUI.getData(node, o.idField);
-		if (!id) id = 'tn' + (++MUI.IDCount);
+		if (!id) id = 'tn' + (++MUI.idCount);
 
 		if (node._element != null) li = node._element;
 		if (!li) li = new Element('li', {'id': id + '_li'});
@@ -217,9 +215,9 @@ MUI.Tree = new NamedClass('MUI.Tree', {
 		if (title) node._a.title = title;
 
 		if (o.value == value){
-			self.element.getElements('.sel').removeClass('sel');
+			this.el.element.getElements('.sel').removeClass('sel');
 			node._a.className = 'sel';
-			o.selectedNode = self;
+			o.selectedNode = this;
 		}
 
 		if (node.nodes && node.nodes.length > 0){
@@ -231,7 +229,7 @@ MUI.Tree = new NamedClass('MUI.Tree', {
 			node._ul = ul;
 
 			for (var i = 0; i < node.nodes.length; i++){
-				self.buildNode(node.nodes[i], node, ul, depth + 1);
+				this.buildNode(node.nodes[i], node, ul, depth + 1);
 			}
 			ul.childNodes[ul.childNodes.length - 1].addClass('last');
 		} else li.addClass('nochild');
@@ -247,21 +245,18 @@ MUI.Tree = new NamedClass('MUI.Tree', {
 		if (node._checkbox){
 			var isChecked = MUI.getData(node, o.isCheckedField);
 			if (isChecked != null) node._checkbox.checked = isChecked;
-			node._checkbox.removeEvents('click');
-			node._checkbox.addEvent('click', function(e){
-				self.onNodeCheck(node, e);
-			});
+			node._checkbox.removeEvents('click')._checkbox.addEvent('click', function(e){
+				this.onNodeCheck(node, e);
+			}.bind(this));
 		}
-		li.removeEvents('click');
-		li.addEvent('click', function(e){
-			self.onNodeExpand(node, e);
+		li.removeEvents('click').addEvent('click', function(e){
+			this.onNodeExpand(node, e);
 		});
-		node._a.removeEvents('click');
-		node._a.addEvent('click', function(e){
-			self.onNodeClick(node, e);
-		});
+		node._a.removeEvents('click').addEvent('click', function(e){
+			this.onNodeClick(node, e);
+		}.bind(this));
 
-		return self;
+		return this;
 	},
 
 	nodeFind: function(val, node){

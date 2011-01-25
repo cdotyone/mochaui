@@ -34,7 +34,9 @@ MUI.Column = new NamedClass('MUI.Column', {
 		width:			null,
 		resizeLimit:	[],
 		sortable:		true,
-		isCollapsed:	false
+		isCollapsed:	false,
+
+		panels:			[]
 
 		//onDrawBegin:	null,
 		//onDrawEnd:	null,
@@ -53,45 +55,52 @@ MUI.Column = new NamedClass('MUI.Column', {
 		});
 
 		// If column has no ID, give it one.
-		if (this.options.id == null) this.options.id = 'column' + (++MUI.idCount);
-		this.id = this.options.id;
+		this.id = this.options.id = this.options.id || 'column' + (++MUI.idCount);
 		MUI.set(this.id, this);
 
 		if (this.options.drawOnInit) this.draw();
 	},
 
 	draw: function(){
+		// todo: need to domready adding to container
+		// todo: need to except external container
+ 
 		var options = this.options;
+
 		this.fireEvent('drawBegin', [this]);
 
-		if (options.container == null) options.container = MUI.Desktop.pageWrapper;
+		if (options.container == null) options.container = MUI.desktop.el.content;
 		else $(options.container).setStyle('overflow', 'hidden');
-
 		if (typeOf(options.container) == 'string') options.container = $(options.container);
 
 		// Check if column already exists
 		if (this.el.column) return this;
 		else MUI.set(options.id, this);
 
-		// If loading columns into a panel, hide the regular content container.
-		if ($(options.container).getElement('.pad') != null) $(options.container).getElement('.pad').hide();
+		var parentInstance = MUI.get(options.container);
+		if(parentInstance && (parentInstance.isTypeOf('MUI.Panel') || parentInstance.isTypeOf('MUI.Window'))) {
+			// If loading columns into a panel, hide the regular content container.
+			if (parentInstance.el.element.getElement('.pad') != null) parentInstance.el.element.getElement('.pad').hide();
 
-		// If loading columns into a window, hide the regular content container.
-		if ($(options.container).getElement('.mochaContent') != null)  $(options.container).getElement('.mochaContent').hide();
+			// If loading columns into a window, hide the regular content container.
+			if (parentInstance.el.element.getElement('.mochaContent') != null)  parentInstance.el.element.getElement('.mochaContent').hide();
+		}
 
-		this.el.column = new Element('div', {
-			'id': options.id,
-			'class': 'column expanded',
-			'styles': {
-				'width': options.placement == 'main' ? null : options.width
-			}
-		}).inject($(options.container));
+		// make or use existing element
+		if (options.element) this.el.column = options.element;
+		else if ($(options.id)) this.el.column = $(options.id);
+		else this.el.column = new Element('div', {'id': options.id}).inject($(options.container));
+		this.el.element = this.el.column;
 
-		this.el.column.store('instance', this);
-
+		// parent container's height
 		var parent = this.el.column.getParent();
 		var columnHeight = parent.getStyle('height').toInt();
-		this.el.column.setStyle('height', columnHeight);
+
+		// format column element correctly
+		this.el.column.addClass('column expanded')
+				.setStyle('width', options.placement == 'main' ? null : options.width)
+				.store('instance', this)
+				.setStyle('height', columnHeight);
 
 		if (options.sortable){
 			if (!options.container.retrieve('sortables')){
@@ -138,7 +147,6 @@ MUI.Column = new NamedClass('MUI.Column', {
 				options.container.retrieve('sortables').addLists(this.el.column);
 			}
 		}
-
 		if (options.placement == 'main') this.el.column.addClass('rWidth');
 
 		switch (options.placement){
@@ -178,7 +186,21 @@ MUI.Column = new NamedClass('MUI.Column', {
 		}
 
 		MUI.rWidth();
-		this.fireEvent('drawEnd', [this]);
+
+		if (options.panels){
+			for(var i=0;i<options.panels.length;i++) {
+				var panel=options.panels[i];
+
+				if (!panel.id) panel.id = options.id + 'Panel' + i;
+				panel.container = this.el.column;
+				panel.column = options.id;
+				panel.element = new Element('div', {'id':panel.id+'_wrapper'}).inject(this.el.column);
+				panel.control = 'MUI.Panel';
+				MUI.create(panel);
+			}
+		}
+
+		//this.fireEvent('drawEnd', [this]);
 		return this;
 	},
 
@@ -263,13 +285,15 @@ MUI.Column = new NamedClass('MUI.Column', {
 		var sortables = self.options.container.retrieve('sortables');
 		if (sortables) sortables.removeLists(this.el.column);
 
-		Array.each(this.el, function(el){el.destroy();});
+		Array.each(this.el, function(el){
+			el.destroy();
+		});
 		this.el = {};
 
 		MUI.erase(self.options.id);
 		return this;
 	},
-	
+
 	_addResize: function(element, min, max, where){
 		var instance = this;
 		if (!$(element)) return;
@@ -350,6 +374,295 @@ MUI.Column = new NamedClass('MUI.Column', {
 				});
 
 			}.bind(this)
+		});
+	}
+
+});
+
+MUI.append({
+
+	// Panel Height
+	panelHeight: function(column, changing, action){
+		if (column != null){
+			MUI.panelHeight2($(column), changing, action);
+		} else {
+			$$('.column').each(function(column){
+				MUI.panelHeight2(column);
+			}.bind(this));
+		}
+	},
+
+	panelHeight2: function(column, changing, action){
+		var parent = column.getParent();
+		var columnHeight = parent.getStyle('height').toInt();
+		if (Browser.ie6 && parent == MUI.Desktop.pageWrapper){
+			columnHeight -= 1;
+		}
+		column.setStyle('height', columnHeight);
+
+		// Get column panels
+		var panels = [];
+		column.getChildren('.panelWrapper').each(function(panelWrapper){
+			panels.push(panelWrapper.getElement('.panel'));
+		}.bind(this));
+
+		// Get expanded column panels
+		var panelsExpanded = [];
+		column.getChildren('.expanded').each(function(panelWrapper){
+			panelsExpanded.push(panelWrapper.getElement('.panel'));
+		}.bind(this));
+
+		// All the panels in the column whose height will be effected.
+		var panelsToResize = [];
+
+		// The panel with the greatest height. Remainders will be added to this panel
+		var tallestPanel;
+		var tallestPanelHeight = 0;
+
+		this.panelsTotalHeight = 0; // Height of all the panels in the column
+		this.height = 0; // Height of all the elements in the column
+
+		// Set panel resize partners
+		panels.each(function(panel){
+			var instance = MUI.get(panel.id);
+			if (panel.getParent().hasClass('expanded') && panel.getParent().getNext('.expanded')){
+				instance.partner = panel.getParent().getNext('.expanded').getElement('.panel');
+				instance.resize.attach();
+				instance.el.handle.setStyles({
+					'display': 'block',
+					'cursor': Browser.webkit ? 'row-resize' : 'n-resize'
+				}).removeClass('detached');
+			} else {
+				instance.resize.detach();
+				instance.el.handle.setStyles({
+					'display': 'none',
+					'cursor': null
+				}).addClass('detached');
+			}
+			if (panel.getParent().getNext('.panelWrapper') == null){
+				instance.el.handle.hide();
+			}
+		}.bind(this));
+
+		// Add panels to panelsToResize
+		// Get the total height of all the resizable panels
+		// Get the total height of all the column's children
+		column.getChildren().each(function(panelWrapper){
+
+			panelWrapper.getChildren().each(function(el){
+
+				if (el.hasClass('panel')){
+					var instance = MUI.get(el.id);
+
+					// Are any next siblings Expanded?
+					anyNextSiblingsExpanded = function(el){
+						var test;
+						el.getParent().getAllNext('.panelWrapper').each(function(sibling){
+							var siblingInstance = MUI.get(sibling.getElement('.panel').id);
+							if (!siblingInstance.isCollapsed){
+								test = true;
+							}
+						}.bind(this));
+						return test;
+					}.bind(this);
+
+					// If a next sibling is expanding, are any of the nexts siblings of the expanding sibling Expanded?
+					var anyExpandingNextSiblingsExpanded = function(){
+						var test;
+						changing.getParent().getAllNext('.panelWrapper').each(function(sibling){
+							var siblingInstance = MUI.get(sibling.getElement('.panel').id);
+							if (!siblingInstance.isCollapsed){
+								test = true;
+							}
+						}.bind(this));
+						return test;
+					}.bind(this);
+
+					// Is the panel that is collapsing, expanding, or new located after this panel?
+					var anyNextContainsChanging = function(el){
+						var allNext = [];
+						el.getParent().getAllNext('.panelWrapper').each(function(panelWrapper){
+							allNext.push(panelWrapper.getElement('.panel'));
+						}.bind(this));
+						return allNext.contains(changing);
+					}.bind(this);
+
+					var nextExpandedChanging = function(el){
+						var test;
+						if (el.getParent().getNext('.expanded')){
+							if (el.getParent().getNext('.expanded').getElement('.panel') == changing) test = true;
+						}
+						return test;
+					};
+
+					// NEW PANEL
+					// Resize panels that are "new" or not collapsed
+					if (action == 'new'){
+						if (!instance.isCollapsed && el != changing){
+							panelsToResize.push(el);
+							this.panelsTotalHeight += el.offsetHeight.toInt();
+						}
+					}
+
+					// COLLAPSING PANELS and CURRENTLY EXPANDED PANELS
+					// Resize panels that are not collapsed.
+					// If a panel is collapsing resize any expanded panels below.
+					// If there are no expanded panels below it, resize the expanded panels above it.
+					else if (action == null || action == 'collapsing'){
+						if (!instance.isCollapsed && (!anyNextContainsChanging(el) || !anyNextSiblingsExpanded(el))){
+							panelsToResize.push(el);
+							this.panelsTotalHeight += el.offsetHeight.toInt();
+						}
+					}
+
+					// EXPANDING PANEL
+					// Resize panels that are not collapsed and are not expanding.
+					// Resize any expanded panels below the expanding panel.
+					// If there are no expanded panels below the expanding panel, resize the first expanded panel above it.
+					else if (action == 'expanding' && !instance.isCollapsed && el != changing){
+						if (!anyNextContainsChanging(el) || (!anyExpandingNextSiblingsExpanded(el) && nextExpandedChanging(el))){
+							panelsToResize.push(el);
+							this.panelsTotalHeight += el.offsetHeight.toInt();
+						}
+					}
+
+					if (el.style.height){
+						this.height += el.getStyle('height').toInt();
+					}
+				} else {
+					this.height += el.offsetHeight.toInt();
+				}
+			}.bind(this));
+
+			panelsToResize.each(function(panel){
+				var MUIPanel = MUI.get(panel.id);
+				if (action != 'new') MUIPanel.fireEvent('resize', [MUIPanel]);
+			});
+
+		}.bind(this));
+
+		// Get the remaining height
+		var remainingHeight = column.offsetHeight.toInt() - this.height;
+
+		this.height = 0;
+
+		// Get height of all the column's children
+		column.getChildren().each(function(el){
+			this.height += el.offsetHeight.toInt();
+		}.bind(this));
+
+		remainingHeight = column.offsetHeight.toInt() - this.height;
+
+		panelsToResize.each(function(panel){
+			var ratio = this.panelsTotalHeight / panel.offsetHeight.toInt();
+			var newPanelHeight = panel.getStyle('height').toInt() + (remainingHeight / ratio);
+			if (newPanelHeight < 1){
+				newPanelHeight = 0;
+			}
+			panel.setStyle('height', newPanelHeight);
+		}.bind(this));
+
+		// Make sure the remaining height is 0. If not add/subtract the
+		// remaining height to the tallest panel. This makes up for browser resizing,
+		// off ratios, and users trying to give panels too much height.
+
+		// Get height of all the column's children
+		this.height = 0;
+		column.getChildren().each(function(panelWrapper){
+			panelWrapper.getChildren().each(function(el){
+				this.height += el.offsetHeight.toInt();
+				if (el.hasClass('panel') && el.getStyle('height').toInt() > tallestPanelHeight){
+					tallestPanel = el;
+					tallestPanelHeight = el.getStyle('height').toInt();
+				}
+			}.bind(this));
+		}.bind(this));
+
+		remainingHeight = column.offsetHeight.toInt() - this.height;
+
+		if (remainingHeight != 0 && tallestPanelHeight > 0){
+			tallestPanel.setStyle('height', tallestPanel.getStyle('height').toInt() + remainingHeight);
+			if (tallestPanel.getStyle('height') < 1){
+				tallestPanel.setStyle('height', 0);
+			}
+		}
+
+		parent.getChildren('.columnHandle').each(function(handle){
+			var parent = handle.getParent();
+			if (parent.getStyle('height').toInt() < 1) return; // Keeps IE7 and 8 from throwing an error when collapsing a panel within a panel
+			var handleHeight = parent.getStyle('height').toInt() - handle.getStyle('border-top').toInt() - handle.getStyle('border-bottom').toInt();
+			if (Browser.ie6 && parent == MUI.Desktop.pageWrapper){
+				handleHeight -= 1;
+			}
+			handle.setStyle('height', handleHeight);
+		});
+
+		panelsExpanded.each(function(panel){
+			MUI.resizeChildren(panel);
+		}.bind(this));
+
+	},
+
+	resizeChildren: function(panel){ // May rename this resizeIframeEl()
+		var instance = MUI.get(panel.id);
+		var contentWrapper = instance.el.contentWrapper;
+
+		if (instance.el.iframe){
+			if (!Browser.ie){
+				instance.el.iframe.setStyles({
+					'height': contentWrapper.getStyle('height'),
+					'width': contentWrapper.offsetWidth - contentWrapper.getStyle('border-left').toInt() - contentWrapper.getStyle('border-right').toInt()
+				});
+			} else {
+				// The following hack is to get IE8 RC1 IE8 Standards Mode to properly resize an iframe
+				// when only the vertical dimension is changed.
+				instance.el.iframe.setStyles({
+					'height': contentWrapper.getStyle('height'),
+					'width': contentWrapper.offsetWidth - contentWrapper.getStyle('border-left').toInt() - contentWrapper.getStyle('border-right').toInt() - 1
+				});
+				instance.el.iframe.setStyles({
+					'width': contentWrapper.offsetWidth - contentWrapper.getStyle('border-left').toInt() - contentWrapper.getStyle('border-right').toInt()
+				});
+			}
+		}
+
+	},
+
+	rWidth: function(container){ // Remaining Width
+		if (container == null) container = MUI.Desktop.desktop;
+		if (container == null) return;
+		container.getElements('.rWidth').each(function(column){
+			var currentWidth = column.offsetWidth.toInt();
+			currentWidth -= column.getStyle('border-left').toInt();
+			currentWidth -= column.getStyle('border-right').toInt();
+
+			var parent = column.getParent();
+			this.width = 0;
+
+			// Get the total width of all the parent element's children
+			parent.getChildren().each(function(el){
+				if (el.hasClass('mocha') != true){
+					this.width += el.offsetWidth.toInt();
+				}
+			}.bind(this));
+
+			// Add the remaining width to the current element
+			var remainingWidth = parent.offsetWidth.toInt() - this.width;
+			var newWidth = currentWidth + remainingWidth;
+			if (newWidth < 1) newWidth = 0;
+			column.setStyle('width', newWidth);
+
+			// fire all panel resize events and the column resize event
+			var instance = MUI.get(column.id);
+			[instance].combine(instance.getPanels()).each(function(panel){
+				panel.fireEvent('resize', [panel]);
+			}, this);
+
+			column.getElements('.panel').each(function(panel){
+				panel.setStyle('width', newWidth - panel.getStyle('border-left').toInt() - panel.getStyle('border-right').toInt());
+				MUI.resizeChildren(panel);
+			}.bind(this));
+
 		});
 	}
 

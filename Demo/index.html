@@ -12,18 +12,20 @@
 	<link rel="stylesheet" type="text/css" href="../Source/Themes/default/css/desktop.css"/>
 	<link rel="stylesheet" type="text/css" href="../Source/Themes/default/css/taskbar.css"/>
 	<link rel="stylesheet" type="text/css" href="../Source/Themes/default/css/window.css"/>
+	<link rel="stylesheet" type="text/css" href="../Source/Themes/default/css/imagebutton.css"/>
 
 	<!--[if IE]>
 	<script type="text/javascript" src="scripts/excanvas_r43.js"></script>
 	<![endif]-->
-	<script type="text/javascript" src="scripts/mootools-1.3.0-core-nocompat-yc.js"></script>
+	<script type="text/javascript" src="scripts/mootools-1.3.0-core-nocompat.js"></script>
 	<script type="text/javascript" src="scripts/mootools-1.3.0-more-yc.js"></script>
 
 	<!--MOCHAUI-->
 	<script type="text/javascript" src="../Source/Core/core.js"></script>
 	<script type="text/javascript" src="../Source/Core/canvas.js"></script>
 	<script type="text/javascript" src="../Source/Core/content.js"></script>
-	<script type="text/javascript" src="../Source/Core/desktop.js"></script>
+	<script type="text/javascript" src="../Source/Controls/desktop/desktop.js"></script>
+	<script type="text/javascript" src="../Source/Controls/imagebutton/imagebutton.js"></script>
 	<script type="text/javascript" src="../Source/Controls/column/column.js"></script>
 	<script type="text/javascript" src="../Source/Controls/panel/panel.js"></script>
 	<script type="text/javascript" src="../Source/Controls/taskbar/taskbar.js"></script>
@@ -37,122 +39,7 @@
 <body>
 
 <div id="desktop">
-
-	<div id="desktopHeader">
-		<div id="desktopTitlebarWrapper">
-			<div id="desktopTitlebar">
-
-				<h1 class="applicationTitle">Mocha UI</h1>
-
-				<h2 class="tagline">A Web Applications <span class="taglineEm">User Interface Library</span></h2>
-
-				<div id="topNav">
-					<ul class="menu-right">
-						<li>Welcome <a href="#" onclick="MochaUI.notification('Do Something');return false;">Demo
-							User</a>.
-						</li>
-						<li><a href="#" onclick="MochaUI.notification('Do Something');return false;">Sign Out</a></li>
-					</ul>
-				</div>
-			</div>
-		</div>
-		<div id="desktopNavbar">
-			<ul>
-				<li><a class="returnFalse" href="">File</a>
-					<ul>
-						<li><a href="#" onclick="MochaUI.notification('Do Something');return false;">Open</a></li>
-						<li class="divider"><a class="returnFalse arrow-right" href="">Tests</a>
-							<ul>
-								<li><a id="windoweventsLinkCheck" href="pages/events.html">Window Events</a></li>
-								<li><a id="containertestLinkCheck" href="pages/lipsum.html">Container Test</a></li>
-								<li><a id="iframetestsLinkCheck" href="pages/iframetests.html">Iframe Tests</a></li>
-								<li><a id="formtestsLinkCheck" href="pages/formtests.html">Form Tests</a></li>
-								<li><a id="noCanvasLinkCheck" href="pages/lipsum.html">No Canvas Body</a></li>
-								<li><a id="CSS3LinkCheck" href="pages/lipsum.html">CSS3 Body</a></li>
-								<li><a id="CSS3fallbackLinkCheck" href="pages/lipsum.html">CSS3 Canvas Fallback</a></li>
-								<li><a id="forceCanvasLinkCheck" href="pages/lipsum.html">Force Canvas</a></li>
-								<li><a id="closePanelCheck" href="#">Close Panel</a></li>
-								<li><a id="closeColumnCheck" href="#">Close Column</a></li>
-							</ul>
-						</li>
-						<li class="divider"><a class="returnFalse arrow-right" href="">Starters</a>
-							<ul>
-								<li><a target="_blank" href="demo-virtual-desktop.html">Virtual Desktop</a></li>
-								<li><a target="_blank" href="demo-fixed-width.html">Fixed Width</a></li>
-								<li><a target="_blank" href="demo-taskbar-only.html">Fixed Width 2</a></li>
-								<li><a target="_blank" href="demo-no-toolbars.html">No Toolbars</a></li>
-								<li><a target="_blank" href="demo-no-desktop.html">No Desktop</a></li>
-								<li><a target="_blank" href="demo-modal-only.html">Modal Only</a></li>
-							</ul>
-						</li>
-					</ul>
-				</li>
-				<li><a class="returnFalse" href="">View</a>
-					<ul>
-						<li><a id="cascadeLink" href="">Cascade Windows</a></li>
-						<li><a id="tileLink" href="">Tile Windows</a></li>
-						<li class="divider"><a id="minimizeLink" href="">Minimize All Windows</a></li>
-						<li><a id="closeLink" href="">Close All Windows</a></li>
-					</ul>
-				</li>
-				<li><a class="returnFalse" href="">Tools</a>
-					<ul>
-						<li><a id="builderLinkCheck" href="../Source/Plugins/windowform/">Window Builder</a></li>
-						<li class="divider"><a class="returnFalse arrow-right" href="">Options</a>
-							<ul>
-								<li><a id="toggleStandardEffectsLinkCheck" href="#">Standard Effects</a></li>
-								<li><a id="toggleAdvancedEffectsLinkCheck" href="#">Advanced Effects</a></li>
-							</ul>
-						</li>
-					</ul>
-				</li>
-				<li>
-					<a class="returnFalse" href="">Workspace</a>
-					<ul>
-						<li><a id="saveWorkspaceLink" href="">Save Workspace</a></li>
-						<li><a id="loadWorkspaceLink" href="">Load Workspace</a></li>
-					</ul>
-				</li>
-				<li><a class="returnFalse" href="">Help</a>
-					<ul>
-						<li><a id="featuresLinkCheck" href="pages/features-general.html">Features</a></li>
-						<li class="divider"><a target="_blank" href="http://mochaui.com/docs/">Documentation</a></li>
-						<li class="divider"><a id="aboutLink" href="pages/about.html">About</a></li>
-					</ul>
-				</li>
-			</ul>
-
-			<div class="toolbar divider">
-				<div class="spinnerWrapper">
-					<div class="spinner"></div>
-				</div>
-			</div>
-
-			<div class="toolbar divider">
-				<select id="themeControl" name="themeControl" size="1"
-						onchange="MUI.Themes.init(this.options[this.selectedIndex].value)">
-					<option id="chooseTheme" value="" selected="selected">Choose Theme:</option>
-					<option value="default">Default</option>
-					<option value="Charcoal">Charcoal</option>
-				</select>
-			</div>
-
-		</div>
-		<!-- desktopNavbar end -->
-	</div>
-	<!-- desktopHeader end -->
-
-	<div id="pageWrapper"></div>
-
-	<div id="desktopFooterWrapper">
-		<div id="desktopFooter">
-			&copy; 2010 <a target="_blank" href="scripts/AUTHORS.txt" id="authorsLink">Various Contributors</a> -
-			<a target="_blank" href="license.html" id="licenseLink">MIT License</a>
-		</div>
-	</div>
-
 </div>
-<!-- desktop end -->
 
 </body>
 </html>

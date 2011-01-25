@@ -209,7 +209,9 @@ MUI.append({
 		if (js.length > 0 && MUI.files[js[0]] == 'loaded' && !options.fromHTML){
 			if (config.loadOnly || options.loadOnly) return null;
 			var klass = MUI[name];
-			return new klass(options);
+			var obj = new klass(options);
+			if (options.onNew) options.onNew(obj);
+			return obj;
 		}
 
 		if (options.fromHTML) js.push(path[sname] + cname + '_html.js');
@@ -224,7 +226,8 @@ MUI.append({
 			'onload':function(){
 				if (config.loadOnly || options.loadOnly) return;
 				var klass = MUI[name];
-				new klass(options);
+				var obj = new klass(options);
+				if (options.onNew) options.onNew(obj);
 				if (options.fromHTML) ret.fromHTML();
 			}
 		});
@@ -282,9 +285,10 @@ MUI.append({
 		}
 	},
 
-	getData: function(item, property){
-		if (!item || !property) return '';
-		if (item[property] == null) return '';
+	getData: function(item, property, dfault){
+		if (!dfault) dfault = '';
+		if (!item || !property) return dfault;
+		if (item[property] == null) return dfault;
 		return item[property];
 	},
 
@@ -328,12 +332,13 @@ MUI.append({
 	},
 
 	register: function(namespace, funcs, depth){
+		return;
 		try{
 			if (depth == null) depth = 4;
 			if (depth < 0) return;
 			Object.each(funcs, function(func, name){
 				if (typeOf(func) != 'function') return;
-				if (typeOf(func) != 'object'){
+				if (typeOf(func) == 'object'){
 					MUI.register(namespace + '.' + name, func, depth - 1);
 					return;
 				}
@@ -653,3 +658,27 @@ Object.append(Asset, {
 		return false;
 	}
 });
+
+(function(){
+	var realConsole = window.console || null,
+		fn = function(){},
+		disabledConsole = {
+			log: fn,
+			warn: fn,
+			info: fn,
+			enable: function(quiet){
+				window.dbg = realConsole ? realConsole : disabledConsole;
+				if (!quiet) window.dbg.log('dbg enabled.');
+			},
+			disable: function(){
+				window.dbg = disabledConsole;
+			}
+		};
+
+	if (realConsole) {
+		realConsole.disable = disabledConsole.disable;
+		realConsole.enable = disabledConsole.enable;
+	}
+
+	disabledConsole.enable(true);
+})();

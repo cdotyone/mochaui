@@ -43,34 +43,23 @@ MUI.Menu = new NamedClass('MUI.Menu', {
 	},
 
 	initialize: function(options){
-		options.instance = this;
 		this.setOptions(options);
-
-		var o = this.options;
 		this.el = {};
 
-		// make sure this controls has an ID
-		var id = o.id;
-		if (!id){
-			id = 'toolbarMenu' + (++MUI.idCount);
-			o.id = id;
-		}
-		this.id = id;
+		// If menu has no ID, give it one.
+		this.id = this.options.id = this.options.id || 'menu' + (++MUI.idCount);
+		MUI.set(this.id, this);
 
-		if (o.content) o.content.instance = this;
-		this.draw();
-
-		MUI.set(id, this);
+		if(this.options.drawOnInit) this.draw();
 	},
 
-	draw: function(containerEl){
-		var self = this;
-		var o = self.options;
+	draw: function(container){
+		var o = this.options;
+		if(!container) container=o.container;
 
+		// determine element for this control
 		var isNew = false;
-		var div;
-
-		div = $(o.id);
+		var div = o.element ? o.element : $(o.id);
 		if (!div){
 			div = new Element('div', {'id': o.id});
 			isNew = true;
@@ -82,46 +71,53 @@ MUI.Menu = new NamedClass('MUI.Menu', {
 		if (o.divider) div.addClass('divider');
 		if (o.orientation) div.addClass(o.orientation);
 
-		self.el.element = div.store('instance', this);
+		this.el.element = div.store('instance', this);
 		var ul = new Element('ul').inject(div);
 
 		this._buildItems(ul, o.items, false);
 
-		if (!isNew) return;
-		if (o._container) o._container.inject(div);
-		else window.addEvent('domready', function(){
-			if (!o._container){
-				o._container = $(containerEl ? containerEl : o.container);
-				if (o._container) o._container.inject(div);
-			}
-		});
+		// add to container
+		var addToContainer = function(){
+			if (typeOf(container) == 'string') container = $(container);
+			if (div.getParent() == null) div.inject(container);
+		}.bind(this);
+		if (!isNew || typeOf(container) == 'element') addToContainer();
+		else window.addEvent('domready', addToContainer);
 
-		return div;
+		return this;
 	},
 
 	_buildItems:function(ul, items, addArrow){
 		for (var i = 0; i < items.length; i++){
 			var item = items[i];
+			if (item.type == 'divider') continue;
 			var li = new Element('li').inject(ul);
+			if (i > 0 && items[i - 1].type == 'divider') li.addClass('divider');
 			var a = new Element('a', {text:item.text}).inject(li);
 			if (item.type == 'radio') new Element('div', {'class':(item.selected ? 'radio' : 'noradio')}).inject(a);
 			if (item.type == 'check') new Element('div', {'class':(item.selected ? 'check' : 'nocheck')}).inject(a);
 
 			var url = item.url;
-			if (!url){
+			if (!url || item.registered){
 				url = '';
-				a.addEvent('click',function(){return false;})
+				var callRegistered = function(){return false;};
+				if (item.registered){
+					callRegistered = (function(name,item){
+						return function(ev){
+							ev.stop();
+							MUI.registered[name].apply(this,[ev,item]);
+						};
+					})(item.registered, item);
+				}
+				a.addEvent('click', callRegistered);
 			}
 			a.setAttribute('href', MUI.replacePaths(url));
 
-			if (Browser.ie6){
-				li.addEvent('mouseenter', function(){
-					this.addClass('ieHover');
-				})
-						.addEvent('mouseleave', function(){
-					this.removeClass('ieHover');
-				});
-			}
+			li.addEvent('mouseenter', function(){
+				this.addClass('hover');
+			}).addEvent('mouseleave', function(){
+				this.removeClass('hover');
+			});
 
 			if (item.items && item.items.length > 0){
 				if (addArrow) a.addClass('arrow-right');

@@ -33,8 +33,9 @@ MUI.Taskbar.implement({
 		useControls:	true,			// Toggles autohide and taskbar placement controls.
 		position:		'bottom',		// Position the taskbar starts in, top or bottom.
 		visible:		true,			// is the taskbar visible
-		autoHide: 		false,			// True when taskbar autohide is set to on, false if set to off
-		menuCheck:		'taskbarCheck'	// the name of the element in the menu that needs to be checked if taskbar is shown
+		autoHide:		 false,			// True when taskbar autohide is set to on, false if set to off
+		menuCheck:		'taskbarCheck',	// the name of the element in the menu that needs to be checked if taskbar is shown
+		cssClass:		'taskbar'
 
 		//onDrawBegin:	null,
 		//onDrawEnd:	null,
@@ -47,73 +48,68 @@ MUI.Taskbar.implement({
 
 	initialize: function(options){
 		this.setOptions(options);
-
-		if (MUI.taskbar != null) return false;  // only one taskbar allowed
-		else MUI.set(this.options.id, this);
-		MUI.taskbar = this;
-
-		if (!this.options.container) this.options.container = 'desktop';
-		this.container = $(this.options.container);
-
 		this.el = {};
-		this.el.taskbar = $(this.options.id);
-		if (!this.el.taskbar && this.options.drawOnInit) this.draw();
-		else if (this.el.taskbar){
-			this.el.wrapper = $(this.options.id + 'Wrapper');
 
-			if (!this.options.useControls){
-				if ($(this.options.id + 'Placement')) $(this.options.id + 'Placement').setStyle('cursor', 'default');
-				if ($(this.options.id + 'AutoHide')) $(this.options.id + 'AutoHide').setStyle('cursor', 'default');
-			}
+		// If taskbar has no ID, give it one.
+		this.id = this.options.id = this.options.id || 'taskbar' + (++MUI.idCount);
+		MUI.set(this.id, this);
 
-			this.el.wrapper.setStyles({
-				'display':	'block',
-				'position':	'absolute',
-				'top':		null,
-				'bottom':	MUI.Desktop.desktopFooter ? MUI.Desktop.desktopFooter.offsetHeight : 0,
-				'left':		0
-			});
-
-			if (this.options.useControls) this._initialize();
-		}
+		if (this.options.drawOnInit) this.draw();
 	},
 
 	draw: function(){
+		var o = this.options;
+
 		this.fireEvent('drawBegin', [this]);
 
-		this.el.wrapper = new Element('div', {'id': this.options.id + 'Wrapper', styles: {
-				'display':	'block',
-				'position':	'absolute',
-				'top':		null,
-				'bottom':	MUI.Desktop.desktopFooter ? MUI.Desktop.desktopFooter.offsetHeight : 0,
-				'left':		0
-			}}).inject(this.container);
-		this.el.taskbar = new Element('div', {'id': this.options.id}).inject(this.el.wrapper);
+		if (MUI.desktop && MUI.desktop.el && MUI.desktop.el.footer) this.desktopFooter = MUI.desktop.el.footer;
+
+		var isNew = false;
+		var div = o.element ? o.element :$(o.id + 'Wrapper');
+		if (!div){
+			div = new Element('div', {'id': o.id + 'Wrapper'});
+			isNew = true;
+		}
+		div.set('class', o.cssClass + 'Wrapper');
+		div.empty();
+		this.el.wrapper = this.el.element = div.store('instance', this);
+
+		var defaultBottom = this.desktopFooter ? this.desktopFooter.offsetHeight : 0;
+		this.el.wrapper.setStyles({
+			'display':	'block',
+			'position':	'absolute',
+			'top':		null,
+			'bottom':	defaultBottom,
+			'left':		0,
+			'class':	o.cssClass + 'Wrapper'
+		});
+
+		this.el.taskbar = new Element('div', {'id': this.options.id,'class':o.cssClass}).inject(this.el.wrapper);
 
 		if (this.options.useControls){
-			this.el.taskbarPlacement = new Element('div', {'id': this.options.id + 'Placement'}).inject(this.el.taskbar).setStyle('cursor', 'default');
-			this.el.taskbarAutoHide = new Element('div', {'id': this.options.id + 'AutoHide'}).inject(this.el.taskbar).setStyle('cursor', 'default');
+			this.el.placement = new Element('div', {'id': this.options.id + 'Placement','class':o.cssClass + 'Placement'}).inject(this.el.taskbar).setStyle('cursor', 'default');
+			this.el.autohide = new Element('div', {'id': this.options.id + 'AutoHide','class':o.cssClass + 'AutoHide'}).inject(this.el.taskbar).setStyle('cursor', 'default');
 		}
 
-		this.el.taskbarSort = new Element('div', {'id': this.options.id + 'Sort'}).inject(this.el.taskbar);
-		this.el.taskbarClear = new Element('div', {'id': this.options.id + 'Clear', 'class': 'clear'}).inject(this.el.taskbarSort);
+		this.el.sort = new Element('div', {'id': this.options.id + 'Sort'}).inject(this.el.taskbar);
+		this.el.clear = new Element('div', {'id': this.options.id + 'Clear', 'class': 'clear'}).inject(this.el.sort);
 
 		this._initialize();
 		this.fireEvent('drawEnd', [this]);
 	},
 
 	setTaskbarColors: function(){
-		var taskbarButtonEnabled = Asset.getCSSRule('.taskbarButtonEnabled');
-		if (taskbarButtonEnabled && taskbarButtonEnabled.style.backgroundColor)
-			this.enabledButtonColor = new Color(taskbarButtonEnabled.style.backgroundColor);
+		var enabled = Asset.getCSSRule('.taskbarButtonEnabled');
+		if (enabled && enabled.style.backgroundColor)
+			this.enabledButtonColor = new Color(enabled.style.backgroundColor);
 
-		var taskbarButtonDisabled = Asset.getCSSRule('.taskbarButtonDisabled');
-		if (taskbarButtonDisabled && taskbarButtonDisabled.style.backgroundColor)
-			this.disabledButtonColor = new Color(taskbarButtonDisabled.style.backgroundColor);
+		var disabled = Asset.getCSSRule('.taskbarButtonDisabled');
+		if (disabled && disabled.style.backgroundColor)
+			this.disabledButtonColor = new Color(disabled.style.backgroundColor);
 
-		var trueButtonColor = Asset.getCSSRule('.taskbarButtonTrue');
-		if (trueButtonColor && trueButtonColor.style.backgroundColor)
-			this.trueButtonColor = new Color(trueButtonColor.style.backgroundColor);
+		var color = Asset.getCSSRule('.taskbarButtonTrue');
+		if (color && color.style.backgroundColor)
+			this.trueButtonColor = new Color(color.style.backgroundColor);
 
 		this._renderTaskControls();
 	},
@@ -123,16 +119,16 @@ MUI.Taskbar.implement({
 	},
 
 	move: function(position){
-		var ctx = $(this.options.id+'Canvas').getContext('2d');
+		var ctx = this.el.canvas.getContext('2d');
 		// Move taskbar to top position
-		if (position=='top' || this.el.wrapper.getStyle('position') != 'relative'){
-			if (position=='top') return;
+		if (position == 'top' || this.el.wrapper.getStyle('position') != 'relative'){
+			if (position == 'top') return;
 
 			this.el.wrapper.setStyles({
 				'position':	'relative',
 				'bottom':	null
 			}).addClass('top');
-			MUI.Desktop.setDesktopSize();
+			if (MUI.desktop) MUI.desktop.setDesktopSize();
 			this.el.wrapper.setProperty('position', 'top');
 			ctx.clearRect(0, 0, 100, 100);
 			MUI.Canvas.circle(ctx, 5, 4, 3, this.enabledButtonColor, 1.0);
@@ -142,14 +138,14 @@ MUI.Taskbar.implement({
 			this.options.autoHide = false;
 			this.options.position = 'top';
 		} else {
-			if (position=='bottom') return;
+			if (position == 'bottom') return;
 
 			// Move taskbar to bottom position
 			this.el.wrapper.setStyles({
 				'position':	'absolute',
-				'bottom':	MUI.Desktop.desktopFooter ? MUI.Desktop.desktopFooter.offsetHeight : 0
+				'bottom':	this.desktopFooter ? this.desktopFooter.offsetHeight : 0
 			}).removeClass('top');
-			MUI.Desktop.setDesktopSize();
+			if (MUI.desktop) MUI.desktop.setDesktopSize();
 			this.el.wrapper.setProperty('position', 'bottom');
 			ctx.clearRect(0, 0, 100, 100);
 			MUI.Canvas.circle(ctx, 5, 4, 3, this.enabledButtonColor, 1.0);
@@ -199,48 +195,50 @@ MUI.Taskbar.implement({
 			}
 		}.bind(instance));
 
-		this.taskbarSortables.addItems(taskbarTab);
+		this.sortables.addItems(taskbarTab);
 
 		var titleText = instance.el.title.innerHTML;
 
 		new Element('div', {
 			'id': instance.options.id + '_taskbarTabText',
-			'class': 'taskbarText'
+			'class': this.options.cssClass + 'Text'
 		}).set('html', titleText.substring(0, 19) + (titleText.length > 19 ? '...' : '')).inject($(taskbarTab));
 
 		// Need to resize everything in case the taskbar wraps when a new tab is added
-		MUI.Desktop.setDesktopSize();
+		if (this.desktopFooter) MUI.desktop.setDesktopSize();
 		this.fireEvent('tabCreated', [this, instance]);
 	},
 
 	makeTabActive: function(instance){
+		var css = this.options.cssClass;
+
 		if (!instance){
 			// getWindowWithHighestZindex is used in case the currently focused window is closed.
 			var windowEl = MUI.Windows._getWithHighestZIndex();
 			instance = windowEl.retrieve('instance');
 		}
 
-		$$('.taskbarTab').removeClass('activetaskbarTab');
+		$$('.' + css + 'Tab').removeClass('activeTab');
 		if (instance.isMinimized != true){
 			instance.el.windowEl.addClass('isFocused');
 			var currentButton = $(instance.options.id + '_taskbarTab');
-			if (currentButton != null) currentButton.addClass('activetaskbarTab');
+			if (currentButton != null) currentButton.addClass('activeTab');
 		} else instance.el.windowEl.removeClass('isFocused');
-		this.fireEvent('tabSet',[this,instance]);
+		this.fireEvent('tabSet', [this,instance]);
 	},
 
 	show: function(){
-		this.el.wrapper.show();
+		this.el.wrapper.setStyle('display', 'block');
 		this.options.visible = true;
-		MUI.Desktop.setDesktopSize();
-		this.fireEvent('show',[this]);
+		if (this.desktopFooter) MUI.desktop.setDesktopSize();
+		this.fireEvent('show', [this]);
 	},
 
 	hide: function(){
-		this.el.wrapper.hide();
+		this.el.wrapper.setStyle('display', 'none');
 		this.options.visible = false;
-		MUI.Desktop.setDesktopSize();
-		this.fireEvent('hide',[this]);
+		if (this.desktopFooter) MUI.desktop.setDesktopSize();
+		this.fireEvent('hide', [this]);
 	},
 
 	toggle: function(){
@@ -249,36 +247,36 @@ MUI.Taskbar.implement({
 	},
 
 	_initialize: function(){
+		var css = this.options.cssClass;
+
 		if (this.options.useControls){
 			// Insert canvas
-			var canvas = new Element('canvas', {
+			this.el.canvas = new Element('canvas', {
 				'id':	 this.options.id + 'Canvas',
 				'width':  '15',
-				'height': '18'
+				'height': '18',
+				'class' : css + 'Canvas'
 			}).inject(this.el.taskbar);
 
 			// Dynamically initialize canvas using excanvas. This is only required by IE
 			if (Browser.ie && MUI.ieSupport == 'excanvas'){
-				G_vmlCanvasManager.initElement(canvas);
+				G_vmlCanvasManager.initElement(this.el.canvas);
 			}
 		}
 
-		var placement = $(this.options.id + 'Placement');
-		var autohide = $(this.options.id + 'AutoHide');
-
 		// Position top or bottom selector
-		placement.setProperty('title', 'Position Taskbar Top');
+		this.el.placement.setProperty('title', 'Position Taskbar Top');
 
 		// Attach event
-		placement.addEvent('click', function(){
+		this.el.placement.addEvent('click', function(){
 			this.move();
 		}.bind(this));
 
 		// Auto Hide toggle switch
-		autohide.setProperty('title', 'Turn Auto Hide On');
+		this.el.autohide.setProperty('title', 'Turn Auto Hide On');
 
 		// Attach event Auto Hide
-		autohide.addEvent('click', function(){
+		this.el.autohide.addEvent('click', function(){
 			this._doAutoHide();
 		}.bind(this));
 
@@ -292,7 +290,7 @@ MUI.Taskbar.implement({
 			'id': this.options.id + '_check'
 		}).inject($(this.options.menuCheck));
 
-		this.taskbarSortables = new Sortables('#taskbarSort', {
+		this.sortables = new Sortables('.' + css + 'Sort', {
 			opacity: 1,
 			constrain: true,
 			clone: false,
@@ -300,27 +298,23 @@ MUI.Taskbar.implement({
 		});
 
 		if (this.options.autoHide) this._doAutoHide(true);
-		MUI.Desktop.setDesktopSize();
+		if (this.desktopFooter) MUI.desktop.setDesktopSize();
 	},
 
 	_doAutoHide: function(notoggle){
 		if (this.el.wrapper.getProperty('position') == 'top')
 			return false;
 
-		var ctx = $(this.options.id + 'Canvas').getContext('2d');
+		var ctx = this.el.canvas.getContext('2d');
 		if (!notoggle) this.options.autoHide = !this.options.autoHide;	// Toggle
 
 		if (this.options.autoHide){
 			$(this.options.id + 'AutoHide').setProperty('title', 'Turn Auto Hide Off');
-			//ctx.clearRect(0, 11, 100, 100);
 			MUI.Canvas.circle(ctx, 5, 14, 3, this.trueButtonColor, 1.0);
-			// Add event
 			document.addEvent('mousemove', this._autoHideEvent.bind(this));
 		} else {
-			$(this.options.id+'AutoHide').setProperty('title', 'Turn Auto Hide On');
-			//ctx.clearRect(0, 11, 100, 100);
+			$(this.options.id + 'AutoHide').setProperty('title', 'Turn Auto Hide On');
 			MUI.Canvas.circle(ctx, 5, 14, 3, this.enabledButtonColor, 1.0);
-			// Remove event
 			document.removeEvent('mousemove', this._autoHideEvent.bind(this));
 		}
 	},
@@ -328,18 +322,18 @@ MUI.Taskbar.implement({
 	_autoHideEvent: function(event){
 		if (!this.options.autoHide) return;
 		var hotspotHeight;
-		if (!MUI.Desktop.desktopFooter){
+		if (!this.desktopFooter){
 			hotspotHeight = this.el.wrapper.offsetHeight;
 			if (hotspotHeight < 25) hotspotHeight = 25;
 		}
-		else if (MUI.Desktop.desktopFooter){
-			hotspotHeight = this.el.wrapper.offsetHeight + MUI.Desktop.desktopFooter.offsetHeight;
+		else if (this.desktopFooter){
+			hotspotHeight = this.el.wrapper.offsetHeight + this.desktopFooter.offsetHeight;
 			if (hotspotHeight < 25) hotspotHeight = 25;
 		}
-		if (!MUI.Desktop.desktopFooter && event.client.y > (document.getCoordinates().height - hotspotHeight)){
+		if (!this.desktopFooter && event.client.y > (document.getCoordinates().height - hotspotHeight)){
 			if (!this.options.visible) this.show();
 		}
-		else if (MUI.Desktop.desktopFooter && event.client.y > (document.getCoordinates().height - hotspotHeight)){
+		else if (this.desktopFooter && event.client.y > (document.getCoordinates().height - hotspotHeight)){
 			if (!this.options.visible) this.show();
 		}
 		else if (this.options.visible) this.hide();
@@ -347,7 +341,7 @@ MUI.Taskbar.implement({
 
 	_renderTaskControls: function(){
 		// Draw taskbar controls
-		var ctx = $(this.options.id + 'Canvas').getContext('2d');
+		var ctx = this.el.canvas.getContext('2d');
 		ctx.clearRect(0, 0, 100, 100);
 		MUI.Canvas.circle(ctx, 5, 4, 3, this.enabledButtonColor, 1.0);
 
@@ -393,7 +387,7 @@ MUI.Window.implement({
 			this.el.contentWrapper.setStyle('overflow', 'hidden');
 		}
 
-		if (MUI.Desktop) MUI.Desktop.setDesktopSize();
+		if (MUI.desktop) MUI.desktop.setDesktopSize();
 
 		// Have to use timeout because window gets focused when you click on the minimize button
 		setTimeout(function(){
@@ -411,7 +405,7 @@ MUI.Window.implement({
 
 		if (!MUI.Windows.windowsVisible) MUI.Windows.toggleAll();
 		this.show(); // show the window
-		MUI.Desktop.setDesktopSize();
+		MUI.desktop.setDesktopSize();
 		if (this.options.scrollbars && !this.el.iframe) this.el.contentWrapper.setStyle('overflow', 'auto'); // Part of Mac FF2 scrollbar fix
 		if (this.isCollapsed) this.collapseToggle();
 

@@ -14,28 +14,36 @@
  ...
  */
 
-/* menu */
-.toolMenu  { background: #f2f2f2; height: 30px; margin:0; padding:0; overflow: hidden; }
-.toolMenu  ul { padding: 0; margin: 0; list-style: none; font-size: 12px; text-align:left; }
-.toolMenu  li { float: left; }
-.toolMenu  a { display: block; }
-.toolMenu  ul li a { padding: 6px 10px 6px 10px; color: #333; font-weight: normal; }
-.toolMenu  ul li a:hover { color: #333; }
-.toolMenu  ul li a.arrow-right, .toolMenu  ul li a:hover.arrow-right { background-image: url(../images/arrow-right.gif); background-repeat: no-repeat; background-position: right 7px; }
-.toolMenu  li ul { padding: 2px; border: 1px solid #3f3f3f; background: #fff url(../images/bg-dropdown.gif) repeat-y; position: absolute; width: 164px; left: -999em; z-index: 8000; }
-.toolMenu  li:hover ul ul, .toolMenu  li.ieHover ul ul, .toolMenu  li:hover ul ul ul, .toolMenu  li.ieHover ul ul ul { left: -999em; }
-.toolMenu  li ul ul { /* third-and-above-level lists */ margin: -22px 0 0 163px; }
-.toolMenu  li ul li a { position: relative; padding: 1px 9px 1px 25px; width: 130px; color: #3f3f3f; font-weight: normal; }
-.toolMenu  li ul li a:hover { background: #6C98D9; color: #fff; -moz-border-radius: 2px; }
-.toolMenu  li ul li .radio { position: absolute; top: 6px; left: 4px; width: 9px; height: 9px; background: transparent url(../images/menu-radio.gif) no-repeat 0 bottom; overflow: hidden; line-height: 1px; font-size: 1px; }
-.toolMenu  li ul li .noradio { position: absolute; top: 6px; left: 4px; width: 9px; height: 9px; background: transparent url(../images/menu-radio.gif) no-repeat 0 0; overflow: hidden; line-height: 1px; font-size: 1px; }
-.toolMenu  li ul li a:hover .radio { background-position: right bottom; }
-.toolMenu  li ul li a:hover .noradio { background-position: right 0; }
-.toolMenu  li ul li .check { position: absolute; top: 6px; left: 4px; width: 9px; height: 9px; background: transparent url(../images/menu-check.gif) no-repeat 0 bottom; overflow: hidden; line-height: 1px; font-size: 1px; }
-.toolMenu  li ul li .nocheck { position: absolute; top: 6px; left: 4px; width: 9px; height: 9px; background: transparent url(../images/menu-check.gif) no-repeat 0 0; overflow: hidden; line-height: 1px; font-size: 1px; }
-.toolMenu  li ul li a:hover .check { background-position: right bottom; }
-.toolMenu  li ul li a:hover .nocheck { background-position: right 0; }
-.toolMenu  li:hover ul, .toolMenu  li.ieHover ul, .toolMenu  li li.ieHover ul, .toolMenu  li li li.ieHover ul, .toolMenu  li li:hover ul, .toolMenu  li li li:hover ul { /* lists nested under hovered list items */ left: auto; }
-.toolMenu  li:hover { /* For IE7 */ position: static; }
+/* Toolbar Dock */
+.toolbardock { padding:0; }
+.toolbardock div.divider { /* Have to specify div here for IE6's sake */ background: url(../images/toolbar-divider.gif) repeat-y; padding-left: 6px; padding-right:3px; float:right; }
+.toolbardock div.left { float: left }
+.toolbardock div.right { float: right }
+.toolbardock div.tabs ul { padding-top:0; }
+.toolbardock div.tabs { margin-top:2px; }
 
-li.divider { margin-top: 2px; padding-top: 3px; border-top: 1px solid #ebebeb; }
+div.panel-header div.tabs { margin:0; border-bottom: 1px solid #282828; }
+div.panel-header div.tabs ul { height:28px; overflow:hidden }
+
+/* Toolbar */
+.toolbar { margin-top: 2px; float: right; overflow: hidden; text-align: right; height: 22px; padding-bottom:2px; padding-top:2px; vertical-align:middle; }
+.toolbar img.disabled { cursor: default; }
+.toolbar .button { vertical-align: top; margin-top:0; height:23px; }
+.toolbar span.imgButton .imgButton span img { padding: 0 0 2px; position: relative; top: 6px; }
+.toolbar span.icon { line-height:24px; font-size:14px;padding: 3px 9px; background-repeat: no-repeat; background-position: center; border: 1px solid transparent; }
+.toolbar span.icon:hover { border: 1px solid #a0a0a0; -moz-border-radius: 3px; border-radius: 3px; }
+.toolbar select.theme { line-height:24px; margin: 3px 0 4px 0; }
+* html .toolbar .searchField, * html .toolbar .searchButton { /* IE6 Hack */ margin-top: -1px; }
+* html .toolbar .button { /* IE6 Hack */ vertical-align: top; margin-top: 0; height:25px; }
+
+.panel-footer div div.toolbar { }
+
+/* spinner */
+.spinnerWrapper { width: 16px; height: 16px; background: url(../images/spinner-placeholder.gif) no-repeat; margin: 4px 5px 0 5px; }
+.spinner { display: none; background: url(../images/spinner.gif) no-repeat; width: 16px; height: 16px; }
+.toolbar .spinnerWrapper { margin: 4px 0 2px 0; height:24px;}
+
+/* search fields toolbar */
+.searchField { width: 150px; overflow: hidden; line-height: 15px; margin: 0; padding: 4px 0 2px 5px; border: 1px solid #808080; border-right: 0; vertical-align: middle; -moz-border-radius-topleft: 3px; -moz-border-radius-bottomleft: 3px; border-radius: 3px 0 0 3px; }
+.searchButton { -moz-border-radius-topleft: 0; -moz-border-radius-bottomleft: 0; border-radius: 0 3px 3px 0; }
+*:first-child + html .toolbar .searchField, *:first-child + html .toolbar .searchButton { /* IE7 Hack */ margin-top: -1px; }

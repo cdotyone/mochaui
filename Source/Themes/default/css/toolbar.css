@@ -20,8 +20,11 @@
 .toolbardock div.tabs ul { padding-top:0; }
 .toolbardock div.tabs { margin-top:2px; }
 
+div.panel-header div.tabs { margin:0; border-bottom: 1px solid #D3D3D3; }
+div.panel-header div.tabs ul { height:28px; overflow:hidden }
+
 /* Toolbar */
-.toolbar { margin-top: 2px; float: right; overflow: hidden; text-align: right; height: 22px; padding-bottom:2px; padding-top:2px; vertical-align:middle }
+.toolbar { margin-top: 2px; float: right; overflow: hidden; text-align: right; height: 22px; padding-bottom:2px; padding-top:2px; vertical-align:middle; }
 .toolbar img.disabled { cursor: default; }
 .toolbar .button { vertical-align: top; margin-top:0; height:23px; }
 .toolbar span.imgButton .imgButton span img { padding: 0 0 2px; position: relative; top: 6px; }
