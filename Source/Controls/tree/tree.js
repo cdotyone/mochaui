@@ -37,7 +37,6 @@ MUI.Tree = new NamedClass('MUI.Tree', {
 		container:			null,			// the parent control in the document to add the control to
 		clearContainer:		true,			// should the control clear its parent container before it appends itself
 		drawOnInit:			true,			// true to add tree to container when control is initialized
-		cssClass:			'tree',			// the primary css tag
 
 		content:			false,			// used to load content
 		nodes:				[],				// the hierarchical list of nodes
@@ -51,8 +50,11 @@ MUI.Tree = new NamedClass('MUI.Tree', {
 		imageField:			'image',		// the name of the field that has the node's image if imageOpenField and imageClosedField are not defined
 		imageOpenField:		'imageOpen',	// the name of the field that has the node's open image
 		imageClosedField:	'imageClosed',	// the name of the field that has the node's closed image
-		showIcon:			true,
 
+		partner: 			false,			// default partner element to send content to
+		partnerMethod: 		'xhr',			// default loadMethod when sending content to partner
+		cssClass:			'tree',			// the primary css tag
+		showIcon:			true,
 		showCheckBox:		false,			// true to show checkBoxes
 		canSelect:			true,			// can the user select a node by clicking it
 		value:				'',				// the currently selected node's value
@@ -89,7 +91,7 @@ MUI.Tree = new NamedClass('MUI.Tree', {
 
 	draw: function(container){
 		var o = this.options;
-		if(!container) container=o.container;
+		if (!container) container = o.container;
 
 		var isNew = false;
 		var div = o.element ? o.element : $(o.id);
@@ -109,7 +111,7 @@ MUI.Tree = new NamedClass('MUI.Tree', {
 		}
 		nodes.each(function(node){
 			this.buildNode(node, ul, 1);
-		},this);
+		}, this);
 		var first = ul.getFirst();
 		if (first) first.addClass('first');
 		var last = ul.getChildren().getLast();
@@ -122,13 +124,13 @@ MUI.Tree = new NamedClass('MUI.Tree', {
 			return this;
 		}
 
-		var addToContainer = function() {
+		var addToContainer = function(){
 			if (o.clearContainer) container.empty();
 			div.inject(container);
 			this.fireEvent('loaded', [this]);
 		}.bind(this);
 
-		if(typeof(container)=='element') {
+		if (typeof(container) == 'element'){
 			addToContainer();
 			return this;
 		} else window.addEvent('domready', function(){
@@ -206,13 +208,22 @@ MUI.Tree = new NamedClass('MUI.Tree', {
 		var value = MUI.getData(node, o.valueField);
 		var text = MUI.getData(node, o.textField);
 		if (o.showCheckBox) node._checkbox = new Element('INPUT', {'type': 'checkbox', 'value': value, 'id': id + '_cb'}).inject(li);
-		node._a = new Element('a', {'href': '#' + value, 'id': id}).inject(li);
-		node._span = new Element('span', {'text': text, 'id': id + '_tle'}).inject(node._a);
-		if (o.showIcon) node._icon = new Element('span', {'class': 'treeIcon'}).inject(node._a, 'top');
+		node._a = new Element('a', {'id': id}).inject(li);
+		if (node.target) node._a.setAttribute('target', node.target); 									// add anchor target
+		node._span = new Element('span', {'text': text, 'id': id + '_tle'}).inject(node._a);			// add node text
+		if (o.showIcon) node._icon = new Element('span', {'class': 'treeIcon'}).inject(node._a, 'top');	// add node image
 
 		node._element = li;
 		var title = MUI.getData(node, o.titleField);
 		if (title) node._a.title = title;
+
+		var url = node.url;
+		if (!url || node.registered){		// is node using registered function mapping
+			url = '#';
+			if (node.registered && node.registered != '')
+				a.addEvent('click', MUI.getRegistered(this, node.registered, [node]));
+		}
+		if(node.target) a.setAttribute('href', MUI.replacePaths(url));
 
 		if (o.value == value){
 			this.el.element.getElements('.sel').removeClass('sel');
@@ -245,16 +256,10 @@ MUI.Tree = new NamedClass('MUI.Tree', {
 		if (node._checkbox){
 			var isChecked = MUI.getData(node, o.isCheckedField);
 			if (isChecked != null) node._checkbox.checked = isChecked;
-			node._checkbox.removeEvents('click')._checkbox.addEvent('click', function(e){
-				this.onNodeCheck(node, e);
-			}.bind(this));
+			node._checkbox.removeEvents('click')._checkbox.addEvent('click', MUI.getWrappedEvent(this, this.onNodeCheck, [node]));
 		}
-		li.removeEvents('click').addEvent('click', function(e){
-			this.onNodeExpand(node, e);
-		});
-		node._a.removeEvents('click').addEvent('click', function(e){
-			this.onNodeClick(node, e);
-		}.bind(this));
+		li.removeEvents('click').addEvent('click', MUI.getWrappedEvent(this, this.onNodeExpand, [node]));
+		node._a.removeEvents('click').addEvent('click', MUI.getWrappedEvent(this, this.onNodeCheck, [node]));
 
 		return this;
 	},

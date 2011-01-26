@@ -106,7 +106,6 @@ Object.append(Demo, {
 
 	writeConsole: function(message){
 		var d = new Date().format('%H:%M:%S: ');
-		//console.writeln(d + message);
 		new Element('div', {text: d + message}).inject('mochaConsole', 'top');
 	},
 
@@ -392,34 +391,34 @@ Object.append(Demo, {
 			width: 340,
 			height: 255,
 			onLoaded: function(){
-				MUI.notification('Window content was loaded.');
+				Demo.writeConsole('Window content was loaded.');
 			},
 			onCloseComplete: function(){
-				MUI.notification('The window is closed.');
+				Demo.writeConsole('The window is closed.');
 			},
 			onMinimize: function(){
-				MUI.notification('Window was minimized.');
+				Demo.writeConsole('Window was minimized.');
 			},
 			onMaximize: function(){
-				MUI.notification('Window was maximized.');
+				Demo.writeConsole('Window was maximized.');
 			},
 			onRestore: function(){
-				MUI.notification('Window was restored.');
+				Demo.writeConsole('Window was restored.');
 			},
 			onResize: function(){
-				MUI.notification('Window was resized.');
+				Demo.writeConsole('Window was resized.');
 			},
 			onFocus: function(){
-				MUI.notification('Window was focused.');
+				Demo.writeConsole('Window was focused.');
 			},
 			onBlur: function(){
-				MUI.notification('Window lost focus.');
+				Demo.writeConsole('Window lost focus.');
 			},
 			onDragStart: function(){
-				MUI.notification('Window is being dragged.');
+				Demo.writeConsole('Window is being dragged.');
 			},
 			onDragComplete: function(){
-				MUI.notification('Window drag complete.');
+				Demo.writeConsole('Window drag complete.');
 			}
 		});
 	},
@@ -429,7 +428,7 @@ Object.append(Demo, {
 			id: 'containertest',
 			title: 'Container Test',
 			content: {url: 'pages/lipsum.html'},
-			container: 'pageWrapper',
+			container: 'desktopContent',
 			width: 340,
 			height: 150,
 			x: 100,
