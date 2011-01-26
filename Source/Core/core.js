@@ -332,22 +332,44 @@ MUI.append({
 	},
 
 	register: function(namespace, funcs, depth){
-		return;
 		try{
 			if (depth == null) depth = 4;
 			if (depth < 0) return;
-			Object.each(funcs, function(func, name){
+			for(var name in funcs) {
+				if(name=='') continue;
+				var func = funcs[name];
 				if (typeOf(func) != 'function') return;
 				if (typeOf(func) == 'object'){
 					MUI.register(namespace + '.' + name, func, depth - 1);
 					return;
 				}
 				MUI.registered[namespace + '.' + name] = func;
-			}).bind(this);
+			}
 		} catch(e){
 		}
-	}
+	},
 
+	getRegistered: function(bind,name,args){
+		return function(ev){
+			ev.stop();
+			args.unshift(ev);
+			MUI.registered[name].apply(bind,args);
+		};
+	},
+
+	getWrappedEvent: function(bind,func,args){
+		return function(ev){
+			args.unshift(ev);
+			func.apply(bind,args);
+		};
+	},
+
+	sendContentToPartner: function(bind,url,partner,method){
+		return function(ev){
+			ev.stop();
+			if(partner=$(partner)) MUI.update({url:url,element:partner,loadMethod:method});
+		};
+	}
 });
 
 var NamedClass = function(name, members){

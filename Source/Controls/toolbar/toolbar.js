@@ -43,7 +43,7 @@ MUI.Toolbar = new NamedClass('MUI.Toolbar', {
 			 name:		'name of button',		// the name of the button
 			 id:		'id of button',			// the id of the button
 			 cssClass:'icon_application_home',	// css name to add to the button
-			 content:{}							// generic MUI.Content.update structure to execute on when onclick isn null or returns true.
+			 content:{}							// generic MUI.Content.update structure to execute on when onclick is null or returns true.
 			 type:'icon'						// can be:
 			 // icon = simple icon button 		(default)
 			 // html = html button
