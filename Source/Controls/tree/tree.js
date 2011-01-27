@@ -51,8 +51,8 @@ MUI.Tree = new NamedClass('MUI.Tree', {
 		imageOpenField:		'imageOpen',	// the name of the field that has the node's open image
 		imageClosedField:	'imageClosed',	// the name of the field that has the node's closed image
 
-		partner: 			false,			// default partner element to send content to
-		partnerMethod: 		'xhr',			// default loadMethod when sending content to partner
+		partner:			 false,			// default partner element to send content to
+		partnerMethod:		 'xhr',			// default loadMethod when sending content to partner
 		cssClass:			'tree',			// the primary css tag
 		showIcon:			true,
 		showCheckBox:		false,			// true to show checkBoxes
@@ -63,7 +63,7 @@ MUI.Tree = new NamedClass('MUI.Tree', {
 
 		//onNodeExpanded:	null			// event: called when node is expanded
 		//onNodeChecked: 	null			// event: called when node's checkbox is checked
-		//onNodeSelected:	null			// event: when a node is checked
+		//onNodeClicked:	null			// event: when a node is checked
 		//onLoaded:		    null			// event: called when tree is done building itself
 	},
 
@@ -208,26 +208,38 @@ MUI.Tree = new NamedClass('MUI.Tree', {
 		var value = MUI.getData(node, o.valueField);
 		var text = MUI.getData(node, o.textField);
 		if (o.showCheckBox) node._checkbox = new Element('INPUT', {'type': 'checkbox', 'value': value, 'id': id + '_cb'}).inject(li);
-		node._a = new Element('a', {'id': id}).inject(li);
-		if (node.target) node._a.setAttribute('target', node.target); 									// add anchor target
-		node._span = new Element('span', {'text': text, 'id': id + '_tle'}).inject(node._a);			// add node text
-		if (o.showIcon) node._icon = new Element('span', {'class': 'treeIcon'}).inject(node._a, 'top');	// add node image
+		a = node._a = new Element('a', {'id': id}).inject(li);
+		if (node.target) a.setAttribute('target', node.target); 									// add anchor target
+		span = node._span = new Element('span', {'text': text, 'id': id + '_tle'}).inject(a);		// add node text
+		if (o.showIcon) node._icon = new Element('span', {'class': 'treeIcon'}).inject(a, 'top');	// add node image
 
 		node._element = li;
 		var title = MUI.getData(node, o.titleField);
-		if (title) node._a.title = title;
+		if (title) a.title = title;
 
 		var url = node.url;
 		if (!url || node.registered){		// is node using registered function mapping
 			url = '#';
+
+			// determine partner settings
+			var partner = node.partnerContent;
+			if (url && partner){
+				if (!partner.element) partner.element = o.partner;
+				if (!partner.loadMethod) partner.loadMethod = o.partnerMethod;
+				if (!partner.title) partner.title = node.title;
+				if (!partner.title) partner.title = node.text;
+				if (partner.element) a.addEvent('click', MUI.getPartnerLoader(this, partner));
+			} else
+
+			// if not using a partner then check for registered method calls
 			if (node.registered && node.registered != '')
 				a.addEvent('click', MUI.getRegistered(this, node.registered, [node]));
 		}
-		if(node.target) a.setAttribute('href', MUI.replacePaths(url));
+		a.setAttribute('href', MUI.replacePaths(url));
 
 		if (o.value == value){
 			this.el.element.getElements('.sel').removeClass('sel');
-			node._a.className = 'sel';
+			a.className = 'sel';
 			o.selectedNode = this;
 		}
 
@@ -258,8 +270,8 @@ MUI.Tree = new NamedClass('MUI.Tree', {
 			if (isChecked != null) node._checkbox.checked = isChecked;
 			node._checkbox.removeEvents('click')._checkbox.addEvent('click', MUI.getWrappedEvent(this, this.onNodeCheck, [node]));
 		}
-		li.removeEvents('click').addEvent('click', MUI.getWrappedEvent(this, this.onNodeExpand, [node]));
-		node._a.removeEvents('click').addEvent('click', MUI.getWrappedEvent(this, this.onNodeCheck, [node]));
+		li.addEvent('click', MUI.getWrappedEvent(this, this.onNodeExpand, [node]));
+		a.addEvent('click', MUI.getWrappedEvent(this, this.onNodeClick, [node]));
 
 		return this;
 	},
@@ -286,8 +298,8 @@ MUI.Tree = new NamedClass('MUI.Tree', {
 
 	nodeRefresh: function(node){
 		if (!node._element) return;
-		this.buildNode(node, node._element.getParent());
-		this.setLast(node._element.getParent());
+		this.buildNode(node, node._element.getParent())
+				.setLast(node._element.getParent());
 	},
 
 	nodeGetPath: function(node){
@@ -315,40 +327,6 @@ MUI.Tree = new NamedClass('MUI.Tree', {
 		return this;
 	},
 
-	onNodeExpand: function(node, e){
-		var self = this;
-
-		var itm = node._element;
-		var mY = 0;
-		var mX = 0;
-		if (e){
-			e = new Event(e).stop();
-			var c = itm.getCoordinates();
-			mY = e.client.y - c.top;
-			mX = e.client.x - c.left;
-		}
-
-		if (mX < 20 && mY < 20){
-			var ul = itm.getElement('ul');
-			if (ul && node.isExpanded){
-				ul.style.display = 'none';
-				itm.removeClass('O');
-				itm.addClass('C');
-				node.isExpanded = false;
-				//return;
-			} else if (ul && !node.isExpanded){
-				ul.style.display = '';
-				itm.removeClass('C');
-				itm.addClass('O');
-				node.isExpanded = true;
-				//if (node.nodes.length > 0) return;
-			}
-			this._nodeSetImage(node);
-		}
-
-		self.fireEvent('nodeExpanded', [node, node.isExpanded, self, e]);
-	},
-
 	_nodeSetImage: function(node){
 		var o = this.options;
 		var span = node._span;
@@ -368,17 +346,46 @@ MUI.Tree = new NamedClass('MUI.Tree', {
 		}
 	},
 
-	onNodeClick: function(node, e){
-		var self = this;
-		var o = self.options;
-		e = new Event(e).stop();
-		self.selectValue(MUI.getData(node, o.valueField), e);
+	onNodeExpand: function(e, node){
+		var itm = node._element;
+		var mY = 0;
+		var mX = 0;
+		if (e){
+			e = new Event(e).stop();
+			var c = itm.getCoordinates();
+			mY = e.client.y - c.top;
+			mX = e.client.x - c.left;
+		}
+
+		if (mX < 20 && mY < 20){
+			var ul = itm.getElement('ul');
+			if (ul && node.isExpanded){
+				ul.style.display = 'none';
+				itm.removeClass('O').addClass('C');
+				node.isExpanded = false;
+				//return;
+			} else if (ul && !node.isExpanded){
+				ul.style.display = '';
+				itm.removeClass('C').addClass('O');
+				node.isExpanded = true;
+				//if (node.nodes.length > 0) return;
+			}
+			this._nodeSetImage(node);
+		}
+
+		this.fireEvent('nodeExpanded', [e, node, this]);
 	},
 
-	onNodeCheck: function(node, e){
-		var self = this;
+	onNodeClick: function(e, node){
+		var o = this.options;
+		e = new Event(e).stop();
+		this.selectValue(MUI.getData(node, o.valueField), e);
+		this.fireEvent('nodeClicked', [e, node, this]);
+	},
+
+	onNodeCheck: function(e, node){
 		e = new Event(e).stopPropagation();
-		self.fireEvent('nodeChecked', [node, node._checkbox.checked, self, e]);
+		this.fireEvent('nodeChecked', [e, node, this]);
 	}
 
 });
