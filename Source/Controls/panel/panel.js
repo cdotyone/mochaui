@@ -83,6 +83,8 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		if (!container) container = options.container;
 		var parent = MUI.get(options.container);
 		if (!container) container = parent.el.element;
+		if (typeOf(container) == 'string') container = $(container);
+		if (typeOf(container) != 'element') return;
 
 		// Check if panel already exists
 		if (this.el.panel) return this;
@@ -289,7 +291,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		});
 
 		var parent = MUI.get($(options.container));
-		if(parent.isTypeOf('MUI.Column')) {
+		if (parent.isTypeOf('MUI.Column')){
 			if (expandedSiblings.length == 0 && parent.options.placement != 'main'){
 				parent.toggle();
 				return;
