@@ -338,7 +338,7 @@ MUI.append({
 			for(var name in funcs) {
 				if(name=='') continue;
 				var func = funcs[name];
-				if (typeOf(func) != 'function') return;
+				if (typeOf(func) != 'function') continue;
 				if (typeOf(func) == 'object'){
 					MUI.register(namespace + '.' + name, func, depth - 1);
 					return;
@@ -364,10 +364,10 @@ MUI.append({
 		};
 	},
 
-	sendContentToPartner: function(bind,url,partner,method){
+	getPartnerLoader: function(bind,content){
 		return function(ev){
 			ev.stop();
-			if(partner=$(partner)) MUI.update({url:url,element:partner,loadMethod:method});
+			if($(content.element)) MUI.Content.update(content);
 		};
 	}
 });

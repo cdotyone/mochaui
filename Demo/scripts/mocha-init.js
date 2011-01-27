@@ -698,6 +698,8 @@ Object.append(Demo, {
 
 	splitPanelPanel: function(){
 		if ($('mainPanel')){
+			MUI.Content.update({ element: 'mainPanel', title: 'Split Panel', content:'' });
+			
 			new MUI.Column({
 				container: 'mainPanel',
 				id: 'sideColumn3',
@@ -718,7 +720,7 @@ Object.append(Demo, {
 				header: false,
 				id: 'splitPanel_mainPanel',
 				content: {url: 'license.html'},
-				column: 'mainColumn2'
+				container: 'mainColumn2'
 			});
 
 			new MUI.Panel({
@@ -726,7 +728,7 @@ Object.append(Demo, {
 				id: 'splitPanel_sidePanel',
 				cssClass: 'panelAlt',
 				content: {url: 'pages/lipsum.html'},
-				column: 'sideColumn3'
+				container: 'sideColumn3'
 			});
 		}
 	},
@@ -851,301 +853,273 @@ Demo.initializeDesktop = function(){
 			]},
 			{name:'content',columns:[
 				{id: 'sideColumn1', placement: 'left', width: 205, resizeLimit: [100, 300],
-						panels:[
-							{
-								id: 'files-panel',
-								title: 'Examples',
-								content: {
-									padding: 8,
-									control: 'MUI.Tree',
-									container: 'files-panel',
-									content: {url: 'data/file-tree.json', recordsField: false},
-									idField: 'value',
-									onLoaded: function(){
-										return;
-										var mainPanel = $('mainPanel');
-										$('notesLink').addEvent('click', function(){
-											MUI.Content.update({
-												element: mainPanel,
-												url: 'pages/notes.html',
-												title: 'Development Notes'
-											});
+					panels:[
+						{
+							id: 'files-panel',
+							title: 'Examples',
+							content: {
+								padding: 8,
+								control: 'MUI.Tree',
+								container: 'files-panel',
+								partner: 'mainPanel',
+								content: {url: 'data/file-tree.json', recordsField: false},
+								idField: 'value',
+								onLoaded: function(){
+									return;
+									var mainPanel = $('mainPanel');
+									if ($('plistLink')){
+										$('plistLink').addEvent('click', function(e){
+											e.stop();
+											Demo.listBuilder('mainPanel');
 										});
-										if ($('plistLink')){
-											$('plistLink').addEvent('click', function(e){
-												e.stop();
-												Demo.listBuilder('mainPanel');
-											});
-										}
-										if ($('wlistLink')){
-											$('wlistLink').addEvent('click', function(e){
-												e.stop();
-												new MUI.Window({
-													id: 'basicListWindow',
-													content: 'loading...',
-													title: 'Basic List in Window',
-													width: 340,
-													height: 150
-												});
-												Demo.listBuilder('basicListWindow');
-											});
-										}
-										if ($('pcbgLink')){
-											$('pcbgLink').addEvent('click', function(e){
-												e.stop();
-												Demo.checkBoxGrid('mainPanel');
-											});
-										}
-										if ($('wcbgLink')){
-											$('wcbgLink').addEvent('click', function(e){
-												e.stop();
-												new MUI.Window({
-													id: 'cbgWindow',
-													content: 'loading...',
-													title: 'Check Box Grid in Window',
-													width: 340,
-													height: 150
-												});
-												Demo.checkBoxGrid('cbgWindow');
-											});
-										}
-										if ($('pslLink')){
-											$('pslLink').addEvent('click', function(e){
-												e.stop();
-												Demo.selectListBuilder('mainPanel');
-											});
-										}
-										if ($('wslLink')){
-											$('wslLink').addEvent('click', function(e){
-												e.stop();
-												new MUI.Window({
-													id: 'slWindow',
-													content: 'loading...',
-													title: 'Select List in Window',
-													width: 340,
-													height: 150
-												});
-												Demo.selectListBuilder('slWindow');
-											});
-										}
-										if ($('pibLink')){
-											$('pibLink').addEvent('click', function(e){
-												e.stop();
-												Demo.imageButtonBuilder('mainPanel');
-											});
-										}
-										if ($('wibLink')){
-											$('wibLink').addEvent('click', function(e){
-												e.stop();
-												new MUI.Window({
-													id: 'wiWindow',
-													content: 'loading...',
-													title: 'Image Button in Window',
-													width: 340,
-													height: 150
-												});
-												Demo.imageButtonBuilder('wiWindow');
-											});
-										}
-
-										if ($('ptaLink')){
-											$('ptaLink').addEvent('click', function(e){
-												e.stop();
-												Demo.textAreaBuilder('mainPanel');
-											});
-										}
-										if ($('wtaLink')){
-											$('wtaLink').addEvent('click', function(e){
-												e.stop();
-												new MUI.Window({
-													id: 'taWindow',
-													content: 'loading...',
-													title: 'TextArea in Window',
-													width: 340,
-													height: 150
-												});
-												Demo.textAreaBuilder('taWindow');
-											});
-										}
-
-										if ($('ptbLink')){
-											$('ptbLink').addEvent('click', function(e){
-												e.stop();
-												Demo.textBoxBuilder('mainPanel');
-											});
-										}
-										if ($('wtbLink')){
-											$('wtbLink').addEvent('click', function(e){
-												e.stop();
-												new MUI.Window({
-													id: 'tbWindow',
-													content: 'loading...',
-													title: 'TextBox in Window',
-													width: 340,
-													height: 150
-												});
-												Demo.textBoxBuilder('tbWindow');
-											});
-										}
-
-										if ($('ptreeLink')){
-											$('ptreeLink').addEvent('click', function(e){
-												e.stop();
-												Demo.treeBuilder('mainPanel');
-											});
-										}
-										if ($('wtreeLink')){
-											$('wtreeLink').addEvent('click', function(e){
-												e.stop();
-												new MUI.Window({
-													id: 'wtreeLinkWindow',
-													content: 'loading...',
-													title: 'Tree in Window',
-													width: 340,
-													height: 150
-												});
-												Demo.treeBuilder('wtreeLinkWindow');
-											});
-										}
-
-										$('xhrLink').addEvent('click', function(){
-											MUI.Content.update({
-												element: mainPanel,
-												url: 'pages/lipsum.html',
-												title: 'Lorem Ipsum'
-											});
-										});
-										$('youtube4Link').addEvent('click', function(){
-											MUI.Content.update({
-												element: mainPanel,
-												loadMethod: 'iframe',
-												url: 'pages/youtube.html',
-												title: 'Iframe: YouTube'
-											});
-										});
-										$('splitPanelLink').addEvent('click', function(){
-											MUI.Content.update({
-												element: mainPanel,
-												title: 'Split Panel'
-											});
-											Demo.splitPanelPanel(); // This is initialized in mocha-init.js just like the windows.
-										});
-										$('splitWindowLink').addEvent('click', function(){
-											Demo.splitWindow();
-										});
-										$('ajaxpageLink').addEvent('click', function(){
-											Demo.ajaxpageWindow();
-										});
-										$('jsonLink').addEvent('click', function(){
-											Demo.jsonWindows();
-										});
-										$('youtubeLink').addEvent('click', function(){
-											Demo.youtubeWindow();
-										});
-										$('clockLink').addEvent('click', function(){
-											Demo.clockWindow();
-										});
-										$('parametricsLink').addEvent('click', function(){
-											Demo.parametricsWindow();
-										});
-										$('pcalendarLink').addEvent('click', function(){
-											MUI.Content.update({
-												element: mainPanel,
-												url: '{controls}calendar/demo.html',
-												title: 'Calendar Component',
-												padding: {top: 8, right: 8, bottom: 8, left: 8},
-												onLoaded:function(){
-													MUI.create({control: 'MUI.Calendar', id: 'date1', format: 'd/m/Y', direction: 1, tweak: {x: 6, y: 0}});
-												}
-											});
-										});
-										$('wcalendarLink').addEvent('click', function(){
+									}
+									if ($('wlistLink')){
+										$('wlistLink').addEvent('click', function(e){
+											e.stop();
 											new MUI.Window({
-												id: 'cslWindow',
-												content: 'Loading...',
-												title: 'Calendar in Window',
+												id: 'basicListWindow',
+												content: 'loading...',
+												title: 'Basic List in Window',
 												width: 340,
-												height: 150,
-												onLoaded:function(){
-													MUI.create({control: 'MUI.Calendar', id: 'wcalendarLink1', container: 'cslWindow', format: 'd/m/Y', direction: 1, tweak: {x: 6, y: 0}});
-												}
+												height: 150
 											});
-										});
-										$('fxmorpherLink').addEvent('click', function(){
-											MUI.Content.update({
-												element: mainPanel,
-												url: '{plugins}Fx.Morpher/',
-												title: 'Fx.Morpher Path Animation',
-												padding: {top: 8, right: 8, bottom: 8, left: 8}
-											});
-											Demo.fxmorpherWindow();
-										});
-
-										$('paccordiontestLink').addEvent('click', function(e){
-											e.stop();
-											MUI.create({
-												control: 'MUI.Accordion',
-												container: mainPanel,
-												id: 'accordionMainPanel1',
-												panels: [
-													{text: 'Lorem Ipsum', value: 'panel0', 'html': '<h3>Lorem Ipsum Dolor Sit Amet</h3><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean consequat dignissim pede. Aliquam erat volutpat. In ac nulla. Phasellus sapien.</p>'},
-													{text: 'Dolor Sit', 'html': '<h3>Lorem Ipsum Dolor Sit Amet</h3><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean consequat dignissim pede. Aliquam erat volutpat. In ac nulla. Phasellus sapien.</p>'},
-													{text: 'Amet', 'html': '<h3>Lorem Ipsum Dolor Sit Amet</h3><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean consequat dignissim pede. Aliquam erat volutpat. In ac nulla. Phasellus sapien.</p>'}
-												]
-											});
-										});
-
-										$('waccordiontestLink').addEvent('click', function(e){
-											e.stop();
-											Demo.accordionTestWindow();
-										});
-
-										$('modalLink').addEvent('click', function(e){
-											e.stop();
-											Demo.createModal();
+											Demo.listBuilder('basicListWindow');
 										});
 									}
-								}
-							},
-							{
-								id: 'panel2',
-								title: 'Ajax Form',
-								height: 230,
-								content: {
-									url: 'pages/ajax.form.html',
-									onLoaded: function(){
-										return;
-										$('myForm').addEvent('submit', function(e){
+									if ($('pcbgLink')){
+										$('pcbgLink').addEvent('click', function(e){
 											e.stop();
+											Demo.checkBoxGrid('mainPanel');
+										});
+									}
+									if ($('wcbgLink')){
+										$('wcbgLink').addEvent('click', function(e){
+											e.stop();
+											new MUI.Window({
+												id: 'cbgWindow',
+												content: 'loading...',
+												title: 'Check Box Grid in Window',
+												width: 340,
+												height: 150
+											});
+											Demo.checkBoxGrid('cbgWindow');
+										});
+									}
+									if ($('pslLink')){
+										$('pslLink').addEvent('click', function(e){
+											e.stop();
+											Demo.selectListBuilder('mainPanel');
+										});
+									}
+									if ($('wslLink')){
+										$('wslLink').addEvent('click', function(e){
+											e.stop();
+											new MUI.Window({
+												id: 'slWindow',
+												content: 'loading...',
+												title: 'Select List in Window',
+												width: 340,
+												height: 150
+											});
+											Demo.selectListBuilder('slWindow');
+										});
+									}
+									if ($('pibLink')){
+										$('pibLink').addEvent('click', function(e){
+											e.stop();
+											Demo.imageButtonBuilder('mainPanel');
+										});
+									}
+									if ($('wibLink')){
+										$('wibLink').addEvent('click', function(e){
+											e.stop();
+											new MUI.Window({
+												id: 'wiWindow',
+												content: 'loading...',
+												title: 'Image Button in Window',
+												width: 340,
+												height: 150
+											});
+											Demo.imageButtonBuilder('wiWindow');
+										});
+									}
 
-											MUI.showSpinner();
-											if ($('postContent') && MUI.options.standardEffects){
-												$('postContent').setStyle('opacity', 0);
-											} else {
-												$('mainPanel_pad').empty();
+									if ($('ptaLink')){
+										$('ptaLink').addEvent('click', function(e){
+											e.stop();
+											Demo.textAreaBuilder('mainPanel');
+										});
+									}
+									if ($('wtaLink')){
+										$('wtaLink').addEvent('click', function(e){
+											e.stop();
+											new MUI.Window({
+												id: 'taWindow',
+												content: 'loading...',
+												title: 'TextArea in Window',
+												width: 340,
+												height: 150
+											});
+											Demo.textAreaBuilder('taWindow');
+										});
+									}
+
+									if ($('ptbLink')){
+										$('ptbLink').addEvent('click', function(e){
+											e.stop();
+											Demo.textBoxBuilder('mainPanel');
+										});
+									}
+									if ($('wtbLink')){
+										$('wtbLink').addEvent('click', function(e){
+											e.stop();
+											new MUI.Window({
+												id: 'tbWindow',
+												content: 'loading...',
+												title: 'TextBox in Window',
+												width: 340,
+												height: 150
+											});
+											Demo.textBoxBuilder('tbWindow');
+										});
+									}
+
+									if ($('ptreeLink')){
+										$('ptreeLink').addEvent('click', function(e){
+											e.stop();
+											Demo.treeBuilder('mainPanel');
+										});
+									}
+									if ($('wtreeLink')){
+										$('wtreeLink').addEvent('click', function(e){
+											e.stop();
+											new MUI.Window({
+												id: 'wtreeLinkWindow',
+												content: 'loading...',
+												title: 'Tree in Window',
+												width: 340,
+												height: 150
+											});
+											Demo.treeBuilder('wtreeLinkWindow');
+										});
+									}
+
+									$('splitWindowLink').addEvent('click', function(){
+										Demo.splitWindow();
+									});
+									$('ajaxpageLink').addEvent('click', function(){
+										Demo.ajaxpageWindow();
+									});
+									$('jsonLink').addEvent('click', function(){
+										Demo.jsonWindows();
+									});
+									$('youtubeLink').addEvent('click', function(){
+										Demo.youtubeWindow();
+									});
+									$('clockLink').addEvent('click', function(){
+										Demo.clockWindow();
+									});
+									$('parametricsLink').addEvent('click', function(){
+										Demo.parametricsWindow();
+									});
+									$('pcalendarLink').addEvent('click', function(){
+										MUI.Content.update({
+											element: mainPanel,
+											url: '{controls}calendar/demo.html',
+											title: 'Calendar Component',
+											padding: {top: 8, right: 8, bottom: 8, left: 8},
+											onLoaded:function(){
+												MUI.create({control: 'MUI.Calendar', id: 'date1', format: 'd/m/Y', direction: 1, tweak: {x: 6, y: 0}});
 											}
-
-											this.set('send', {
-												onComplete: function(response){
-													MUI.Content.update({
-														element: 'mainPanel',
-														content: response,
-														title: 'Ajax Response',
-														padding: {top: 8, right: 8, bottom: 8, left: 8}
-													});
-												},
-												onSuccess: function(){
-													if (MUI.options.standardEffects){
-														$('postContent').setStyle('opacity', 0).get('morph').start({'opacity': 1});
-													}
-												}
-											});
-											this.send();
 										});
-									}
+									});
+									$('wcalendarLink').addEvent('click', function(){
+										new MUI.Window({
+											id: 'cslWindow',
+											content: 'Loading...',
+											title: 'Calendar in Window',
+											width: 340,
+											height: 150,
+											onLoaded:function(){
+												MUI.create({control: 'MUI.Calendar', id: 'wcalendarLink1', container: 'cslWindow', format: 'd/m/Y', direction: 1, tweak: {x: 6, y: 0}});
+											}
+										});
+									});
+									$('fxmorpherLink').addEvent('click', function(){
+										MUI.Content.update({
+											element: mainPanel,
+											url: '{plugins}Fx.Morpher/',
+											title: 'Fx.Morpher Path Animation',
+											padding: {top: 8, right: 8, bottom: 8, left: 8}
+										});
+										Demo.fxmorpherWindow();
+									});
+
+									$('paccordiontestLink').addEvent('click', function(e){
+										e.stop();
+										MUI.create({
+											control: 'MUI.Accordion',
+											container: mainPanel,
+											id: 'accordionMainPanel1',
+											panels: [
+												{text: 'Lorem Ipsum', value: 'panel0', 'html': '<h3>Lorem Ipsum Dolor Sit Amet</h3><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean consequat dignissim pede. Aliquam erat volutpat. In ac nulla. Phasellus sapien.</p>'},
+												{text: 'Dolor Sit', 'html': '<h3>Lorem Ipsum Dolor Sit Amet</h3><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean consequat dignissim pede. Aliquam erat volutpat. In ac nulla. Phasellus sapien.</p>'},
+												{text: 'Amet', 'html': '<h3>Lorem Ipsum Dolor Sit Amet</h3><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean consequat dignissim pede. Aliquam erat volutpat. In ac nulla. Phasellus sapien.</p>'}
+											]
+										});
+									});
+
+									$('waccordiontestLink').addEvent('click', function(e){
+										e.stop();
+										Demo.accordionTestWindow();
+									});
+
+									$('modalLink').addEvent('click', function(e){
+										e.stop();
+										Demo.createModal();
+									});
 								}
 							}
-						]},
+						},
+						{
+							id: 'panel2',
+							title: 'Ajax Form',
+							height: 230,
+							content: {
+								url: 'pages/ajax.form.html',
+								onLoaded: function(){
+									return;
+									$('myForm').addEvent('submit', function(e){
+										e.stop();
+
+										MUI.showSpinner();
+										if ($('postContent') && MUI.options.standardEffects){
+											$('postContent').setStyle('opacity', 0);
+										} else {
+											$('mainPanel_pad').empty();
+										}
+
+										this.set('send', {
+											onComplete: function(response){
+												MUI.Content.update({
+													element: 'mainPanel',
+													content: response,
+													title: 'Ajax Response',
+													padding: {top: 8, right: 8, bottom: 8, left: 8}
+												});
+											},
+											onSuccess: function(){
+												if (MUI.options.standardEffects){
+													$('postContent').setStyle('opacity', 0).get('morph').start({'opacity': 1});
+												}
+											}
+										});
+										this.send();
+									});
+								}
+							}
+						}
+					]},
 				{id: 'mainColumn',	placement: 'main', resizeLimit: [100, 300],
 					panels:[
 						{
@@ -1199,7 +1173,7 @@ Demo.initializeDesktop = function(){
 								{name: 'buttons1', position: 'header', control: 'MUI.Toolbar', buttons: [
 									{id: 'button1', type: 'image', text: 'Button 1', title: 'Click to do something 1', image: '{fff}accept.png'},
 									{id: 'button2', type: 'image', text: 'Button 2', title: 'Click to do something 2'}
-									],
+								],
 									onClick: function(){
 										MUI.notification('Do Something');
 										return true;
