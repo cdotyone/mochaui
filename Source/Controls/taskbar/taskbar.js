@@ -54,6 +54,9 @@ MUI.Taskbar.implement({
 		this.id = this.options.id = this.options.id || 'taskbar' + (++MUI.idCount);
 		MUI.set(this.id, this);
 
+		if (MUI.taskbar) return;	// [i_a] only one taskbar allowed
+		MUI.taskbar = this;
+
 		if (this.options.drawOnInit) this.draw();
 	},
 
