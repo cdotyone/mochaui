@@ -65,35 +65,29 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 
 	initialize: function(options){
 		this.setOptions(options);
+		options = this.options;
 
-		// make sure this controls has an ID
-		var id = this.options.id;
-		if (!id){
-			id = 'selectList' + (++MUI.IDCount);
-			this.options.id = id;
-		}
+		// If selectList has no ID, give it one.
+		this.id = options.id = options.id || 'selectList' + (++MUI.idCount);
+		MUI.set(this.id, this);
 
-		if(options.content) {
+		if (options.content){
 			options.content.instance = this;
 			MUI.Content.update(options.content);
 		}
 
 		// create sub items if available
-		if (this.options.drawOnInit && this.options.items.length > 0) this.draw();
-
-		MUI.set(id, this);
+		if (options.drawOnInit && options.items.length > 0) this.draw();
 	},
 
-	draw: function(containerEl){
+	draw: function(container){
 		var o = this.options;
-		var self = this;
-
-		self._determineContainer(containerEl);
+		if (!container) container = o.container;
 
 		var id = o.id;
 		var drop;
 		if (o.isDropList){
-			var panel = $(id);
+			var panel = o.element ? o.element : $(o.id);
 			if (!panel){
 				panel = new Element('div', {id:id});
 				if (o.width) panel.setStyle('width', parseInt('' + o.width) + 'px');
@@ -101,28 +95,27 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 			panel.empty();
 
 			drop = new Element('div', {id:id + '_droplist','class':o.dropCssClass,styles:{'width':parseInt('' + o.width) + 'px'}}).inject(panel);
-			self.dropElement = drop;
+			this.dropElement = drop;
 			drop.addEvent('click', function(e){
-				self._open(e);
-			});
+				this._open(e);
+			}.bind(this));
 
-			self.textElement = new Element('div', {id:id + '_text','class':'text','text':'1 selected',styles:{'width':(parseInt('' + o.width) - 24) + 'px'}}).inject(drop);
-			self.buttonElement = new Element('div', {id:id + '_button','class':'button','html':'&nbsp;'}).inject(drop);
+			this.textElement = new Element('div', {id:id + '_text','class':'text','text':'1 selected',styles:{'width':(parseInt('' + o.width) - 24) + 'px'}}).inject(drop);
+			this.buttonElement = new Element('div', {id:id + '_button','class':'button','html':'&nbsp;'}).inject(drop);
 
 			o.id += '_list';
 			o.isOpen = false;
 		}
 
-		var div = $(id);
+		var div = o.element ? o.element : $(o.id);
 		var isNew = false;
 		if (!div){
-			div = new Element('div', {'id':id,'class':o.cssClass});
+			div = new Element('div', {'id':id});
 			if (o.width) div.setStyle('width', (parseInt('' + o.width) - 2) + 'px');
 			if (o.height) div.setStyle('height', parseInt('' + o.height) + 'px');
 			isNew = true;
 		}
-		if (o.cssClass) div.set('class', o.cssClass);
-		this.element = div;
+		this.element = div.addClass(o.cssClass);
 
 		div.empty();
 
@@ -133,24 +126,27 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 			else this._buildItem(o.items[i], ul, (i % 2));
 		}
 
-		if (!isNew) return this;
+		// add to container
+		var addToContainer = function(){
+			if (typeOf(container) == 'string') container = $(container);
+			if (o.clearContainer) o._container.empty();
 
-		window.addEvent('domready', function(){
-			self._determineContainer();
-			if(o.clearContainer) o._container.empty();
+			container.setStyle('padding', '0');
 			if (drop){
-				var selectText = self.options.dropText.replace('{$}', self.getSelectedCount());
-				self.textElement.set('text', selectText);
+				var selectText = this.options.dropText.replace('{$}', this.getSelectedCount());
+				this.textElement.set('text', selectText);
 				div.addEvent('click', function(e){
 					e.stop();
 				});
-				o._container.appendChild(drop);
+				drop.inject(container);
 				document.body.appendChild(div);
 				div.addClass('notop');
 				div.setStyles({'display':'none','position':'absolute','z-index':999});
 			}
-			else o._container.appendChild(div);
-		});
+			if (div.getParent() == null) div.inject(container);
+		}.bind(this);
+		if (!isNew || typeOf(container) == 'element') addToContainer();
+		else window.addEvent('domready', addToContainer);
 
 		return this;
 	},
@@ -187,21 +183,6 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		var self = this;
 		self.options.items = items;
 		self.draw();
-	},
-
-	_determineContainer: function(containerEl) {
-		var o = this.options;
-		// determine parent container object
-		if(!o._container && typeof(o.container) == 'string') {
-			var instance = MUI.get(o.container);
-			if(instance) {
-				if(instance.el.content) {
-					instance.el.content.setStyle('padding','0');
-					o._container = instance.el.content;
-				}
-			}
-			if(!o._container) o._container=$(containerEl ? containerEl : o.container);
-		}
 	},
 
 	_selected: function(e, item){
@@ -320,13 +301,13 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		return li;
 	},
 
-	updateStart: function(content) {
+	updateStart: function(content){
 		content.loadMethod = 'json';
 	},
 
-	updateEnd: function(content) {
+	updateEnd: function(content){
 		this.options.items = MUI.Content.getRecords(content);
-		if(this.options.items) this.draw();
+		if (this.options.items) this.draw();
 	}
 
 });

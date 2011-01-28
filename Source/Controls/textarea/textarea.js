@@ -60,21 +60,14 @@ MUI.TextArea = new NamedClass('MUI.TextArea', {
 	},
 
 	initialize: function(options){
-		// handle options
 		this.setOptions(options);
-		var o = this.options;
+		this.el = {};
 
-		// make sure this controls has an ID
-		var id = o.id;
-		if (!id){
-			id = 'textbox' + (++MUI.IDCount);
-			o.id = id;
-		}
+		// If textarea has no ID, give it one.
+		this.id = this.options.id = this.options.id || 'textArea' + (++MUI.idCount);
+		MUI.set(this.id, this);
 
-		// create control if we have a target container
-		if (o.drawOnInit && o.container != null) this.draw();
-
-		MUI.set(id, this);
+		if (this.options.drawOnInit && this.options.container != null) this.draw();
 	},
 
 	getFieldTitle: function(){
@@ -85,13 +78,18 @@ MUI.TextArea = new NamedClass('MUI.TextArea', {
 		return o.id;
 	},
 
-	draw: function(){
-		var self = this,o = this.options;
+	draw: function(container){
+		// todo: need way to create all elements externally 
+		// todo: need way to allow other controls know the main element is id+_field and is a fieldset 
+
+		var o = this.options;
+		if (!container) container = o.container;
 
 		var isNew = false;
-		var inp = $(o.id);
-		if (!inp){
-			self._wrapper = new Element('fieldset', {'id':o.id + '_field',
+		var fs = o.element ? o.element : $(o.id + '_field');
+		if (!fs){
+			isNew = true;
+			this.el.element = fs = new Element('fieldset', {'id':o.id + '_field',
 				'styles':
 				{
 					'resize':'none',
@@ -101,23 +99,15 @@ MUI.TextArea = new NamedClass('MUI.TextArea', {
 					'height':'auto'
 				}
 			});
-
-			var tle = MUI.getData(o.formData, o.formTitleField);
-			if (!tle) tle = o.id;
-			self._label = new Element('label', {'text':tle}).inject(self._wrapper);
-
-			inp = new Element('textarea', {'id':o.id,'rows':o.rows}).inject(self._wrapper);
-			if (o.width) inp.setStyle('width', o.width + 'px');
-			if (o.height && !o.hasDynamicSize) inp.setStyle('height', o.height + 'px');
-			isNew = true;
 		}
-		if (o.cssClass){
-			if (self._wrapper) self._wrapper.set('class', o.cssClass);
-			inp.set('class', o.cssClass);
-		}
+		fs.addClass(o.cssClass).empty();
 
-		self.element = inp;
-		inp.addEvent('focus', self.focus.bind(self));
+		var tle = MUI.getData(o.formData, o.formTitleField);
+		if (!tle) tle = o.id;
+		this.el.label = new Element('label', {'text':tle}).inject(fs);
+		var inp = this.el.input = new Element('textarea', {'id':o.id,'rows':o.rows,'class':o.cssClass}).inject(fs).addEvent('focus', this.focus.bind(this)).setStyle('overflow', 'hidden');
+		if (o.width) inp.setStyle('width', o.width + 'px');
+		if (o.height && !o.hasDynamicSize) inp.setStyle('height', o.height + 'px');
 
 		var value = o.value;
 		if (o.valueField) value = MUI.getData(o.formData, o.valueField);
@@ -125,27 +115,13 @@ MUI.TextArea = new NamedClass('MUI.TextArea', {
 		inp.set('value', value);
 		o._prevValue = value;
 
-		if (!isNew) return inp;
-
-		window.addEvent('domready', function(){
-			// determine parent container object
-			if(!o._container && typeof(o.container) == 'string') {
-				var instance = MUI.get(o.container);
-				if(instance) {
-					if(instance.el.content) {
-						instance.el.content.setStyle('padding','0');
-						o._container = instance.el.content;
-					}
-				}
-				if(!o._container) o._container=$(o.container);
-			}
-			if(!o._container) o._container=$(containerEl ? containerEl : o.container);
-			if(!o._container) return;
-			self._wrapper.inject(o._container);
+		// add to container
+		var addToContainer = function(){
+			if (typeOf(container) == 'string') container = $(container);
+			if (fs.getParent() == null) fs.inject(container);
 
 			if (!o.width) o.width = inp.getSize().x;
-			if (!o.hasDynamicSize) return;
-			inp.setStyle('overflow', 'hidden');
+			if (!o.hasDynamicSize || isNew) return;
 
 			// Firefox handles scroll heights differently than all other browsers -- from Amadeus Demarzi
 			if (Browser.firefox){
@@ -162,16 +138,18 @@ MUI.TextArea = new NamedClass('MUI.TextArea', {
 			inp.set('rows', 1);
 			o._lineHeight = (inp.measure(function(){
 				return this.getScrollSize().y;
-			})) + o.offset - o.padding;
+			}).bind(this)) + o.offset - o.padding;
 			inp.value = backupString;
 			o._minHeight = o._lineHeight * o.rows;
 			inp.setStyle('height', o._minHeight);
 
 			// make sure we have proper width
 			inp.setStyle('width', o.width);
-		});
+		}.bind(this);
+		if (!isNew || typeOf(container) == 'element') addToContainer();
+		else window.addEvent('domready', addToContainer);
 
-		return inp;
+		return this;
 	},
 
 	keypress: function(e){

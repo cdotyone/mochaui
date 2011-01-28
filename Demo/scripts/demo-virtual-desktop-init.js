@@ -118,13 +118,14 @@ initializeWindows = function(){
 						{'text': 'Boards of Canada', 'url': 'pages/youtube3.html', 'title': 'Boards of Canada'}
 					],
 					onLoaded: function(element,uOptions,json){
-						MUI.create('MUI.Tabs',{
-							'id': 'youtube_toolbar',
-							'container': 'youtube',
-							'position': 'top',
-							'tabs': json,
-							'partner': 'youtube',
-							'section': 'toolbar'
+						MUI.create({
+							control:'MUI.Tabs',
+							id: 'youtube_toolbar',
+							container: 'youtube',
+							position: 'top',
+							tabs: json,
+							partner: 'youtube',
+							section: 'toolbar'
 						});
 					}
 				}
@@ -297,10 +298,11 @@ initializeWindows = function(){
 				url: 'data/accordion-demo.json',
 				loadMethod: 'json',
 				onLoaded: function(el,cOptions,json){
-					MUI.create('MUI.Accordion',{
-						'container': id,
-						'idField': 'value',
-						'panels': json
+					MUI.create({
+						control: 'MUI.Accordion',
+						container: id,
+						idField: 'value',
+						panels: json
 					});
 				}
 			},
@@ -467,12 +469,13 @@ initializeWindows = function(){
 						{'text': 'General', 'url': 'pages/features-general.html', 'loadMethod': 'iframe', 'title': 'Features - General', 'class': 'last'}
 					],
 					onLoaded: function(element, uOptions, json){
-						MUI.create('MUI.Tabs', {
-							'id': 'features_toolbar',
-							'container': 'features',
-							'position': 'top',
-							'tabs': json,
-							'partner': 'features'
+						MUI.create({
+							control: 'MUI.Tabs',
+							id: 'features_toolbar',
+							container: 'features',
+							position: 'top',
+							tabs: json,
+							partner: 'features'
 						});
 					}
 				}

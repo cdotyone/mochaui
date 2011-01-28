@@ -27,7 +27,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 	options: {
 		id:						null,			// id of the main div tag for the panel
-		column:					null,			// the name of the column to insert this panel into
+		container:				null,			// the name of the column to insert this panel into
 		drawOnInit:				true,			// true to inject panel into DOM when panel is first created
 
 		// content section update options
@@ -72,27 +72,30 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		});
 
 		// If panel has no ID, give it one.
-		if (this.options.id == null) this.options.id = 'panel' + (++MUI.IDCount);
-		this.id = this.options.id;
+		this.id = this.options.id = this.options.id || 'panel' + (++MUI.idCount);
 		MUI.set(this.id, this);
 
 		if (this.options.drawOnInit) this.draw();
 	},
 
-	draw: function(){
+	draw: function(container){
 		var options = this.options;
-		var columnInstance = MUI.get(options.column);
+		if (!container) container = options.container;
+		var parent = MUI.get(options.container);
+		if (!container) container = parent.el.element;
+		if (typeOf(container) == 'string') container = $(container);
+		if (typeOf(container) != 'element') return;
 
 		// Check if panel already exists
 		if (this.el.panel) return this;
 
 		this.fireEvent('drawBegin', [this]);
-		this.showHandle = $(options.column).getChildren().length != 0;
+		this.showHandle = container.getChildren().length != 0;
 
-		this.el.element = new Element('div', {
-			'id': options.id + '_wrapper',
-			'class': 'panelWrapper expanded'
-		}).inject($(options.column));
+		var div = options.element ? options.element : $(options.id + '_wrapper');
+		if (!div) div = new Element('div', {'id': options.id + '_wrapper'}).inject(container);
+		div.empty().addClass('panelWrapper expanded');
+		this.el.element = div;
 
 		this.el.panel = new Element('div', {
 			'id': options.id,
@@ -100,7 +103,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 			'styles': {
 				'height': options.height
 			}
-		}).inject(this.el.element)
+		}).inject(div)
 				.addClass(options.cssClass)
 				.store('instance', this);
 
@@ -128,24 +131,21 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		}
 
 		// This is in order to use the same variable as the windows do in MUI.Content.update.
-		// May rethink this.
 		this.el.contentWrapper = this.el.panel;
 
 		var headerItems = [];
 		var footerItems = [];
 		var snum = 0;
-		this.sections.each(function(section, idx){
+		this.sections.each(function(section){
 			if (!section.position || section.position == 'content'){
 				if (section.loadMethod == 'iframe') section.padding = 0;  // Iframes have their own padding.
-				section.element = this.el.content;
-				this.sections[idx] = section;
+				section.container = this.el.content;
 				return;
 			}
 			var id = options.id + '_' + (section.name || 'section' + (snum++));
 			if (!section.control) section.control = 'MUI.DockHtml';
 			if (!section.id) section.id = id;
 			section.partner = this.id;
-			this.sections[idx] = section;
 			if (section.position == 'header') headerItems.unshift(section);
 			if (section.position == 'footer') footerItems.unshift(section);
 		}, this);
@@ -170,10 +170,11 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				headerItems.push({id:options.id + 'headerContent',content:this.el.title,orientation:'left', divider:false});
 			}
 
-			MUI.create('MUI.Dock', {
-				container:this.el.panel,
-				_container:this.el.panel.id,
-				id:options.id + '_header',
+			MUI.create({
+				control: 'MUI.Dock',
+				container: this.el.panel,
+				element: this.el.header,
+				id: options.id + '_header',
 				cssClass: 'panel-header',
 				docked:headerItems
 			});
@@ -184,19 +185,19 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				'id': options.id + '_footer',
 				'class': 'panel-footer',
 				'styles': { 'display': options.footer ? 'block' : 'none' }
-			}).inject(this.el.panel,'after');
+			}).inject(this.el.panel, 'after');
 
-			MUI.create('MUI.Dock', {
-				container:this.el.element,
-				_container:this.el.element.id,
-				id:options.id + '_footer',
+			MUI.create({
+				control: 'MUI.Dock',
+				container: this.el.element,
+				id: options.id + '_footer',
 				cssClass: 'panel-footer',
-				docked:footerItems
+				docked: footerItems
 			});
 		}
 
-		if (columnInstance && columnInstance.options.sortable){
-			columnInstance.options.container.retrieve('sortables').addItems(this.el.element);
+		if (parent && parent.options.sortable){
+			parent.options.container.retrieve('sortables').addItems(this.el.element);
 			if (this.el.header){
 				this.el.header.setStyle('cursor', 'move');
 				this.el.header.addEvent('mousedown', function(e){
@@ -227,37 +228,40 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 			if (section.position == 'header' || section.position == 'footer') return;
 			if (section.onLoaded) section.onLoaded = section.onLoaded.bind(this);
 			if (!section.instance) section.instance = this;
+
 			MUI.Content.update(section);
 		}, this);
 
 		// Do this when creating and removing panels
-		if (!options.column) return;
-		$(options.column).getChildren('.panelWrapper').removeClass('bottomPanel').getLast().addClass('bottomPanel');
-		MUI.panelHeight(options.column, this.el.panel, 'new');
+		if (!container) return;
+		container.getChildren('.panelWrapper').removeClass('bottomPanel').getLast().addClass('bottomPanel');
+		MUI.panelHeight(container, this.el.panel, 'new');
 
 		Object.each(this.el, (function(ele){
 			if (ele != this.el.headerToolbox) ele.store('instance', this);
 		}).bind(this));
 
 		if (options.isCollapsed) this._collapse();
+
 		this.fireEvent('drawEnd', [this]);
+
 		return this;
 	},
 
 	close: function(){
-		var column = this.options.column;
+		var container = this.options.container;
 		this.isClosing = true;
 
-		var columnInstance = MUI.get(column);
-		if (columnInstance.options.sortable)
-			columnInstance.options.container.retrieve('sortables').removeItems(this.el.element);
+		var parent = MUI.get(container);
+		if (parent.options.sortable)
+			parent.options.container.retrieve('sortables').removeItems(this.el.element);
 
 		this.el.element.destroy();
 
 		if (MUI.Desktop) MUI.Desktop.resizePanels();
 
 		// Do this when creating and removing panels
-		var panels = $(column).getElements('.panelWrapper');
+		var panels = $(container).getElements('.panelWrapper');
 		panels.removeClass('bottomPanel');
 		if (panels.length > 0) panels.getLast().addClass('bottomPanel');
 
@@ -286,12 +290,14 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				expandedSiblings.push(sibling.getElement('.panel').id);
 		});
 
-		var currentColumn = MUI.get($(options.column).id);
-		if (expandedSiblings.length == 0 && currentColumn.options.placement != 'main'){
-			currentColumn.toggle();
-			return;
-		} else if (expandedSiblings.length == 0 && currentColumn.options.placement == 'main'){
-			return;
+		var parent = MUI.get($(options.container));
+		if (parent.isTypeOf('MUI.Column')){
+			if (expandedSiblings.length == 0 && parent.options.placement != 'main'){
+				parent.toggle();
+				return;
+			} else if (expandedSiblings.length == 0 && parent.options.placement == 'main'){
+				return;
+			}
 		}
 
 		this._collapse(true);
@@ -312,7 +318,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		this.isCollapsed = true;
 		panelWrapper.addClass('collapsed')
 				.removeClass('expanded');
-		MUI.panelHeight(options.column, panel, 'collapsing');
+		MUI.panelHeight(options.container, panel, 'collapsing');
 		MUI.panelHeight(); // Run this a second time for panels within panels
 		this.el.collapseToggle.removeClass('panel-collapsed')
 				.addClass('panel-expand')
@@ -330,7 +336,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		this.isCollapsed = false;
 		this.el.element.addClass('expanded')
 				.removeClass('collapsed');
-		MUI.panelHeight(this.options.column, this.el.panel, 'expanding');
+		MUI.panelHeight(this.options.container, this.el.panel, 'expanding');
 		MUI.panelHeight(); // Run this a second time for panels within panels
 		this.el.collapseToggle.removeClass('panel-expand')
 				.addClass('panel-collapsed')

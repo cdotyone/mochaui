@@ -51,23 +51,17 @@ MUI.TextBox = new NamedClass('MUI.TextBox', {
 	},
 
 	initialize: function(options){
-		var self = this;
-		self.setOptions(options);
-		var o = self.options;
+		this.setOptions(options);
+		options = this.options;
+		this.el = {};
 
-		// make sure this controls has an ID
-		var id = o.id;
-		if (!id){
-			id = 'textbox' + (++MUI.IDCount);
-			o.id = id;
-		}
+		// If textbox has no ID, give it one.
+		this.id = options.id = options.id || 'textBox' + (++MUI.idCount);
+		MUI.set(this.id, this);
 
-		if (o.maskType.capitalize() == 'Password') o.type = 'password';
+		if (options.maskType.capitalize() == 'Password') options.type = 'password';
 
-		// create sub items if available
-		if (o.drawOnInit && o.container != null) this.draw();
-
-		MUI.set(id, this);
+		if(options.drawOnInit && options.container != null) this.draw();
 	},
 
 	checkForMask: function(){
@@ -140,6 +134,11 @@ MUI.TextBox = new NamedClass('MUI.TextBox', {
 	},
 
 	draw: function(containerEl){
+		// todo: need way to create all elements externally
+		// todo: need way to allow other controls know the main element is id+_field and is a fieldset
+		// todo: need to have all elements moved to .el
+		// todo: need to make domready adding to container same as other controls
+		
 		var self = this;
 		var o = self.options;
 

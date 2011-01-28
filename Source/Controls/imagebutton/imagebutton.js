@@ -52,79 +52,66 @@ MUI.ImageButton = new NamedClass('MUI.ImageButton', {
 		this.setOptions(options);
 		this.el = {};
 
-		// make sure this controls has an ID
-		var id = this.options.id;
-		if (!id){
-			id = 'imageButton' + (++MUI.IDCount);
-			this.options.id = id;
-		}
+		// If ImageButton has no ID, give it one.
+		this.id = this.options.id = this.options.id || 'imgButton' + (++MUI.idCount);
+		MUI.set(this.id, this);
 
 		if (this.options.drawOnInit) this.draw();
-
-		MUI.set(id, this);
 	},
 
 	// <span class="imgButton"><a class="imgButton"><span><img></span><span>Text</span></a></span>
-	draw: function(){
-		var self = this;
-		var o = self.options;
+	draw: function(container){
+		var o = this.options;
+		if (!container) container = o.container;
 
-		var isNew = true;
-		var div = self.el.element;
-		if (div == null) div = new Element('span', {'class':o.cssClass,'id':o.id});
-		else {
-			div.empty();
-			isNew = false;
+		// determine element for this control
+		var isNew = false;
+		var div = o.element ? o.element : $(o.id);
+		if (!div){
+			div = new Element('div', {'id': o.id});
+			isNew = true;
 		}
-
-		div.setStyle('opacity', o.isDisabled ? '0.25' : '1.0');
+		div.addClass(o.cssClass)
+			.empty()
+			.setStyle('opacity', o.isDisabled ? '0.25' : '1.0');
 
 		var a = new Element('a', {id:o.id + '_click','class':o.cssClass,'title':o.title}).inject(div);
-		self.el[a.id] = a;
+		this.el[a.id] = a;
 
-		div.removeEvents('click');
-		div.addEvent('click', function(){
-			self.fireEvent("click", self)
-		});
+		div.removeEvents('click').addEvent('click', function(){
+			this.fireEvent("click", this)
+		}.bind(this));
 
 		if (o.image){
 			var tle = o.title;
 			if (!tle) tle = o.text;
 			var si = new Element('span', {id:o.id + '_imageWrapper'}).inject(a);
 			var img = new Element('img', {id:o.id + '_image','src':MUI.replacePaths(o.image),'alt':tle}).inject(si);
-			self.el[si.id] = si;
-			self.el[img.id] = img;
+			this.el[si.id] = si;
+			this.el[img.id] = img;
 		}
 		if (o.text){
 			a.appendChild(new Element('span', {'text':o.text,'class':'t'}));
 		}
 
-		self.el.element = div;
+		this.el.element = div;
 
-		if (!isNew) return self;
+		// add to container
+		var addToContainer = function(){
+			if (typeOf(container) == 'string') container = $(container);
+			var instance = container.retrieve('instance');
+			if (div.getParent() == null) div.inject(container, instance != null && instance.options.orientation == 'right' ? 'bottom' : 'top');
 
-		if (o._container) this._addToContainer(o._container, div);
-		else window.addEvent('domready', function(){
-			var instance = MUI.get(o.container);
-			if (!o._container && typeof(o.container) == 'string'){
-				if (instance && !o._container && instance.el.content) o._container = instance.el.content;
-				if (!o._container) o._container = $(o.container);
-			}
-			if (o._container) this._addToContainer(o._container, div);
-		}.bind(this));
+		}.bind(this);
+		if (!isNew || typeOf(container) == 'element') addToContainer();
+		else window.addEvent('domready', addToContainer);
 
-		return self;
+		return this;
 	},
 
 	setDisabled: function(disabled){
 		this.options.isDisabled = disabled;
 		this.draw();
 		return disabled;
-	},
-
-	_addToContainer: function(container, element){
-		var instance = container.retrieve('instance');
-		element.inject(container, instance != null && instance.options.orientation == 'right' ? 'bottom' : 'top');
 	}
-
 });

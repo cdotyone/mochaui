@@ -1,0 +1,49 @@
+/*
+ ---
+
+ file: toolbar.css
+
+ description: MUI - Toolbar css.
+
+ copyright: (c) 2010 Contributors in (/AUTHORS.txt).
+
+ license: MIT-style license in (/MIT-LICENSE.txt).
+
+ provides: css for charcoal theme
+
+ ...
+ */
+
+/* Toolbar Dock */
+.toolbardock { padding:0; }
+.toolbardock div.divider { /* Have to specify div here for IE6's sake */ background: url(../images/toolbar-divider.gif) repeat-y; padding-left: 6px; padding-right:3px; float:right; }
+.toolbardock div.left { float: left }
+.toolbardock div.right { float: right }
+.toolbardock div.tabs ul { padding-top:0; }
+.toolbardock div.tabs { margin-top:2px; }
+
+div.panel-header div.tabs { margin:0; border-bottom: 1px solid #282828; }
+div.panel-header div.tabs ul { height:28px; overflow:hidden }
+
+/* Toolbar */
+.toolbar { margin-top: 2px; float: right; overflow: hidden; text-align: right; height: 22px; padding-bottom:2px; padding-top:2px; vertical-align:middle; }
+.toolbar img.disabled { cursor: default; }
+.toolbar .button { vertical-align: top; margin-top:0; height:23px; }
+.toolbar span.imgButton .imgButton span img { padding: 0 0 2px; position: relative; top: 6px; }
+.toolbar span.icon { line-height:24px; font-size:14px;padding: 3px 9px; background-repeat: no-repeat; background-position: center; border: 1px solid transparent; }
+.toolbar span.icon:hover { border: 1px solid #a0a0a0; -moz-border-radius: 3px; border-radius: 3px; }
+.toolbar select.theme { line-height:24px; margin: 3px 0 4px 0; }
+* html .toolbar .searchField, * html .toolbar .searchButton { /* IE6 Hack */ margin-top: -1px; }
+* html .toolbar .button { /* IE6 Hack */ vertical-align: top; margin-top: 0; height:25px; }
+
+.panel-footer div div.toolbar { }
+
+/* spinner */
+.spinnerWrapper { width: 16px; height: 16px; background: url(../images/spinner-placeholder.gif) no-repeat; margin: 4px 5px 0 5px; }
+.spinner { display: none; background: url(../images/spinner.gif) no-repeat; width: 16px; height: 16px; }
+.toolbar .spinnerWrapper { margin: 4px 0 2px 0; height:24px;}
+
+/* search fields toolbar */
+.searchField { width: 150px; overflow: hidden; line-height: 15px; margin: 0; padding: 4px 0 2px 5px; border: 1px solid #808080; border-right: 0; vertical-align: middle; -moz-border-radius-topleft: 3px; -moz-border-radius-bottomleft: 3px; border-radius: 3px 0 0 3px; }
+.searchButton { -moz-border-radius-topleft: 0; -moz-border-radius-bottomleft: 0; border-radius: 0 3px 3px 0; }
+*:first-child + html .toolbar .searchField, *:first-child + html .toolbar .searchButton { /* IE7 Hack */ margin-top: -1px; }

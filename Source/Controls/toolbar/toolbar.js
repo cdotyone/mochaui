@@ -43,7 +43,7 @@ MUI.Toolbar = new NamedClass('MUI.Toolbar', {
 			 name:		'name of button',		// the name of the button
 			 id:		'id of button',			// the id of the button
 			 cssClass:'icon_application_home',	// css name to add to the button
-			 content:{}							// generic MUI.Content.update structure to execute on when onclick isn null or returns true.
+			 content:{}							// generic MUI.Content.update structure to execute on when onclick is null or returns true.
 			 type:'icon'						// can be:
 			 // icon = simple icon button 		(default)
 			 // html = html button
@@ -63,41 +63,31 @@ MUI.Toolbar = new NamedClass('MUI.Toolbar', {
 	},
 
 	initialize: function(options){
-		var self = this;
-		self.setOptions(options);
-		var o = self.options;
-		self.el = {};
-		self.buttonCount = 0;
+		this.setOptions(options);
+		options = this.options;
+		this.el = {};
 
-		// make sure this controls has an ID
-		var id = o.id;
-		if (!id){
-			id = 'toolbar' + (++MUI.IDCount);
-			o.id = id;
-		}
-		this.id = id;
-
-		if (o.content) o.content.instance = this;
-		MUI.set(id, this);
+		// If toolbar has no ID, give it one.
+		this.id = options.id = options.id || 'toolbar' + (++MUI.idCount);
+		MUI.set(this.id, this);
 
 		if (options.content && options.content.url){
 			options.content.loadMethod = 'json';
 			options.content.onLoaded = (function(element, options){
-				this.options.buttons = MUI.Content.getRecords(options);
+				options.buttons = MUI.Content.getRecords(options);
 				this.draw();
 			}).bind(this);
 			MUI.Content.update(options.content);
-		} else this.draw();
+		} else if(options.drawOnInit) this.draw();
 	},
 
-	draw: function(containerEl){
-		var self = this;
-		var o = self.options;
+	draw: function(container){
+		var o = this.options;
+		if (!container) container = o.container;
 
+		// determine element for this control
 		var isNew = false;
-		var div;
-
-		div = $(o.id);
+		var div = o.element ? o.element : $(o.id);
 		if (!div){
 			div = new Element('div', {'id': o.id});
 			isNew = true;
@@ -107,18 +97,18 @@ MUI.Toolbar = new NamedClass('MUI.Toolbar', {
 		if (o.cssClass) div.addClass(o.cssClass);
 		if (o.divider) div.addClass('divider');
 
-		self.el.element = div.store('instance', this);
+		this.el.element = div.store('instance', this);
 
-		self.buttonCount = 0;
+		this.buttonCount = 0;
 		Object.each(o.buttons, this._buildButton, this);
 
-		if (!isNew) return;
-		if (o._container) o._container.inject(div);
-		else window.addEvent('domready', function(){
-			o._container = $(containerEl ? containerEl : o.container);
-			if (o._container) o._container.inject(div);
-			if (o.content) MUI.Content.update(o.content);
-		}.bind(this));
+		// add to container
+		var addToContainer = function(){
+			if (typeOf(container) == 'string') container = $(container);
+			if (div.getParent() == null) div.inject(container);
+		}.bind(this);
+		if (!isNew || typeOf(container) == 'element') addToContainer();
+		else window.addEvent('domready', addToContainer);
 
 		return div;
 	},
@@ -184,14 +174,18 @@ MUI.Toolbar = new NamedClass('MUI.Toolbar', {
 				this.el[button.id] = new Element('input', {id:button.id,'class':css,type:'button','value':button.text,title:button.title}).inject(div, where).addEvent('click', onclick).store('instance', this);
 				break;
 			case 'image':
+				this.el[button.id] = new Element('span', {id:button.id}).store('instance', this);
 				var options = Object.clone(button);
+				options=Object.merge(options,{
+					container:div.id,
+					onClick:onclick,
+					control:'MUI.ImageButton',
+					element:this.el[button.id]
+				});
 				delete options.type;
 				delete options.position;
 				delete options.content;
-				options._container = div;
-				options.container = div.id;
-				options.onClick = onclick;
-				MUI.create('MUI.ImageButton', options);
+				MUI.create(options);
 				break;
 			default:
 				if (!css) css = 'icon';

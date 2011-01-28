@@ -1,9 +1,9 @@
 [
 	{'value':'item1', 'text':"Panels", 'isChecked':false, 'isSelected':false, imageOpen:'_open', imageClosed:'_closed','nodes':[
-		{'value':'notesLink',text:'Development Notes','isChecked': true,'isSelected': true, 'image':'_doc'},
-		{'value':'xhrLink',text:'XHR: Lorem Ipsum','isChecked': false,'isSelected': false, 'image':'_doc'},
-		{'value':'youtube4Link',text:'Iframe: YouTube','isChecked': false,'isSelected': false, 'image':'_doc'},
-		{'value':'splitPanelLink',text:'Split Panel','isChecked': false,'isSelected': false, 'image':'_doc'},
+		{'value':'notesLink',text:'Development Notes','isChecked': true,'isSelected': true, 'image':'_doc', 'partnerContent':{'url':'pages/notes.html'}},
+		{'value':'xhrLink',text:'XHR: Lorem Ipsum','isChecked': false,'isSelected': false, 'image':'_doc', 'partnerContent':{'url':'pages/lipsum.html', 'title':'Lorem Ipsum'}},
+		{'value':'youtube4Link',text:'Iframe: YouTube','isChecked': false,'isSelected': false, 'image':'_doc', 'partnerContent':{'url':'pages/youtube.html','loadMethod':'iframe'}},
+		{'value':'splitPanelLink',text:'Split Panel','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.splitPanelPanel'},
 		{'value':'panelControls', 'text':"Controls", 'isChecked':false, 'isSelected':false, imageOpen:'_open', imageClosed:'_closed','nodes':[
 			{'value':'paccordiontestLink','text':'Accordion','isChecked': false,'isSelected': false, 'image':'_doc'},
 			{'value':'plistLink','text':'Basic List','isChecked': false,'isSelected': false, 'image':'_doc'},

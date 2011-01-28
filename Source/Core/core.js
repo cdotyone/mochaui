@@ -60,7 +60,8 @@ MUI.append({
 	version: '1.0.0',
 	initialized: false,
 	instances: new Hash(),
-	IDCount: 0,
+	registered: new Hash(),
+	idCount: 0,
 	ieSupport: 'excanvas',					// Makes it easier to switch between Excanvas and Moocanvas for testing
 	//pluginGroups: ['controls','plugins'],
 	path: MUI.options.path,					// depreciated, will be removed
@@ -92,7 +93,7 @@ MUI.append({
 				var name = key.replace(/[\{\}]/g, '');
 				if (name == null || name == '') return;
 
-				if (!values[name]) return;
+				if (values[name] == null) return;
 				var re = new RegExp('\\{' + name + '\\}', 'g');
 				str = str.replace(re, values[name]);
 			});
@@ -112,7 +113,7 @@ MUI.append({
 		return MUI.replaceFields(files, paths);
 	},
 
-	files: new Hash({'{source}Core/Core.js': 'loaded'}),
+	files: new Hash({'{source}Core/core.js': 'loaded'}),
 
 	getID: function(el){
 		var type = typeOf(el);
@@ -164,17 +165,19 @@ MUI.append({
 		return true;   // returns true to signal that it loading something
 	},
 
-	load:function(type, loadScriptHTML){
-		MUI.create(type, null, loadScriptHTML, true);
+	load:function(options){
+		options.loadOnly = true;
+		MUI.create(options);
 	},
 
-	create:function(type, options, fromHTML, loadOnly){
+	create:function(options){
+		if (typeOf(options) == 'string') options = {control:options};
 		if (!MUI.initialized) MUI.initialize();
 		if (this.loadPluginGroups(function(){
 			MUI.create(type, options, fromHTML, loadOnly);  // [i_a] make sure all args get through to the next invocation when the plugins are loaded!
 		})) return;
 
-		var name = type.replace(/(^MUI\.)/i, '');
+		var name = options.control.replace(/(^MUI\.)/i, '');
 		var cname = name.toLowerCase();
 
 		// try and locate the requested item
@@ -203,13 +206,15 @@ MUI.append({
 
 		js = MUI.replaceFields(js, path);
 
-		if (js.length > 0 && MUI.files[js[0]] == 'loaded' && !fromHTML){
-			if (config.loadOnly || loadOnly) return null;
+		if (js.length > 0 && MUI.files[js[0]] == 'loaded' && !options.fromHTML){
+			if (config.loadOnly || options.loadOnly) return null;
 			var klass = MUI[name];
-			return new klass(options);
+			var obj = new klass(options);
+			if (options.onNew) options.onNew(obj);
+			return obj;
 		}
 
-		if (fromHTML) js.push(path[sname] + cname + '_html.js');
+		if (options.fromHTML) js.push(path[sname] + cname + '_html.js');
 
 		var css = [];
 		if (config.css) css = config.css;
@@ -219,10 +224,11 @@ MUI.append({
 			'js':js,
 			'css':css,
 			'onload':function(){
-				if (config.loadOnly || loadOnly) return;
+				if (config.loadOnly || options.loadOnly) return;
 				var klass = MUI[name];
-				new klass(options);
-				if (fromHTML) ret.fromHTML();
+				var obj = new klass(options);
+				if (options.onNew) options.onNew(obj);
+				if (options.fromHTML) ret.fromHTML();
 			}
 		});
 		return null;
@@ -234,7 +240,8 @@ MUI.append({
 	},
 
 	notification: function(message){
-		MUI.create('MUI.Window',{
+		MUI.create({
+			control: 'MUI.Window',
 			loadMethod: 'html',
 			closeAfter: 1500,
 			type: 'notification',
@@ -278,9 +285,10 @@ MUI.append({
 		}
 	},
 
-	getData: function(item, property){
-		if (!item || !property) return '';
-		if (item[property] == null) return '';
+	getData: function(item, property, dfault){
+		if (!dfault) dfault = '';
+		if (!item || !property) return dfault;
+		if (item[property] == null) return dfault;
 		return item[property];
 	},
 
@@ -321,8 +329,47 @@ MUI.append({
 			return;
 		}
 		if (instance && instance.showSpinner) instance.showSpinner();
-	}
+	},
 
+	register: function(namespace, funcs, depth){
+		try{
+			if (depth == null) depth = 4;
+			if (depth < 0) return;
+			for(var name in funcs) {
+				if(name=='') continue;
+				var func = funcs[name];
+				if (typeOf(func) != 'function') continue;
+				if (typeOf(func) == 'object'){
+					MUI.register(namespace + '.' + name, func, depth - 1);
+					return;
+				}
+				MUI.registered[namespace + '.' + name] = func;
+			}
+		} catch(e){
+		}
+	},
+
+	getRegistered: function(bind,name,args){
+		return function(ev){
+			ev.stop();
+			args.unshift(ev);
+			MUI.registered[name].apply(bind,args);
+		};
+	},
+
+	getWrappedEvent: function(bind,func,args){
+		return function(ev){
+			args.unshift(ev);
+			func.apply(bind,args);
+		};
+	},
+
+	getPartnerLoader: function(bind,content){
+		return function(ev){
+			ev.stop();
+			if($(content.element)) MUI.Content.update(content);
+		};
+	}
 });
 
 var NamedClass = function(name, members){
@@ -633,3 +680,27 @@ Object.append(Asset, {
 		return false;
 	}
 });
+
+(function(){
+	var realConsole = window.console || null,
+		fn = function(){},
+		disabledConsole = {
+			log: fn,
+			warn: fn,
+			info: fn,
+			enable: function(quiet){
+				window.dbg = realConsole ? realConsole : disabledConsole;
+				if (!quiet) window.dbg.log('dbg enabled.');
+			},
+			disable: function(){
+				window.dbg = disabledConsole;
+			}
+		};
+
+	if (realConsole) {
+		realConsole.disable = disabledConsole.disable;
+		realConsole.enable = disabledConsole.enable;
+	}
+
+	disabledConsole.enable(true);
+})();

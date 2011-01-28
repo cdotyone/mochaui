@@ -63,87 +63,60 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 	},
 
 	initialize: function(options){
-		var self = this;
-		self.setOptions(options);
-		var o = self.options;
+		this.setOptions(options);
 
-		// make sure this controls has an ID
-		var id = o.id;
-		if (!id){
-			id = 'accordion' + (++MUI.IDCount);
-			o.id = id;
-		}
+		// If accordion has no ID, give it one.
+		this.id = this.options.id = this.options.id || 'accordion' + (++MUI.idCount);
+		MUI.set(this.id, this);
 
 		// create sub items if available
-		if (o.drawOnInit && o.panels.length > 0) self.draw();
+		if (this.options.drawOnInit && this.options.panels.length > 0) self.draw();
 		else if (self.fromHTML){
 			window.addEvent('domready', function(){
 				var el = $(id);
 				if (el != null) self.fromHTML();
 			});
 		}
-
-		MUI.set(id, self);
 	},
 
-	draw: function(containerEl){
-		var self = this;
-		var o = self.options;
+	draw: function(container){
+		var o = this.options;
+		if (!container) container = o.container;
 
+		// determine element for this control
 		var isNew = false;
-
-		// build primary wrapper div
-		var div = $(o.id);
+		var div = o.element ? o.element : $(o.id);
 		if (!div){
-			div = new Element('div', {'id':o.id});
+			div = new Element('div', {'id': o.id});
 			isNew = true;
-		} else div.empty();
+		}
 		if (o.cssClass) div.set('class', o.cssClass);
-		self.element = div;
+
+		this.el.element = div.store('instance', this);		// assign instance to element
 
 		// create main panel container
-		self._panelsElement = new Element('div', {'class':'panels'}).inject(div);
+		this._panelsElement = new Element('div', {'class':'panels'}).inject(div);
 
 		// if no tab selected, then select first tab for them
 		if (o.panels.length > 0 && (o.value == null || o.value == '')) o.value = MUI.getData(o.panels[0], o.valueField);
 
 		// build all panels
-		self._togglers = [];
-		self._panels = [];
+		this._togglers = [];
+		this._panels = [];
 		o.panels.each(function(panel){
-			self._buildPanel(panel, self._panelsElement);
+			this._buildPanel(panel, this._panelsElement);
 		});
-		if (self._panels.length > 1){
-			self._togglers[0].addClass('first');
-			self._togglers[self._panels.length - 1].addClass('last');
+		if (this._panels.length > 1){
+			this._togglers[0].addClass('first');
+			this._togglers[this._panels.length - 1].addClass('last');
 		}
 
+		// add to container
+		var addToContainer = function(){
+			if (typeOf(container) == 'string') container = $(container);
+			if (div.getParent() == null) div.inject(container);
 
-		var attachToDOM = function(){
-			var instance;
-			if (isNew){
-				// determine parent container object
-				if (!o._container && typeof(o.container) == 'object'){
-					o._container = o.container;
-					o.container = o.container.get('id');
-				}
-				if (!o._container && typeof(o.container) == 'string'){
-					instance = MUI.get(o.container);
-					if (instance && instance.el.content){
-						instance.el.content.setStyle('padding', '0');
-						o._container = instance.el.content;
-					}
-					if (!o._container) o._container = $(containerEl ? containerEl : o.container);
-				}
-
-				if (o._container){
-					if (o.clearContainer) o._container.empty();
-					o._container.appendChild(div);
-				}
-			}
-
-			instance = MUI.get(o.container);
-			self._accordion = new Fx.Accordion(self._togglers, self._panels, {
+			this._accordion = new Fx.Accordion(this._togglers, this._panels, {
 				'height':o.heightFx
 				,'width':o.widthFx
 				,'opacity':o.opacity
@@ -158,26 +131,23 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 					toggler.removeClass('open');
 				},
 				onStart: function(){
-					self.accordionResize = function(){
-						if(instance && instance.dynamicResize) instance.dynamicResize(); // once more for good measure
+					var instance = MUI.get(o.container);
+					this.accordionResize = function(){
+						if (instance && instance.dynamicResize) instance.dynamicResize(); // once more for good measure
 					};
-					self.accordionTimer = self.accordionResize.periodical(10);
+					this.accordionTimer = this.accordionResize.periodical(10);
 				},
 				onComplete: function(){
-					self.accordionTimer = clearInterval(self.accordionTimer);
-					if(instance.dynamicResize) instance.dynamicResize(); // once more for good measure
+					var instance = MUI.get(o.container);
+					this.accordionTimer = clearInterval(this.accordionTimer);
+					if (instance.dynamicResize) instance.dynamicResize(); // once more for good measure
 				}
 			});
-		};
+		}.bind(this);
+		if (!isNew || typeOf(container) == 'element') addToContainer();
+		else window.addEvent('domready', addToContainer);
 
-		if (!isNew){
-			attachToDOM();
-			return this;
-		}
-
-		window.addEvent('domready', attachToDOM);
-
-		return div;
+		return this;
 	},
 
 	_buildPanel: function(panel, div){
@@ -185,7 +155,7 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 		var o = self.options;
 
 		var value = MUI.getData(panel, o.valueField);
-		if (!value) value = 'apanel' + (++MUI.IDCount);
+		if (!value) value = 'apanel' + (++MUI.idCount);
 		var text = MUI.getData(panel, o.textField);
 		var title = MUI.getData(panel, o.titleField);
 		var html = MUI.getData(panel, o.contentField);

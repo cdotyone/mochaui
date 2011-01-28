@@ -61,13 +61,11 @@ MUI.List = new NamedClass('MUI.List', {
 
 	initialize: function(options){
 		this.setOptions(options);
+		options = this.options;
 
-		// make sure this controls has an ID
-		var id = this.options.id;
-		if (!id){
-			id = 'list' + (++MUI.IDCount);
-			this.options.id = id;
-		}
+		// If list has no ID, give it one.
+		this.id = options.id = options.id || 'list' + (++MUI.idCount);
+		MUI.set(this.id, this);
 
 		if(options.content) {
 			options.content.loadMethod = 'json';
@@ -80,13 +78,11 @@ MUI.List = new NamedClass('MUI.List', {
 
 		// create sub items if available
 		if (this.options.drawOnInit && this.options.items.length > 0) this.draw();
-
-		MUI.set(id, this);
 	},
 
-	draw: function(containerEl){
-		var self = this;
-		var o = self.options;
+	draw: function(container){
+		var o = this.options;
+		if (!container) container = o.container;
 
 		// see if we need build columns automagically
 		if (o.columns == null || o.columns.length == 0){
@@ -103,15 +99,14 @@ MUI.List = new NamedClass('MUI.List', {
 		}
 
 		// build control's wrapper div
-		var div = $(self.id);
 		var isNew = false;
-		if (!div){					 // check to see if it is already on DOM
-			div = new Element('div');
-			div.id = o.id;
+		var div = o.element ? o.element : $(o.id);
+		if (!div){
+			div = new Element('div', {'id': o.id});
 			isNew = true;
 		}
 		if (o.cssClass) div.set('class', o.cssClass);
-		self.element = div;
+		this.element = div;
 
 		//-------------------------
 		// build table
@@ -153,7 +148,7 @@ MUI.List = new NamedClass('MUI.List', {
 			for (i = 0; i < items.length; i++){
 				// build the row
 				var item = items[i];
-				self._buildItem(item, tbody);
+				this._buildItem(item, tbody);
 				tr = item._element;
 
 				// select row if it needs to selected
@@ -163,29 +158,19 @@ MUI.List = new NamedClass('MUI.List', {
 				else if (i % 2 && o.alternateRows) tr.addClass('alt');
 			}
 		}
-		//-------------------------
 
-		if (!isNew) return this;
+		// add to container
+		var addToContainer = function(){
+			if (typeOf(container) == 'string') container = $(container);
+			if( o.clearContainer ) container.empty();
+			if (div.getParent() == null) div.inject(container);
 
-		// add control to document
-		window.addEvent('domready', function(){
-			// determine parent container object
-			if(!o._container && typeof(o.container) == 'string') {
-				var instance = MUI.get(o.container);
-				if(instance) {
-					if(instance.el.content) {
-						instance.el.content.setStyle('padding','0');
-						o._container = instance.el.content;
-					}
-				}
-				if(!o._container) o._container=$(containerEl ? containerEl : o.container);
-			}
+			container.el.content.setStyle('padding','0');
+		}.bind(this);
+		if (!isNew || typeOf(container) == 'element') addToContainer();
+		else window.addEvent('domready', addToContainer);
 
-			if(o.clearContainer) o._container.empty();
-			o._container.appendChild(div);
-		});
-
-		return self;
+		return this;
 	},
 
 	_buildItem: function(item, parent){

@@ -42,62 +42,53 @@ MUI.Dock = new NamedClass('MUI.Dock', {
 	},
 
 	initialize: function(options){
-		var self = this;
-		self.setOptions(options);
-		var o = self.options;
-		self.el = {};
+		this.setOptions(options);
+		this.el = {};
 
-		// make sure this controls has an ID
-		var id = o.id;
-		if (!id){
-			id = 'toolbarDock' + (++MUI.IDCount);
-			o.id = id;
-		}
-		this.id = id;
+		// If dock has no ID, give it one.
+		this.id = this.options.id = this.options.id || 'dock' + (++MUI.idCount);
+		MUI.set(this.id, this);
 
-		this.draw();
-
-		MUI.set(id, this);
+		if(this.options.drawOnInit) this.draw();
 	},
 
-	draw: function(containerEl){
-		var self = this;
-		var o = self.options;
+	draw: function(container){
+		var o = this.options;
+		if (!container) container = o.container;
 
+		// determine element for this control
 		var isNew = false;
-		var div;
-
-		div = $(o.id);
+		var div = o.element ? o.element : $(o.id);
 		if (!div){
 			div = new Element('div', {'id': o.id});
 			isNew = true;
 		}
+
+		// add styling to element
 		div.addClass('toolbardock');
 		if (o.cssClass) div.addClass(o.cssClass);
-		self.el.element = div.store('instance', this);
 
-		if (!isNew || o._container) this._addToContainer(o._container, div);
-		else window.addEvent('domready', function(){
-			if (!o._container) o._container = $(containerEl ? containerEl : o.container);
-			this._addToContainer(o._container, div);
-		});
+		this.el.element = div.store('instance', this);		// assign instance to element
 
-		return div;
-	},
+		// add to container
+		var addToContainer = function(){
+			if (typeOf(container) == 'string') container = $(container);
+			if (div.getParent() == null) div.inject(container);
 
-	_addToContainer: function(container){
-		if(this.el.element.getParent()==null) this.el.element.inject(container);
-		Object.each(this.options.docked, this._createToolbar.bind(this));
+			// add docked controls
+			Object.each(this.options.docked, this._createToolbar, this);
+		}.bind(this);
+		if (!isNew || typeOf(container) == 'element') addToContainer();
+		else window.addEvent('domready', addToContainer);
+
+		return this;
 	},
 
 	_createToolbar:function(toolbar, idx){
 		if (!toolbar.control) toolbar.control = 'MUI.DockHtml';
 		if (!toolbar.id) toolbar.id = this.id + 'Toolbar' + idx;
-		new Element('div', {'id':toolbar.id,'class':'toolbar'}).inject(this.el.element);
-		/*
-		 toolbar._container = this.el.element;
-		 toolbar.container = toolbar._container.id;
-		 */
+		toolbar.container = this.el.element;
+		toolbar.element = new Element('div', {'id':toolbar.id,'class':'toolbar'}).inject(this.el.element);
 		if (!toolbar.partner) toolbar.partner = this.options.partner;
 		this.options.docked[idx] = toolbar;
 		var content = {};
@@ -106,7 +97,7 @@ MUI.Dock = new NamedClass('MUI.Dock', {
 				content[key] = val;
 		});
 		toolbar.content = content;
-		MUI.create(toolbar.control, toolbar);
+		MUI.create(toolbar);
 	}
 
 });

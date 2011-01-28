@@ -42,57 +42,45 @@ MUI.Spinner = new NamedClass('MUI.Spinner', {
 	},
 
 	initialize: function(options){
-		options.instance = this;
 		this.setOptions(options);
-
-		var o = this.options;
 		this.el = {};
 
-		// make sure this controls has an ID
-		var id = o.id;
-		if (!id){
-			id = 'toolbarSpinner' + (++MUI.IDCount);
-			o.id = id;
-		}
-		this.id = id;
+		// If spinner has no ID, give it one.
+		this.id = this.options.id = this.options.id || 'spinner' + (++MUI.idCount);
+		MUI.set(this.id, this);
 
-		if (o.content) o.content.instance = this;
-		this.draw();
-
-		MUI.set(id, this);
+		if(this.options.drawOnInit) this.draw();
 	},
 
-	draw: function(containerEl){
-		var self = this;
-		var o = self.options;
+	draw: function(container){
+		var o = this.options;
+		if (!container) container = o.container;
 
+		// determine element for this control
 		var isNew = false;
-		var div = $(o.id);
+		var div = o.element ? o.element : $(o.id);
 		if (!div){
 			div = new Element('div', {'id': o.id});
 			isNew = true;
 		}
-		div.empty();
+		this.el.element = div.store('instance', this).empty();
 
 		div.addClass('toolbar');
 		if (o.cssClass) div.addClass(o.cssClass);
 		if (o.divider) div.addClass('divider');
 		if (o.orientation) div.addClass(o.orientation);
 
-		self.el.element = div.store('instance', this);
-
-		self.el.spinner = new Element('div', {'id':o.id + '_spinner',class:'spinner'}).inject(
-				new Element('div', {'id':o.id + 'spinnerWrapper',class:'spinnerWrapper'}).inject(div)
+		this.el.spinner = new Element('div', {'id':o.id + '_spinner','class':'spinner'}).inject(
+				new Element('div', {'id':o.id + 'spinnerWrapper','class':'spinnerWrapper'}).inject(div)
 				);
 
-		if (!isNew) return;
-		if (o._container) o._container.inject(div);
-		else window.addEvent('domready', function(){
-			if (!o._container){
-				o._container = $(containerEl ? containerEl : o.container);
-				if (o._container) o._container.inject(div);
-			}
-		});
+		// add to container
+		var addToContainer = function(){
+			if (typeOf(container) == 'string') container = $(container);
+			if (div.getParent() == null) div.inject(container);
+		}.bind(this);
+		if (!isNew || typeOf(container) == 'element') addToContainer();
+		else window.addEvent('domready', addToContainer);
 
 		return div;
 	},

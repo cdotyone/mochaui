@@ -33,123 +33,176 @@ MUI.Desktop = new NamedClass('MUI.Desktop', {
 		id:				'',				// id of the primary element, and id os control that is registered with mocha
 		container:		null,			// the parent control in the document to add the control to
 		drawOnInit:		true,			// true to add tree to container when control is initialized
-		cssClass:		false,			// additional css tag
+		cssClass:		'desktop',		// additional css tag
 		orientation:	'left',			// toolbars are listed from left to right or right to left
 
 		partner:		false,			// default partner panel to pass docked controls
 		header:			true,			// has a header section
+		taskbar:		true,			// has a taskbar section
 		footer:			true,			// has a footer section
 
-		sections:		[]				// sections that make up desktop, section names can be 'header','content','footer'
+		content:		[]				// content that make up desktop, content positions can be 'header','page','footer'
+
+		//onDrawBegin:	null,
+		//onDrawEnd:	null,
+		//onResize:		null,
 	},
 
-	initialize: function(options)
-	{
-		var self = this;
-		self.setOptions(options);
-		var o = self.options;
-		self.el = {};
+	initialize: function(options){
+		this.setOptions(options);
+		this.el = {};
 
-		// make sure this controls has an ID
-		var id = o.id;
-		if (!id){
-			id = 'desktop' + (++MUI.IDCount);
-			o.id = id;
-		}
-		this.id = id;
-		MUI.set(id, this);
+		// If desktop has no ID, give it one.
+		this.id = this.options.id = this.options.id || 'desktop' + (++MUI.idCount);
+		MUI.set(this.id, this);
 
-		this.draw();
+		if(this.options.drawOnInit) this.draw();
 	},
 
-	draw: function(containerEl)
-	{
-		var self = this;
-		var o = self.options;
+	draw: function(container){
+		this.fireEvent('drawBegin', [this]);
+		var o = this.options;
+		if (!container) container = o.container;
 
+		// determine element for this control
 		var isNew = false;
-		var div;
-
-		div = $(o.id);
+		var div = o.element ? o.element : $(o.id);
 		if (!div){
 			div = new Element('div', {'id': o.id});
 			isNew = true;
 		}
-		div.addClass('desktop');
-		div.empty();
-		if (o.cssClass) div.addClass(o.cssClass);
-		self.el.element = div.store('instance', this);
+		this.el.element = div.empty().addClass(o.cssClass).store('instance', this);
+		MUI.desktop = this;
 
-		if (o.header) this.el.header = new Element('div', {'id':o.id + 'Header','class':'desktopHeader'}).inject(this.el.element);
-		this.el.page = new Element('div', {'id':o.id + 'Page','class':'desktopPage'}).inject(this.el.element);
-		if (o.footer) this.el.footer = new Element('div', {'id':o.id + 'Footer','class':'desktopFooter'}).inject(this.el.element);
-
-		if (!isNew || o._container){
-			if (this.el.element.getParent() == null) this.el.element.inject(o._container);
-			this.setDesktopSize();
-		} else window.addEvent('domready', function()
-		{
-			if (!o._container) o._container = $(containerEl ? containerEl : o.container);
-			if (!o._container) o._container = document.body;
-			if (this.el.element.getParent() == null) this.el.element.inject(o._container);
-			this.setDesktopSize();
-		});
-
-		return div;
-	},
-
-	_createSection:function(sectionName)
-	{
-		var lname = sectionName.toLowerCase();
-		var dock = new MUI.Dock({'id':this.id + sectionName,container:this.el.element});
-		this[lname] = dock;
-
-		Object.each(this.options.sections, function(section, idx)
-		{
-			if (section.name == lname) return;
-			if (!section.control) section.control = 'MUI.Dock';
-			if (!section.id) section.id = this.id + 'Section' + idx;
-			this.el[section.id] = new Element('div', {'id':section.id}).inject(this.el.element);
-			section.container = dock.el.element;
-
-			if (!section.partner) section.partner = this.options.partner;
-			this.options.sections[idx] = section;
-			var content = {};
-			Object.each(section, function(val, key)
-			{
-				if (['loadmethod', 'method', 'url', 'content', 'onloaded'].indexOf(key) > -1)
-					content[key] = val;
+		for (var idx = 0; idx < this.options.content.length; idx++){
+			var section = this.options.content[idx];
+			if (!section.name) section.name = 'section' + idx;
+			if (!section.id) section.id = this.id + section.name.replace(/(\w)(\w*)/g, function (_, i, r){
+				return i.toUpperCase() + (r != null ? r : "");
 			});
-			section.content = content;
-			MUI.create(section.control, section);
-		}, bind(this));
+
+			if (section.name == 'content'){
+				// add content element
+				this.el.content = new Element('div', {'id':o.id + 'Content','class':o.cssClass + 'Content'}).inject(this.el.element);
+
+				// content section may have columns, process if it does
+				if (section.columns){
+					for (var i = 0; i < section.columns.length; i++){
+						var column = section.columns[i];
+
+						if (!column.id) column.id = o.id + 'Column' + i;
+						column.container = this.el.content;
+						column.element = new Element('div', {'id':column.id}).inject(this.el.content);
+						column.control = 'MUI.Column';
+
+						// last column we want it to call the this.setDesktopSize
+						if (i + 1 == section.columns.length) column.onNew = this.setDesktopSize.bind(this);
+						MUI.create(column);
+					}
+				}
+			} else {
+				// create section element
+				var e = section.element = this.el[section.name] = new Element('div', {'id':section.id}).inject(this.el.element);
+				if (section.cssClass) e.addClass(section.cssClass);
+
+				// for controls they need to know the desktop element
+				section.container = this.el.element;
+				MUI.Content.update(section);
+			}
+		}
+
+		// add to container
+		var addToContainer = function(){
+			if (typeOf(container) == 'string') container = $(container);
+			if (div.getParent() == null) div.inject(container);
+
+			this.setDesktopSize();					// resize the desktop
+			window.addEvent('resize', function(){	// capture browser resize events
+				this._onBrowserResize();
+			}.bind(this));
+
+			this.fireEvent('drawEnd', [this]);
+		}.bind(this);
+		if (!isNew || typeOf(container) == 'element') addToContainer();
+		else window.addEvent('domready', addToContainer);
+
+		return this;
 	},
 
 	setDesktopSize: function(){
-		var windowDimensions = window.getCoordinates();
+		var dimensions = window.getCoordinates();
 
 		// Setting the desktop height may only be needed by IE7
-		if (this.el.element) this.el.element.setStyle('height', windowDimensions.height);
+		if (this.el.element) this.el.element.setStyle('height', dimensions.height);
 
-		// Set pageWrapper height so the taskbar doesn't cover the pageWrapper scrollbars.
-		if (this.el.page){
-			var taskbarOffset = this.taskbar ? this.taskbar.getHeight() : 0;
-			var pageWrapperHeight = windowDimensions.height;
-			pageWrapperHeight -= this.el.page.getStyle('border-top').toInt();
-			pageWrapperHeight -= this.el.page.getStyle('border-bottom').toInt();
-			if (this.el.header) pageWrapperHeight -= this.el.header.offsetHeight;
-			if (this.el.footer) pageWrapperHeight -= this.el.footer.offsetHeight;
-			pageWrapperHeight -= taskbarOffset;
-			if (pageWrapperHeight < 0) pageWrapperHeight = 0;
-			this.el.page.setStyle('height', pageWrapperHeight);
+		// Set content height so the taskbar doesn't cover the content scrollbars.
+		if (this.el.content){
+			var height = dimensions.height;
+			height -= this.el.content.getStyle('border-top').toInt();
+			height -= this.el.content.getStyle('border-bottom').toInt();
+
+			Object.each(this.el, function(val, key){
+				if (['content', 'element'].indexOf(key) < 0){
+					height -= val.offsetHeight;
+					height += val.getStyle('padding-bottom').toInt();
+					height += val.getStyle('padding-top').toInt();
+				}
+			});
+			height -= this.el.taskbar ? this.el.taskbar.getHeight() : 0;
+			if (height < 0) height = 0;
+			this.el.content.setStyle('height', height);
 		}
 
-		this.resizePanels();
+		this.resizePanels().fireEvent('resize', [this]);
+		return this;
+	},
+
+	_onBrowserResize: function(){
+		this.setDesktopSize();
+
+		// Resize maximized windows to fit new browser window size
+		setTimeout(function(){
+			MUI.each(function(instance){
+				var options = instance.options;
+				if (instance.className != 'MUI.Window') return;
+				if (instance.isMaximized){
+
+					// Hide iframe while resize for better performance
+					if (instance.el.iframe) instance.el.iframe.setStyle('visibility', 'hidden');
+
+					var resizeDimensions;
+					if (options.container) resizeDimensions = $(options.container).getCoordinates();
+					else resizeDimensions = document.getCoordinates();
+					var shadowBlur = options.shadowBlur;
+					var shadowOffset = options.shadowOffset;
+					var newHeight = resizeDimensions.height - options.headerHeight - options.footerHeight;
+					newHeight -= instance.el.contentBorder.getStyle('border-top').toInt();
+					newHeight -= instance.el.contentBorder.getStyle('border-bottom').toInt();
+					newHeight -= instance._getAllSectionsHeight();
+
+					instance.resize({
+						width: resizeDimensions.width,
+						height: newHeight,
+						top: resizeDimensions.top + shadowOffset.y - shadowBlur,
+						left: resizeDimensions.left + shadowOffset.x - shadowBlur
+					});
+
+					instance.redraw();
+					if (instance.el.iframe){
+						instance.el.iframe.setStyles({
+							'height': instance.el.contentWrapper.getStyle('height')
+						});
+						instance.el.iframe.setStyle('visibility', 'visible');
+					}
+				}
+			}.bind(this));
+		}.bind(this), 100);
 	},
 
 	resizePanels: function(){
 		MUI.panelHeight(null, null, 'all');
-		MUI.rWidth(this.el.page);
+		MUI.rWidth(this.el.content);
+		return this;
 	}
 
 });
@@ -364,7 +417,7 @@ MUI.append({
 					var instance = MUI.get(el.id);
 
 					// Are any next siblings Expanded?
-					anyNextSiblingsExpanded = function(el){
+					var anyNextSiblingsExpanded = function(el){
 						var test;
 						el.getParent().getAllNext('.panelWrapper').each(function(sibling){
 							var siblingInstance = MUI.get(sibling.getElement('.panel').id);
@@ -452,7 +505,6 @@ MUI.append({
 
 		// Get the remaining height
 		var remainingHeight = column.offsetHeight.toInt() - this.height;
-
 		this.height = 0;
 
 		// Get height of all the column's children
@@ -509,7 +561,6 @@ MUI.append({
 		panelsExpanded.each(function(panel){
 			MUI.resizeChildren(panel);
 		}.bind(this));
-
 	},
 
 	resizeChildren: function(panel){ // May rename this resizeIframeEl()
@@ -517,29 +568,24 @@ MUI.append({
 		var contentWrapper = instance.el.contentWrapper;
 
 		if (instance.el.iframe){
+			// The following hack is to get IE8 RC1 IE8 Standards Mode to properly resize an iframe
+			// when only the vertical dimension is changed.
 			if (!Browser.ie){
 				instance.el.iframe.setStyles({
 					'height': contentWrapper.getStyle('height'),
 					'width': contentWrapper.offsetWidth - contentWrapper.getStyle('border-left').toInt() - contentWrapper.getStyle('border-right').toInt()
 				});
 			} else {
-				// The following hack is to get IE8 RC1 IE8 Standards Mode to properly resize an iframe
-				// when only the vertical dimension is changed.
-				instance.el.iframe.setStyles({
-					'height': contentWrapper.getStyle('height'),
-					'width': contentWrapper.offsetWidth - contentWrapper.getStyle('border-left').toInt() - contentWrapper.getStyle('border-right').toInt() - 1
-				});
 				instance.el.iframe.setStyles({
 					'width': contentWrapper.offsetWidth - contentWrapper.getStyle('border-left').toInt() - contentWrapper.getStyle('border-right').toInt()
 				});
 			}
 		}
-
 	},
 
 	rWidth: function(container){ // Remaining Width
 		if (container == null){
-			container = MUI.Desktop.desktop;
+			container = MUI.desktop.el.element;
 		}
 		container.getElements('.rWidth').each(function(column){
 			var currentWidth = column.offsetWidth.toInt();
@@ -571,8 +617,8 @@ MUI.append({
 			column.getElements('.panel').each(function(panel){
 				MUI.resizeChildren(panel);
 			}.bind(this));
-
 		});
 	}
 
 });
+

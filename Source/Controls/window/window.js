@@ -310,7 +310,7 @@ MUI.Window.implement({
 		}
 
 		// If window has no ID, give it one.
-		options.id = options.id || 'win' + (++MUI.IDCount);
+		this.id = options.id = options.id || 'win' + (++MUI.idCount);
 
 		this.el.windowEl = $(options.id);
 
@@ -330,7 +330,7 @@ MUI.Window.implement({
 		return this;
 	},
 
-	draw: function(){ // options is not doing anything
+	draw: function(){
 		var options = this.options;
 
 		// Check if window already exists and is not in progress of closing
@@ -432,7 +432,7 @@ MUI.Window.implement({
 		}
 
 		// Inject window into DOM
-		this.el.windowEl.inject(options.container);
+		this.el.windowEl.inject($(options.container));
 
 		// Convert CSS colors to Canvas colors.
 		this._setColors();
@@ -1742,9 +1742,10 @@ MUI.Window.implement({
 		}
 
 		// Resize panels if there are any
-		if (this.el.contentWrapper.getChildren('.column') != null){
+		var columns = this.el.contentWrapper.getChildren('.column');
+		if (columns != null && columns.length>0){
 			MUI.rWidth(this.el.contentWrapper);
-			this.el.contentWrapper.getChildren('.column').each(function(column){
+			columns.each(function(column){
 				MUI.panelHeight(column);
 			});
 		}
@@ -1880,7 +1881,7 @@ MUI.Window.implement({
 
 		if (MUI.taskbar && this.options.type == 'window'){
 			var currentButton = $(this.options.id + '_taskbarTab');
-			if (currentButton) MUI.taskbar.taskbarSortables.removeItems(currentButton).destroy();
+			if (currentButton) MUI.taskbar.sortables.removeItems(currentButton).destroy();
 			// Need to resize everything in case the taskbar becomes smaller when a tab is removed
 			MUI.Desktop.setDesktopSize();
 		}

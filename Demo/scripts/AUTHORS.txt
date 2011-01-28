@@ -2,10 +2,13 @@ MochaUI Authors
 
 This software consists of voluntary contributions made by many
 individuals. For exact contribution history, see the revision history
-and logs, available at http://github.com/cdotyone/mochaui
+and logs, available at http://github.com/mui/mochaui
 
 Chris Doty (cdotyone@gmail.com)
-Greg Houstan (greg.houston@gmail.com)
+Greg Houstan (gregory.houston@gmail.com)
 Scott F. Frederick
 Joel Lindau
-Harry Roberts 
+Harry Roberts
+Marko Santic (marko@omnisdata.com) <http://www.omnisdata.com/omnigrid/>
+Paul Duncan (paul@pablotron.org) <http://github.com/jeremydurham/persist-js>
+Aeron Glemann (Calendar) <http://electricprism.com/aeron>

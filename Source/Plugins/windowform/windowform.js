@@ -3,7 +3,7 @@
 
  name: WindowForm
 
- script: Window-from-form.js
+ script: windowform.js
 
  description: MUI - Create a window from a form.
 
@@ -47,7 +47,7 @@ MUI.WindowForm = new NamedClass('MUI.WindowForm', {
 
 	initialize: function(options){
 		this.setOptions(options);
-		this.options.id = 'win' + (++MUI.IDCount);
+		this.options.id = 'win' + (++MUI.idCount);
 		this.options.title = $('newWindowHeaderTitle').value;
 
 		if ($('htmlLoadMethod').checked){

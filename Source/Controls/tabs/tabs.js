@@ -57,31 +57,22 @@ MUI.Tabs = new NamedClass('MUI.Tabs', {
 	},
 
 	initialize: function(options){
-		var self = this;
-		self.setOptions(options);
-		var o = self.options;
+		this.setOptions(options);
 		this.el = {};
 
-		// make sure this controls has an ID
-		var id = o.id;
-		if (!id){
-			id = 'tabs' + (++MUI.IDCount);
-			o.id = id;
-		}
-		this.id = id;
+		// If tabs has no ID, give it one.
+		this.id = this.options.id = this.options.id || 'tabs' + (++MUI.idCount);
+		MUI.set(this.id, this);
 
-		// create sub items if available
-		if (o.drawOnInit && o.tabs.length > 0) this.draw();
-
-		MUI.set(id, this);
+		if(this.options.drawOnInit && this.options.tabs.length > 0) this.draw();
 	},
 
-	draw: function(containerEl){
-		var self = this;
-		var o = self.options;
+	draw: function(container){
+		var o = this.options;
+		if (!container) container = o.container;
 
 		var isNew = false;
-		var div = $(o.id);
+		var div = o.element ? o.element : $(o.id);
 		if (!div){
 			div = new Element('div', {'id': o.id});
 			isNew = true;
@@ -91,7 +82,7 @@ MUI.Tabs = new NamedClass('MUI.Tabs', {
 		var ul = div.getElement('ul');
 		if (!ul) ul = new Element('ul', {'class': o.cssClass}).inject(div);
 		else ul.set('class', o.cssClass).empty();
-		self.el.element = div;
+		this.el.element = div;
 
 		// if no tab selected, then select first tab for them
 		if (o.tabs.length > 0 && (o.value == null || o.value == '')){
@@ -104,49 +95,49 @@ MUI.Tabs = new NamedClass('MUI.Tabs', {
 
 		// build all tabs
 		o.tabs.each(function(tab){
-			self._buildTab(tab, ul);
+			this._buildTab(tab, ul);
 			if (MUI.getData(tab, o.valueField) == o.value) o.selectedTab = tab;
-		});
+		},this);
 
 		// add a formatting div
 		new Element('div', {'class': 'clear'}).inject(ul);
 
 		if (!isNew){
 			div.removeClass('toolbar');
-			if (o.selectedTab) o.selectedTab._element.fireEvent('click');
+			if (o.selectedTab) o.selectedTab.element.fireEvent('click');
 			return this;
 		}
 
-		if (this.options._container){
-			this.options._container.appendChild(div);
-			if (o.selectedTab) o.selectedTab._element.fireEvent('click');
-		}
-		else window.addEvent('domready', function(){
-			this.options._container = $(containerEl ? containerEl : o.container);
-			this.options._container.appendChild(div);
-			if (o.selectedTab) o.selectedTab._element.fireEvent('click');
-		}.bind(this));
+		// add to container
+		var addToContainer = function(){
+			if (typeOf(container) == 'string') container = $(container);
+			if (div.getParent() == null) div.inject(container);
+
+			// select current tab
+			if (o.selectedTab) o.selectedTab.fireEvent('click');
+		}.bind(this);
+		if (!isNew || typeOf(container) == 'element') addToContainer();
+		else window.addEvent('domready', addToContainer);
 
 		return div;
 	},
 
 	_buildTab: function(tab, ul){
-		var self = this;
-		var o = self.options;
+		var o = this.options;
 
 		var value = MUI.getData(tab, o.valueField);
-		if (!value) value = 'tab' + (++MUI.IDCount);
+		if (!value) value = 'tab' + (++MUI.idCount);
 		var text = MUI.getData(tab, o.textField);
 		var title = MUI.getData(tab, o.titleField);
 		var liClass = MUI.getData(tab, 'class');
 
 		var li = new Element('li', {'class': liClass}).inject(ul);
 		var a = new Element('a', {'text': text}).inject(li);
-		tab._element = li;
+		tab.element = li;
 
 		li.addEvent('click', function(e){
-			self._tabClick(tab, ul, e);
-		});
+			this._tabClick(tab, ul, e);
+		}.bind(this));
 		a.addEvent('click', function(e){
 			e.preventDefault();
 		});
@@ -157,8 +148,7 @@ MUI.Tabs = new NamedClass('MUI.Tabs', {
 	},
 
 	_tabClick: function(tab, ul, e){
-		var self = this;
-		var o = self.options;
+		var o = this.options;
 		if (e) e.stopPropagation();
 
 		var value = MUI.getData(tab, o.valueField);
@@ -169,7 +159,7 @@ MUI.Tabs = new NamedClass('MUI.Tabs', {
 		ul.getChildren().each(function(listItem){
 			listItem.removeClass('sel');
 		});
-		tab._element.addClass('sel');
+		tab.element.addClass('sel');
 
 		var url = MUI.getData(tab, o.urlField);
 		if (o.partner && url){
@@ -182,8 +172,8 @@ MUI.Tabs = new NamedClass('MUI.Tabs', {
 				content: content,
 				url: url,
 				onLoaded: function(){
-					self.fireEvent('tabSelected', [tab, value, self, e]);
-				}
+					this.fireEvent('tabSelected', [tab, value, this, e]);
+				}.bind(this)
 			};
 
 			if (o.updateOptions) uOptions = Object.merge(uOptions, o.updateOptions);
@@ -193,7 +183,7 @@ MUI.Tabs = new NamedClass('MUI.Tabs', {
 
 			MUI.Content.update(uOptions);
 		} else {
-			self.fireEvent('tabSelected', [tab, value, self, e]);
+			this.fireEvent('tabSelected', [tab, value, this, e]);
 		}
 	}
 

@@ -5,8 +5,7 @@
 
  description: Create web application layouts. Enables window maximize.
 
- todo:
- - Make it so the taskbar requires no initial html markup.
+ todo: - Make it so the taskbar requires no initial html markup.
 
  copyright: (c) 2010 Contributors in (/AUTHORS.txt).
 

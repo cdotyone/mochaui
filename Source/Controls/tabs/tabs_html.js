@@ -41,7 +41,7 @@ MUI.Tabs.implement({
 			var tab = {};
 
 			var value = li.get('id');
-			if (!value) value = 'tab' + (++MUI.IDCount);
+			if (!value) value = 'tab' + (++MUI.idCount);
 
 			var a = li.getElement('a');
 			var title = a.get('title');

@@ -65,43 +65,43 @@ MUI.Calendar = new NamedClass('MUI.Calendar', {
 
 	initialize: function(options){
 		this.setOptions(options);
-		var o = this.options;
+		this.el={};
+		options = this.options;
 
-		// make sure this controls has an ID
-		if (!o.id) o.id = 'calendar' + (++MUI.IDCount);
+		// If calendar has no ID, give it one.
+		this.id = options.id = options.id || 'calendar' + (++MUI.idCount);
+		MUI.set(this.id, this);
 
 		// create our classes array
-		var keys = [o.cssClass, 'prev', 'next', 'month', 'year', 'today', 'invalid', 'valid', 'inactive', 'active', 'hover', 'hilite'];
+		var keys = [options.cssClass, 'prev', 'next', 'month', 'year', 'today', 'invalid', 'valid', 'inactive', 'active', 'hover', 'hilite'];
 		var values = keys.map(function(key, i){
-			return (o.cssClasses[i] && o.cssClasses[i].length) ? o.cssClasses[i] : key;
+			return (options.cssClasses[i] && options.cssClasses[i].length) ? options.cssClasses[i] : key;
 		}, this);
 		this._classes = values.associate(keys);
 
 		this.isVisible = false;
 		var d = new Date(); // today
-		d.setDate(d.getDate() + o.direction.toInt()); // correct today for directional offset
+		d.setDate(d.getDate() + options.direction.toInt()); // correct today for directional offset
 		this._month = d.getMonth();
 		this._year = d.getFullYear();
 
-		if (o.drawOnInit) this.draw();
-		MUI.set(o.id, this);
+		if (options.drawOnInit) this.draw();
 	},
 
 	draw: function(containerEl){
-		var self = this;
-		var o = self.options;
+		// todo: need to except external container
 
-		if (!self.el) self.el = {};
+		var o = this.options;
 
 		// determine fields that need to be added
-		self.el.input = $(o.id);
-		self.el.button = $(o.id + '_button');
-		self.el.element = $(o.id + '_calendar');
+		this.el.input =  o.element ? o.element : $(o.id);
+		this.el.button = $(o.id + '_button');
+		this.el.element = $(o.id + '_calendar');
 		var newInput = false;
-		if (!self.el.input) newInput = true;
-		else if (!o.value && !o.dvalue) o.value = self.el.input.read('value');
-		var newButton = !self.el.button;
-		var newCal = !self.el.element;
+		if (!this.el.input) newInput = true;
+		else if (!o.value && !o.dvalue) o.value = this.el.input.read('value');
+		var newButton = !this.el.button;
+		var newCal = !this.el.element;
 
 		// no need to draw elements if they are already there
 		if (!newInput && !newButton && !newCal) return this;
@@ -118,89 +118,89 @@ MUI.Calendar = new NamedClass('MUI.Calendar', {
 
 			if (o.clearContainer && o._container) o._container.empty();
 
-			self.el.input = $(o.id);
-			self.el.button = $(o.id + '_button');
-			self.el.element = $(o.id + '_calendar');
+			this.el.input = $(o.id);
+			this.el.button = $(o.id + '_button');
+			this.el.element = $(o.id + '_calendar');
 
-			if (!self.el.input){
+			if (!this.el.input){
 				if (!o._container) return;
-				self.el.input = new Element('input', {'type':'input','maxlength':10,width:o.width});
-				o._container.appendChild(self.el.input);
-			} else if (!o.value) o.value = self.el.input.get('value');
-			if (!o.value && o.dvalue) o.value = self.format(o.dvalue, o.format);
-			if (o.value) self.el.input.set('value', o.value);
-			if (!o.dvalue && o.value) o.dvalue = self.unformat(o.value, o.format);
+				this.el.input = new Element('input', {'type':'input','maxlength':10,width:o.width});
+				o._container.appendChild(this.el.input);
+			} else if (!o.value) o.value = this.el.input.get('value');
+			if (!o.value && o.dvalue) o.value = this.format(o.dvalue, o.format);
+			if (o.value) this.el.input.set('value', o.value);
+			if (!o.dvalue && o.value) o.dvalue = this.unformat(o.value, o.format);
 
-			if (!self.el.button){
-				self.el.button = new Element('button', {'id':o.id + '_button', 'type': 'button', 'class':self._classes.calendar }).addEvent('click', function(){
-					self.toggle();
-				}.bind(self));
-				self.el.button.inject(self.el.input, 'after');
+			if (!this.el.button){
+				this.el.button = new Element('button', {'id':o.id + '_button', 'type': 'button', 'class':this._classes.calendar }).addEvent('click', function(){
+					this.toggle();
+				}.bind(this));
+				this.el.button.inject(this.el.input, 'after');
 			}
 
-			if (!self.el.element){
+			if (!this.el.element){
 				// create cal element with css styles required for proper cal functioning
-				self.el.element = new Element('div', {
+				this.el.element = new Element('div', {
 					'id':o.id + '_calendar',
 					'styles': { left: '-1000px', opacity: 0, position: 'absolute', top: '-1000px', zIndex: 1000 }
-				}).addClass(self._classes.calendar).inject(document.body);
+				}).addClass(this._classes.calendar).inject(document.body);
 
 				// iex 6 needs a transparent iframe underneath the calendar in order to not allow select elements to render through
 				if (window.ie6){
-					self.iframe = new Element('iframe', {
+					this.iframe = new Element('iframe', {
 						'styles': { left: '-1000px', position: 'absolute', top: '-1000px', zIndex: 999 }
 					}).inject(document.body);
-					self.iframe.style.filter = 'progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0)';
+					this.iframe.style.filter = 'progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0)';
 				}
 
 				// initialize fade method
-				self.fx = new Fx.Tween(self.el.element, {
+				this.fx = new Fx.Tween(this.el.element, {
 					onStart: function(){
-						if (self.el.element.getStyle('opacity') == 0){ // show
-							if (window.ie6) self.iframe.setStyle('display', 'block');
-							self.el.element.setStyles({'display':'block','visibility':'visible'});
-							self.fireEvent('showStart', self);
+						if (this.el.element.getStyle('opacity') == 0){ // show
+							if (window.ie6) this.iframe.setStyle('display', 'block');
+							this.el.element.setStyles({'display':'block','visibility':'visible'});
+							this.fireEvent('showStart', this);
 						}
-						else self.fireEvent('hideStart', self); // hide
-					}.bind(self),
+						else this.fireEvent('hideStart', this); // hide
+					}.bind(this),
 					onComplete: function(){
-						if (self.el.element.getStyle('opacity') == 0){ // hidden
-							self.el.element.setStyles({'display':'none','visibility':'hidden'});
-							if (window.ie6) self.iframe.setStyle('display', 'none');
-							self.fireEvent('hideComplete', self);
+						if (this.el.element.getStyle('opacity') == 0){ // hidden
+							this.el.element.setStyles({'display':'none','visibility':'hidden'});
+							if (window.ie6) this.iframe.setStyle('display', 'none');
+							this.fireEvent('hideComplete', this);
 						}
-						else self.fireEvent('showComplete', self); // shown
-					}.bind(self)
+						else this.fireEvent('showComplete', this); // shown
+					}.bind(this)
 				});
 
 				// initialize drag method
-				if (window.Drag && self.options.draggable){
-					self.drag = new Drag.Move(self.el.element, {
+				if (window.Drag && this.options.draggable){
+					this.drag = new Drag.Move(this.el.element, {
 						onDrag: function(){
-							if (window.ie6) self.iframe.setStyles({ left: self.el.element.style.left, top: self.el.element.style.top });
-						}.bind(self)
+							if (window.ie6) this.iframe.setStyles({ left: this.el.element.style.left, top: this.el.element.style.top });
+						}.bind(this)
 					});
 				}
 			}
 
-			if (self.el.input){
-				if (self.el.input.get('tag') == 'select'){ // select elements allow the user to manually set the date via select option
-					self.el.input.addEvent('change', function(){
-						self._changed();
+			if (this.el.input){
+				if (this.el.input.get('tag') == 'select'){ // select elements allow the user to manually set the date via select option
+					this.el.input.addEvent('change', function(){
+						this._changed();
 					}.bind(this));
 				}
 				else { // input (type text) elements restrict the user to only setting the date via the calendar
-					self.el.input.readOnly = true;
-					self.el.input.addEvent('focus', function(){
-						self.toggle();
+					this.el.input.readOnly = true;
+					this.el.input.addEvent('focus', function(){
+						this.toggle();
 					}.bind(this));
 				}
 			}
 
-			Object.append(self, self._bounds()); // abs bounds of calendar
-			Object.append(self, self._values()); // valid days, months, years
-			self._rebuild();
-		});
+			Object.append(this, this._bounds()); // abs bounds of calendar
+			Object.append(this, this._values()); // valid days, months, years
+			this._rebuild();
+		}.bind(this));
 
 		return this;
 	},

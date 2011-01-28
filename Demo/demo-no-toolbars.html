@@ -25,7 +25,7 @@
 	<script type="text/javascript" src="../Source/Controls/taskbar/taskbar.js"></script>
 	<script type="text/javascript" src="../Source/Controls/window/window.js"></script>
 	<script type="text/javascript" src="../Source/Controls/window/modal.js"></script>
-	<script type="text/javascript" src="../Source/Utility/window-from-html.js"></script>
+	<script type="text/javascript" src="../Source/Plugins/windowform/windowform.js"></script>
 	<!--MOCHAUI-->
 
 	<script type="text/javascript">
@@ -51,9 +51,7 @@
 
 			// Initialize MochaUI options
 			MUI.initialize();
-		
-			//MUI.Desktop.initialize();
-			
+
 			MUI.Windows.newFromHTML();
 
 			$('aboutLink').addEvent('click', function(e) {

@@ -60,10 +60,10 @@ MUI.Content = Object.append((MUI.Content || {}), {
 
 		// detect subcontrol content
 		if (content.control){
-		  if (!content.options) content.options = {};
-		  if (content.url) content.options.url = content.url;
-		  if (content.loadMethod) content.options.loadMethod = content.loadMethod;
-		  content.loadMethod = 'control';
+			if (!content.options) content.options = {};
+			if (content.url) content.options.url = content.url;
+			if (content.loadMethod) content.options.loadMethod = content.loadMethod;
+			content.loadMethod = 'control';
 		}
 
 		// make sure loadMethod has a value
@@ -76,19 +76,16 @@ MUI.Content = Object.append((MUI.Content || {}), {
 			}
 		}
 
-		var element,instance = content.instance;
-		if (content.element){
-			element = $(content.element);
-			if (!instance) instance = element.retrieve('instance');
-		}
-		content.contentContainer = element;
+		var instance = content.instance;
+		var element = content.element = $(content.element);
+		if (!instance && element) instance = element.retrieve('instance');
 
 		// -- argument pre-processing override --
 		// allow controls to process any custom arguments, titles, scrollbars, etc..
 		if (instance && instance.updateStart) instance.updateStart(content);
 
 		// no content or url and not a subcontrol? nothing else to do beyond this point
-		if(!content.url && !content.content && content.loadMethod!='control') return content;
+		if (!content.url && !content.content && content.loadMethod != 'control') return content;
 
 		// replace in path replacement fields,  and prepare the url
 		content.doPrepUrl = (function(prepUrl){
@@ -105,11 +102,11 @@ MUI.Content = Object.append((MUI.Content || {}), {
 
 		// -- content removal --
 		// allow controls option to clear their own content
-		var removeContent = true;
+		var removeContent = false;
 		if (instance && instance.updateClear) removeContent = instance.updateClear(content);
 
 		// Remove old content.
-		if (removeContent && element) content.contentContainer.empty().show();
+		if (removeContent && element) element.empty().show();
 
 		// prepare function to persist the data
 		if (content.persist && MUI.Content.Providers[content.loadMethod].canPersist){
@@ -272,15 +269,18 @@ MUI.Content = Object.append((MUI.Content || {}), {
 	setRecords: function(content){
 		if (!content.content) return null;
 		var paging = content.paging;
-		if (!content.fireLoaded || !paging || paging.pageSize <= 0) return content.content;
 
 		var records;
-		if (!paging.recordsField) records = content.content;
+		if (!paging || !paging.recordsField || !content.content[paging.recordsField]) records = content.content;
 		else records = content.content[paging.recordsField];
 
 		['total','page','pageMax','pageSize','page','last','first'].each(function(options, name){
-			options.paging[name] = MUI.getData(options.content, options.paging[name + 'Field']);
+			options.paging[name] = MUI.getData(options.content, options.paging[name + 'Field'], 0);
 		}.bind(this, content));
+		delete content.content;
+
+		if (!content.fireLoaded || !paging || paging.pageSize <= 0)
+			return content.records = records;
 
 		if (!content.records) content.records = records;
 		else {
@@ -288,8 +288,6 @@ MUI.Content = Object.append((MUI.Content || {}), {
 				content.records[t] = records[i];
 			}
 		}
-
-		delete content.content;
 	},
 
 	getRecords: function(content){
@@ -371,7 +369,7 @@ MUI.Content.Providers.xhr = {
 			return;
 		}
 
-		new Request({
+		var request=new Request({
 			url: content.persistKey,
 			method: content.method ? content.method : 'get',
 			data: content.data ? new Hash(content.data).toQueryString() : '',
@@ -393,12 +391,13 @@ MUI.Content.Providers.xhr = {
 				content.error = error;
 				content.errorMessage = '<h3>Error: ' + error[1] + '</h3>';
 				if (instance && instance.updateSetContent) updateSetContent = instance.updateSetContent(content);
-				if (this.contentContainer){
-					if (updateSetContent) this.contentContainer.set('html', content.errorMessage);
+				if (this.element){
+					if (updateSetContent) this.element.set('html', content.errorMessage);
 					MUI.hideSpinner(instance);
 				}
 			}.bind(content),
 			onSuccess: function(text){
+				content = this._content;
 				var instance = content.instance;
 				text = content.persistStore(text);
 				text = MUI.Content.processFilters(text, content);
@@ -413,7 +412,7 @@ MUI.Content.Providers.xhr = {
 				content.content = html;
 				if (instance && instance.updateSetContent) updateSetContent = instance.updateSetContent(content);
 				if (updateSetContent){
-					if (content.contentContainer) content.contentContainer.set('html', content.content);
+					if (content.element) content.element.set('html', content.content);
 					var evalJS = true;
 					if (instance && instance.options && instance.options.evalScripts) evalJS = instance.options.evalScripts;
 					if (evalJS && js) Browser.exec(js);
@@ -423,10 +422,10 @@ MUI.Content.Providers.xhr = {
 			},
 			onComplete: function(){
 			}
-		}).send();
-
+		});
+		request._content = content;
+		request.send();
 	}
-
 };
 
 MUI.Content.Providers.json = {
@@ -459,7 +458,7 @@ MUI.Content.Providers.json = {
 	},
 
 	doRequest: function(content){
-		if(content.content && !content.url) {
+		if (content.content && !content.url){
 			Browser.ie6 ? content.fireLoaded.delay(50, this) : content.fireLoaded();
 			return;
 		}
@@ -474,7 +473,7 @@ MUI.Content.Providers.json = {
 			// still not found so load
 			new Request({
 				url: content.persistKey,
-				update: content.contentContainer,
+				update: content.element,
 				method: content.method ? content.method : 'get',
 				data: content.data ? new Hash(content.data).toQueryString() : '',
 				evalScripts: false,
@@ -489,9 +488,9 @@ MUI.Content.Providers.json = {
 					this.errorMessage = '<p><strong>Error Loading XMLHttpRequest</strong></p>';
 					if (this.instance && this.instance.updateSetContent) updateSetContent = this.instance.updateSetContent(this);
 
-					if (this.contentContainer){
-						if (updateSetContent) this.contentContainer.set('html', this.errorMessage);
-						this.contentContainer.hideSpinner(this.instance);
+					if (this.element){
+						if (updateSetContent) this.element.set('html', this.errorMessage);
+						this.element.hideSpinner(this.instance);
 					}
 				}.bind(content),
 				onException: function(){
@@ -524,12 +523,12 @@ MUI.Content.Providers.iframe = {
 		var updateSetContent = true;
 		var instance = content.instance;
 		if (instance && instance.updateSetContent) updateSetContent = instance.updateSetContent(content);
-		var contentContainer = content.contentContainer;
+		var element = content.element;
 
-		if (updateSetContent && contentContainer){
+		if (updateSetContent && element){
 			var iframeEl = new Element('iframe', {
-				id: content.element.id + '_iframe',
-				name: content.element.id + '_iframe',
+				id: element.id + '_iframe',
+				name: element.id + '_iframe',
 				'class': 'mochaIframe',
 				src: content.doPrepUrl(content),
 				marginwidth: 0,
@@ -537,10 +536,10 @@ MUI.Content.Providers.iframe = {
 				frameBorder: 0,
 				scrolling: 'auto',
 				styles: {
-					height: contentContainer.offsetHeight - contentContainer.getStyle('border-top').toInt() - contentContainer.getStyle('border-bottom').toInt(),
-					width: instance && instance.el.panel ? contentContainer.offsetWidth - contentContainer.getStyle('border-left').toInt() - contentContainer.getStyle('border-right').toInt() : '100%'
+					height: element.offsetHeight - element.getStyle('border-top').toInt() - element.getStyle('border-bottom').toInt(),
+					width: instance && instance.el.panel ? element.offsetWidth - element.getStyle('border-left').toInt() - element.getStyle('border-right').toInt() : '100%'
 				}
-			}).inject(contentContainer);
+			}).inject(element);
 			if (instance) instance.el.iframe = iframeEl;
 
 			// Add onload event to iframe so we can hide the spinner and run fireLoaded()
@@ -564,9 +563,9 @@ MUI.Content.Providers.html = {
 
 		var updateSetContent = true;
 		if (content.instance && content.instance.updateSetContent) updateSetContent = content.instance.updateSetContent(content);
-		if (updateSetContent && content.contentContainer){
-			if (elementTypes.contains(typeOf(content.content))) content.content.inject(content.contentContainer);
-			else content.contentContainer.set('html', content.content);
+		if (updateSetContent && content.element){
+			if (elementTypes.contains(typeOf(content.content))) content.content.inject(content.element);
+			else content.element.set('html', content.content);
 		}
 
 		Browser.ie6 ? content.fireLoaded.delay(50, content) : content.fireLoaded();
@@ -581,23 +580,11 @@ MUI.Content.Providers.control = {
 	canPage:		false,
 
 	doRequest: function(content){
-		var options2 = content.options;
-		var type = content.control;
-
+		//var options2 = content.options;
 		// remove unneeded items that cause recursion
-		delete content.options;
+		// delete content.options;
 		delete content.instance;
-		delete content.control;
-
-		// create a new options hash for new control
-		var options = Object.merge({}, options2);
-
-		if (content.contentContainer){
-			options._container = content.contentContainer;
-			options.container = content.contentContainer.id;
-			delete options.contentContainer;
-		}
-		MUI.create(type, options);
+		MUI.create(content);
 	}
 
 };
@@ -611,7 +598,7 @@ MUI.append({
 		updateStart: function(options){
 			if (!options.position) options.position = 'content';
 			if (options.position == 'content'){
-				options.contentContainer = this.el.content;
+				options.element = this.el.content;
 				this.addPadding(options);
 
 				// set title if given option to do so
@@ -632,13 +619,15 @@ MUI.append({
 		/// intercepts workflow from MUI.Content.update
 		updateClear: function(options){
 			if (options.position == 'content'){
-				this.el.content.show();
+				this.el.content.show().empty();
 				var iframes = this.el.contentWrapper.getElements('.mochaIframe');
 				if (iframes) iframes.destroy();
 
 				// Panels are not loaded into the padding div, so we remove them separately.
 				this.el.content.getAllNext('.column').destroy();
 				this.el.content.getAllNext('.columnHandle').destroy();
+
+				return false;
 			}
 			return true;
 		},
@@ -651,7 +640,7 @@ MUI.append({
 					this.el.content.removeClass('pad');
 					this.el.content.setStyle('padding', '0px');
 					this.el.content.hide();
-					options.contentContainer = this.el.contentWrapper;
+					options.element = this.el.contentWrapper;
 				}
 			}
 			return true;	// tells MUI.Content.update to update the content

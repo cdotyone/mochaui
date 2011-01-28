@@ -36,71 +36,54 @@ MUI.DockHtml = new NamedClass('MUI.DockHtml', {
 
 		content:		false,			// used to load content
 
-		cssClass:		false,			// css tag to add to control
+		cssClass:		'toolbar',		// css tag to add to control
 		divider:		true,			// true if this toolbar has a divider
 		orientation:	false			// left or right side of dock.  default is right
 	},
 
 	initialize: function(options){
-		options.instance = this;
 		this.setOptions(options);
-
-		var o = this.options;
 		this.el = {};
 
-		// make sure this controls has an ID
-		var id = o.id;
-		if (!id){
-			id = 'toolbarHtml' + (++MUI.IDCount);
-			o.id = id;
-		}
-		this.id = id;
+		// If DockHtml has no ID, give it one.
+		this.id = this.options.id = this.options.id || 'dockHtml' + (++MUI.idCount);
+		MUI.set(this.id, this);
 
-		if (o.content) o.content.instance = this;
-		this.draw();
-
-		MUI.set(id, this);
+		if(this.options.drawOnInit) this.draw();
 	},
 
-	draw: function(containerEl){
-		var self = this;
-		var o = self.options;
+	draw: function(container){
+		var o = this.options;
+		if (!container) container = o.container;
 
+		// determine element for this control
 		var isNew = false;
-		var div;
-
-		div = $(o.id);
+		var div = o.element ? o.element : $(o.id);
 		if (!div){
 			div = new Element('div', {'id': o.id});
 			isNew = true;
 		}
+		if (o.content) o.content.container = div;
 
-		div.addClass('toolbar');
-		if(o.cssClass) div.addClass(o.cssClass);
-		if(o.divider) div.addClass('divider');
-		if(o.orientation) div.addClass(o.orientation);
+		// add styling to element
+		if (o.cssClass) div.addClass(o.cssClass);
+		if (o.divider) div.addClass('divider');
+		if (o.orientation) div.addClass(o.orientation);
 
-		self.el.element = div.store('instance', this);
+		o.content.element = this.el.element = div.store('instance', this);		// assign instance to element
 
-		if (!isNew || o._container) {
-			if(isNew) o._container.inject(div);
-			if (o.content) {
-				if(o.content==null || o.content.content==null || o.content.content.style==null)  MUI.Content.update(o.content);
-				else o.content.content.inject(div);
-			}
-		}
-		else window.addEvent('domready', function(){
-			if (!o._container) o._container = $(containerEl ? containerEl : o.container);
-			if (o._container) o._container.inject(div);
+		// add to container
+		var addToContainer = function(){
+			if (typeOf(container) == 'string') container = $(container);
+			if (div.getParent() == null) div.inject(container);
+
+			// add content
 			if (o.content) MUI.Content.update(o.content);
-		});
+		}.bind(this);
+		if (!isNew || typeOf(container) == 'element') addToContainer();
+		else window.addEvent('domready', addToContainer);
 
-		return div;
-	},
-
-	updateSetContent: function(content){
-		this.el.element.set('html', content.content);
-		return false;
+		return this;
 	}
 
 });

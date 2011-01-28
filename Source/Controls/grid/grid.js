@@ -13,7 +13,7 @@
 
  authors:
  Chris Doty		MochaUI Version
- Marko Ãƒâ€¦Ã‚Â antiÃƒâ€žÃ¢â‚¬Â¡	original <http://www.omnisdata.com/omnigrid/>
+ Marko ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â antiÃƒÆ’Ã¢â‚¬Å¾ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¡	original <http://www.omnisdata.com/omnigrid/>
 
  note:
  This started out as OmniGrid and got modified so to much to work like a Mocha control.
@@ -70,13 +70,9 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 		this.setOptions(options);
 		options = this.options;
 
-		// make sure this controls has an ID
-		var id = this.options.id;
-		if (!id){
-			id = 'grid' + (++MUI.IDCount);
-			this.options.id = id;
-		}
-		this.id = id;
+		// If grid has no ID, give it one.
+		this.id = options.id = options.id || 'grid' + (++MUI.idCount);
+		MUI.set(this.id, this);
 
 		// see if we can find the control
 		if (MUI.get(id)) return; // don't do anything if this control is already registered
@@ -869,20 +865,24 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 	},
 
 	// --- Main draw function
-	draw: function(){
-		var self = this;
-		var o = self.options;
+	draw: function(container){
+		// todo: need to have all elements moved to .el
+		// todo: need to domready adding to container
+		// todo: need to except external container
 
-		self.removeAll(); // reset variables and only empty ulBody
+		var o = this.options;
+		if (!container) container = o.container;
 
-		// build control's wrapper div
-		var div = $(self.id);
+		this.removeAll(); // reset variables and only empty ulBody
+
+		// determine element for this control
 		var isNew = false;
-		if (!div){					 // check to see if it is already on DOM
-			div = new Element('div', {'id':o.id});
+		var div = o.element ? o.element : $(o.id);
+		if (!div){
+			div = new Element('div', {'id': o.id});
 			isNew = true;
 		}
-		self.element = div.empty();
+		this.element = div.store('instance', this).empty();		// assign instance to element
 
 		// --- common
 		var width = o.width - 2; //-2 for the borders
@@ -890,7 +890,7 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 		// --- common
 
 		// --- container
-		if (o.width)	self.element.setStyle('width', o.width);
+		if (o.width)	this.element.setStyle('width', o.width);
 		div.addClass('grid');
 		// --- container
 
@@ -915,7 +915,7 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 				divBtn.addClass('fbutton');
 
 				var divBtnC = new Element('div');
-				divBtnC.addEvent('click', button.click.bind(self, [button.cssClass, self]));
+				divBtnC.addEvent('click', button.click.bind(this, [button.cssClass, this]));
 				divBtnC.addEvent('mouseover', function(){
 					this.addClass('fbOver');
 				});
@@ -943,8 +943,8 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 
 		var headDivBox = new Element('div', {'class':'hDivBox'}).inject(headDiv);
 
-		self.sumWidth = 0;
-		self.visibleColumns = 0; // differs from the columnCount because data for some columns are of reading but are not shown
+		this.sumWidth = 0;
+		this.visibleColumns = 0; // differs from the columnCount because data for some columns are of reading but are not shown
 		var columns,c;
 		for (c = 0; c < columnCount; c++){
 			columns = o.columns[c];
@@ -956,9 +956,9 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 
 			// Header events
 			if (o.sortHeader){
-				columnDiv.addEvent('click', self._clickHeaderColumn.bind(self));
-				columnDiv.addEvent('mouseout', self._outHeaderColumn.bind(self));
-				columnDiv.addEvent('mouseover', self._overHeaderColumn.bind(self));
+				columnDiv.addEvent('click', this._clickHeaderColumn.bind(this));
+				columnDiv.addEvent('mouseout', this._outHeaderColumn.bind(this));
+				columnDiv.addEvent('mouseover', this._overHeaderColumn.bind(this));
 			}
 
 			columnDiv.store('column', c);
@@ -969,20 +969,20 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 
 			if (columns.hidden) columnDiv.setStyle('display', 'none');
 			else {
-				self.sumWidth += columns.width;
-				self.visibleColumns++;
+				this.sumWidth += columns.width;
+				this.visibleColumns++;
 			}
 
 			var header = columns.header;
 			if (header) columnDiv.set('html', header);
 		}
-		headDivBox.setStyle('width', self.sumWidth + self.visibleColumns * 2);
+		headDivBox.setStyle('width', this.sumWidth + this.visibleColumns * 2);
 		if (!o.showHeader) headDiv.setStyle('display', 'none');
 		// --- header
 
 		// --- Column size drag
 		if (o.height){
-			var bodyHeight = self._getBodyHeight();
+			var bodyHeight = this._getBodyHeight();
 			div.setStyle('height', o.height);
 		}
 
@@ -1003,13 +1003,13 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 				cDrag.appendChild(dragSt);
 
 				// Events
-				dragSt.addEvent('mouseout', self._dragColumnOut.bind(self));
-				dragSt.addEvent('mouseover', self._dragColumnOver.bind(self));
+				dragSt.addEvent('mouseout', this._dragColumnOut.bind(this));
+				dragSt.addEvent('mouseover', this._dragColumnOver.bind(this));
 
 				var dragMove = new Drag(dragSt, {snap:0});
-				dragMove.addEvent('drag', self._dragColumnDragging.bind(self));
-				dragMove.addEvent('start', self._dragColumnStart.bind(self));
-				dragMove.addEvent('complete', self._dragColumnComplete.bind(self));
+				dragMove.addEvent('drag', this._dragColumnDragging.bind(this));
+				dragMove.addEvent('start', this._dragColumnStart.bind(this));
+				dragMove.addEvent('complete', this._dragColumnComplete.bind(this));
 
 				if (columns.hidden) dragSt.setStyle('display', 'none');
 				else dragTempWidth += columns.width;
@@ -1027,11 +1027,11 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 		div.appendChild(bDiv);
 
 		//  scroll event
-		self.onBodyScrollBind = self._bodyScroll.bind(self);
-		bDiv.addEvent('scroll', self.onBodyScrollBind);
-		self.ulBody = new Element('ul');
-		self.ulBody.setStyle('width', self.sumWidth + self.visibleColumns); // not to see surplus, address the overflow hidden
-		bDiv.appendChild(self.ulBody);
+		this.onBodyScrollBind = this._bodyScroll.bind(this);
+		bDiv.addEvent('scroll', this.onBodyScrollBind);
+		this.ulBody = new Element('ul');
+		this.ulBody.setStyle('width', this.sumWidth + this.visibleColumns); // not to see surplus, address the overflow hidden
+		bDiv.appendChild(this.ulBody);
 
 		var paging=o.content.paging;
 		if (paging.pageSize && !div.getElement('div.pDiv')){
@@ -1073,13 +1073,13 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 				rpObj.options[0].selected = true;
 			}
 
-			pageDiv.getElement('.pFirst').addEvent('click', self.firstPage.bind(self));
-			pageDiv.getElement('.pPrev').addEvent('click', self.prevPage.bind(self));
-			pageDiv.getElement('.pNext').addEvent('click', self.nextPage.bind(self));
-			pageDiv.getElement('.pLast').addEvent('click', self.lastPage.bind(self));
-			pageDiv.getElement('.pReload').addEvent('click', self.refresh.bind(self, false));
-			pageDiv.getElement('.rp').addEvent('change', self._pageSizeChange.bind(self));
-			pageDiv.getElement('input.cpage').addEvent('keyup', self._pageChange.bind(self));
+			pageDiv.getElement('.pFirst').addEvent('click', this.firstPage.bind(this));
+			pageDiv.getElement('.pPrev').addEvent('click', this.prevPage.bind(this));
+			pageDiv.getElement('.pNext').addEvent('click', this.nextPage.bind(this));
+			pageDiv.getElement('.pLast').addEvent('click', this.lastPage.bind(this));
+			pageDiv.getElement('.pReload').addEvent('click', this.refresh.bind(this, false));
+			pageDiv.getElement('.rp').addEvent('change', this._pageSizeChange.bind(this));
+			pageDiv.getElement('input.cpage').addEvent('keyup', this._pageChange.bind(this));
 		}
 		// --- body
 	},

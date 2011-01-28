@@ -22,12 +22,6 @@ ul.tree { list-style: none; margin: 0; padding: 0; text-decoration: none; cursor
 ul.tree ul, ul.tree li { list-style: none; margin: 0; padding: 0; text-decoration: none; cursor: pointer; }
 ul.tree ul { background: transparent url(../images/tree_vert.gif) repeat-y left center; }
 ul.tree li { line-height: 18px; padding: 0; }
-ul.tree li a:link { display: inline; text-decoration: none; vertical-align: middle; }
-ul.tree li a:visited { text-decoration: none; vertical-align: middle; }
-ul.tree li a:active { text-decoration: none; vertical-align: middle; }
-ul.tree li a:hover span { text-decoration: underline; }
-ul.tree li a.lbl { color: WindowText; }
-ul.tree li a.sel span { text-decoration: underline; }
 ul.tree ul li.O { padding-left: 18px; background: transparent url(../images/tree_open.gif) no-repeat left top; }
 ul.tree ul li.C { padding-left: 18px; background: transparent url(../images/tree_closed.gif) no-repeat left top; }
 ul.tree li.nochild { background: transparent url(../images/tree_nochild.gif) no-repeat left top; }
@@ -40,9 +34,15 @@ ul.tree li span.treeIcon { margin-right: 0; background: transparent url(../image
 ul.tree li.O li span.treeIcon { margin-right: 0; background: transparent url(../images/doc.gif) no-repeat left top; }
 ul.tree li.O span.treeIcon { margin-right: 2px; background: transparent url(../images/open.gif) no-repeat left top; }
 ul.tree li.C span.treeIcon { margin-right: 2px; background: transparent url(../images/closed.gif) no-repeat left top; }
-ul.tree li a:link { color: #181818; }
 ul.tree ul li.O.first { background: transparent url(../images/tree_open_first.gif) no-repeat left top; }
 ul.tree ul li.C.first { background: transparent url(../images/tree_close_first.gif) no-repeat left top; }
+
+ul.tree li a { color:#333333;  text-decoration: none; }
+ul.tree li a:link { display: inline; text-decoration: none; vertical-align: middle; color: #181818; }
+ul.tree li a:visited { text-decoration: none; vertical-align: middle; }
+ul.tree li a:active { text-decoration: none; vertical-align: middle; }
+ul.tree li a:hover span { text-decoration: underline; }
+ul.tree li a.sel span { text-decoration: underline; }
 
 div.panel div.tree { background-color: #f8f8f8; }
 div.panel div.tree ul ul li.last { background-color: #f8f8f8; }

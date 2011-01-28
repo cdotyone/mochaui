@@ -5,7 +5,8 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=8"/>
 
 	<title>MochaUI - A Web Applications User Interface Library</title>
-	<meta name="description" content="A web applications user interface library built on the Mootools JavaScript framework"/>
+	<meta name="description"
+		  content="A web applications user interface library built on the Mootools JavaScript framework"/>
 
 	<link rel="stylesheet" type="text/css" href="../../../Source/Themes/default/css/core.css"/>
 	<link rel="stylesheet" type="text/css" href="../../../Source/Themes/default/css/desktop.css"/>
@@ -22,45 +23,88 @@
 	<script type="text/javascript" src="../../../Source/Core/content.js"></script>
 	<script type="text/javascript" src="../../../Source/Core/themes.js"></script>
 	<script type="text/javascript" src="../../../Source/Controls/desktop/desktop.js"></script>
+	<script type="text/javascript" src="../../../Source/Controls/dock/dock.js"></script>
 	<!--MOCHAUI-->
 
 	<script type="text/javascript">
 		MUI.initialize();
 		MUI.options.path.root = '../../../';
 		MUI.options.path.demo = '{root}Demo/';
+
 		window.addEvent('load', function(){
-			new MUI.Desktop({'id':'desktop'});
+			new MUI.Desktop({
+				'id':'desktop',
+				'content':[
+					{name:'header',url:'{demo}/pages/titlebar.html'},
+					{name:'nav',control:'MUI.Dock',cssClass:'desktopNav',docked:[
+						{name: 'menu', position: 'header', control: 'MUI.Menu',
+							items:[
+								{text:'File',items:[
+									{text:'Open',items:[]},
+									{text:'Tests',items:[
+										{text:'Window Events',id:'windoweventsLinkCheck', url:'{demo}pages/events.html' },
+										{text:'Container Test',id:'containertestLinkCheck', url:'{demo}pages/lipsum.html' },
+										{text:'Iframe Tests',id:'iframetestsLinkCheck', url:'{demo}pages/iframetests.html' },
+										{text:'Form Tests',id:'formtestsLinkCheck', url:'{demo}pages/formtests.html' },
+										{text:'No Canvas Body',id:'noCanvasLinkCheck', url:'{demo}pages/lipsum.html' },
+										{text:'CSS3 Body',id:'CSS3LinkCheck', url:'{demo}pages/lipsum.html' },
+										{text:'CSS3 Canvas Fallback',id:'CSS3fallbackLinkCheck', url:'{demo}pages/lipsum.html' },
+										{text:'Force Canvas',id:'forceCanvasLinkCheck', url:'{demo}pages/lipsum.html' },
+										{text:'Close Panel',id:'closePanelCheck' },
+										{text:'Close Column',id:'closeColumnCheck' }
+									]},
+									{text:'Starters',items:[
+										{text:'Virtual Desktop',url:'{demo}demo-virtual-desktop.html'},
+										{text:'Fixed Width',url:'{demo}demo-fixed-width.html'},
+										{text:'Fixed Width 2',url:'{demo}demo-taskbar-only.html'},
+										{text:'No Toolbars',url:'{demo}demo-no-toolbars.html'},
+										{text:'No Desktop',url:'{demo}demo-no-desktop.html'},
+										{text:'Modal Only',url:'{demo}demo-modal-only.html'}
+									]}
+								]},
+								{text:'View',items:[
+									{text:'Cascade Windows',id:'cascadeLink'},
+									{text:'Tile Windows',id:'tileLink'},
+									{type:'divider'},
+									{text:'Minimize All Windows',id:'minimizeLink'},
+									{text:'Close All Windows',id:'closeLink'}
+								]},
+								{text:'Tools',items:[
+									{text:'Window Builder',id:'builderLinkCheck',url:'{plugins}/windowform/'},
+									{type:'divider'},
+									{text:'Options',items:[
+										{text:'Standard Effects',id:'minimizeLink',type:'radio',group:'effects',selected:true},
+										{text:'Advanced Effects',id:'closeLink',type:'radio',group:'effects'}
+									]}
+								]},
+								{text:'Workspace',items:[
+									{text:'Save Workspace',id:'saveWorkspaceLink'},
+									{text:'Load Workspace',id:'loadWorkspaceLink'}
+								]},
+								{text:'Help',items:[
+									{text:'Features',id:'featuresLinkCheck',url:'{demo}pages/features.html'},
+									{type:'divider'},
+									{text:'Documentation',id:'loadWorkspaceLink',target:'_blank',url:'http://mochaui.org/docs/'},
+									{type:'divider'},
+									{text:'About',id:'aboutLink',url:'{demo}pages/about.html'}
+								]}
+							]
+						}
+					]},
+					{name:'content',columns:[
+						{id: 'sideColumn1', placement: 'left', width: 205, resizeLimit: [100, 300] },
+						{id: 'mainColumn',	placement: 'main', resizeLimit: [100, 300]},
+						{id: 'sideColumn2',	placement: 'right', width: 220, resizeLimit: [200, 300]}
+					]},
+					{name:'footer',content:'<div class="copyright">&copy; 2010 <a target="_blank" href="scripts/AUTHORS.txt" id="authorsLink">Various Contributors</a> - <a target="_blank" href="license.html" id="licenseLink">MIT License</a><div>',cssClass:'desktopFooter'}
+				]
+			});
 		});
 	</script>
 </head>
 <body>
 
 <div id="desktop">
-	<div id="desktopHeader">
-		<div id="desktopTitlebarWrapper">
-			<div id="desktopTitlebar">
-				<h1 class="applicationTitle">Mocha UI</h1>
-				<h2 class="tagline">A Web Applications <span class="taglineEm">User Interface Library</span></h2>
-				<div id="topNav">
-					<ul class="menu-right">
-						<li>Welcome <a href="#" onclick="MochaUI.notification('Do Something');return false;">Demo
-							User</a>.
-						</li>
-						<li><a href="#" onclick="MochaUI.notification('Do Something');return false;">Sign Out</a></li>
-					</ul>
-				</div>
-			</div>
-		</div>
-		<div id="desktopNavbar">
-		</div>
-	</div>
-	<div id="pageWrapper"></div>
-	<div id="desktopFooterWrapper">
-		<div id="desktopFooter">
-			&copy; 2010 <a target="_blank" href="scripts/AUTHORS.txt" id="authorsLink">Various Contributors</a> -
-			<a target="_blank" href="license.html" id="licenseLink">MIT License</a>
-		</div>
-	</div>
 </div>
 
 </body>
