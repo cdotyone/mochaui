@@ -79,6 +79,7 @@ MUI.Content = Object.append((MUI.Content || {}), {
 		var instance = content.instance;
 		var element = content.element = $(content.element);
 		if (!instance && element) instance = element.retrieve('instance');
+		content.instance = instance;
 
 		// -- argument pre-processing override --
 		// allow controls to process any custom arguments, titles, scrollbars, etc..
