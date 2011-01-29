@@ -64,10 +64,21 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 
 	initialize: function(options){
 		this.setOptions(options);
+		this.el = {};
 
 		// If accordion has no ID, give it one.
 		this.id = this.options.id = this.options.id || 'accordion' + (++MUI.idCount);
 		MUI.set(this.id, this);
+
+		if (options.content){
+			options.content.loadMethod = 'json';
+			options.content.onLoaded = (function(element, options){
+				this.options.panels = MUI.Content.getRecords(options);
+				this.draw();
+			}).bind(this);
+			MUI.Content.update(options.content);
+			return;
+		}
 
 		// create sub items if available
 		if (this.options.drawOnInit && this.options.panels.length > 0) self.draw();
@@ -105,7 +116,7 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 		this._panels = [];
 		o.panels.each(function(panel){
 			this._buildPanel(panel, this._panelsElement);
-		});
+		}, this);
 		if (this._panels.length > 1){
 			this._togglers[0].addClass('first');
 			this._togglers[this._panels.length - 1].addClass('last');
@@ -114,7 +125,21 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 		// add to container
 		var addToContainer = function(){
 			if (typeOf(container) == 'string') container = $(container);
+			if (o.clearContainer) container.empty();
 			if (div.getParent() == null) div.inject(container);
+
+			var instance = MUI.get(o.container);
+			if (!instance || !instance.dynamicResize){
+				var parentHeight = container.getSize().y;
+				if (!o.height){
+					o.height = parentHeight;
+					this._togglers.each(function(toggler){
+						o.height -= toggler.getSize().y
+					});
+				}
+				this._panelsElement.setStyle('height', parentHeight + 'px');
+				container.setStyle('overflow', 'hidden');
+			}
 
 			this._accordion = new Fx.Accordion(this._togglers, this._panels, {
 				'height':o.heightFx
@@ -124,11 +149,13 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 				,'fixedWidth':o.width
 				,'alwaysHide':o.alwaysHide
 				,'initialDisplayFx':o.initialDisplayFx
-				,onActive: function(toggler){
+				,onActive: function(toggler,element){
 					toggler.addClass('open');
+					element.setStyle('overflow', 'auto');
 				},
-				onBackground: function(toggler){
+				onBackground: function(toggler,element){
 					toggler.removeClass('open');
+					element.setStyle('overflow', 'hidden');
 				},
 				onStart: function(){
 					var instance = MUI.get(o.container);

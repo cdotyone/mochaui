@@ -110,10 +110,10 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 		// add to container
 		var addToContainer = function(){
 			if (typeOf(container) == 'string') container = $(container);
-			if (o.clearContainer) o._container.empty();
+			if (o.clearContainer) container.empty();
 			if (fs.getParent() == null) fs.inject(container);
 
-			o.container.setStyle('padding', '0');
+			container.setStyle('padding', '0');
 			this._convertToGrid.delay(1, this, [fs]);
 		}.bind(this);
 		if (!isNew || typeOf(container) == 'element') addToContainer();
@@ -261,6 +261,6 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 			}
 		});
 
-		self.element.setStyles({'width':null,'height':null});
+		self.el.element.setStyles({'width':null,'height':null});
 	}
 });

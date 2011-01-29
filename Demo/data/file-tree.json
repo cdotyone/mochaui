@@ -5,16 +5,16 @@
 		{'value':'youtube4Link',text:'Iframe: YouTube','isChecked': false,'isSelected': false, 'image':'_doc', 'partnerContent':{'url':'pages/youtube.html','loadMethod':'iframe'}},
 		{'value':'splitPanelLink',text:'Split Panel','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.splitPanelPanel'},
 		{'value':'panelControls', 'text':"Controls", 'isChecked':false, 'isSelected':false, imageOpen:'_open', imageClosed:'_closed','nodes':[
-			{'value':'paccordiontestLink','text':'Accordion','isChecked': false,'isSelected': false, 'image':'_doc'},
-			{'value':'plistLink','text':'Basic List','isChecked': false,'isSelected': false, 'image':'_doc'},
-			{'value':'pcalendarLink','text':'Calendar','isChecked': false,'isSelected': false, 'image':'_doc'},
-			{'value':'pcbgLink','text':'Check Box Grid','isChecked': false,'isSelected': false, 'image':'_doc'},
-			{'value':'pibLink','text':'Image Button','isChecked': false,'isSelected': false, 'image':'_doc'},
+			{'value':'paccordiontestLink','text':'Accordion','isChecked': false,'isSelected': false, 'image':'_doc','registered':'Demo.accordionBuilder' },
+			{'value':'plistLink','text':'Basic List','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.listBuilder'},
+			{'value':'pcalendarLink','text':'Calendar','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.calendarBuilder'},
+			{'value':'pcbgLink','text':'Check Box Grid','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.checkBoxGrid'},
+			{'value':'pibLink','text':'Image Button','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.imageButtonBuilder'},
 			{'value':'pogLink','text':'Grid','isChecked': false,'isSelected': false, 'image':'_doc'},
-			{'value':'pslLink','text':'Select List','isChecked': false,'isSelected': false, 'image':'_doc'},
-			{'value':'ptaLink','text':'Text Area','isChecked': false,'isSelected': false, 'image':'_doc'},
-			{'value':'ptbLink','text':'Text Box','isChecked': false,'isSelected': false, 'image':'_doc'},
-			{'value':'ptreeLink','text':'Tree','isChecked': false,'isSelected': false, 'image':'_doc'}
+			{'value':'pslLink','text':'Select List','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.selectListBuilder'},
+			{'value':'ptaLink','text':'Text Area','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.textAreaBuilder'},
+			{'value':'ptbLink','text':'Text Box','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.textBoxBuilder'},
+			{'value':'ptreeLink','text':'Tree','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.treeBuilder'}
 		]}
 	]},
 	{'value':'item2',text:'Windows','isChecked': true,'isSelected': false, imageOpen:'_open', imageClosed:'_closed','nodes':[
@@ -25,16 +25,16 @@
 		{'value':'splitWindowLink','text':'Split Window','isChecked': false,'isSelected': false, 'image':'_doc'},
 		{'value':'modalLink','text':'Modal Window','isChecked': false,'isSelected': false, 'image':'_doc'},
 		{'value':'panelControls', 'text':"Controls", 'isChecked':false, 'isSelected':false, imageOpen:'_open', imageClosed:'_closed','nodes':[
-			{'value':'waccordiontestLink','text':'Accordion','isChecked': false,'isSelected': false, 'image':'_doc'},
-			{'value':'wlistLink','text':'Basic List','isChecked': false,'isSelected': false, 'image':'_doc'},
-			{'value':'wcalendarLink','text':'Calendar','isChecked': false,'isSelected': false, 'image':'_doc'},
-			{'value':'wcbgLink','text':'Check Box Grid','isChecked': false,'isSelected': false, 'image':'_doc'},
-			{'value':'wibLink','text':'Image Button','isChecked': false,'isSelected': false, 'image':'_doc'},
+			{'value':'waccordiontestLink','text':'Accordion','isChecked': false,'isSelected': false, 'image':'_doc','registered':'Demo.accordionBuilder' },
+			{'value':'wlistLink','text':'Basic List','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.listBuilder'},
+			{'value':'wcalendarLink','text':'Calendar','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.calendarBuilder'},
+			{'value':'wcbgLink','text':'Check Box Grid','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.checkBoxGrid'},
+			{'value':'wibLink','text':'Image Button','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.imageButtonBuilder'},
 			{'value':'wogLink','text':'Grid','isChecked': false,'isSelected': false, 'image':'_doc'},
-			{'value':'wslLink','text':'Select List','isChecked': false,'isSelected': false, 'image':'_doc'},
-			{'value':'wtaLink','text':'Text Area','isChecked': false,'isSelected': false, 'image':'_doc'},
-			{'value':'wtbLink','text':'Text Box','isChecked': false,'isSelected': false, 'image':'_doc'},
-			{'value':'wtreeLink','text':'Tree','isChecked': false,'isSelected': false, 'image':'_doc'}
+			{'value':'wslLink','text':'Select List','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.selectListBuilder'},
+			{'value':'wtaLink','text':'Text Area','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.textAreaBuilder'},
+			{'value':'wtbLink','text':'Text Box','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.textBoxBuilder'},
+			{'value':'wtreeLink','text':'Tree','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.treeBuilder'}
 		]}
 	]},
 	{'value':'item3','text':'Plugins','isChecked': false,'isSelected': false, imageOpen:'_open', imageClosed:'_closed','nodes':[
