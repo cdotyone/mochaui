@@ -18,12 +18,12 @@
 		]}
 	]},
 	{'value':'item2',text:'Windows','isChecked': true,'isSelected': false, imageOpen:'_open', imageClosed:'_closed','nodes':[
-		{'value':'ajaxpageLink','text':'Ajax/XHR Demo','isChecked': false,'isSelected': false, 'image':'_doc'},
-		{'value':'jsonLink','text':'Json Demo','isChecked': false,'isSelected': false, 'image':'_doc'},
-		{'value':'youtubeLink','text':'Iframe','isChecked': false,'isSelected': false, 'image':'_doc'},
-		{'value':'parametricsLink','text':'Window Parametrics','isChecked': false,'isSelected': false, 'image':'_doc'},
-		{'value':'splitWindowLink','text':'Split Window','isChecked': false,'isSelected': false, 'image':'_doc'},
-		{'value':'modalLink','text':'Modal Window','isChecked': false,'isSelected': false, 'image':'_doc'},
+		{'value':'ajaxpageLink','text':'Ajax/XHR Demo','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.ajaxpageWindow'},
+		{'value':'jsonLink','text':'Json Demo','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.jsonWindows'},
+		{'value':'youtubeLink','text':'Iframe','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.youtubeWindow'},
+		{'value':'parametricsLink','text':'Window Parametrics','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.parametricsWindow'},
+		{'value':'splitWindowLink','text':'Split Window','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.splitWindow'},
+		{'value':'modalLink','text':'Modal Window','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.createModal'},
 		{'value':'panelControls', 'text':"Controls", 'isChecked':false, 'isSelected':false, imageOpen:'_open', imageClosed:'_closed','nodes':[
 			{'value':'waccordiontestLink','text':'Accordion','isChecked': false,'isSelected': false, 'image':'_doc','registered':'Demo.accordionBuilder' },
 			{'value':'wlistLink','text':'Basic List','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.listBuilder'},

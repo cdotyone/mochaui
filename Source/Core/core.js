@@ -452,7 +452,7 @@ Element.implement({
 		var instance = MUI.get(this.id);
 		if (instance != null && instance.hide != null){
 			instance.hide();
-			return;
+			return this;
 		}
 
 		this.setStyle('display', 'none');
@@ -463,7 +463,7 @@ Element.implement({
 		var instance = MUI.get(this.id);
 		if (instance != null && instance.show != null){
 			instance.show();
-			return;
+			return this;
 		}
 
 		this.setStyle('display', 'block');
