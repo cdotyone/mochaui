@@ -109,7 +109,27 @@ Object.append(Demo, {
 		new Element('div', {text: d + message}).inject('mochaConsole', 'top');
 	},
 
-	listBuilder: function(container){
+	getDemoContainer: function(node,hideScrolls) {
+		var isWindow = node.value.substr(0, 1) == 'w';
+		if (isWindow){
+			var win=new MUI.Window({
+				id: node.value+'Window',
+				content: 'loading...',
+				title: node.text + ' in Window',
+				width: 340,
+				height: 200,
+				scrollbars: !hideScrolls,
+				resizable: false,
+				maximizable: false
+			});
+			return win.el.content;
+		}
+		return 'mainPanel';
+	},
+
+	listBuilder: function(e, node){
+		var container = Demo.getDemoContainer(node);
+
 		MUI.create({
 			control: 'MUI.List',
 			id: container + 'list1',
@@ -136,7 +156,9 @@ Object.append(Demo, {
 		});
 	},
 
-	checkBoxGrid: function(container){
+	checkBoxGrid: function(e, node){
+		var container = Demo.getDemoContainer(node);
+
 		MUI.create({
 			control: 'MUI.CheckBoxGrid',
 			id: container + 'cbg1',
@@ -176,7 +198,9 @@ Object.append(Demo, {
 		});
 	},
 
-	selectListBuilder: function(container){
+	selectListBuilder: function(e,node){
+		var container = Demo.getDemoContainer(node);
+
 		MUI.create({
 			control: 'MUI.SelectList',
 			id: container + 'sl1',
@@ -194,9 +218,9 @@ Object.append(Demo, {
 		});
 	},
 
-	imageButtonBuilder: function(container){
-		MUI.get(container).el.content.empty();
-		if ($('mainPanel_search_buttonHolder')) $('mainPanel_search_buttonHolder').empty();
+	imageButtonBuilder: function(e,node){
+		var container = Demo.getDemoContainer(node);
+		$(container).empty();
 		MUI.create({
 			control: 'MUI.ImageButton',
 			cssClass: 'imgButton',
@@ -223,15 +247,16 @@ Object.append(Demo, {
 		});
 	},
 
-	textAreaBuilder: function(container){
-		MUI.get(container).el.content.empty();
+	textAreaBuilder: function(e,node){
+		var container = Demo.getDemoContainer(node);
+		$(container).empty();
 		MUI.create({control: 'MUI.TextArea', container: container, rows: 5, id:container + 'textarea1'});
 		MUI.create({control: 'MUI.TextArea', container: container, id: container + 'textarea2', hasDynamicSize: true});
 	},
 
-	textBoxBuilder: function(container){
-		var content = MUI.get(container).el.content;
-		content.empty();
+	textBoxBuilder: function(e,node){
+		var container = Demo.getDemoContainer(node);
+		$(container).empty();
 
 		var ftypes = ['fixed.phone', 'fixed.phone-us', 'fixed.cpf', 'fixed.cnpj', 'fixed.date', 'fixed.date-us', 'fixed.cep', 'fixed.time', 'fixed.cc'];
 		Object.append(ftypes, ['reverse.integer', 'reverse.decimal', 'reverse.decimal-us', 'reverse.reais', 'reverse.dollar', 'regexp.ip', 'regexp.email', 'password']);
@@ -243,7 +268,7 @@ Object.append(Demo, {
 			if (mtype != ttype){
 				mtype = ttype;
 				window.addEvent('domready', function(){
-					new Element('div', {'text': ttype, 'id': container + ttype}).inject(content);
+					new Element('div', {'text': ttype, 'id': container + ttype}).inject(container);
 				});
 			}
 			if (s.length < 2) s[1] = ttype;
@@ -251,7 +276,8 @@ Object.append(Demo, {
 		});
 	},
 
-	treeBuilder: function(container){
+	treeBuilder: function(e,node){
+		var container = Demo.getDemoContainer(node);
 		MUI.create({
 			control: 'MUI.Tree',
 			container: container,
@@ -265,6 +291,20 @@ Object.append(Demo, {
 			},
 			onNodeSelected: function(node, self){
 				Demo.writeConsole(self.options.id + ' receieved onNodeSelected command on node ' + node.value)
+			}
+		});
+	},
+
+	calendarBuilder: function(e,node) {
+		var container = Demo.getDemoContainer(node);
+
+		MUI.Content.update({
+			element: container,
+			url: '{controls}calendar/demo.html',
+			title: 'Calendar Component',
+			padding: {top: 8, right: 8, bottom: 8, left: 8},
+			onLoaded:function(){
+				MUI.create({control: 'MUI.Calendar', id: 'date1', format: 'd/m/Y', direction: 1, tweak: {x: 6, y: 0}});
 			}
 		});
 	},
@@ -458,26 +498,16 @@ Object.append(Demo, {
 		});
 	},
 
-	accordionTestWindow: function(){
-		var id = 'accordiontest';
-		new MUI.Window({
-			id: id,
-			title: 'Accordion',
-			content: {url: 'data/accordion-demo.json', loadMethod: 'json'},
-			width: 300,
-			height: 200,
-			scrollbars: false,
-			resizable: false,
-			maximizable: false,
-			onLoaded: function(el, content){
-				MUI.create({
-					control: 'MUI.Accordion',
-					container: id,
-					idField: 'value',
-					panels: content.content
-				});
-			}
+	accordionBuilder: function(e,node){
+		var container = Demo.getDemoContainer(node,true);
+
+		MUI.create({
+			control: 'MUI.Accordion',
+			container: container,
+			id: 'accordionMainPanel1',
+			content: {url: 'data/accordion-demo.json', loadMethod: 'json'}
 		});
+
 	},
 
 	noCanvasWindow: function(){
@@ -699,7 +729,7 @@ Object.append(Demo, {
 	splitPanelPanel: function(){
 		if ($('mainPanel')){
 			MUI.Content.update({ element: 'mainPanel', title: 'Split Panel', content:'' });
-			
+
 			new MUI.Column({
 				container: 'mainPanel',
 				id: 'sideColumn3',

@@ -74,6 +74,7 @@ MUI.List = new NamedClass('MUI.List', {
 				this.draw();
 			}).bind(this);
 			MUI.Content.update(options.content);
+			return;
 		}
 
 		// create sub items if available
@@ -165,7 +166,11 @@ MUI.List = new NamedClass('MUI.List', {
 			if( o.clearContainer ) container.empty();
 			if (div.getParent() == null) div.inject(container);
 
-			container.el.content.setStyle('padding','0');
+			container.setStyle('overflow','auto');
+
+			var instance=MUI.get(container);
+			if(instance && instance.el && instance.el.content)
+				instance.el.content.setStyle('padding','0');
 		}.bind(this);
 		if (!isNew || typeOf(container) == 'element') addToContainer();
 		else window.addEvent('domready', addToContainer);

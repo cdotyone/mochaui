@@ -68,7 +68,7 @@ MUI.ImageButton = new NamedClass('MUI.ImageButton', {
 		var isNew = false;
 		var div = o.element ? o.element : $(o.id);
 		if (!div){
-			div = new Element('div', {'id': o.id});
+			div = new Element('span', {'id': o.id});
 			isNew = true;
 		}
 		div.addClass(o.cssClass)

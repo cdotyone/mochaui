@@ -335,8 +335,8 @@ MUI.append({
 		try{
 			if (depth == null) depth = 4;
 			if (depth < 0) return;
-			for(var name in funcs) {
-				if(name=='') continue;
+			for (var name in funcs){
+				if (name == '') continue;
 				var func = funcs[name];
 				if (typeOf(func) != 'function') continue;
 				if (typeOf(func) == 'object'){
@@ -349,25 +349,22 @@ MUI.append({
 		}
 	},
 
-	getRegistered: function(bind,name,args){
+	getRegistered: function(bind, name, args){
 		return function(ev){
-			ev.stop();
-			args.unshift(ev);
-			MUI.registered[name].apply(bind,args);
+			MUI.registered[name].apply(bind, [ev].append(args));
 		};
 	},
 
-	getWrappedEvent: function(bind,func,args){
+	getWrappedEvent: function(bind, func, args){
 		return function(ev){
-			args.unshift(ev);
-			func.apply(bind,args);
+			func.apply(bind, [ev].append(args));
 		};
 	},
 
-	getPartnerLoader: function(bind,content){
+	getPartnerLoader: function(bind, content){
 		return function(ev){
 			ev.stop();
-			if($(content.element)) MUI.Content.update(content);
+			if ($(content.element)) MUI.Content.update(content);
 		};
 	}
 });
@@ -683,21 +680,21 @@ Object.append(Asset, {
 
 (function(){
 	var realConsole = window.console || null,
-		fn = function(){},
-		disabledConsole = {
-			log: fn,
-			warn: fn,
-			info: fn,
-			enable: function(quiet){
-				window.dbg = realConsole ? realConsole : disabledConsole;
-				if (!quiet) window.dbg.log('dbg enabled.');
-			},
-			disable: function(){
-				window.dbg = disabledConsole;
-			}
-		};
+			fn = function(){},
+			disabledConsole = {
+				log: fn,
+				warn: fn,
+				info: fn,
+				enable: function(quiet){
+					window.dbg = realConsole ? realConsole : disabledConsole;
+					if (!quiet) window.dbg.log('dbg enabled.');
+				},
+				disable: function(){
+					window.dbg = disabledConsole;
+				}
+			};
 
-	if (realConsole) {
+	if (realConsole){
 		realConsole.disable = disabledConsole.disable;
 		realConsole.enable = disabledConsole.enable;
 	}

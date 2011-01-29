@@ -129,7 +129,7 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		// add to container
 		var addToContainer = function(){
 			if (typeOf(container) == 'string') container = $(container);
-			if (o.clearContainer) o._container.empty();
+			if (o.clearContainer) container.empty();
 
 			container.setStyle('padding', '0');
 			if (drop){
