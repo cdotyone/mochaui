@@ -17,15 +17,6 @@ var Demo = (Demo || {});
 // Examples
 Object.append(Demo, {
 
-	htmlWindow: function(){
-		new MUI.Window({
-			id: 'htmlpage',
-			content: 'Hello World',
-			width: 340,
-			height: 150
-		});
-	},
-
 	ajaxpageWindow: function(){
 		new MUI.Window({
 			id: 'ajaxpage',
@@ -124,7 +115,7 @@ Object.append(Demo, {
 			});
 			return win.el.content;
 		}
-		return 'mainPanel';
+		return MUI.get('mainPanel').el.content;
 	},
 
 	listBuilder: function(e, node){
@@ -132,7 +123,7 @@ Object.append(Demo, {
 
 		MUI.create({
 			control: 'MUI.List',
-			id: container + 'list1',
+			id: node.value + 'list1',
 			container: container,
 			clearContainer: true,
 			content: {url: 'data/person.json', paging: {size: 10, totalCount: 200, recordsField: false}},
@@ -161,7 +152,7 @@ Object.append(Demo, {
 
 		MUI.create({
 			control: 'MUI.CheckBoxGrid',
-			id: container + 'cbg1',
+			id: node.value + 'cbg1',
 			container: container,
 			clearContainer: true,
 			content: {url: 'data/person.json', paging: {size: 10, totalCount:200, recordsField: false}},
@@ -179,7 +170,7 @@ Object.append(Demo, {
 		});
 		MUI.create({
 			control: 'MUI.CheckBoxGrid',
-			id: container + 'cbg2',
+			id: node.value + 'cbg2',
 			container: container,
 			clearContainer: false,
 			content: {url: 'data/person.json', paging: {size: 10, totalCount: 200, recordsField: false}},
@@ -203,7 +194,7 @@ Object.append(Demo, {
 
 		MUI.create({
 			control: 'MUI.SelectList',
-			id: container + 'sl1',
+			id: node.value + 'sl1',
 			container: container,
 			clearContainer: true,
 			content: {url: 'data/employees.json', paging: {size: 10, totalCount: 200, recordsField: false}},
@@ -227,7 +218,7 @@ Object.append(Demo, {
 			text: 'Accept',
 			title: 'Accept Order',
 			image: '{theme}images/accept.png',
-			id: container + 'btnAccept',
+			id: node.value + 'btnAccept',
 			container: container,
 			onClick: function(self){
 				Demo.writeConsole(self.options.id + ' clicked');
@@ -239,7 +230,7 @@ Object.append(Demo, {
 			text: 'Cancel',
 			title: 'Cancel Order',
 			image: '{theme}images/cancel.png',
-			id: container + 'btnCancel',
+			id: node.value + 'btnCancel',
 			container: container,
 			onClick: function(self){
 				Demo.writeConsole(self.options.id + ' clicked');
@@ -250,8 +241,8 @@ Object.append(Demo, {
 	textAreaBuilder: function(e,node){
 		var container = Demo.getDemoContainer(node);
 		$(container).empty();
-		MUI.create({control: 'MUI.TextArea', container: container, rows: 5, id:container + 'textarea1'});
-		MUI.create({control: 'MUI.TextArea', container: container, id: container + 'textarea2', hasDynamicSize: true});
+		MUI.create({control: 'MUI.TextArea', container: container, rows: 5, id:node.value + 'textarea1'});
+		MUI.create({control: 'MUI.TextArea', container: container, id: node.value + 'textarea2', hasDynamicSize: true});
 	},
 
 	textBoxBuilder: function(e,node){
@@ -268,11 +259,11 @@ Object.append(Demo, {
 			if (mtype != ttype){
 				mtype = ttype;
 				window.addEvent('domready', function(){
-					new Element('div', {'text': ttype, 'id': container + ttype}).inject(container);
+					new Element('div', {'text': ttype, 'id': node.value + ttype}).inject(container);
 				});
 			}
 			if (s.length < 2) s[1] = ttype;
-			MUI.create({control: 'MUI.TextBox', container: container + ttype, id: container + t, formTitle: s[1].capitalize(), maskType: t, autoTab: true});
+			MUI.create({control: 'MUI.TextBox', container: node.value + ttype, id: node.value + t, formTitle: s[1].capitalize(), maskType: t, autoTab: true});
 		});
 	},
 
@@ -281,7 +272,7 @@ Object.append(Demo, {
 		MUI.create({
 			control: 'MUI.Tree',
 			container: container,
-			id: container + 'tree1',
+			id: node.value + 'tree1',
 			content: {url: 'data/tree-testdata.json'},
 			onNodeExpanded: function(node, isExpanded, self){
 				Demo.writeConsole(self.options.id + ' receieved onNodeExpanded command on node ' + node.value + ', isExpanded=' + isExpanded)
@@ -297,6 +288,7 @@ Object.append(Demo, {
 
 	calendarBuilder: function(e,node) {
 		var container = Demo.getDemoContainer(node);
+		$(container).empty();
 
 		MUI.Content.update({
 			element: container,
@@ -304,7 +296,7 @@ Object.append(Demo, {
 			title: 'Calendar Component',
 			padding: {top: 8, right: 8, bottom: 8, left: 8},
 			onLoaded:function(){
-				MUI.create({control: 'MUI.Calendar', id: 'date1', format: 'd/m/Y', direction: 1, tweak: {x: 6, y: 0}});
+				MUI.create({control: 'MUI.Calendar', id: 'date1', format: 'm/d/Y', direction: 1, tweak: {x: 6, y: 0}});
 			}
 		});
 	},
@@ -554,22 +546,22 @@ Object.append(Demo, {
 
 	modalCount: 0,
 	createModal:  function(){
-		MUI.modalCount++;
+		Demo.modalCount++;
 		var content = 'Your modal window content';
-		if (MUI.modalCount < 3) content += '<br/><br/><a id="createModal' + MUI.modalCount + '">Create Another Modal</a>';
+		if (Demo.modalCount < 3) content += '<br/><br/><a id="createModal' + Demo.modalCount + '">Create Another Modal</a>';
 		new MUI.Modal({
-			id: 'modalDemo' + MUI.modalCount,
-			title: 'A Modal Window ' + MUI.modalCount,
+			id: 'modalDemo' + Demo.modalCount,
+			title: 'A Modal Window ' + Demo.modalCount,
 			content: content,
 			width: 400,
 			height: 250,
-			x:70 + (MUI.modalCount * 30),
-			y:70 + (MUI.modalCount * 30),
+			x:70 + (Demo.modalCount * 30),
+			y:70 + (Demo.modalCount * 30),
 			onClose:function(){
-				MUI.modalCount--;
+				Demo.modalCount--;
 			},
 			onLoaded:function(){
-				if ($('createModal' + MUI.modalCount)) $('createModal' + MUI.modalCount).addEvent('click', function(e){
+				if ($('createModal' + Demo.modalCount)) $('createModal' + Demo.modalCount).addEvent('click', function(e){
 					e.stop();
 					Demo.createModal();
 				});
@@ -1292,7 +1284,7 @@ Demo.initialize = function(){
 	MUI.register('MUI.Windows', MUI.Windows);
 	MUI.create('famfamfam');
 	Demo.initializeDesktop();
-	//Demo.parametricsWindow();
+	Demo.parametricsWindow();
 };
 
 // Initialize MochaUI when the DOM is ready

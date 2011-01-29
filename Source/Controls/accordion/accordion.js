@@ -139,6 +139,7 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 				}
 				this._panelsElement.setStyle('height', parentHeight + 'px');
 				container.setStyle('overflow', 'hidden');
+				container.setStyle('padding',0);
 			}
 
 			this._accordion = new Fx.Accordion(this._togglers, this._panels, {
