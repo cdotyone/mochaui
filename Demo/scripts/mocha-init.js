@@ -691,7 +691,13 @@ Object.append(Demo, {
 			width: 350,
 			height: 195,
 			padding: {top: 43, right: 12, bottom: 10, left: 12},
-			scrollbars: false
+			scrollbars: false,
+			onLoaded: function() {
+				$('authorsAboutLink').addEvent('click',function(e){
+					e.stop();
+					Demo.authorsWindow();
+				})
+			}
 		});
 	},
 
@@ -818,6 +824,7 @@ Demo.initializeDesktop = function(){
 		'taskbar':true,
 		'content':[
 			{name:'header',url:'pages/titlebar.html'},
+			{name:'taskbar',control:'MUI.Taskbar'},
 			{name:'nav',control:'MUI.Dock',cssClass:'desktopNav',docked:[
 				{name: 'menu', position: 'header', control: 'MUI.Menu',
 					items:[
@@ -1275,7 +1282,10 @@ Demo.initializeDesktop = function(){
 					]}
 			]},
 			{name:'footer',content:'<div class="copyright">&copy; 2010 <a target="_blank" href="scripts/AUTHORS.txt" id="authorsLink">Various Contributors</a> - <a target="_blank" href="license.html" id="licenseLink">MIT License</a><div>',cssClass:'desktopFooter'}
-		]
+		],
+		'onDrawEnd':function() {
+			Demo.parametricsWindow();
+		}
 	});
 };
 
@@ -1286,7 +1296,6 @@ Demo.initialize = function(){
 	MUI.register('MUI.Windows', MUI.Windows);
 	MUI.create('famfamfam');
 	Demo.initializeDesktop();
-	Demo.parametricsWindow();
 };
 
 // Initialize MochaUI when the DOM is ready

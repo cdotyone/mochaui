@@ -270,7 +270,7 @@ MUI.Window.implement({
 			options.container = document.body;
 			options.minimizable = false;
 		}
-		if (!options.container) options.container = MUI.Desktop && MUI.Desktop.desktop ? MUI.Desktop.desktop : document.body;
+		if (!options.container) options.container = MUI.desktop ? MUI.desktop : document.body;
 
 		// Set this.options.resizable to default if it was not defined
 		if (options.resizable == null) options.resizable = !(options.type != 'window' || options.shape == 'gauge');
@@ -293,12 +293,13 @@ MUI.Window.implement({
 		}
 
 		// Minimizable, taskbar is required and window cannot be modal
-		if (MUI.taskbar){
+		if(MUI.desktop && MUI.desktop.taskbar) this.taskbar = MUI.desktop.taskbar;
+		if (this.taskbar){
 			if (options.type != 'modal' && options.type != 'modal2') this.options.minimizable = options.minimizable;
 		} else options.minimizable = false;
 
 		// Maximizable, desktop is required
-		options.maximizable = MUI.Desktop && MUI.Desktop.desktop && options.maximizable && options.type != 'modal' && options.type != 'modal2';
+		options.maximizable = MUI.desktop && options.maximizable && options.type != 'modal' && options.type != 'modal2';
 
 		if (this.options.type == 'modal2'){
 			this.options.shadowBlur = 0;
@@ -333,6 +334,8 @@ MUI.Window.implement({
 	draw: function(){
 		var options = this.options;
 
+		if(MUI.desktop && MUI.desktop.taskbar) this.taskbar = MUI.desktop.taskbar;
+
 		// Check if window already exists and is not in progress of closing
 		if (this.el.windowEl && !this.isClosing){
 			// Restore if minimized
@@ -350,10 +353,10 @@ MUI.Window.implement({
 				this.el.windowEl.setStyle('opacity', 0);
 				this.el.windowEl.addClass('mocha');
 
-				if (MUI.taskbar && options.type == 'window'){
+				if (this.taskbar && options.type == 'window'){
 					var currentButton = $(options.id + '_taskbarTab');
 					if (currentButton) currentButton.show();
-					MUI.Desktop.setDesktopSize();
+					MUI.desktop.setDesktopSize();
 				}
 
 				this._showNewWindow();
@@ -455,12 +458,12 @@ MUI.Window.implement({
 		if (options.resizable) this._adjustHandles();
 
 		// Position window. If position not specified by user then center the window on the page.
-		var dimensions = (options.container == document.body || options.container == MUI.Desktop.desktop) ? window.getSize() : $(this.options.container).getSize();
+		var dimensions = (options.container == document.body || options.container == MUI.desktop) ? window.getSize() : $(this.options.container).getSize();
 		var x,y;
 		if (options.y){
 			y = options.y - options.shadowBlur;
 		} else {
-			if (MUI.Desktop && MUI.Desktop.desktop){
+			if (MUI.desktop){
 				y = (dimensions.y * .5) - (this.el.windowEl.offsetHeight * .5);
 				if (y < -options.shadowBlur) y = -options.shadowBlur;
 			} else {
@@ -526,7 +529,7 @@ MUI.Window.implement({
 		}).bind(this));
 
 		if (this.options.closeAfter) this.close.delay(this.options.closeAfter, this);
-		if (MUI.taskbar && this.options.type == 'window') MUI.taskbar.createTab(this);
+		if (this.taskbar && this.options.type == 'window') this.taskbar.createTab(this);
 		this.fireEvent('drawEnd', [this]);
 		return this;
 	},
@@ -625,7 +628,7 @@ MUI.Window.implement({
 		if (options.type != 'notification' && options.useCanvasControls) this._drawControls(width, height, shadows);
 
 		// Resize panels if there are any
-		if (MUI.Desktop && this.el.contentWrapper.getChildren('.column').length != 0){
+		if (MUI.desktop && this.el.contentWrapper.getChildren('.column').length != 0){
 			MUI.rWidth(this.el.contentWrapper);
 			this.el.contentWrapper.getChildren('.column').each(function(column){
 				MUI.panelHeight(column);
@@ -766,7 +769,7 @@ MUI.Window.implement({
 			instance.el.windowEl.removeClass('isFocused');
 		});
 
-		if (MUI.taskbar && this.options.type == 'window') MUI.taskbar.makeTabActive();
+		if (this.taskbar && this.options.type == 'window') this.taskbar.makeTabActive();
 		windowEl.addClass('isFocused');
 
 		if (fireEvent) this.fireEvent('focus', [this]);
@@ -1820,14 +1823,14 @@ MUI.Window.implement({
 		}
 
 		MUI.erase(this.options.id);
-		if (!MUI.Desktop) return;
-		if (MUI.Desktop.loadingWorkspace) MUI.Desktop.loadingCallChain();
+		if (!MUI.desktop) return;
+		if (MUI.desktop.loadingWorkspace) MUI.desktop.loadingCallChain();
 
-		if (MUI.taskbar && this.options.type == 'window'){
+		if (this.taskbar && this.options.type == 'window'){
 			var currentButton = $(this.options.id + '_taskbarTab');
-			if (currentButton) MUI.taskbar.sortables.removeItems(currentButton).destroy();
+			if (currentButton) this.taskbar.sortables.removeItems(currentButton).destroy();
 			// Need to resize everything in case the taskbar becomes smaller when a tab is removed
-			MUI.Desktop.setDesktopSize();
+			MUI.desktop.setDesktopSize();
 		}
 	},
 
@@ -1839,10 +1842,10 @@ MUI.Window.implement({
 		windowEl.addClass('windowClosed');
 		windowEl.removeClass('mocha');
 
-		if (MUI.taskbar && this.options.type == 'window'){
+		if (this.taskbar && this.options.type == 'window'){
 			var currentButton = $(this.options.id + '_taskbarTab');
 			if (currentButton) currentButton.hide();
-			MUI.Desktop.setDesktopSize();
+			MUI.desktop.setDesktopSize();
 		}
 
 		this.fireEvent('closeComplete', [this]);

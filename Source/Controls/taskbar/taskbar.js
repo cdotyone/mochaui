@@ -62,12 +62,15 @@ MUI.Taskbar.implement({
 
 		this.fireEvent('drawBegin', [this]);
 
-		if (MUI.desktop && MUI.desktop.el && MUI.desktop.el.footer) this.desktopFooter = MUI.desktop.el.footer;
+		if (MUI.desktop) {
+			MUI.desktop.taskbar = this;
+			if (MUI.desktop && MUI.desktop.el && MUI.desktop.el.footer) this.desktopFooter = MUI.desktop.el.footer;
+		}
 
 		var isNew = false;
-		var div = o.element ? o.element :$(o.id + 'Wrapper');
+		var div = o.element ? o.element : $(o.id + 'Wrapper');
 		if (!div){
-			div = new Element('div', {'id': o.id + 'Wrapper'});
+			div = new Element('div', {'id': o.id + 'Wrapper'}).inject(o.container);
 			isNew = true;
 		}
 		div.set('class', o.cssClass + 'Wrapper');
@@ -119,6 +122,7 @@ MUI.Taskbar.implement({
 	},
 
 	move: function(position){
+		if (!position) position = this.options.position;
 		var ctx = this.el.canvas.getContext('2d');
 		// Move taskbar to top position
 		if (position == 'top' || this.el.wrapper.getStyle('position') != 'relative'){
@@ -393,7 +397,7 @@ MUI.Window.implement({
 		setTimeout(function(){
 			//this.el.windowEl.setStyle('zIndex', 1);
 			this.el.windowEl.removeClass('isFocused');
-			MUI.taskbar.makeTabActive();
+			MUI.desktop.taskbar.makeTabActive();
 		}.bind(this), 100);
 
 		this.fireEvent('minimize', [this]);
