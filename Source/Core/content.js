@@ -34,6 +34,7 @@ MUI.Content = Object.append((MUI.Content || {}), {
 		 method:		null,			// the method to use to make request, 'POST' or 'GET'
 		 data:			null,			// the data payload to send to the url
 		 content:		null,			// used to feed content instead of requesting from a url endpoint
+		 clear:			false,			// setting to true forces current content to be cleared
 		 loadMethod:	null,			// the provider that will be used to make the request
 		 url:			null,			// the url endpoint to make the request to
 		 prepUrl:		null,			// callback that is executed to prepare the url. syntax: prepUrl.run([url,values,instance],this) return url;
@@ -631,8 +632,10 @@ MUI.append({
 				if (iframes) iframes.destroy();
 
 				// Panels are not loaded into the padding div, so we remove them separately.
-				this.el.content.getAllNext('.column').destroy();
-				this.el.content.getAllNext('.columnHandle').destroy();
+				this.el.contentWrapper.getElements('.column').destroy();
+				this.el.contentWrapper.getElements('.columnHandle').destroy();
+
+				if(this.el.content.getParent()==null) this.el.content.inject(this.el.element);
 
 				return false;
 			}

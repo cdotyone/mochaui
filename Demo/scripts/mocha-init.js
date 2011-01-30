@@ -80,7 +80,7 @@ Object.append(Demo, {
 			content: {
 				url: '{plugins}coolclock/demo.html',
 				require: {
-					js: ['{plugins}coolclock/scripts/coolclock.js'],
+					js: ['{plugins}coolclock/coolclock.js'],
 					onload: function(){
 						if (CoolClock) new CoolClock();
 					}
@@ -100,11 +100,11 @@ Object.append(Demo, {
 		new Element('div', {text: d + message}).inject('mochaConsole', 'top');
 	},
 
-	getDemoContainer: function(node,hideScrolls) {
+	getDemoContainer: function(node, hideScrolls){
 		var isWindow = node.value.substr(0, 1) == 'w';
 		if (isWindow){
-			var win=new MUI.Window({
-				id: node.value+'Window',
+			var win = new MUI.Window({
+				id: node.value + 'Window',
 				content: 'loading...',
 				title: node.text + ' in Window',
 				width: 340,
@@ -189,7 +189,7 @@ Object.append(Demo, {
 		});
 	},
 
-	selectListBuilder: function(e,node){
+	selectListBuilder: function(e, node){
 		var container = Demo.getDemoContainer(node);
 
 		MUI.create({
@@ -209,7 +209,7 @@ Object.append(Demo, {
 		});
 	},
 
-	imageButtonBuilder: function(e,node){
+	imageButtonBuilder: function(e, node){
 		var container = Demo.getDemoContainer(node);
 		$(container).empty();
 		MUI.create({
@@ -238,14 +238,14 @@ Object.append(Demo, {
 		});
 	},
 
-	textAreaBuilder: function(e,node){
+	textAreaBuilder: function(e, node){
 		var container = Demo.getDemoContainer(node);
 		$(container).empty();
 		MUI.create({control: 'MUI.TextArea', container: container, rows: 5, id:node.value + 'textarea1'});
 		MUI.create({control: 'MUI.TextArea', container: container, id: node.value + 'textarea2', hasDynamicSize: true});
 	},
 
-	textBoxBuilder: function(e,node){
+	textBoxBuilder: function(e, node){
 		var container = Demo.getDemoContainer(node);
 		$(container).empty();
 
@@ -267,7 +267,7 @@ Object.append(Demo, {
 		});
 	},
 
-	treeBuilder: function(e,node){
+	treeBuilder: function(e, node){
 		var container = Demo.getDemoContainer(node);
 		MUI.create({
 			control: 'MUI.Tree',
@@ -286,7 +286,7 @@ Object.append(Demo, {
 		});
 	},
 
-	calendarBuilder: function(e,node) {
+	calendarBuilder: function(e, node){
 		var container = Demo.getDemoContainer(node);
 		$(container).empty();
 
@@ -388,9 +388,9 @@ Object.append(Demo, {
 			id: 'fxmorpherExample',
 			title: 'Path Animation Example',
 			content: {
-				url: '{plugins}Fx.Morpher/demo.html',
+				url: '{plugins}fx.morpher/demo.html',
 				require: {
-					js: ['{plugins}Fx.Morpher/scripts/cbox.js', '{plugins}Fx.Morpher/scripts/demo.js'],
+					js: ['{plugins}fx.morpher/fx.morpher.js', '{plugins}fx.morpher/demo.js'],
 					onload: function(){
 						createCanvas();
 						myAnim.delay(250);
@@ -490,8 +490,8 @@ Object.append(Demo, {
 		});
 	},
 
-	accordionBuilder: function(e,node){
-		var container = Demo.getDemoContainer(node,true);
+	accordionBuilder: function(e, node){
+		var container = Demo.getDemoContainer(node, true);
 
 		MUI.create({
 			control: 'MUI.Accordion',
@@ -720,7 +720,7 @@ Object.append(Demo, {
 
 	splitPanelPanel: function(){
 		if ($('mainPanel')){
-			MUI.Content.update({ element: 'mainPanel', title: 'Split Panel', content:'' });
+			MUI.Content.update({ element: 'mainPanel', title: 'Split Panel', clear:true });
 
 			new MUI.Column({
 				container: 'mainPanel',
@@ -871,7 +871,9 @@ Demo.initializeDesktop = function(){
 							{text:'About',id:'aboutLink',url:'{demo}pages/about.html',registered:'Demo.aboutWindow'}
 						]}
 					]
-				}
+				},
+				{control:'MUI.Spinner',divider:false},
+				{control:'MUI.ThemeChange',divider:false}
 			]},
 			{name:'content',columns:[
 				{id: 'sideColumn1', placement: 'left', width: 205, resizeLimit: [100, 300],
