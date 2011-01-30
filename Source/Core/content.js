@@ -86,7 +86,13 @@ MUI.Content = Object.append((MUI.Content || {}), {
 		if (instance && instance.updateStart) instance.updateStart(content);
 
 		// no content or url and not a subcontrol? nothing else to do beyond this point
-		if (!content.url && !content.content && content.loadMethod != 'control') return content;
+		if (!content.url && !content.content && content.loadMethod != 'control') {
+			if(content.clear) {
+				if (instance && instance.updateClear) removeContent = instance.updateClear(content);
+				if (element) element.empty().show();
+			}
+			return content;
+		}
 
 		// replace in path replacement fields,  and prepare the url
 		content.doPrepUrl = (function(prepUrl){
@@ -103,7 +109,7 @@ MUI.Content = Object.append((MUI.Content || {}), {
 
 		// -- content removal --
 		// allow controls option to clear their own content
-		var removeContent = false;
+		var removeContent = content.clear;
 		if (instance && instance.updateClear) removeContent = instance.updateClear(content);
 
 		// Remove old content.
