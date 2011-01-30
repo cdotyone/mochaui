@@ -824,7 +824,6 @@ Demo.initializeDesktop = function(){
 		'taskbar':true,
 		'content':[
 			{name:'header',url:'pages/titlebar.html'},
-			{name:'taskbar',control:'MUI.Taskbar'},
 			{name:'nav',control:'MUI.Dock',cssClass:'desktopNav',docked:[
 				{name: 'menu', position: 'header', control: 'MUI.Menu',
 					items:[
@@ -882,6 +881,7 @@ Demo.initializeDesktop = function(){
 				{control:'MUI.Spinner',divider:false},
 				{control:'MUI.ThemeChange',divider:false}
 			]},
+			{name:'taskbar'},
 			{name:'content',columns:[
 				{id: 'sideColumn1', placement: 'left', width: 205, resizeLimit: [100, 300],
 					panels:[
