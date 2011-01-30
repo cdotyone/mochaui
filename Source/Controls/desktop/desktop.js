@@ -38,7 +38,6 @@ MUI.Desktop = new NamedClass('MUI.Desktop', {
 
 		partner:		false,			// default partner panel to pass docked controls
 		header:			true,			// has a header section
-		taskbar:		true,			// has a taskbar section
 		footer:			true,			// has a footer section
 
 		content:		[]				// content that make up desktop, content positions can be 'header','page','footer'
@@ -56,7 +55,7 @@ MUI.Desktop = new NamedClass('MUI.Desktop', {
 		this.id = this.options.id = this.options.id || 'desktop' + (++MUI.idCount);
 		MUI.set(this.id, this);
 
-		if(this.options.drawOnInit) this.draw();
+		if (this.options.drawOnInit) this.draw();
 	},
 
 	draw: function(container){
@@ -148,7 +147,6 @@ MUI.Desktop = new NamedClass('MUI.Desktop', {
 					height += val.getStyle('padding-top').toInt();
 				}
 			});
-			height -= this.el.taskbar ? this.el.taskbar.getHeight() : 0;
 			if (height < 0) height = 0;
 			this.el.content.setStyle('height', height);
 		}
