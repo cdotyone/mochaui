@@ -1,9 +1,9 @@
 /*
  ---
 
- name: ToolbarThemeChange
+ name: ThemeChange
 
- script: toolbarthemechange.js
+ script: themechange.js
 
  description: MUI - Creates a toolbar theme changing control.
 
@@ -23,7 +23,7 @@
  ...
  */
 
-MUI.files['{controls}toolbar/toolbarthemechange.js'] = 'loaded';
+MUI.files['{controls}themechange/themechange.js'] = 'loaded';
 
 MUI.ThemeChange = new NamedClass('MUI.ThemeChange', {
 

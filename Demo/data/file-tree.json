@@ -38,7 +38,7 @@
 		]}
 	]},
 	{'value':'item3','text':'Plugins','isChecked': false,'isSelected': false, imageOpen:'_open', imageClosed:'_closed','nodes':[
-		{'value':'clockLink','text':'Clock','isChecked': false,'isSelected': false, 'image':'_doc'},
-		{'value':'fxmorpherLink','text':'Path Animation (Plugin)','isChecked': false,'isSelected': false, 'image':'_doc'}
+		{'value':'clockLink','text':'Clock','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.clockWindow'},
+		{'value':'fxmorpherLink','text':'Path Animation (Plugin)','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.fxmorpherWindow'}
 	]}
 ]

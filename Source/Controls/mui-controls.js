@@ -40,7 +40,7 @@ Object.append(MUI.controls, {
 	'dockhtml':{'samples':['index'],data:['json'],'description':'Toolbar HTML Block','isFormControl':false,'css':['{theme}css/toolbar.css']},
 	'menu':{'samples':['index'],data:['json'],'description':'Toolbar Menu','isFormControl':false,'css':['{theme}css/menu.css']},
 	'spinner':{'samples':['index'],data:['json'],'description':'Toolbar Spinner','isFormControl':false,'css':['{theme}css/toolbar.css']},
-	'themechange':{'samples':['index'],data:['json'],'description':'Toolbar Menu','isFormControl':false,'css':['{theme}css/toolbar.css'],'js':['{control}themechange.js','{source}Core/Themes.js']},
+	'themechange':{'samples':['index'],data:['json'],'description':'Toolbar Menu','isFormControl':false,'css':['{theme}css/toolbar.css'],'js':['{control}themechange.js','{source}Core/themes.js']},
 	'window':{'samples':['demo'],data:['json'],'description':'Modal','isFormControl':true,'css':['{theme}css/window.css']}
 
 });
