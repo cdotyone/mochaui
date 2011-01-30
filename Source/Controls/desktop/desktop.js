@@ -100,13 +100,18 @@ MUI.Desktop = new NamedClass('MUI.Desktop', {
 					}
 				}
 			} else {
-				// create section element
-				var e = section.element = this.el[section.name] = new Element('div', {'id':section.id}).inject(this.el.element);
-				if (section.cssClass) e.addClass(section.cssClass);
+				if (section.name == 'taskbar'){
+					this.el[section.name] = new Element('div', {'id':section.id+'Wrapper'}).inject(this.el.element);
+					this.taskbar = new MUI.Taskbar({id:section.id,drawOnInit:false,container:this.el.element,desktop:this,element:this.el[section.name]});
+				} else {
+					// create section element
+					var e = section.element = this.el[section.name] = new Element('div', {'id':section.id}).inject(this.el.element);
+					if (section.cssClass) e.addClass(section.cssClass);
 
-				// for controls they need to know the desktop element
-				section.container = this.el.element;
-				MUI.Content.update(section);
+					// for controls they need to know the desktop element
+					section.container = this.el.element;
+					MUI.Content.update(section);
+				}
 			}
 		}
 
@@ -115,7 +120,9 @@ MUI.Desktop = new NamedClass('MUI.Desktop', {
 			if (typeOf(container) == 'string') container = $(container);
 			if (div.getParent() == null) div.inject(container);
 
+			if (this.taskbar) this.taskbar.draw();
 			this.setDesktopSize();					// resize the desktop
+
 			window.addEvent('resize', function(){	// capture browser resize events
 				this._onBrowserResize();
 			}.bind(this));

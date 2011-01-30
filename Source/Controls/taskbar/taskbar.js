@@ -49,23 +49,21 @@ MUI.Taskbar.implement({
 	initialize: function(options){
 		this.setOptions(options);
 		this.el = {};
+		this._tabs = [];
 
 		// If taskbar has no ID, give it one.
 		this.id = this.options.id = this.options.id || 'taskbar' + (++MUI.idCount);
 		MUI.set(this.id, this);
+		if (options.desktop) this.desktop = options.desktop;
 
 		if (this.options.drawOnInit) this.draw();
 	},
 
 	draw: function(){
 		var o = this.options;
-
 		this.fireEvent('drawBegin', [this]);
 
-		if (MUI.desktop) {
-			MUI.desktop.taskbar = this;
-			if (MUI.desktop && MUI.desktop.el && MUI.desktop.el.footer) this.desktopFooter = MUI.desktop.el.footer;
-		}
+		if (this.desktop) this.desktopFooter = this.desktop.el.footer;
 
 		var isNew = false;
 		var div = o.element ? o.element : $(o.id + 'Wrapper');
@@ -122,7 +120,6 @@ MUI.Taskbar.implement({
 	},
 
 	move: function(position){
-		if (!position) position = this.options.position;
 		var ctx = this.el.canvas.getContext('2d');
 		// Move taskbar to top position
 		if (position == 'top' || this.el.wrapper.getStyle('position') != 'relative'){
@@ -132,7 +129,7 @@ MUI.Taskbar.implement({
 				'position':	'relative',
 				'bottom':	null
 			}).addClass('top');
-			if (MUI.desktop) MUI.desktop.setDesktopSize();
+			if (this.desktop) this.desktop.setDesktopSize();
 			this.el.wrapper.setProperty('position', 'top');
 			ctx.clearRect(0, 0, 100, 100);
 			MUI.Canvas.circle(ctx, 5, 4, 3, this.enabledButtonColor, 1.0);
@@ -149,7 +146,7 @@ MUI.Taskbar.implement({
 				'position':	'absolute',
 				'bottom':	this.desktopFooter ? this.desktopFooter.offsetHeight : 0
 			}).removeClass('top');
-			if (MUI.desktop) MUI.desktop.setDesktopSize();
+			if (this.desktop) this.desktop.setDesktopSize();
 			this.el.wrapper.setProperty('position', 'bottom');
 			ctx.clearRect(0, 0, 100, 100);
 			MUI.Canvas.circle(ctx, 5, 4, 3, this.enabledButtonColor, 1.0);
@@ -163,6 +160,9 @@ MUI.Taskbar.implement({
 	},
 
 	createTab: function(instance){
+		this._tabs.push(instance);
+		if (!this._intialized) return;
+
 		var taskbarTab = new Element('div', {
 			'id': instance.options.id + '_taskbarTab',
 			'class': 'taskbarTab',
@@ -209,7 +209,7 @@ MUI.Taskbar.implement({
 		}).set('html', titleText.substring(0, 19) + (titleText.length > 19 ? '...' : '')).inject($(taskbarTab));
 
 		// Need to resize everything in case the taskbar wraps when a new tab is added
-		if (this.desktopFooter) MUI.desktop.setDesktopSize();
+		if (this.desktop) this.desktop.setDesktopSize();
 		this.fireEvent('tabCreated', [this, instance]);
 	},
 
@@ -231,17 +231,28 @@ MUI.Taskbar.implement({
 		this.fireEvent('tabSet', [this,instance]);
 	},
 
+	removeTab: function(instance) {
+		if (instance.options.type == 'window'){
+			var currentButton = $(instance.options.id + '_taskbarTab');
+			if (currentButton) this.sortables.removeItems(currentButton).destroy();
+			this._tabs.erase(instance);
+
+			// Need to resize everything in case the taskbar becomes smaller when a tab is removed
+			MUI.desktop.setDesktopSize();
+		}
+	},
+
 	show: function(){
 		this.el.wrapper.setStyle('display', 'block');
 		this.options.visible = true;
-		if (this.desktopFooter) MUI.desktop.setDesktopSize();
+		if (this.desktop) this.desktop.setDesktopSize();
 		this.fireEvent('show', [this]);
 	},
 
 	hide: function(){
 		this.el.wrapper.setStyle('display', 'none');
 		this.options.visible = false;
-		if (this.desktopFooter) MUI.desktop.setDesktopSize();
+		if (this.desktop) this.desktop.setDesktopSize();
 		this.fireEvent('hide', [this]);
 	},
 
@@ -302,7 +313,14 @@ MUI.Taskbar.implement({
 		});
 
 		if (this.options.autoHide) this._doAutoHide(true);
-		if (this.desktopFooter) MUI.desktop.setDesktopSize();
+		if (this.desktopFooter) this.desktop.setDesktopSize();
+		this._intialized = true;
+
+		var tabs=this._tabs;
+		this._tabs=[];
+		tabs.each(function(tab){
+			this.createTab(tab);
+		},this);
 	},
 
 	_doAutoHide: function(notoggle){
@@ -391,7 +409,7 @@ MUI.Window.implement({
 			this.el.contentWrapper.setStyle('overflow', 'hidden');
 		}
 
-		if (MUI.desktop) MUI.desktop.setDesktopSize();
+		if (this.desktop) this.desktop.setDesktopSize();
 
 		// Have to use timeout because window gets focused when you click on the minimize button
 		setTimeout(function(){
