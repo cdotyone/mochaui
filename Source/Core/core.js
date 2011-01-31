@@ -338,7 +338,7 @@ MUI.append({
 			for (var name in funcs){
 				if (name == '') continue;
 				var func = funcs[name];
-				if (typeOf(func) != 'function') continue;
+				if (typeOf(func) != 'function' || name.substr(0,1)=='_') continue;
 				if (typeOf(func) == 'object'){
 					MUI.register(namespace + '.' + name, func, depth - 1);
 					return;
