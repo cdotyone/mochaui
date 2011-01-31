@@ -237,8 +237,8 @@ MUI.Window.implement({
 
 		// If the window has a container that is not the desktop
 		// temporarily move the window to the desktop while it is minimized.
-		if (options.container != MUI.Desktop.desktop){
-			MUI.Desktop.desktop.grab(windowEl);
+		if (options.container != MUI.desktop.el.content){
+			MUI.desktop.grab(windowEl);
 			if (options.restrict) windowDrag.container = this.el.desktop;
 		}
 
@@ -274,7 +274,7 @@ MUI.Window.implement({
 		else resizeDimensions = document.getCoordinates();
 		var shadowBlur = options.shadowBlur;
 		var shadowOffset = options.shadowOffset;
-		var newHeight = resizeDimensions.height - options.headerHeight - options.footerHeight;
+		var newHeight = resizeDimensions.height;
 		newHeight -= this.el.contentBorder.getStyle('border-top').toInt();
 		newHeight -= this.el.contentBorder.getStyle('border-bottom').toInt();
 		newHeight -= this._getAllSectionsHeight();
@@ -282,8 +282,8 @@ MUI.Window.implement({
 		this.resize({
 			width: resizeDimensions.width,
 			height: newHeight,
-			top: resizeDimensions.top + shadowOffset.y - shadowBlur,
-			left: resizeDimensions.left + shadowOffset.x - shadowBlur
+			top: shadowOffset.y - shadowBlur,
+			left: shadowOffset.x - shadowBlur
 		});
 		this.fireEvent('maximize', [this]);
 
