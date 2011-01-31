@@ -274,7 +274,7 @@ MUI.Window.implement({
 		else resizeDimensions = document.getCoordinates();
 		var shadowBlur = options.shadowBlur;
 		var shadowOffset = options.shadowOffset;
-		var newHeight = resizeDimensions.height;
+		var newHeight = resizeDimensions.height;// - options.headerHeight - options.footerHeight;
 		newHeight -= this.el.contentBorder.getStyle('border-top').toInt();
 		newHeight -= this.el.contentBorder.getStyle('border-bottom').toInt();
 		newHeight -= this._getAllSectionsHeight();
@@ -283,7 +283,7 @@ MUI.Window.implement({
 			width: resizeDimensions.width,
 			height: newHeight,
 			top: shadowOffset.y - shadowBlur,
-			left: shadowOffset.x - shadowBlur
+			left: resizeDimensions.left + shadowOffset.x - shadowBlur
 		});
 		this.fireEvent('maximize', [this]);
 
@@ -627,3 +627,114 @@ MUI.append({
 
 });
 
+MUI.Windows = Object.append((MUI.Windows || {}), {
+
+	arrangeCascade: function(){
+
+		var viewportTopOffset = 30;    // Use a negative number if neccessary to place first window where you want it
+		var viewportLeftOffset = 20;
+		var windowTopOffset = 50;    // Initial vertical spacing of each window
+		var windowLeftOffset = 40;
+
+		// See how much space we have to work with
+		var coordinates = document.getCoordinates();
+
+		var openWindows = 0;
+		MUI.each(function(instance){
+			if (instance.className != 'MUI.Window') return;
+			if (!instance.isMinimized && instance.options.draggable) openWindows ++;
+		});
+
+		var topOffset = ((windowTopOffset * (openWindows + 1)) >= (coordinates.height - viewportTopOffset)) ?
+				(coordinates.height - viewportTopOffset) / (openWindows + 1) : windowTopOffset;
+		var leftOffset = ((windowLeftOffset * (openWindows + 1)) >= (coordinates.width - viewportLeftOffset - 20)) ?
+				(coordinates.width - viewportLeftOffset - 20) / (openWindows + 1) : windowLeftOffset;
+
+		var x = viewportLeftOffset;
+		var y = viewportTopOffset;
+		$$('.mocha').each(function(windowEl){
+			var instance = windowEl.retrieve('instance');
+			if (!instance.isMinimized && !instance.isMaximized && instance.options.draggable){
+				instance.focus();
+				x += leftOffset;
+				y += topOffset;
+
+				if (!MUI.options.advancedEffects){
+					windowEl.setStyles({
+						'top': y,
+						'left': x
+					});
+				} else {
+					var cascadeMorph = new Fx.Morph(windowEl, {
+						'duration': 550
+					});
+					cascadeMorph.start({
+						'top': y,
+						'left': x
+					});
+				}
+			}
+		}.bind(this));
+	},
+
+	arrangeTile: function(){
+
+		var viewportTopOffset = 30;    // Use a negative number if neccessary to place first window where you want it
+		var viewportLeftOffset = 20;
+
+		var x = 10;
+		var y = 80;
+
+		var windowsNum = 0;
+
+		MUI.each(function(instance){
+			if (instance.className != 'MUI.Window') return;
+			if (!instance.isMinimized && !instance.isMaximized){
+				windowsNum++;
+			}
+		});
+
+		var cols = 3;
+		var rows = Math.ceil(windowsNum / cols);
+
+		var coordinates = document.getCoordinates();
+
+		var col_width = ((coordinates.width - viewportLeftOffset) / cols);
+		var col_height = ((coordinates.height - viewportTopOffset) / rows);
+
+		var row = 0;
+		var col = 0;
+
+		MUI.each(function(instance){
+			if (instance.className != 'MUI.Window') return;
+			if (!instance.isMinimized && !instance.isMaximized && instance.options.draggable){
+
+				var left = (x + (col * col_width));
+				var top = (y + (row * col_height));
+
+				instance.redraw();
+				instance.focus();
+
+				if (MUI.options.advancedEffects){
+					var tileMorph = new Fx.Morph(instance.el.windowEl, {
+						'duration': 550
+					});
+					tileMorph.start({
+						'top': top,
+						'left': left
+					});
+				} else {
+					instance.el.windowEl.setStyles({
+						'top': top,
+						'left': left
+					});
+				}
+
+				if (++col === cols){
+					row++;
+					col = 0;
+				}
+			}
+		}.bind(this));
+	}
+});

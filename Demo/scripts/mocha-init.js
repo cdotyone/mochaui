@@ -834,11 +834,11 @@ Demo.initializeDesktop = function(){
 							]}
 						]},
 						{text:'View',items:[
-							{text:'Cascade Windows',id:'cascadeLink',register:'MUI.Windows.arrangeCascade'},
-							{text:'Tile Windows',id:'tileLink',register:'MUI.Windows.arrangeTile'},
+							{text:'Cascade Windows',id:'cascadeLink',registered:'MUI.Windows.arrangeCascade'},
+							{text:'Tile Windows',id:'tileLink',registered:'MUI.Windows.arrangeTile'},
 							{type:'divider'},
-							{text:'Minimize All Windows',id:'minimizeLink',register:'MUI.Windows.minimizeAll'},
-							{text:'Close All Windows',id:'closeLink',register:'MUI.Windows.closeAll'}
+							{text:'Minimize All Windows',id:'minimizeLink',registered:'MUI.Windows.minimizeAll'},
+							{text:'Close All Windows',id:'closeLink',registered:'MUI.Windows.closeAll'}
 						]},
 						{text:'Tools',items:[
 							{text:'Window Builder',id:'builderLinkCheck',registered:'Demo.builderWindow'},
