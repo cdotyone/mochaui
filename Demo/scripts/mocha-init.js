@@ -455,19 +455,6 @@ Object.append(Demo, {
 		});
 	},
 
-	containerTestWindow: function(){
-		new MUI.Window({
-			id: 'containertest',
-			title: 'Container Test',
-			content: {url: 'pages/lipsum.html'},
-			container: 'desktopContent',
-			width: 340,
-			height: 150,
-			x: 100,
-			y: 100
-		});
-	},
-
 	iframeTestsWindow: function(){
 		new MUI.Window({
 			id: 'iframetests',
@@ -828,7 +815,6 @@ Demo.initializeDesktop = function(){
 							{text:'Open',items:[]},
 							{text:'Tests',items:[
 								{text:'Window Events',id:'windoweventsLinkCheck', registered:'Demo.eventsWindow' },
-								{text:'Container Test',id:'containertestLinkCheck', registered:'Demo.containerTestWindow' },
 								{text:'Iframe Tests',id:'iframetestsLinkCheck', registered:'Demo.iframeTestsWindow' },
 								{text:'Form Tests',id:'formtestsLinkCheck', registered:'Demo.formTestsWindow' },
 								{text:'No Canvas Body',id:'noCanvasLinkCheck', registered:'Demo.noCanvasWindow' },
