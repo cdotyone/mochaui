@@ -270,7 +270,7 @@ MUI.Window.implement({
 			options.container = document.body;
 			options.minimizable = false;
 		}
-		if (!options.container) options.container = MUI.desktop ? MUI.desktop : document.body;
+		if (!options.container) options.container = MUI.desktop ? MUI.desktop.el.content : document.body;
 
 		// Set this.options.resizable to default if it was not defined
 		if (options.resizable == null) options.resizable = !(options.type != 'window' || options.shape == 'gauge');
