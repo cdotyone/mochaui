@@ -258,7 +258,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 		this.el.element.destroy();
 
-		if (MUI.Desktop) MUI.Desktop.resizePanels();
+		if (MUI.desktop) MUI.desktop.resizePanels();
 
 		// Do this when creating and removing panels
 		var panels = $(container).getElements('.panelWrapper');

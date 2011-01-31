@@ -280,7 +280,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 			if (self.el.handle != null) self.el.handle.destroy();
 		}
 
-		if (MUI.Desktop) MUI.Desktop.resizePanels();
+		if (MUI.desktop) MUI.desktop.resizePanels();
 
 		var sortables = self.options.container.retrieve('sortables');
 		if (sortables) sortables.removeLists(this.el.column);
