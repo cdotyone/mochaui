@@ -13,6 +13,9 @@
 
  provides: [MUI.Windows]
 
+ todo: need to have windows use toolbar control for headers and footers
+ todo: need to change minimize, maximize, restore buttons to css images instead of canvas, easier to theme
+
  ...
  */
 

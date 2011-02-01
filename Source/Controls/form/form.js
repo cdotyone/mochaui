@@ -14,6 +14,8 @@
  note:
  This documentation is taken directly from the javascript source files. It is built using Natural Docs.
 
+ todo:  the form control just needs to be reworked to actually function.   this is stale code and needs some love.
+
  requires:
  - Core/Element
  - Core/Class

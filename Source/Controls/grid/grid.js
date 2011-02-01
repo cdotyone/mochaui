@@ -20,6 +20,10 @@
  It was renamed to just grid because it departs to much from OmniGrid.  This Grid is not
  designed to work outside of the Mocha framework.
 
+ todo: need to make buttons use toolbar control
+ todo: need to make pagination use toolbar control - may need to create pagination control
+ todo: need to allow buttons and pagination use header and footer of both the window and the panels
+
  requires:
  - Core/Element
  - Core/Class

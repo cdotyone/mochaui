@@ -20,6 +20,9 @@
  - MUI.Core
 
  provides: [MUI.Dock]
+
+ todo: need to use Chain on create of desktop, to insure setDesktopSize is being called at the end 
+
  ...
  */
 
