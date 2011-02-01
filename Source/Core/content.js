@@ -448,7 +448,7 @@ MUI.Content.Providers.json = {
 			Browser.ie6 ? content.fireLoaded.delay(50, content) : content.fireLoaded();
 			return true;	// return them all if they exists and paging is turned off
 		}
-		if (content.records && paging.pageSize > 0){							// if paging is on make sure we have that page
+		if (content.records && content.records.length && paging.pageSize > 0){	// if paging is on make sure we have that page
 			var first = ((paging.page - 1) * paging.pageSize);
 			var last = first + paging.pageSize - 1;
 			var total = content.records.length;

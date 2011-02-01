@@ -40,6 +40,7 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 
 	options: {
 		id:					'',			// id of the primary element, and id os control that is registered with mocha
+		clearContainer:		true,		// should the control clear its parent container before it appends itself
 		container:			null,		// the parent control in the document to add the control to
 		drawOnInit:			true,		// true to add tree to container when control is initialized
 
@@ -73,12 +74,6 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 		// If grid has no ID, give it one.
 		this.id = options.id = options.id || 'grid' + (++MUI.idCount);
 		MUI.set(this.id, this);
-
-		// see if we can find the control
-		if (MUI.get(id)) return; // don't do anything if this control is already registered
-
-		// register with mocha
-		MUI.set(id, this);
 
 		if (options.content){
 			if (!options.content.paging) options.content.paging = {};
@@ -867,8 +862,6 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 	// --- Main draw function
 	draw: function(container){
 		// todo: need to have all elements moved to .el
-		// todo: need to domready adding to container
-		// todo: need to except external container
 
 		var o = this.options;
 		if (!container) container = o.container;
@@ -1082,6 +1075,16 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 			pageDiv.getElement('input.cpage').addEvent('keyup', this._pageChange.bind(this));
 		}
 		// --- body
+
+		// add to container
+		var addToContainer = function(){
+			if (typeOf(container) == 'string') container = $(container);
+			if (o.clearContainer) container.empty();
+			if (div.getParent() == null) div.inject(container);
+			container.setStyle('padding', '0');
+		}.bind(this);
+		if (!isNew || typeOf(container) == 'element') addToContainer();
+		else window.addEvent('domready', addToContainer);
 	},
 
 	_pageSizeChange: function(){
