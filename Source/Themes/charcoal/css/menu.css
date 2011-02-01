@@ -15,12 +15,12 @@
  */
 
 /* menu */
-.toolMenu, .toolbar.toolMenu { margin:0; padding:0; padding-top:4px; overflow:visible }
+.toolMenu, .toolbar.toolMenu { margin:0; padding:0; padding-top:4px; overflow:visible; color:#F8F8F8 }
 .toolMenu  ul { padding: 0; margin: 0; list-style: none; font-size: 12px; text-align:left; }
 .toolMenu  li { float: left; padding-left:4px; padding-right:4px; height:25px; line-height:23px; vertical-align:middle; }
 .toolMenu  a { display: block; }
-.toolMenu  ul li a { color: #333; font-weight: normal; height:25px; }
-.toolMenu  ul li a:hover { color: #333; }
+.toolMenu  ul li a { color: #F8F8F8; font-weight: normal; height:25px; }
+.toolMenu  ul li a:hover { color: #F8F8F8; }
 .toolMenu  ul li a.arrow-right, .toolMenu  ul li a:hover.arrow-right { background-image: url(../images/arrow-right.gif); background-repeat: no-repeat; background-position: right 9px; }
 .toolMenu  li ul { padding-bottom:4px; border: 1px solid #3f3f3f; border-top:solid 1px transparent; background: #fff url(../images/bg-dropdown.gif) repeat-y; position: absolute; width: 164px; left: -999em; z-index: 8000; }
 .toolMenu  li.hover ul ul, .toolMenu  li.hover ul ul ul { left: -999em; }

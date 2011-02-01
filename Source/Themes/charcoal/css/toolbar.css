@@ -16,6 +16,7 @@
 
 /* Toolbar Dock */
 .toolbardock { padding:0; }
+.toolbardock div { padding-left: 3px; padding-right:3px; }
 .toolbardock div.divider { /* Have to specify div here for IE6's sake */ background: url(../images/toolbar-divider.gif) repeat-y; padding-left: 6px; padding-right:3px; float:right; }
 .toolbardock div.left { float: left }
 .toolbardock div.right { float: right }
@@ -40,7 +41,7 @@ div.panel-header div.tabs ul { height:28px; overflow:hidden }
 
 /* spinner */
 .spinnerWrapper { width: 16px; height: 16px; background: url(../images/spinner-placeholder.gif) no-repeat; margin: 4px 5px 0 5px; }
-.spinner { display: none; background: url(../images/spinner.gif) no-repeat; width: 16px; height: 16px; }
+.spinner { display: none; background: url(../images/spinner.gif) no-repeat; width: 16px; height: 16px; margin-left:-3px }
 .toolbar .spinnerWrapper { margin: 4px 0 2px 0; height:24px;}
 
 /* search fields toolbar */

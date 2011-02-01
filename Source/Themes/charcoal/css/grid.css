@@ -16,7 +16,7 @@
 
 .grid { font-family: Verdana, Geneva, Arial, Helvetica, sans-serif; font-size: 11px; position: relative; border: 0 solid #eee; overflow: hidden; /* to exclude debug */ color: #000; }
 .grid div.hDivBox { position: relative; overflow: hidden; }
-.grid div.hDiv /* header div */ { background: #fafafa url(../images/o-fhbg.gif) repeat-x bottom; position: relative; border: 1px solid #ccc; border-bottom: 0; overflow: hidden; }
+.grid div.hDiv /* header div */ { background: #fafafa url(../images/bg-panel-header.gif) repeat-x bottom; position: relative; border: 1px solid #ccc; border-bottom: 0; overflow: hidden; }
 .grid div.bDiv /* body div */ { border: 1px solid #ccc; border-top: 0; background: #fff; overflow: auto; position: relative; }
 .grid div.hDiv .th, .grid div.bDiv .td /* common cell properties*/ { text-align: left; border-right: 1px solid #ddd; border-left: 1px solid #fff; vertical-align: top !important; display: inline-block; float: left; white-space: nowrap; overflow: hidden; padding-left: 5px; cursor: pointer; }
 .grid ::selection { color: none; background-color: transparent; }
@@ -34,7 +34,7 @@
 /* accordion */
 
 /* toolbar */
-.grid div.tDiv { background: #fafafa url(../images/o-bg.gif) repeat-x top; position: relative; border: 1px solid #ccc; border-bottom: 0; overflow: hidden; height: 25px; }
+.grid div.tDiv { background: #fafafa url(../images/bg-panel-header.gif) repeat-x top; position: relative; border: 1px solid #ccc; border-bottom: 0; overflow: hidden; height: 25px; }
 .grid div.fbutton { margin-top: 1px; float: left; display: block; cursor: pointer; padding: 1px; }
 .grid div.fbutton div { float: left; padding: 1px 3px; }
 .grid div.fbutton span { float: left; display: block; padding: 3px; }
@@ -62,7 +62,7 @@
 /* sort */
 
 /* Pagination */
-.grid div.pDiv { background: url(../images/o-wbg.gif) repeat-x 0 -1px; border: 1px solid #ccc; border-top: 0; overflow: hidden; white-space: nowrap; }
+.grid div.pDiv { background: url(../images/bg-panel-header.gif) repeat-x 0 -1px; border: 1px solid #ccc; border-top: 0; overflow: hidden; white-space: nowrap; }
 .grid div.pDiv div.pDiv2 { margin: 2px; margin-left: -2px; float: left; width: 1024px; }
 div.pGroup { float: left; background: none; height: 24px; margin: 0 5px; }
 .grid div.pDiv .pPageStat, .grid div.pDiv .pcontrol { position: relative; top: 5px; overflow: visible; font-size: 10px; color: #777777; }
