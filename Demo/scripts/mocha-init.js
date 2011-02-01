@@ -100,17 +100,20 @@ Object.append(Demo, {
 		new Element('div', {text: d + message}).inject('mochaConsole', 'top');
 	},
 
-	getDemoContainer: function(node, hideScrolls){
+	getDemoContainer: function(node, hideScrolls, canResize, width, height){
 		var isWindow = node.value.substr(0, 1) == 'w';
+		if (!width) width = 340;
+		if (!height) height = 200;
+
 		if (isWindow){
 			var win = new MUI.Window({
 				id: node.value + 'Window',
 				content: 'loading...',
 				title: node.text + ' in Window',
-				width: 340,
-				height: 200,
+				width: width,
+				height: height,
 				scrollbars: !hideScrolls,
-				resizable: false,
+				resizable: canResize,
 				maximizable: false
 			});
 			return win.el.content;
@@ -186,6 +189,74 @@ Object.append(Demo, {
 			onValueChanged: function(value, self){
 				Demo.writeConsole(self.options.id + ' received onValueChanged command, value = ' + self.options.value);
 			}
+		});
+	},
+
+	gridBuilder: function(e, node){
+		var container = Demo.getDemoContainer(node, false, true, 507, 320);
+
+		var gridButtonClick = function(button){
+			alert(button);
+		};
+
+		var accordionFunction = function(obj){
+			obj.parent.set('html', '<div style="padding:5px"> Row ' + obj.row + '<br/><br/>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </div>');
+		};
+
+		MUI.create('MUI.Grid',{
+			'id': node.value + 'Grid',
+			container: container,
+			columns: [
+				{
+					header: "Name",
+					name: 'name',
+					dataType:'string'
+				},
+				{
+					header: "Address",
+					name: 'address',
+					dataType:'string'
+				},
+				{
+					header: "City",
+					name: 'city',
+					dataType:'string'
+				},
+				{
+					header: "State",
+					name: 'state',
+					dataType:'string'
+				},
+				{
+					header: "Zip",
+					name: 'zip',
+					dataType:'string'
+				}
+			],
+			buttons : [
+				{name: 'Add', cssClass: 'add', 'click': gridButtonClick},
+				{name: 'Delete', cssClass: 'delete', 'click': gridButtonClick},
+				{separator: true},
+				{name: 'Duplicate', cssClass: 'duplicate', 'click': gridButtonClick}
+			],
+			accordion:true,
+			accordionRenderer:accordionFunction,
+			autoSectionToggle:false,
+
+			content:{
+				url:"/mochaui-grails/person/list?page={page}&max={pageSize}&order={dir}&sort={sort}",
+				persist:true,
+				paging: {
+					pageSize:10,
+					page:1
+				}
+			},
+
+			showHeader: true,
+			sortHeader: true,
+			alternateRows: true,
+			resizeColumns: true,
+			multipleSelection:true
 		});
 	},
 
@@ -679,8 +750,8 @@ Object.append(Demo, {
 			height: 195,
 			padding: {top: 43, right: 12, bottom: 10, left: 12},
 			scrollbars: false,
-			onLoaded: function() {
-				$('authorsAboutLink').addEvent('click',function(e){
+			onLoaded: function(){
+				$('authorsAboutLink').addEvent('click', function(e){
 					e.stop();
 					Demo.authorsWindow();
 				})
@@ -1051,7 +1122,7 @@ Demo.initializeDesktop = function(){
 			]},
 			{name:'footer',content:'<div class="copyright">&copy; 2010 <a target="_blank" href="scripts/AUTHORS.txt" id="authorsLink">Various Contributors</a> - <a target="_blank" href="license.html" id="licenseLink">MIT License</a><div>',cssClass:'desktopFooter'}
 		],
-		'onDrawEnd':function() {
+		'onDrawEnd':function(){
 			Demo.parametricsWindow();
 		}
 	});
