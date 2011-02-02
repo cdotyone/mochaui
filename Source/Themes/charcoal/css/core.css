@@ -51,7 +51,7 @@ h3 { font-size: 13px; font-weight: bold; }
 h4 { font-size: 11px; }
 a { color: #A5DFF2; text-decoration: none; cursor: pointer; }
 a:hover { text-decoration: none; }
-{ margin: 0; padding: 0 0 9px 0; }
+p { margin: 0; padding: 0 0 9px 0; }
 .lite { color: #999; }
 
 /* Lists */

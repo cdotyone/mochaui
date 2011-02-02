@@ -52,7 +52,9 @@ MUI.append({
 			'plugins':{path:'{root}Source/Plugins/',singularName:'plugin'}
 		},
 
-		themes: ['Default','Charcoal']
+		themes: ['Default','Charcoal'],
+
+		css: 	['{theme}css/core.css']				// default list of css files to load, added to requirements of every control and plugin loaded
 	}
 });
 
@@ -69,6 +71,7 @@ MUI.append({
 	initialize: function(options){
 		if (options){
 			if (options.path) options.path = Object.append(MUI.options.path, options.path);
+			if (options.css) options.css = Object.append(MUI.options.css, options.css);
 			if (options.pluginGroups) options.pluginGroups = Object.append(MUI.options.pluginGroups, options.pluginGroups);
 			Object.append(MUI.options, options);
 		}
@@ -218,6 +221,7 @@ MUI.append({
 
 		var css = [];
 		if (config.css) css = config.css;
+		css.combine(MUI.options.css);
 		css = MUI.replaceFields(css, path);
 
 		new MUI.Require({

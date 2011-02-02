@@ -23,7 +23,7 @@ Object.append(MUI.controls, {
 	'calendar':{'samples':['demo','index'],data:['json'],'description':'Calendar','isFormControl':true,'css':['{theme}css/calendar.css']},
 	'checkboxgrid':{'samples':['demo','index'],data:['json'],'description':'Check Box Grid','isFormControl':true,'css':['{theme}css/checkboxgrid.css']},
 	'column':{'samples':['demo'],data:['json'],'description':'Column','isFormControl':false,'css':['{theme}css/desktop.css']},
-	'desktop':{'samples':['demo'],data:['json'],'description':'Desktop','isFormControl':false,'css':['{theme}css/desktop.css','{theme}css/dock.css'],'js':['{controls}/dock/dock.js','{control}desktop.js']},
+	'desktop':{'samples':['demo'],data:['json'],'description':'Desktop','isFormControl':false,'css':['{theme}css/desktop.css','{theme}css/dock.css','{theme}css/taskbar.css'],'js':['{controls}dock/dock.js','{control}desktop.js','{controls}taskbar/taskbar.js']},
 	'imagebutton':{'samples':['demo','index'],data:['json'],'description':'Image Button','isFormControl':true,'css':['{theme}css/imagebutton.css']},
 	'list':{'samples':['demo','index'],data:['json'],'description':'Basic List','isFormControl':false,'css':['{theme}css/list.css']},
 	'modal':{'samples':['demo'],data:['json'],'description':'Modal','isFormControl':true,'css':['{theme}css/desktop.css'],location:'window'},
@@ -40,7 +40,7 @@ Object.append(MUI.controls, {
 	'dockhtml':{'samples':['index'],data:['json'],'description':'Toolbar HTML Block','isFormControl':false,'css':['{theme}css/toolbar.css']},
 	'menu':{'samples':['index'],data:['json'],'description':'Toolbar Menu','isFormControl':false,'css':['{theme}css/menu.css']},
 	'spinner':{'samples':['index'],data:['json'],'description':'Toolbar Spinner','isFormControl':false,'css':['{theme}css/toolbar.css']},
-	'themechange':{'samples':['index'],data:['json'],'description':'Toolbar Menu','isFormControl':false,'css':['{theme}css/toolbar.css'],'js':['{control}themechange.js','{source}Core/themes.js']},
+	'themechange':{'samples':['index'],data:['json'],'description':'Toolbar Menu','isFormControl':false,'css':['{theme}css/toolbar.css']},
 	'window':{'samples':['demo'],data:['json'],'description':'Modal','isFormControl':false,'css':['{theme}css/window.css']}
 
 });
