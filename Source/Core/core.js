@@ -177,7 +177,7 @@ MUI.append({
 		if (typeOf(options) == 'string') options = {control:options};
 		if (!MUI.initialized) MUI.initialize();
 		if (this.loadPluginGroups(function(){
-			MUI.create(type, options, fromHTML, loadOnly);  // [i_a] make sure all args get through to the next invocation when the plugins are loaded!
+			MUI.create(options);
 		})) return;
 
 		var name = options.control.replace(/(^MUI\.)/i, '');
