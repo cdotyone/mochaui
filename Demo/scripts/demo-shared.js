@@ -73,7 +73,7 @@ Object.append(Demo, {
 			content: {
 				url: '{plugins}coolclock/demo.html',
 				require: {
-					js: ['{plugins}coolclock/coolclock.js'],
+					js: ['{plugins}coolclock/moreskins.js','{plugins}coolclock/coolclock.js'],
 					onload: function(){
 						if (CoolClock) new CoolClock();
 					}
