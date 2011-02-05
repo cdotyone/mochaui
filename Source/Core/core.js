@@ -289,13 +289,6 @@ MUI.append({
 		}
 	},
 
-	getData: function(item, property, dfault){
-		if (!dfault) dfault = '';
-		if (!item || !property) return dfault;
-		if (item[property] == null) return dfault;
-		return item[property];
-	},
-
 	hideSpinner: function(instance){
 		if (instance == null) instance = MUI.get(this.id);
 		var spinner = $$('.spinner');

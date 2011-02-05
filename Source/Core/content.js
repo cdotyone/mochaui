@@ -695,7 +695,17 @@ MUI.append({
 			});
 			return retval;
 		}
+	},
+
+	update: MUI.Content.update,
+
+	getData: function(item, property, dfault){
+		if (!dfault) dfault = '';
+		if (!item || !property) return dfault;
+		if (item[property] == null) return dfault;
+		return item[property];
 	}
+
 });
 
 MUI.Content.PagingOptions = {
