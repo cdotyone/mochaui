@@ -1,16 +1,16 @@
 name: "MochaUI"
 
-version: "0.9.8-dev"
+version: "1.0-dev"
 
 exports: "mochaui.js"
 
-web: "[mochaui.com](http://mochaui.com/)"
+web: "[mochaui.org](http://mochaui.org/)"
 
 description: "MochaUI, A web applications user interface library"
 
-license: "[MIT License](http://mochaui.com/demo/license.txt)"
+license: "[MIT License](http://mochaui.org/MIT-LICENSE.txt)"
 
-copyright: "&copy; [AUTHORS.txt]"
+copyright: "&copy; [AUTHORS.txt](http://mochaui.org/AUTHORS.txt)"
 
 authors:
   - "[Chris Doty](http://polaropposite.com/)"
@@ -20,15 +20,12 @@ authors:
   - "Harry Roberts"
 
 sources:
-  - "Source/Core/Core.js"
-  - "Source/Core/Canvas.js"
-  - "Source/Core/Content.js"
-  - "Source/Core/Desktop.js"
-  - "Source/Controls/column/Column.js"
-  - "Source/Controls/panel/Panel.js"
-  - "Source/Controls/taskbar/Taskbar.js"
-  - "Source/Controls/window/Window.js"
-  - "Source/Controls/window/Modal.js"
-  - "Source/Core/Themes.js"
-  
+  - "Source/Core/core.js"
+  - "Source/Core/create.js"
+  - "Source/Core/require.js"
+  - "Source/Core/canvas.js"
+  - "Source/Core/content.js"
+  - "Source/Core/persist.js"
+  - "Source/Core/themes.js"
+
   
