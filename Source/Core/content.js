@@ -314,8 +314,6 @@ MUI.Content = Object.append((MUI.Content || {}), {
 
 });
 
-MUI.updateContent = MUI.Content.update;
-
 MUI.Content.Filters.tree = function(response, content, node){
 	var usePaging = node == null && content.paging && content.paging.size > 0 && content.paging.recordsField;
 	var data = response, i;
