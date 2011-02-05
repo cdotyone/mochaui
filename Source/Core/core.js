@@ -120,7 +120,7 @@ MUI.append({
 
 	getID: function(el){
 		var type = typeOf(el);
-		if (type == 'string') return el;    // [i_a] statement order: typeof, the string check
+		if (type == 'string') return el;
 		if (type == 'element') return el.id;
 		else if (type == 'object' && el.id) return el.id;
 		else if (type == 'object' && el.options && el.options.id) return el.options.id;
