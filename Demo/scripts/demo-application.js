@@ -116,7 +116,6 @@ Demo.initializeDesktop = function(){
 							content: {
 								url: 'pages/ajax.form.html',
 								onLoaded: function(){
-									return;
 									$('myForm').addEvent('submit', function(e){
 										e.stop();
 
