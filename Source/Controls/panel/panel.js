@@ -314,7 +314,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		this.oldHeight = panel.getStyle('height').toInt();
 		if (this.oldHeight < 10) this.oldHeight = 20;
 		this.el.content.setStyle('position', 'absolute'); // This is so IE6 and IE7 will collapse the panel all the way
-		panel.setStyle('height', 0);
+		panel.hide().setStyle('height', 0);
 		this.isCollapsed = true;
 		panelWrapper.addClass('collapsed')
 				.removeClass('expanded');
@@ -325,6 +325,8 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				.setProperty('title', 'Expand Panel');
 		if (fireevent) this.fireEvent('collapse', [this]);
 
+		MUI.desktop.setDesktopSize();
+
 		return this;
 	},
 
@@ -332,7 +334,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 		// Expand Panel
 		this.el.content.setStyle('position', null); // This is so IE6 and IE7 will collapse the panel all the way
-		this.el.panel.setStyle('height', this.oldHeight);
+		this.el.panel.setStyle('height', this.oldHeight).show();
 		this.isCollapsed = false;
 		this.el.element.addClass('expanded')
 				.removeClass('collapsed');

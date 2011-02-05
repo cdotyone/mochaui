@@ -105,7 +105,7 @@ MUI.Desktop = new NamedClass('MUI.Desktop', {
 			} else {
 				if (section.name == 'taskbar'){
 					this.el[section.name] = new Element('div', {'id':section.id+'Wrapper'}).inject(this.el.element);
-					this.taskbar = new MUI.Taskbar({id:section.id,drawOnInit:false,container:this.el.element,desktop:this,element:this.el[section.name]});
+					this.taskbar = MUI.create({control:'MUI.Taskbar',id:section.id,drawOnInit:false,container:this.el.element,desktop:this,element:this.el[section.name]});
 				} else {
 					// create section element
 					var e = section.element = this.el[section.name] = new Element('div', {'id':section.id}).inject(this.el.element);

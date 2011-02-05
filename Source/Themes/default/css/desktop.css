@@ -47,7 +47,7 @@ li.divider { margin-top: 2px; padding-top: 3px; border-top: 1px solid #ebebeb; }
 .bottomPanel .panel { border-bottom: 0; }
 .pad { padding: 8px; }
 #mainPanel2 { background: #fff; }
-.panel-header { position: relative; background: #f1f1f1 url(../images/bg-panel-header.gif) repeat-x; height: 30px; border-bottom: 1px solid #d3d3d3; }
+.panel-header { position: relative; background: #f1f1f1 url(../images/bg-panel-header.gif) repeat-x; height: 30px; border-bottom: 1px solid #d3d3d3; overflow:hidden; overflow-x: hidden; overflow-y: hidden; }
 .panel-headerContent { padding-top: 2px; display: table-cell }
 .panel-header h2 { display: inline-block; font-size: 12px; margin: 0; padding: 3px 8px 0 8px; height: 22px; overflow: hidden; color: #333; }
 .panel-collapse { background: url(../images/collapse-expand.gif) left top no-repeat; padding-right:5px }

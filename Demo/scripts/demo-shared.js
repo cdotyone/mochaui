@@ -2,6 +2,9 @@
  Creating Demo namespace, this is not required.
  Doing this to keep demo stuff separated.
  */
+
+MUI.files['scripts/demo-shared.js'] = 'loaded';
+
 var Demo = (Demo || {});
 
 // Examples
