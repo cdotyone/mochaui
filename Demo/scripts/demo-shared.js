@@ -366,41 +366,6 @@ Object.append(Demo, {
 		});
 	},
 
-	parametricsWindow: function(){
-		new MUI.Window({
-			id: 'parametrics',
-			title: 'Window Parametrics',
-			content: {
-				url: '{plugins}parametrics/demo.html',
-				require: {
-					js: ['{plugins}parametrics/parametrics.js'] //,
-					// onload: function(){} // either use onload here or Window/onLoaded further down
-				}
-			},
-			width: 305,
-			height: 210,
-			x: 570,
-			y: 160,
-			padding: {top: 12, right: 12, bottom: 10, left: 12},
-			resizable: false,
-			minimizable: true,
-			maximizable: false,
-			onDragStart: function(instance){
-				if (!Browser.ie) instance.el.windowEl.setStyle('opacity', 0.5);
-				// VML doesn't render opacity nicely on the shadow
-			},
-			onDragComplete: function(instance){
-				if (!Browser.ie) instance.el.windowEl.setStyle('opacity', 1);
-			},
-			onLoaded: function(){
-				if (MUI.addRadiusSlider) MUI.addRadiusSlider();
-				if (MUI.addShadowSlider) MUI.addShadowSlider();
-				if (MUI.addOffsetXSlider) MUI.addOffsetXSlider();
-				if (MUI.addOffsetYSlider) MUI.addOffsetYSlider();
-			}
-		});
-	},
-
 	splitWindow: function(){
 		new MUI.Window({
 			id: 'splitWindow',
