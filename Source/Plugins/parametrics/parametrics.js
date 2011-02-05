@@ -5,14 +5,11 @@
 
  script: Parametrics.js
 
- description: MUI - Initializes the GUI Parametrics property sliders.
+ description: MUI - Creates a window and initializes sliders.
 
  copyright: (c) 2010 Contributors in (/AUTHORS.txt).
 
  license: MIT-style license in (/MIT-LICENSE.txt).
-
- note:
- This documentation is taken directly from the javascript source files. It is built using Natural Docs.
 
  requires:
  - Core/Element
@@ -21,14 +18,54 @@
  - Core/Events
  - MUI
  - MUI.Core
+ - MUI.Window
 
- provides: [MUI.Parametrics]
+ provides: [Parametrics.createwindow]
 
  ...
  */
 
-MUI.append({
+var Parametrics = {};
 
+Object.append(Parametrics,{
+
+	createwindow: function(){
+
+		MUI.create({
+			control: 'MUI.Window',
+			id: 'parametrics',
+			title: 'Window Parametrics',
+			content: {
+				url: '{plugins}parametrics/demo.html',
+				require: {
+					js: ['{plugins}parametrics/parametrics.js'] //,
+					// onload: function(){} // either use onload here or Window/onLoaded further down
+				}
+			},
+			width: 305,
+			height: 210,
+			x: 570,
+			y: 160,
+			padding: {top: 12, right: 12, bottom: 10, left: 12},
+			resizable: false,
+			minimizable: true,
+			maximizable: false,
+			onDragStart: function(instance){
+				if (!Browser.ie) instance.el.windowEl.setStyle('opacity', 0.5);
+				// VML doesn't render opacity nicely on the shadow
+			},
+			onDragComplete: function(instance){
+				if (!Browser.ie) instance.el.windowEl.setStyle('opacity', 1);
+			},
+			onLoaded: function(){
+				Parametrics.addRadiusSlider();
+				Parametrics.addShadowSlider();
+				Parametrics.addOffsetXSlider();
+				Parametrics.addOffsetYSlider();
+			}
+		});
+	},
+	
 	addRadiusSlider: function(){
 		if ($('radiusSliderarea')){
 			var windowOptions = MUI.Windows.options;
@@ -36,6 +73,7 @@ MUI.append({
 			var mochaSlide = new Slider('radiusSliderarea', 'radiusSliderknob', {
 				steps: 14,
 				offset: 0,
+				initialStep: windowOptions.cornerRadius,
 				onChange: function(pos){
 					// Don't redraw windows the first time the slider is initialized
 					if (sliderFirst){
@@ -66,6 +104,7 @@ MUI.append({
 			var mochaSlide = new Slider('shadowSliderarea', 'shadowSliderknob', {
 				range: [1, 10],
 				offset: 0,
+				initialStep:  windowOptions.shadowBlur,
 				onChange: function(pos){
 					// Don't redraw windows the first time the slider is initialized
 					if (sliderFirst){
@@ -113,7 +152,7 @@ MUI.append({
 			var mochaSlide = new Slider('offsetXSliderarea', 'offsetXSliderknob', {
 				range: [-5, 5],
 				offset: 0,
-				initialStep: 0,
+				initialStep: windowOptions.shadowOffset.x,
 				onChange: function(pos){
 					// Don't redraw windows the first time the slider is initialized
 					if (sliderFirst){
@@ -153,6 +192,7 @@ MUI.append({
 			var mochaSlide = new Slider('offsetYSliderarea', 'offsetYSliderknob', {
 				range: [-5, 5],
 				offset: 0,
+				initialStep: windowOptions.shadowOffset.y,
 				onChange: function(pos){
 					// Don't redraw windows the first time the slider is initialized
 					if (sliderFirst){

@@ -280,7 +280,7 @@ Demo.initializeDesktop = function(){
 			{name:'footer',content:'<div class="copyright">&copy; 2010 <a target="_blank" href="scripts/AUTHORS.txt" id="authorsLink">Various Contributors</a> - <a target="_blank" href="license.html" id="licenseLink">MIT License</a><div>',cssClass:'desktopFooter'}
 		],
 		'onDrawEnd':function(){
-			Demo.parametricsWindow();
+			Parametrics.createwindow();
 		}
 	});
 };
@@ -293,7 +293,8 @@ Demo.initialize = function(){
 			MUI.initialize({path:{demo:''}});
 			MUI.register('Demo', Demo);
 			MUI.register('MUI.Windows', MUI.Windows);
-			MUI.create('famfamfam');
+			MUI.load('famfamfam');
+			MUI.load('parametrics');
 			Demo.initializeDesktop();
 		}
 	});
