@@ -119,8 +119,8 @@ MUI.append({
 	files: new Hash({'{source}Core/core.js': 'loaded'}),
 
 	getID: function(el){
-		if (type == 'string') return el;
 		var type = typeOf(el);
+		if (type == 'string') return el;    // [i_a] statement order: typeof, the string check
 		if (type == 'element') return el.id;
 		else if (type == 'object' && el.id) return el.id;
 		else if (type == 'object' && el.options && el.options.id) return el.options.id;
@@ -177,7 +177,7 @@ MUI.append({
 		if (typeOf(options) == 'string') options = {control:options};
 		if (!MUI.initialized) MUI.initialize();
 		if (this.loadPluginGroups(function(){
-			MUI.create(options);
+			MUI.create(type, options, fromHTML, loadOnly);  // [i_a] make sure all args get through to the next invocation when the plugins are loaded!
 		})) return;
 
 		var name = options.control.replace(/(^MUI\.)/i, '');
