@@ -87,7 +87,7 @@ MUI.Calendar = new NamedClass('MUI.Calendar', {
 	},
 
 	draw: function(containerEl){
-		// todo: need to except external container
+		// todo: need to accept external container
 
 		var o = this.options;
 
