@@ -113,6 +113,7 @@ Demo.initializeDesktop = function(){
 							id: 'panel2',
 							title: 'Ajax Form',
 							height: 230,
+							isCollapsed: true,
 							content: {
 								url: 'pages/ajax.form.html',
 								onLoaded: function(){
@@ -288,14 +289,14 @@ Demo.initializeDesktop = function(){
 Demo.initialize = function(){
 
 	new MUI.Require({js:['scripts/demo-shared.js'],
-		'onload':function() {
+		'onload':function(){
 			// Initialize MochaUI options
 			MUI.initialize({path:{demo:''}});
-			MUI.register('Demo', Demo);
-			MUI.register('MUI.Windows', MUI.Windows);
 			MUI.load('famfamfam');
 			MUI.load('Parametrics');
 			MUI.load('CoolClock');
+			MUI.register('Demo', Demo);
+			MUI.register('MUI.Windows', MUI.Windows);
 			Demo.initializeDesktop();
 		}
 	});
