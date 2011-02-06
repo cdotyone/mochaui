@@ -388,28 +388,6 @@ Object.append(Demo, {
 		});
 	},
 
-	fxmorpherWindow: function(){
-		new MUI.Window({
-			id: 'fxmorpherExample',
-			title: 'Path Animation Example',
-			content: {
-				url: '{plugins}fx.morpher/demo.html',
-				require: {
-					js: ['{plugins}fx.morpher/fx.morpher.js', '{plugins}fx.morpher/demo.js'],
-					onload: function(){
-						createCanvas();
-						myAnim.delay(250);
-					}
-				}
-			},
-			width: 330,
-			height: 330,
-			padding: {top: 0, right: 0, bottom: 0, left: 0},
-			scrollbars: false,
-			resizable: false
-		});
-	},
-
 	// Examples > Tests
 	serverResponseWindow: function(response){
 		new MUI.Window({

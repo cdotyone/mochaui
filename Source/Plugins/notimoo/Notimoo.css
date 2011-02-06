@@ -1,0 +1,51 @@
+/*
+---
+script: notimoo-1.2.css
+description: Notification system using Mootools (1.2+)
+license: MIT-style
+authors:
+ - PaquitoSoft
+requires:
+core:1.2: [Element.Style, Element.Event, Element.Dimension, Fx.Tween, Fx.Morph, Array]
+provides: [Notimoo]
+version: 1.2
+...
+ 
+    Document   : notimoo
+    Created on : 31-mar-2009, 10:49:46
+    Author     : PaquitoSoft
+    Description:
+        Styles for Notimoo notification system.
+        Change it to meet your needs.
+*/
+
+.notimoo {
+
+    /* Don't touch here */
+    position: absolute;
+    z-index: 999; /* There are some cases where you'll need to change this if you're currently using a greater one in your project*/
+    cursor: pointer;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+
+    /* Change this to fit your needs*/
+    padding:10px;
+    border: 3px;
+    border-style: solid;
+    border-color: #B2B2B2;
+    background: #333333;
+    color: #FFFFFF;
+}
+
+.notimoo .title {
+    font-weight: bold;
+    border-bottom: 1px solid;
+}
+
+.notimoo .message {
+    margin-top: 2px;
+}
+
+.notimoo a {
+    color: #FFFFFF;
+}
