@@ -60,8 +60,8 @@ MUI.Column = new NamedClass('MUI.Column', {
 	},
 
 	draw: function(){
-		// todo: need to domready adding to container
-		// todo: need to except external container
+		// todo: need to use domready when adding to container
+		// todo: need to accept external container
  
 		var options = this.options;
 
