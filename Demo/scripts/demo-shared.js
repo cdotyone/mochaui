@@ -63,29 +63,6 @@ Object.append(Demo, {
 		});
 	},
 
-	clockWindow: function(){
-		new MUI.Window({
-			id: 'clock',
-			title: 'Canvas Clock',
-			cssClass: 'transparent',
-			content: {
-				url: '{plugins}coolclock/demo.html',
-				require: {
-					js: ['{plugins}coolclock/moreskins.js','{plugins}coolclock/coolclock.js'],
-					onload: function(){
-						if (CoolClock) new CoolClock();
-					}
-				}},
-			shape: 'gauge',
-			headerHeight: 30,
-			width: 160,
-			height: 160,
-			x: 570,
-			y: 140,
-			padding: 0
-		});
-	},
-
 	writeConsole: function(message){
 		var d = new Date().format('%H:%M:%S: ');
 		new Element('div', {text: d + message}).inject('mochaConsole', 'top');

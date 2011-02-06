@@ -294,7 +294,8 @@ Demo.initialize = function(){
 			MUI.register('Demo', Demo);
 			MUI.register('MUI.Windows', MUI.Windows);
 			MUI.load('famfamfam');
-			MUI.load('parametrics');
+			MUI.load('Parametrics');
+			MUI.load('CoolClock');
 			Demo.initializeDesktop();
 		}
 	});
