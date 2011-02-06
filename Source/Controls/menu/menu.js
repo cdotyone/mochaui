@@ -23,8 +23,6 @@
  ...
  */
 
-MUI.files['{controls}toolbar/toolbarmenu.js'] = 'loaded';
-
 MUI.Menu = new NamedClass('MUI.Menu', {
 
 	Implements: [Events, Options],

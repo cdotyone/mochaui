@@ -26,8 +26,6 @@
  ...
  */
 
-MUI.files['{controls}selectList/selectList.js'] = 'loaded';
-
 MUI.SelectList = new NamedClass('MUI.SelectList', {
 
 	Implements: [Events, Options],

@@ -16,8 +16,6 @@
  ...
  */
 
-MUI.files['{source}Core/canvas.js'] = 'loaded';
-
 MUI.Canvas = Object.append((MUI.Canvas || {}), {
 
 	drawBox: function(ctx, width, height, shadowBlur, shadowOffset, shadows, headerHeight, cornerRadius, bodyBgColor, headerStartColor, headerStopColor){

@@ -15,8 +15,6 @@
  ...
  */
 
-MUI.files['{controls}mui-controls.js'] = 'loaded';
-
 Object.append(MUI.controls, {
 
 	'accordion':{'samples':[,'demo','index'],data:['json','html'],'description':'Accordion','isFormControl':false,'css':['{theme}css/accordion.css']},

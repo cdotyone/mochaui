@@ -19,8 +19,6 @@
  ...
  */
 
-MUI.files['{controls}column/column.js'] = 'loaded';
-
 MUI.Column = new NamedClass('MUI.Column', {
 
 	Implements: [Events, Options],

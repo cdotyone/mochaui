@@ -36,8 +36,6 @@
  ...
  */
 
-MUI.files['{controls}grid/grid.js'] = 'loaded';
-
 MUI.Grid = new NamedClass('MUI.Grid', {
 
 	Implements: [Events,Options],

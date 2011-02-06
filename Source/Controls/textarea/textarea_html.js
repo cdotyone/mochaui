@@ -35,8 +35,6 @@
  ...
  */
 
-MUI.files['{controls}textArea/textarea_html.js'] = 'loaded';
-
 MUI.TextArea.implement({
 
 	fromHTML: function(){

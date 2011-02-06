@@ -27,8 +27,6 @@
  ...
  */
 
-MUI.files['{controls}accordion/accordion_html.js'] = 'loaded';
-
 MUI.Accordion.implement({
 
 	fromHTML: function(el){

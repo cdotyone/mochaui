@@ -23,8 +23,6 @@
  ...
  */
 
-MUI.files['{controls}toolbar/toolbardock.js'] = 'loaded';
-
 MUI.Dock = new NamedClass('MUI.Dock', {
 
 	Implements: [Events, Options],

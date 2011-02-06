@@ -13,8 +13,6 @@
  ...
  */
 
-MUI.files['{plugins}mui-plugins.js'] = 'loaded';
-
 Object.append(MUI.plugins, {
 
 	'coolclock':{'samples':['demo'],'description':'Cool Clock Plugin','js':['{control}moreskins.js','{control}coolclock.js']},

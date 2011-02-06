@@ -18,8 +18,6 @@ provides: [MUI.Mask.Repeat]
 ...
 */
 
-MUI.files['{controls}textbox/mask.repeat.js'] = 'loaded';
-
 MUI.Mask.Repeat = new Class({
 
 	Extends : MUI.Mask,

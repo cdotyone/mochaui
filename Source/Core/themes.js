@@ -37,8 +37,6 @@
  ...
  */
 
-MUI.files['{source}Core/themes.js'] = 'loaded';
-
 MUI.Themes = {
 
 	init: function(newTheme){

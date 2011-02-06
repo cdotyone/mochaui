@@ -32,8 +32,6 @@
  ...
  */
 
-MUI.files['{controls}textarea/textarea.js'] = 'loaded';
-
 MUI.TextArea = new NamedClass('MUI.TextArea', {
 
 	Implements: [Events, Options],

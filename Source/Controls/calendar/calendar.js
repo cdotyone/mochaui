@@ -27,8 +27,6 @@
  ...
  */
 
-MUI.files['{controls}calendar/calendar.js'] = 'loaded';
-
 MUI.Calendar = new NamedClass('MUI.Calendar', {
 
 	Implements: [ Events, Options ],

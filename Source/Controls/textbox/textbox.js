@@ -26,8 +26,6 @@
  ...
  */
 
-MUI.files['{controls}textbox/textbox.js'] = 'loaded';
-
 MUI.TextBox = new NamedClass('MUI.TextBox', {
 
 	Implements: [Events, Options],

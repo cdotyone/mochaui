@@ -25,8 +25,6 @@
  ...
  */
 
-MUI.files['{controls}tabs/tabs_html.js'] = 'loaded';
-
 MUI.Tabs.implement({
 
 	fromHTML: function(el){
