@@ -294,7 +294,7 @@ MUI.Window.implement({
 		}
 
 		// Minimizable, taskbar is required and window cannot be modal
-		if(MUI.desktop && MUI.desktop.taskbar) this.taskbar = MUI.desktop.taskbar;
+		if (MUI.desktop && MUI.desktop.taskbar) this.taskbar = MUI.desktop.taskbar;
 		if (this.taskbar){
 			if (options.type != 'modal' && options.type != 'modal2') this.options.minimizable = options.minimizable;
 		} else options.minimizable = false;
@@ -335,7 +335,7 @@ MUI.Window.implement({
 	draw: function(){
 		var options = this.options;
 
-		if(MUI.desktop && MUI.desktop.taskbar) this.taskbar = MUI.desktop.taskbar;
+		if (MUI.desktop && MUI.desktop.taskbar) this.taskbar = MUI.desktop.taskbar;
 
 		// Check if window already exists and is not in progress of closing
 		if (this.el.windowEl && !this.isClosing){
@@ -499,7 +499,7 @@ MUI.Window.implement({
 		this.morph = new Fx.Morph(this.el.windowEl, {
 			'duration': 200
 		});
-		this.el.windowEl.store('morph', this.morph);
+		this.el.windowEl.store('morph', this.morph).store('instance',this);
 
 		this.resizeMorph = new Fx.Elements([this.el.contentWrapper, this.el.windowEl], {
 			duration: 400,
@@ -524,10 +524,6 @@ MUI.Window.implement({
 				'id': this.options.id + '_check'
 			}).inject(this.el.windowEl.id + 'LinkCheck');
 		}
-
-		Object.each(this.el, (function(ele){
-			if(ele!=this.el.spinner) ele.store('instance', this);
-		}).bind(this));
 
 		if (this.options.closeAfter) this.close.delay(this.options.closeAfter, this);
 		if (this.taskbar && this.options.type == 'window') this.taskbar.createTab(this);
@@ -619,8 +615,7 @@ MUI.Window.implement({
 				}
 
 				if (options.resizable && !this.isMaximized){
-					if (!this.resizableColor)
-					{
+					if (!this.resizableColor){
 						alert('resizableColor not set!');
 					}
 					MUI.Canvas.triangle(ctx, width - (shadowBlur + shadowOffset.x + 17), height - (shadowBlur + shadowOffset.y + 18), 11, 11, this.resizableColor, 1.0);
@@ -1026,8 +1021,7 @@ MUI.Window.implement({
 				this.headerStopColor = new Color(this.el.titleBar.getStyle('background-color')).mix('#000', 20);
 				this.el.titleBar.addClass('replaced');
 			}
-			else
-			{
+			else {
 				this.headerStartColor = new Color('#ff0');
 				this.headerStopColor = new Color('#ff0');
 				this.el.titleBar.addClass('replaced');
@@ -1038,21 +1032,18 @@ MUI.Window.implement({
 				this.bodyBgColor = new Color(this.el.windowEl.getStyle('background-color'));
 				this.el.windowEl.addClass('replaced');
 			}
-			else
-			{
+			else {
 				this.bodyBgColor = new Color('#ff0');
 				this.el.windowEl.addClass('replaced');
 			}
 
 			// Set resizableColor, the color of the SE corner resize handle
-			if (this.options.resizable)
-			{
+			if (this.options.resizable){
 				if (this.el.se.getStyle('background-color') !== '' && this.el.se.getStyle('background-color') !== 'transparent'){
 					this.resizableColor = new Color(this.el.se.getStyle('background-color'));
 					this.el.se.addClass('replaced');
 				}
-				else
-				{
+				else {
 					this.resizableColor = new Color('#ff0');
 					this.el.se.addClass('replaced');
 				}
@@ -1062,12 +1053,10 @@ MUI.Window.implement({
 		if (this.options.useCanvasControls){
 			if (this.el.minimizeButton){
 				// Set Minimize Button Foreground Color
-				if (this.el.minimizeButton.getStyle('color') !== '' && this.el.minimizeButton.getStyle('color') !== 'transparent')
-				{
+				if (this.el.minimizeButton.getStyle('color') !== '' && this.el.minimizeButton.getStyle('color') !== 'transparent'){
 					this.minimizeColor = new Color(this.el.minimizeButton.getStyle('color'));
 				}
-				else
-				{
+				else {
 					this.minimizeColor = new Color('#ff0');
 				}
 
@@ -1076,8 +1065,7 @@ MUI.Window.implement({
 					this.minimizeBgColor = new Color(this.el.minimizeButton.getStyle('background-color'));
 					this.el.minimizeButton.addClass('replaced');
 				}
-				else
-				{
+				else {
 					this.minimizeBgColor = new Color('#ff0');
 					this.el.minimizeButton.addClass('replaced');
 				}
@@ -1085,12 +1073,10 @@ MUI.Window.implement({
 
 			if (this.el.maximizeButton){
 				// Set Maximize Button Foreground Color
-				if (this.el.maximizeButton.getStyle('color') !== '' && this.el.maximizeButton.getStyle('color') !== 'transparent')
-				{
+				if (this.el.maximizeButton.getStyle('color') !== '' && this.el.maximizeButton.getStyle('color') !== 'transparent'){
 					this.maximizeColor = new Color(this.el.maximizeButton.getStyle('color'));
 				}
-				else
-				{
+				else {
 					this.maximizeColor = new Color('#ff0');
 					this.el.minimizeButton.addClass('replaced');
 				}
@@ -1100,8 +1086,7 @@ MUI.Window.implement({
 					this.maximizeBgColor = new Color(this.el.maximizeButton.getStyle('background-color'));
 					this.el.maximizeButton.addClass('replaced');
 				}
-				else
-				{
+				else {
 					this.maximizeBgColor = new Color('#ff0');
 					this.el.maximizeButton.addClass('replaced');
 				}
@@ -1109,12 +1094,10 @@ MUI.Window.implement({
 
 			if (this.el.closeButton){
 				// Set Close Button Foreground Color
-				if (this.el.closeButton.getStyle('color') !== '' && this.el.closeButton.getStyle('color') !== 'transparent')
-				{
+				if (this.el.closeButton.getStyle('color') !== '' && this.el.closeButton.getStyle('color') !== 'transparent'){
 					this.closeColor = new Color(this.el.closeButton.getStyle('color'));
 				}
-				else
-				{
+				else {
 					this.closeColor = new Color('#ff0');
 				}
 
@@ -1123,8 +1106,7 @@ MUI.Window.implement({
 					this.closeBgColor = new Color(this.el.closeButton.getStyle('background-color'));
 					this.el.closeButton.addClass('replaced');
 				}
-				else
-				{
+				else {
 					this.closeBgColor = new Color('#ff0');
 					this.el.closeButton.addClass('replaced');
 				}
@@ -1341,7 +1323,7 @@ MUI.Window.implement({
 			if (section.wrap && section.position == 'bottom') section.element.addClass('bottom');
 
 			this.sections[idx] = section;
-			cache[section.element.id]=section.element;
+			cache[section.element.id] = section.element;
 		}, this);
 
 		if (options.useCanvasControls){
@@ -1747,7 +1729,7 @@ MUI.Window.implement({
 
 		// Resize panels if there are any
 		var columns = this.el.contentWrapper.getChildren('.column');
-		if (columns != null && columns.length>0){
+		if (columns != null && columns.length > 0){
 			MUI.rWidth(this.el.contentWrapper);
 			columns.each(function(column){
 				MUI.panelHeight(column);
