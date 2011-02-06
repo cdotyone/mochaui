@@ -18,8 +18,6 @@ provides: [MUI.Mask.Reverse]
 ...
 */
 
-MUI.files['{controls}textbox/mask.reverse.js'] = 'loaded';
-
 MUI.Mask.Reverse = new Class({
 
 	Extends: MUI.Mask,

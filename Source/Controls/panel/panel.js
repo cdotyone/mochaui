@@ -19,8 +19,6 @@
  ...
  */
 
-MUI.files['{controls}panel/panel.js'] = 'loaded';
-
 MUI.Panel = new NamedClass('MUI.Panel', {
 
 	Implements: [Events, Options],

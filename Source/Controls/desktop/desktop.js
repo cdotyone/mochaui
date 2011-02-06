@@ -26,8 +26,6 @@
  ...
  */
 
-MUI.files['{controls}desktop/desktop.js'] = 'loaded';
-
 MUI.Desktop = new NamedClass('MUI.Desktop', {
 
 	Implements: [Events, Options],

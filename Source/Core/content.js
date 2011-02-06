@@ -17,8 +17,6 @@
  ...
  */
 
-MUI.files['{source}Core/content.js'] = 'loaded';
-
 MUI.Content = Object.append((MUI.Content || {}), {
 
 	Providers: {},

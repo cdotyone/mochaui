@@ -20,8 +20,6 @@
  ...
  */
 
-MUI.files['{controls}window/modal.js'] = 'loaded';
-
 MUI.Modal = new NamedClass('MUI.Modal', {
 
 	Extends: MUI.Window,

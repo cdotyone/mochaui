@@ -19,8 +19,6 @@
  ...
  */
 
-MUI.files['{controls}textbox/passshark.js'] = 'loaded';
-
 MUI.PassShark = new Class({
 
 	Implements: [Options, Events, Class.Occlude],

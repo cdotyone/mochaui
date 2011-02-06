@@ -18,8 +18,6 @@
  ...
  */
 
-MUI.files['{controls}taskbar/taskbar.js'] = 'loaded';
-
 MUI.Taskbar = (MUI.Taskbar || new NamedClass('MUI.Taskbar', {}));
 MUI.Taskbar.implement({
 

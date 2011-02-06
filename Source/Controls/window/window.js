@@ -19,8 +19,6 @@
  ...
  */
 
-MUI.files['{controls}window/window.js'] = 'loaded';
-
 MUI.Windows = Object.append((MUI.Windows || {}), {
 	indexLevel:	 100,			// Used for window z-Index
 	windowsVisible: true,		// Ctrl-Alt-Q to toggle window visibility

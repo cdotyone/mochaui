@@ -27,8 +27,6 @@
  ...
  */
 
-MUI.files['{controls}imagebutton/imagebutton.js'] = 'loaded';
-
 MUI.ImageButton = new NamedClass('MUI.ImageButton', {
 
 	Implements: [Events, Options],

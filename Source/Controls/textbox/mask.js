@@ -21,8 +21,6 @@
  ...
  */
 
-MUI.files['{controls}textbox/mask.js'] = 'loaded';
-
 // credits to Jan Kassens
 Object.append(Element.NativeEvents, {
 	'paste': 2, 'input': 2

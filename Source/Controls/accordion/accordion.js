@@ -27,8 +27,6 @@
  ...
  */
 
-MUI.files['{controls}accordion/accordion.js'] = 'loaded';
-
 MUI.Accordion = new NamedClass('MUI.Accordian', {
 
 	Implements: [Events, Options],

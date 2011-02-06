@@ -23,8 +23,6 @@
  ...
  */
 
-MUI.files['{controls}themechange/themechange.js'] = 'loaded';
-
 MUI.ThemeChange = new NamedClass('MUI.ThemeChange', {
 
 	Implements: [Events, Options],

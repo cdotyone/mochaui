@@ -26,8 +26,6 @@
  ...
  */
 
-MUI.files['{controls}selectlist/selectlist_html.js'] = 'loaded';
-
 MUI.SelectList.implement({
 
 	fromHTML: function(el){

@@ -18,8 +18,6 @@
  ...
  */
 
-MUI.files['{controls}textbox/mask.regexp.js'] = 'loaded';
-
 MUI.Mask.Regexp = new Class({
 
 	Extends : MUI.Mask,

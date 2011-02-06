@@ -37,8 +37,6 @@
  ...
  */
 
-MUI.files['{source}Core/persist.js'] = 'loaded';
-
 MUI.Persist = Object.append((MUI.Persist || {}), {
 	options: {
 		name: 'MUI',								// Name added to keys in some of the providers.
