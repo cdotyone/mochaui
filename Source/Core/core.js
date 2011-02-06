@@ -51,7 +51,7 @@ MUI.append({
 
 		themes: ['Default','Charcoal'],
 
-		css: 	['{theme}css/core.css']				// default list of css files to load, added to requirements of every control and plugin loaded
+		css:	 ['{theme}css/core.css']				// default list of css files to load, added to requirements of every control and plugin loaded
 	}
 });
 
@@ -238,12 +238,16 @@ MUI.append({
 
 	register: function(namespace, funcs, depth){
 		try{
+			if (typeof(funcs) == 'function'){
+				if (namespace) MUI.registered[namespace] = funcs;
+				return;
+			}
 			if (depth == null) depth = 4;
 			if (depth < 0) return;
 			for (var name in funcs){
 				if (name == '') continue;
 				var func = funcs[name];
-				if (typeOf(func) != 'function' || name.substr(0,1)=='_') continue;
+				if (typeOf(func) != 'function' || name.substr(0, 1) == '_') continue;
 				if (typeOf(func) == 'object'){
 					MUI.register(namespace + '.' + name, func, depth - 1);
 					return;

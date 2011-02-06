@@ -25,9 +25,7 @@
  ...
  */
 
-var Parametrics = {};
-
-Object.append(Parametrics,{
+var Parametrics = {
 
 	createwindow: function(){
 
@@ -224,4 +222,6 @@ Object.append(Parametrics,{
 			}).set(windowOptions.shadowOffset.y);
 		}
 	}
-});
+};
+
+MUI.register('Parametrics.createwindow',Parametrics.createwindow);
