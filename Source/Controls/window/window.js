@@ -420,7 +420,7 @@ MUI.Window.implement({
 						if (options.useCanvasControls) this.el.canvasControls.setStyle('visibility', 'visible');
 						else this.el.controls.setStyle('visibility', 'visible');
 						this.el.canvasHeader.setStyle('visibility', 'visible');
-						this.el.title.show();
+						this.el.title.setStyle('display', 'block');
 					}
 				};
 				showControls.delay(0, this);
@@ -431,7 +431,7 @@ MUI.Window.implement({
 				if (this.options.useCanvasControls) this.el.canvasControls.setStyle('visibility', 'hidden');
 				else this.el.controls.setStyle('visibility', 'hidden');
 				this.el.canvasHeader.setStyle('visibility', 'hidden');
-				this.el.title.hide(); // TODO: should this really hide the entire window like it does now?
+				this.el.title.setStyle('display', 'none');
 			}.bind(this));
 		}
 
