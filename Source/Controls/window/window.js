@@ -1899,7 +1899,7 @@ MUI.Window.implement({
 			MUI.Desktop.setDesktopSize();
 		}
 
-		delete MUI.erase(this.id);
+		delete MUI.erase(this.el.windowEl);
 	},
 
 	_storeOnClose: function(){

@@ -680,6 +680,7 @@ MUI.append({
 		},
 
 		empty: function(){
+			MUI.erase(this.el.content.getChildren());
 			this.el.content.empty();
 			return this;
 		},

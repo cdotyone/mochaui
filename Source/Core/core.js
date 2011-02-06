@@ -137,8 +137,16 @@ MUI.append({
 	},
 
 	erase: function(el){
-		el = this.getID(el);
-		return this.instances.erase(el);
+		var t=typeof(el);
+		if(t=='string') { this.instances.erase(el); return;}
+		if(t=='array' || el.each) { el.each(function(el) { MUI.erase(el) }); return;}
+		if(t=='element') el=$(el);
+		if(el.getChildren) {
+			this.instances.erase(MUI.getID(el));
+			MUI.erase($(el).getChildren());
+			return;
+		}
+		return this.instances.erase(MUI.getID(el));
 	},
 
 	each: function(func){

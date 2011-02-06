@@ -254,6 +254,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		if (parent.options.sortable)
 			parent.options.container.retrieve('sortables').removeItems(this.el.element);
 
+		MUI.erase(this.el.element);
 		this.el.element.destroy();
 
 		if (MUI.desktop) MUI.desktop.resizePanels();
@@ -263,7 +264,6 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		panels.removeClass('bottomPanel');
 		if (panels.length > 0) panels.getLast().addClass('bottomPanel');
 
-		MUI.erase(this.options.id);
 		this.fireEvent('close', [this]);
 		return this;
 	},
