@@ -1849,28 +1849,57 @@ MUI.Window.implement({
 	},
 
 	_doClosingJobs: function(){
-		var windowEl = this.el.windowEl;
-		windowEl.setStyle('visibility', 'hidden');
-		// Destroy throws an error in IE8
-		if (Browser.ie) windowEl.dispose();
-		else windowEl.destroy();
-		this.fireEvent('closeComplete', [this]);
+		this.el.windowEl.setStyle('visibility', 'hidden');
+		var delay = 50;
 
-		if (this.options.type != 'notification'){
-			var newFocus = MUI.Windows._getWithHighestZIndex();
-			this.focus(newFocus);
+		MUI.each(function(instance){
+			if (!instance.isTypeOf('MUI.Window')) return;
+
+			// helps release memory in chrome
+			if (instance.el.canvas){
+				instance.el.canvas.height = 0;
+				instance.el.canvas.width = 0;
+			}
+			if (instance.el.canvas){
+				instance.el.canvasControls.height = 0;
+				instance.el.canvasControls.width = 0;
+			}
+
+			if (instance.el.iframe){
+				var idoc = instance.el.iframe.contentDocument;
+				delay = idoc.getElementsByTagName("*").length * 10;
+
+				if (idoc.defaultView.MooTools){
+					if (idoc.defaultView.MooTools.version.contains("1.3")) idoc.defaultView.Browser.ie = true;
+					else idoc.defaultView.Browser.Engine.trident = true;
+				}
+
+				instance.el.iframe.src = "javascript:false";
+			}
+		});
+
+		this._killWindow.delay(delay, this);
+	},
+
+	_killWindow: function(){
+		if (Browser.ie) this.el.windowEl.dispose();
+		else this.el.windowEl.destroy();
+		this.fireEvent('closeComplete');
+
+		var count = 0;
+		MUI.each(function(instance){
+			if (instance.isTypeOf('MUI.Window')) count++;
+		});
+
+		if (this.options.type != 'notification' && count > 1) this.focus();
+		if (this.loadingWorkspace) this.windowUnload();
+		if (MUI.Dock && $(MUI.options.dock) && this.options.type == 'window'){
+			var currentButton = $(this.id + '_dockTab');
+			if (currentButton != null) MUI.Dock.dockSortables.removeItems(currentButton).destroy();
+			MUI.Desktop.setDesktopSize();
 		}
 
-		MUI.erase(this.options.id);
-		if (!MUI.desktop) return;
-		if (MUI.desktop.loadingWorkspace) MUI.desktop.loadingCallChain();
-
-		if (this.taskbar && this.options.type == 'window'){
-			var currentButton = $(this.options.id + '_taskbarTab');
-			if (currentButton) this.taskbar.sortables.removeItems(currentButton).destroy();
-			// Need to resize everything in case the taskbar becomes smaller when a tab is removed
-			MUI.desktop.setDesktopSize();
-		}
+		delete MUI.erase(this.id);
 	},
 
 	_storeOnClose: function(){
