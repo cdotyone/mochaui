@@ -17,7 +17,7 @@ Object.append(MUI.plugins, {
 
 	'coolclock':{'samples':['demo'],'description':'Cool Clock Plugin','js':['{plugin}coolclock.js','{plugin}moreskins.js','{plugin}muiclock.js'],'loadOnly':true},
 	'famfamfam':{'samples':['index'],'description':'Fam Fam Fam Icon Set Plugin','css':['{plugin}style.css'],'js':[],'loadOnly':true,paths:{'fff':'{plugin}icons/'}},
-	'fx.morpher':{'samples':['demo'],'data':['json'],'description':'Morph on Steroids Plugin','css':['{plugin}style.css']},
+	'fx.morpher':{'samples':['demo'],'data':['json'],'description':'Morph on Steroids Plugin','css':['{plugin}style.css'], js: ['{plugin}fx.morpher.js', '{plugin}demo.js']},
 	'parametrics':{'samples':['demo'],'description':'Parametrics Dialog Plugin','loadOnly':true},
 	'windowform':{'samples':['demo'],'description':'Window From Form Plugin','css':['{plugin}style.css']}
 
