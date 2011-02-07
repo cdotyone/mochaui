@@ -33,15 +33,14 @@ MUI.Calendar = new NamedClass('MUI.Calendar', {
 
 	options: {
 		id:				null,		 // id of input field to attach to,  if not found it will create a new text field
-		format:			'd/m/Y',	// date format
-
 		container:		null,		// the parent control in the document to add the control to
-		clearContainer:	false,		// should the control clear its parent container before it appends itself
+		//clearContainer:	false,	// should the control clear its parent container before it appends itself
 		drawOnInit:		true,		// true to add tree to container when control is initialized
 		cssClass:		'calendar',	// the primary css tag, added to the beginning of each css name
 		cssClasses:		{},			// ['calendar', 'prev', 'next', 'month', 'year', 'today', 'invalid', 'valid', 'inactive', 'active', 'hover', 'hilite']
 
-		blocked:		[],		  // dates are blocked
+		format:			'd/m/Y',	// date format
+		blocked:		[],			// dates are blocked
 		hilited:		[],			// the dates to hilite on the calendar
 		days:			['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'], // days of the week starting at sunday
 		direction:		0,			// -1 past, 0 past + future, 1 future
@@ -52,7 +51,13 @@ MUI.Calendar = new NamedClass('MUI.Calendar', {
 		offset:			0,			// first day of the week: 0 = sunday, 1 = monday, etc..
 		tweak:			{x: 0, y: 0},// tweak calendar positioning
 
-		value:			'',			// current date in text form
+		//valueField:		false,	// defaults to the id on this field
+		//formTitleField:	false,	// defaults to the id of this field
+		//formData:			false,	// used in conjunction with the above Fields to get/set value in an object
+
+		hasTitle:			true,
+		//formTitle:		'',		// defaults to the id of this field
+		//value:			'',		// current date in text form
 		dvalue:			new Date()  // current date in date form
 
 		// onHideStart: null,
@@ -86,101 +91,148 @@ MUI.Calendar = new NamedClass('MUI.Calendar', {
 		if (options.drawOnInit) this.draw();
 	},
 
+	getFormTitle: function(){
+		var self = this,o = this.options;
+
+		if (o.formTitle) return o.formTitle;
+		if (o.formTitleField) return MUI.getData(o.formData, o.formTitleField);
+		if (o.formData) return MUI.getData(o.formData, o.id);
+		return o.id;
+	},
+
 	draw: function(container){
 		var o = this.options;
 		if (!container) container = o.container;
 
-		// determine fields that need to be added
-		this.el.input = o.element ? o.element : $(o.id);
-		if (!this.el.input){
-			if (!o._container) return;
-			this.el.input = new Element('input', {'type':'input','maxlength':10,width:o.width});
-		} else if (!o.value && !o.dvalue) o.value = this.el.input.get('value');
-		if (!o.value && o.dvalue) o.value = this.format(o.dvalue, o.format);
-		if (o.value) this.el.input.set('value', o.value);
-		if (!o.dvalue && o.value) o.dvalue = this.unformat(o.value, o.format);
+		// look for a fieldset that contains the input field
+		var isNew = false;
+		var fs = o.element && o.element.nodeName == 'FIELDSET' ? o.element : $(o.id + '_field');
+		if (!fs){  // create it, if it does not already exist
+			fs = new Element('fieldset', {'id':o.id + '_field'});
+			isNew = true;
+		}
+		this.el.element = fs.addClass(o.cssClass).setStyles({
+			'resize':'none',
+			'position':'relative',
+			'display':'block',
+			'overflow':'hidden',
+			'height':'auto'
+		});
 
-		if (this.el.input){
-			if (this.el.input.get('tag') == 'select'){ // select elements allow the user to manually set the date via select option
-				this.el.input.addEvent('change', function(){
-					this._changed();
-				}.bind(this));
-			} else { // input (type text) elements restrict the user to only setting the date via the calendar
-				this.el.input.readOnly = true;
-				this.el.input.addEvent('focus', function(){
-					this.toggle();
-				}.bind(this));
+		var lbl = $(o.id + '_label');
+		if (o.hasTitle){
+			var tle = this.getFormTitle();
+			lbl = new Element('label', {'id':o.id + '_label'}).inject(fs);
+		} else {
+			if (lbl){
+				lbl.dispose();
+				this.el.erase('label');
 			}
+		}
+		if (lbl) this.el.label = lbl.set('text', tle).set('for', o.id);
+
+		// see if we where given an input field instead
+		var inp = o.element && o.element.nodeName == 'INPUT' ? o.element : $(o.id);
+		if (!inp){  // create input field if none given
+			if (!o._container) return;
+			inp = new Element('input', {'type':'input','id':o.id}).inject(fs);
+		}
+		this.el.input = inp.set('maxlength', 10).setStyle('width', o.width);
+
+		// determine value of input field
+		var value = o.value;
+		if (o.formData) value = MUI.getData(o.formData, (o.valueField ? o.valueField : o.id));	// get value from data if bound to a dataset
+		if (!value) value = this.el.input.get('value');											// pull value from input field if we don't have one yet
+		if (value && o.dvalue) value = this.format(o.dvalue, o.format);							// pull value from the data value field if we don't have one yet
+		inp.set('value', value);																// set the value in the input field
+		o.value = value;																		// remember the current value, so we can detect changes
+		if (!o.dvalue && value) o.dvalue = this.unformat(value, o.format);						// turn string into data value
+
+		// make sure input field is inside of the fieldset, only should happen if input field is created externally and we are attaching to it
+		var parent = inp.getParent();
+		if (parent && parent != fs){
+			inp.dispose().inject(fs);
+			fs.inject(parent);
+		}
+
+		if (inp.get('tag') == 'select'){ // select elements allow the user to manually set the date via select option
+			inp.removeEvents('change').addEvent('change', function(){
+				this._changed();
+			}.bind(this));
+		} else { // input (type text) elements restrict the user to only setting the date via the calendar
+			inp.set('readonly', true);
+			inp.removeEvents('focus').addEvent('focus', function(){
+				this.toggle();
+			}.bind(this));
 		}
 
 		this.el.button = $(o.id + '_button');
 		if (!this.el.button){
 			this.el.button = new Element('button', {'id':o.id + '_button', 'type': 'button', 'class':this._classes.calendar }).addEvent('click', function(){
 				this.toggle();
-			}.bind(this));
+			}.bind(this)).inject(inp, 'after');
 		}
 
-		this.el.element = $(o.id + '_calendar');
-		if (!this.el.element){
-			// create cal element with css styles required for proper cal functioning
-			this.el.element = new Element('div', {
-				'id':o.id + '_calendar',
-				'styles': { left: '-1000px', opacity: 0, position: 'absolute', top: '-1000px', zIndex: 1000 }
-			}).addClass(this._classes.calendar);
+		this.el.calendar = $(o.id + '_calendar');
+		if (!this.el.calendar){
+			// create calendar element with css styles required for proper cal functioning
+			this.el.calendar = new Element('div', {'id':o.id + '_calendar'}).inject(document.body);
+		}
+		this.el.calendar.setStyles({ left: '-1000px', opacity: 0, position: 'absolute', top: '-1000px', zIndex: 1000 })
+				.addClass(this._classes.calendar)
+				.empty();
 
-			// iex 6 needs a transparent iframe underneath the calendar in order to not allow select elements to render through
-			if (window.ie6){
-				this.iframe = new Element('iframe', {
-					'styles': { left: '-1000px', position: 'absolute', top: '-1000px', zIndex: 999 }
-				}).inject(document.body);
-				this.iframe.style.filter = 'progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0)';
-			}
+		// iex 6 needs a transparent iframe underneath the calendar in order to not allow select elements to render through
+		if (window.ie6){
+			this.iframe = new Element('iframe', {
+				'styles': { left: '-1000px', position: 'absolute', top: '-1000px', zIndex: 999 }
+			}).inject(document.body);
+			this.iframe.style.filter = 'progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0)';
+		}
 
-			// initialize fade method
-			this.fx = new Fx.Tween(this.el.element, {
-				onStart: function(){
-					if (this.el.element.getStyle('opacity') == 0){ // show
-						if (window.ie6) this.iframe.setStyle('display', 'block');
-						this.el.element.setStyles({'display':'block','visibility':'visible'});
-						this.fireEvent('showStart', this);
-					}
-					else this.fireEvent('hideStart', this); // hide
-				}.bind(this),
-				onComplete: function(){
-					if (this.el.element.getStyle('opacity') == 0){ // hidden
-						this.el.element.setStyles({'display':'none','visibility':'hidden'});
-						if (window.ie6) this.iframe.setStyle('display', 'none');
-						this.fireEvent('hideComplete', this);
-					}
-					else this.fireEvent('showComplete', this); // shown
+		// initialize fade method
+		this.fx = new Fx.Tween(this.el.calendar, {
+			onStart: function(){
+				if (this.el.calendar.getStyle('opacity') == 0){ // show
+					if (window.ie6) this.iframe.setStyle('display', 'block');
+					this.el.calendar.setStyles({'display':'block','visibility':'visible'});
+					this.fireEvent('showStart', this);
+				}
+				else this.fireEvent('hideStart', this); // hide
+			}.bind(this),
+			onComplete: function(){
+				if (this.el.calendar.getStyle('opacity') == 0){ // hidden
+					this.el.calendar.setStyles({'display':'none','visibility':'hidden'});
+					if (window.ie6) this.iframe.setStyle('display', 'none');
+					this.fireEvent('hideComplete', this);
+				}
+				else this.fireEvent('showComplete', this); // shown
+			}.bind(this)
+		});
+
+		// initialize drag method
+		if (window.Drag && this.options.draggable){
+			this.drag = new Drag.Move(this.el.calendar, {
+				onDrag: function(){
+					if (window.ie6) this.iframe.setStyles({ left: this.el.calendar.style.left, top: this.el.calendar.style.top });
 				}.bind(this)
 			});
-
-			// initialize drag method
-			if (window.Drag && this.options.draggable){
-				this.drag = new Drag.Move(this.el.element, {
-					onDrag: function(){
-						if (window.ie6) this.iframe.setStyles({ left: this.el.element.style.left, top: this.el.element.style.top });
-					}.bind(this)
-				});
-			}
 		}
 
 		// add to container
 		var addToContainer = function(){
 			if (typeOf(container) == 'string') container = $(container);
-			if (!container && this.el.input) container = this.el.input.getParent();
-			if (o.clearContainer) container.empty();
-
-			if (this.el.input.getParent() == null) this.el.input.inject(container);
-			if (this.el.button.getParent() == null) this.el.button.inject(this.el.input, 'after');
-			if (this.el.element.getParent() == null) this.el.element.inject(document.body);
+			if (this.el.element.getParent() == null){
+				if (o.clearContainer) container.empty();
+				this.el.element.inject(container);
+			}
 
 			Object.append(this, this._bounds()); // abs bounds of calendar
 			Object.append(this, this._values()); // valid days, months, years
 			this._rebuild();
+			return this;
 		}.bind(this);
-		if ((!this.el.input && !this.el.button && !this.el.element) || typeOf(container) == 'element') return;
+		if (!isNew || typeOf(container) == 'element') return addToContainer();
 		else window.addEvent('domready', addToContainer);
 
 		return this;
@@ -410,7 +462,7 @@ MUI.Calendar = new NamedClass('MUI.Calendar', {
 		if (o.dvalue.getDate() < o.days[0]) o.dvalue.setDate(o.days[0]);
 		if (o.dvalue.getDate() > o.days.getLast()) o.dvalue.setDate(o.days.getLast());
 
-		this.el.element.value = this.format(o.dvalue, o.format);
+		this.el.input.value = this.format(o.dvalue, o.format);
 		if (this.isVisible) this.display();
 	},
 
@@ -425,7 +477,7 @@ MUI.Calendar = new NamedClass('MUI.Calendar', {
 
 		if (o.value){
 			this.toggle(); // hide cal
-			this.el.element.focus = true;
+			this.el.input.focus = true;
 		} else { // remove active class and replace with valid
 			td.addClass(this._classes.valid);
 			td.removeClass(this._classes.active);
@@ -434,7 +486,7 @@ MUI.Calendar = new NamedClass('MUI.Calendar', {
 
 	display: function(){
 		var o = this.options;
-		var calendar = this.el.element;
+		var calendar = this.el.calendar;
 
 		// 1. header and navigation
 		calendar.empty(); // init div
@@ -672,7 +724,7 @@ MUI.Calendar = new NamedClass('MUI.Calendar', {
 	},
 
 	toggle: function(){
-		var calendar = this.el.element;
+		var calendar = this.el.calendar;
 		var o = this.options;
 
 		if (!this.fn){
@@ -813,7 +865,7 @@ MUI.Calendar = new NamedClass('MUI.Calendar', {
 
 	_values: function(){
 		var years, months, days;
-		var el = this.el.element;
+		var el = this.el.input;
 		var self = this;
 
 		if (el.get('tag') == 'select'){
