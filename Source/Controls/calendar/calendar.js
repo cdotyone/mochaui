@@ -32,8 +32,8 @@ MUI.Calendar = new NamedClass('MUI.Calendar', {
 	Implements: [ Events, Options ],
 
 	options: {
-		id:				null,		 // id of input field to attach to,  if not found it will create a new text field
-		container:		null,		// the parent control in the document to add the control to
+		//id:				null,	// id of input field to attach to,  if not found it will create a new text field
+		//container:		null,	// the parent control in the document to add the control to
 		//clearContainer:	false,	// should the control clear its parent container before it appends itself
 		drawOnInit:		true,		// true to add tree to container when control is initialized
 		cssClass:		'calendar',	// the primary css tag, added to the beginning of each css name
@@ -92,8 +92,7 @@ MUI.Calendar = new NamedClass('MUI.Calendar', {
 	},
 
 	getFormTitle: function(){
-		var self = this,o = this.options;
-
+		var o = this.options;
 		if (o.formTitle) return o.formTitle;
 		if (o.formTitleField) return MUI.getData(o.formData, o.formTitleField);
 		if (o.formData) return MUI.getData(o.formData, o.id);
@@ -134,7 +133,6 @@ MUI.Calendar = new NamedClass('MUI.Calendar', {
 		// see if we where given an input field instead
 		var inp = o.element && o.element.nodeName == 'INPUT' ? o.element : $(o.id);
 		if (!inp){  // create input field if none given
-			if (!o._container) return;
 			inp = new Element('input', {'type':'input','id':o.id}).inject(fs);
 		}
 		this.el.input = inp.set('maxlength', 10).setStyle('width', o.width);

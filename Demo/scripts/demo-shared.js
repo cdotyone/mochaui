@@ -292,18 +292,16 @@ Object.append(Demo, {
 		var ftypes = ['fixed.phone', 'fixed.phone-us', 'fixed.cpf', 'fixed.cnpj', 'fixed.date', 'fixed.date-us', 'fixed.cep', 'fixed.time', 'fixed.cc'];
 		Object.append(ftypes, ['reverse.integer', 'reverse.decimal', 'reverse.decimal-us', 'reverse.reais', 'reverse.dollar', 'regexp.ip', 'regexp.email', 'password']);
 
-		var mtype;
+		var mtype,div;
 		ftypes.each(function(t){
 			var s = t.split('.');
 			var ttype = s[0].capitalize();
 			if (mtype != ttype){
 				mtype = ttype;
-				window.addEvent('domready', function(){
-					new Element('div', {'text': ttype, 'id': node.value + ttype}).inject(container);
-				});
+				div = new Element('div', {'text': ttype, 'id': node.value + ttype}).inject(container);
 			}
 			if (s.length < 2) s[1] = ttype;
-			MUI.create({control: 'MUI.TextBox', container: node.value + ttype, id: node.value + t, formTitle: s[1].capitalize(), maskType: t, autoTab: true});
+			MUI.create({control: 'MUI.TextBox', container: div, id: node.value + t, formTitle: s[1].capitalize(), maskType: t, autoTab: true});
 		});
 	},
 

@@ -31,21 +31,23 @@ MUI.TextBox = new NamedClass('MUI.TextBox', {
 	Implements: [Events, Options],
 
 	options: {
-		id:				''			// id of the primary element, and id os control that is registered with mocha
-		,container:			null		// the parent control in the document to add the control to
-		,drawOnInit:		true		// true to add textbox to container when control is initialized
-		,cssClass:			'form'		// the primary css tag
-		,type:				'text'		// this is a text field
+		//id:				'',			// id of the primary element, and id os control that is registered with mocha
+		//container:		null,		// the parent control in the document to add the control to
+		//clearContainer:	false,		// should the control clear its parent container before it appends itself
+		drawOnInit:			true,		// true to add textbox to container when control is initialized
+		cssClass:			'form',		// the primary css tag
+		type:				'text',		// this is a text field
 
-		,maskType:			'none'		// type of mask to apply  ['Fixed','Regexp','Reverse']
-		,maskOptions:		{}			// the field mask
+		maskType:			'none',		// type of mask to apply  ['Fixed','Regexp','Reverse']
+		maskOptions:		{},			// the field mask
 
-		,valueField:		false		// defaults to the id on this field
-		,formTitleField:	false		// defaults to the id of this field
-		,formData:			false		// used in conjunction with the above Fields to get/set value in an object
+		//valueField:		false,		// defaults to the id on this field
+		//formTitleField:	false,		// defaults to the id of this field
+		//formData:			false,		// used in conjunction with the above Fields to get/set value in an object
 
-		,formTitle:			''			// defaults to the id of this field
-		,value:				''			// the currently textbox's value
+		hasTitle:			true
+		//formTitle:		'',		// defaults to the id of this field
+		//value:			'',		// current date in text form
 	},
 
 	initialize: function(options){
@@ -59,14 +61,73 @@ MUI.TextBox = new NamedClass('MUI.TextBox', {
 
 		if (options.maskType.capitalize() == 'Password') options.type = 'password';
 
-		if(options.drawOnInit && options.container != null) this.draw();
+		if (options.drawOnInit) this.draw();
+	},
+
+	draw: function(container){
+		// todo: need way to create all elements externally
+		// todo: need way to allow other controls know the main element is id+_field and is a fieldset
+		// todo: need to have all elements moved to .el
+		// todo: need to make domready adding to container same as other controls
+		var o = this.options;
+		if (!container) container = o.container;
+
+		// look for a fieldset that contains the input field
+		var isNew = false;
+		var fs = o.element && o.element.nodeName == 'FIELDSET' ? o.element : $(o.id + '_field');
+		if (!fs){  // create it, if it does not already exist
+			fs = new Element('fieldset', {'id':o.id + '_field'});
+			isNew = true;
+		}
+		this.el.element = fs.addClass(o.cssClass);
+
+		var lbl = $(o.id + '_label');
+		if (o.hasTitle){
+			var tle = this.getFormTitle();
+			lbl = new Element('label', {'id':o.id + '_label'}).inject(fs);
+		} else {
+			if (lbl){
+				lbl.dispose();
+				this.el.erase('label');
+			}
+		}
+		if (lbl) this.el.label = lbl.set('text', tle).set('for', o.id);
+
+		// see if we where given an input field instead
+		var inp = o.element && o.element.nodeName == 'INPUT' ? o.element : $(o.id);
+		if (!inp){  // create input field if none given
+			inp = new Element('input', {'type':'input','id':o.id}).inject(fs);
+		}
+		this.el.input = inp.set('maxlength', 10).set('type',o.type).setStyle('width', o.width).set('class', o.cssClass);
+
+		// determine value of input field
+		var value = o.value;
+		if (o.formData) value = MUI.getData(o.formData, (o.valueField ? o.valueField : o.id));	// get value from data if bound to a dataset
+		if (!value) value = this.el.input.get('value');											// pull value from input field if we don't have one yet
+		inp.set('value', value);																// set the value in the input field
+		o.value = value;																		// remember the current value, so we can detect changes
+
+		// add to container
+		var addToContainer = function(){
+			if (typeOf(container) == 'string') container = $(container);
+			if (this.el.element.getParent() == null){
+				if (o.clearContainer) container.empty();
+				this.el.element.inject(container);
+			}
+
+			this.checkForMask();
+			return this;
+		}.bind(this);
+		if (!isNew || typeOf(container) == 'element') return addToContainer();
+		else window.addEvent('domready', addToContainer);
+
+		return this;
 	},
 
 	checkForMask: function(){
-		var self = this;
-		var o = self.options;
+		var o = this.options;
 
-		if (o.maskType != 'none' && (!MUI.Mask || !MUI.Mask[o.maskType]) && self.element){
+		if (o.maskType != 'none' && (!MUI.Mask || !MUI.Mask[o.maskType]) && this.el.input){
 			o.maskType = o.maskType.camelCase().capitalize();
 
 			if (o.maskType == 'Password'){
@@ -74,8 +135,8 @@ MUI.TextBox = new NamedClass('MUI.TextBox', {
 					onload: function(){
 						var options = Object.clone(o.maskOptions);
 						options.maskType = o.maskType.toLowerCase();
-						new MUI.PassShark(self.element, options);
-					}
+						new MUI.PassShark(this.el.input, options);
+					}.bind(this)
 				});
 			} else {
 				new MUI.Require({js: ['{controls}textbox/mask.js'],
@@ -83,15 +144,15 @@ MUI.TextBox = new NamedClass('MUI.TextBox', {
 						new MUI.Require({
 							js: ['{controls}textbox/mask.' + o.maskType.split('.')[0].toLowerCase() + '.js'],
 							onload: function(){
-								var o = self.options;
+								var o = this.options;
 								var options = Object.clone(o.maskOptions);
 								options.maskType = o.maskType.toLowerCase();
-								var klass = self.getMaskClassOptions(o.maskType);
+								var klass = this.getMaskClassOptions(o.maskType);
 								if (!klass) return;
-								new klass(options).link(self.element);
-							}
+								new klass(options).link(this.el.input);
+							}.bind(this)
 						});
-					}
+					}.bind(this)
 				});
 			}
 		}
@@ -105,87 +166,27 @@ MUI.TextBox = new NamedClass('MUI.TextBox', {
 		return (classNames[1] ? MUI.Mask[name][classNames[1].camelCase().capitalize()] : MUI.Mask[name]);
 	},
 
-	getFieldTitle: function(){
-		var self = this;
-		var o = self.options;
-
+	getFormTitle: function(){
+		var o = this.options;
+		if (o.formTitle) return o.formTitle;
 		if (o.formTitleField) return MUI.getData(o.formData, o.formTitleField);
 		if (o.formData) return MUI.getData(o.formData, o.id);
-		if (o.formTitle) return o.formTitle;
 		return o.id;
 	},
 
 	fromHTML: function(){
-		var self = this;
-		var o = self.options;
+		var o = this.options;
 
 		var inp = $(o.id);
-		if (!inp) return self;
-		self.element = inp;
+		if (!inp) return this;
+		this.el.input = inp;
 
 		if (inp.get('type')) o.type = inp.get('type');
 		o.value = inp.get('defaultValue');
 		if (inp.get('class')) o.cssClass = inp.get('class');
 
-		self.draw();
-		return self;
-	},
-
-	draw: function(containerEl){
-		// todo: need way to create all elements externally
-		// todo: need way to allow other controls know the main element is id+_field and is a fieldset
-		// todo: need to have all elements moved to .el
-		// todo: need to make domready adding to container same as other controls
-		
-		var self = this;
-		var o = self.options;
-
-		var isNew = false;
-		var inp = $(o.id);
-		if (!inp){
-			self._wrapper = new Element('fieldset', {'id':o.id});
-
-			var tle = self.getFieldTitle();
-			if (!tle) tle = o.id;
-			self._label = new Element('label', {'text':tle}).inject(self._wrapper);
-
-			inp = new Element('input', {'id':o.id,'type':o.type}).inject(self._wrapper);
-			isNew = true;
-		}
-		if (o.cssClass){
-			if (self._wrapper) self._wrapper.set('class', o.cssClass);
-			inp.set('class', o.cssClass);
-		}
-
-		self.element = inp;
-
-		var value = o.value;
-		if (o.valueField) value = MUI.getData(o.formData, o.valueField);
-		else if (o.formData) value = MUI.getData(o.formData, o.id);
-		inp.set('value', value);
-
-		self.checkForMask();
-		if (!isNew) return inp;
-
-		window.addEvent('domready', function(){
-			// determine parent container object
-			if (!o._container && typeof(o.container) == 'string'){
-				var instance = MUI.get(o.container);
-				if (instance){
-					if (instance.el.content){
-						instance.el.content.setStyle('padding', '0');
-						o._container = instance.el.content;
-					}
-				}
-				if (!o._container) o._container = $(o.container);
-			}
-			if (!o._container) o._container = $(containerEl ? containerEl : o.container);
-			if (!o._container) return;
-
-			self._wrapper.inject(o._container);
-		});
-
-		return inp;
+		this.draw();
+		return this;
 	}
 
 });
