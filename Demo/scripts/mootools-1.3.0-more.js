@@ -1,6 +1,6 @@
 // MooTools: the javascript framework.
-// Load this file's selection again by visiting: http://mootools.net/more/e53fa62a10c54221de0617e367b83eb5 
-// Or build this file again with packager using: packager build More/More More/Class.Refactor More/Class.Binds More/Class.Occlude More/Chain.Wait More/Array.Extras More/Date More/Date.Extras More/Number.Format More/Object.Extras More/String.Extras More/String.QueryString More/URI More/URI.Relative More/Hash More/Fx.Elements More/Fx.Accordion More/Fx.Move More/Fx.Reveal More/Fx.Scroll More/Fx.Slide More/Drag More/Drag.Move More/Slider More/Sortables More/Request.JSONP More/Request.Queue More/Request.Periodical More/Assets More/Color More/Mask More/Scroller More/Tips More/Spinner More/Locale More/Locale.Set.From More/Locale.en-US.Date More/Locale.en-US.Form.Validator
+// Load this file's selection again by visiting: http://mootools.net/more/f04c978bcdfd762ce3cc0d21a61c819d
+// Or build this file again with packager using: packager build More/More More/Events.Pseudos More/Class.Refactor More/Class.Binds More/Class.Occlude More/Chain.Wait More/Array.Extras More/Date More/Date.Extras More/Number.Format More/Object.Extras More/String.Extras More/String.QueryString More/URI More/URI.Relative More/Hash More/Hash.Extras More/Element.Forms More/Elements.From More/Element.Event.Pseudos More/Element.Event.Pseudos.Keys More/Element.Delegation More/Element.Measure More/Element.Pin More/Element.Position More/Element.Shortcuts More/Form.Request More/Form.Request.Append More/Form.Validator More/Form.Validator.Inline More/Form.Validator.Extras More/OverText More/Fx.Elements More/Fx.Accordion More/Fx.Move More/Fx.Reveal More/Fx.Scroll More/Fx.Slide More/Fx.SmoothScroll More/Fx.Sort More/Drag More/Drag.Move More/Slider More/Sortables More/Request.JSONP More/Request.Queue More/Request.Periodical More/Assets More/Color More/Group More/Hash.Cookie More/IframeShim More/HtmlTable More/HtmlTable.Zebra More/HtmlTable.Sort More/HtmlTable.Select More/Keyboard More/Keyboard.Extras More/Mask More/Scroller More/Tips More/Spinner More/Locale More/Locale.Set.From More/Locale.en-US.Date More/Locale.en-US.Form.Validator More/Locale.en-US.Number More/Locale.ar.Date More/Locale.ar.Form.Validator More/Locale.ca-CA.Date More/Locale.ca-CA.Form.Validator More/Locale.cs-CZ.Date More/Locale.cs-CZ.Form.Validator More/Locale.da-DK.Date More/Locale.da-DK.Form.Validator More/Locale.de-CH.Date More/Locale.de-CH.Form.Validator More/Locale.de-DE.Date More/Locale.de-DE.Form.Validator More/Locale.de-DE.Number More/Locale.en-GB.Date More/Locale.es-AR.Date More/Locale.es-AR.Form.Validator More/Locale.es-ES.Date More/Locale.es-ES.Form.Validator More/Locale.et-EE.Date More/Locale.et-EE.Form.Validator More/Locale.EU.Number More/Locale.fa.Date More/Locale.fa.Form.Validator More/Locale.fi-FI.Date More/Locale.fi-FI.Form.Validator More/Locale.fi-FI.Number More/Locale.fr-FR.Date More/Locale.fr-FR.Form.Validator More/Locale.fr-FR.Number More/Locale.he-IL.Date More/Locale.he-IL.Form.Validator More/Locale.he-IL.Number More/Locale.hu-HU.Date More/Locale.hu-HU.Form.Validator More/Locale.it-IT.Date More/Locale.it-IT.Form.Validator More/Locale.ja-JP.Date More/Locale.ja-JP.Form.Validator More/Locale.ja-JP.Number More/Locale.nl-NL.Date More/Locale.nl-NL.Form.Validator More/Locale.nl-NL.Number More/Locale.no-NO.Date More/Locale.no-NO.Form.Validator More/Locale.pl-PL.Date More/Locale.pl-PL.Form.Validator More/Locale.pt-BR.Date More/Locale.pt-BR.Form.Validator More/Locale.pt-PT.Date More/Locale.pt-PT.Form.Validator More/Locale.ru-RU-unicode.Date More/Locale.ru-RU-unicode.Form.Validator More/Locale.si-SI.Date More/Locale.si-SI.Form.Validator More/Locale.sv-SE.Date More/Locale.sv-SE.Form.Validator More/Locale-uk-UA.Date More/Locale.uk-UA.Form.Validator More/Locale.zh-CH.Date More/Locale.zh-CH.Form.Validator
 /*
 ---
 
@@ -33,6 +33,137 @@ MooTools.More = {
 	'version': '1.3.0.1',
 	'build': '6dce99bed2792dffcbbbb4ddc15a1fb9a41994b5'
 };
+
+
+/*
+---
+
+name: Events.Pseudos
+
+description: Adds the functionallity to add pseudo events
+
+license: MIT-style license
+
+authors:
+  - Arian Stolwijk
+
+requires: [Core/Class.Extras, Core/Slick.Parser, More/MooTools.More]
+
+provides: [Events.Pseudos]
+
+...
+*/
+
+Events.Pseudos = function(pseudos, addEvent, removeEvent){
+
+	var storeKey = 'monitorEvents:';
+
+	var storageOf = function(object){
+
+		return {
+			store: object.store ? function(key, value){
+				object.store(storeKey + key, value);
+			} : function(key, value){
+				(object.$monitorEvents || (object.$monitorEvents = {}))[key] = value;
+			},
+			retrieve: object.retrieve ? function(key, dflt){
+				return object.retrieve(storeKey + key, dflt);
+			} : function(key, dflt){
+				if (!object.$monitorEvents) return dflt;
+				return object.$monitorEvents[key] || dflt;
+			}
+		};
+	};
+
+
+	var splitType = function(type){
+		if (type.indexOf(':') == -1) return null;
+
+		var parsed = Slick.parse(type).expressions[0][0],
+			parsedPseudos = parsed.pseudos;
+
+		return (pseudos && pseudos[parsedPseudos[0].key]) ? {
+			event: parsed.tag,
+			value: parsedPseudos[0].value,
+			pseudo: parsedPseudos[0].key,
+			original: type
+		} : null;
+	};
+
+
+	return {
+
+		addEvent: function(type, fn, internal){
+			var split = splitType(type);
+			if (!split) return addEvent.call(this, type, fn, internal);
+
+			var storage = storageOf(this),
+				events = storage.retrieve(type, []),
+				pseudoArgs = Array.from(pseudos[split.pseudo]),
+				proxy = pseudoArgs[1];
+
+			var self = this;
+			var monitor = function(){
+				pseudoArgs[0].call(self, split, fn, arguments, proxy);
+			};
+
+			events.include({event: fn, monitor: monitor});
+			storage.store(type, events);
+
+			var eventType = split.event;
+			if (proxy && proxy[eventType]) eventType = proxy[eventType].base;
+
+			addEvent.call(this, type, fn, internal);
+			return addEvent.call(this, eventType, monitor, internal);
+		},
+
+		removeEvent: function(type, fn){
+			var split = splitType(type);
+			if (!split) return removeEvent.call(this, type, fn);
+
+			var storage = storageOf(this),
+				events = storage.retrieve(type),
+				pseudoArgs = Array.from(pseudos[split.pseudo]),
+				proxy = pseudoArgs[1];
+
+			if (!events) return this;
+
+			var eventType = split.event;
+			if (proxy && proxy[eventType]) eventType = proxy[eventType].base;
+
+			removeEvent.call(this, type, fn);
+			events.each(function(monitor, i){
+				if (!fn || monitor.event == fn) removeEvent.call(this, eventType, monitor.monitor);
+				delete events[i];
+			}, this);
+
+			storage.store(type, events);
+			return this;
+		}
+
+	};
+
+};
+
+(function(){
+
+var pseudos = {
+
+	once: function(split, fn, args){
+		fn.apply(this, args);
+		this.removeEvent(split.original, fn);
+	}
+
+};
+
+Events.definePseudo = function(key, fn){
+	pseudos[key] = fn;
+};
+
+var proto = Events.prototype;
+Events.implement(Events.Pseudos(pseudos, proto.addEvent, proto.removeEvent));
+
+})();
 
 
 /*
@@ -1994,6 +2125,3313 @@ Hash.alias({indexOf: 'keyOf', contains: 'hasValue'});
 /*
 ---
 
+script: Hash.Extras.js
+
+name: Hash.Extras
+
+description: Extends the Hash Type to include getFromPath which allows a path notation to child elements.
+
+license: MIT-style license
+
+authors:
+  - Aaron Newton
+
+requires:
+  - /Hash
+  - /Object.Extras
+
+provides: [Hash.Extras]
+
+...
+*/
+
+Hash.implement({
+
+	getFromPath: function(notation){
+		return Object.getFromPath(this, notation);
+	},
+
+	cleanValues: function(method){
+		return new Hash(Object.cleanValues(this, method));
+	},
+
+	run: function(){
+		Object.run(arguments);
+	}
+
+});
+
+
+/*
+---
+
+script: Element.Forms.js
+
+name: Element.Forms
+
+description: Extends the Element native object to include methods useful in managing inputs.
+
+license: MIT-style license
+
+authors:
+  - Aaron Newton
+
+requires:
+  - Core/Element
+  - /String.Extras
+  - /MooTools.More
+
+provides: [Element.Forms]
+
+...
+*/
+
+Element.implement({
+
+	tidy: function(){
+		this.set('value', this.get('value').tidy());
+	},
+
+	getTextInRange: function(start, end){
+		return this.get('value').substring(start, end);
+	},
+
+	getSelectedText: function(){
+		if (this.setSelectionRange) return this.getTextInRange(this.getSelectionStart(), this.getSelectionEnd());
+		return document.selection.createRange().text;
+	},
+
+	getSelectedRange: function(){
+		if (this.selectionStart != null){
+			return {
+				start: this.selectionStart,
+				end: this.selectionEnd
+			};
+		}
+
+		var pos = {
+			start: 0,
+			end: 0
+		};
+		var range = this.getDocument().selection.createRange();
+		if (!range || range.parentElement() != this) return pos;
+		var duplicate = range.duplicate();
+
+		if (this.type == 'text'){
+			pos.start = 0 - duplicate.moveStart('character', -100000);
+			pos.end = pos.start + range.text.length;
+		} else {
+			var value = this.get('value');
+			var offset = value.length;
+			duplicate.moveToElementText(this);
+			duplicate.setEndPoint('StartToEnd', range);
+			if (duplicate.text.length) offset -= value.match(/[\n\r]*$/)[0].length;
+			pos.end = offset - duplicate.text.length;
+			duplicate.setEndPoint('StartToStart', range);
+			pos.start = offset - duplicate.text.length;
+		}
+		return pos;
+	},
+
+	getSelectionStart: function(){
+		return this.getSelectedRange().start;
+	},
+
+	getSelectionEnd: function(){
+		return this.getSelectedRange().end;
+	},
+
+	setCaretPosition: function(pos){
+		if (pos == 'end') pos = this.get('value').length;
+		this.selectRange(pos, pos);
+		return this;
+	},
+
+	getCaretPosition: function(){
+		return this.getSelectedRange().start;
+	},
+
+	selectRange: function(start, end){
+		if (this.setSelectionRange){
+			this.focus();
+			this.setSelectionRange(start, end);
+		} else {
+			var value = this.get('value');
+			var diff = value.substr(start, end - start).replace(/\r/g, '').length;
+			start = value.substr(0, start).replace(/\r/g, '').length;
+			var range = this.createTextRange();
+			range.collapse(true);
+			range.moveEnd('character', start + diff);
+			range.moveStart('character', start);
+			range.select();
+		}
+		return this;
+	},
+
+	insertAtCursor: function(value, select){
+		var pos = this.getSelectedRange();
+		var text = this.get('value');
+		this.set('value', text.substring(0, pos.start) + value + text.substring(pos.end, text.length));
+		if (select !== false) this.selectRange(pos.start, pos.start + value.length);
+		else this.setCaretPosition(pos.start + value.length);
+		return this;
+	},
+
+	insertAroundCursor: function(options, select){
+		options = Object.append({
+			before: '',
+			defaultMiddle: '',
+			after: ''
+		}, options);
+
+		var value = this.getSelectedText() || options.defaultMiddle;
+		var pos = this.getSelectedRange();
+		var text = this.get('value');
+
+		if (pos.start == pos.end){
+			this.set('value', text.substring(0, pos.start) + options.before + value + options.after + text.substring(pos.end, text.length));
+			this.selectRange(pos.start + options.before.length, pos.end + options.before.length + value.length);
+		} else {
+			var current = text.substring(pos.start, pos.end);
+			this.set('value', text.substring(0, pos.start) + options.before + current + options.after + text.substring(pos.end, text.length));
+			var selStart = pos.start + options.before.length;
+			if (select !== false) this.selectRange(selStart, selStart + current.length);
+			else this.setCaretPosition(selStart + text.length);
+		}
+		return this;
+	}
+
+});
+
+
+/*
+---
+
+script: Elements.From.js
+
+name: Elements.From
+
+description: Returns a collection of elements from a string of html.
+
+license: MIT-style license
+
+authors:
+  - Aaron Newton
+
+requires:
+  - Core/String
+  - Core/Element
+  - /MooTools.More
+
+provides: [Elements.from, Elements.From]
+
+...
+*/
+
+Elements.from = function(text, excludeScripts){
+	if (excludeScripts || excludeScripts == null) text = text.stripScripts();
+
+	var container, match = text.match(/^\s*<(t[dhr]|tbody|tfoot|thead)/i);
+
+	if (match){
+		container = new Element('table');
+		var tag = match[1].toLowerCase();
+		if (['td', 'th', 'tr'].contains(tag)){
+			container = new Element('tbody').inject(container);
+			if (tag != 'tr') container = new Element('tr').inject(container);
+		}
+	}
+
+	return (container || new Element('div')).set('html', text).getChildren();
+};
+
+
+/*
+---
+
+name: Element.Event.Pseudos
+
+description: Adds the functionality to add pseudo events for Elements
+
+license: MIT-style license
+
+authors:
+  - Arian Stolwijk
+
+requires: [Core/Element.Event, Events.Pseudos]
+
+provides: [Element.Event.Pseudos]
+
+...
+*/
+
+(function(){
+
+var pseudos = {
+
+	once: function(split, fn, args){
+		fn.apply(this, args);
+		this.removeEvent(split.original, fn);
+	}
+
+};
+
+Event.definePseudo = function(key, fn, proxy){
+	pseudos[key] = [fn, proxy];
+};
+
+var proto = Element.prototype;
+[Element, Window, Document].invoke('implement', Events.Pseudos(pseudos, proto.addEvent, proto.removeEvent));
+
+})();
+
+
+/*
+---
+
+name: Element.Event.Pseudos.Keys
+
+description: Adds functionallity fire events if certain keycombinations are pressed
+
+license: MIT-style license
+
+authors:
+  - Arian Stolwijk
+
+requires: [Element.Event.Pseudos]
+
+provides: [Element.Event.Pseudos.Keys]
+
+...
+*/
+
+(function(){
+
+var keysStoreKey = '$moo:keys-pressed',
+	keysKeyupStoreKey = '$moo:keys-keyup';
+
+
+Event.definePseudo('keys', function(split, fn, args){
+
+	var event = args[0],
+		keys = [],
+		pressed = this.retrieve(keysStoreKey, []);
+
+	keys.append(split.value.replace('++', function(){
+		keys.push('+'); // shift++ and shift+++a
+		return '';
+	}).split('+'));
+
+	pressed.include(event.key);
+
+	if (keys.every(function(key){
+		return pressed.contains(key);
+	})) fn.apply(this, args);
+
+	this.store(keysStoreKey, pressed);
+
+	if (!this.retrieve(keysKeyupStoreKey)){
+		var keyup = function(event){
+			(function(){
+				pressed = this.retrieve(keysStoreKey, []).erase(event.key);
+				this.store(keysStoreKey, pressed);
+			}).delay(0, this); // Fix for IE
+		};
+		this.store(keysKeyupStoreKey, keyup).addEvent('keyup', keyup);
+	}
+
+});
+
+Object.append(Event.Keys, {
+	'shift': 16,
+	'control': 17,
+	'alt': 18,
+	'capslock': 20,
+	'pageup': 33,
+	'pagedown': 34,
+	'end': 35,
+	'home': 36,
+	'numlock': 144,
+	'scrolllock': 145,
+	';': 186,
+	'=': 187,
+	',': 188,
+	'-': Browser.firefox ? 109 : 189,
+	'.': 190,
+	'/': 191,
+	'`': 192,
+	'[': 219,
+	'\\': 220,
+	']': 221,
+	"'": 222,
+	'+': 107
+});
+
+})();
+
+
+/*
+---
+
+script: Element.Delegation.js
+
+name: Element.Delegation
+
+description: Extends the Element native object to include the delegate method for more efficient event management.
+
+credits:
+  - "Event checking based on the work of Daniel Steigerwald. License: MIT-style license. Copyright: Copyright (c) 2008 Daniel Steigerwald, daniel.steigerwald.cz"
+
+license: MIT-style license
+
+authors:
+  - Aaron Newton
+  - Daniel Steigerwald
+
+requires: [/MooTools.More, Element.Event.Pseudos]
+
+provides: [Element.Delegation]
+
+...
+*/
+
+
+Event.definePseudo('relay', function(split, fn, args, proxy){
+	var event = args[0];
+	var check = proxy ? proxy.condition : null;
+
+	for (var target = event.target; target && target != this; target = target.parentNode){
+		var finalTarget = document.id(target);
+		if (Slick.match(target, split.value) && (!check || check.call(finalTarget, event))){
+			if (finalTarget) fn.call(finalTarget, event, finalTarget);
+			return;
+		}
+	}
+
+}, {
+	mouseenter: {
+		base: 'mouseover',
+		condition: Element.Events.mouseenter.condition
+	},
+	mouseleave: {
+		base: 'mouseout',
+		condition: Element.Events.mouseleave.condition
+	}
+});
+
+
+/*
+---
+
+script: Element.Measure.js
+
+name: Element.Measure
+
+description: Extends the Element native object to include methods useful in measuring dimensions.
+
+credits: "Element.measure / .expose methods by Daniel Steigerwald License: MIT-style license. Copyright: Copyright (c) 2008 Daniel Steigerwald, daniel.steigerwald.cz"
+
+license: MIT-style license
+
+authors:
+  - Aaron Newton
+
+requires:
+  - Core/Element.Style
+  - Core/Element.Dimensions
+  - /MooTools.More
+
+provides: [Element.Measure]
+
+...
+*/
+
+(function(){
+
+var getStylesList = function(styles, planes){
+	var list = [];
+	Object.each(planes, function(directions){
+		Object.each(directions, function(edge){
+			styles.each(function(style){
+				list.push(style + '-' + edge + (style == 'border' ? '-width' : ''));
+			});
+		});
+	});
+	return list;
+};
+
+var calculateEdgeSize = function(edge, styles){
+	var total = 0;
+	Object.each(styles, function(value, style){
+		if (style.test(edge)) total = total + value.toInt();
+	});
+	return total;
+};
+
+
+Element.implement({
+
+	measure: function(fn){
+		var visibility = function(el){
+			return !!(!el || el.offsetHeight || el.offsetWidth);
+		};
+		if (visibility(this)) return fn.apply(this);
+		var parent = this.getParent(),
+			restorers = [],
+			toMeasure = [];
+		while (!visibility(parent) && parent != document.body){
+			toMeasure.push(parent.expose());
+			parent = parent.getParent();
+		}
+		var restore = this.expose();
+		var result = fn.apply(this);
+		restore();
+		toMeasure.each(function(restore){
+			restore();
+		});
+		return result;
+	},
+
+	expose: function(){
+		if (this.getStyle('display') != 'none') return function(){};
+		var before = this.style.cssText;
+		this.setStyles({
+			display: 'block',
+			position: 'absolute',
+			visibility: 'hidden'
+		});
+		return function(){
+			this.style.cssText = before;
+		}.bind(this);
+	},
+
+	getDimensions: function(options){
+		options = Object.merge({computeSize: false}, options);
+		var dim = {x: 0, y: 0};
+
+		var getSize = function(el, options){
+			return (options.computeSize) ? el.getComputedSize(options) : el.getSize();
+		};
+
+		var parent = this.getParent('body');
+
+		if (parent && this.getStyle('display') == 'none'){
+			dim = this.measure(function(){
+				return getSize(this, options);
+			});
+		} else if (parent){
+			try { //safari sometimes crashes here, so catch it
+				dim = getSize(this, options);
+			}catch(e){}
+		}
+
+		return Object.append(dim, (dim.x || dim.x === 0) ? {
+				width: dim.x,
+				height: dim.y
+			} : {
+				x: dim.width,
+				y: dim.height
+			}
+		);
+	},
+
+	getComputedSize: function(options){
+		//<1.2compat>
+		//legacy support for my stupid spelling error
+		if (options && options.plains) options.planes = options.plains;
+		//</1.2compat>
+
+		options = Object.merge({
+			styles: ['padding','border'],
+			planes: {
+				height: ['top','bottom'],
+				width: ['left','right']
+			},
+			mode: 'both'
+		}, options);
+
+		var styles = {},
+			size = {width: 0, height: 0};
+
+		if (options.mode == 'vertical'){
+			delete size.width;
+			delete options.planes.width;
+		} else if (options.mode == 'horizontal'){
+			delete size.height;
+			delete options.planes.height;
+		}
+
+
+		getStylesList(options.styles, options.planes).each(function(style){
+			styles[style] = this.getStyle(style).toInt();
+		}, this);
+
+		Object.each(options.planes, function(edges, plane){
+
+			var capitalized = plane.capitalize();
+			styles[plane] = this.getStyle(plane).toInt();
+			size['total' + capitalized] = styles[plane];
+
+			edges.each(function(edge){
+				var edgesize = calculateEdgeSize(edge, styles);
+				size['computed' + edge.capitalize()] = edgesize;
+				size['total' + capitalized] += edgesize;
+			});
+
+		}, this);
+
+		return Object.append(size, styles);
+	}
+
+});
+
+})();
+
+
+/*
+---
+
+script: Element.Pin.js
+
+name: Element.Pin
+
+description: Extends the Element native object to include the pin method useful for fixed positioning for elements.
+
+license: MIT-style license
+
+authors:
+  - Aaron Newton
+
+requires:
+  - Core/Element.Event
+  - Core/Element.Dimensions
+  - Core/Element.Style
+  - /MooTools.More
+
+provides: [Element.Pin]
+
+...
+*/
+
+(function(){
+	var supportsPositionFixed = false,
+		supportTested = false;
+
+	var testPositionFixed = function(){
+		var test = new Element('div').setStyles({
+			position: 'fixed',
+			top: 0,
+			right: 0
+		}).inject(document.body);
+		supportsPositionFixed = (test.offsetTop === 0);
+		test.dispose();
+		supportTested = true;
+	}
+
+	Element.implement({
+
+		pin: function(enable, forceScroll){
+			if (!supportTested) testPositionFixed();
+			if (this.getStyle('display') == 'none') return this;
+
+			var pinnedPosition,
+				scroll = window.getScroll();
+
+			if (enable !== false){
+				pinnedPosition = this.getPosition(supportsPositionFixed ? document.body : this.getOffsetParent());
+				if (!this.retrieve('pin:_pinned')){
+					var currentPosition = {
+						top: pinnedPosition.y - scroll.y,
+						left: pinnedPosition.x - scroll.x
+					};
+
+					if (supportsPositionFixed && !forceScroll){
+						this.setStyle('position', 'fixed').setStyles(currentPosition);
+					} else {
+
+						var parent = this.getOffsetParent(),
+							position = this.getPosition(parent),
+							styles = this.getStyles('left', 'top');
+
+						if (parent && styles.left == 'auto' || styles.top == 'auto') this.setPosition(position);
+						if (this.getStyle('position') == 'static') this.setStyle('position', 'absolute');
+
+						position = {
+							x: styles.left.toInt() - scroll.x,
+							y: styles.top.toInt() - scroll.y
+						};
+
+						var scrollFixer = function(){
+							if (!this.retrieve('pin:_pinned')) return;
+							var scroll = window.getScroll();
+							this.setStyles({
+								left: position.x + scroll.x,
+								top: position.y + scroll.y
+							});
+						}.bind(this);
+
+						this.store('pin:_scrollFixer', scrollFixer);
+						window.addEvent('scroll', scrollFixer);
+					}
+					this.store('pin:_pinned', true);
+				}
+
+			} else {
+				if (!this.retrieve('pin:_pinned')) return this;
+
+				var parent = this.getParent(),
+					offsetParent = (parent.getComputedStyle('position') != 'static' ? parent : parent.getOffsetParent());
+
+				pinnedPosition = this.getPosition(offsetParent);
+
+				this.store('pin:_pinned', false);
+				var scrollFixer = this.retrieve('pin:_scrollFixer');
+				if (!scrollFixer){
+					this.setStyles({
+						position: 'absolute',
+						top: pinnedPosition.y + scroll.y,
+						left: pinnedPosition.x + scroll.x
+					});
+				} else {
+					this.store('pin:_scrollFixer', null);
+					window.removeEvent('scroll', scrollFixer);
+				}
+				this.removeClass('isPinned');
+			}
+			return this;
+		},
+
+		unpin: function(){
+			return this.pin(false);
+		},
+
+		togglepin: function(){
+			return this.pin(!this.retrieve('pin:_pinned'));
+		}
+
+	});
+
+})();
+
+
+/*
+---
+
+script: Element.Position.js
+
+name: Element.Position
+
+description: Extends the Element native object to include methods useful positioning elements relative to others.
+
+license: MIT-style license
+
+authors:
+  - Aaron Newton
+
+requires:
+  - Core/Element.Dimensions
+  - /Element.Measure
+
+provides: [Element.Position]
+
+...
+*/
+
+(function(){
+
+var original = Element.prototype.position;
+
+Element.implement({
+
+	position: function(options){
+		//call original position if the options are x/y values
+		if (options && (options.x != null || options.y != null)){
+			return original ? original.apply(this, arguments) : this;
+		}
+
+		Object.each(options || {}, function(v, k){
+			if (v == null) delete options[k];
+		});
+
+		options = Object.merge({
+			// minimum: { x: 0, y: 0 },
+			// maximum: { x: 0, y: 0},
+			relativeTo: document.body,
+			position: {
+				x: 'center', //left, center, right
+				y: 'center' //top, center, bottom
+			},
+			offset: {x: 0, y: 0}/*,
+			edge: false,
+			returnPos: false,
+			relFixedPosition: false,
+			ignoreMargins: false,
+			ignoreScroll: false,
+			allowNegative: false*/
+		}, options);
+
+		//compute the offset of the parent positioned element if this element is in one
+		var parentOffset = {x: 0, y: 0},
+			parentPositioned = false;
+
+		/* dollar around getOffsetParent should not be necessary, but as it does not return
+		 * a mootools extended element in IE, an error occurs on the call to expose. See:
+		 * http://mootools.lighthouseapp.com/projects/2706/tickets/333-element-getoffsetparent-inconsistency-between-ie-and-other-browsers */
+		var offsetParent = this.measure(function(){
+			return document.id(this.getOffsetParent());
+		});
+		if (offsetParent && offsetParent != this.getDocument().body){
+			parentOffset = offsetParent.measure(function(){
+				return this.getPosition();
+			});
+			parentPositioned = offsetParent != document.id(options.relativeTo);
+			options.offset.x = options.offset.x - parentOffset.x;
+			options.offset.y = options.offset.y - parentOffset.y;
+		}
+
+		//upperRight, bottomRight, centerRight, upperLeft, bottomLeft, centerLeft
+		//topRight, topLeft, centerTop, centerBottom, center
+		var fixValue = function(option){
+			if (typeOf(option) != 'string') return option;
+			option = option.toLowerCase();
+			var val = {};
+
+			if (option.test('left')){
+				val.x = 'left';
+			} else if (option.test('right')){
+				val.x = 'right';
+			} else {
+				val.x = 'center';
+			}
+
+			if (option.test('upper') || option.test('top')){
+				val.y = 'top';
+			} else if (option.test('bottom')){
+				val.y = 'bottom';
+			} else {
+				val.y = 'center';
+			}
+
+			return val;
+		};
+
+		options.edge = fixValue(options.edge);
+		options.position = fixValue(options.position);
+		if (!options.edge){
+			if (options.position.x == 'center' && options.position.y == 'center') options.edge = {x:'center', y:'center'};
+			else options.edge = {x:'left', y:'top'};
+		}
+
+		this.setStyle('position', 'absolute');
+		var rel = document.id(options.relativeTo) || document.body,
+				calc = rel == document.body ? window.getScroll() : rel.getPosition(),
+				top = calc.y, left = calc.x;
+
+		var dim = this.getDimensions({
+			computeSize: true,
+			styles:['padding', 'border','margin']
+		});
+
+		var pos = {},
+			prefY = options.offset.y,
+			prefX = options.offset.x,
+			winSize = window.getSize();
+
+		switch(options.position.x){
+			case 'left':
+				pos.x = left + prefX;
+				break;
+			case 'right':
+				pos.x = left + prefX + rel.offsetWidth;
+				break;
+			default: //center
+				pos.x = left + ((rel == document.body ? winSize.x : rel.offsetWidth)/2) + prefX;
+				break;
+		}
+
+		switch(options.position.y){
+			case 'top':
+				pos.y = top + prefY;
+				break;
+			case 'bottom':
+				pos.y = top + prefY + rel.offsetHeight;
+				break;
+			default: //center
+				pos.y = top + ((rel == document.body ? winSize.y : rel.offsetHeight)/2) + prefY;
+				break;
+		}
+
+		if (options.edge){
+			var edgeOffset = {};
+
+			switch(options.edge.x){
+				case 'left':
+					edgeOffset.x = 0;
+					break;
+				case 'right':
+					edgeOffset.x = -dim.x-dim.computedRight-dim.computedLeft;
+					break;
+				default: //center
+					edgeOffset.x = -(dim.totalWidth/2);
+					break;
+			}
+
+			switch(options.edge.y){
+				case 'top':
+					edgeOffset.y = 0;
+					break;
+				case 'bottom':
+					edgeOffset.y = -dim.y-dim.computedTop-dim.computedBottom;
+					break;
+				default: //center
+					edgeOffset.y = -(dim.totalHeight/2);
+					break;
+			}
+
+			pos.x += edgeOffset.x;
+			pos.y += edgeOffset.y;
+		}
+
+		pos = {
+			left: ((pos.x >= 0 || parentPositioned || options.allowNegative) ? pos.x : 0).toInt(),
+			top: ((pos.y >= 0 || parentPositioned || options.allowNegative) ? pos.y : 0).toInt()
+		};
+
+		var xy = {left: 'x', top: 'y'};
+
+		['minimum', 'maximum'].each(function(minmax){
+			['left', 'top'].each(function(lr){
+				var val = options[minmax] ? options[minmax][xy[lr]] : null;
+				if (val != null && ((minmax == 'minimum') ? pos[lr] < val : pos[lr] > val)) pos[lr] = val;
+			});
+		});
+
+		if (rel.getStyle('position') == 'fixed' || options.relFixedPosition){
+			var winScroll = window.getScroll();
+			pos.top+= winScroll.y;
+			pos.left+= winScroll.x;
+		}
+		if (options.ignoreScroll){
+			var relScroll = rel.getScroll();
+			pos.top -= relScroll.y;
+			pos.left -= relScroll.x;
+		}
+
+		if (options.ignoreMargins){
+			pos.left += (
+				options.edge.x == 'right' ? dim['margin-right'] :
+				options.edge.x == 'center' ? -dim['margin-left'] + ((dim['margin-right'] + dim['margin-left'])/2) :
+					- dim['margin-left']
+			);
+			pos.top += (
+				options.edge.y == 'bottom' ? dim['margin-bottom'] :
+				options.edge.y == 'center' ? -dim['margin-top'] + ((dim['margin-bottom'] + dim['margin-top'])/2) :
+					- dim['margin-top']
+			);
+		}
+
+		pos.left = Math.ceil(pos.left);
+		pos.top = Math.ceil(pos.top);
+		if (options.returnPos) return pos;
+		else this.setStyles(pos);
+		return this;
+	}
+
+});
+
+})();
+
+
+/*
+---
+
+script: Element.Shortcuts.js
+
+name: Element.Shortcuts
+
+description: Extends the Element native object to include some shortcut methods.
+
+license: MIT-style license
+
+authors:
+  - Aaron Newton
+
+requires:
+  - Core/Element.Style
+  - /MooTools.More
+
+provides: [Element.Shortcuts]
+
+...
+*/
+
+Element.implement({
+
+	isDisplayed: function(){
+		return this.getStyle('display') != 'none';
+	},
+
+	isVisible: function(){
+		var w = this.offsetWidth,
+			h = this.offsetHeight;
+		return (w == 0 && h == 0) ? false : (w > 0 && h > 0) ? true : this.style.display != 'none';
+	},
+
+	toggle: function(){
+		return this[this.isDisplayed() ? 'hide' : 'show']();
+	},
+
+	hide: function(){
+		var d;
+		try {
+			//IE fails here if the element is not in the dom
+			d = this.getStyle('display');
+		} catch(e){}
+		if (d == 'none') return this;
+		return this.store('element:_originalDisplay', d || '').setStyle('display', 'none');
+	},
+
+	show: function(display){
+		if (!display && this.isDisplayed()) return this;
+		display = display || this.retrieve('element:_originalDisplay') || 'block';
+		return this.setStyle('display', (display == 'none') ? 'block' : display);
+	},
+
+	swapClass: function(remove, add){
+		return this.removeClass(remove).addClass(add);
+	}
+
+});
+
+Document.implement({
+
+	clearSelection: function(){
+		if (document.selection && document.selection.empty){
+			document.selection.empty();
+		} else if (window.getSelection){
+			var selection = window.getSelection();
+			if (selection && selection.removeAllRanges) selection.removeAllRanges();
+		}
+	}
+
+});
+
+
+/*
+---
+
+script: IframeShim.js
+
+name: IframeShim
+
+description: Defines IframeShim, a class for obscuring select lists and flash objects in IE.
+
+license: MIT-style license
+
+authors:
+  - Aaron Newton
+
+requires:
+  - Core/Element.Event
+  - Core/Element.Style
+  - Core/Options
+  - Core/Events
+  - /Element.Position
+  - /Class.Occlude
+
+provides: [IframeShim]
+
+...
+*/
+
+var IframeShim = new Class({
+
+	Implements: [Options, Events, Class.Occlude],
+
+	options: {
+		className: 'iframeShim',
+		src: 'javascript:false;document.write("");',
+		display: false,
+		zIndex: null,
+		margin: 0,
+		offset: {x: 0, y: 0},
+		browsers: ((Browser.ie && Browser.version == 6) || (Browser.firefox && Browser.version < 3 && Browser.Platform.mac))
+	},
+
+	property: 'IframeShim',
+
+	initialize: function(element, options){
+		this.element = document.id(element);
+		if (this.occlude()) return this.occluded;
+		this.setOptions(options);
+		this.makeShim();
+		return this;
+	},
+
+	makeShim: function(){
+		if (this.options.browsers){
+			var zIndex = this.element.getStyle('zIndex').toInt();
+
+			if (!zIndex){
+				zIndex = 1;
+				var pos = this.element.getStyle('position');
+				if (pos == 'static' || !pos) this.element.setStyle('position', 'relative');
+				this.element.setStyle('zIndex', zIndex);
+			}
+			zIndex = ((this.options.zIndex != null || this.options.zIndex === 0) && zIndex > this.options.zIndex) ? this.options.zIndex : zIndex - 1;
+			if (zIndex < 0) zIndex = 1;
+			this.shim = new Element('iframe', {
+				src: this.options.src,
+				scrolling: 'no',
+				frameborder: 0,
+				styles: {
+					zIndex: zIndex,
+					position: 'absolute',
+					border: 'none',
+					filter: 'progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0)'
+				},
+				'class': this.options.className
+			}).store('IframeShim', this);
+			var inject = (function(){
+				this.shim.inject(this.element, 'after');
+				this[this.options.display ? 'show' : 'hide']();
+				this.fireEvent('inject');
+			}).bind(this);
+			if (!IframeShim.ready) window.addEvent('load', inject);
+			else inject();
+		} else {
+			this.position = this.hide = this.show = this.dispose = Function.from(this);
+		}
+	},
+
+	position: function(){
+		if (!IframeShim.ready || !this.shim) return this;
+		var size = this.element.measure(function(){
+			return this.getSize();
+		});
+		if (this.options.margin != undefined){
+			size.x = size.x - (this.options.margin * 2);
+			size.y = size.y - (this.options.margin * 2);
+			this.options.offset.x += this.options.margin;
+			this.options.offset.y += this.options.margin;
+		}
+		this.shim.set({width: size.x, height: size.y}).position({
+			relativeTo: this.element,
+			offset: this.options.offset
+		});
+		return this;
+	},
+
+	hide: function(){
+		if (this.shim) this.shim.setStyle('display', 'none');
+		return this;
+	},
+
+	show: function(){
+		if (this.shim) this.shim.setStyle('display', 'block');
+		return this.position();
+	},
+
+	dispose: function(){
+		if (this.shim) this.shim.dispose();
+		return this;
+	},
+
+	destroy: function(){
+		if (this.shim) this.shim.destroy();
+		return this;
+	}
+
+});
+
+window.addEvent('load', function(){
+	IframeShim.ready = true;
+});
+
+
+/*
+---
+
+script: Mask.js
+
+name: Mask
+
+description: Creates a mask element to cover another.
+
+license: MIT-style license
+
+authors:
+  - Aaron Newton
+
+requires:
+  - Core/Options
+  - Core/Events
+  - Core/Element.Event
+  - /Class.Binds
+  - /Element.Position
+  - /IframeShim
+
+provides: [Mask]
+
+...
+*/
+
+var Mask = new Class({
+
+	Implements: [Options, Events],
+
+	Binds: ['position'],
+
+	options: {/*
+		onShow: function(){},
+		onHide: function(){},
+		onDestroy: function(){},
+		onClick: function(){},
+		inject: {
+			where: 'after',
+			target: null,
+		},
+		hideOnClick: false,
+		id: null,
+		destroyOnHide: false,*/
+		style: {},
+		'class': 'mask',
+		maskMargins: false,
+		useIframeShim: true,
+		iframeShimOptions: {}
+	},
+
+	initialize: function(target, options){
+		this.target = document.id(target) || document.id(document.body);
+		this.target.store('mask', this);
+		this.setOptions(options);
+		this.render();
+		this.inject();
+	},
+
+	render: function(){
+		this.element = new Element('div', {
+			'class': this.options['class'],
+			id: this.options.id || 'mask-' + String.uniqueID(),
+			styles: Object.merge(this.options.style, {
+				display: 'none'
+			}),
+			events: {
+				click: function(){
+					this.fireEvent('click');
+					if (this.options.hideOnClick) this.hide();
+				}.bind(this)
+			}
+		});
+
+		this.hidden = true;
+	},
+
+	toElement: function(){
+		return this.element;
+	},
+
+	inject: function(target, where){
+		where = where || (this.options.inject ? this.options.inject.where : '') || this.target == document.body ? 'inside' : 'after';
+		target = target || (this.options.inject ? this.options.inject.target : '') || this.target;
+
+		this.element.inject(target, where);
+
+		if (this.options.useIframeShim){
+			this.shim = new IframeShim(this.element, this.options.iframeShimOptions);
+
+			this.addEvents({
+				show: this.shim.show.bind(this.shim),
+				hide: this.shim.hide.bind(this.shim),
+				destroy: this.shim.destroy.bind(this.shim)
+			});
+		}
+	},
+
+	position: function(){
+		this.resize(this.options.width, this.options.height);
+
+		this.element.position({
+			relativeTo: this.target,
+			position: 'topLeft',
+			ignoreMargins: !this.options.maskMargins,
+			ignoreScroll: this.target == document.body
+		});
+
+		return this;
+	},
+
+	resize: function(x, y){
+		var opt = {
+			styles: ['padding', 'border']
+		};
+		if (this.options.maskMargins) opt.styles.push('margin');
+
+		var dim = this.target.getComputedSize(opt);
+		if (this.target == document.body){
+			var win = window.getScrollSize();
+			if (dim.totalHeight < win.y) dim.totalHeight = win.y;
+			if (dim.totalWidth < win.x) dim.totalWidth = win.x;
+		}
+		this.element.setStyles({
+			width: Array.pick([x, dim.totalWidth, dim.x]),
+			height: Array.pick([y, dim.totalHeight, dim.y])
+		});
+
+		return this;
+	},
+
+	show: function(){
+		if (!this.hidden) return this;
+
+		window.addEvent('resize', this.position);
+		this.position();
+		this.showMask.apply(this, arguments);
+
+		return this;
+	},
+
+	showMask: function(){
+		this.element.setStyle('display', 'block');
+		this.hidden = false;
+		this.fireEvent('show');
+	},
+
+	hide: function(){
+		if (this.hidden) return this;
+
+		window.removeEvent('resize', this.position);
+		this.hideMask.apply(this, arguments);
+		if (this.options.destroyOnHide) return this.destroy();
+
+		return this;
+	},
+
+	hideMask: function(){
+		this.element.setStyle('display', 'none');
+		this.hidden = true;
+		this.fireEvent('hide');
+	},
+
+	toggle: function(){
+		this[this.hidden ? 'show' : 'hide']();
+	},
+
+	destroy: function(){
+		this.hide();
+		this.element.destroy();
+		this.fireEvent('destroy');
+		this.target.eliminate('mask');
+	}
+
+});
+
+Element.Properties.mask = {
+
+	set: function(options){
+		var mask = this.retrieve('mask');
+		if (mask) mask.destroy();
+		return this.eliminate('mask').store('mask:options', options);
+	},
+
+	get: function(){
+		var mask = this.retrieve('mask');
+		if (!mask){
+			mask = new Mask(this, this.retrieve('mask:options'));
+			this.store('mask', mask);
+		}
+		return mask;
+	}
+
+};
+
+Element.implement({
+
+	mask: function(options){
+		if (options) this.set('mask', options);
+		this.get('mask').show();
+		return this;
+	},
+
+	unmask: function(){
+		this.get('mask').hide();
+		return this;
+	}
+
+});
+
+
+/*
+---
+
+script: Spinner.js
+
+name: Spinner
+
+description: Adds a semi-transparent overlay over a dom element with a spinnin ajax icon.
+
+license: MIT-style license
+
+authors:
+  - Aaron Newton
+
+requires:
+  - Core/Fx.Tween
+  - Core/Request
+  - /Class.refactor
+  - /Mask
+
+provides: [Spinner]
+
+...
+*/
+
+var Spinner = new Class({
+
+	Extends: Mask,
+
+	Implements: Chain,
+
+	options: {/*
+		message: false,*/
+		'class': 'spinner',
+		containerPosition: {},
+		content: {
+			'class': 'spinner-content'
+		},
+		messageContainer: {
+			'class': 'spinner-msg'
+		},
+		img: {
+			'class': 'spinner-img'
+		},
+		fxOptions: {
+			link: 'chain'
+		}
+	},
+
+	initialize: function(target, options){
+		this.target = document.id(target) || document.id(document.body);
+		this.target.store('spinner', this);
+		this.setOptions(options);
+		this.render();
+		this.inject();
+
+		// Add this to events for when noFx is true; parent methods handle hide/show.
+		var deactivate = function(){ this.active = false; }.bind(this);
+		this.addEvents({
+			hide: deactivate,
+			show: deactivate
+		});
+	},
+
+	render: function(){
+		this.parent();
+
+		this.element.set('id', this.options.id || 'spinner-' + String.uniqueID());
+
+		this.content = document.id(this.options.content) || new Element('div', this.options.content);
+		this.content.inject(this.element);
+
+		if (this.options.message){
+			this.msg = document.id(this.options.message) || new Element('p', this.options.messageContainer).appendText(this.options.message);
+			this.msg.inject(this.content);
+		}
+
+		if (this.options.img){
+			this.img = document.id(this.options.img) || new Element('div', this.options.img);
+			this.img.inject(this.content);
+		}
+
+		this.element.set('tween', this.options.fxOptions);
+	},
+
+	show: function(noFx){
+		if (this.active) return this.chain(this.show.bind(this));
+		if (!this.hidden){
+			this.callChain.delay(20, this);
+			return this;
+		}
+
+		this.active = true;
+
+		return this.parent(noFx);
+	},
+
+	showMask: function(noFx){
+		var pos = function(){
+			this.content.position(Object.merge({
+				relativeTo: this.element
+			}, this.options.containerPosition));
+		}.bind(this);
+
+		if (noFx){
+			this.parent();
+			pos();
+		} else {
+			if (!this.options.style.opacity) this.options.style.opacity = this.element.getStyle('opacity').toFloat();
+			this.element.setStyles({
+				display: 'block',
+				opacity: 0
+			}).tween('opacity', this.options.style.opacity);
+			pos();
+			this.hidden = false;
+			this.fireEvent('show');
+			this.callChain();
+		}
+	},
+
+	hide: function(noFx){
+		if (this.active) return this.chain(this.hide.bind(this));
+		if (this.hidden){
+			this.callChain.delay(20, this);
+			return this;
+		}
+		this.active = true;
+		return this.parent(noFx);
+	},
+
+	hideMask: function(noFx){
+		if (noFx) return this.parent();
+		this.element.tween('opacity', 0).get('tween').chain(function(){
+			this.element.setStyle('display', 'none');
+			this.hidden = true;
+			this.fireEvent('hide');
+			this.callChain();
+		}.bind(this));
+	},
+
+	destroy: function(){
+		this.content.destroy();
+		this.parent();
+		this.target.eliminate('spinner');
+	}
+
+});
+
+Request = Class.refactor(Request, {
+
+	options: {
+		useSpinner: false,
+		spinnerOptions: {},
+		spinnerTarget: false
+	},
+
+	initialize: function(options){
+		this._send = this.send;
+		this.send = function(options){
+			var spinner = this.getSpinner();
+			if (spinner) spinner.chain(this._send.pass(options, this)).show();
+			else this._send(options);
+			return this;
+		};
+		this.previous(options);
+	},
+
+	getSpinner: function(){
+		if (!this.spinner){
+			var update = document.id(this.options.spinnerTarget) || document.id(this.options.update);
+			if (this.options.useSpinner && update){
+				update.set('spinner', this.options.spinnerOptions);
+				var spinner = this.spinner = update.get('spinner');
+				['complete', 'exception', 'cancel'].each(function(event){
+					this.addEvent(event, spinner.hide.bind(spinner));
+				}, this);
+			}
+		}
+		return this.spinner;
+	}
+
+});
+
+Element.Properties.spinner = {
+
+	set: function(options){
+		var spinner = this.retrieve('spinner');
+		if (spinner) spinner.destroy();
+		return this.eliminate('spinner').store('spinner:options', options);
+	},
+
+	get: function(){
+		var spinner = this.retrieve('spinner');
+		if (!spinner){
+			spinner = new Spinner(this, this.retrieve('spinner:options'));
+			this.store('spinner', spinner);
+		}
+		return spinner;
+	}
+
+};
+
+Element.implement({
+
+	spin: function(options){
+		if (options) this.set('spinner', options);
+		this.get('spinner').show();
+		return this;
+	},
+
+	unspin: function(){
+		this.get('spinner').hide();
+		return this;
+	}
+
+});
+
+
+/*
+---
+
+script: Form.Request.js
+
+name: Form.Request
+
+description: Handles the basic functionality of submitting a form and updating a dom element with the result.
+
+license: MIT-style license
+
+authors:
+  - Aaron Newton
+
+requires:
+  - Core/Request.HTML
+  - /Class.Binds
+  - /Class.Occlude
+  - /Spinner
+  - /String.QueryString
+  - /Element.Delegation
+
+provides: [Form.Request]
+
+...
+*/
+
+if (!window.Form) window.Form = {};
+
+(function(){
+
+	Form.Request = new Class({
+
+		Binds: ['onSubmit', 'onFormValidate'],
+
+		Implements: [Options, Events, Class.Occlude],
+
+		options: {
+			//onFailure: function(){},
+			//onSuccess: #function(){}, //aliased to onComplete,
+			//onSend: function(){}
+			requestOptions: {
+				evalScripts: true,
+				useSpinner: true,
+				emulation: false,
+				link: 'ignore'
+			},
+			sendButtonClicked: true,
+			extraData: {},
+			resetForm: true
+		},
+
+		property: 'form.request',
+
+		initialize: function(form, update, options){
+			this.element = document.id(form);
+			if (this.occlude()) return this.occluded;
+			this.update = document.id(update);
+			this.setOptions(options);
+			this.makeRequest();
+			if (this.options.resetForm){
+				this.request.addEvent('success', function(){
+					Function.attempt(function(){ this.element.reset(); }.bind(this));
+					if (window.OverText) OverText.update();
+				}.bind(this));
+			}
+			this.attach();
+		},
+
+		toElement: function(){
+			return this.element;
+		},
+
+		makeRequest: function(){
+			this.request = new Request.HTML(Object.merge({
+					update: this.update,
+					emulation: false,
+					spinnerTarget: this.element,
+					method: this.element.get('method') || 'post'
+			}, this.options.requestOptions)).addEvents({
+				success: function(tree, elements, html, javascript){
+					['complete', 'success'].each(function(evt){
+						this.fireEvent(evt, [this.update, tree, elements, html, javascript]);
+					}, this);
+				}.bind(this),
+				failure: function(){
+					this.fireEvent('complete', arguments).fireEvent('failure', arguments);
+				}.bind(this),
+				exception: function(){
+					this.fireEvent('failure', arguments);
+				}.bind(this)
+			});
+		},
+
+		attach: function(attach){
+			attach = attach != null ? attach : true;
+			method = attach ? 'addEvent' : 'removeEvent';
+
+			this.element[method]('click:relay(button, input[type=submit])', this.saveClickedButton.bind(this));
+
+			var fv = this.element.retrieve('validator');
+			if (fv) fv[method]('onFormValidate', this.onFormValidate);
+			else this.element[method]('submit', this.onSubmit);
+		},
+
+		detach: function(){
+			this.attach(false);
+			return this;
+		},
+
+		//public method
+		enable: function(){
+			this.attach();
+			return this;
+		},
+
+		//public method
+		disable: function(){
+			this.detach();
+			return this;
+		},
+
+		onFormValidate: function(valid, form, e){
+			//if there's no event, then this wasn't a submit event
+			if (!e) return;
+			var fv = this.element.retrieve('validator');
+			if (valid || (fv && !fv.options.stopOnFailure)){
+				if (e && e.stop) e.stop();
+				this.send();
+			}
+		},
+
+		onSubmit: function(e){
+			var fv = this.element.retrieve('validator');
+			if (fv){
+				//form validator was created after Form.Request
+				this.element.removeEvent('submit', this.onSubmit);
+				fv.addEvent('onFormValidate', this.onFormValidate);
+				this.element.validate();
+				return;
+			}
+			if (e) e.stop();
+			this.send();
+		},
+
+		saveClickedButton: function(event, target){
+			if (!this.options.sendButtonClicked) return;
+			if (!target.get('name')) return;
+			this.options.extraData[target.get('name')] = target.get('value') || true;
+			this.clickedCleaner = function(){
+				delete this.options.extraData[target.get('name')];
+				this.clickedCleaner = function(){};
+			}.bind(this);
+		},
+
+		clickedCleaner: function(){},
+
+		send: function(){
+			var str = this.element.toQueryString().trim();
+			var data = Object.toQueryString(this.options.extraData);
+			if (str) str += "&" + data;
+			else str = data;
+			this.fireEvent('send', [this.element, str.parseQueryString()]);
+			this.request.send({data: str, url: this.element.get("action")});
+			this.clickedCleaner();
+			return this;
+		}
+
+	});
+
+	Element.Properties.formRequest = {
+
+		set: function(){
+			var opt = Array.link(arguments, {options: Type.isObject, update: Type.isElement, updateId: Type.isString});
+			var update = opt.update || opt.updateId;
+			var updater = this.retrieve('form.request');
+			if (update){
+				if (updater) updater.update = document.id(update);
+				this.store('form.request:update', update);
+			}
+			if (opt.options){
+				if (updater) updater.setOptions(opt.options);
+				this.store('form.request:options', opt.options);
+			}
+			return this;
+		},
+
+		get: function(){
+			var opt = Array.link(arguments, {options: Type.isObject, update: Type.isElement, updateId: Type.isString});
+			var update = opt.update || opt.updateId;
+			if (opt.options || update || !this.retrieve('form.request')){
+				if (opt.options || !this.retrieve('form.request:options')) this.set('form.request', opt.options);
+				if (update) this.set('form.request', update);
+				this.store('form.request', new Form.Request(this, this.retrieve('form.request:update'), this.retrieve('form.request:options')));
+			}
+			return this.retrieve('form.request');
+		}
+
+	};
+
+	Element.implement({
+
+		formUpdate: function(update, options){
+			this.get('formRequest', update, options).send();
+			return this;
+		}
+
+	});
+
+})();
+
+
+/*
+---
+
+script: Fx.Reveal.js
+
+name: Fx.Reveal
+
+description: Defines Fx.Reveal, a class that shows and hides elements with a transition.
+
+license: MIT-style license
+
+authors:
+  - Aaron Newton
+
+requires:
+  - Core/Fx.Morph
+  - /Element.Shortcuts
+  - /Element.Measure
+
+provides: [Fx.Reveal]
+
+...
+*/
+
+Fx.Reveal = new Class({
+
+	Extends: Fx.Morph,
+
+	options: {/*
+		onShow: function(thisElement){},
+		onHide: function(thisElement){},
+		onComplete: function(thisElement){},
+		heightOverride: null,
+		widthOverride: null,*/
+		link: 'cancel',
+		styles: ['padding', 'border', 'margin'],
+		transitionOpacity: !Browser.ie6,
+		mode: 'vertical',
+		display: function(){
+			return this.element.get('tag') != 'tr' ? 'block' : 'table-row';
+		},
+		opacity: 1,
+		hideInputs: Browser.ie ? 'select, input, textarea, object, embed' : null
+	},
+
+	dissolve: function(){
+		if (!this.hiding && !this.showing){
+			if (this.element.getStyle('display') != 'none'){
+				this.hiding = true;
+				this.showing = false;
+				this.hidden = true;
+				this.cssText = this.element.style.cssText;
+
+				var startStyles = this.element.getComputedSize({
+					styles: this.options.styles,
+					mode: this.options.mode
+				});
+				if (this.options.transitionOpacity) startStyles.opacity = this.options.opacity;
+
+				var zero = {};
+				Object.each(startStyles, function(style, name){
+					zero[name] = [style, 0];
+				});
+
+				this.element.setStyles({
+					display: Function.from(this.options.display).call(this),
+					overflow: 'hidden'
+				});
+
+				var hideThese = this.options.hideInputs ? this.element.getElements(this.options.hideInputs) : null;
+				if (hideThese) hideThese.setStyle('visibility', 'hidden');
+
+				this.$chain.unshift(function(){
+					if (this.hidden){
+						this.hiding = false;
+						this.element.style.cssText = this.cssText;
+						this.element.setStyle('display', 'none');
+						if (hideThese) hideThese.setStyle('visibility', 'visible');
+					}
+					this.fireEvent('hide', this.element);
+					this.callChain();
+				}.bind(this));
+
+				this.start(zero);
+			} else {
+				this.callChain.delay(10, this);
+				this.fireEvent('complete', this.element);
+				this.fireEvent('hide', this.element);
+			}
+		} else if (this.options.link == 'chain'){
+			this.chain(this.dissolve.bind(this));
+		} else if (this.options.link == 'cancel' && !this.hiding){
+			this.cancel();
+			this.dissolve();
+		}
+		return this;
+	},
+
+	reveal: function(){
+		if (!this.showing && !this.hiding){
+			if (this.element.getStyle('display') == 'none'){
+				this.hiding = false;
+				this.showing = true;
+				this.hidden = false;
+				this.cssText = this.element.style.cssText;
+
+				var startStyles;
+				this.element.measure(function(){
+					startStyles = this.element.getComputedSize({
+						styles: this.options.styles,
+						mode: this.options.mode
+					});
+				}.bind(this));
+				if (this.options.heightOverride != null) startStyles.height = this.options.heightOverride.toInt();
+				if (this.options.widthOverride != null) startStyles.width = this.options.widthOverride.toInt();
+				if (this.options.transitionOpacity){
+					this.element.setStyle('opacity', 0);
+					startStyles.opacity = this.options.opacity;
+				}
+
+				var zero = {
+					height: 0,
+					display: Function.from(this.options.display).call(this)
+				};
+				Object.each(startStyles, function(style, name){
+					zero[name] = 0;
+				});
+				zero.overflow = 'hidden';
+
+				this.element.setStyles(zero);
+
+				var hideThese = this.options.hideInputs ? this.element.getElements(this.options.hideInputs) : null;
+				if (hideThese) hideThese.setStyle('visibility', 'hidden');
+
+				this.$chain.unshift(function(){
+					this.element.style.cssText = this.cssText;
+					this.element.setStyle('display', Function.from(this.options.display).call(this));
+					if (!this.hidden) this.showing = false;
+					if (hideThese) hideThese.setStyle('visibility', 'visible');
+					this.callChain();
+					this.fireEvent('show', this.element);
+				}.bind(this));
+
+				this.start(startStyles);
+			} else {
+				this.callChain();
+				this.fireEvent('complete', this.element);
+				this.fireEvent('show', this.element);
+			}
+		} else if (this.options.link == 'chain'){
+			this.chain(this.reveal.bind(this));
+		} else if (this.options.link == 'cancel' && !this.showing){
+			this.cancel();
+			this.reveal();
+		}
+		return this;
+	},
+
+	toggle: function(){
+		if (this.element.getStyle('display') == 'none'){
+			this.reveal();
+		} else {
+			this.dissolve();
+		}
+		return this;
+	},
+
+	cancel: function(){
+		this.parent.apply(this, arguments);
+		this.element.style.cssText = this.cssText;
+		this.hiding = false;
+		this.showing = false;
+		return this;
+	}
+
+});
+
+Element.Properties.reveal = {
+
+	set: function(options){
+		this.get('reveal').cancel().setOptions(options);
+		return this;
+	},
+
+	get: function(){
+		var reveal = this.retrieve('reveal');
+		if (!reveal){
+			reveal = new Fx.Reveal(this);
+			this.store('reveal', reveal);
+		}
+		return reveal;
+	}
+
+};
+
+Element.Properties.dissolve = Element.Properties.reveal;
+
+Element.implement({
+
+	reveal: function(options){
+		this.get('reveal').setOptions(options).reveal();
+		return this;
+	},
+
+	dissolve: function(options){
+		this.get('reveal').setOptions(options).dissolve();
+		return this;
+	},
+
+	nix: function(options){
+		var params = Array.link(arguments, {destroy: Type.isBoolean, options: Type.isObject});
+		this.get('reveal').setOptions(options).dissolve().chain(function(){
+			this[params.destroy ? 'destroy' : 'dispose']();
+		}.bind(this));
+		return this;
+	},
+
+	wink: function(){
+		var params = Array.link(arguments, {duration: Type.isNumber, options: Type.isObject});
+		var reveal = this.get('reveal').setOptions(params.options);
+		reveal.reveal().chain(function(){
+			(function(){
+				reveal.dissolve();
+			}).delay(params.duration || 2000);
+		});
+	}
+
+});
+
+
+/*
+---
+
+script: Form.Request.Append.js
+
+name: Form.Request.Append
+
+description: Handles the basic functionality of submitting a form and updating a dom element with the result. The result is appended to the DOM element instead of replacing its contents.
+
+license: MIT-style license
+
+authors:
+  - Aaron Newton
+
+requires:
+  - /Form.Request
+  - /Fx.Reveal
+  - /Elements.from
+
+provides: [Form.Request.Append]
+
+...
+*/
+
+Form.Request.Append = new Class({
+
+	Extends: Form.Request,
+
+	options: {
+		//onBeforeEffect: function(){},
+		useReveal: true,
+		revealOptions: {},
+		inject: 'bottom'
+	},
+
+	makeRequest: function(){
+		this.request = new Request.HTML(Object.merge({
+				url: this.element.get('action'),
+				method: this.element.get('method') || 'post',
+				spinnerTarget: this.element
+			}, this.options.requestOptions, {
+				evalScripts: false
+			})
+		).addEvents({
+			success: function(tree, elements, html, javascript){
+				var container;
+				var kids = Elements.from(html);
+				if (kids.length == 1){
+					container = kids[0];
+				} else {
+					 container = new Element('div', {
+						styles: {
+							display: 'none'
+						}
+					}).adopt(kids);
+				}
+				container.inject(this.update, this.options.inject);
+				if (this.options.requestOptions.evalScripts) Browser.exec(javascript);
+				this.fireEvent('beforeEffect', container);
+				var finish = function(){
+					this.fireEvent('success', [container, this.update, tree, elements, html, javascript]);
+				}.bind(this);
+				if (this.options.useReveal){
+					container.set('reveal', this.options.revealOptions).get('reveal').chain(finish);
+					container.reveal();
+				} else {
+					finish();
+				}
+			}.bind(this),
+			failure: function(xhr){
+				this.fireEvent('failure', xhr);
+			}.bind(this)
+		});
+	}
+
+});
+
+
+/*
+---
+
+name: Locale.en-US.Form.Validator
+
+description: Form Validator messages for English.
+
+license: MIT-style license
+
+authors:
+  - Aaron Newton
+
+requires:
+  - /Locale
+
+provides: [Locale.en-US.Form.Validator]
+
+...
+*/
+
+Locale.define('en-US', 'FormValidator', {
+
+	required: 'This field is required.',
+	minLength: 'Please enter at least {minLength} characters (you entered {length} characters).',
+	maxLength: 'Please enter no more than {maxLength} characters (you entered {length} characters).',
+	integer: 'Please enter an integer in this field. Numbers with decimals (e.g. 1.25) are not permitted.',
+	numeric: 'Please enter only numeric values in this field (i.e. "1" or "1.1" or "-1" or "-1.1").',
+	digits: 'Please use numbers and punctuation only in this field (for example, a phone number with dashes or dots is permitted).',
+	alpha: 'Please use only letters (a-z) within this field. No spaces or other characters are allowed.',
+	alphanum: 'Please use only letters (a-z) or numbers (0-9) in this field. No spaces or other characters are allowed.',
+	dateSuchAs: 'Please enter a valid date such as {date}',
+	dateInFormatMDY: 'Please enter a valid date such as MM/DD/YYYY (i.e. "12/31/1999")',
+	email: 'Please enter a valid email address. For example "fred@domain.com".',
+	url: 'Please enter a valid URL such as http://www.google.com.',
+	currencyDollar: 'Please enter a valid $ amount. For example $100.00 .',
+	oneRequired: 'Please enter something for at least one of these inputs.',
+	errorPrefix: 'Error: ',
+	warningPrefix: 'Warning: ',
+
+	// Form.Validator.Extras
+	noSpace: 'There can be no spaces in this input.',
+	reqChkByNode: 'No items are selected.',
+	requiredChk: 'This field is required.',
+	reqChkByName: 'Please select a {label}.',
+	match: 'This field needs to match the {matchName} field',
+	startDate: 'the start date',
+	endDate: 'the end date',
+	currendDate: 'the current date',
+	afterDate: 'The date should be the same or after {label}.',
+	beforeDate: 'The date should be the same or before {label}.',
+	startMonth: 'Please select a start month',
+	sameMonth: 'These two dates must be in the same month - you must change one or the other.',
+	creditcard: 'The credit card number entered is invalid. Please check the number and try again. {length} digits entered.'
+
+});
+
+
+/*
+---
+
+script: Form.Validator.js
+
+name: Form.Validator
+
+description: A css-class based form validation system.
+
+license: MIT-style license
+
+authors:
+  - Aaron Newton
+
+requires:
+  - Core/Options
+  - Core/Events
+  - Core/Slick.Finder
+  - Core/Element.Event
+  - Core/Element.Style
+  - Core/JSON
+  - /Locale
+  - /Class.Binds
+  - /Date
+  - /Element.Forms
+  - /Locale.en-US.Form.Validator
+  - /Element.Shortcuts
+
+provides: [Form.Validator, InputValidator, FormValidator.BaseValidators]
+
+...
+*/
+if (!window.Form) window.Form = {};
+
+var InputValidator = new Class({
+
+	Implements: [Options],
+
+	options: {
+		errorMsg: 'Validation failed.',
+		test: function(field){return true;}
+	},
+
+	initialize: function(className, options){
+		this.setOptions(options);
+		this.className = className;
+	},
+
+	test: function(field, props){
+		if (document.id(field)) return this.options.test(document.id(field), props || this.getProps(field));
+		else return false;
+	},
+
+	getError: function(field, props){
+		var err = this.options.errorMsg;
+		if (typeOf(err) == 'function') err = err(document.id(field), props || this.getProps(field));
+		return err;
+	},
+
+	getProps: function(field){
+		if (!document.id(field)) return {};
+		return field.get('validatorProps');
+	}
+
+});
+
+Element.Properties.validatorProps = {
+
+	set: function(props){
+		return this.eliminate('$moo:validatorProps').store('$moo:validatorProps', props);
+	},
+
+	get: function(props){
+		if (props) this.set(props);
+		if (this.retrieve('$moo:validatorProps')) return this.retrieve('$moo:validatorProps');
+		if (this.getProperty('$moo:validatorProps')){
+			try {
+				this.store('$moo:validatorProps', JSON.decode(this.getProperty('$moo:validatorProps')));
+			}catch(e){
+				return {};
+			}
+		} else {
+			var vals = this.get('class').split(' ').filter(function(cls){
+				return cls.test(':');
+			});
+			if (!vals.length){
+				this.store('$moo:validatorProps', {});
+			} else {
+				props = {};
+				vals.each(function(cls){
+					var split = cls.split(':');
+					if (split[1]){
+						try {
+							props[split[0]] = JSON.decode(split[1]);
+						} catch(e){}
+					}
+				});
+				this.store('$moo:validatorProps', props);
+			}
+		}
+		return this.retrieve('$moo:validatorProps');
+	}
+
+};
+
+Form.Validator = new Class({
+
+	Implements:[Options, Events],
+
+	Binds: ['onSubmit'],
+
+	options: {/*
+		onFormValidate: function(isValid, form, event){},
+		onElementValidate: function(isValid, field, className, warn){},
+		onElementPass: function(field){},
+		onElementFail: function(field, validatorsFailed){}, */
+		fieldSelectors: 'input, select, textarea',
+		ignoreHidden: true,
+		ignoreDisabled: true,
+		useTitles: false,
+		evaluateOnSubmit: true,
+		evaluateFieldsOnBlur: true,
+		evaluateFieldsOnChange: true,
+		serial: true,
+		stopOnFailure: true,
+		warningPrefix: function(){
+			return Form.Validator.getMsg('warningPrefix') || 'Warning: ';
+		},
+		errorPrefix: function(){
+			return Form.Validator.getMsg('errorPrefix') || 'Error: ';
+		}
+	},
+
+	initialize: function(form, options){
+		this.setOptions(options);
+		this.element = document.id(form);
+		this.element.store('validator', this);
+		this.warningPrefix = Function.from(this.options.warningPrefix)();
+		this.errorPrefix = Function.from(this.options.errorPrefix)();
+		if (this.options.evaluateOnSubmit) this.element.addEvent('submit', this.onSubmit);
+		if (this.options.evaluateFieldsOnBlur || this.options.evaluateFieldsOnChange) this.watchFields(this.getFields());
+	},
+
+	toElement: function(){
+		return this.element;
+	},
+
+	getFields: function(){
+		return (this.fields = this.element.getElements(this.options.fieldSelectors));
+	},
+
+	watchFields: function(fields){
+		fields.each(function(el){
+			if (this.options.evaluateFieldsOnBlur)
+				el.addEvent('blur', this.validationMonitor.pass([el, false], this));
+			if (this.options.evaluateFieldsOnChange)
+				el.addEvent('change', this.validationMonitor.pass([el, true], this));
+		}, this);
+	},
+
+	validationMonitor: function(){
+		clearTimeout(this.timer);
+		this.timer = this.validateField.delay(50, this, arguments);
+	},
+
+	onSubmit: function(event){
+		if (!this.validate(event) && event) event.preventDefault();
+		else this.reset();
+	},
+
+	reset: function(){
+		this.getFields().each(this.resetField, this);
+		return this;
+	},
+
+	validate: function(event){
+		var result = this.getFields().map(function(field){
+			return this.validateField(field, true);
+		}, this).every(function(v){ return v;});
+		this.fireEvent('formValidate', [result, this.element, event]);
+		if (this.options.stopOnFailure && !result && event) event.preventDefault();
+		return result;
+	},
+
+	validateField: function(field, force){
+		if (this.paused) return true;
+		field = document.id(field);
+		var passed = !field.hasClass('validation-failed');
+		var failed, warned;
+		if (this.options.serial && !force){
+			failed = this.element.getElement('.validation-failed');
+			warned = this.element.getElement('.warning');
+		}
+		if (field && (!failed || force || field.hasClass('validation-failed') || (failed && !this.options.serial))){
+			var validators = field.className.split(' ').some(function(cn){
+				return this.getValidator(cn);
+			}, this);
+			var validatorsFailed = [];
+			field.className.split(' ').each(function(className){
+				if (className && !this.test(className, field)) validatorsFailed.include(className);
+			}, this);
+			passed = validatorsFailed.length === 0;
+			if (validators && !field.hasClass('warnOnly')){
+				if (passed){
+					field.addClass('validation-passed').removeClass('validation-failed');
+					this.fireEvent('elementPass', field);
+				} else {
+					field.addClass('validation-failed').removeClass('validation-passed');
+					this.fireEvent('elementFail', [field, validatorsFailed]);
+				}
+			}
+			if (!warned){
+				var warnings = field.className.split(' ').some(function(cn){
+					if (cn.test('^warn-') || field.hasClass('warnOnly'))
+						return this.getValidator(cn.replace(/^warn-/,''));
+					else return null;
+				}, this);
+				field.removeClass('warning');
+				var warnResult = field.className.split(' ').map(function(cn){
+					if (cn.test('^warn-') || field.hasClass('warnOnly'))
+						return this.test(cn.replace(/^warn-/,''), field, true);
+					else return null;
+				}, this);
+			}
+		}
+		return passed;
+	},
+
+	test: function(className, field, warn){
+		field = document.id(field);
+		if ((this.options.ignoreHidden && !field.isVisible()) || (this.options.ignoreDisabled && field.get('disabled'))) return true;
+		var validator = this.getValidator(className);
+		warn = warn != null ? warn : false;
+		if (field.hasClass('warnOnly')) warn = true;
+		var isValid = field.hasClass('ignoreValidation') || (validator ? validator.test(field) : true);
+		if (validator) this.fireEvent('elementValidate', [isValid, field, className, warn]);
+		if (warn) return true;
+		return isValid;
+	},
+
+	resetField: function(field){
+		field = document.id(field);
+		if (field){
+			field.className.split(' ').each(function(className){
+				if (className.test('^warn-')) className = className.replace(/^warn-/, '');
+				field.removeClass('validation-failed');
+				field.removeClass('warning');
+				field.removeClass('validation-passed');
+			}, this);
+		}
+		return this;
+	},
+
+	stop: function(){
+		this.paused = true;
+		return this;
+	},
+
+	start: function(){
+		this.paused = false;
+		return this;
+	},
+
+	ignoreField: function(field, warn){
+		field = document.id(field);
+		if (field){
+			this.enforceField(field);
+			if (warn) field.addClass('warnOnly');
+			else field.addClass('ignoreValidation');
+		}
+		return this;
+	},
+
+	enforceField: function(field){
+		field = document.id(field);
+		if (field) field.removeClass('warnOnly').removeClass('ignoreValidation');
+		return this;
+	}
+
+});
+
+Form.Validator.getMsg = function(key){
+	return Locale.get('FormValidator.' + key);
+};
+
+Form.Validator.adders = {
+
+	validators:{},
+
+	add : function(className, options){
+		this.validators[className] = new InputValidator(className, options);
+		//if this is a class (this method is used by instances of Form.Validator and the Form.Validator namespace)
+		//extend these validators into it
+		//this allows validators to be global and/or per instance
+		if (!this.initialize){
+			this.implement({
+				validators: this.validators
+			});
+		}
+	},
+
+	addAllThese : function(validators){
+		Array.from(validators).each(function(validator){
+			this.add(validator[0], validator[1]);
+		}, this);
+	},
+
+	getValidator: function(className){
+		return this.validators[className.split(':')[0]];
+	}
+
+};
+
+Object.append(Form.Validator, Form.Validator.adders);
+
+Form.Validator.implement(Form.Validator.adders);
+
+Form.Validator.add('IsEmpty', {
+
+	errorMsg: false,
+	test: function(element){
+		if (element.type == 'select-one' || element.type == 'select')
+			return !(element.selectedIndex >= 0 && element.options[element.selectedIndex].value != '');
+		else
+			return ((element.get('value') == null) || (element.get('value').length == 0));
+	}
+
+});
+
+Form.Validator.addAllThese([
+
+	['required', {
+		errorMsg: function(){
+			return Form.Validator.getMsg('required');
+		},
+		test: function(element){
+			return !Form.Validator.getValidator('IsEmpty').test(element);
+		}
+	}],
+
+	['minLength', {
+		errorMsg: function(element, props){
+			if (typeOf(props.minLength) != 'null')
+				return Form.Validator.getMsg('minLength').substitute({minLength:props.minLength,length:element.get('value').length });
+			else return '';
+		},
+		test: function(element, props){
+			if (typeOf(props.minLength) != 'null') return (element.get('value').length >= (props.minLength || 0));
+			else return true;
+		}
+	}],
+
+	['maxLength', {
+		errorMsg: function(element, props){
+			//props is {maxLength:10}
+			if (typeOf(props.maxLength) != 'null')
+				return Form.Validator.getMsg('maxLength').substitute({maxLength:props.maxLength,length:element.get('value').length });
+			else return '';
+		},
+		test: function(element, props){
+			//if the value is <= than the maxLength value, element passes test
+			return (element.get('value').length <= (props.maxLength || 10000));
+		}
+	}],
+
+	['validate-integer', {
+		errorMsg: Form.Validator.getMsg.pass('integer'),
+		test: function(element){
+			return Form.Validator.getValidator('IsEmpty').test(element) || (/^(-?[1-9]\d*|0)$/).test(element.get('value'));
+		}
+	}],
+
+	['validate-numeric', {
+		errorMsg: Form.Validator.getMsg.pass('numeric'),
+		test: function(element){
+			return Form.Validator.getValidator('IsEmpty').test(element) ||
+				(/^-?(?:0$0(?=\d*\.)|[1-9]|0)\d*(\.\d+)?$/).test(element.get('value'));
+		}
+	}],
+
+	['validate-digits', {
+		errorMsg: Form.Validator.getMsg.pass('digits'),
+		test: function(element){
+			return Form.Validator.getValidator('IsEmpty').test(element) || (/^[\d() .:\-\+#]+$/.test(element.get('value')));
+		}
+	}],
+
+	['validate-alpha', {
+		errorMsg: Form.Validator.getMsg.pass('alpha'),
+		test: function(element){
+			return Form.Validator.getValidator('IsEmpty').test(element) || (/^[a-zA-Z]+$/).test(element.get('value'));
+		}
+	}],
+
+	['validate-alphanum', {
+		errorMsg: Form.Validator.getMsg.pass('alphanum'),
+		test: function(element){
+			return Form.Validator.getValidator('IsEmpty').test(element) || !(/\W/).test(element.get('value'));
+		}
+	}],
+
+	['validate-date', {
+		errorMsg: function(element, props){
+			if (Date.parse){
+				var format = props.dateFormat || '%x';
+				return Form.Validator.getMsg('dateSuchAs').substitute({date: new Date().format(format)});
+			} else {
+				return Form.Validator.getMsg('dateInFormatMDY');
+			}
+		},
+		test: function(element, props){
+			if (Form.Validator.getValidator('IsEmpty').test(element)) return true;
+			var d;
+			if (Date.parse){
+				var format = props.dateFormat || '%x';
+				d = Date.parse(element.get('value'));
+				var formatted = d.format(format);
+				if (formatted != 'invalid date') element.set('value', formatted);
+				return !isNaN(d);
+			} else {
+				var regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+				if (!regex.test(element.get('value'))) return false;
+				d = new Date(element.get('value').replace(regex, '$1/$2/$3'));
+				return (parseInt(RegExp.$1, 10) == (1 + d.getMonth())) &&
+					(parseInt(RegExp.$2, 10) == d.getDate()) &&
+					(parseInt(RegExp.$3, 10) == d.getFullYear());
+			}
+		}
+	}],
+
+	['validate-email', {
+		errorMsg: Form.Validator.getMsg.pass('email'),
+		test: function(element){
+			return Form.Validator.getValidator('IsEmpty').test(element) || (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i).test(element.get('value'));
+		}
+	}],
+
+	['validate-url', {
+		errorMsg: Form.Validator.getMsg.pass('url'),
+		test: function(element){
+			return Form.Validator.getValidator('IsEmpty').test(element) || (/^(https?|ftp|rmtp|mms):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i).test(element.get('value'));
+		}
+	}],
+
+	['validate-currency-dollar', {
+		errorMsg: Form.Validator.getMsg.pass('currencyDollar'),
+		test: function(element){
+			// [$]1[##][,###]+[.##]
+			// [$]1###+[.##]
+			// [$]0.##
+			// [$].##
+			return Form.Validator.getValidator('IsEmpty').test(element) || (/^\$?\-?([1-9]{1}[0-9]{0,2}(\,[0-9]{3})*(\.[0-9]{0,2})?|[1-9]{1}\d*(\.[0-9]{0,2})?|0(\.[0-9]{0,2})?|(\.[0-9]{1,2})?)$/).test(element.get('value'));
+		}
+	}],
+
+	['validate-one-required', {
+		errorMsg: Form.Validator.getMsg.pass('oneRequired'),
+		test: function(element, props){
+			var p = document.id(props['validate-one-required']) || element.getParent(props['validate-one-required']);
+			return p.getElements('input').some(function(el){
+				if (['checkbox', 'radio'].contains(el.get('type'))) return el.get('checked');
+				return el.get('value');
+			});
+		}
+	}]
+
+]);
+
+Element.Properties.validator = {
+
+	set: function(options){
+		var validator = this.retrieve('validator');
+		if (validator) validator.setOptions(options);
+		return this.store('$moo:validator:options', options);
+	},
+
+	get: function(options){
+		if (options || !this.retrieve('validator')){
+			if (options || !this.retrieve('$moo:validator:options')) this.set('validator', options);
+			this.store('validator', new Form.Validator(this, this.retrieve('$moo:validator:options')));
+		}
+		return this.retrieve('validator');
+	}
+
+};
+
+Element.implement({
+
+	validate: function(options){
+		if (options) this.set('validator', options);
+		return this.get('validator', options).validate();
+	}
+
+});
+//<1.2compat>
+//legacy
+var FormValidator = Form.Validator;
+//</1.2compat>
+
+
+/*
+---
+
+script: Form.Validator.Inline.js
+
+name: Form.Validator.Inline
+
+description: Extends Form.Validator to add inline messages.
+
+license: MIT-style license
+
+authors:
+  - Aaron Newton
+
+requires:
+  - /Form.Validator
+
+provides: [Form.Validator.Inline]
+
+...
+*/
+
+Form.Validator.Inline = new Class({
+
+	Extends: Form.Validator,
+
+	options: {
+		showError: function(errorElement){
+			if (errorElement.reveal) errorElement.reveal();
+			else errorElement.setStyle('display', 'block');
+		},
+		hideError: function(errorElement){
+			if (errorElement.dissolve) errorElement.dissolve();
+			else errorElement.setStyle('display', 'none');
+		},
+		scrollToErrorsOnSubmit: true,
+		scrollToErrorsOnBlur: false,
+		scrollToErrorsOnChange: false,
+		scrollFxOptions: {
+			transition: 'quad:out',
+			offset: {
+				y: -20
+			}
+		}
+	},
+
+	initialize: function(form, options){
+		this.parent(form, options);
+		this.addEvent('onElementValidate', function(isValid, field, className, warn){
+			var validator = this.getValidator(className);
+			if (!isValid && validator.getError(field)){
+				if (warn) field.addClass('warning');
+				var advice = this.makeAdvice(className, field, validator.getError(field), warn);
+				this.insertAdvice(advice, field);
+				this.showAdvice(className, field);
+			} else {
+				this.hideAdvice(className, field);
+			}
+		});
+	},
+
+	makeAdvice: function(className, field, error, warn){
+		var errorMsg = (warn) ? this.warningPrefix : this.errorPrefix;
+			errorMsg += (this.options.useTitles) ? field.title || error:error;
+		var cssClass = (warn) ? 'warning-advice' : 'validation-advice';
+		var advice = this.getAdvice(className, field);
+		if (advice){
+			advice = advice.set('html', errorMsg);
+		} else {
+			advice = new Element('div', {
+				html: errorMsg,
+				styles: { display: 'none' },
+				id: 'advice-' + className.split(':')[0] + '-' + this.getFieldId(field)
+			}).addClass(cssClass);
+		}
+		field.store('$moo:advice-' + className, advice);
+		return advice;
+	},
+
+	getFieldId : function(field){
+		return field.id ? field.id : field.id = 'input_' + field.name;
+	},
+
+	showAdvice: function(className, field){
+		var advice = this.getAdvice(className, field);
+		if (advice && !field.retrieve('$moo:' + this.getPropName(className))
+				&& (advice.getStyle('display') == 'none'
+				|| advice.getStyle('visiblity') == 'hidden'
+				|| advice.getStyle('opacity') == 0)){
+			field.store('$moo:' + this.getPropName(className), true);
+			this.options.showError(advice);
+			this.fireEvent('showAdvice', [field, advice, className]);
+		}
+	},
+
+	hideAdvice: function(className, field){
+		var advice = this.getAdvice(className, field);
+		if (advice && field.retrieve('$moo:' + this.getPropName(className))){
+			field.store('$moo:' + this.getPropName(className), false);
+			this.options.hideError(advice);
+			this.fireEvent('hideAdvice', [field, advice, className]);
+		}
+	},
+
+	getPropName: function(className){
+		return 'advice' + className;
+	},
+
+	resetField: function(field){
+		field = document.id(field);
+		if (!field) return this;
+		this.parent(field);
+		field.className.split(' ').each(function(className){
+			this.hideAdvice(className, field);
+		}, this);
+		return this;
+	},
+
+	getAllAdviceMessages: function(field, force){
+		var advice = [];
+		if (field.hasClass('ignoreValidation') && !force) return advice;
+		var validators = field.className.split(' ').some(function(cn){
+			var warner = cn.test('^warn-') || field.hasClass('warnOnly');
+			if (warner) cn = cn.replace(/^warn-/, '');
+			var validator = this.getValidator(cn);
+			if (!validator) return;
+			advice.push({
+				message: validator.getError(field),
+				warnOnly: warner,
+				passed: validator.test(),
+				validator: validator
+			});
+		}, this);
+		return advice;
+	},
+
+	getAdvice: function(className, field){
+		return field.retrieve('$moo:advice-' + className);
+	},
+
+	insertAdvice: function(advice, field){
+		//Check for error position prop
+		var props = field.get('validatorProps');
+		//Build advice
+		if (!props.msgPos || !document.id(props.msgPos)){
+			if (field.type && field.type.toLowerCase() == 'radio') field.getParent().adopt(advice);
+			else advice.inject(document.id(field), 'after');
+		} else {
+			document.id(props.msgPos).grab(advice);
+		}
+	},
+
+	validateField: function(field, force, scroll){
+		var result = this.parent(field, force);
+		if (((this.options.scrollToErrorsOnSubmit && scroll == null) || scroll) && !result){
+			var failed = document.id(this).getElement('.validation-failed');
+			var par = document.id(this).getParent();
+			while (par != document.body && par.getScrollSize().y == par.getSize().y){
+				par = par.getParent();
+			}
+			var fx = par.retrieve('$moo:fvScroller');
+			if (!fx && window.Fx && Fx.Scroll){
+				fx = new Fx.Scroll(par, this.options.scrollFxOptions);
+				par.store('$moo:fvScroller', fx);
+			}
+			if (failed){
+				if (fx) fx.toElement(failed);
+				else par.scrollTo(par.getScroll().x, failed.getPosition(par).y - 20);
+			}
+		}
+		return result;
+	},
+
+	watchFields: function(fields){
+		fields.each(function(el){
+		if (this.options.evaluateFieldsOnBlur){
+			el.addEvent('blur', this.validationMonitor.pass([el, false, this.options.scrollToErrorsOnBlur], this));
+		}
+		if (this.options.evaluateFieldsOnChange){
+				el.addEvent('change', this.validationMonitor.pass([el, true, this.options.scrollToErrorsOnChange], this));
+			}
+		}, this);
+	}
+
+});
+
+
+/*
+---
+
+script: Form.Validator.Extras.js
+
+name: Form.Validator.Extras
+
+description: Additional validators for the Form.Validator class.
+
+license: MIT-style license
+
+authors:
+  - Aaron Newton
+
+requires:
+  - /Form.Validator
+
+provides: [Form.Validator.Extras]
+
+...
+*/
+Form.Validator.addAllThese([
+
+	['validate-enforce-oncheck', {
+		test: function(element, props){
+			var fv = element.getParent('form').retrieve('validator');
+			if (!fv) return true;
+			(props.toEnforce || document.id(props.enforceChildrenOf).getElements('input, select, textarea')).map(function(item){
+				if (element.checked){
+					fv.enforceField(item);
+				} else {
+					fv.ignoreField(item);
+					fv.resetField(item);
+				}
+			});
+			return true;
+		}
+	}],
+
+	['validate-ignore-oncheck', {
+		test: function(element, props){
+			var fv = element.getParent('form').retrieve('validator');
+			if (!fv) return true;
+			(props.toIgnore || document.id(props.ignoreChildrenOf).getElements('input, select, textarea')).each(function(item){
+				if (element.checked){
+					fv.ignoreField(item);
+					fv.resetField(item);
+				} else {
+					fv.enforceField(item);
+				}
+			});
+			return true;
+		}
+	}],
+
+	['validate-nospace', {
+		errorMsg: function(){
+			return Form.Validator.getMsg('noSpace');
+		},
+		test: function(element, props){
+			return !element.get('value').test(/\s/);
+		}
+	}],
+
+	['validate-toggle-oncheck', {
+		test: function(element, props){
+			var fv = element.getParent('form').retrieve('validator');
+			if (!fv) return true;
+			var eleArr = props.toToggle || document.id(props.toToggleChildrenOf).getElements('input, select, textarea');
+			if (!element.checked){
+				eleArr.each(function(item){
+					fv.ignoreField(item);
+					fv.resetField(item);
+				});
+			} else {
+				eleArr.each(function(item){
+					fv.enforceField(item);
+				});
+			}
+			return true;
+		}
+	}],
+
+	['validate-reqchk-bynode', {
+		errorMsg: function(){
+			return Form.Validator.getMsg('reqChkByNode');
+		},
+		test: function(element, props){
+			return (document.id(props.nodeId).getElements(props.selector || 'input[type=checkbox], input[type=radio]')).some(function(item){
+				return item.checked;
+			});
+		}
+	}],
+
+	['validate-required-check', {
+		errorMsg: function(element, props){
+			return props.useTitle ? element.get('title') : Form.Validator.getMsg('requiredChk');
+		},
+		test: function(element, props){
+			return !!element.checked;
+		}
+	}],
+
+	['validate-reqchk-byname', {
+		errorMsg: function(element, props){
+			return Form.Validator.getMsg('reqChkByName').substitute({label: props.label || element.get('type')});
+		},
+		test: function(element, props){
+			var grpName = props.groupName || element.get('name');
+			var oneCheckedItem = $$(document.getElementsByName(grpName)).some(function(item, index){
+				return item.checked;
+			});
+			var fv = element.getParent('form').retrieve('validator');
+			if (oneCheckedItem && fv) fv.resetField(element);
+			return oneCheckedItem;
+		}
+	}],
+
+	['validate-match', {
+		errorMsg: function(element, props){
+			return Form.Validator.getMsg('match').substitute({matchName: props.matchName || document.id(props.matchInput).get('name')});
+		},
+		test: function(element, props){
+			var eleVal = element.get('value');
+			var matchVal = document.id(props.matchInput) && document.id(props.matchInput).get('value');
+			return eleVal && matchVal ? eleVal == matchVal : true;
+		}
+	}],
+
+	['validate-after-date', {
+		errorMsg: function(element, props){
+			return Form.Validator.getMsg('afterDate').substitute({
+				label: props.afterLabel || (props.afterElement ? Form.Validator.getMsg('startDate') : Form.Validator.getMsg('currentDate'))
+			});
+		},
+		test: function(element, props){
+			var start = document.id(props.afterElement) ? Date.parse(document.id(props.afterElement).get('value')) : new Date();
+			var end = Date.parse(element.get('value'));
+			return end && start ? end >= start : true;
+		}
+	}],
+
+	['validate-before-date', {
+		errorMsg: function(element, props){
+			return Form.Validator.getMsg('beforeDate').substitute({
+				label: props.beforeLabel || (props.beforeElement ? Form.Validator.getMsg('endDate') : Form.Validator.getMsg('currentDate'))
+			});
+		},
+		test: function(element, props){
+			var start = Date.parse(element.get('value'));
+			var end = document.id(props.beforeElement) ? Date.parse(document.id(props.beforeElement).get('value')) : new Date();
+			return end && start ? end >= start : true;
+		}
+	}],
+
+	['validate-custom-required', {
+		errorMsg: function(){
+			return Form.Validator.getMsg('required');
+		},
+		test: function(element, props){
+			return element.get('value') != props.emptyValue;
+		}
+	}],
+
+	['validate-same-month', {
+		errorMsg: function(element, props){
+			var startMo = document.id(props.sameMonthAs) && document.id(props.sameMonthAs).get('value');
+			var eleVal = element.get('value');
+			if (eleVal != '') return Form.Validator.getMsg(startMo ? 'sameMonth' : 'startMonth');
+		},
+		test: function(element, props){
+			var d1 = Date.parse(element.get('value'));
+			var d2 = Date.parse(document.id(props.sameMonthAs) && document.id(props.sameMonthAs).get('value'));
+			return d1 && d2 ? d1.format('%B') == d2.format('%B') : true;
+		}
+	}],
+
+
+	['validate-cc-num', {
+		errorMsg: function(element){
+			var ccNum = element.get('value').replace(/[^0-9]/g, '');
+			return Form.Validator.getMsg('creditcard').substitute({length: ccNum.length});
+		},
+		test: function(element){
+			// required is a different test
+			if (Form.Validator.getValidator('IsEmpty').test(element)) return true;
+
+			// Clean number value
+			var ccNum = element.get('value');
+			ccNum = ccNum.replace(/[^0-9]/g, '');
+
+			var valid_type = false;
+
+			if (ccNum.test(/^4[0-9]{12}([0-9]{3})?$/)) valid_type = 'Visa';
+			else if (ccNum.test(/^5[1-5]([0-9]{14})$/)) valid_type = 'Master Card';
+			else if (ccNum.test(/^3[47][0-9]{13}$/)) valid_type = 'American Express';
+			else if (ccNum.test(/^6011[0-9]{12}$/)) valid_type = 'Discover';
+
+			if (valid_type){
+				var sum = 0;
+				var cur = 0;
+
+				for (var i=ccNum.length-1; i>=0; --i){
+					cur = ccNum.charAt(i).toInt();
+					if (cur == 0) continue;
+
+					if ((ccNum.length-i) % 2 == 0) cur += cur;
+					if (cur > 9){
+						cur = cur.toString().charAt(0).toInt() + cur.toString().charAt(1).toInt();
+					}
+
+					sum += cur;
+				}
+				if ((sum % 10) == 0) return true;
+			}
+
+			var chunks = '';
+			while (ccNum != ''){
+				chunks += ' ' + ccNum.substr(0,4);
+				ccNum = ccNum.substr(4);
+			}
+
+			element.getParent('form').retrieve('validator').ignoreField(element);
+			element.set('value', chunks.clean());
+			element.getParent('form').retrieve('validator').enforceField(element);
+			return false;
+		}
+	}]
+
+
+]);
+
+
+/*
+---
+
+script: OverText.js
+
+name: OverText
+
+description: Shows text over an input that disappears when the user clicks into it. The text remains hidden if the user adds a value.
+
+license: MIT-style license
+
+authors:
+  - Aaron Newton
+
+requires:
+  - Core/Options
+  - Core/Events
+  - Core/Element.Event
+  - /Class.Binds
+  - /Class.Occlude
+  - /Element.Position
+  - /Element.Shortcuts
+
+provides: [OverText]
+
+...
+*/
+
+var OverText = new Class({
+
+	Implements: [Options, Events, Class.Occlude],
+
+	Binds: ['reposition', 'assert', 'focus', 'hide'],
+
+	options: {/*
+		textOverride: null,
+		onFocus: function(){},
+		onTextHide: function(textEl, inputEl){},
+		onTextShow: function(textEl, inputEl){}, */
+		element: 'label',
+		positionOptions: {
+			position: 'upperLeft',
+			edge: 'upperLeft',
+			offset: {
+				x: 4,
+				y: 2
+			}
+		},
+		poll: false,
+		pollInterval: 250,
+		wrap: false
+	},
+
+	property: 'OverText',
+
+	initialize: function(element, options){
+		this.element = document.id(element);
+		if (this.occlude()) return this.occluded;
+		this.setOptions(options);
+		this.attach(this.element);
+		OverText.instances.push(this);
+		if (this.options.poll) this.poll();
+		return this;
+	},
+
+	toElement: function(){
+		return this.element;
+	},
+
+	attach: function(){
+		var val = this.options.textOverride || this.element.get('alt') || this.element.get('title');
+		if (!val) return;
+		this.text = new Element(this.options.element, {
+			'class': 'overTxtLabel',
+			styles: {
+				lineHeight: 'normal',
+				position: 'absolute',
+				cursor: 'text'
+			},
+			html: val,
+			events: {
+				click: this.hide.pass(this.options.element == 'label', this)
+			}
+		}).inject(this.element, 'after');
+		if (this.options.element == 'label'){
+			if (!this.element.get('id')) this.element.set('id', 'input_' + new Date().getTime());
+			this.text.set('for', this.element.get('id'));
+		}
+
+		if (this.options.wrap){
+			this.textHolder = new Element('div', {
+				styles: {
+					lineHeight: 'normal',
+					position: 'relative'
+				},
+				'class':'overTxtWrapper'
+			}).adopt(this.text).inject(this.element, 'before');
+		}
+
+		return this.enable();
+	},
+
+	destroy: function(){
+		this.element.eliminate('OverTextDiv').eliminate('OverText');
+		this.disable();
+		if (this.text) this.text.destroy();
+		if (this.textHolder) this.textHolder.destroy();
+		return this;
+	},
+
+	disable: function(){
+		this.element.removeEvents({
+			focus: this.focus,
+			blur: this.assert,
+			change: this.assert
+		});
+		window.removeEvent('resize', this.reposition);
+		this.hide(true, true);
+		return this;
+	},
+
+	enable: function(){
+		this.element.addEvents({
+			focus: this.focus,
+			blur: this.assert,
+			change: this.assert
+		});
+		window.addEvent('resize', this.reposition);
+		this.assert(true);
+		this.reposition();
+		return this;
+	},
+
+	wrap: function(){
+		if (this.options.element == 'label'){
+			if (!this.element.get('id')) this.element.set('id', 'input_' + new Date().getTime());
+			this.text.set('for', this.element.get('id'));
+		}
+	},
+
+	startPolling: function(){
+		this.pollingPaused = false;
+		return this.poll();
+	},
+
+	poll: function(stop){
+		//start immediately
+		//pause on focus
+		//resumeon blur
+		if (this.poller && !stop) return this;
+		var test = function(){
+			if (!this.pollingPaused) this.assert(true);
+		}.bind(this);
+		if (stop) clearInterval(this.poller);
+		else this.poller = test.periodical(this.options.pollInterval, this);
+		return this;
+	},
+
+	stopPolling: function(){
+		this.pollingPaused = true;
+		return this.poll(true);
+	},
+
+	focus: function(){
+		if (this.text && (!this.text.isDisplayed() || this.element.get('disabled'))) return;
+		this.hide();
+	},
+
+	hide: function(suppressFocus, force){
+		if (this.text && (this.text.isDisplayed() && (!this.element.get('disabled') || force))){
+			this.text.hide();
+			this.fireEvent('textHide', [this.text, this.element]);
+			this.pollingPaused = true;
+			if (!suppressFocus){
+				try {
+					this.element.fireEvent('focus');
+					this.element.focus();
+				} catch(e){} //IE barfs if you call focus on hidden elements
+			}
+		}
+		return this;
+	},
+
+	show: function(){
+		if (this.text && !this.text.isDisplayed()){
+			this.text.show();
+			this.reposition();
+			this.fireEvent('textShow', [this.text, this.element]);
+			this.pollingPaused = false;
+		}
+		return this;
+	},
+
+	assert: function(suppressFocus){
+		this[this.test() ? 'show' : 'hide'](suppressFocus);
+	},
+
+	test: function(){
+		var v = this.element.get('value');
+		return !v;
+	},
+
+	reposition: function(){
+		this.assert(true);
+		if (!this.element.isVisible()) return this.stopPolling().hide();
+		if (this.text && this.test()) this.text.position(Object.merge(this.options.positionOptions, {relativeTo: this.element}));
+		return this;
+	}
+
+});
+
+OverText.instances = [];
+
+Object.append(OverText, {
+
+	each: function(fn){
+		return OverText.instances.map(function(ot, i){
+			if (ot.element && ot.text) return fn.apply(OverText, [ot, i]);
+			return null; //the input or the text was destroyed
+		});
+	},
+
+	update: function(){
+
+		return OverText.each(function(ot){
+			return ot.reposition();
+		});
+
+	},
+
+	hideAll: function(){
+
+		return OverText.each(function(ot){
+			return ot.hide(true, true);
+		});
+
+	},
+
+	showAll: function(){
+		return OverText.each(function(ot){
+			return ot.show();
+		});
+	}
+
+});
+
+if (window.Fx && Fx.Reveal){
+	Fx.Reveal.implement({
+		hideInputs: Browser.ie ? 'select, input, textarea, object, embed, .overTxtLabel' : false
+	});
+}
+
+
+/*
+---
+
 script: Fx.Elements.js
 
 name: Fx.Elements
@@ -2297,402 +5735,6 @@ var Accordion = new Class({
 /*
 ---
 
-script: Element.Measure.js
-
-name: Element.Measure
-
-description: Extends the Element native object to include methods useful in measuring dimensions.
-
-credits: "Element.measure / .expose methods by Daniel Steigerwald License: MIT-style license. Copyright: Copyright (c) 2008 Daniel Steigerwald, daniel.steigerwald.cz"
-
-license: MIT-style license
-
-authors:
-  - Aaron Newton
-
-requires:
-  - Core/Element.Style
-  - Core/Element.Dimensions
-  - /MooTools.More
-
-provides: [Element.Measure]
-
-...
-*/
-
-(function(){
-
-var getStylesList = function(styles, planes){
-	var list = [];
-	Object.each(planes, function(directions){
-		Object.each(directions, function(edge){
-			styles.each(function(style){
-				list.push(style + '-' + edge + (style == 'border' ? '-width' : ''));
-			});
-		});
-	});
-	return list;
-};
-
-var calculateEdgeSize = function(edge, styles){
-	var total = 0;
-	Object.each(styles, function(value, style){
-		if (style.test(edge)) total = total + value.toInt();
-	});
-	return total;
-};
-
-
-Element.implement({
-
-	measure: function(fn){
-		var visibility = function(el){
-			return !!(!el || el.offsetHeight || el.offsetWidth);
-		};
-		if (visibility(this)) return fn.apply(this);
-		var parent = this.getParent(),
-			restorers = [],
-			toMeasure = [];
-		while (!visibility(parent) && parent != document.body){
-			toMeasure.push(parent.expose());
-			parent = parent.getParent();
-		}
-		var restore = this.expose();
-		var result = fn.apply(this);
-		restore();
-		toMeasure.each(function(restore){
-			restore();
-		});
-		return result;
-	},
-
-	expose: function(){
-		if (this.getStyle('display') != 'none') return function(){};
-		var before = this.style.cssText;
-		this.setStyles({
-			display: 'block',
-			position: 'absolute',
-			visibility: 'hidden'
-		});
-		return function(){
-			this.style.cssText = before;
-		}.bind(this);
-	},
-
-	getDimensions: function(options){
-		options = Object.merge({computeSize: false}, options);
-		var dim = {x: 0, y: 0};
-
-		var getSize = function(el, options){
-			return (options.computeSize) ? el.getComputedSize(options) : el.getSize();
-		};
-
-		var parent = this.getParent('body');
-
-		if (parent && this.getStyle('display') == 'none'){
-			dim = this.measure(function(){
-				return getSize(this, options);
-			});
-		} else if (parent){
-			try { //safari sometimes crashes here, so catch it
-				dim = getSize(this, options);
-			}catch(e){}
-		}
-
-		return Object.append(dim, (dim.x || dim.x === 0) ? {
-				width: dim.x,
-				height: dim.y
-			} : {
-				x: dim.width,
-				y: dim.height
-			}
-		);
-	},
-
-	getComputedSize: function(options){
-		//<1.2compat>
-		//legacy support for my stupid spelling error
-		if (options && options.plains) options.planes = options.plains;
-		//</1.2compat>
-
-		options = Object.merge({
-			styles: ['padding','border'],
-			planes: {
-				height: ['top','bottom'],
-				width: ['left','right']
-			},
-			mode: 'both'
-		}, options);
-
-		var styles = {},
-			size = {width: 0, height: 0};
-
-		if (options.mode == 'vertical'){
-			delete size.width;
-			delete options.planes.width;
-		} else if (options.mode == 'horizontal'){
-			delete size.height;
-			delete options.planes.height;
-		}
-
-
-		getStylesList(options.styles, options.planes).each(function(style){
-			styles[style] = this.getStyle(style).toInt();
-		}, this);
-
-		Object.each(options.planes, function(edges, plane){
-
-			var capitalized = plane.capitalize();
-			styles[plane] = this.getStyle(plane).toInt();
-			size['total' + capitalized] = styles[plane];
-
-			edges.each(function(edge){
-				var edgesize = calculateEdgeSize(edge, styles);
-				size['computed' + edge.capitalize()] = edgesize;
-				size['total' + capitalized] += edgesize;
-			});
-
-		}, this);
-
-		return Object.append(size, styles);
-	}
-
-});
-
-})();
-
-
-/*
----
-
-script: Element.Position.js
-
-name: Element.Position
-
-description: Extends the Element native object to include methods useful positioning elements relative to others.
-
-license: MIT-style license
-
-authors:
-  - Aaron Newton
-
-requires:
-  - Core/Element.Dimensions
-  - /Element.Measure
-
-provides: [Element.Position]
-
-...
-*/
-
-(function(){
-
-var original = Element.prototype.position;
-
-Element.implement({
-
-	position: function(options){
-		//call original position if the options are x/y values
-		if (options && (options.x != null || options.y != null)){
-			return original ? original.apply(this, arguments) : this;
-		}
-
-		Object.each(options || {}, function(v, k){
-			if (v == null) delete options[k];
-		});
-
-		options = Object.merge({
-			// minimum: { x: 0, y: 0 },
-			// maximum: { x: 0, y: 0},
-			relativeTo: document.body,
-			position: {
-				x: 'center', //left, center, right
-				y: 'center' //top, center, bottom
-			},
-			offset: {x: 0, y: 0}/*,
-			edge: false,
-			returnPos: false,
-			relFixedPosition: false,
-			ignoreMargins: false,
-			ignoreScroll: false,
-			allowNegative: false*/
-		}, options);
-
-		//compute the offset of the parent positioned element if this element is in one
-		var parentOffset = {x: 0, y: 0},
-			parentPositioned = false;
-
-		/* dollar around getOffsetParent should not be necessary, but as it does not return
-		 * a mootools extended element in IE, an error occurs on the call to expose. See:
-		 * http://mootools.lighthouseapp.com/projects/2706/tickets/333-element-getoffsetparent-inconsistency-between-ie-and-other-browsers */
-		var offsetParent = this.measure(function(){
-			return document.id(this.getOffsetParent());
-		});
-		if (offsetParent && offsetParent != this.getDocument().body){
-			parentOffset = offsetParent.measure(function(){
-				return this.getPosition();
-			});
-			parentPositioned = offsetParent != document.id(options.relativeTo);
-			options.offset.x = options.offset.x - parentOffset.x;
-			options.offset.y = options.offset.y - parentOffset.y;
-		}
-
-		//upperRight, bottomRight, centerRight, upperLeft, bottomLeft, centerLeft
-		//topRight, topLeft, centerTop, centerBottom, center
-		var fixValue = function(option){
-			if (typeOf(option) != 'string') return option;
-			option = option.toLowerCase();
-			var val = {};
-
-			if (option.test('left')){
-				val.x = 'left';
-			} else if (option.test('right')){
-				val.x = 'right';
-			} else {
-				val.x = 'center';
-			}
-
-			if (option.test('upper') || option.test('top')){
-				val.y = 'top';
-			} else if (option.test('bottom')){
-				val.y = 'bottom';
-			} else {
-				val.y = 'center';
-			}
-
-			return val;
-		};
-
-		options.edge = fixValue(options.edge);
-		options.position = fixValue(options.position);
-		if (!options.edge){
-			if (options.position.x == 'center' && options.position.y == 'center') options.edge = {x:'center', y:'center'};
-			else options.edge = {x:'left', y:'top'};
-		}
-
-		this.setStyle('position', 'absolute');
-		var rel = document.id(options.relativeTo) || document.body,
-				calc = rel == document.body ? window.getScroll() : rel.getPosition(),
-				top = calc.y, left = calc.x;
-
-		var dim = this.getDimensions({
-			computeSize: true,
-			styles:['padding', 'border','margin']
-		});
-
-		var pos = {},
-			prefY = options.offset.y,
-			prefX = options.offset.x,
-			winSize = window.getSize();
-
-		switch(options.position.x){
-			case 'left':
-				pos.x = left + prefX;
-				break;
-			case 'right':
-				pos.x = left + prefX + rel.offsetWidth;
-				break;
-			default: //center
-				pos.x = left + ((rel == document.body ? winSize.x : rel.offsetWidth)/2) + prefX;
-				break;
-		}
-
-		switch(options.position.y){
-			case 'top':
-				pos.y = top + prefY;
-				break;
-			case 'bottom':
-				pos.y = top + prefY + rel.offsetHeight;
-				break;
-			default: //center
-				pos.y = top + ((rel == document.body ? winSize.y : rel.offsetHeight)/2) + prefY;
-				break;
-		}
-
-		if (options.edge){
-			var edgeOffset = {};
-
-			switch(options.edge.x){
-				case 'left':
-					edgeOffset.x = 0;
-					break;
-				case 'right':
-					edgeOffset.x = -dim.x-dim.computedRight-dim.computedLeft;
-					break;
-				default: //center
-					edgeOffset.x = -(dim.totalWidth/2);
-					break;
-			}
-
-			switch(options.edge.y){
-				case 'top':
-					edgeOffset.y = 0;
-					break;
-				case 'bottom':
-					edgeOffset.y = -dim.y-dim.computedTop-dim.computedBottom;
-					break;
-				default: //center
-					edgeOffset.y = -(dim.totalHeight/2);
-					break;
-			}
-
-			pos.x += edgeOffset.x;
-			pos.y += edgeOffset.y;
-		}
-
-		pos = {
-			left: ((pos.x >= 0 || parentPositioned || options.allowNegative) ? pos.x : 0).toInt(),
-			top: ((pos.y >= 0 || parentPositioned || options.allowNegative) ? pos.y : 0).toInt()
-		};
-
-		var xy = {left: 'x', top: 'y'};
-
-		['minimum', 'maximum'].each(function(minmax){
-			['left', 'top'].each(function(lr){
-				var val = options[minmax] ? options[minmax][xy[lr]] : null;
-				if (val != null && ((minmax == 'minimum') ? pos[lr] < val : pos[lr] > val)) pos[lr] = val;
-			});
-		});
-
-		if (rel.getStyle('position') == 'fixed' || options.relFixedPosition){
-			var winScroll = window.getScroll();
-			pos.top+= winScroll.y;
-			pos.left+= winScroll.x;
-		}
-		if (options.ignoreScroll){
-			var relScroll = rel.getScroll();
-			pos.top -= relScroll.y;
-			pos.left -= relScroll.x;
-		}
-
-		if (options.ignoreMargins){
-			pos.left += (
-				options.edge.x == 'right' ? dim['margin-right'] :
-				options.edge.x == 'center' ? -dim['margin-left'] + ((dim['margin-right'] + dim['margin-left'])/2) :
-					- dim['margin-left']
-			);
-			pos.top += (
-				options.edge.y == 'bottom' ? dim['margin-bottom'] :
-				options.edge.y == 'center' ? -dim['margin-top'] + ((dim['margin-bottom'] + dim['margin-top'])/2) :
-					- dim['margin-top']
-			);
-		}
-
-		pos.left = Math.ceil(pos.left);
-		pos.top = Math.ceil(pos.top);
-		if (options.returnPos) return pos;
-		else this.setStyles(pos);
-		return this;
-	}
-
-});
-
-})();
-
-
-/*
----
-
 script: Fx.Move.js
 
 name: Fx.Move
@@ -2758,311 +5800,6 @@ Element.implement({
 	move: function(options){
 		this.get('move').start(options);
 		return this;
-	}
-
-});
-
-
-/*
----
-
-script: Element.Shortcuts.js
-
-name: Element.Shortcuts
-
-description: Extends the Element native object to include some shortcut methods.
-
-license: MIT-style license
-
-authors:
-  - Aaron Newton
-
-requires:
-  - Core/Element.Style
-  - /MooTools.More
-
-provides: [Element.Shortcuts]
-
-...
-*/
-
-Element.implement({
-
-	isDisplayed: function(){
-		return this.getStyle('display') != 'none';
-	},
-
-	isVisible: function(){
-		var w = this.offsetWidth,
-			h = this.offsetHeight;
-		return (w == 0 && h == 0) ? false : (w > 0 && h > 0) ? true : this.style.display != 'none';
-	},
-
-	toggle: function(){
-		return this[this.isDisplayed() ? 'hide' : 'show']();
-	},
-
-	hide: function(){
-		var d;
-		try {
-			//IE fails here if the element is not in the dom
-			d = this.getStyle('display');
-		} catch(e){}
-		if (d == 'none') return this;
-		return this.store('element:_originalDisplay', d || '').setStyle('display', 'none');
-	},
-
-	show: function(display){
-		if (!display && this.isDisplayed()) return this;
-		display = display || this.retrieve('element:_originalDisplay') || 'block';
-		return this.setStyle('display', (display == 'none') ? 'block' : display);
-	},
-
-	swapClass: function(remove, add){
-		return this.removeClass(remove).addClass(add);
-	}
-
-});
-
-Document.implement({
-
-	clearSelection: function(){
-		if (document.selection && document.selection.empty){
-			document.selection.empty();
-		} else if (window.getSelection){
-			var selection = window.getSelection();
-			if (selection && selection.removeAllRanges) selection.removeAllRanges();
-		}
-	}
-
-});
-
-
-/*
----
-
-script: Fx.Reveal.js
-
-name: Fx.Reveal
-
-description: Defines Fx.Reveal, a class that shows and hides elements with a transition.
-
-license: MIT-style license
-
-authors:
-  - Aaron Newton
-
-requires:
-  - Core/Fx.Morph
-  - /Element.Shortcuts
-  - /Element.Measure
-
-provides: [Fx.Reveal]
-
-...
-*/
-
-Fx.Reveal = new Class({
-
-	Extends: Fx.Morph,
-
-	options: {/*
-		onShow: function(thisElement){},
-		onHide: function(thisElement){},
-		onComplete: function(thisElement){},
-		heightOverride: null,
-		widthOverride: null,*/
-		link: 'cancel',
-		styles: ['padding', 'border', 'margin'],
-		transitionOpacity: !Browser.ie6,
-		mode: 'vertical',
-		display: function(){
-			return this.element.get('tag') != 'tr' ? 'block' : 'table-row';
-		},
-		opacity: 1,
-		hideInputs: Browser.ie ? 'select, input, textarea, object, embed' : null
-	},
-
-	dissolve: function(){
-		if (!this.hiding && !this.showing){
-			if (this.element.getStyle('display') != 'none'){
-				this.hiding = true;
-				this.showing = false;
-				this.hidden = true;
-				this.cssText = this.element.style.cssText;
-
-				var startStyles = this.element.getComputedSize({
-					styles: this.options.styles,
-					mode: this.options.mode
-				});
-				if (this.options.transitionOpacity) startStyles.opacity = this.options.opacity;
-
-				var zero = {};
-				Object.each(startStyles, function(style, name){
-					zero[name] = [style, 0];
-				});
-
-				this.element.setStyles({
-					display: Function.from(this.options.display).call(this),
-					overflow: 'hidden'
-				});
-
-				var hideThese = this.options.hideInputs ? this.element.getElements(this.options.hideInputs) : null;
-				if (hideThese) hideThese.setStyle('visibility', 'hidden');
-
-				this.$chain.unshift(function(){
-					if (this.hidden){
-						this.hiding = false;
-						this.element.style.cssText = this.cssText;
-						this.element.setStyle('display', 'none');
-						if (hideThese) hideThese.setStyle('visibility', 'visible');
-					}
-					this.fireEvent('hide', this.element);
-					this.callChain();
-				}.bind(this));
-
-				this.start(zero);
-			} else {
-				this.callChain.delay(10, this);
-				this.fireEvent('complete', this.element);
-				this.fireEvent('hide', this.element);
-			}
-		} else if (this.options.link == 'chain'){
-			this.chain(this.dissolve.bind(this));
-		} else if (this.options.link == 'cancel' && !this.hiding){
-			this.cancel();
-			this.dissolve();
-		}
-		return this;
-	},
-
-	reveal: function(){
-		if (!this.showing && !this.hiding){
-			if (this.element.getStyle('display') == 'none'){
-				this.hiding = false;
-				this.showing = true;
-				this.hidden = false;
-				this.cssText = this.element.style.cssText;
-
-				var startStyles;
-				this.element.measure(function(){
-					startStyles = this.element.getComputedSize({
-						styles: this.options.styles,
-						mode: this.options.mode
-					});
-				}.bind(this));
-				if (this.options.heightOverride != null) startStyles.height = this.options.heightOverride.toInt();
-				if (this.options.widthOverride != null) startStyles.width = this.options.widthOverride.toInt();
-				if (this.options.transitionOpacity){
-					this.element.setStyle('opacity', 0);
-					startStyles.opacity = this.options.opacity;
-				}
-
-				var zero = {
-					height: 0,
-					display: Function.from(this.options.display).call(this)
-				};
-				Object.each(startStyles, function(style, name){
-					zero[name] = 0;
-				});
-				zero.overflow = 'hidden';
-
-				this.element.setStyles(zero);
-
-				var hideThese = this.options.hideInputs ? this.element.getElements(this.options.hideInputs) : null;
-				if (hideThese) hideThese.setStyle('visibility', 'hidden');
-
-				this.$chain.unshift(function(){
-					this.element.style.cssText = this.cssText;
-					this.element.setStyle('display', Function.from(this.options.display).call(this));
-					if (!this.hidden) this.showing = false;
-					if (hideThese) hideThese.setStyle('visibility', 'visible');
-					this.callChain();
-					this.fireEvent('show', this.element);
-				}.bind(this));
-
-				this.start(startStyles);
-			} else {
-				this.callChain();
-				this.fireEvent('complete', this.element);
-				this.fireEvent('show', this.element);
-			}
-		} else if (this.options.link == 'chain'){
-			this.chain(this.reveal.bind(this));
-		} else if (this.options.link == 'cancel' && !this.showing){
-			this.cancel();
-			this.reveal();
-		}
-		return this;
-	},
-
-	toggle: function(){
-		if (this.element.getStyle('display') == 'none'){
-			this.reveal();
-		} else {
-			this.dissolve();
-		}
-		return this;
-	},
-
-	cancel: function(){
-		this.parent.apply(this, arguments);
-		this.element.style.cssText = this.cssText;
-		this.hiding = false;
-		this.showing = false;
-		return this;
-	}
-
-});
-
-Element.Properties.reveal = {
-
-	set: function(options){
-		this.get('reveal').cancel().setOptions(options);
-		return this;
-	},
-
-	get: function(){
-		var reveal = this.retrieve('reveal');
-		if (!reveal){
-			reveal = new Fx.Reveal(this);
-			this.store('reveal', reveal);
-		}
-		return reveal;
-	}
-
-};
-
-Element.Properties.dissolve = Element.Properties.reveal;
-
-Element.implement({
-
-	reveal: function(options){
-		this.get('reveal').setOptions(options).reveal();
-		return this;
-	},
-
-	dissolve: function(options){
-		this.get('reveal').setOptions(options).dissolve();
-		return this;
-	},
-
-	nix: function(options){
-		var params = Array.link(arguments, {destroy: Type.isBoolean, options: Type.isObject});
-		this.get('reveal').setOptions(options).dissolve().chain(function(){
-			this[params.destroy ? 'destroy' : 'dispose']();
-		}.bind(this));
-		return this;
-	},
-
-	wink: function(){
-		var params = Array.link(arguments, {duration: Type.isNumber, options: Type.isObject});
-		var reveal = this.get('reveal').setOptions(params.options);
-		reveal.reveal().chain(function(){
-			(function(){
-				reveal.dissolve();
-			}).delay(params.duration || 2000);
-		});
 	}
 
 });
@@ -3389,6 +6126,236 @@ Element.implement({
 		}
 		if (!toggle) this.eliminate('slide:flag');
 		return this;
+	}
+
+});
+
+
+/*
+---
+
+script: Fx.SmoothScroll.js
+
+name: Fx.SmoothScroll
+
+description: Class for creating a smooth scrolling effect to all internal links on the page.
+
+license: MIT-style license
+
+authors:
+  - Valerio Proietti
+
+requires:
+  - Core/Slick.Finder
+  - /Fx.Scroll
+
+provides: [Fx.SmoothScroll]
+
+...
+*/
+
+/*<1.2compat>*/var SmoothScroll = /*</1.2compat>*/Fx.SmoothScroll = new Class({
+
+	Extends: Fx.Scroll,
+
+	initialize: function(options, context){
+		context = context || document;
+		this.doc = context.getDocument();
+		this.parent(this.doc, options);
+
+		var win = context.getWindow(),
+			location = win.location.href.match(/^[^#]*/)[0] + '#',
+			links = $$(this.options.links || this.doc.links);
+
+		links.each(function(link){
+			if (link.href.indexOf(location) != 0) return;
+			var anchor = link.href.substr(location.length);
+			if (anchor) this.useLink(link, anchor);
+		}, this);
+	},
+
+	useLink: function(link, anchor){
+
+		link.addEvent('click', function(event){
+			var el = document.id(anchor) || this.doc.getElement('a[name=' + anchor + ']');
+			if (!el) return;
+
+			event.preventDefault();
+			this.toElement(el).chain(function(){
+				this.fireEvent('scrolledTo', [link, el]);
+			}.bind(this));
+
+		}.bind(this));
+
+		return this;
+	}
+});
+
+
+/*
+---
+
+script: Fx.Sort.js
+
+name: Fx.Sort
+
+description: Defines Fx.Sort, a class that reorders lists with a transition.
+
+license: MIT-style license
+
+authors:
+  - Aaron Newton
+
+requires:
+  - Core/Element.Dimensions
+  - /Fx.Elements
+  - /Element.Measure
+
+provides: [Fx.Sort]
+
+...
+*/
+
+Fx.Sort = new Class({
+
+	Extends: Fx.Elements,
+
+	options: {
+		mode: 'vertical'
+	},
+
+	initialize: function(elements, options){
+		this.parent(elements, options);
+		this.elements.each(function(el){
+			if (el.getStyle('position') == 'static') el.setStyle('position', 'relative');
+		});
+		this.setDefaultOrder();
+	},
+
+	setDefaultOrder: function(){
+		this.currentOrder = this.elements.map(function(el, index){
+			return index;
+		});
+	},
+
+	sort: function(){
+		if (!this.check(arguments)) return this;
+		var newOrder = Array.flatten(arguments);
+
+		var top = 0,
+			left = 0,
+			next = {},
+			zero = {},
+			vert = this.options.mode == 'vertical';
+
+		var current = this.elements.map(function(el, index){
+			var size = el.getComputedSize({styles: ['border', 'padding', 'margin']});
+			var val;
+			if (vert){
+				val = {
+					top: top,
+					margin: size['margin-top'],
+					height: size.totalHeight
+				};
+				top += val.height - size['margin-top'];
+			} else {
+				val = {
+					left: left,
+					margin: size['margin-left'],
+					width: size.totalWidth
+				};
+				left += val.width;
+			}
+			var plane = vert ? 'top' : 'left';
+			zero[index] = {};
+			var start = el.getStyle(plane).toInt();
+			zero[index][plane] = start || 0;
+			return val;
+		}, this);
+
+		this.set(zero);
+		newOrder = newOrder.map(function(i){ return i.toInt(); });
+		if (newOrder.length != this.elements.length){
+			this.currentOrder.each(function(index){
+				if (!newOrder.contains(index)) newOrder.push(index);
+			});
+			if (newOrder.length > this.elements.length)
+				newOrder.splice(this.elements.length-1, newOrder.length - this.elements.length);
+		}
+		var margin = top = left = 0;
+		newOrder.each(function(item, index){
+			var newPos = {};
+			if (vert){
+				newPos.top = top - current[item].top - margin;
+				top += current[item].height;
+			} else {
+				newPos.left = left - current[item].left;
+				left += current[item].width;
+			}
+			margin = margin + current[item].margin;
+			next[item]=newPos;
+		}, this);
+		var mapped = {};
+		Array.clone(newOrder).sort().each(function(index){
+			mapped[index] = next[index];
+		});
+		this.start(mapped);
+		this.currentOrder = newOrder;
+
+		return this;
+	},
+
+	rearrangeDOM: function(newOrder){
+		newOrder = newOrder || this.currentOrder;
+		var parent = this.elements[0].getParent();
+		var rearranged = [];
+		this.elements.setStyle('opacity', 0);
+		//move each element and store the new default order
+		newOrder.each(function(index){
+			rearranged.push(this.elements[index].inject(parent).setStyles({
+				top: 0,
+				left: 0
+			}));
+		}, this);
+		this.elements.setStyle('opacity', 1);
+		this.elements = $$(rearranged);
+		this.setDefaultOrder();
+		return this;
+	},
+
+	getDefaultOrder: function(){
+		return this.elements.map(function(el, index){
+			return index;
+		});
+	},
+
+	forward: function(){
+		return this.sort(this.getDefaultOrder());
+	},
+
+	backward: function(){
+		return this.sort(this.getDefaultOrder().reverse());
+	},
+
+	reverse: function(){
+		return this.sort(this.currentOrder.reverse());
+	},
+
+	sortByElements: function(elements){
+		return this.sort(elements.map(function(el){
+			return this.elements.indexOf(el);
+		}, this));
+	},
+
+	swap: function(one, two){
+		if (typeOf(one) == 'element') one = this.elements.indexOf(one);
+		if (typeOf(two) == 'element') two = this.elements.indexOf(two);
+
+		var newOrder = Array.clone(this.currentOrder);
+		newOrder[this.currentOrder.indexOf(one)] = two;
+		newOrder[this.currentOrder.indexOf(two)] = one;
+
+		return this.sort(newOrder);
 	}
 
 });
@@ -4934,143 +7901,136 @@ String.implement({
 /*
 ---
 
-script: IframeShim.js
+script: Group.js
 
-name: IframeShim
+name: Group
 
-description: Defines IframeShim, a class for obscuring select lists and flash objects in IE.
+description: Class for monitoring collections of events
 
 license: MIT-style license
 
 authors:
-  - Aaron Newton
+  - Valerio Proietti
 
 requires:
-  - Core/Element.Event
-  - Core/Element.Style
-  - Core/Options
   - Core/Events
-  - /Element.Position
-  - /Class.Occlude
+  - /MooTools.More
 
-provides: [IframeShim]
+provides: [Group]
 
 ...
 */
 
-var IframeShim = new Class({
+(function(){
 
-	Implements: [Options, Events, Class.Occlude],
+this.Group = new Class({
+
+	initialize: function(){
+		this.instances = Array.flatten(arguments);
+		this.events = {};
+		this.checker = {};
+	},
+
+	addEvent: function(type, fn){
+		this.checker[type] = this.checker[type] || {};
+		this.events[type] = this.events[type] || [];
+		if (this.events[type].contains(fn)) return false;
+		else this.events[type].push(fn);
+		this.instances.each(function(instance, i){
+			instance.addEvent(type, this.check.pass([type, instance, i], this));
+		}, this);
+		return this;
+	},
+
+	check: function(type, instance, i){
+		this.checker[type][i] = true;
+		var every = this.instances.every(function(current, j){
+			return this.checker[type][j] || false;
+		}, this);
+		if (!every) return;
+		this.checker[type] = {};
+		this.events[type].each(function(event){
+			event.call(this, this.instances, instance);
+		}, this);
+	}
+
+});
+
+})();
+
+
+
+/*
+---
+
+script: Hash.Cookie.js
+
+name: Hash.Cookie
+
+description: Class for creating, reading, and deleting Cookies in JSON format.
+
+license: MIT-style license
+
+authors:
+  - Valerio Proietti
+  - Aaron Newton
+
+requires:
+  - Core/Cookie
+  - Core/JSON
+  - /MooTools.More
+  - /Hash
+
+provides: [Hash.Cookie]
+
+...
+*/
+
+Hash.Cookie = new Class({
+
+	Extends: Cookie,
 
 	options: {
-		className: 'iframeShim',
-		src: 'javascript:false;document.write("");',
-		display: false,
-		zIndex: null,
-		margin: 0,
-		offset: {x: 0, y: 0},
-		browsers: ((Browser.ie && Browser.version == 6) || (Browser.firefox && Browser.version < 3 && Browser.Platform.mac))
+		autoSave: true
 	},
 
-	property: 'IframeShim',
-
-	initialize: function(element, options){
-		this.element = document.id(element);
-		if (this.occlude()) return this.occluded;
-		this.setOptions(options);
-		this.makeShim();
-		return this;
+	initialize: function(name, options){
+		this.parent(name, options);
+		this.load();
 	},
 
-	makeShim: function(){
-		if (this.options.browsers){
-			var zIndex = this.element.getStyle('zIndex').toInt();
-
-			if (!zIndex){
-				zIndex = 1;
-				var pos = this.element.getStyle('position');
-				if (pos == 'static' || !pos) this.element.setStyle('position', 'relative');
-				this.element.setStyle('zIndex', zIndex);
-			}
-			zIndex = ((this.options.zIndex != null || this.options.zIndex === 0) && zIndex > this.options.zIndex) ? this.options.zIndex : zIndex - 1;
-			if (zIndex < 0) zIndex = 1;
-			this.shim = new Element('iframe', {
-				src: this.options.src,
-				scrolling: 'no',
-				frameborder: 0,
-				styles: {
-					zIndex: zIndex,
-					position: 'absolute',
-					border: 'none',
-					filter: 'progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0)'
-				},
-				'class': this.options.className
-			}).store('IframeShim', this);
-			var inject = (function(){
-				this.shim.inject(this.element, 'after');
-				this[this.options.display ? 'show' : 'hide']();
-				this.fireEvent('inject');
-			}).bind(this);
-			if (!IframeShim.ready) window.addEvent('load', inject);
-			else inject();
-		} else {
-			this.position = this.hide = this.show = this.dispose = Function.from(this);
-		}
+	save: function(){
+		var value = JSON.encode(this.hash);
+		if (!value || value.length > 4096) return false; //cookie would be truncated!
+		if (value == '{}') this.dispose();
+		else this.write(value);
+		return true;
 	},
 
-	position: function(){
-		if (!IframeShim.ready || !this.shim) return this;
-		var size = this.element.measure(function(){
-			return this.getSize();
-		});
-		if (this.options.margin != undefined){
-			size.x = size.x - (this.options.margin * 2);
-			size.y = size.y - (this.options.margin * 2);
-			this.options.offset.x += this.options.margin;
-			this.options.offset.y += this.options.margin;
-		}
-		this.shim.set({width: size.x, height: size.y}).position({
-			relativeTo: this.element,
-			offset: this.options.offset
-		});
-		return this;
-	},
-
-	hide: function(){
-		if (this.shim) this.shim.setStyle('display', 'none');
-		return this;
-	},
-
-	show: function(){
-		if (this.shim) this.shim.setStyle('display', 'block');
-		return this.position();
-	},
-
-	dispose: function(){
-		if (this.shim) this.shim.dispose();
-		return this;
-	},
-
-	destroy: function(){
-		if (this.shim) this.shim.destroy();
+	load: function(){
+		this.hash = new Hash(JSON.decode(this.read(), true));
 		return this;
 	}
 
 });
 
-window.addEvent('load', function(){
-	IframeShim.ready = true;
+Hash.each(Hash.prototype, function(method, name){
+	if (typeof method == 'function') Hash.Cookie.implement(name, function(){
+		var value = method.apply(this.hash, arguments);
+		if (this.options.autoSave) this.save();
+		return value;
+	});
 });
 
 
 /*
 ---
 
-script: Mask.js
+script: HtmlTable.js
 
-name: Mask
+name: HtmlTable
 
-description: Creates a mask element to cover another.
+description: Builds table elements with methods to add rows.
 
 license: MIT-style license
 
@@ -5080,196 +8040,1124 @@ authors:
 requires:
   - Core/Options
   - Core/Events
-  - Core/Element.Event
-  - /Class.Binds
-  - /Element.Position
-  - /IframeShim
+  - /Class.Occlude
 
-provides: [Mask]
+provides: [HtmlTable]
 
 ...
 */
 
-var Mask = new Class({
+var HtmlTable = new Class({
 
-	Implements: [Options, Events],
+	Implements: [Options, Events, Class.Occlude],
 
-	Binds: ['position'],
-
-	options: {/*
-		onShow: function(){},
-		onHide: function(){},
-		onDestroy: function(){},
-		onClick: function(){},
-		inject: {
-			where: 'after',
-			target: null,
+	options: {
+		properties: {
+			cellpadding: 0,
+			cellspacing: 0,
+			border: 0
 		},
-		hideOnClick: false,
-		id: null,
-		destroyOnHide: false,*/
-		style: {},
-		'class': 'mask',
-		maskMargins: false,
-		useIframeShim: true,
-		iframeShimOptions: {}
+		rows: [],
+		headers: [],
+		footers: []
 	},
 
-	initialize: function(target, options){
-		this.target = document.id(target) || document.id(document.body);
-		this.target.store('mask', this);
-		this.setOptions(options);
-		this.render();
-		this.inject();
+	property: 'HtmlTable',
+
+	initialize: function(){
+		var params = Array.link(arguments, {options: Type.isObject, table: Type.isElement});
+		this.setOptions(params.options);
+		this.element = params.table || new Element('table', this.options.properties);
+		if (this.occlude()) return this.occluded;
+		this.build();
 	},
 
-	render: function(){
-		this.element = new Element('div', {
-			'class': this.options['class'],
-			id: this.options.id || 'mask-' + String.uniqueID(),
-			styles: Object.merge(this.options.style, {
-				display: 'none'
-			}),
-			events: {
-				click: function(){
-					this.fireEvent('click');
-					if (this.options.hideOnClick) this.hide();
-				}.bind(this)
-			}
-		});
+	build: function(){
+		this.element.store('HtmlTable', this);
 
-		this.hidden = true;
+		this.body = document.id(this.element.tBodies[0]) || new Element('tbody').inject(this.element);
+		$$(this.body.rows);
+
+		if (this.options.headers.length) this.setHeaders(this.options.headers);
+		else this.thead = document.id(this.element.tHead);
+		if (this.thead) this.head = document.id(this.thead.rows[0]);
+
+		if (this.options.footers.length) this.setFooters(this.options.footers);
+		this.tfoot = document.id(this.element.tFoot);
+		if (this.tfoot) this.foot = document.id(this.tfoot.rows[0]);
+
+		this.options.rows.each(function(row){
+			this.push(row);
+		}, this);
+
+		['adopt', 'inject', 'wraps', 'grab', 'replaces', 'dispose'].each(function(method){
+				this[method] = this.element[method].bind(this.element);
+		}, this);
 	},
 
 	toElement: function(){
 		return this.element;
 	},
 
-	inject: function(target, where){
-		where = where || (this.options.inject ? this.options.inject.where : '') || this.target == document.body ? 'inside' : 'after';
-		target = target || (this.options.inject ? this.options.inject.target : '') || this.target;
-
-		this.element.inject(target, where);
-
-		if (this.options.useIframeShim){
-			this.shim = new IframeShim(this.element, this.options.iframeShimOptions);
-
-			this.addEvents({
-				show: this.shim.show.bind(this.shim),
-				hide: this.shim.hide.bind(this.shim),
-				destroy: this.shim.destroy.bind(this.shim)
-			});
-		}
-	},
-
-	position: function(){
-		this.resize(this.options.width, this.options.height);
-
-		this.element.position({
-			relativeTo: this.target,
-			position: 'topLeft',
-			ignoreMargins: !this.options.maskMargins,
-			ignoreScroll: this.target == document.body
-		});
-
+	empty: function(){
+		this.body.empty();
 		return this;
 	},
 
-	resize: function(x, y){
-		var opt = {
-			styles: ['padding', 'border']
+	set: function(what, items){
+		var target = (what == 'headers') ? 'tHead' : 'tFoot';
+		this[target.toLowerCase()] = (document.id(this.element[target]) || new Element(target.toLowerCase()).inject(this.element, 'top')).empty();
+		var data = this.push(items, {}, this[target.toLowerCase()], what == 'headers' ? 'th' : 'td');
+		if (what == 'headers') this.head = document.id(this.thead.rows[0]);
+		else this.foot = document.id(this.thead.rows[0]);
+		return data;
+	},
+
+	setHeaders: function(headers){
+		this.set('headers', headers);
+		return this;
+	},
+
+	setFooters: function(footers){
+		this.set('footers', footers);
+		return this;
+	},
+
+	push: function(row, rowProperties, target, tag){
+		if (typeOf(row) == "element" && row.get('tag') == 'tr'){
+			row.inject(target || this.body);
+			return {
+				tr: row,
+				tds: row.getChildren('td')
+			};
+		}
+		var tds = row.map(function(data){
+			var td = new Element(tag || 'td', data ? data.properties : {}),
+				type = (data ? data.content : '') || data,
+				element = document.id(type);
+			if (typeOf(type) != 'string' && element) td.adopt(element);
+			else td.set('html', type);
+
+			return td;
+		});
+
+		return {
+			tr: new Element('tr', rowProperties).inject(target || this.body).adopt(tds),
+			tds: tds
 		};
-		if (this.options.maskMargins) opt.styles.push('margin');
-
-		var dim = this.target.getComputedSize(opt);
-		if (this.target == document.body){
-			var win = window.getScrollSize();
-			if (dim.totalHeight < win.y) dim.totalHeight = win.y;
-			if (dim.totalWidth < win.x) dim.totalWidth = win.x;
-		}
-		this.element.setStyles({
-			width: Array.pick([x, dim.totalWidth, dim.x]),
-			height: Array.pick([y, dim.totalHeight, dim.y])
-		});
-
-		return this;
-	},
-
-	show: function(){
-		if (!this.hidden) return this;
-
-		window.addEvent('resize', this.position);
-		this.position();
-		this.showMask.apply(this, arguments);
-
-		return this;
-	},
-
-	showMask: function(){
-		this.element.setStyle('display', 'block');
-		this.hidden = false;
-		this.fireEvent('show');
-	},
-
-	hide: function(){
-		if (this.hidden) return this;
-
-		window.removeEvent('resize', this.position);
-		this.hideMask.apply(this, arguments);
-		if (this.options.destroyOnHide) return this.destroy();
-
-		return this;
-	},
-
-	hideMask: function(){
-		this.element.setStyle('display', 'none');
-		this.hidden = true;
-		this.fireEvent('hide');
-	},
-
-	toggle: function(){
-		this[this.hidden ? 'show' : 'hide']();
-	},
-
-	destroy: function(){
-		this.hide();
-		this.element.destroy();
-		this.fireEvent('destroy');
-		this.target.eliminate('mask');
 	}
 
 });
 
-Element.Properties.mask = {
 
-	set: function(options){
-		var mask = this.retrieve('mask');
-		if (mask) mask.destroy();
-		return this.eliminate('mask').store('mask:options', options);
+/*
+---
+
+script: HtmlTable.Zebra.js
+
+name: HtmlTable.Zebra
+
+description: Builds a stripy table with methods to add rows.
+
+license: MIT-style license
+
+authors:
+  - Harald Kirschner
+  - Aaron Newton
+
+requires:
+  - /HtmlTable
+  - /Class.refactor
+
+provides: [HtmlTable.Zebra]
+
+...
+*/
+
+HtmlTable = Class.refactor(HtmlTable, {
+
+	options: {
+		classZebra: 'table-tr-odd',
+		zebra: true
 	},
 
-	get: function(){
-		var mask = this.retrieve('mask');
-		if (!mask){
-			mask = new Mask(this, this.retrieve('mask:options'));
-			this.store('mask', mask);
+	initialize: function(){
+		this.previous.apply(this, arguments);
+		if (this.occluded) return this.occluded;
+		if (this.options.zebra) this.updateZebras();
+	},
+
+	updateZebras: function(){
+		Array.each(this.body.rows, this.zebra, this);
+	},
+
+	zebra: function(row, i){
+		return row[((i % 2) ? 'remove' : 'add')+'Class'](this.options.classZebra);
+	},
+
+	push: function(){
+		var pushed = this.previous.apply(this, arguments);
+		if (this.options.zebra) this.updateZebras();
+		return pushed;
+	}
+
+});
+
+
+/*
+---
+
+script: HtmlTable.Sort.js
+
+name: HtmlTable.Sort
+
+description: Builds a stripy, sortable table with methods to add rows.
+
+license: MIT-style license
+
+authors:
+  - Harald Kirschner
+  - Aaron Newton
+
+requires:
+  - Core/Hash
+  - /HtmlTable
+  - /Class.refactor
+  - /Element.Delegation
+  - /String.Extras
+  - /Date
+
+provides: [HtmlTable.Sort]
+
+...
+*/
+
+HtmlTable = Class.refactor(HtmlTable, {
+
+	options: {/*
+		onSort: function(){}, */
+		sortIndex: 0,
+		sortReverse: false,
+		parsers: [],
+		defaultParser: 'string',
+		classSortable: 'table-sortable',
+		classHeadSort: 'table-th-sort',
+		classHeadSortRev: 'table-th-sort-rev',
+		classNoSort: 'table-th-nosort',
+		classGroupHead: 'table-tr-group-head',
+		classGroup: 'table-tr-group',
+		classCellSort: 'table-td-sort',
+		classSortSpan: 'table-th-sort-span',
+		sortable: false
+	},
+
+	initialize: function (){
+		this.previous.apply(this, arguments);
+		if (this.occluded) return this.occluded;
+		this.sorted = {index: null, dir: 1};
+		this.bound = {
+			headClick: this.headClick.bind(this)
+		};
+		this.sortSpans = new Elements();
+		if (this.options.sortable){
+			this.enableSort();
+			if (this.options.sortIndex != null) this.sort(this.options.sortIndex, this.options.sortReverse);
 		}
-		return mask;
+	},
+
+	attachSorts: function(attach){
+		this.element.removeEvents('click:relay(th)');
+		this.element[attach !== false ? 'addEvent' : 'removeEvent']('click:relay(th)', this.bound.headClick);
+	},
+
+	setHeaders: function(){
+		this.previous.apply(this, arguments);
+		if (this.sortEnabled) this.detectParsers();
+	},
+
+	detectParsers: function(force){
+		if (!this.head) return;
+		var parsers = this.options.parsers,
+			rows = this.body.rows;
+
+		// auto-detect
+		this.parsers = $$(this.head.cells).map(function(cell, index){
+			if (!force && (cell.hasClass(this.options.classNoSort) || cell.retrieve('htmltable-parser'))) return cell.retrieve('htmltable-parser');
+			var thDiv = new Element('div');
+			Array.each(cell.childNodes, function(node){
+				thDiv.adopt(node);
+			});
+			thDiv.inject(cell);
+			var sortSpan = new Element('span', {'html': '&#160;', 'class': this.options.classSortSpan}).inject(thDiv, 'top');
+
+			this.sortSpans.push(sortSpan);
+
+			var parser = parsers[index],
+					cancel;
+			switch (typeOf(parser)){
+				case 'function': parser = {convert: parser}; cancel = true; break;
+				case 'string': parser = parser; cancel = true; break;
+			}
+			if (!cancel){
+				Object.some(HtmlTable.Parsers, function(current){
+					var match = current.match;
+					if (!match) return false;
+					for (var i = 0, j = rows.length; i < j; i++){
+						var cell = document.id(rows[i].cells[index]);
+						var text = cell ? cell.get('html').clean() : '';
+						if (text && match.test(text)){
+							parser = current;
+							return true;
+						}
+					}
+				});
+			}
+
+			if (!parser) parser = this.options.defaultParser;
+			cell.store('htmltable-parser', parser);
+			return parser;
+		}, this);
+	},
+
+	headClick: function(event, el){
+		if (!this.head || el.hasClass(this.options.classNoSort)) return;
+		var index = Array.indexOf(this.head.cells, el);
+		this.sort(index);
+		return false;
+	},
+
+	sort: function(index, reverse, pre){
+		if (!this.head) return;
+		var classCellSort = this.options.classCellSort;
+		var classGroup = this.options.classGroup,
+			classGroupHead = this.options.classGroupHead;
+
+		if (!pre){
+			if (index != null){
+				if (this.sorted.index == index){
+					this.sorted.reverse = !(this.sorted.reverse);
+				} else {
+					if (this.sorted.index != null){
+						this.sorted.reverse = false;
+						this.head.cells[this.sorted.index].removeClass(this.options.classHeadSort).removeClass(this.options.classHeadSortRev);
+					} else {
+						this.sorted.reverse = true;
+					}
+					this.sorted.index = index;
+				}
+			} else {
+				index = this.sorted.index;
+			}
+
+			if (reverse != null) this.sorted.reverse = reverse;
+
+			var head = document.id(this.head.cells[index]);
+			if (head){
+				head.addClass(this.options.classHeadSort);
+				if (this.sorted.reverse) head.addClass(this.options.classHeadSortRev);
+				else head.removeClass(this.options.classHeadSortRev);
+			}
+
+			this.body.getElements('td').removeClass(this.options.classCellSort);
+		}
+
+		var parser = this.parsers[index];
+		if (typeOf(parser) == 'string') parser = HtmlTable.Parsers[parser];
+		if (!parser) return;
+
+		if (!Browser.ie){
+			var rel = this.body.getParent();
+			this.body.dispose();
+		}
+
+		var data = Array.map(this.body.rows, function(row, i){
+			var value = parser.convert.call(document.id(row.cells[index]));
+
+			return {
+				position: i,
+				value: value,
+				toString: function(){
+					return value.toString();
+				}
+			};
+		}, this);
+		data.reverse(true);
+
+		data.sort(function(a, b){
+			if (a.value === b.value) return 0;
+			return a.value > b.value ? 1 : -1;
+		});
+
+		if (!this.sorted.reverse) data.reverse(true);
+
+		var i = data.length, body = this.body;
+		var j, position, entry, group;
+
+		while (i){
+			var item = data[--i];
+			position = item.position;
+			var row = body.rows[position];
+			if (row.disabled) continue;
+
+			if (!pre){
+				if (group === item.value){
+					row.removeClass(classGroupHead).addClass(classGroup);
+				} else {
+					group = item.value;
+					row.removeClass(classGroup).addClass(classGroupHead);
+				}
+				if (this.options.zebra) this.zebra(row, i);
+
+				row.cells[index].addClass(classCellSort);
+			}
+
+			body.appendChild(row);
+			for (j = 0; j < i; j++){
+				if (data[j].position > position) data[j].position--;
+			}
+		};
+		data = null;
+		if (rel) rel.grab(body);
+
+		return this.fireEvent('sort', [body, index]);
+	},
+
+	reSort: function(){
+		if (this.sortEnabled) this.sort.call(this, this.sorted.index, this.sorted.reverse);
+		return this;
+	},
+
+	enableSort: function(){
+		this.element.addClass(this.options.classSortable);
+		this.attachSorts(true);
+		this.detectParsers();
+		this.sortEnabled = true;
+		return this;
+	},
+
+	disableSort: function(){
+		this.element.removeClass(this.options.classSortable);
+		this.attachSorts(false);
+		this.sortSpans.each(function(span){ span.destroy(); });
+		this.sortSpans.empty();
+		this.sortEnabled = false;
+		return this;
+	}
+
+});
+
+HtmlTable.Parsers = {
+
+	'date': {
+		match: /^\d{2}[-\/ ]\d{2}[-\/ ]\d{2,4}$/,
+		convert: function(){
+			var d = Date.parse(this.get('text').stripTags());
+			return (typeOf(d) == 'date') ? d.format('db') : '';
+		},
+		type: 'date'
+	},
+	'input-checked': {
+		match: / type="(radio|checkbox)" /,
+		convert: function(){
+			return this.getElement('input').checked;
+		}
+	},
+	'input-value': {
+		match: /<input/,
+		convert: function(){
+			return this.getElement('input').value;
+		}
+	},
+	'number': {
+		match: /^\d+[^\d.,]*$/,
+		convert: function(){
+			return this.get('text').stripTags().toInt();
+		},
+		number: true
+	},
+	'numberLax': {
+		match: /^[^\d]+\d+$/,
+		convert: function(){
+			return this.get('text').replace(/[^-?^0-9]/, '').stripTags().toInt();
+		},
+		number: true
+	},
+	'float': {
+		match: /^[\d]+\.[\d]+/,
+		convert: function(){
+			return this.get('text').replace(/[^-?^\d.]/, '').stripTags().toFloat();
+		},
+		number: true
+	},
+	'floatLax': {
+		match: /^[^\d]+[\d]+\.[\d]+$/,
+		convert: function(){
+			return this.get('text').replace(/[^-?^\d.]/, '').stripTags();
+		},
+		number: true
+	},
+	'string': {
+		match: null,
+		convert: function(){
+			return this.get('text').stripTags();
+		}
+	},
+	'title': {
+		match: null,
+		convert: function(){
+			return this.title;
+		}
 	}
 
 };
 
-Element.implement({
+//<1.2compat>
+HtmlTable.Parsers = new Hash(HtmlTable.Parsers);
+//</1.2compat>
 
-	mask: function(options){
-		if (options) this.set('mask', options);
-		this.get('mask').show();
+HtmlTable.defineParsers = function(parsers){
+	HtmlTable.Parsers = Object.append(HtmlTable.Parsers, parsers);
+};
+
+
+/*
+---
+
+script: Keyboard.js
+
+name: Keyboard
+
+description: KeyboardEvents used to intercept events on a class for keyboard and format modifiers in a specific order so as to make alt+shift+c the same as shift+alt+c.
+
+license: MIT-style license
+
+authors:
+  - Perrin Westrich
+  - Aaron Newton
+  - Scott Kyle
+
+requires:
+  - Core/Events
+  - Core/Options
+  - Core/Element.Event
+  - Element.Event.Pseudos.Keys
+
+provides: [Keyboard]
+
+...
+*/
+
+(function(){
+
+	var Keyboard = this.Keyboard = new Class({
+
+		Extends: Events,
+
+		Implements: [Options],
+
+		options: {/*
+			onActivate: function(){},
+			onDeactivate: function(){},*/
+			defaultEventType: 'keydown',
+			active: false,
+			manager: null,
+			events: {},
+			nonParsedEvents: ['activate', 'deactivate', 'onactivate', 'ondeactivate', 'changed', 'onchanged']
+		},
+
+		initialize: function(options){
+			if (options && options.manager){
+				this.manager = options.manager;
+				delete options.manager;
+			}
+			this.setOptions(options);
+			this.setup();
+		},
+		setup: function(){
+			this.addEvents(this.options.events);
+			//if this is the root manager, nothing manages it
+			if (Keyboard.manager && !this.manager) Keyboard.manager.manage(this);
+			if (this.options.active) this.activate();
+		},
+
+		handle: function(event, type){
+			//Keyboard.stop(event) prevents key propagation
+			if (event.preventKeyboardPropagation) return;
+
+			var bubbles = !!this.manager;
+			if (bubbles && this.activeKB){
+				this.activeKB.handle(event, type);
+				if (event.preventKeyboardPropagation) return;
+			}
+			this.fireEvent(type, event);
+
+			if (!bubbles && this.activeKB) this.activeKB.handle(event, type);
+		},
+
+		addEvent: function(type, fn, internal){
+			return this.parent(Keyboard.parse(type, this.options.defaultEventType, this.options.nonParsedEvents), fn, internal);
+		},
+
+		removeEvent: function(type, fn){
+			return this.parent(Keyboard.parse(type, this.options.defaultEventType, this.options.nonParsedEvents), fn);
+		},
+
+		toggleActive: function(){
+			return this[this.isActive() ? 'deactivate' : 'activate']();
+		},
+
+		activate: function(instance){
+			if (instance){
+				if (instance.isActive()) return this;
+				//if we're stealing focus, store the last keyboard to have it so the relinquish command works
+				if (this.activeKB && instance != this.activeKB){
+					this.previous = this.activeKB;
+					this.previous.fireEvent('deactivate');
+				}
+				//if we're enabling a child, assign it so that events are now passed to it
+				this.activeKB = instance.fireEvent('activate');
+				Keyboard.manager.fireEvent('changed');
+			} else if (this.manager){
+				//else we're enabling ourselves, we must ask our parent to do it for us
+				this.manager.activate(this);
+			}
+			return this;
+		},
+
+		isActive: function(){
+			return this.manager ? (this.manager.activeKB == this) : (Keyboard.manager == this);
+		},
+
+		deactivate: function(instance){
+			if (instance){
+				if (instance === this.activeKB){
+					this.activeKB = null;
+					instance.fireEvent('deactivate');
+					Keyboard.manager.fireEvent('changed');
+				}
+			} else if (this.manager){
+				this.manager.deactivate(this);
+			}
+			return this;
+		},
+
+		relinquish: function(){
+			if (this.isActive() && this.manager && this.manager.previous) this.manager.activate(this.manager.previous);
+		},
+
+		//management logic
+		manage: function(instance){
+			if (instance.manager && instance.manager != Keyboard.manager && this != Keyboard.manager) instance.manager.drop(instance);
+			this.instances.push(instance);
+			instance.manager = this;
+			if (!this.activeKB) this.activate(instance);
+		},
+
+		_disable: function(instance){
+			if (this.activeKB == instance) this.activeKB = null;
+		},
+
+		drop: function(instance){
+			this._disable(instance);
+			this.instances.erase(instance);
+			Keyboard.manager.manage(instance);
+			if (this.activeKB == instance && this.previous && this.instances.contains(this.previous)) this.activate(this.previous);
+		},
+
+		instances: [],
+
+		trace: function(){
+			Keyboard.trace(this);
+		},
+
+		each: function(fn){
+			Keyboard.each(this, fn);
+		}
+
+	});
+
+	var parsed = {};
+	var modifiers = ['shift', 'control', 'alt', 'meta'];
+	var regex = /^(?:shift|control|ctrl|alt|meta)$/;
+
+	Keyboard.parse = function(type, eventType, ignore){
+		if (ignore && ignore.contains(type.toLowerCase())) return type;
+
+		type = type.toLowerCase().replace(/^(keyup|keydown):/, function($0, $1){
+			eventType = $1;
+			return '';
+		});
+
+		if (!parsed[type]){
+			var key, mods = {};
+			type.split('+').each(function(part){
+				if (regex.test(part)) mods[part] = true;
+				else key = part;
+			});
+
+			mods.control = mods.control || mods.ctrl; // allow both control and ctrl
+
+			var keys = [];
+			modifiers.each(function(mod){
+				if (mods[mod]) keys.push(mod);
+			});
+
+			if (key) keys.push(key);
+			parsed[type] = keys.join('+');
+		}
+
+		return eventType + ':keys(' + parsed[type] + ')';
+	};
+
+	Keyboard.each = function(keyboard, fn){
+		var current = keyboard || Keyboard.manager;
+		while (current){
+			fn.run(current);
+			current = current.activeKB;
+		}
+	};
+
+	Keyboard.stop = function(event){
+		event.preventKeyboardPropagation = true;
+	};
+
+	Keyboard.manager = new Keyboard({
+		active: true
+	});
+
+	Keyboard.trace = function(keyboard){
+		keyboard = keyboard || Keyboard.manager;
+		var hasConsole = window.console && console.log;
+		if (hasConsole) console.log('the following items have focus: ');
+		Keyboard.each(keyboard, function(current){
+			if (hasConsole) console.log(document.id(current.widget) || current.wiget || current);
+		});
+	};
+
+	var handler = function(event){
+		var keys = [];
+		modifiers.each(function(mod){
+			if (event[mod]) keys.push(mod);
+		});
+
+		if (!regex.test(event.key)) keys.push(event.key);
+		Keyboard.manager.handle(event, event.type + ':keys(' + keys.join('+') + ')');
+	};
+
+	document.addEvents({
+		'keyup': handler,
+		'keydown': handler
+	});
+
+})();
+
+
+/*
+---
+
+script: Keyboard.Extras.js
+
+name: Keyboard.Extras
+
+description: Enhances Keyboard by adding the ability to name and describe keyboard shortcuts, and the ability to grab shortcuts by name and bind the shortcut to different keys.
+
+license: MIT-style license
+
+authors:
+  - Perrin Westrich
+
+requires:
+  - /Keyboard
+  - /MooTools.More
+
+provides: [Keyboard.Extras]
+
+...
+*/
+Keyboard.prototype.options.nonParsedEvents.combine(['rebound', 'onrebound']);
+
+Keyboard.implement({
+
+	/*
+		shortcut should be in the format of:
+		{
+			'keys': 'shift+s', // the default to add as an event.
+			'description': 'blah blah blah', // a brief description of the functionality.
+			'handler': function(){} // the event handler to run when keys are pressed.
+		}
+	*/
+	addShortcut: function(name, shortcut){
+		this.shortcuts = this.shortcuts || [];
+		this.shortcutIndex = this.shortcutIndex || {};
+
+		shortcut.getKeyboard = Function.from(this);
+		shortcut.name = name;
+		this.shortcutIndex[name] = shortcut;
+		this.shortcuts.push(shortcut);
+		if (shortcut.keys) this.addEvent(shortcut.keys, shortcut.handler);
 		return this;
 	},
 
-	unmask: function(){
-		this.get('mask').hide();
+	addShortcuts: function(obj){
+		for (var name in obj) this.addShortcut(name, obj[name]);
 		return this;
+	},
+
+	removeShortcut: function(name){
+		var shortcut = this.getShortcut(name);
+		if (shortcut && shortcut.keys){
+			this.removeEvent(shortcut.keys, shortcut.handler);
+			delete this.shortcutIndex[name];
+			this.shortcuts.erase(shortcut);
+		}
+		return this;
+	},
+
+	removeShortcuts: function(names){
+		names.each(this.removeShortcut, this);
+		return this;
+	},
+
+	getShortcuts: function(){
+		return this.shortcuts || [];
+	},
+
+	getShortcut: function(name){
+		return (this.shortcutIndex || {})[name];
+	}
+
+});
+
+Keyboard.rebind = function(newKeys, shortcuts){
+	Array.from(shortcuts).each(function(shortcut){
+		shortcut.getKeyboard().removeEvent(shortcut.keys, shortcut.handler);
+		shortcut.getKeyboard().addEvent(newKeys, shortcut.handler);
+		shortcut.keys = newKeys;
+		shortcut.getKeyboard().fireEvent('rebound');
+	});
+};
+
+
+Keyboard.getActiveShortcuts = function(keyboard){
+	var activeKBS = [], activeSCS = [];
+	Keyboard.each(keyboard, [].push.bind(activeKBS));
+	activeKBS.each(function(kb){ activeSCS.extend(kb.getShortcuts()); });
+	return activeSCS;
+};
+
+Keyboard.getShortcut = function(name, keyboard, opts){
+	opts = opts || {};
+	var shortcuts = opts.many ? [] : null,
+		set = opts.many ? function(kb){
+				var shortcut = kb.getShortcut(name);
+				if (shortcut) shortcuts.push(shortcut);
+			} : function(kb){
+				if (!shortcuts) shortcuts = kb.getShortcut(name);
+			};
+	Keyboard.each(keyboard, set);
+	return shortcuts;
+};
+
+Keyboard.getShortcuts = function(name, keyboard){
+	return Keyboard.getShortcut(name, keyboard, { many: true });
+};
+
+
+/*
+---
+
+script: HtmlTable.Select.js
+
+name: HtmlTable.Select
+
+description: Builds a stripy, sortable table with methods to add rows. Rows can be selected with the mouse or keyboard navigation.
+
+license: MIT-style license
+
+authors:
+  - Harald Kirschner
+  - Aaron Newton
+
+requires:
+  - /Keyboard
+  - /Keyboard.Extras
+  - /HtmlTable
+  - /Class.refactor
+  - /Element.Delegation
+  - /Element.Shortcuts
+
+provides: [HtmlTable.Select]
+
+...
+*/
+
+HtmlTable = Class.refactor(HtmlTable, {
+
+	options: {
+		/*onRowFocus: function(){},
+		onRowUnfocus: function(){},*/
+		useKeyboard: true,
+		classRowSelected: 'table-tr-selected',
+		classRowHovered: 'table-tr-hovered',
+		classSelectable: 'table-selectable',
+		shiftForMultiSelect: true,
+		allowMultiSelect: true,
+		selectable: false
+	},
+
+	initialize: function(){
+		this.previous.apply(this, arguments);
+		if (this.occluded) return this.occluded;
+
+		this._selectedRows = new Elements();
+
+		this._bound = {
+			mouseleave: this._mouseleave.bind(this),
+			clickRow: this._clickRow.bind(this)
+		};
+
+		if (this.options.selectable) this.enableSelect();
+	},
+
+	enableSelect: function(){
+		this._selectEnabled = true;
+		this._attachSelects();
+		this.element.addClass(this.options.classSelectable);
+	},
+
+	disableSelect: function(){
+		this._selectEnabled = false;
+		this._attachSelects(false);
+		this.element.removeClass(this.options.classSelectable);
+	},
+
+	push: function(){
+		var ret = this.previous.apply(this, arguments);
+		this._updateSelects();
+		return ret;
+	},
+
+	isSelected: function(row){
+		return this._selectedRows.contains(row);
+	},
+
+	toggleRow: function(row){
+		return this[(this.isSelected(row) ? 'de' : '') + 'selectRow'](row);
+	},
+
+	selectRow: function(row, _nocheck){
+		//private variable _nocheck: boolean whether or not to confirm the row is in the table body
+		//added here for optimization when selecting ranges
+		if (this.isSelected(row) || (!_nocheck && !this.body.getChildren().contains(row))) return;
+		if (!this.options.allowMultiSelect) this.selectNone();
+
+		if (!this.isSelected(row)){
+			this._selectedRows.push(row);
+			row.addClass(this.options.classRowSelected);
+			this.fireEvent('rowFocus', [row, this._selectedRows]);
+		}
+
+		this._focused = row;
+		document.clearSelection();
+
+		return this;
+	},
+
+	deselectRow: function(row, _nocheck){
+		if (!this.isSelected(row) || (!_nocheck && !this.body.getChildren().contains(row))) return;
+
+		this._selectedRows = new Elements(Array.from(this._selectedRows).erase(row));
+		row.removeClass(this.options.classRowSelected);
+		this.fireEvent('rowUnfocus', [row, this._selectedRows]);
+
+		return this;
+	},
+
+	selectAll: function(selectNone){
+		if (!selectNone && !this.options.allowMultiSelect) return;
+		this.selectRange(0, this.body.rows.length, selectNone);
+		return this;
+	},
+
+	selectNone: function(){
+		return this.selectAll(true);
+	},
+
+	selectRange: function(startRow, endRow, _deselect){
+		if (!this.options.allowMultiSelect && !_deselect) return;
+		var method = _deselect ? 'deselectRow' : 'selectRow',
+			rows = Array.clone(this.body.rows);
+
+		if (typeOf(startRow) == 'element') startRow = rows.indexOf(startRow);
+		if (typeOf(endRow) == 'element') endRow = rows.indexOf(endRow);
+		endRow = endRow < rows.length - 1 ? endRow : rows.length - 1;
+
+		if (endRow < startRow){
+			var tmp = startRow;
+			startRow = endRow;
+			endRow = tmp;
+		}
+
+		for(var i = startRow; i <= endRow; i++) this[method](rows[i], true);
+
+		return this;
+	},
+
+	deselectRange: function(startRow, endRow){
+		this.selectRange(startRow, endRow, true);
+	},
+
+/*
+	Private methods:
+*/
+
+	_enterRow: function(row){
+		if (this._hovered) this._hovered = this._leaveRow(this._hovered);
+		this._hovered = row.addClass(this.options.classRowHovered);
+	},
+
+	_leaveRow: function(row){
+		row.removeClass(this.options.classRowHovered);
+	},
+
+	_updateSelects: function(){
+		Array.each(this.body.rows, function(row){
+			var binders = row.retrieve('binders');
+			if ((binders && this._selectEnabled) || (!binders && !this._selectEnabled)) return;
+			if (!binders){
+				binders = {
+					mouseenter: this._enterRow.pass([row], this),
+					mouseleave: this._leaveRow.pass([row], this)
+				};
+				row.store('binders', binders).addEvents(binders);
+			} else {
+				row.removeEvents(binders);
+			}
+		}, this);
+	},
+
+	_shiftFocus: function(offset, event){
+		if (!this._focused) return this.selectRow(this.body.rows[0], event);
+		var to = this._getRowByOffset(offset);
+		if (to === null || this._focused == this.body.rows[to]) return this;
+		this.toggleRow(this.body.rows[to], event);
+	},
+
+	_clickRow: function(event, row){
+		var selecting = (event.shift || event.meta || event.control) && this.options.shiftForMultiSelect;
+		if (!selecting && !(event.rightClick && this.isSelected(row) && this.options.allowMultiSelect)) this.selectNone();
+
+		if (event.rightClick) this.selectRow(row);
+		else this.toggleRow(row);
+
+		if (event.shift){
+			this.selectRange(this._rangeStart || this.body.rows[0], row, this._rangeStart ? !this.isSelected(row) : true);
+			this._focused = row;
+		}
+		this._rangeStart = row;
+	},
+
+	_getRowByOffset: function(offset){
+		if (!this._focused) return 0;
+		var rows = Array.clone(this.body.rows),
+			index = rows.indexOf(this._focused) + offset;
+
+		if (index < 0) index = null;
+		if (index >= rows.length) index = null;
+
+		return index;
+	},
+
+	_attachSelects: function(attach){
+		attach = attach != null ? attach : true;
+
+		var method = attach ? 'addEvents' : 'removeEvents';
+		this.element[method]({
+			mouseleave: this._bound.mouseleave
+		});
+
+		this.body[method]({
+			'click:relay(tr)': this._bound.clickRow,
+			'contextmenu:relay(tr)': this._bound.clickRow
+		});
+
+		if (this.options.useKeyboard || this.keyboard){
+			if (!this.keyboard){
+				var timer, held;
+
+				var move = function(offset){
+					var mover = function(e){
+						clearTimeout(timer);
+						e.preventDefault();
+
+						var to = this.body.rows[this._getRowByOffset(offset)];
+						if (e.shift && to && this.isSelected(to)){
+							this.deselectRow(this._focused);
+							this._focused = to;
+						} else {
+							if (to && (!this.options.allowMultiSelect || !e.shift)){
+								this.selectNone();
+							}
+							this._shiftFocus(offset, e);
+						}
+
+						if (held){
+							timer = mover.delay(100, this, e);
+						} else {
+							timer = (function(){
+								held = true;
+								mover(e);
+							}).delay(400);
+						}
+					}.bind(this);
+					return mover;
+				}.bind(this);
+
+				var clear = function(){
+					clearTimeout(timer);
+					held = false;
+				};
+
+				this.keyboard = new Keyboard({
+					events: {
+						'keydown:shift+up': move(-1),
+						'keydown:shift+down': move(1),
+						'keyup:shift+up': clear,
+						'keyup:shift+down': clear,
+						'keyup:up': clear,
+						'keyup:down': clear
+					},
+					active: true
+				});
+
+				var shiftHint = '';
+				if (this.options.allowMultiSelect && this.options.shiftForMultiSelect && this.options.useKeyboard){
+					shiftHint = " (Shift multi-selects).";
+				}
+
+				this.keyboard.addShortcuts({
+					'Select Previous Row': {
+						keys: 'up',
+						shortcut: 'up arrow',
+						handler: move(-1),
+						description: 'Select the previous row in the table.' + shiftHint
+					},
+					'Select Next Row': {
+						keys: 'down',
+						shortcut: 'down arrow',
+						handler: move(1),
+						description: 'Select the next row in the table.' + shiftHint
+					}
+				});
+
+			}
+			this.keyboard[attach ? 'activate' : 'deactivate']();
+		}
+		this._updateSelects();
+	},
+
+	_mouseleave: function(){
+		if (this._hovered) this._leaveRow(this._hovered);
 	}
 
 });
@@ -5592,224 +9480,6 @@ this.Tips = new Class({
 /*
 ---
 
-script: Spinner.js
-
-name: Spinner
-
-description: Adds a semi-transparent overlay over a dom element with a spinnin ajax icon.
-
-license: MIT-style license
-
-authors:
-  - Aaron Newton
-
-requires:
-  - Core/Fx.Tween
-  - Core/Request
-  - /Class.refactor
-  - /Mask
-
-provides: [Spinner]
-
-...
-*/
-
-var Spinner = new Class({
-
-	Extends: Mask,
-
-	Implements: Chain,
-
-	options: {/*
-		message: false,*/
-		'class': 'spinner',
-		containerPosition: {},
-		content: {
-			'class': 'spinner-content'
-		},
-		messageContainer: {
-			'class': 'spinner-msg'
-		},
-		img: {
-			'class': 'spinner-img'
-		},
-		fxOptions: {
-			link: 'chain'
-		}
-	},
-
-	initialize: function(target, options){
-		this.target = document.id(target) || document.id(document.body);
-		this.target.store('spinner', this);
-		this.setOptions(options);
-		this.render();
-		this.inject();
-
-		// Add this to events for when noFx is true; parent methods handle hide/show.
-		var deactivate = function(){ this.active = false; }.bind(this);
-		this.addEvents({
-			hide: deactivate,
-			show: deactivate
-		});
-	},
-
-	render: function(){
-		this.parent();
-
-		this.element.set('id', this.options.id || 'spinner-' + String.uniqueID());
-
-		this.content = document.id(this.options.content) || new Element('div', this.options.content);
-		this.content.inject(this.element);
-
-		if (this.options.message){
-			this.msg = document.id(this.options.message) || new Element('p', this.options.messageContainer).appendText(this.options.message);
-			this.msg.inject(this.content);
-		}
-
-		if (this.options.img){
-			this.img = document.id(this.options.img) || new Element('div', this.options.img);
-			this.img.inject(this.content);
-		}
-
-		this.element.set('tween', this.options.fxOptions);
-	},
-
-	show: function(noFx){
-		if (this.active) return this.chain(this.show.bind(this));
-		if (!this.hidden){
-			this.callChain.delay(20, this);
-			return this;
-		}
-
-		this.active = true;
-
-		return this.parent(noFx);
-	},
-
-	showMask: function(noFx){
-		var pos = function(){
-			this.content.position(Object.merge({
-				relativeTo: this.element
-			}, this.options.containerPosition));
-		}.bind(this);
-
-		if (noFx){
-			this.parent();
-			pos();
-		} else {
-			if (!this.options.style.opacity) this.options.style.opacity = this.element.getStyle('opacity').toFloat();
-			this.element.setStyles({
-				display: 'block',
-				opacity: 0
-			}).tween('opacity', this.options.style.opacity);
-			pos();
-			this.hidden = false;
-			this.fireEvent('show');
-			this.callChain();
-		}
-	},
-
-	hide: function(noFx){
-		if (this.active) return this.chain(this.hide.bind(this));
-		if (this.hidden){
-			this.callChain.delay(20, this);
-			return this;
-		}
-		this.active = true;
-		return this.parent(noFx);
-	},
-
-	hideMask: function(noFx){
-		if (noFx) return this.parent();
-		this.element.tween('opacity', 0).get('tween').chain(function(){
-			this.element.setStyle('display', 'none');
-			this.hidden = true;
-			this.fireEvent('hide');
-			this.callChain();
-		}.bind(this));
-	},
-
-	destroy: function(){
-		this.content.destroy();
-		this.parent();
-		this.target.eliminate('spinner');
-	}
-
-});
-
-Request = Class.refactor(Request, {
-
-	options: {
-		useSpinner: false,
-		spinnerOptions: {},
-		spinnerTarget: false
-	},
-
-	initialize: function(options){
-		this._send = this.send;
-		this.send = function(options){
-			var spinner = this.getSpinner();
-			if (spinner) spinner.chain(this._send.pass(options, this)).show();
-			else this._send(options);
-			return this;
-		};
-		this.previous(options);
-	},
-
-	getSpinner: function(){
-		if (!this.spinner){
-			var update = document.id(this.options.spinnerTarget) || document.id(this.options.update);
-			if (this.options.useSpinner && update){
-				update.set('spinner', this.options.spinnerOptions);
-				var spinner = this.spinner = update.get('spinner');
-				['complete', 'exception', 'cancel'].each(function(event){
-					this.addEvent(event, spinner.hide.bind(spinner));
-				}, this);
-			}
-		}
-		return this.spinner;
-	}
-
-});
-
-Element.Properties.spinner = {
-
-	set: function(options){
-		var spinner = this.retrieve('spinner');
-		if (spinner) spinner.destroy();
-		return this.eliminate('spinner').store('spinner:options', options);
-	},
-
-	get: function(){
-		var spinner = this.retrieve('spinner');
-		if (!spinner){
-			spinner = new Spinner(this, this.retrieve('spinner:options'));
-			this.store('spinner', spinner);
-		}
-		return spinner;
-	}
-
-};
-
-Element.implement({
-
-	spin: function(options){
-		if (options) this.set('spinner', options);
-		this.get('spinner').show();
-		return this;
-	},
-
-	unspin: function(){
-		this.get('spinner').hide();
-		return this;
-	}
-
-});
-
-
-/*
----
-
 script: Locale.Set.From.js
 
 name: Locale.Set.From
@@ -5864,9 +9534,724 @@ Locale.Set.from = function(set, type){
 /*
 ---
 
-name: Locale.en-US.Form.Validator
+name: Locale.ar.Date
 
-description: Form Validator messages for English.
+description: Date messages for Arabic.
+
+license: MIT-style license
+
+authors:
+  - Chafik Barbar
+
+requires:
+  - /Locale
+
+provides: [Locale.ar.Date]
+
+...
+*/
+
+Locale.define('ar', 'Date', {
+
+	// Culture's date order: DD/MM/YYYY
+	dateOrder: ['date', 'month', 'year'],
+	shortDate: '%d/%m/%Y',
+	shortTime: '%H:%M'
+
+});
+
+
+/*
+---
+
+name: Locale.ar.Form.Validator
+
+description: Form Validator messages for Arabic.
+
+license: MIT-style license
+
+authors:
+  - Chafik Barbar
+
+requires:
+  - /Locale
+
+provides: [Locale.ar.Form.Validator]
+
+...
+*/
+
+Locale.define('ar', 'FormValidator', {
+
+	required: 'هذا الحقل مطلوب.',
+	minLength: 'رجاءً إدخال {minLength} أحرف على الأقل (تم إدخال {length} أحرف).',
+	maxLength: 'الرجاء عدم إدخال أكثر من {maxLength} أحرف (تم إدخال {length} أحرف).',
+	integer: 'الرجاء إدخال عدد صحيح في هذا الحقل. أي رقم ذو كسر عشري أو مئوي (مثال 1.25 ) غير مسموح.',
+	numeric: 'الرجاء إدخال قيم رقمية في هذا الحقل (مثال "1" أو "1.1" أو "-1" أو "-1.1").',
+	digits: 'الرجاء أستخدام قيم رقمية وعلامات ترقيمية فقط في هذا الحقل (مثال, رقم هاتف مع نقطة أو شحطة)',
+	alpha: 'الرجاء أستخدام أحرف فقط (ا-ي) في هذا الحقل. أي فراغات أو علامات غير مسموحة.',
+	alphanum: 'الرجاء أستخدام أحرف فقط (ا-ي) أو أرقام (0-9) فقط في هذا الحقل. أي فراغات أو علامات غير مسموحة.',
+	dateSuchAs: 'الرجاء إدخال تاريخ صحيح كالتالي {date}',
+	dateInFormatMDY: 'الرجاء إدخال تاريخ صحيح (مثال, 31-12-1999)',
+	email: 'الرجاء إدخال بريد إلكتروني صحيح.',
+	url: 'الرجاء إدخال عنوان إلكتروني صحيح مثل http://www.google.com',
+	currencyDollar: 'الرجاء إدخال قيمة $ صحيحة. مثال, 100.00$',
+	oneRequired: 'الرجاء إدخال قيمة في أحد هذه الحقول على الأقل.',
+	errorPrefix: 'خطأ: ',
+	warningPrefix: 'تحذير: '
+
+});
+
+
+/*
+---
+
+name: Locale.ca-CA.Date
+
+description: Date messages for Catalan.
+
+license: MIT-style license
+
+authors:
+  - Ãlfons Sanchez
+
+requires:
+  - /Locale
+
+provides: [Locale.ca-CA.Date]
+
+...
+*/
+
+Locale.define('ca-CA', 'Date', {
+
+	months: ['Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny', 'Juli', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre'],
+	months_abbr: ['gen.', 'febr.', 'març', 'abr.', 'maig', 'juny', 'jul.', 'ag.', 'set.', 'oct.', 'nov.', 'des.'],
+	days: ['Diumenge', 'Dilluns', 'Dimarts', 'Dimecres', 'Dijous', 'Divendres', 'Dissabte'],
+	days_abbr: ['dg', 'dl', 'dt', 'dc', 'dj', 'dv', 'ds'],
+
+	// Culture's date order: DD/MM/YYYY
+	dateOrder: ['date', 'month', 'year'],
+	shortDate: '%d/%m/%Y',
+	shortTime: '%H:%M',
+	AM: 'AM',
+	PM: 'PM',
+
+	// Date.Extras
+	ordinal: '',
+
+	lessThanMinuteAgo: 'fa menys d`un minut',
+	minuteAgo: 'fa un minut',
+	minutesAgo: 'fa {delta} minuts',
+	hourAgo: 'fa un hora',
+	hoursAgo: 'fa unes {delta} hores',
+	dayAgo: 'fa un dia',
+	daysAgo: 'fa {delta} dies',
+
+	lessThanMinuteUntil: 'menys d`un minut des d`ara',
+	minuteUntil: 'un minut des d`ara',
+	minutesUntil: '{delta} minuts des d`ara',
+	hourUntil: 'un hora des d`ara',
+	hoursUntil: 'unes {delta} hores des d`ara',
+	dayUntil: '1 dia des d`ara',
+	daysUntil: '{delta} dies des d`ara'
+
+});
+
+
+/*
+---
+
+name: Locale.ca-CA.Form.Validator
+
+description: Form Validator messages for Catalan.
+
+license: MIT-style license
+
+authors:
+  - Miquel Hudin
+  - Ãlfons Sanchez
+
+requires:
+  - /Locale
+
+provides: [Locale.ca-CA.Form.Validator]
+
+...
+*/
+
+Locale.define('ca-CA', 'FormValidator', {
+
+	required: 'Aquest camp es obligatori.',
+	minLength: 'Per favor introdueix al menys {minLength} caracters (has introduit {length} caracters).',
+	maxLength: 'Per favor introdueix no mes de {maxLength} caracters (has introduit {length} caracters).',
+	integer: 'Per favor introdueix un nombre enter en aquest camp. Nombres amb decimals (p.e. 1,25) no estan permesos.',
+	numeric: 'Per favor introdueix sols valors numerics en aquest camp (p.e. "1" o "1,1" o "-1" o "-1,1").',
+	digits: 'Per favor usa sols numeros i puntuacio en aquest camp (per exemple, un nombre de telefon amb guions i punts no esta permes).',
+	alpha: 'Per favor utilitza lletres nomes (a-z) en aquest camp. No s´admiteixen espais ni altres caracters.',
+	alphanum: 'Per favor, utilitza nomes lletres (a-z) o numeros (0-9) en aquest camp. No s´admiteixen espais ni altres caracters.',
+	dateSuchAs: 'Per favor introdueix una data valida com {date}',
+	dateInFormatMDY: 'Per favor introdueix una data valida com DD/MM/YYYY (p.e. "31/12/1999")',
+	email: 'Per favor, introdueix una adreça de correu electronic valida. Per exemple, "fred@domain.com".',
+	url: 'Per favor introdueix una URL valida com http://www.google.com.',
+	currencyDollar: 'Per favor introdueix una quantitat valida de €. Per exemple €100,00 .',
+	oneRequired: 'Per favor introdueix alguna cosa per al menys una d´aquestes entrades.',
+	errorPrefix: 'Error: ',
+	warningPrefix: 'Avis: ',
+
+	// Form.Validator.Extras
+	noSpace: 'No poden haver espais en aquesta entrada.',
+	reqChkByNode: 'No hi han elements seleccionats.',
+	requiredChk: 'Aquest camp es obligatori.',
+	reqChkByName: 'Per favor selecciona una {label}.',
+	match: 'Aquest camp necessita coincidir amb el camp {matchName}',
+	startDate: 'la data de inici',
+	endDate: 'la data de fi',
+	currendDate: 'la data actual',
+	afterDate: 'La data deu ser igual o posterior a {label}.',
+	beforeDate: 'La data deu ser igual o anterior a {label}.',
+	startMonth: 'Per favor selecciona un mes d´orige',
+	sameMonth: 'Aquestes dos dates deuen estar dins del mateix mes - deus canviar una o altra.'
+
+});
+
+
+/*
+---
+
+name: Locale.cs-CZ.Date
+
+description: Date messages for Czech.
+
+license: MIT-style license
+
+authors:
+  - Jan Černý chemiX
+  - Christopher Zukowski
+
+requires:
+  - /Locale
+
+provides: [Locale.cs-CZ.Date]
+
+...
+*/
+(function(){
+
+// Czech language pluralization rules, see http://unicode.org/repos/cldr-tmp/trunk/diff/supplemental/language_plural_rules.html
+// one -> n is 1;            1
+// few -> n in 2..4;         2-4
+// other -> everything else  0, 5-999, 1.31, 2.31, 5.31...
+var pluralize = function (n, one, few, other) {
+	if (n == 1) return one;
+	else if (n == 2 || n == 3 || n == 4) return few;
+	else return other;
+};
+
+Locale.define('cs-CZ', 'Date', {
+
+	months: ['Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen', 'Červenec', 'Srpen', 'Září', 'Říjen', 'Listopad', 'Prosinec'],
+	months_abbr: ['ledna', 'února', 'března', 'dubna', 'května', 'června', 'července', 'srpna', 'září', 'října', 'listopadu', 'prosince'],
+	days: ['Neděle', 'Pondělí', 'Úterý', 'Středa', 'Čtvrtek', 'Pátek', 'Sobota'],
+	days_abbr: ['ne', 'po', 'út', 'st', 'čt', 'pá', 'so'],
+
+	// Culture's date order: DD.MM.YYYY
+	dateOrder: ['date', 'month', 'year'],
+	shortDate: '%d.%m.%Y',
+	shortTime: '%H:%M',
+	AM: 'dop.',
+	PM: 'odp.',
+
+	// Date.Extras
+	ordinal: '.',
+
+	lessThanMinuteAgo: 'před chvílí',
+	minuteAgo: 'přibližně před minutou',
+	minutesAgo: function(delta) { return 'před {delta} ' + pluralize(delta, 'minutou', 'minutami', 'minutami'); },
+	hourAgo: 'přibližně před hodinou',
+	hoursAgo: function(delta) { return 'před {delta} ' + pluralize(delta, 'hodinou', 'hodinami', 'hodinami'); },
+	dayAgo: 'před dnem',
+	daysAgo: function(delta) { return 'před {delta} ' + pluralize(delta, 'dnem', 'dny', 'dny'); },
+	weekAgo: 'před týdnem',
+	weeksAgo: function(delta) { return 'před {delta} ' + pluralize(delta, 'týdnem', 'týdny', 'týdny'); },
+	monthAgo: 'před měsícem',
+	monthsAgo: function(delta) { return 'před {delta} ' + pluralize(delta, 'měsícem', 'měsíci', 'měsíci'); },
+	yearAgo: 'před rokem',
+	yearsAgo: function(delta) { return 'před {delta} ' + pluralize(delta, 'rokem', 'lety', 'lety'); },
+
+	lessThanMinuteUntil: 'za chvíli',
+	minuteUntil: 'přibližně za minutu',
+	minutesUntil: function(delta) { return 'za {delta} ' + pluralize(delta, 'minutu', 'minuty', 'minut'); },
+	hourUntil: 'přibližně za hodinu',
+	hoursUntil: function(delta) { return 'za {delta} ' + pluralize(delta, 'hodinu', 'hodiny', 'hodin'); },
+	dayUntil: 'za den',
+	daysUntil: function(delta) { return 'za {delta} ' + pluralize(delta, 'den', 'dny', 'dnů'); },
+	weekUntil: 'za týden',
+	weeksUntil: function(delta) { return 'za {delta} ' + pluralize(delta, 'týden', 'týdny', 'týdnů'); },
+	monthUntil: 'za měsíc',
+	monthsUntil: function(delta) { return 'za {delta} ' + pluralize(delta, 'měsíc', 'měsíce', 'měsíců'); },
+	yearUntil: 'za rok',
+	yearsUntil: function(delta) { return 'za {delta} ' + pluralize(delta, 'rok', 'roky', 'let'); }
+});
+
+})();
+
+
+/*
+---
+
+name: Locale.cs-CZ.Form.Validator
+
+description: Form Validator messages for Czech.
+
+license: MIT-style license
+
+authors:
+  - Jan Černý chemiX
+
+requires:
+  - /Locale
+
+provides: [Locale.cs-CZ.Form.Validator]
+
+...
+*/
+
+Locale.define('cs-CZ', 'FormValidator', {
+
+	required: 'Tato položka je povinná.',
+	minLength: 'Zadejte prosím alespoň {minLength} znaků (napsáno {length} znaků).',
+	maxLength: 'Zadejte prosím méně než {maxLength} znaků (nápsáno {length} znaků).',
+	integer: 'Zadejte prosím celé číslo. Desetinná čísla (např. 1.25) nejsou povolena.',
+	numeric: 'Zadejte jen číselné hodnoty (tj. "1" nebo "1.1" nebo "-1" nebo "-1.1").',
+	digits: 'Zadejte prosím pouze čísla a interpunkční znaménka(například telefonní číslo s pomlčkami nebo tečkami je povoleno).',
+	alpha: 'Zadejte prosím pouze písmena (a-z). Mezery nebo jiné znaky nejsou povoleny.',
+	alphanum: 'Zadejte prosím pouze písmena (a-z) nebo číslice (0-9). Mezery nebo jiné znaky nejsou povoleny.',
+	dateSuchAs: 'Zadejte prosím platné datum jako {date}',
+	dateInFormatMDY: 'Zadejte prosím platné datum jako MM / DD / RRRR (tj. "12/31/1999")',
+	email: 'Zadejte prosím platnou e-mailovou adresu. Například "fred@domain.com".',
+	url: 'Zadejte prosím platnou URL adresu jako http://www.google.com.',
+	currencyDollar: 'Zadejte prosím platnou částku. Například $100.00.',
+	oneRequired: 'Zadejte prosím alespoň jednu hodnotu pro tyto položky.',
+	errorPrefix: 'Chyba: ',
+	warningPrefix: 'Upozornění: ',
+
+	// Form.Validator.Extras
+	noSpace: 'V této položce nejsou povoleny mezery',
+	reqChkByNode: 'Nejsou vybrány žádné položky.',
+	requiredChk: 'Tato položka je vyžadována.',
+	reqChkByName: 'Prosím vyberte {label}.',
+	match: 'Tato položka se musí shodovat s položkou {matchName}',
+	startDate: 'datum zahájení',
+	endDate: 'datum ukončení',
+	currendDate: 'aktuální datum',
+	afterDate: 'Datum by mělo být stejné nebo větší než {label}.',
+	beforeDate: 'Datum by mělo být stejné nebo menší než {label}.',
+	startMonth: 'Vyberte počáteční měsíc.',
+	sameMonth: 'Tyto dva datumy musí být ve stejném měsíci - změňte jeden z nich.',
+	creditcard: 'Zadané číslo kreditní karty je neplatné. Prosím opravte ho. Bylo zadáno {length} čísel.'
+
+});
+
+
+/*
+---
+
+name: Locale.da-DK.Date
+
+description: Date messages for Danish.
+
+license: MIT-style license
+
+authors:
+  - Martin Overgaard
+  - Henrik Hansen
+
+requires:
+  - /Locale
+
+provides: [Locale.da-DK.Date]
+
+...
+*/
+
+Locale.define('da-DK', 'Date', {
+
+	months: ['Januar', 'Februar', 'Marts', 'April', 'Maj', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'December'],
+	months_abbr: ['jan.', 'feb.', 'mar.', 'apr.', 'maj.', 'jun.', 'jul.', 'aug.', 'sep.', 'okt.', 'nov.', 'dec.'],
+	days: ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'],
+	days_abbr: ['søn', 'man', 'tir', 'ons', 'tor', 'fre', 'lør'],
+
+	// Culture's date order: DD-MM-YYYY
+	dateOrder: ['date', 'month', 'year'],
+	shortDate: '%d-%m-%Y',
+	shortTime: '%H:%M',
+	AM: 'AM',
+	PM: 'PM',
+
+	// Date.Extras
+	ordinal: '.',
+
+	lessThanMinuteAgo: 'mindre end et minut siden',
+	minuteAgo: 'omkring et minut siden',
+	minutesAgo: '{delta} minutter siden',
+	hourAgo: 'omkring en time siden',
+	hoursAgo: 'omkring {delta} timer siden',
+	dayAgo: '1 dag siden',
+	daysAgo: '{delta} dage siden',
+	weekAgo: '1 uge siden',
+	weeksAgo: '{delta} uger siden',
+	monthAgo: '1 måned siden',
+	monthsAgo: '{delta} måneder siden',
+	yearAgo: '1 år siden',
+	yearsAgo: '{delta} år siden',
+
+	lessThanMinuteUntil: 'mindre end et minut fra nu',
+	minuteUntil: 'omkring et minut fra nu',
+	minutesUntil: '{delta} minutter fra nu',
+	hourUntil: 'omkring en time fra nu',
+	hoursUntil: 'omkring {delta} timer fra nu',
+	dayUntil: '1 dag fra nu',
+	daysUntil: '{delta} dage fra nu',
+	weekUntil: '1 uge fra nu',
+	weeksUntil: '{delta} uger fra nu',
+	monthUntil: '1 måned fra nu',
+	monthsUntil: '{delta} måneder fra nu',
+	yearUntil: '1 år fra nu',
+	yearsUntil: '{delta} år fra nu'
+
+});
+
+
+/*
+---
+
+name: Locale.da-DK.Form.Validator
+
+description: Form Validator messages for Danish.
+
+license: MIT-style license
+
+authors:
+  - Martin Overgaard
+
+requires:
+  - /Locale
+
+provides: [Locale.da-DK.Form.Validator]
+
+...
+*/
+
+Locale.define('da-DK', 'FormValidator', {
+
+	required: 'Feltet skal udfyldes.',
+	minLength: 'Skriv mindst {minLength} tegn (du skrev {length} tegn).',
+	maxLength: 'Skriv maksimalt {maxLength} tegn (du skrev {length} tegn).',
+	integer: 'Skriv et tal i dette felt. Decimal tal (f.eks. 1.25) er ikke tilladt.',
+	numeric: 'Skriv kun tal i dette felt (i.e. "1" eller "1.1" eller "-1" eller "-1.1").',
+	digits: 'Skriv kun tal og tegnsætning i dette felt (eksempel, et telefon nummer med bindestreg eller punktum er tilladt).',
+	alpha: 'Skriv kun bogstaver (a-z) i dette felt. Mellemrum og andre tegn er ikke tilladt.',
+	alphanum: 'Skriv kun bogstaver (a-z) eller tal (0-9) i dette felt. Mellemrum og andre tegn er ikke tilladt.',
+	dateSuchAs: 'Skriv en gyldig dato som {date}',
+	dateInFormatMDY: 'Skriv dato i formatet DD-MM-YYYY (f.eks. "31-12-1999")',
+	email: 'Skriv en gyldig e-mail adresse. F.eks "fred@domain.com".',
+	url: 'Skriv en gyldig URL adresse. F.eks "http://www.google.com".',
+	currencyDollar: 'Skriv et gldigt beløb. F.eks Kr.100.00 .',
+	oneRequired: 'Et eller flere af felterne i denne formular skal udfyldes.',
+	errorPrefix: 'Fejl: ',
+	warningPrefix: 'Advarsel: ',
+
+	// Form.Validator.Extras
+	noSpace: 'Der må ikke benyttes mellemrum i dette felt.',
+	reqChkByNode: 'Foretag et valg.',
+	requiredChk: 'Dette felt skal udfyldes.',
+	reqChkByName: 'Vælg en {label}.',
+	match: 'Dette felt skal matche {matchName} feltet',
+	startDate: 'start dato',
+	endDate: 'slut dato',
+	currendDate: 'dags dato',
+	afterDate: 'Datoen skal være større end eller lig med {label}.',
+	beforeDate: 'Datoen skal være mindre end eller lig med {label}.',
+	startMonth: 'Vælg en start måned',
+	sameMonth: 'De valgte datoer skal være i samme måned - skift en af dem.'
+
+});
+
+
+/*
+---
+
+name: Locale.de-DE.Date
+
+description: Date messages for German.
+
+license: MIT-style license
+
+authors:
+  - Christoph Pojer
+  - Frank Rossi
+  - Ulrich Petri
+  - Fabian Beiner
+
+requires:
+  - /Locale
+
+provides: [Locale.de-DE.Date]
+
+...
+*/
+
+Locale.define('de-DE', 'Date', {
+
+	months: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
+	months_abbr: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'],
+	days: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
+	days_abbr: ['So.', 'Mo.', 'Di.', 'Mi.', 'Do.', 'Fr.', 'Sa.'],
+
+	// Culture's date order: DD.MM.YYYY
+	dateOrder: ['date', 'month', 'year'],
+	shortDate: '%d.%m.%Y',
+	shortTime: '%H:%M',
+	AM: 'vormittags',
+	PM: 'nachmittags',
+
+	// Date.Extras
+	ordinal: '.',
+
+	lessThanMinuteAgo: 'vor weniger als einer Minute',
+	minuteAgo: 'vor einer Minute',
+	minutesAgo: 'vor {delta} Minuten',
+	hourAgo: 'vor einer Stunde',
+	hoursAgo: 'vor {delta} Stunden',
+	dayAgo: 'vor einem Tag',
+	daysAgo: 'vor {delta} Tagen',
+	weekAgo: 'vor einer Woche',
+	weeksAgo: 'vor {delta} Wochen',
+	monthAgo: 'vor einem Monat',
+	monthsAgo: 'vor {delta} Monaten',
+	yearAgo: 'vor einem Jahr',
+	yearsAgo: 'vor {delta} Jahren',
+
+	lessThanMinuteUntil: 'in weniger als einer Minute',
+	minuteUntil: 'in einer Minute',
+	minutesUntil: 'in {delta} Minuten',
+	hourUntil: 'in ca. einer Stunde',
+	hoursUntil: 'in ca. {delta} Stunden',
+	dayUntil: 'in einem Tag',
+	daysUntil: 'in {delta} Tagen',
+	weekUntil: 'in einer Woche',
+	weeksUntil: 'in {delta} Wochen',
+	monthUntil: 'in einem Monat',
+	monthsUntil: 'in {delta} Monaten',
+	yearUntil: 'in einem Jahr',
+	yearsUntil: 'in {delta} Jahren'
+
+});
+
+
+/*
+---
+
+name: Locale.de-CH.Date
+
+description: Date messages for German (Switzerland).
+
+license: MIT-style license
+
+authors:
+  - Michael van der Weg
+
+requires:
+  - /Locale
+  - /Locale.de-DE.Date
+
+provides: [Locale.de-CH.Date]
+
+...
+*/
+
+Locale.define('de-CH').inherit('de-DE', 'Date');
+
+
+/*
+---
+
+name: Locale.de-CH.Form.Validator
+
+description: Form Validator messages for German (Switzerland).
+
+license: MIT-style license
+
+authors:
+  - Michael van der Weg
+
+requires:
+  - /Locale
+
+provides: [Locale.de-CH.Form.Validator]
+
+...
+*/
+
+Locale.define('de-CH', 'FormValidator', {
+
+	required: 'Dieses Feld ist obligatorisch.',
+	minLength: 'Geben Sie bitte mindestens {minLength} Zeichen ein (Sie haben {length} Zeichen eingegeben).',
+	maxLength: 'Bitte geben Sie nicht mehr als {maxLength} Zeichen ein (Sie haben {length} Zeichen eingegeben).',
+	integer: 'Geben Sie bitte eine ganze Zahl ein. Dezimalzahlen (z.B. 1.25) sind nicht erlaubt.',
+	numeric: 'Geben Sie bitte nur Zahlenwerte in dieses Eingabefeld ein (z.B. &quot;1&quot;, &quot;1.1&quot;, &quot;-1&quot; oder &quot;-1.1&quot;).',
+	digits: 'Benutzen Sie bitte nur Zahlen und Satzzeichen in diesem Eingabefeld (erlaubt ist z.B. eine Telefonnummer mit Bindestrichen und Punkten).',
+	alpha: 'Benutzen Sie bitte nur Buchstaben (a-z) in diesem Feld. Leerzeichen und andere Zeichen sind nicht erlaubt.',
+	alphanum: 'Benutzen Sie bitte nur Buchstaben (a-z) und Zahlen (0-9) in diesem Eingabefeld. Leerzeichen und andere Zeichen sind nicht erlaubt.',
+	dateSuchAs: 'Geben Sie bitte ein g&uuml;ltiges Datum ein. Wie zum Beispiel {date}',
+	dateInFormatMDY: 'Geben Sie bitte ein g&uuml;ltiges Datum ein. Wie zum Beispiel TT.MM.JJJJ (z.B. &quot;31.12.1999&quot;)',
+	email: 'Geben Sie bitte eine g&uuml;ltige E-Mail Adresse ein. Wie zum Beispiel &quot;maria@bernasconi.ch&quot;.',
+	url: 'Geben Sie bitte eine g&uuml;ltige URL ein. Wie zum Beispiel http://www.google.ch.',
+	currencyDollar: 'Geben Sie bitte einen g&uuml;ltigen Betrag in Schweizer Franken ein. Wie zum Beispiel 100.00 CHF .',
+	oneRequired: 'Machen Sie f&uuml;r mindestens eines der Eingabefelder einen Eintrag.',
+	errorPrefix: 'Fehler: ',
+	warningPrefix: 'Warnung: ',
+
+	// Form.Validator.Extras
+	noSpace: 'In diesem Eingabefeld darf kein Leerzeichen sein.',
+	reqChkByNode: 'Es wurden keine Elemente gew&auml;hlt.',
+	requiredChk: 'Dieses Feld ist obligatorisch.',
+	reqChkByName: 'Bitte w&auml;hlen Sie ein {label}.',
+	match: 'Dieses Eingabefeld muss mit dem Feld {matchName} &uuml;bereinstimmen.',
+	startDate: 'Das Anfangsdatum',
+	endDate: 'Das Enddatum',
+	currendDate: 'Das aktuelle Datum',
+	afterDate: 'Das Datum sollte zur gleichen Zeit oder sp&auml;ter sein {label}.',
+	beforeDate: 'Das Datum sollte zur gleichen Zeit oder fr&uuml;her sein {label}.',
+	startMonth: 'W&auml;hlen Sie bitte einen Anfangsmonat',
+	sameMonth: 'Diese zwei Datumsangaben m&uuml;ssen im selben Monat sein - Sie m&uuml;ssen eine von beiden ver&auml;ndern.',
+	creditcard: 'Die eingegebene Kreditkartennummer ist ung&uuml;ltig. Bitte &uuml;berpr&uuml;fen Sie diese und versuchen Sie es erneut. {length} Zahlen eingegeben.'
+
+});
+
+
+/*
+---
+
+name: Locale.de-DE.Form.Validator
+
+description: Form Validator messages for German.
+
+license: MIT-style license
+
+authors:
+  - Frank Rossi
+  - Ulrich Petri
+  - Fabian Beiner
+
+requires:
+  - /Locale
+
+provides: [Locale.de-DE.Form.Validator]
+
+...
+*/
+
+Locale.define('de-DE', 'FormValidator', {
+
+	required: 'Dieses Eingabefeld muss ausgef&uuml;llt werden.',
+	minLength: 'Geben Sie bitte mindestens {minLength} Zeichen ein (Sie haben nur {length} Zeichen eingegeben).',
+	maxLength: 'Geben Sie bitte nicht mehr als {maxLength} Zeichen ein (Sie haben {length} Zeichen eingegeben).',
+	integer: 'Geben Sie in diesem Eingabefeld bitte eine ganze Zahl ein. Dezimalzahlen (z.B. &quot;1.25&quot;) sind nicht erlaubt.',
+	numeric: 'Geben Sie in diesem Eingabefeld bitte nur Zahlenwerte (z.B. &quot;1&quot;, &quot;1.1&quot;, &quot;-1&quot; oder &quot;-1.1&quot;) ein.',
+	digits: 'Geben Sie in diesem Eingabefeld bitte nur Zahlen und Satzzeichen ein (z.B. eine Telefonnummer mit Bindestrichen und Punkten ist erlaubt).',
+	alpha: 'Geben Sie in diesem Eingabefeld bitte nur Buchstaben (a-z) ein. Leerzeichen und andere Zeichen sind nicht erlaubt.',
+	alphanum: 'Geben Sie in diesem Eingabefeld bitte nur Buchstaben (a-z) und Zahlen (0-9) ein. Leerzeichen oder andere Zeichen sind nicht erlaubt.',
+	dateSuchAs: 'Geben Sie bitte ein g&uuml;ltiges Datum ein (z.B. &quot;{date}&quot;).',
+	dateInFormatMDY: 'Geben Sie bitte ein g&uuml;ltiges Datum im Format TT.MM.JJJJ ein (z.B. &quot;31.12.1999&quot;).',
+	email: 'Geben Sie bitte eine g&uuml;ltige E-Mail-Adresse ein (z.B. &quot;max@mustermann.de&quot;).',
+	url: 'Geben Sie bitte eine g&uuml;ltige URL ein (z.B. &quot;http://www.google.de&quot;).',
+	currencyDollar: 'Geben Sie bitte einen g&uuml;ltigen Betrag in EURO ein (z.B. 100.00&#8364;).',
+	oneRequired: 'Bitte f&uuml;llen Sie mindestens ein Eingabefeld aus.',
+	errorPrefix: 'Fehler: ',
+	warningPrefix: 'Warnung: ',
+
+	// Form.Validator.Extras
+	noSpace: 'Es darf kein Leerzeichen in diesem Eingabefeld sein.',
+	reqChkByNode: 'Es wurden keine Elemente gew&auml;hlt.',
+	requiredChk: 'Dieses Feld muss ausgef&uuml;llt werden.',
+	reqChkByName: 'Bitte w&auml;hlen Sie ein {label}.',
+	match: 'Dieses Eingabefeld muss mit dem {matchName} Eingabefeld &uuml;bereinstimmen.',
+	startDate: 'Das Anfangsdatum',
+	endDate: 'Das Enddatum',
+	currendDate: 'Das aktuelle Datum',
+	afterDate: 'Das Datum sollte zur gleichen Zeit oder sp&auml;ter sein als {label}.',
+	beforeDate: 'Das Datum sollte zur gleichen Zeit oder fr&uuml;her sein als {label}.',
+	startMonth: 'W&auml;hlen Sie bitte einen Anfangsmonat',
+	sameMonth: 'Diese zwei Datumsangaben m&uuml;ssen im selben Monat sein - Sie m&uuml;ssen eines von beiden ver&auml;ndern.',
+	creditcard: 'Die eingegebene Kreditkartennummer ist ung&uuml;ltig. Bitte &uuml;berpr&uuml;fen Sie diese und versuchen Sie es erneut. {length} Zahlen eingegeben.'
+
+});
+
+
+/*
+---
+
+name: Locale.EU.Number
+
+description: Number messages for Europe.
+
+license: MIT-style license
+
+authors:
+  - Arian Stolwijk
+
+requires:
+  - /Locale
+
+provides: [Locale.EU.Number]
+
+...
+*/
+
+Locale.define('EU', 'Number', {
+
+	decimal: ',',
+	group: '.',
+
+	currency: {
+		prefix: '€ '
+	}
+
+});
+
+
+/*
+---
+
+name: Locale.de-DE.Number
+
+description: Number messages for German.
+
+license: MIT-style license
+
+authors:
+  - Christoph Pojer
+
+requires:
+  - /Locale
+  - /Locale.EU.Number
+
+provides: [Locale.de-DE.Number]
+
+...
+*/
+
+Locale.define('de-DE').inherit('EU', 'Number');
+
+
+/*
+---
+
+name: Locale.en-GB.Date
+
+description: Date messages for British English.
 
 license: MIT-style license
 
@@ -5875,45 +10260,2647 @@ authors:
 
 requires:
   - /Locale
+  - /Locale.en-US.Date
 
-provides: [Locale.en-US.Form.Validator]
+provides: [Locale.en-GB.Date]
 
 ...
 */
 
-Locale.define('en-US', 'FormValidator', {
+Locale.define('en-GB', 'Date', {
 
-	required: 'This field is required.',
-	minLength: 'Please enter at least {minLength} characters (you entered {length} characters).',
-	maxLength: 'Please enter no more than {maxLength} characters (you entered {length} characters).',
-	integer: 'Please enter an integer in this field. Numbers with decimals (e.g. 1.25) are not permitted.',
-	numeric: 'Please enter only numeric values in this field (i.e. "1" or "1.1" or "-1" or "-1.1").',
-	digits: 'Please use numbers and punctuation only in this field (for example, a phone number with dashes or dots is permitted).',
-	alpha: 'Please use only letters (a-z) within this field. No spaces or other characters are allowed.',
-	alphanum: 'Please use only letters (a-z) or numbers (0-9) in this field. No spaces or other characters are allowed.',
-	dateSuchAs: 'Please enter a valid date such as {date}',
-	dateInFormatMDY: 'Please enter a valid date such as MM/DD/YYYY (i.e. "12/31/1999")',
-	email: 'Please enter a valid email address. For example "fred@domain.com".',
-	url: 'Please enter a valid URL such as http://www.google.com.',
-	currencyDollar: 'Please enter a valid $ amount. For example $100.00 .',
-	oneRequired: 'Please enter something for at least one of these inputs.',
+	// Culture's date order: DD/MM/YYYY
+	dateOrder: ['date', 'month', 'year'],
+	shortDate: '%d/%m/%Y',
+	shortTime: '%H:%M'
+
+}).inherit('en-US', 'Date');
+
+
+/*
+---
+
+name: Locale.es-ES.Date
+
+description: Date messages for Spanish.
+
+license: MIT-style license
+
+authors:
+  - Ãlfons Sanchez
+
+requires:
+  - /Locale
+
+provides: [Locale.es-ES.Date]
+
+...
+*/
+
+Locale.define('es-ES', 'Date', {
+
+	months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+	months_abbr: ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'],
+	days: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+	days_abbr: ['dom', 'lun', 'mar', 'mié', 'juv', 'vie', 'sáb'],
+
+	// Culture's date order: DD/MM/YYYY
+	dateOrder: ['date', 'month', 'year'],
+	shortDate: '%d/%m/%Y',
+	shortTime: '%H:%M',
+	AM: 'AM',
+	PM: 'PM',
+
+	// Date.Extras
+	ordinal: '',
+
+	lessThanMinuteAgo: 'hace menos de un minuto',
+	minuteAgo: 'hace un minuto',
+	minutesAgo: 'hace {delta} minutos',
+	hourAgo: 'hace una hora',
+	hoursAgo: 'hace unas {delta} horas',
+	dayAgo: 'hace un día',
+	daysAgo: 'hace {delta} días',
+	weekAgo: 'hace una semana',
+	weeksAgo: 'hace unas {delta} semanas',
+	monthAgo: 'hace un mes',
+	monthsAgo: 'hace {delta} meses',
+	yearAgo: 'hace un año',
+	yearsAgo: 'hace {delta} años',
+
+	lessThanMinuteUntil: 'menos de un minuto desde ahora',
+	minuteUntil: 'un minuto desde ahora',
+	minutesUntil: '{delta} minutos desde ahora',
+	hourUntil: 'una hora desde ahora',
+	hoursUntil: 'unas {delta} horas desde ahora',
+	dayUntil: 'un día desde ahora',
+	daysUntil: '{delta} días desde ahora',
+	weekUntil: 'una semana desde ahora',
+	weeksUntil: 'unas {delta} semanas desde ahora',
+	monthUntil: 'un mes desde ahora',
+	monthsUntil: '{delta} meses desde ahora',
+	yearUntil: 'un año desde ahora',
+	yearsUntil: '{delta} años desde ahora'
+
+});
+
+
+/*
+---
+
+name: Locale.es-AR.Date
+
+description: Date messages for Spanish (Argentina).
+
+license: MIT-style license
+
+authors:
+  - Ãlfons Sanchez
+  - Diego Massanti
+
+requires:
+  - /Locale
+  - /Locale.es-ES.Date
+
+provides: [Locale.es-AR.Date]
+
+...
+*/
+
+Locale.define('es-AR').inherit('es-ES', 'Date');
+
+
+/*
+---
+
+name: Locale.es-AR.Form.Validator
+
+description: Form Validator messages for Spanish (Argentina).
+
+license: MIT-style license
+
+authors:
+  - Diego Massanti
+
+requires:
+  - /Locale
+
+provides: [Locale.es-AR.Form.Validator]
+
+...
+*/
+
+Locale.define('es-AR', 'FormValidator', {
+
+	required: 'Este campo es obligatorio.',
+	minLength: 'Por favor ingrese al menos {minLength} caracteres (ha ingresado {length} caracteres).',
+	maxLength: 'Por favor no ingrese más de {maxLength} caracteres (ha ingresado {length} caracteres).',
+	integer: 'Por favor ingrese un número entero en este campo. Números con decimales (p.e. 1,25) no se permiten.',
+	numeric: 'Por favor ingrese solo valores numéricos en este campo (p.e. "1" o "1,1" o "-1" o "-1,1").',
+	digits: 'Por favor use sólo números y puntuación en este campo (por ejemplo, un número de teléfono con guiones y/o puntos no está permitido).',
+	alpha: 'Por favor use sólo letras (a-z) en este campo. No se permiten espacios ni otros caracteres.',
+	alphanum: 'Por favor, usa sólo letras (a-z) o números (0-9) en este campo. No se permiten espacios u otros caracteres.',
+	dateSuchAs: 'Por favor ingrese una fecha válida como {date}',
+	dateInFormatMDY: 'Por favor ingrese una fecha válida, utulizando el formato DD/MM/YYYY (p.e. "31/12/1999")',
+	email: 'Por favor, ingrese una dirección de e-mail válida. Por ejemplo, "fred@dominio.com".',
+	url: 'Por favor ingrese una URL válida como http://www.google.com.',
+	currencyDollar: 'Por favor ingrese una cantidad válida de pesos. Por ejemplo $100,00 .',
+	oneRequired: 'Por favor ingrese algo para por lo menos una de estas entradas.',
 	errorPrefix: 'Error: ',
-	warningPrefix: 'Warning: ',
+	warningPrefix: 'Advertencia: ',
 
 	// Form.Validator.Extras
-	noSpace: 'There can be no spaces in this input.',
-	reqChkByNode: 'No items are selected.',
-	requiredChk: 'This field is required.',
-	reqChkByName: 'Please select a {label}.',
-	match: 'This field needs to match the {matchName} field',
-	startDate: 'the start date',
-	endDate: 'the end date',
-	currendDate: 'the current date',
-	afterDate: 'The date should be the same or after {label}.',
-	beforeDate: 'The date should be the same or before {label}.',
-	startMonth: 'Please select a start month',
-	sameMonth: 'These two dates must be in the same month - you must change one or the other.',
-	creditcard: 'The credit card number entered is invalid. Please check the number and try again. {length} digits entered.'
+	noSpace: 'No se permiten espacios en este campo.',
+	reqChkByNode: 'No hay elementos seleccionados.',
+	requiredChk: 'Este campo es obligatorio.',
+	reqChkByName: 'Por favor selecciona una {label}.',
+	match: 'Este campo necesita coincidir con el campo {matchName}',
+	startDate: 'la fecha de inicio',
+	endDate: 'la fecha de fin',
+	currendDate: 'la fecha actual',
+	afterDate: 'La fecha debe ser igual o posterior a {label}.',
+	beforeDate: 'La fecha debe ser igual o anterior a {label}.',
+	startMonth: 'Por favor selecciona un mes de origen',
+	sameMonth: 'Estas dos fechas deben estar en el mismo mes - debes cambiar una u otra.'
+
+});
+
+
+/*
+---
+
+name: Locale.es-ES.Form.Validator
+
+description: Form Validator messages for Spanish.
+
+license: MIT-style license
+
+authors:
+  - Ãlfons Sanchez
+
+requires:
+  - /Locale
+
+provides: [Locale.es-ES.Form.Validator]
+
+...
+*/
+
+Locale.define('es-ES', 'FormValidator', {
+
+	required: 'Este campo es obligatorio.',
+	minLength: 'Por favor introduce al menos {minLength} caracteres (has introducido {length} caracteres).',
+	maxLength: 'Por favor introduce no m&aacute;s de {maxLength} caracteres (has introducido {length} caracteres).',
+	integer: 'Por favor introduce un n&uacute;mero entero en este campo. N&uacute;meros con decimales (p.e. 1,25) no se permiten.',
+	numeric: 'Por favor introduce solo valores num&eacute;ricos en este campo (p.e. "1" o "1,1" o "-1" o "-1,1").',
+	digits: 'Por favor usa solo n&uacute;meros y puntuaci&oacute;n en este campo (por ejemplo, un n&uacute;mero de tel&eacute;fono con guiones y puntos no esta permitido).',
+	alpha: 'Por favor usa letras solo (a-z) en este campo. No se admiten espacios ni otros caracteres.',
+	alphanum: 'Por favor, usa solo letras (a-z) o n&uacute;meros (0-9) en este campo. No se admiten espacios ni otros caracteres.',
+	dateSuchAs: 'Por favor introduce una fecha v&aacute;lida como {date}',
+	dateInFormatMDY: 'Por favor introduce una fecha v&aacute;lida como DD/MM/YYYY (p.e. "31/12/1999")',
+	email: 'Por favor, introduce una direcci&oacute;n de email v&aacute;lida. Por ejemplo, "fred@domain.com".',
+	url: 'Por favor introduce una URL v&aacute;lida como http://www.google.com.',
+	currencyDollar: 'Por favor introduce una cantidad v&aacute;lida de €. Por ejemplo €100,00 .',
+	oneRequired: 'Por favor introduce algo para por lo menos una de estas entradas.',
+	errorPrefix: 'Error: ',
+	warningPrefix: 'Aviso: ',
+
+	// Form.Validator.Extras
+	noSpace: 'No pueden haber espacios en esta entrada.',
+	reqChkByNode: 'No hay elementos seleccionados.',
+	requiredChk: 'Este campo es obligatorio.',
+	reqChkByName: 'Por favor selecciona una {label}.',
+	match: 'Este campo necesita coincidir con el campo {matchName}',
+	startDate: 'la fecha de inicio',
+	endDate: 'la fecha de fin',
+	currendDate: 'la fecha actual',
+	afterDate: 'La fecha debe ser igual o posterior a {label}.',
+	beforeDate: 'La fecha debe ser igual o anterior a {label}.',
+	startMonth: 'Por favor selecciona un mes de origen',
+	sameMonth: 'Estas dos fechas deben estar en el mismo mes - debes cambiar una u otra.'
+
+});
+
+
+/*
+---
+
+name: Locale.et-EE.Date
+
+description: Date messages for Estonian.
+
+license: MIT-style license
+
+authors:
+  - Kevin Valdek
+
+requires:
+  - /Locale
+
+provides: [Locale.et-EE.Date]
+
+...
+*/
+
+Locale.define('et-EE', 'Date', {
+
+	months: ['jaanuar', 'veebruar', 'märts', 'aprill', 'mai', 'juuni', 'juuli', 'august', 'september', 'oktoober', 'november', 'detsember'],
+	months_abbr: ['jaan', 'veebr', 'märts', 'apr', 'mai', 'juuni', 'juuli', 'aug', 'sept', 'okt', 'nov', 'dets'],
+	days: ['pühapäev', 'esmaspäev', 'teisipäev', 'kolmapäev', 'neljapäev', 'reede', 'laupäev'],
+	days_abbr: ['pühap', 'esmasp', 'teisip', 'kolmap', 'neljap', 'reede', 'laup'],
+
+	// Culture's date order: MM.DD.YYYY
+	dateOrder: ['month', 'date', 'year'],
+	shortDate: '%m.%d.%Y',
+	shortTime: '%H:%M',
+	AM: 'AM',
+	PM: 'PM',
+
+	// Date.Extras
+	ordinal: '',
+
+	lessThanMinuteAgo: 'vähem kui minut aega tagasi',
+	minuteAgo: 'umbes minut aega tagasi',
+	minutesAgo: '{delta} minutit tagasi',
+	hourAgo: 'umbes tund aega tagasi',
+	hoursAgo: 'umbes {delta} tundi tagasi',
+	dayAgo: '1 päev tagasi',
+	daysAgo: '{delta} päeva tagasi',
+	weekAgo: '1 nädal tagasi',
+	weeksAgo: '{delta} nädalat tagasi',
+	monthAgo: '1 kuu tagasi',
+	monthsAgo: '{delta} kuud tagasi',
+	yearAgo: '1 aasta tagasi',
+	yearsAgo: '{delta} aastat tagasi',
+
+	lessThanMinuteUntil: 'vähem kui minuti aja pärast',
+	minuteUntil: 'umbes minuti aja pärast',
+	minutesUntil: '{delta} minuti pärast',
+	hourUntil: 'umbes tunni aja pärast',
+	hoursUntil: 'umbes {delta} tunni pärast',
+	dayUntil: '1 päeva pärast',
+	daysUntil: '{delta} päeva pärast',
+	weekUntil: '1 nädala pärast',
+	weeksUntil: '{delta} nädala pärast',
+	monthUntil: '1 kuu pärast',
+	monthsUntil: '{delta} kuu pärast',
+	yearUntil: '1 aasta pärast',
+	yearsUntil: '{delta} aasta pärast'
+
+});
+
+
+/*
+---
+
+name: Locale.et-EE.Form.Validator
+
+description: Form Validator messages for Estonian.
+
+license: MIT-style license
+
+authors:
+  - Kevin Valdek
+
+requires:
+  - /Locale
+
+provides: [Locale.et-EE.Form.Validator]
+
+...
+*/
+
+Locale.define('et-EE', 'FormValidator', {
+
+	required: 'Väli peab olema täidetud.',
+	minLength: 'Palun sisestage vähemalt {minLength} tähte (te sisestasite {length} tähte).',
+	maxLength: 'Palun ärge sisestage rohkem kui {maxLength} tähte (te sisestasite {length} tähte).',
+	integer: 'Palun sisestage väljale täisarv. Kümnendarvud (näiteks 1.25) ei ole lubatud.',
+	numeric: 'Palun sisestage ainult numbreid väljale (näiteks "1", "1.1", "-1" või "-1.1").',
+	digits: 'Palun kasutage ainult numbreid ja kirjavahemärke (telefoninumbri sisestamisel on lubatud kasutada kriipse ja punkte).',
+	alpha: 'Palun kasutage ainult tähti (a-z). Tühikud ja teised sümbolid on keelatud.',
+	alphanum: 'Palun kasutage ainult tähti (a-z) või numbreid (0-9). Tühikud ja teised sümbolid on keelatud.',
+	dateSuchAs: 'Palun sisestage kehtiv kuupäev kujul {date}',
+	dateInFormatMDY: 'Palun sisestage kehtiv kuupäev kujul MM.DD.YYYY (näiteks: "12.31.1999").',
+	email: 'Palun sisestage kehtiv e-maili aadress (näiteks: "fred@domain.com").',
+	url: 'Palun sisestage kehtiv URL (näiteks: http://www.google.com).',
+	currencyDollar: 'Palun sisestage kehtiv $ summa (näiteks: $100.00).',
+	oneRequired: 'Palun sisestage midagi vähemalt ühele antud väljadest.',
+	errorPrefix: 'Viga: ',
+	warningPrefix: 'Hoiatus: ',
+
+	// Form.Validator.Extras
+	noSpace: 'Väli ei tohi sisaldada tühikuid.',
+	reqChkByNode: 'Ükski väljadest pole valitud.',
+	requiredChk: 'Välja täitmine on vajalik.',
+	reqChkByName: 'Palun valige üks {label}.',
+	match: 'Väli peab sobima {matchName} väljaga',
+	startDate: 'algkuupäev',
+	endDate: 'lõppkuupäev',
+	currendDate: 'praegune kuupäev',
+	afterDate: 'Kuupäev peab olema võrdne või pärast {label}.',
+	beforeDate: 'Kuupäev peab olema võrdne või enne {label}.',
+	startMonth: 'Palun valige algkuupäev.',
+	sameMonth: 'Antud kaks kuupäeva peavad olema samas kuus - peate muutma ühte kuupäeva.'
+
+});
+
+
+/*
+---
+
+name: Locale.fa.Date
+
+description: Date messages for Persian.
+
+license: MIT-style license
+
+authors:
+  - Amir Hossein Hodjaty Pour
+
+requires:
+  - /Locale
+
+provides: [Locale.fa.Date]
+
+...
+*/
+
+Locale.define('fa', 'Date', {
+
+	months: ['ژانویه', 'فوریه', 'مارس', 'آپریل', 'مه', 'ژوئن', 'ژوئیه', 'آگوست', 'سپتامبر', 'اکتبر', 'نوامبر', 'دسامبر'],
+	months_abbr: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+	days: ['یکشنبه', 'دوشنبه', 'سه شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه', 'شنبه'],
+	days_abbr: ['ي', 'د', 'س', 'چ', 'پ', 'ج', 'ش'],
+
+	// Culture's date order: MM/DD/YYYY
+	dateOrder: ['month', 'date', 'year'],
+	shortDate: '%m/%d/%Y',
+	shortTime: '%I:%M%p',
+	AM: 'ق.ظ',
+	PM: 'ب.ظ',
+
+	// Date.Extras
+	ordinal: 'ام',
+
+	lessThanMinuteAgo: 'کمتر از یک دقیقه پیش',
+	minuteAgo: 'حدود یک دقیقه پیش',
+	minutesAgo: '{delta} دقیقه پیش',
+	hourAgo: 'حدود یک ساعت پیش',
+	hoursAgo: 'حدود {delta} ساعت پیش',
+	dayAgo: '1 روز پیش',
+	daysAgo: '{delta} روز پیش',
+	weekAgo: '1 هفته پیش',
+	weeksAgo: '{delta} هفته پیش',
+	monthAgo: '1 ماه پیش',
+	monthsAgo: '{delta} ماه پیش',
+	yearAgo: '1 سال پیش',
+	yearsAgo: '{delta} سال پیش',
+
+	lessThanMinuteUntil: 'کمتر از یک دقیقه از حالا',
+	minuteUntil: 'حدود یک دقیقه از حالا',
+	minutesUntil: '{delta} دقیقه از حالا',
+	hourUntil: 'حدود یک ساعت از حالا',
+	hoursUntil: 'حدود {delta} ساعت از حالا',
+	dayUntil: '1 روز از حالا',
+	daysUntil: '{delta} روز از حالا',
+	weekUntil: '1 هفته از حالا',
+	weeksUntil: '{delta} هفته از حالا',
+	monthUntil: '1 ماه از حالا',
+	monthsUntil: '{delta} ماه از حالا',
+	yearUntil: '1 سال از حالا',
+	yearsUntil: '{delta} سال از حالا'
+
+});
+
+
+/*
+---
+
+name: Locale.fa.Form.Validator
+
+description: Form Validator messages for Persian.
+
+license: MIT-style license
+
+authors:
+  - Amir Hossein Hodjaty Pour
+
+requires:
+  - /Locale
+
+provides: [Locale.fa.Form.Validator]
+
+...
+*/
+
+Locale.define('fa', 'FormValidator', {
+
+	required: 'این فیلد الزامی است.',
+	minLength: 'شما باید حداقل {minLength} حرف وارد کنید ({length} حرف وارد کرده اید).',
+	maxLength: 'لطفا حداکثر {maxLength} حرف وارد کنید (شما {length} حرف وارد کرده اید).',
+	integer: 'لطفا از عدد صحیح استفاده کنید. اعداد اعشاری (مانند 1.25) مجاز نیستند.',
+	numeric: 'لطفا فقط داده عددی وارد کنید (مانند "1" یا "1.1" یا "1-" یا "1.1-").',
+	digits: 'لطفا فقط از اعداد و علامتها در این فیلد استفاده کنید (برای مثال شماره تلفن با خط تیره و نقطه قابل قبول است).',
+	alpha: 'لطفا فقط از حروف الفباء برای این بخش استفاده کنید. کاراکترهای دیگر و فاصله مجاز نیستند.',
+	alphanum: 'لطفا فقط از حروف الفباء و اعداد در این بخش استفاده کنید. کاراکترهای دیگر و فاصله مجاز نیستند.',
+	dateSuchAs: 'لطفا یک تاریخ معتبر مانند {date} وارد کنید.',
+	dateInFormatMDY: 'لطفا یک تاریخ معتبر به شکل MM/DD/YYYY وارد کنید (مانند "12/31/1999").',
+	email: 'لطفا یک آدرس ایمیل معتبر وارد کنید. برای مثال "fred@domain.com".',
+	url: 'لطفا یک URL معتبر مانند http://www.google.com وارد کنید.',
+	currencyDollar: 'لطفا یک محدوده معتبر برای این بخش وارد کنید مانند 100.00$ .',
+	oneRequired: 'لطفا حداقل یکی از فیلدها را پر کنید.',
+	errorPrefix: 'خطا: ',
+	warningPrefix: 'هشدار: ',
+
+	// Form.Validator.Extras
+	noSpace: 'استفاده از فاصله در این بخش مجاز نیست.',
+	reqChkByNode: 'موردی انتخاب نشده است.',
+	requiredChk: 'این فیلد الزامی است.',
+	reqChkByName: 'لطفا یک {label} را انتخاب کنید.',
+	match: 'این فیلد باید با فیلد {matchName} مطابقت داشته باشد.',
+	startDate: 'تاریخ شروع',
+	endDate: 'تاریخ پایان',
+	currendDate: 'تاریخ کنونی',
+	afterDate: 'تاریخ میبایست برابر یا بعد از {label} باشد',
+	beforeDate: 'تاریخ میبایست برابر یا قبل از {label} باشد',
+	startMonth: 'لطفا ماه شروع را انتخاب کنید',
+	sameMonth: 'این دو تاریخ باید در یک ماه باشند - شما باید یکی یا هر دو را تغییر دهید.',
+	creditcard: 'شماره کارت اعتباری که وارد کرده اید معتبر نیست. لطفا شماره را بررسی کنید و مجددا تلاش کنید. {length} رقم وارد شده است.'
+
+});
+
+
+/*
+---
+
+name: Locale.fi-FI.Date
+
+description: Date messages for Finnish.
+
+license: MIT-style license
+
+authors:
+  - ksel
+
+requires:
+  - /Locale
+
+provides: [Locale.fi-FI.Date]
+
+...
+*/
+
+Locale.define('fi-FI', 'Date', {
+
+	// NOTE: months and days are not capitalized in finnish
+	months: ['tammikuu', 'helmikuu', 'maaliskuu', 'huhtikuu', 'toukokuu', 'kesäkuu', 'heinäkuu', 'elokuu', 'syyskuu', 'lokakuu', 'marraskuu', 'joulukuu'],
+
+	// these abbreviations are really not much used in finnish because they obviously won't abbreviate very much. ;)
+	// NOTE: sometimes one can see forms such as "tammi", "helmi", etc. but that is not proper finnish.
+	months_abbr: ['tammik.', 'helmik.', 'maalisk.', 'huhtik.', 'toukok.', 'kesäk.', 'heinäk.', 'elok.', 'syysk.', 'lokak.', 'marrask.', 'jouluk.'],
+
+	days: ['sunnuntai', 'maanantai', 'tiistai', 'keskiviikko', 'torstai', 'perjantai', 'lauantai'],
+	days_abbr: ['su', 'ma', 'ti', 'ke', 'to', 'pe', 'la'],
+
+	// Culture's date order: DD/MM/YYYY
+	dateOrder: ['date', 'month', 'year'],
+	shortDate: '%d.%m.%Y',
+	shortTime: '%H:%M',
+	AM: 'AM',
+	PM: 'PM',
+
+	// Date.Extras
+	ordinal: '.',
+
+	lessThanMinuteAgo: 'vajaa minuutti sitten',
+	minuteAgo: 'noin minuutti sitten',
+	minutesAgo: '{delta} minuuttia sitten',
+	hourAgo: 'noin tunti sitten',
+	hoursAgo: 'noin {delta} tuntia sitten',
+	dayAgo: 'päivä sitten',
+	daysAgo: '{delta} päivää sitten',
+	weekAgo: 'viikko sitten',
+	weeksAgo: '{delta} viikkoa sitten',
+	monthAgo: 'kuukausi sitten',
+	monthsAgo: '{delta} kuukautta sitten',
+	yearAgo: 'vuosi sitten',
+	yearsAgo: '{delta} vuotta sitten',
+
+	lessThanMinuteUntil: 'vajaan minuutin kuluttua',
+	minuteUntil: 'noin minuutin kuluttua',
+	minutesUntil: '{delta} minuutin kuluttua',
+	hourUntil: 'noin tunnin kuluttua',
+	hoursUntil: 'noin {delta} tunnin kuluttua',
+	dayUntil: 'päivän kuluttua',
+	daysUntil: '{delta} päivän kuluttua',
+	weekUntil: 'viikon kuluttua',
+	weeksUntil: '{delta} viikon kuluttua',
+	monthUntil: 'kuukauden kuluttua',
+	monthsUntil: '{delta} kuukauden kuluttua',
+	yearUntil: 'vuoden kuluttua',
+	yearsUntil: '{delta} vuoden kuluttua'
+
+});
+
+
+/*
+---
+
+name: Locale.fi-FI.Form.Validator
+
+description: Form Validator messages for Finnish.
+
+license: MIT-style license
+
+authors:
+  - ksel
+
+requires:
+  - /Locale
+
+provides: [Locale.fi-FI.Form.Validator]
+
+...
+*/
+
+Locale.define('fi-FI', 'FormValidator', {
+
+	required: 'Tämä kenttä on pakollinen.',
+	minLength: 'Ole hyvä ja anna vähintään {minLength} merkkiä (annoit {length} merkkiä).',
+	maxLength: 'Älä anna enempää kuin {maxLength} merkkiä (annoit {length} merkkiä).',
+	integer: 'Ole hyvä ja anna kokonaisluku. Luvut, joissa on desimaaleja (esim. 1.25) eivät ole sallittuja.',
+	numeric: 'Anna tähän kenttään lukuarvo (kuten "1" tai "1.1" tai "-1" tai "-1.1").',
+	digits: 'Käytä pelkästään numeroita ja välimerkkejä tässä kentässä (syötteet, kuten esim. puhelinnumero, jossa on väliviivoja, pilkkuja tai pisteitä, kelpaa).',
+	alpha: 'Anna tähän kenttään vain kirjaimia (a-z). Välilyönnit tai muut merkit eivät ole sallittuja.',
+	alphanum: 'Anna tähän kenttään vain kirjaimia (a-z) tai numeroita (0-9). Välilyönnit tai muut merkit eivät ole sallittuja.',
+	dateSuchAs: 'Ole hyvä ja anna kelvollinen päivmäärä, kuten esimerkiksi {date}',
+	dateInFormatMDY: 'Ole hyvä ja anna kelvollinen päivämäärä muodossa pp/kk/vvvv (kuten "12/31/1999")',
+	email: 'Ole hyvä ja anna kelvollinen sähköpostiosoite (kuten esimerkiksi "matti@meikalainen.com").',
+	url: 'Ole hyvä ja anna kelvollinen URL, kuten esimerkiksi http://www.google.fi.',
+	currencyDollar: 'Ole hyvä ja anna kelvollinen eurosumma (kuten esimerkiksi 100,00 EUR) .',
+	oneRequired: 'Ole hyvä ja syötä jotakin ainakin johonkin näistä kentistä.',
+	errorPrefix: 'Virhe: ',
+	warningPrefix: 'Varoitus: ',
+
+	// Form.Validator.Extras
+	noSpace: 'Tässä syötteessä ei voi olla välilyöntejä',
+	reqChkByNode: 'Ei valintoja.',
+	requiredChk: 'Tämä kenttä on pakollinen.',
+	reqChkByName: 'Ole hyvä ja valitse {label}.',
+	match: 'Tämän kentän tulee vastata kenttää {matchName}',
+	startDate: 'alkupäivämäärä',
+	endDate: 'loppupäivämäärä',
+	currendDate: 'nykyinen päivämäärä',
+	afterDate: 'Päivämäärän tulisi olla sama tai myöhäisempi ajankohta kuin {label}.',
+	beforeDate: 'Päivämäärän tulisi olla sama tai aikaisempi ajankohta kuin {label}.',
+	startMonth: 'Ole hyvä ja valitse aloituskuukausi',
+	sameMonth: 'Näiden kahden päivämäärän tulee olla saman kuun sisällä -- sinun pitää muuttaa jompaa kumpaa.',
+	creditcard: 'Annettu luottokortin numero ei kelpaa. Ole hyvä ja tarkista numero sekä yritä uudelleen. {length} numeroa syötetty.'
+
+});
+
+
+/*
+---
+
+name: Locale.fi-FI.Number
+
+description: Finnish number messages
+
+license: MIT-style license
+
+authors:
+  - ksel
+
+requires:
+  - /Locale
+  - /Locale.EU.Number
+
+provides: [Locale.fi-FI.Number]
+
+...
+*/
+
+Locale.define('fi-FI', 'Number', {
+
+	group: ' ' // grouped by space
+
+}).inherit('EU', 'Number');
+
+
+/*
+---
+
+name: Locale.fr-FR.Date
+
+description: Date messages for French.
+
+license: MIT-style license
+
+authors:
+  - Nicolas Sorosac
+  - Antoine Abt
+
+requires:
+  - /Locale
+
+provides: [Locale.fr-FR.Date]
+
+...
+*/
+
+Locale.define('fr-FR', 'Date', {
+
+	months: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+	months_abbr: ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'],
+	days: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+	days_abbr: ['dim.', 'lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.'],
+
+	// Culture's date order: DD/MM/YYYY
+	dateOrder: ['date', 'month', 'year'],
+	shortDate: '%d/%m/%Y',
+	shortTime: '%H:%M',
+	AM: 'AM',
+	PM: 'PM',
+
+	// Date.Extras
+	ordinal: function(dayOfMonth){
+		return (dayOfMonth > 1) ? '' : 'er';
+	},
+
+	lessThanMinuteAgo: "il y a moins d'une minute",
+	minuteAgo: 'il y a une minute',
+	minutesAgo: 'il y a {delta} minutes',
+	hourAgo: 'il y a une heure',
+	hoursAgo: 'il y a {delta} heures',
+	dayAgo: 'il y a un jour',
+	daysAgo: 'il y a {delta} jours',
+	weekAgo: 'il y a une semaine',
+	weeksAgo: 'il y a {delta} semaines',
+	monthAgo: 'il y a 1 mois',
+	monthsAgo: 'il y a {delta} mois',
+	yearthAgo: 'il y a 1 an',
+	yearsAgo: 'il y a {delta} ans',
+
+	lessThanMinuteUntil: "dans moins d'une minute",
+	minuteUntil: 'dans une minute',
+	minutesUntil: 'dans {delta} minutes',
+	hourUntil: 'dans une heure',
+	hoursUntil: 'dans {delta} heures',
+	dayUntil: 'dans un jour',
+	daysUntil: 'dans {delta} jours',
+	weekUntil: 'dans 1 semaine',
+	weeksUntil: 'dans {delta} semaines',
+	monthUntil: 'dans 1 mois',
+	monthsUntil: 'dans {delta} mois',
+	yearUntil: 'dans 1 an',
+	yearsUntil: 'dans {delta} ans'
+
+});
+
+
+/*
+---
+
+name: Locale.fr-FR.Form.Validator
+
+description: Form Validator messages for French.
+
+license: MIT-style license
+
+authors:
+  - Miquel Hudin
+  - Nicolas Sorosac
+
+requires:
+  - /Locale
+
+provides: [Locale.fr-FR.Form.Validator]
+
+...
+*/
+
+Locale.define('fr-FR', 'FormValidator', {
+
+	required: 'Ce champ est obligatoire.',
+	minLength: 'Veuillez saisir un minimum de {minLength} caract&egrave;re(s) (vous avez saisi {length} caract&egrave;re(s)).',
+	maxLength: 'Veuillez saisir un maximum de {maxLength} caract&egrave;re(s) (vous avez saisi {length} caract&egrave;re(s)).',
+	integer: 'Veuillez saisir un nombre entier dans ce champ. Les nombres d&eacute;cimaux (ex : "1,25") ne sont pas autoris&eacute;s.',
+	numeric: 'Veuillez saisir uniquement des chiffres dans ce champ (ex : "1" ou "1,1" ou "-1" ou "-1,1").',
+	digits: "Veuillez saisir uniquement des chiffres et des signes de ponctuation dans ce champ (ex : un num&eacute;ro de t&eacute;l&eacute;phone avec des traits d'union est autoris&eacute;).",
+	alpha: 'Veuillez saisir uniquement des lettres (a-z) dans ce champ. Les espaces ou autres caract&egrave;res ne sont pas autoris&eacute;s.',
+	alphanum: 'Veuillez saisir uniquement des lettres (a-z) ou des chiffres (0-9) dans ce champ. Les espaces ou autres caract&egrave;res ne sont pas autoris&eacute;s.',
+	dateSuchAs: 'Veuillez saisir une date correcte comme {date}',
+	dateInFormatMDY: 'Veuillez saisir une date correcte, au format JJ/MM/AAAA (ex : "31/11/1999").',
+	email: 'Veuillez saisir une adresse de courrier &eacute;lectronique. Par example "fred@domaine.com".',
+	url: 'Veuillez saisir une URL, comme http://www.google.com.',
+	currencyDollar: 'Veuillez saisir une quantit&eacute; correcte. Par example 100,00&euro;.',
+	oneRequired: 'Veuillez s&eacute;lectionner au moins une de ces options.',
+	errorPrefix: 'Erreur : ',
+	warningPrefix: 'Attention : ',
+
+	// Form.Validator.Extras
+	noSpace: "Ce champ n'accepte pas les espaces.",
+	reqChkByNode: "Aucun &eacute;l&eacute;ment n'est s&eacute;lectionn&eacute;.",
+	requiredChk: 'Ce champ est obligatoire.',
+	reqChkByName: 'Veuillez s&eacute;lectionner un(e) {label}.',
+	match: 'Ce champ doit correspondre avec le champ {matchName}.',
+	startDate: 'date de d&eacute;but',
+	endDate: 'date de fin',
+	currendDate: 'date actuelle',
+	afterDate: 'La date doit &ecirc;tre identique ou post&eacute;rieure &agrave; {label}.',
+	beforeDate: 'La date doit &ecirc;tre identique ou ant&eacute;rieure &agrave; {label}.',
+	startMonth: 'Veuillez s&eacute;lectionner un mois de d&eacute;but.',
+	sameMonth: 'Ces deux dates doivent &ecirc;tre dans le m&ecirc;me mois - vous devez en modifier une.',
+	creditcard: 'Le num&eacute;ro de carte de cr&eacute;dit est invalide. Merci de v&eacute;rifier le num&eacute;ro et de r&eacute;essayer. Vous avez entr&eacute; {length} chiffre(s).'
+
+});
+
+
+/*
+---
+
+name: Locale.fr-FR.Number
+
+description: Number messages for French.
+
+license: MIT-style license
+
+authors:
+  - Arian Stolwijk
+  - sv1l
+
+requires:
+  - /Locale
+  - /Locale.EU.Number
+
+provides: [Locale.fr-FR.Number]
+
+...
+*/
+
+Locale.define('fr-FR', 'Number', {
+
+	group: ' ' // In fr-FR localization, group character is a blank space
+
+}).inherit('EU', 'Number');
+
+
+/*
+---
+
+name: Locale.he-IL.Date
+
+description: Date messages for Hebrew.
+
+license: MIT-style license
+
+authors:
+  - Elad Ossadon
+
+requires:
+  - /Locale
+
+provides: [Locale.he-IL.Date]
+
+...
+*/
+
+Locale.define('he-IL', 'Date', {
+
+	months: ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'],
+	months_abbr: ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'],
+	days: ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'],
+	days_abbr: ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'],
+
+	// Culture's date order: MM/DD/YYYY
+	dateOrder: ['date', 'month', 'year'],
+	shortDate: '%d/%m/%Y',
+	shortTime: '%H:%M',
+	AM: 'AM',
+	PM: 'PM',
+
+	// Date.Extras
+	ordinal: '',
+
+	lessThanMinuteAgo: 'לפני פחות מדקה',
+	minuteAgo: 'לפני כדקה',
+	minutesAgo: 'לפני {delta} דקות',
+	hourAgo: 'לפני כשעה',
+	hoursAgo: 'לפני {delta} שעות',
+	dayAgo: 'לפני יום',
+	daysAgo: 'לפני {delta} ימים',
+	weekAgo: 'לפני שבוע',
+	weeksAgo: 'לפני {delta} שבועות',
+	monthAgo: 'לפני חודש',
+	monthsAgo: 'לפני {delta} חודשים',
+	yearAgo: 'לפני שנה',
+	yearsAgo: 'לפני {delta} שנים',
+
+	lessThanMinuteUntil: 'בעוד פחות מדקה',
+	minuteUntil: 'בעוד כדקה',
+	minutesUntil: 'בעוד {delta} דקות',
+	hourUntil: 'בעוד כשעה',
+	hoursUntil: 'בעוד {delta} שעות',
+	dayUntil: 'בעוד יום',
+	daysUntil: 'בעוד {delta} ימים',
+	weekUntil: 'בעוד שבוע',
+	weeksUntil: 'בעוד {delta} שבועות',
+	monthUntil: 'בעוד חודש',
+	monthsUntil: 'בעוד {delta} חודשים',
+	yearUntil: 'בעוד שנה',
+	yearsUntil: 'בעוד {delta} שנים'
+
+});
+
+
+/*
+---
+
+name: Locale.he-IL.Form.Validator
+
+description: Form Validator messages for Hebrew.
+
+license: MIT-style license
+
+authors:
+  - Elad Ossadon
+
+requires:
+  - /Locale
+
+provides: [Locale.he-IL.Form.Validator]
+
+...
+*/
+
+Locale.define('he-IL', 'FormValidator', {
+
+	required: 'נא למלא שדה זה.',
+	minLength: 'נא להזין לפחות {minLength} תווים (הזנת {length} תווים).',
+	maxLength: 'נא להזין עד {maxLength} תווים (הזנת {length} תווים).',
+	integer: 'נא להזין מספר שלם לשדה זה. מספרים עשרוניים (כמו 1.25) אינם חוקיים.',
+	numeric: 'נא להזין ערך מספרי בלבד בשדה זה (כמו "1", "1.1", "-1" או "-1.1").',
+	digits: 'נא להזין רק ספרות וסימני הפרדה בשדה זה (למשל, מספר טלפון עם מקפים או נקודות הוא חוקי).',
+	alpha: 'נא להזין רק אותיות באנגלית (a-z) בשדה זה. רווחים או תווים אחרים אינם חוקיים.',
+	alphanum: 'נא להזין רק אותריות באנגלית (a-z) או ספרות (0-9) בשדה זה. אווחרים או תווים אחרים אינם חוקיים.',
+	dateSuchAs: 'נא להזין תאריך חוקי, כמו {date}',
+	dateInFormatMDY: 'נא להזין תאריך חוקי בפורמט MM/DD/YYYY (כמו "12/31/1999")',
+	email: 'נא להזין כתובת אימייל חוקית. לדוגמה: "fred@domain.com".',
+	url: 'נא להזין כתובת אתר חוקית, כמו http://www.google.com.',
+	currencyDollar: 'נא להזין סכום דולרי חוקי. לדוגמה $100.00.',
+	oneRequired: 'נא לבחור לפחות בשדה אחד.',
+	errorPrefix: 'שגיאה: ',
+	warningPrefix: 'אזהרה: ',
+
+	// Form.Validator.Extras
+	noSpace: 'אין להזין רווחים בשדה זה.',
+	reqChkByNode: 'נא לבחור אחת מהאפשרויות.',
+	requiredChk: 'שדה זה נדרש.',
+	reqChkByName: 'נא לבחור {label}.',
+	match: 'שדה זה צריך להתאים לשדה {matchName}',
+	startDate: 'תאריך ההתחלה',
+	endDate: 'תאריך הסיום',
+	currendDate: 'התאריך הנוכחי',
+	afterDate: 'התאריך צריך להיות זהה או אחרי {label}.',
+	beforeDate: 'התאריך צריך להיות זהה או לפני {label}.',
+	startMonth: 'נא לבחור חודש התחלה',
+	sameMonth: 'שני תאריכים אלה צריכים להיות באותו חודש - נא לשנות אחד התאריכים.',
+	creditcard: 'מספר כרטיס האשראי שהוזן אינו חוקי. נא לבדוק שנית. הוזנו {length} ספרות.'
+
+});
+
+
+/*
+---
+
+name: Locale.he-IL.Number
+
+description: Number messages for Hebrew.
+
+license: MIT-style license
+
+authors:
+  - Elad Ossadon
+
+requires:
+  - /Locale
+
+provides: [Locale.he-IL.Number]
+
+...
+*/
+
+Locale.define('he-IL', 'Number', {
+
+	decimal: '.',
+	group: ',',
+
+	currency: {
+		suffix: ' ₪'
+	}
+
+});
+
+
+/*
+---
+
+name: Locale.hu-HU.Date
+
+description: Date messages for Hungarian.
+
+license: MIT-style license
+
+authors:
+  - Zsolt Szegheő
+
+requires:
+  - /Locale
+
+provides: [Locale.hu-HU.Date]
+
+...
+*/
+
+Locale.define('hu-HU', 'Date', {
+
+	months: ['Január', 'Február', 'Március', 'Április', 'Május', 'Június', 'Július', 'Augusztus', 'Szeptember', 'Október', 'November', 'December'],
+	months_abbr: ['jan.', 'febr.', 'márc.', 'ápr.', 'máj.', 'jún.', 'júl.', 'aug.', 'szept.', 'okt.', 'nov.', 'dec.'],
+	days: ['Vasárnap', 'Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat'],
+	days_abbr: ['V', 'H', 'K', 'Sze', 'Cs', 'P', 'Szo'],
+
+	// Culture's date order: YYYY.MM.DD.
+	dateOrder: ['year', 'month', 'date'],
+	shortDate: '%Y.%m.%d.',
+	shortTime: '%I:%M',
+	AM: 'de.',
+	PM: 'du.',
+
+	// Date.Extras
+	ordinal: '.',
+
+	lessThanMinuteAgo: 'alig egy perce',
+	minuteAgo: 'egy perce',
+	minutesAgo: '{delta} perce',
+	hourAgo: 'egy órája',
+	hoursAgo: '{delta} órája',
+	dayAgo: '1 napja',
+	daysAgo: '{delta} napja',
+	weekAgo: '1 hete',
+	weeksAgo: '{delta} hete',
+	monthAgo: '1 hónapja',
+	monthsAgo: '{delta} hónapja',
+	yearAgo: '1 éve',
+	yearsAgo: '{delta} éve',
+
+	lessThanMinuteUntil: 'alig egy perc múlva',
+	minuteUntil: 'egy perc múlva',
+	minutesUntil: '{delta} perc múlva',
+	hourUntil: 'egy óra múlva',
+	hoursUntil: '{delta} óra múlva',
+	dayUntil: '1 nap múlva',
+	daysUntil: '{delta} nap múlva',
+	weekUntil: '1 hét múlva',
+	weeksUntil: '{delta} hét múlva',
+	monthUntil: '1 hónap múlva',
+	monthsUntil: '{delta} hónap múlva',
+	yearUntil: '1 év múlva',
+	yearsUntil: '{delta} év múlva'
+
+});
+
+
+/*
+---
+
+name: Locale.hu-HU.Form.Validator
+
+description: Form Validator messages for Hungarian.
+
+license: MIT-style license
+
+authors:
+  - Zsolt Szegheő
+
+requires:
+  - /Locale
+
+provides: [Locale.hu-HU.Form.Validator]
+
+...
+*/
+
+Locale.define('hu-HU', 'FormValidator', {
+
+	required: 'A mező kitöltése kötelező.',
+	minLength: 'Legalább {minLength} karakter megadása szükséges (megadva {length} karakter).',
+	maxLength: 'Legfeljebb {maxLength} karakter megadása lehetséges (megadva {length} karakter).',
+	integer: 'Egész szám megadása szükséges. A tizedesjegyek (pl. 1.25) nem engedélyezettek.',
+	numeric: 'Szám megadása szükséges (pl. "1" vagy "1.1" vagy "-1" vagy "-1.1").',
+	digits: 'Csak számok és írásjelek megadása lehetséges (pl. telefonszám kötőjelek és/vagy perjelekkel).',
+	alpha: 'Csak betűk (a-z) megadása lehetséges. Szóköz és egyéb karakterek nem engedélyezettek.',
+	alphanum: 'Csak betűk (a-z) vagy számok (0-9) megadása lehetséges. Szóköz és egyéb karakterek nem engedélyezettek.',
+	dateSuchAs: 'Valós dátum megadása szükséges (pl. {date}).',
+	dateInFormatMDY: 'Valós dátum megadása szükséges ÉÉÉÉ.HH.NN. formában. (pl. "1999.12.31.")',
+	email: 'Valós e-mail cím megadása szükséges (pl. "fred@domain.hu").',
+	url: 'Valós URL megadása szükséges (pl. http://www.google.com).',
+	currencyDollar: 'Valós pénzösszeg megadása szükséges (pl. 100.00 Ft.).',
+	oneRequired: 'Az alábbi mezők legalább egyikének kitöltése kötelező.',
+	errorPrefix: 'Hiba: ',
+	warningPrefix: 'Figyelem: ',
+
+	// Form.Validator.Extras
+	noSpace: 'A mező nem tartalmazhat szóközöket.',
+	reqChkByNode: 'Nincs egyetlen kijelölt elem sem.',
+	requiredChk: 'A mező kitöltése kötelező.',
+	reqChkByName: 'Egy {label} kiválasztása szükséges.',
+	match: 'A mezőnek egyeznie kell a(z) {matchName} mezővel.',
+	startDate: 'a kezdet dátuma',
+	endDate: 'a vég dátuma',
+	currendDate: 'jelenlegi dátum',
+	afterDate: 'A dátum nem lehet kisebb, mint {label}.',
+	beforeDate: 'A dátum nem lehet nagyobb, mint {label}.',
+	startMonth: 'Kezdeti hónap megadása szükséges.',
+	sameMonth: 'A két dátumnak ugyanazon hónapban kell lennie.',
+	creditcard: 'A megadott bankkártyaszám nem valódi (megadva {length} számjegy).'
+
+});
+
+
+/*
+---
+
+name: Locale.it-IT.Date
+
+description: Date messages for Italian.
+
+license: MIT-style license.
+
+authors:
+  - Andrea Novero
+  - Valerio Proietti
+
+requires:
+  - /Locale
+
+provides: [Locale.it-IT.Date]
+
+...
+*/
+
+Locale.define('it-IT', 'Date', {
+
+	months: ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'],
+	months_abbr: ['gen', 'feb', 'mar', 'apr', 'mag', 'giu', 'lug', 'ago', 'set', 'ott', 'nov', 'dic'],
+	days: ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'],
+	days_abbr: ['dom', 'lun', 'mar', 'mer', 'gio', 'ven', 'sab'],
+
+	// Culture's date order: DD/MM/YYYY
+	dateOrder: ['date', 'month', 'year'],
+	shortDate: '%d/%m/%Y',
+	shortTime: '%H.%M',
+	AM: 'AM',
+	PM: 'PM',
+
+	// Date.Extras
+	ordinal: 'º',
+
+	lessThanMinuteAgo: 'meno di un minuto fa',
+	minuteAgo: 'circa un minuto fa',
+	minutesAgo: 'circa {delta} minuti fa',
+	hourAgo: "circa un'ora fa",
+	hoursAgo: 'circa {delta} ore fa',
+	dayAgo: 'circa 1 giorno fa',
+	daysAgo: 'circa {delta} giorni fa',
+
+	lessThanMinuteUntil: 'tra meno di un minuto',
+	minuteUntil: 'tra circa un minuto',
+	minutesUntil: 'tra circa {delta} minuti',
+	hourUntil: "tra circa un'ora",
+	hoursUntil: 'tra circa {delta} ore',
+	dayUntil: 'tra circa un giorno',
+	daysUntil: 'tra circa {delta} giorni'
+
+});
+
+
+/*
+---
+
+name: Locale.it-IT.Form.Validator
+
+description: Form Validator messages for Italian.
+
+license: MIT-style license
+
+authors:
+  - Leonardo Laureti
+  - Andrea Novero
+
+requires:
+  - /Locale
+
+provides: [Locale.it-IT.Form.Validator]
+
+...
+*/
+
+Locale.define('it-IT', 'FormValidator', {
+
+	required: 'Il campo &egrave; obbligatorio.',
+	minLength: 'Inserire almeno {minLength} caratteri (ne sono stati inseriti {length}).',
+	maxLength: 'Inserire al massimo {maxLength} caratteri (ne sono stati inseriti {length}).',
+	integer: 'Inserire un numero intero. Non sono consentiti decimali (es.: 1.25).',
+	numeric: 'Inserire solo valori numerici (es.: "1" oppure "1.1" oppure "-1" oppure "-1.1").',
+	digits: 'Inserire solo numeri e caratteri di punteggiatura. Per esempio &egrave; consentito un numero telefonico con trattini o punti.',
+	alpha: 'Inserire solo lettere (a-z). Non sono consentiti spazi o altri caratteri.',
+	alphanum: 'Inserire solo lettere (a-z) o numeri (0-9). Non sono consentiti spazi o altri caratteri.',
+	dateSuchAs: 'Inserire una data valida del tipo {date}',
+	dateInFormatMDY: 'Inserire una data valida nel formato MM/GG/AAAA (es.: "12/31/1999")',
+	email: 'Inserire un indirizzo email valido. Per esempio "nome@dominio.com".',
+	url: 'Inserire un indirizzo valido. Per esempio "http://www.dominio.com".',
+	currencyDollar: 'Inserire un importo valido. Per esempio "$100.00".',
+	oneRequired: 'Completare almeno uno dei campi richiesti.',
+	errorPrefix: 'Errore: ',
+	warningPrefix: 'Attenzione: ',
+
+	// Form.Validator.Extras
+	noSpace: 'Non sono consentiti spazi.',
+	reqChkByNode: 'Nessuna voce selezionata.',
+	requiredChk: 'Il campo &egrave; obbligatorio.',
+	reqChkByName: 'Selezionare un(a) {label}.',
+	match: 'Il valore deve corrispondere al campo {matchName}',
+	startDate: "data d'inizio",
+	endDate: 'data di fine',
+	currendDate: 'data attuale',
+	afterDate: 'La data deve corrispondere o essere successiva al {label}.',
+	beforeDate: 'La data deve corrispondere o essere precedente al {label}.',
+	startMonth: "Selezionare un mese d'inizio",
+	sameMonth: 'Le due date devono essere dello stesso mese - occorre modificarne una.'
+
+});
+
+
+/*
+---
+
+name: Locale.ja-JP.Date
+
+description: Date messages for Japanese.
+
+license: MIT-style license
+
+authors:
+  - Noritaka Horio
+
+requires:
+  - /Locale
+
+provides: [Locale.ja-JP.Date]
+
+...
+*/
+
+Locale.define('ja-JP', 'Date', {
+
+	months: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+	months_abbr: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+	days: ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'],
+	days_abbr: ['日', '月', '火', '水', '木', '金', '土'],
+
+	// Culture's date order: YYYY/MM/DD
+	dateOrder: ['year', 'month', 'date'],
+	shortDate: '%Y/%m/%d',
+	shortTime: '%H:%M',
+	AM: '午前',
+	PM: '午後',
+
+	// Date.Extras
+	ordinal: '',
+
+	lessThanMinuteAgo: '1分以内前',
+	minuteAgo: '約1分前',
+	minutesAgo: '約{delta}分前',
+	hourAgo: '約1時間前',
+	hoursAgo: '約{delta}時間前',
+	dayAgo: '1日前',
+	daysAgo: '{delta}日前',
+	weekAgo: '1週間前',
+	weeksAgo: '{delta}週間前',
+	monthAgo: '1ヶ月前',
+	monthsAgo: '{delta}ヶ月前',
+	yearAgo: '1年前',
+	yearsAgo: '{delta}年前',
+
+	lessThanMinuteUntil: '今から約1分以内',
+	minuteUntil: '今から約1分',
+	minutesUntil: '今から約{delta}分',
+	hourUntil: '今から約1時間',
+	hoursUntil: '今から約{delta}時間',
+	dayUntil: '今から1日間',
+	daysUntil: '今から{delta}日間',
+	weekUntil: '今から1週間',
+	weeksUntil: '今から{delta}週間',
+	monthUntil: '今から1ヶ月',
+	monthsUntil: '今から{delta}ヶ月',
+	yearUntil: '今から1年',
+	yearsUntil: '今から{delta}年'
+
+});
+
+
+/*
+---
+
+name: Locale.ja-JP.Form.Validator
+
+description: Form Validator messages for Japanese.
+
+license: MIT-style license
+
+authors:
+  - Noritaka Horio
+
+requires:
+  - /Locale
+
+provides: [Locale.ja-JP.Form.Validator]
+
+...
+*/
+
+Locale.define("ja-JP", "FormValidator", {
+
+	required: '入力は必須です。',
+	minLength: '入力文字数は{minLength}以上にしてください。({length}文字)',
+	maxLength: '入力文字数は{maxLength}以下にしてください。({length}文字)',
+	integer: '整数を入力してください。',
+	numeric: '入力できるのは数値だけです。(例: "1", "1.1", "-1", "-1.1"....)',
+	digits: '入力できるのは数値と句読記号です。 (例: -や+を含む電話番号など).',
+	alpha: '入力できるのは半角英字だけです。それ以外の文字は入力できません。',
+	alphanum: '入力できるのは半角英数字だけです。それ以外の文字は入力できません。',
+	dateSuchAs: '有効な日付を入力してください。{date}',
+	dateInFormatMDY: '日付の書式に誤りがあります。YYYY/MM/DD (i.e. "1999/12/31")',
+	email: 'メールアドレスに誤りがあります。',
+	url: 'URLアドレスに誤りがあります。',
+	currencyDollar: '金額に誤りがあります。',
+	oneRequired: 'ひとつ以上入力してください。',
+	errorPrefix: 'エラー: ',
+	warningPrefix: '警告: ',
+
+	// FormValidator.Extras
+	noSpace: 'スペースは入力できません。',
+	reqChkByNode: '選択されていません。',
+	requiredChk: 'この項目は必須です。',
+	reqChkByName: '{label}を選択してください。',
+	match: '{matchName}が入力されている場合必須です。',
+	startDate: '開始日',
+	endDate: '終了日',
+	currendDate: '今日',
+	afterDate: '{label}以降の日付にしてください。',
+	beforeDate: '{label}以前の日付にしてください。',
+	startMonth: '開始月を選択してください。',
+	sameMonth: '日付が同一です。どちらかを変更してください。'
+
+});
+
+
+/*
+---
+
+name: Locale.ja-JP.Number
+
+description: Number messages for Japanese.
+
+license: MIT-style license
+
+authors:
+  - Noritaka Horio
+
+requires:
+  - /Locale
+
+provides: [Locale.ja-JP.Number]
+
+...
+*/
+
+Locale.define('ja-JP', 'Number', {
+
+	decimal: '.',
+	group: ',',
+
+	currency: {
+		decimals: 0,
+		prefix: '\\'
+	}
+
+});
+
+
+/*
+---
+
+name: Locale.nl-NL.Date
+
+description: Date messages for Dutch.
+
+license: MIT-style license
+
+authors:
+  - Lennart Pilon
+  - Tim Wienk
+
+requires:
+  - /Locale
+
+provides: [Locale.nl-NL.Date]
+
+...
+*/
+
+Locale.define('nl-NL', 'Date', {
+
+	months: ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'],
+	months_abbr: ['jan', 'feb', 'mrt', 'apr', 'mei', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'],
+	days: ['zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag'],
+	days_abbr: ['zo', 'ma', 'di', 'wo', 'do', 'vr', 'za'],
+
+	// Culture's date order: DD-MM-YYYY
+	dateOrder: ['date', 'month', 'year'],
+	shortDate: '%d-%m-%Y',
+	shortTime: '%H:%M',
+	AM: 'AM',
+	PM: 'PM',
+
+	// Date.Extras
+	ordinal: 'e',
+
+	lessThanMinuteAgo: 'minder dan een minuut geleden',
+	minuteAgo: 'ongeveer een minuut geleden',
+	minutesAgo: '{delta} minuten geleden',
+	hourAgo: 'ongeveer een uur geleden',
+	hoursAgo: 'ongeveer {delta} uur geleden',
+	dayAgo: 'een dag geleden',
+	daysAgo: '{delta} dagen geleden',
+	weekAgo: 'een week geleden',
+	weeksAgo: '{delta} weken geleden',
+	monthAgo: 'een maand geleden',
+	monthsAgo: '{delta} maanden geleden',
+	yearAgo: 'een jaar geleden',
+	yearsAgo: '{delta} jaar geleden',
+
+	lessThanMinuteUntil: 'over minder dan een minuut',
+	minuteUntil: 'over ongeveer een minuut',
+	minutesUntil: 'over {delta} minuten',
+	hourUntil: 'over ongeveer een uur',
+	hoursUntil: 'over {delta} uur',
+	dayUntil: 'over ongeveer een dag',
+	daysUntil: 'over {delta} dagen',
+	weekUntil: 'over een week',
+	weeksUntil: 'over {delta} weken',
+	monthUntil: 'over een maand',
+	monthsUntil: 'over {delta} maanden',
+	yearUntil: 'over een jaar',
+	yearsUntil: 'over {delta} jaar'
+
+});
+
+
+/*
+---
+
+name: Locale.nl-NL.Form.Validator
+
+description: Form Validator messages for Dutch.
+
+license: MIT-style license
+
+authors:
+  - Lennart Pilon
+  - Arian Stolwijk
+  - Tim Wienk
+
+requires:
+  - /Locale
+
+provides: [Locale.nl-NL.Form.Validator]
+
+...
+*/
+
+Locale.define('nl-NL', 'FormValidator', {
+
+	required: 'Dit veld is verplicht.',
+	minLength: 'Vul minimaal {minLength} karakters in (je hebt {length} karakters ingevoerd).',
+	maxLength: 'Vul niet meer dan {maxLength} karakters in (je hebt {length} karakters ingevoerd).',
+	integer: 'Vul een getal in. Getallen met decimalen (bijvoorbeeld 1.25) zijn niet toegestaan.',
+	numeric: 'Vul alleen numerieke waarden in (bijvoorbeeld "1" of "1.1" of "-1" of "-1.1").',
+	digits: 'Vul alleen nummers en leestekens in (bijvoorbeeld een telefoonnummer met streepjes is toegestaan).',
+	alpha: 'Vul alleen letters in (a-z). Spaties en andere karakters zijn niet toegestaan.',
+	alphanum: 'Vul alleen letters (a-z) of nummers (0-9) in. Spaties en andere karakters zijn niet toegestaan.',
+	dateSuchAs: 'Vul een geldige datum in, zoals {date}',
+	dateInFormatMDY: 'Vul een geldige datum, in het formaat MM/DD/YYYY (bijvoorbeeld "12/31/1999")',
+	email: 'Vul een geldig e-mailadres in. Bijvoorbeeld "fred@domein.nl".',
+	url: 'Vul een geldige URL in, zoals http://www.google.nl.',
+	currencyDollar: 'Vul een geldig $ bedrag in. Bijvoorbeeld $100.00 .',
+	oneRequired: 'Vul iets in bij in ieder geval een van deze velden.',
+	warningPrefix: 'Waarschuwing: ',
+	errorPrefix: 'Fout: ',
+
+	// Form.Validator.Extras
+	noSpace: 'Spaties zijn niet toegestaan in dit veld.',
+	reqChkByNode: 'Er zijn geen items geselecteerd.',
+	requiredChk: 'Dit veld is verplicht.',
+	reqChkByName: 'Selecteer een {label}.',
+	match: 'Dit veld moet overeen komen met het {matchName} veld',
+	startDate: 'de begin datum',
+	endDate: 'de eind datum',
+	currendDate: 'de huidige datum',
+	afterDate: 'De datum moet hetzelfde of na {label} zijn.',
+	beforeDate: 'De datum moet hetzelfde of voor {label} zijn.',
+	startMonth: 'Selecteer een begin maand',
+	sameMonth: 'Deze twee data moeten in dezelfde maand zijn - u moet een van beide aanpassen.',
+	creditcard: 'Het ingevulde creditcardnummer is niet geldig. Controleer het nummer en probeer opnieuw. {length} getallen ingevuld.'
+
+});
+
+
+/*
+---
+
+name: Locale.nl-NL.Number
+
+description: Number messages for Dutch.
+
+license: MIT-style license
+
+authors:
+  - Arian Stolwijk
+
+requires:
+  - /Locale
+  - /Locale.EU.Number
+
+provides: [Locale.nl-NL.Number]
+
+...
+*/
+
+Locale.define('nl-NL').inherit('EU', 'Number');
+
+
+
+
+
+/*
+---
+
+name: Locale.no-NO.Date
+
+description: Date messages for Norwegian.
+
+license: MIT-style license
+
+authors:
+  - Espen 'Rexxars' Hovlandsdal
+
+requires:
+  - /Locale
+
+provides: [Locale.no-NO.Date]
+
+...
+*/
+
+Locale.define('no-NO', 'Date', {
+
+	// Culture's date order: DD.MM.YYYY
+	dateOrder: ['date', 'month', 'year'],
+	shortDate: '%d.%m.%Y',
+	shortTime: '%H:%M',
+	AM: 'AM',
+	PM: 'PM',
+
+	lessThanMinuteAgo: 'kortere enn et minutt siden',
+	minuteAgo: 'omtrent et minutt siden',
+	minutesAgo: '{delta} minutter siden',
+	hourAgo: 'omtrent en time siden',
+	hoursAgo: 'omtrent {delta} timer siden',
+	dayAgo: '{delta} dag siden',
+	daysAgo: '{delta} dager siden'
+
+});
+
+
+/*
+---
+
+name: Locale.no-NO.Form.Validator
+
+description: Form Validator messages for Norwegian.
+
+license: MIT-style license
+
+authors:
+  - Espen 'Rexxars' Hovlandsdal
+
+requires:
+  - /Locale
+
+provides: [Locale.no-NO.Form.Validator]
+
+...
+*/
+
+Locale.define('no-NO', 'FormValidator', {
+
+	required: 'Dette feltet er pÃ¥krevd.',
+	minLength: 'Vennligst skriv inn minst {minLength} tegn (du skrev {length} tegn).',
+	maxLength: 'Vennligst skriv inn maksimalt {maxLength} tegn (du skrev {length} tegn).',
+	integer: 'Vennligst skriv inn et tall i dette feltet. Tall med desimaler (for eksempel 1,25) er ikke tillat.',
+	numeric: 'Vennligst skriv inn kun numeriske verdier i dette feltet (for eksempel "1", "1.1", "-1" eller "-1.1").',
+	digits: 'Vennligst bruk kun nummer og skilletegn i dette feltet.',
+	alpha: 'Vennligst bruk kun bokstaver (a-z) i dette feltet. Ingen mellomrom eller andre tegn er tillat.',
+	alphanum: 'Vennligst bruk kun bokstaver (a-z) eller nummer (0-9) i dette feltet. Ingen mellomrom eller andre tegn er tillat.',
+	dateSuchAs: 'Vennligst skriv inn en gyldig dato, som {date}',
+	dateInFormatMDY: 'Vennligst skriv inn en gyldig dato, i formatet MM/DD/YYYY (for eksempel "12/31/1999")',
+	email: 'Vennligst skriv inn en gyldig epost-adresse. For eksempel "espen@domene.no".',
+	url: 'Vennligst skriv inn en gyldig URL, for eksempel http://www.google.no.',
+	currencyDollar: 'Vennligst fyll ut et gyldig $ belÃ¸p. For eksempel $100.00 .',
+	oneRequired: 'Vennligst fyll ut noe i minst ett av disse feltene.',
+	errorPrefix: 'Feil: ',
+	warningPrefix: 'Advarsel: '
+
+});
+
+
+/*
+---
+
+name: Locale.pl-PL.Date
+
+description: Date messages for Polish.
+
+license: MIT-style license
+
+authors:
+  - Oskar Krawczyk
+
+requires:
+  - /Locale
+
+provides: [Locale.pl-PL.Date]
+
+...
+*/
+
+Locale.define('pl-PL', 'Date', {
+
+	months: ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'],
+	months_abbr: ['sty', 'lut', 'mar', 'kwi', 'maj', 'cze', 'lip', 'sie', 'wrz', 'paź', 'lis', 'gru'],
+	days: ['Niedziela', 'Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota'],
+	days_abbr: ['niedz.', 'pon.', 'wt.', 'śr.', 'czw.', 'pt.', 'sob.'],
+
+	// Culture's date order: YYYY-MM-DD
+	dateOrder: ['year', 'month', 'date'],
+	shortDate: '%Y-%m-%d',
+	shortTime: '%H:%M',
+	AM: 'nad ranem',
+	PM: 'po południu',
+
+	// Date.Extras
+	ordinal: function(dayOfMonth){
+		return (dayOfMonth > 3 && dayOfMonth < 21) ? 'ty' : ['ty', 'szy', 'gi', 'ci', 'ty'][Math.min(dayOfMonth % 10, 4)];
+	},
+
+	lessThanMinuteAgo: 'mniej niż minute temu',
+	minuteAgo: 'około minutę temu',
+	minutesAgo: '{delta} minut temu',
+	hourAgo: 'około godzinę temu',
+	hoursAgo: 'około {delta} godzin temu',
+	dayAgo: 'Wczoraj',
+	daysAgo: '{delta} dni temu',
+
+	lessThanMinuteUntil: 'za niecałą minutę',
+	minuteUntil: 'za około minutę',
+	minutesUntil: 'za {delta} minut',
+	hourUntil: 'za około godzinę',
+	hoursUntil: 'za około {delta} godzin',
+	dayUntil: 'za 1 dzień',
+	daysUntil: 'za {delta} dni'
+
+});
+
+
+/*
+---
+
+name: Locale.pl-PL.Form.Validator
+
+description: Form Validator messages for Polish.
+
+license: MIT-style license
+
+authors:
+  - Oskar Krawczyk
+
+requires:
+  - /Locale
+
+provides: [Locale.pl-PL.Form.Validator]
+
+...
+*/
+
+Locale.define('pl-PL', 'FormValidator', {
+
+	required: 'To pole jest wymagane.',
+	minLength: 'Wymagane jest przynajmniej {minLength} znaków (wpisanych zostało tylko {length}).',
+	maxLength: 'Dozwolone jest nie więcej niż {maxLength} znaków (wpisanych zostało {length})',
+	integer: 'To pole wymaga liczb całych. Liczby dziesiętne (np. 1.25) są niedozwolone.',
+	numeric: 'Prosimy używać tylko numerycznych wartości w tym polu (np. "1", "1.1", "-1" lub "-1.1").',
+	digits: 'Prosimy używać liczb oraz zankow punktuacyjnych w typ polu (dla przykładu, przy numerze telefonu myślniki i kropki są dozwolone).',
+	alpha: 'Prosimy używać tylko liter (a-z) w tym polu. Spacje oraz inne znaki są niedozwolone.',
+	alphanum: 'Prosimy używać tylko liter (a-z) lub liczb (0-9) w tym polu. Spacje oraz inne znaki są niedozwolone.',
+	dateSuchAs: 'Prosimy podać prawidłową datę w formacie: {date}',
+	dateInFormatMDY: 'Prosimy podać poprawną date w formacie DD.MM.RRRR (i.e. "12.01.2009")',
+	email: 'Prosimy podać prawidłowy adres e-mail, np. "jan@domena.pl".',
+	url: 'Prosimy podać prawidłowy adres URL, np. http://www.google.pl.',
+	currencyDollar: 'Prosimy podać prawidłową sumę w PLN. Dla przykładu: 100.00 PLN.',
+	oneRequired: 'Prosimy wypełnić chociaż jedno z pól.',
+	errorPrefix: 'Błąd: ',
+	warningPrefix: 'Uwaga: ',
+
+	// Form.Validator.Extras
+	noSpace: 'W tym polu nie mogą znajdować się spacje.',
+	reqChkByNode: 'Brak zaznaczonych elementów.',
+	requiredChk: 'To pole jest wymagane.',
+	reqChkByName: 'Prosimy wybrać z {label}.',
+	match: 'To pole musi być takie samo jak {matchName}',
+	startDate: 'data początkowa',
+	endDate: 'data końcowa',
+	currendDate: 'aktualna data',
+	afterDate: 'Podana data poinna być taka sama lub po {label}.',
+	beforeDate: 'Podana data poinna być taka sama lub przed {label}.',
+	startMonth: 'Prosimy wybrać początkowy miesiąc.',
+	sameMonth: 'Te dwie daty muszą być w zakresie tego samego miesiąca - wymagana jest zmiana któregoś z pól.'
+
+});
+
+
+/*
+---
+
+name: Locale.pt-PT.Date
+
+description: Date messages for Portuguese.
+
+license: MIT-style license
+
+authors:
+  - Fabio Miranda Costa
+
+requires:
+  - /Locale
+
+provides: [Locale.pt-PT.Date]
+
+...
+*/
+
+Locale.define('pt-PT', 'Date', {
+
+	months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+	months_abbr: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+	days: ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'],
+	days_abbr: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+
+	// Culture's date order: DD-MM-YYYY
+	dateOrder: ['date', 'month', 'year'],
+	shortDate: '%d-%m-%Y',
+	shortTime: '%H:%M',
+	AM: 'AM',
+	PM: 'PM',
+
+	// Date.Extras
+	ordinal: 'º',
+
+	lessThanMinuteAgo: 'há menos de um minuto',
+	minuteAgo: 'há cerca de um minuto',
+	minutesAgo: 'há {delta} minutos',
+	hourAgo: 'há cerca de uma hora',
+	hoursAgo: 'há cerca de {delta} horas',
+	dayAgo: 'há um dia',
+	daysAgo: 'há {delta} dias',
+	weekAgo: 'há uma semana',
+	weeksAgo: 'há {delta} semanas',
+	monthAgo: 'há um mês',
+	monthsAgo: 'há {delta} meses',
+	yearAgo: 'há um ano',
+	yearsAgo: 'há {delta} anos',
+
+	lessThanMinuteUntil: 'em menos de um minuto',
+	minuteUntil: 'em um minuto',
+	minutesUntil: 'em {delta} minutos',
+	hourUntil: 'em uma hora',
+	hoursUntil: 'em {delta} horas',
+	dayUntil: 'em um dia',
+	daysUntil: 'em {delta} dias',
+	weekUntil: 'em uma semana',
+	weeksUntil: 'em {delta} semanas',
+	monthUntil: 'em um mês',
+	monthsUntil: 'em {delta} meses',
+	yearUntil: 'em um ano',
+	yearsUntil: 'em {delta} anos'
+
+});
+
+
+/*
+---
+
+name: Locale.pt-BR.Date
+
+description: Date messages for Portuguese (Brazil).
+
+license: MIT-style license
+
+authors:
+  - Fabio Miranda Costa
+
+requires:
+  - /Locale
+  - /Locale.pt-PT.Date
+
+provides: [Locale.pt-BR.Date]
+
+...
+*/
+
+Locale.define('pt-BR', 'Date', {
+
+	// Culture's date order: DD/MM/YYYY
+	shortDate: '%d/%m/%Y'
+
+}).inherit('pt-PT', 'Date');
+
+
+/*
+---
+
+name: Locale.pt-BR.Form.Validator
+
+description: Form Validator messages for Portuguese (Brazil).
+
+license: MIT-style license
+
+authors:
+  - Fábio Miranda Costa
+
+requires:
+  - /Locale
+
+provides: [Locale.pt-BR.Form.Validator]
+
+...
+*/
+
+Locale.define('pt-BR', 'FormValidator', {
+
+	required: 'Este campo é obrigatório.',
+	minLength: 'Digite pelo menos {minLength} caracteres (tamanho atual: {length}).',
+	maxLength: 'Não digite mais de {maxLength} caracteres (tamanho atual: {length}).',
+	integer: 'Por favor digite apenas um número inteiro neste campo. Não são permitidos números decimais (por exemplo, 1,25).',
+	numeric: 'Por favor digite apenas valores numéricos neste campo (por exemplo, "1" ou "1.1" ou "-1" ou "-1,1").',
+	digits: 'Por favor use apenas números e pontuação neste campo (por exemplo, um número de telefone com traços ou pontos é permitido).',
+	alpha: 'Por favor use somente letras (a-z). Espaço e outros caracteres não são permitidos.',
+	alphanum: 'Use somente letras (a-z) ou números (0-9) neste campo. Espaço e outros caracteres não são permitidos.',
+	dateSuchAs: 'Digite uma data válida, como {date}',
+	dateInFormatMDY: 'Digite uma data válida, como DD/MM/YYYY (por exemplo, "31/12/1999")',
+	email: 'Digite um endereço de email válido. Por exemplo "nome@dominio.com".',
+	url: 'Digite uma URL válida. Exemplo: http://www.google.com.',
+	currencyDollar: 'Digite um valor em dinheiro válido. Exemplo: R$100,00 .',
+	oneRequired: 'Digite algo para pelo menos um desses campos.',
+	errorPrefix: 'Erro: ',
+	warningPrefix: 'Aviso: ',
+
+	// Form.Validator.Extras
+	noSpace: 'Não é possível digitar espaços neste campo.',
+	reqChkByNode: 'Não foi selecionado nenhum item.',
+	requiredChk: 'Este campo é obrigatório.',
+	reqChkByName: 'Por favor digite um {label}.',
+	match: 'Este campo deve ser igual ao campo {matchName}.',
+	startDate: 'a data inicial',
+	endDate: 'a data final',
+	currendDate: 'a data atual',
+	afterDate: 'A data deve ser igual ou posterior a {label}.',
+	beforeDate: 'A data deve ser igual ou anterior a {label}.',
+	startMonth: 'Por favor selecione uma data inicial.',
+	sameMonth: 'Estas duas datas devem ter o mesmo mês - você deve modificar uma das duas.',
+	creditcard: 'O número do cartão de crédito informado é inválido. Por favor verifique o valor e tente novamente. {length} números informados.'
+
+});
+
+
+/*
+---
+
+name: Locale.pt-PT.Form.Validator
+
+description: Form Validator messages for Portuguese.
+
+license: MIT-style license
+
+authors:
+  - Miquel Hudin
+
+requires:
+  - /Locale
+
+provides: [Locale.pt-PT.Form.Validator]
+
+...
+*/
+
+Locale.define('pt-PT', 'FormValidator', {
+
+	required: 'Este campo é necessário.',
+	minLength: 'Digite pelo menos{minLength} caracteres (comprimento {length} caracteres).',
+	maxLength: 'Não insira mais de {maxLength} caracteres (comprimento {length} caracteres).',
+	integer: 'Digite um número inteiro neste domínio. Com números decimais (por exemplo, 1,25), não são permitidas.',
+	numeric: 'Digite apenas valores numéricos neste domínio (p.ex., "1" ou "1.1" ou "-1" ou "-1,1").',
+	digits: 'Por favor, use números e pontuação apenas neste campo (p.ex., um número de telefone com traços ou pontos é permitida).',
+	alpha: 'Por favor use somente letras (a-z), com nesta área. Não utilize espaços nem outros caracteres são permitidos.',
+	alphanum: 'Use somente letras (a-z) ou números (0-9) neste campo. Não utilize espaços nem outros caracteres são permitidos.',
+	dateSuchAs: 'Digite uma data válida, como {date}',
+	dateInFormatMDY: 'Digite uma data válida, como DD/MM/YYYY (p.ex. "31/12/1999")',
+	email: 'Digite um endereço de email válido. Por exemplo "fred@domain.com".',
+	url: 'Digite uma URL válida, como http://www.google.com.',
+	currencyDollar: 'Digite um valor válido $. Por exemplo $ 100,00. ',
+	oneRequired: 'Digite algo para pelo menos um desses insumos.',
+	errorPrefix: 'Erro: ',
+	warningPrefix: 'Aviso: '
+
+});
+
+
+/*
+---
+
+name: Locale.ru-RU-unicode.Date
+
+description: Date messages for Russian (utf-8).
+
+license: MIT-style license
+
+authors:
+  - Evstigneev Pavel
+  - Kuryanovich Egor
+
+requires:
+  - /Locale
+
+provides: [Locale.ru-RU.Date]
+
+...
+*/
+
+(function(){
+
+// Russian language pluralization rules, taken from CLDR project, http://unicode.org/cldr/
+// one -> n mod 10 is 1 and n mod 100 is not 11;
+// few -> n mod 10 in 2..4 and n mod 100 not in 12..14;
+// many -> n mod 10 is 0 or n mod 10 in 5..9 or n mod 100 in 11..14;
+// other -> everything else (example 3.14)
+var pluralize = function (n, one, few, many, other){
+	var modulo10 = n % 10,
+		modulo100 = n % 100;
+
+	if (modulo10 == 1 && modulo100 != 11){
+		return one;
+	} else if ((modulo10 == 2 || modulo10 == 3 || modulo10 == 4) && !(modulo100 == 12 || modulo100 == 13 || modulo100 == 14)){
+		return few;
+	} else if (modulo10 == 0 || (modulo10 == 5 || modulo10 == 6 || modulo10 == 7 || modulo10 == 8 || modulo10 == 9) || (modulo100 == 11 || modulo100 == 12 || modulo100 == 13 || modulo100 == 14)){
+		return many;
+	} else {
+		return other;
+	}
+};
+
+Locale.define('ru-RU', 'Date', {
+
+	months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+	months_abbr: ['янв', 'февр', 'март', 'апр', 'май','июнь','июль','авг','сент','окт','нояб','дек'],
+	days: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
+	days_abbr: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+
+	// Culture's date order: DD.MM.YYYY
+	dateOrder: ['date', 'month', 'year'],
+	shortDate: '%d.%m.%Y',
+	shortTime: '%H:%M',
+	AM: 'AM',
+	PM: 'PM',
+
+	// Date.Extras
+	ordinal: '',
+
+	lessThanMinuteAgo: 'меньше минуты назад',
+	minuteAgo: 'минуту назад',
+	minutesAgo: function(delta){ return '{delta} ' + pluralize(delta, 'минуту', 'минуты', 'минут') + ' назад'; },
+	hourAgo: 'час назад',
+	hoursAgo: function(delta){ return '{delta} ' + pluralize(delta, 'час', 'часа', 'часов') + ' назад'; },
+	dayAgo: 'вчера',
+	daysAgo: function(delta){ return '{delta} ' + pluralize(delta, 'день', 'дня', 'дней') + ' назад'; },
+	weekAgo: 'неделю назад',
+	weeksAgo: function(delta){ return '{delta} ' + pluralize(delta, 'неделя', 'недели', 'недель') + ' назад'; },
+	monthAgo: 'месяц назад',
+	monthsAgo: function(delta){ return '{delta} ' + pluralize(delta, 'месяц', 'месяца', 'месецев') + ' назад'; },
+	yearAgo: 'год назад',
+	yearsAgo: function(delta){ return '{delta} ' + pluralize(delta, 'год', 'года', 'лет') + ' назад'; },
+
+	lessThanMinuteUntil: 'меньше чем через минуту',
+	minuteUntil: 'через минуту',
+	minutesUntil: function(delta){ return 'через {delta} ' + pluralize(delta, 'час', 'часа', 'часов') + ''; },
+	hourUntil: 'через час',
+	hoursUntil: function(delta){ return 'через {delta} ' + pluralize(delta, 'час', 'часа', 'часов') + ''; },
+	dayUntil: 'завтра',
+	daysUntil: function(delta){ return 'через {delta} ' + pluralize(delta, 'день', 'дня', 'дней') + ''; },
+	weekUntil: 'через неделю',
+	weeksUntil: function(delta){ return 'через {delta} ' + pluralize(delta, 'неделю', 'недели', 'недель') + ''; },
+	monthUntil: 'через месяц',
+	monthsUntil: function(delta){ return 'через {delta} ' + pluralize(delta, 'месяц', 'месяца', 'месецев') + ''; },
+	yearUntil: 'через',
+	yearsUntil: function(delta){ return 'через {delta} ' + pluralize(delta, 'год', 'года', 'лет') + ''; }
+
+});
+
+//<1.2compat>
+
+Locale.define('ru-RU-unicode').inherit('ru-RU', 'Date');
+
+//</1.2compat>
+
+})();
+
+
+/*
+---
+
+name: Locale.ru-RU-unicode.Form.Validator
+
+description: Form Validator messages for Russian (utf-8).
+
+license: MIT-style license
+
+authors:
+  - Chernodarov Egor
+
+requires:
+  - /Locale
+
+provides: [Locale.ru-RU.Form.Validator]
+
+...
+*/
+
+Locale.define('ru-RU', 'FormValidator', {
+
+	required: 'Это поле обязательно к заполнению.',
+	minLength: 'Пожалуйста, введите хотя бы {minLength} символов (Вы ввели {length}).',
+	maxLength: 'Пожалуйста, введите не больше {maxLength} символов (Вы ввели {length}).',
+	integer: 'Пожалуйста, введите в это поле число. Дробные числа (например 1.25) тут не разрешены.',
+	numeric: 'Пожалуйста, введите в это поле число (например "1" или "1.1", или "-1", или "-1.1").',
+	digits: 'В этом поле Вы можете использовать только цифры и знаки пунктуации (например, телефонный номер со знаками дефиса или с точками).',
+	alpha: 'В этом поле можно использовать только латинские буквы (a-z). Пробелы и другие символы запрещены.',
+	alphanum: 'В этом поле можно использовать только латинские буквы (a-z) и цифры (0-9). Пробелы и другие символы запрещены.',
+	dateSuchAs: 'Пожалуйста, введите корректную дату {date}',
+	dateInFormatMDY: 'Пожалуйста, введите дату в формате ММ/ДД/ГГГГ (например "12/31/1999")',
+	email: 'Пожалуйста, введите корректный емейл-адрес. Для примера "fred@domain.com".',
+	url: 'Пожалуйста, введите правильную ссылку вида http://www.google.com.',
+	currencyDollar: 'Пожалуйста, введите сумму в долларах. Например: $100.00 .',
+	oneRequired: 'Пожалуйста, выберите хоть что-нибудь в одном из этих полей.',
+	errorPrefix: 'Ошибка: ',
+	warningPrefix: 'Внимание: '
+
+});
+
+//<1.2compat>
+
+Locale.define('ru-RU-unicode').inherit('ru-RU', 'FormValidator');
+
+//</1.2compat>
+
+
+/*
+---
+
+name: Locale.si-SI.Date
+
+description: Date messages for Slovenian.
+
+license: MIT-style license
+
+authors:
+  - Radovan Lozej
+
+requires:
+  - /Locale
+
+provides: [Locale.si-SI.Date]
+
+...
+*/
+
+(function(){
+
+var pluralize = function(n, one, two, three, other){
+	return (n >= 1 && n <= 3) ? arguments[n] : other;
+};
+
+Locale.define('si-SI', 'Date', {
+
+	months: ['januar', 'februar', 'marec', 'april', 'maj', 'junij', 'julij', 'avgust', 'september', 'oktober', 'november', 'december'],
+	months_abbr: ['jan', 'feb', 'mar', 'apr', 'maj', 'jun', 'jul', 'avg', 'sep', 'okt', 'nov', 'dec'],
+	days: ['nedelja', 'ponedeljek', 'torek', 'sreda', 'četrtek', 'petek', 'sobota'],
+	days_abbr: ['ned', 'pon', 'tor', 'sre', 'čet', 'pet', 'sob'],
+
+	// Culture's date order: DD.MM.YYYY
+	dateOrder: ['date', 'month', 'year'],
+	shortDate: '%d.%m.%Y',
+	shortTime: '%H.%M',
+	AM: 'AM',
+	PM: 'PM',
+
+	// Date.Extras
+	ordinal: '.',
+
+	lessThanMinuteAgo: 'manj kot minuto nazaj',
+	minuteAgo: 'minuto nazaj',
+	minutesAgo: function(delta){ return '{delta} ' + pluralize(delta, 'minuto', 'minuti', 'minute', 'minut') + ' nazaj'; },
+	hourAgo: 'uro nazaj',
+	hoursAgo: function(delta){ return '{delta} ' + pluralize(delta, 'uro', 'uri', 'ure', 'ur') + ' nazaj'; },
+	dayAgo: 'dan nazaj',
+	daysAgo: function(delta){ return '{delta} ' + pluralize(delta, 'dan', 'dneva', 'dni', 'dni') + ' nazaj'; },
+	weekAgo: 'teden nazaj',
+	weeksAgo: function(delta){ return '{delta} ' + pluralize(delta, 'teden', 'tedna', 'tedne', 'tednov') + ' nazaj'; },
+	monthAgo: 'mesec nazaj',
+	monthsAgo: function(delta){ return '{delta} ' + pluralize(delta, 'mesec', 'meseca', 'mesece', 'mesecov') + ' nazaj'; },
+	yearthAgo: 'leto nazaj',
+	yearsAgo: function(delta){ return '{delta} ' + pluralize(delta, 'leto', 'leti', 'leta', 'let') + ' nazaj'; },
+
+	lessThanMinuteUntil: 'še manj kot minuto',
+	minuteUntil: 'še minuta',
+	minutesUntil: function(delta){ return 'še {delta} ' + pluralize(delta, 'minuta', 'minuti', 'minute', 'minut'); },
+	hourUntil: 'še ura',
+	hoursUntil: function(delta){ return 'še {delta} ' + pluralize(delta, 'ura', 'uri', 'ure', 'ur'); },
+	dayUntil: 'še dan',
+	daysUntil: function(delta){ return 'še {delta} ' + pluralize(delta, 'dan', 'dneva', 'dnevi', 'dni'); },
+	weekUntil: 'še tedn',
+	weeksUntil: function(delta){ return 'še {delta} ' + pluralize(delta, 'teden', 'tedna', 'tedni', 'tednov'); },
+	monthUntil: 'še mesec',
+	monthsUntil: function(delta){ return 'še {delta} ' + pluralize(delta, 'mesec', 'meseca', 'meseci', 'mesecov'); },
+	yearUntil: 'še leto',
+	yearsUntil: function(delta){ return 'še {delta} ' + pluralize(delta, 'leto', 'leti', 'leta', 'let'); }
+
+});
+
+})();
+
+
+/*
+---
+
+name: Locale.si-SI.Form.Validator
+
+description: Form Validator messages for Slovenian.
+
+license: MIT-style license
+
+authors:
+  - Radovan Lozej
+
+requires:
+  - /Locale
+
+provides: [Locale.si-SI.Form.Validator]
+
+...
+*/
+
+Locale.define('si-SI', 'FormValidator', {
+
+	required: 'To polje je obvezno',
+	minLength: 'Prosim, vnesite vsaj {minLength} znakov (vnesli ste {length} znakov).',
+	maxLength: 'Prosim, ne vnesite več kot {maxLength} znakov (vnesli ste {length} znakov).',
+	integer: 'Prosim, vnesite celo število. Decimalna števila (kot 1,25) niso dovoljena.',
+	numeric: 'Prosim, vnesite samo numerične vrednosti (kot "1" ali "1.1" ali "-1" ali "-1.1").',
+	digits: 'Prosim, uporabite številke in ločila le na tem polju (na primer, dovoljena je telefonska številka z pomišlaji ali pikami).',
+	alpha: 'Prosim, uporabite le črke v tem plju. Presledki in drugi znaki niso dovoljeni.',
+	alphanum: 'Prosim, uporabite samo črke ali številke v tem polju. Presledki in drugi znaki niso dovoljeni.',
+	dateSuchAs: 'Prosim, vnesite pravilen datum kot {date}',
+	dateInFormatMDY: 'Prosim, vnesite pravilen datum kot MM.DD.YYYY (primer "12.31.1999")',
+	email: 'Prosim, vnesite pravilen email naslov. Na primer "fred@domain.com".',
+	url: 'Prosim, vnesite pravilen URL kot http://www.google.com.',
+	currencyDollar: 'Prosim, vnesit epravilno vrednost €. Primer 100,00€ .',
+	oneRequired: 'Prosimo, vnesite nekaj za vsaj eno izmed teh polj.',
+	errorPrefix: 'Napaka: ',
+	warningPrefix: 'Opozorilo: ',
+
+	// Form.Validator.Extras
+	noSpace: 'To vnosno polje ne dopušča presledkov.',
+	reqChkByNode: 'Nič niste izbrali.',
+	requiredChk: 'To polje je obvezno',
+	reqChkByName: 'Prosim, izberite {label}.',
+	match: 'To polje se mora ujemati z poljem {matchName}',
+	startDate: 'datum začetka',
+	endDate: 'datum konca',
+	currendDate: 'trenuten datum',
+	afterDate: 'Datum bi moral biti isti ali po {label}.',
+	beforeDate: 'Datum bi moral biti isti ali pred {label}.',
+	startMonth: 'Prosim, vnesite začetni datum',
+	sameMonth: 'Ta dva datuma morata biti v istem mesecu - premeniti morate eno ali drugo.',
+	creditcard: 'Številka kreditne kartice ni pravilna. Preverite številko ali poskusite še enkrat. Vnešenih {length} znakov.'
+
+});
+
+
+/*
+---
+
+name: Locale.sv-SE.Date
+
+description: Date messages for Swedish.
+
+license: MIT-style license
+
+authors:
+  - Martin Lundgren
+
+requires:
+  - /Locale
+
+provides: [Locale.sv-SE.Date]
+
+...
+*/
+
+Locale.define('sv-SE', 'Date', {
+
+	months: ['januari', 'februari', 'mars', 'april', 'maj', 'juni', 'juli', 'augusti', 'september', 'oktober', 'november', 'december'],
+	months_abbr: ['jan', 'feb', 'mar', 'apr', 'maj', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'],
+	days: ['söndag', 'måndag', 'tisdag', 'onsdag', 'torsdag', 'fredag', 'lördag'],
+	days_abbr: ['sön', 'mån', 'tis', 'ons', 'tor', 'fre', 'lör'],
+
+	// Culture's date order: YYYY-MM-DD
+	dateOrder: ['year', 'month', 'date'],
+	shortDate: '%Y-%m-%d',
+	shortTime: '%H:%M',
+	AM: '',
+	PM: '',
+
+	// Date.Extras
+	ordinal: '',
+
+	lessThanMinuteAgo: 'mindre än en minut sedan',
+	minuteAgo: 'ungefär en minut sedan',
+	minutesAgo: '{delta} minuter sedan',
+	hourAgo: 'ungefär en timme sedan',
+	hoursAgo: 'ungefär {delta} timmar sedan',
+	dayAgo: '1 dag sedan',
+	daysAgo: '{delta} dagar sedan',
+
+	lessThanMinuteUntil: 'mindre än en minut sedan',
+	minuteUntil: 'ungefär en minut sedan',
+	minutesUntil: '{delta} minuter sedan',
+	hourUntil: 'ungefär en timme sedan',
+	hoursUntil: 'ungefär {delta} timmar sedan',
+	dayUntil: '1 dag sedan',
+	daysUntil: '{delta} dagar sedan'
+
+});
+
+
+/*
+---
+
+name: Locale.sv-SE.Form.Validator
+
+description: Form Validator messages for Swedish.
+
+license: MIT-style license
+
+authors:
+  - Martin Lundgren
+
+requires:
+  - /Locale
+
+provides: [Locale.sv-SE.Form.Validator]
+
+...
+*/
+
+Locale.define('sv-SE', 'FormValidator', {
+
+	required: 'Fältet är obligatoriskt.',
+	minLength: 'Ange minst {minLength} tecken (du angav {length} tecken).',
+	maxLength: 'Ange högst {maxLength} tecken (du angav {length} tecken). ',
+	integer: 'Ange ett heltal i fältet. Tal med decimaler (t.ex. 1,25) är inte tillåtna.',
+	numeric: 'Ange endast numeriska värden i detta fält (t.ex. "1" eller "1.1" eller "-1" eller "-1,1").',
+	digits: 'Använd endast siffror och skiljetecken i detta fält (till exempel ett telefonnummer med bindestreck tillåtet).',
+	alpha: 'Använd endast bokstäver (a-ö) i detta fält. Inga mellanslag eller andra tecken är tillåtna.',
+	alphanum: 'Använd endast bokstäver (a-ö) och siffror (0-9) i detta fält. Inga mellanslag eller andra tecken är tillåtna.',
+	dateSuchAs: 'Ange ett giltigt datum som t.ex. {date}',
+	dateInFormatMDY: 'Ange ett giltigt datum som t.ex. YYYY-MM-DD (i.e. "1999-12-31")',
+	email: 'Ange en giltig e-postadress. Till exempel "erik@domain.com".',
+	url: 'Ange en giltig webbadress som http://www.google.com.',
+	currencyDollar: 'Ange en giltig belopp. Exempelvis 100,00.',
+	oneRequired: 'Vänligen ange minst ett av dessa alternativ.',
+	errorPrefix: 'Fel: ',
+	warningPrefix: 'Varning: ',
+
+	// Form.Validator.Extras
+	noSpace: 'Det får inte finnas några mellanslag i detta fält.',
+	reqChkByNode: 'Inga objekt är valda.',
+	requiredChk: 'Detta är ett obligatoriskt fält.',
+	reqChkByName: 'Välj en {label}.',
+	match: 'Detta fält måste matcha {matchName}',
+	startDate: 'startdatumet',
+	endDate: 'slutdatum',
+	currendDate: 'dagens datum',
+	afterDate: 'Datumet bör vara samma eller senare än {label}.',
+	beforeDate: 'Datumet bör vara samma eller tidigare än {label}.',
+	startMonth: 'Välj en start månad',
+	sameMonth: 'Dessa två datum måste vara i samma månad - du måste ändra det ena eller det andra.'
+
+});
+
+
+/*
+---
+
+name: Locale-uk-UA.Date
+
+description: Date messages for Ukrainian (utf-8).
+
+license: MIT-style license
+
+authors:
+  - Slik
+
+requires:
+  - /Locale
+
+provides: [Locale-uk-UA.Date]
+
+...
+*/
+
+(function(){
+
+var pluralize = function(n, one, few, many, other){
+	var d = (n / 10).toInt(),
+		z = n % 10,
+		s = (n / 100).toInt();
+
+	if (d == 1 && n > 10) return many;
+	if (z == 1) return one;
+	if (z > 0 && z < 5) return few;
+	return many;
+};
+
+Locale.define('uk-UA', 'Date', {
+
+	months: ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'],
+	months_abbr: ['Січ', 'Лют', 'Бер', 'Квіт', 'Трав', 'Черв', 'Лип', 'Серп', 'Вер', 'Жовт', 'Лист', 'Груд' ],
+	days: ['Неділя', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', "П'ятниця", 'Субота'],
+	days_abbr: ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+
+	// Culture's date order: DD/MM/YYYY
+	dateOrder: ['date', 'month', 'year'],
+	shortDate: '%d/%m/%Y',
+	shortTime: '%H:%M',
+	AM: 'до полудня',
+	PM: 'по полудню',
+
+	// Date.Extras
+	ordinal: '',
+
+	lessThanMinuteAgo: 'меньше хвилини тому',
+	minuteAgo: 'хвилину тому',
+	minutesAgo: function(delta){ return '{delta} ' + pluralize(delta, 'хвилину', 'хвилини', 'хвилин') + ' тому'; },
+	hourAgo: 'годину тому',
+	hoursAgo: function(delta){ return '{delta} ' + pluralize(delta, 'годину', 'години', 'годин') + ' тому'; },
+	dayAgo: 'вчора',
+	daysAgo: function(delta){ return '{delta} ' + pluralize(delta, 'день', 'дня', 'днів') + ' тому'; },
+	weekAgo: 'тиждень тому',
+	weeksAgo: function(delta){ return '{delta} ' + pluralize(delta, 'тиждень', 'тижні', 'тижнів') + ' тому'; },
+	monthAgo: 'місяць тому',
+	monthsAgo: function(delta){ return '{delta} ' + pluralize(delta, 'місяць', 'місяці', 'місяців') + ' тому'; },
+	yearAgo: 'рік тому',
+	yearsAgo: function(delta){ return '{delta} ' + pluralize(delta, 'рік', 'роки', 'років') + ' тому'; },
+
+	lessThanMinuteUntil: 'за мить',
+	minuteUntil: 'через хвилину',
+	minutesUntil: function(delta){ return 'через {delta} ' + pluralize(delta, 'хвилину', 'хвилини', 'хвилин'); },
+	hourUntil: 'через годину',
+	hoursUntil: function(delta){ return 'через {delta} ' + pluralize(delta, 'годину', 'години', 'годин'); },
+	dayUntil: 'завтра',
+	daysUntil: function(delta){ return 'через {delta} ' + pluralize(delta, 'день', 'дня', 'днів'); },
+	weekUntil: 'через тиждень',
+	weeksUntil: function(delta){ return 'через {delta} ' + pluralize(delta, 'тиждень', 'тижні', 'тижнів'); },
+	monthUntil: 'через місяць',
+	monthesUntil: function(delta){ return 'через {delta} ' + pluralize(delta, 'місяць', 'місяці', 'місяців'); },
+	yearUntil: 'через рік',
+	yearsUntil: function(delta){ return 'через {delta} ' + pluralize(delta, 'рік', 'роки', 'років'); }
+
+});
+
+})();
+
+
+/*
+---
+
+name: Locale.uk-UA.Form.Validator
+
+description: Form Validator messages for Ukrainian (utf-8).
+
+license: MIT-style license
+
+authors:
+  - Slik
+
+requires:
+  - /Locale
+
+provides: [Locale.uk-UA.Form.Validator]
+
+...
+*/
+
+Locale.define('uk-UA', 'FormValidator', {
+
+	required: 'Це поле повинне бути заповненим.',
+	minLength: 'Введіть хоча б {minLength} символів (Ви ввели {length}).',
+	maxLength: 'Кількість символів не може бути більше {maxLength} (Ви ввели {length}).',
+	integer: 'Введіть в це поле число. Дробові числа (наприклад 1.25) не дозволені.',
+	numeric: 'Введіть в це поле число (наприклад "1" або "1.1", або "-1", або "-1.1").',
+	digits: 'В цьому полі ви можете використовувати лише цифри і знаки пунктіації (наприклад, телефонний номер з знаками дефізу або з крапками).',
+	alpha: 'В цьому полі можна використовувати лише латинські літери (a-z). Пробіли і інші символи заборонені.',
+	alphanum: 'В цьому полі можна використовувати лише латинські літери (a-z) і цифри (0-9). Пробіли і інші символи заборонені.',
+	dateSuchAs: 'Введіть коректну дату {date}.',
+	dateInFormatMDY: 'Введіть дату в форматі ММ/ДД/РРРР (наприклад "12/31/2009").',
+	email: 'Введіть коректну адресу електронної пошти (наприклад "name@domain.com").',
+	url: 'Введіть коректне інтернет-посилання (наприклад http://www.google.com).',
+	currencyDollar: 'Введіть суму в доларах (наприклад "$100.00").',
+	oneRequired: 'Заповніть одне з полів.',
+	errorPrefix: 'Помилка: ',
+	warningPrefix: 'Увага: ',
+
+	noSpace: 'Пробіли заборонені.',
+	reqChkByNode: 'Не відмічено жодного варіанту.',
+	requiredChk: 'Це поле повинне бути віміченим.',
+	reqChkByName: 'Будь ласка, відмітьте {label}.',
+	match: 'Це поле повинно відповідати {matchName}',
+	startDate: 'початкова дата',
+	endDate: 'кінцева дата',
+	currendDate: 'сьогоднішня дата',
+	afterDate: 'Ця дата повинна бути такою ж, або пізнішою за {label}.',
+	beforeDate: 'Ця дата повинна бути такою ж, або ранішою за {label}.',
+	startMonth: 'Будь ласка, виберіть початковий місяць',
+	sameMonth: 'Ці дати повинні відноситись одного і того ж місяця. Будь ласка, змініть одну з них.',
+	creditcard: 'Номер кредитної карти введений неправильно. Будь ласка, перевірте його. Введено {length} символів.'
+
+});
+
+
+/*
+---
+
+name: Locale.zh-CH.Date
+
+description: Date messages for Chinese (simplified and traditional).
+
+license: MIT-style license
+
+authors:
+  - YMind Chan
+
+requires:
+  - /Locale
+
+provides: [Locale.zh-CH.Date]
+
+...
+*/
+
+// Simplified Chinese
+Locale.define('zh-CHS', 'Date', {
+
+	months: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+	months_abbr: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+	days: ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
+	days_abbr: ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
+
+	// Culture's date order: YYYY-MM-DD
+	dateOrder: ['year', 'month', 'date'],
+	shortDate: '%Y-%m-%d',
+	shortTime: '%I:%M%p',
+	AM: 'AM',
+	PM: 'PM',
+
+	// Date.Extras
+	ordinal: '',
+
+	lessThanMinuteAgo: '不到1分钟前',
+	minuteAgo: '大约1分钟前',
+	minutesAgo: '{delta}分钟之前',
+	hourAgo: '大约1小时前',
+	hoursAgo: '大约{delta}小时前',
+	dayAgo: '1天前',
+	daysAgo: '{delta}天前',
+	weekAgo: '1星期前',
+	weeksAgo: '{delta}星期前',
+	monthAgo: '1个月前',
+	monthsAgo: '{delta}个月前',
+	yearAgo: '1年前',
+	yearsAgo: '{delta}年前',
+
+	lessThanMinuteUntil: '从现在开始不到1分钟',
+	minuteUntil: '从现在开始約1分钟',
+	minutesUntil: '从现在开始约{delta}分钟',
+	hourUntil: '从现在开始1小时',
+	hoursUntil: '从现在开始约{delta}小时',
+	dayUntil: '从现在开始1天',
+	daysUntil: '从现在开始{delta}天',
+	weekUntil: '从现在开始1星期',
+	weeksUntil: '从现在开始{delta}星期',
+	monthUntil: '从现在开始一个月',
+	monthsUntil: '从现在开始{delta}个月',
+	yearUntil: '从现在开始1年',
+	yearsUntil: '从现在开始{delta}年'
+
+});
+
+// Traditional Chinese
+Locale.define('zh-CHT', 'Date', {
+
+	months: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+	days: ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
+
+	// Culture's date order: YYYY-MM-DD
+	dateOrder: ['year', 'month', 'date'],
+	shortDate: '%Y-%m-%d',
+	shortTime: '%I:%M%p',
+	AM: 'AM',
+	PM: 'PM',
+
+	// Date.Extras
+	ordinal: '',
+
+	lessThanMinuteAgo: '不到1分鐘前',
+	minuteAgo: '大約1分鐘前',
+	minutesAgo: '{delta}分鐘之前',
+	hourAgo: '大約1小時前',
+	hoursAgo: '大約{delta}小時前',
+	dayAgo: '1天前',
+	daysAgo: '{delta}天前',
+	weekAgo: '1星期前',
+	weeksAgo: '{delta}星期前',
+	monthAgo: '1个月前',
+	monthsAgo: '{delta}个月前',
+	yearAgo: '1年前',
+	yearsAgo: '{delta}年前',
+
+	lessThanMinuteUntil: '從現在開始不到1分鐘',
+	minuteUntil: '從現在開始約1分鐘',
+	minutesUntil: '從現在開始約{delta}分鐘',
+	hourUntil: '從現在開始1小時',
+	hoursUntil: '從現在開始約{delta}小時',
+	dayUntil: '從現在開始1天',
+	daysUntil: '從現在開始{delta}天',
+	weekUntil: '從現在開始1星期',
+	weeksUntil: '從現在開始{delta}星期',
+	monthUntil: '從現在開始一個月',
+	monthsUntil: '從現在開始{delta}個月',
+	yearUntil: '從現在開始1年',
+	yearsUntil: '從現在開始{delta}年'
+
+});
+
+
+/*
+---
+
+name: Locale.zh-CH.Form.Validator
+
+description: Form Validator messages for Chinese (simplified and traditional).
+
+license: MIT-style license
+
+authors:
+  - YMind Chan
+
+requires:
+  - /Locale
+  - /Form.Validator
+
+provides: [Form.zh-CH.Form.Validator, Form.Validator.CurrencyYuanValidator]
+
+...
+*/
+
+// Simplified Chinese
+Locale.define('zh-CHS', 'FormValidator', {
+
+	required: '此项必填。',
+	minLength: '请至少输入 {minLength} 个字符 (已输入 {length} 个)。',
+	maxLength: '最多只能输入 {maxLength} 个字符 (已输入 {length} 个)。',
+	integer: '请输入一个整数，不能包含小数点。例如："1", "200"。',
+	numeric: '请输入一个数字，例如："1", "1.1", "-1", "-1.1"。',
+	digits: '请输入由数字和标点符号组成的内容。例如电话号码。',
+	alpha: '请输入 A-Z 的 26 个字母，不能包含空格或任何其他字符。',
+	alphanum: '请输入 A-Z 的 26 个字母或 0-9 的 10 个数字，不能包含空格或任何其他字符。',
+	dateSuchAs: '请输入合法的日期格式，如：{date}。',
+	dateInFormatMDY: '请输入合法的日期格式，例如：YYYY-MM-DD ("2010-12-31")。',
+	email: '请输入合法的电子信箱地址，例如："fred@domain.com"。',
+	url: '请输入合法的 Url 地址，例如：http://www.google.com。',
+	currencyDollar: '请输入合法的货币符号，例如：￥100.0',
+	oneRequired: '请至少选择一项。',
+	errorPrefix: '错误：',
+	warningPrefix: '警告：',
+
+	// Form.Validator.Extras
+	noSpace: '不能包含空格。',
+	reqChkByNode: '未选择任何内容。',
+	requiredChk: '此项必填。',
+	reqChkByName: '请选择 {label}.',
+	match: '必须与{matchName}相匹配',
+	startDate: '起始日期',
+	endDate: '结束日期',
+	currendDate: '当前日期',
+	afterDate: '日期必须等于或晚于 {label}.',
+	beforeDate: '日期必须早于或等于 {label}.',
+	startMonth: '请选择起始月份',
+	sameMonth: '您必须修改两个日期中的一个，以确保它们在同一月份。',
+	creditcard: '您输入的信用卡号码不正确。当前已输入{length}个字符。'
+
+});
+
+// Traditional Chinese
+Locale.define('zh-CHT', 'FormValidator', {
+
+	required: '此項必填。 ',
+	minLength: '請至少輸入{minLength} 個字符(已輸入{length} 個)。 ',
+	maxLength: '最多只能輸入{maxLength} 個字符(已輸入{length} 個)。 ',
+	integer: '請輸入一個整數，不能包含小數點。例如："1", "200"。 ',
+	numeric: '請輸入一個數字，例如："1", "1.1", "-1", "-1.1"。 ',
+	digits: '請輸入由數字和標點符號組成的內容。例如電話號碼。 ',
+	alpha: '請輸入AZ 的26 個字母，不能包含空格或任何其他字符。 ',
+	alphanum: '請輸入AZ 的26 個字母或0-9 的10 個數字，不能包含空格或任何其他字符。 ',
+	dateSuchAs: '請輸入合法的日期格式，如：{date}。 ',
+	dateInFormatMDY: '請輸入合法的日期格式，例如：YYYY-MM-DD ("2010-12-31")。 ',
+	email: '請輸入合法的電子信箱地址，例如："fred@domain.com"。 ',
+	url: '請輸入合法的Url 地址，例如：http://www.google.com。 ',
+	currencyDollar: '請輸入合法的貨幣符號，例如：￥100.0',
+	oneRequired: '請至少選擇一項。 ',
+	errorPrefix: '錯誤：',
+	warningPrefix: '警告：',
+
+	// Form.Validator.Extras
+	noSpace: '不能包含空格。 ',
+	reqChkByNode: '未選擇任何內容。 ',
+	requiredChk: '此項必填。 ',
+	reqChkByName: '請選擇 {label}.',
+	match: '必須與{matchName}相匹配',
+	startDate: '起始日期',
+	endDate: '結束日期',
+	currendDate: '當前日期',
+	afterDate: '日期必須等於或晚於{label}.',
+	beforeDate: '日期必須早於或等於{label}.',
+	startMonth: '請選擇起始月份',
+	sameMonth: '您必須修改兩個日期中的一個，以確保它們在同一月份。 ',
+	creditcard: '您輸入的信用卡號碼不正確。當前已輸入{length}個字符。 '
+
+});
+
+Form.Validator.add('validate-currency-yuan', {
+
+	errorMsg: function(){
+		return Form.Validator.getMsg('currencyYuan');
+	},
+
+	test: function(element){
+		// [￥]1[##][,###]+[.##]
+		// [￥]1###+[.##]
+		// [￥]0.##
+		// [￥].##
+		return Form.Validator.getValidator('IsEmpty').test(element) || (/^￥?\-?([1-9]{1}[0-9]{0,2}(\,[0-9]{3})*(\.[0-9]{0,2})?|[1-9]{1}\d*(\.[0-9]{0,2})?|0(\.[0-9]{0,2})?|(\.[0-9]{1,2})?)$/).test(element.get('value'));
+	}
 
 });
 
