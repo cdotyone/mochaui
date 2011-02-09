@@ -31,13 +31,14 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 	Implements: [Events, Options],
 
 	options: {
-		id:					'',				// id of the primary element, and id os control that is registered with mocha
-		container:			null,			// the parent control in the document to add the control to
-		clearContainer:		false,			// should the control clear its parent container before it appends itself
+		//id:				null,			// id of the primary element, and id os control that is registered with mocha
+		//container:		null,			// the parent control in the document to add the control to
+		//clearContainer:	false,			// should the control clear its parent container before it appends itself
 		drawOnInit:			true,			// true to add tree to container when control is initialized
-		cssClass:			'slb',			// the primary css tag
+		cssClass:			'form',			// the form element/title css tag
+		cssSelectList:		'slb',			// the select list css tag
 
-		content:			false,			// used to load content
+		//content:			false,			// used to load content
 		items:				[],				// the array list of nodes
 
 		textField:			'text',			// the name of the field that has the item's text
@@ -49,14 +50,17 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		dropCssClass:		'dslb',			// the class to use when displaying the drop list parent control
 		dropText:			'{$} Selected',	// the text to show on the drop list when items are selected
 
-		alternateRows:		false,			// show the items with alternating background color
+		//alternateRows:	false,			// show the items with alternating background color
 		width:				0,				// width of the control
 		height:				0,				// height of the control when not in drop list mode, or height of drop
 		canMultiSelect:		true,			// can the user select multiple items
 		showCheckBox:		true,			// true to show checkBoxes
-		value:				'',				// the currently selected item's value
-		selectedItem:		null,			// the last selected item
-		selectedItems:		[]				// all of the the currently selected item
+		//value:			'',				// the currently selected item's value
+		//selectedItem:		null,			// the last selected item
+		selectedItems:		[],				// all of the the currently selected item
+
+		hasTitle:			true			// set to true to show a title
+		//formTitle:		''				// defaults to the id of this field
 
 		//onItemSelected:	null			// event: when a node is selected
 	},
@@ -64,6 +68,7 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 	initialize: function(options){
 		this.setOptions(options);
 		options = this.options;
+		this.el = {};
 
 		// If selectList has no ID, give it one.
 		this.id = options.id = options.id || 'selectList' + (++MUI.idCount);
@@ -82,46 +87,45 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		var o = this.options;
 		if (!container) container = o.container;
 
-		var id = o.id;
+		// look for a fieldset that contains the selectList
+		var isNew = false;
+		var fs = o.element && o.element.nodeName == 'FIELDSET' ? o.element : $(o.id);
+		if (!fs){  // create it, if it does not already exist
+			fs = new Element('fieldset', {'id':o.id});
+			isNew = true;
+		}
+		this.el.element = fs.addClass(o.cssClass).empty();
+
+		// add form title if requested to do so
+		if (o.hasTitle && o.formTitle) this.el.label = new Element('label', {'id':o.id + '_label'}).set('text', o.formTitle).set('for', o.id).inject(fs);
+
 		var drop;
 		if (o.isDropList){
-			var panel = o.element ? o.element : $(o.id);
-			if (!panel){
-				panel = new Element('div', {id:id});
-				if (o.width) panel.setStyle('width', parseInt('' + o.width) + 'px');
-			}
-			panel.empty();
+			this.el.panel = new Element('div', {id:id});
+			if (o.width) this.el.panel.setStyle('width', parseInt('' + o.width) + 'px');
 
-			drop = new Element('div', {id:id + '_droplist','class':o.dropCssClass,styles:{'width':parseInt('' + o.width) + 'px'}}).inject(panel);
+			this.el.drop = drop = new Element('div', {id:id + '_droplist','class':o.dropCssClass,styles:{'width':parseInt('' + o.width) + 'px'}}).inject(this.el.panel);
 			this.dropElement = drop;
 			drop.addEvent('click', function(e){
 				this._open(e);
 			}.bind(this));
 
-			this.textElement = new Element('div', {id:id + '_text','class':'text','text':'1 selected',styles:{'width':(parseInt('' + o.width) - 24) + 'px'}}).inject(drop);
-			this.buttonElement = new Element('div', {id:id + '_button','class':'button','html':'&nbsp;'}).inject(drop);
-
-			o.id += '_list';
-			o.isOpen = false;
+			this.el.textElement = new Element('div', {id:id + '_text','class':'text','text':'1 selected',styles:{'width':(parseInt('' + o.width) - 24) + 'px'}}).inject(drop);
+			this.el.buttonElement = new Element('div', {id:id + '_button','class':'button','html':'&nbsp;'}).inject(drop);
 		}
 
 		var div = o.element ? o.element : $(o.id);
-		var isNew = false;
 		if (!div){
-			div = new Element('div', {'id':id});
+			div = new Element('div', {'id':o.id});
 			if (o.width) div.setStyle('width', (parseInt('' + o.width) - 2) + 'px');
 			if (o.height) div.setStyle('height', parseInt('' + o.height) + 'px');
-			isNew = true;
 		}
-		this.element = div.addClass(o.cssClass);
+		this.el.listDiv = div.addClass(o.cssSelectList).empty();
 
-		div.empty();
-
-		var ul = new Element('ul').inject(div);
-
+		this.el.list = new Element('ul').inject(div);
 		for (var i = 0; i < o.items.length; i++){
-			if (o.items[i].isBar) this._buildBar(o.items[i], ul);
-			else this._buildItem(o.items[i], ul, (i % 2));
+			if (o.items[i].isBar) this._buildBar(o.items[i], this.el.list);
+			else this._buildItem(o.items[i], this.el.list, (i % 2));
 		}
 
 		// add to container
@@ -132,7 +136,7 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 			container.setStyle('padding', '0');
 			if (drop){
 				var selectText = this.options.dropText.replace('{$}', this.getSelectedCount());
-				this.textElement.set('text', selectText);
+				this.el.textElement.set('text', selectText);
 				div.addEvent('click', function(e){
 					e.stop();
 				});
@@ -184,8 +188,7 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 	},
 
 	_selected: function(e, item){
-		var self = this;
-		var o = self.options;
+		var o = this.options;
 		if (e.target && e.target.tagName == 'INPUT') return true;
 
 		if (!o.canMultiSelect){
@@ -205,25 +208,24 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		if (item[o.isSelectedField]) item._element.addClass('C');
 		else item._element.removeClass('C');
 
-		self.fireEvent('itemSelected', [item,item[o.isSelectedField],self,e]);
+		this.fireEvent('itemSelected', [item,item[o.isSelectedField],this,e]);
 
-		if (self.textElement){
-			var selectText = o.dropText.replace('{$}', self.getSelectedCount());
-			self.textElement.set('text', selectText);
+		if (this.el.textElement){
+			var selectText = o.dropText.replace('{$}', this.getSelectedCount());
+			this.el.textElement.set('text', selectText);
 		}
 	},
 
 	_checked: function(e, item){
 		e.stopPropagation();
-		var self = this;
-		var o = self.options;
+		var o = this.options;
 		var checked = item._checkBox.checked;
 
 		item[o.isSelectedField] = checked;
 		if (checked) item._element.addClass('C');
 		else item._element.removeClass('C');
 
-		self.fireEvent('itemSelected', [item,checked,self,e]);
+		this.fireEvent('itemSelected', [item,checked,this,e]);
 		return true;
 	},
 
@@ -236,18 +238,17 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 	},
 
 	_open: function(){
-		var self = this;
-		var pos = self.dropElement.getCoordinates();
-		var element = self.element;
-		var button = self.dropElement;
+		var pos = this.dropElement.getCoordinates();
+		var element = this.el.listDiv;
+		var button = this.el.dropElement;
 		element.setStyles({'display':'','top':pos.bottom + 2,'left':pos.left});
 		var close = function(){
 			element.setStyles({'display':'none'});
 			element.removeEvent('mouseleave');
 			button.removeEvent('click');
 			button.addEvent('click', function(e){
-				self._open(e);
-			});
+				this._open(e);
+			}.bind(this));
 		};
 		element.addEvent('mouseleave', close);
 		button.removeEvent('click');
@@ -255,8 +256,7 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 	},
 
 	_buildItem: function(item, ul, alt){
-		var self = this;
-		var o = self.options;
+		var o = this.options;
 
 		var li = new Element('li', {'class':'item'}).inject(ul);
 		var title = MUI.getData(item, o.titleField);
@@ -265,14 +265,14 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		var isSelected = MUI.getData(item, o.isSelectedField);
 		if (isSelected) li.addClass('C');
 		li.addEvent('click', function(e){
-			self._selected(e, item);
-		});
+			this._selected(e, item);
+		}.bind(this));
 		li.addEvent('mouseover', function(e){
-			self._over(e, item);
-		});
+			this._over(e, item);
+		}.bind(this));
 		li.addEvent('mouseout', function(e){
-			self._out(e, item);
-		});
+			this._out(e, item);
+		}.bind(this));
 		item._element = li;
 
 		if (o.showCheckBox){
@@ -281,8 +281,8 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 			var input = new Element('input', { 'type': 'checkbox', 'name': id, 'id': id, 'value':value }).inject(li);
 			if (isSelected) input.checked = true;
 			input.addEvent('click', function(e){
-				self._checked(e, item);
-			});
+				this._checked(e, item);
+			}.bind(this));
 			item._checkBox = input;
 		}
 
