@@ -65,10 +65,6 @@ MUI.TextBox = new NamedClass('MUI.TextBox', {
 	},
 
 	draw: function(container){
-		// todo: need way to create all elements externally
-		// todo: need way to allow other controls know the main element is id+_field and is a fieldset
-		// todo: need to have all elements moved to .el
-		// todo: need to make domready adding to container same as other controls
 		var o = this.options;
 		if (!container) container = o.container;
 
@@ -81,12 +77,13 @@ MUI.TextBox = new NamedClass('MUI.TextBox', {
 		}
 		this.el.element = fs.addClass(o.cssClass);
 
+		// add form label/title
 		var lbl = $(o.id + '_label');
-		if (o.hasTitle){
+		if (o.hasTitle){  // are we supposed to have a title
 			var tle = this.getFormTitle();
 			lbl = new Element('label', {'id':o.id + '_label'}).inject(fs);
 		} else {
-			if (lbl){
+			if (lbl){  // title not needed so remove it, if it exists
 				lbl.dispose();
 				this.el.erase('label');
 			}
@@ -98,7 +95,7 @@ MUI.TextBox = new NamedClass('MUI.TextBox', {
 		if (!inp){  // create input field if none given
 			inp = new Element('input', {'type':'input','id':o.id}).inject(fs);
 		}
-		this.el.input = inp.set('maxlength', 10).set('type',o.type).setStyle('width', o.width).set('class', o.cssClass);
+		this.el.input = inp.set('maxlength', 10).set('type', o.type).setStyle('width', o.width).set('class', o.cssClass);
 
 		// determine value of input field
 		var value = o.value;
@@ -172,21 +169,6 @@ MUI.TextBox = new NamedClass('MUI.TextBox', {
 		if (o.formTitleField) return MUI.getData(o.formData, o.formTitleField);
 		if (o.formData) return MUI.getData(o.formData, o.id);
 		return o.id;
-	},
-
-	fromHTML: function(){
-		var o = this.options;
-
-		var inp = $(o.id);
-		if (!inp) return this;
-		this.el.input = inp;
-
-		if (inp.get('type')) o.type = inp.get('type');
-		o.value = inp.get('defaultValue');
-		if (inp.get('class')) o.cssClass = inp.get('class');
-
-		this.draw();
-		return this;
 	}
 
 });

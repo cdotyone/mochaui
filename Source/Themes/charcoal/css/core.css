@@ -65,7 +65,7 @@ dd { padding: 0 0 9px 0; }
 /* Forms */
 form fieldset { border: 2px solid #454545; clear: both; margin-bottom: 9px; overflow: hidden; padding: 9px 18px; }
 form legend { background: #454545; margin-bottom: 9px; padding: 2px 11px; }
-form label { font-weight: bold; margin-right: 6px; text-align: right; width: 50px; }
+textarea.dynamic { resize:none; position:relative; display:block; overflow:hidden; height:auto }
 textarea, input, select { font-family: Arial, Helvetica, sans-serif; font-size: 12px; vertical-align: middle; }
 textarea, input { color: #ddd; background: #282828; }
 .input { padding: 2px 0 2px 3px; border: 1px solid #181818; }
