@@ -36,7 +36,8 @@ MUI.Calendar = new NamedClass('MUI.Calendar', {
 		//container:		null,	// the parent control in the document to add the control to
 		//clearContainer:	false,	// should the control clear its parent container before it appends itself
 		drawOnInit:		true,		// true to add tree to container when control is initialized
-		cssClass:		'calendar',	// the primary css tag, added to the beginning of each css name
+		cssClass:		'form',		// the form element/title css tag
+		cssCalendar:	'calendar',	// the calendar css tag, added to the beginning of each css name
 		cssClasses:		{},			// ['calendar', 'prev', 'next', 'month', 'year', 'today', 'invalid', 'valid', 'inactive', 'active', 'hover', 'hilite']
 
 		format:			'd/m/Y',	// date format
@@ -76,7 +77,7 @@ MUI.Calendar = new NamedClass('MUI.Calendar', {
 		MUI.set(this.id, this);
 
 		// create our classes array
-		var keys = [options.cssClass, 'prev', 'next', 'month', 'year', 'today', 'invalid', 'valid', 'inactive', 'active', 'hover', 'hilite'];
+		var keys = [options.cssCalendar, 'prev', 'next', 'month', 'year', 'today', 'invalid', 'valid', 'inactive', 'active', 'hover', 'hilite'];
 		var values = keys.map(function(key, i){
 			return (options.cssClasses[i] && options.cssClasses[i].length) ? options.cssClasses[i] : key;
 		}, this);
@@ -110,13 +111,7 @@ MUI.Calendar = new NamedClass('MUI.Calendar', {
 			fs = new Element('fieldset', {'id':o.id + '_field'});
 			isNew = true;
 		}
-		this.el.element = fs.addClass(o.cssClass).setStyles({
-			'resize':'none',
-			'position':'relative',
-			'display':'block',
-			'overflow':'hidden',
-			'height':'auto'
-		});
+		this.el.element = fs.addClass(o.cssClass);
 
 		var lbl = $(o.id + '_label');
 		if (o.hasTitle){
@@ -135,7 +130,7 @@ MUI.Calendar = new NamedClass('MUI.Calendar', {
 		if (!inp){  // create input field if none given
 			inp = new Element('input', {'type':'input','id':o.id}).inject(fs);
 		}
-		this.el.input = inp.set('maxlength', 10).setStyle('width', o.width);
+		this.el.input = inp.set('maxlength', 10).setStyle('width', o.width).addClass(o.cssClass);
 
 		// determine value of input field
 		var value = o.value;
