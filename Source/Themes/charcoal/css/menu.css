@@ -22,11 +22,11 @@
 .toolMenu  ul li a { color: #F8F8F8; font-weight: normal; height:25px; }
 .toolMenu  ul li a:hover { color: #F8F8F8; }
 .toolMenu  ul li a.arrow-right, .toolMenu  ul li a:hover.arrow-right { background-image: url(../images/arrow-right.gif); background-repeat: no-repeat; background-position: right 9px; }
-.toolMenu  li ul { padding-bottom:4px; border: 1px solid #3f3f3f; border-top:solid 1px transparent; background: #fff url(../images/bg-dropdown.gif) repeat-y; position: absolute; width: 164px; left: -999em; z-index: 8000; }
+.toolMenu  li ul { padding-bottom:4px; border: 1px solid #3f3f3f; border-top:solid 1px transparent; background: #999999 url(../images/bg-dropdown.gif) repeat-y; position: absolute; width: 164px; left: -999em; z-index: 8000; }
 .toolMenu  li.hover ul ul, .toolMenu  li.hover ul ul ul { left: -999em; }
 .toolMenu  li ul ul { /* third-and-above-level lists */ margin: -27px 0 0 160px; border-top:solid 1px #3f3f3f }
 .toolMenu  li ul li a { position: relative; padding: 1px 2px 1px 25px; width: 130px; color: #3f3f3f; font-weight: normal; }
-.toolMenu  li ul li a:hover { background: #6C98D9; color: #fff; -moz-border-radius: 2px; }
+.toolMenu  li ul li a:hover { background: #3f3f3f; color: #fff; -moz-border-radius: 2px; }
 .toolMenu  li ul li .radio { position: absolute; top: 6px; left: 4px; width: 9px; height: 9px; background: transparent url(../images/menu-radio.gif) no-repeat 0 bottom; overflow: hidden; line-height: 1px; font-size: 1px; }
 .toolMenu  li ul li .noradio { position: absolute; top: 6px; left: 4px; width: 9px; height: 9px; background: transparent url(../images/menu-radio.gif) no-repeat 0 0; overflow: hidden; line-height: 1px; font-size: 1px; }
 .toolMenu  li ul li a:hover .radio { background-position: right bottom; }
