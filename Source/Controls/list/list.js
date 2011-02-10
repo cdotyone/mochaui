@@ -66,7 +66,7 @@ MUI.List = new NamedClass('MUI.List', {
 		MUI.set(this.id, this);
 
 		if(options.content) {
-			options.content.loadMethod = 'json';
+			options.content.loadMethod = MUI.getDefaultJsonProvider(options.content.loadMethod);
 			options.content.onLoaded = (function(element, options) {
 				this.options.items = MUI.Content.getRecords(options);
 				this.draw();

@@ -70,7 +70,7 @@ MUI.Toolbar = new NamedClass('MUI.Toolbar', {
 		MUI.set(this.id, this);
 
 		if (options.content && options.content.url){
-			options.content.loadMethod = 'json';
+			options.content.loadMethod = MUI.getDefaultJsonProvider(options.content.loadMethod);
 			options.content.onLoaded = (function(element, options){
 				options.buttons = MUI.Content.getRecords(options);
 				this.draw();
@@ -122,7 +122,7 @@ MUI.Toolbar = new NamedClass('MUI.Toolbar', {
 			}
 
 			options.content.instance = this;
-			options.content.loadMethod = 'json';
+			options.content.loadMethod = MUI.getDefaultJsonProvider(options.content.loadMethod);
 			options.content.onLoaded = (function(element, options){
 				this.options.buttons = MUI.Content.getRecords(options);
 				this.draw();

@@ -66,7 +66,8 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 		MUI.set(this.id, this);
 
 		if (options.content){
-			options.content.loadMethod = 'json';
+			options.content.loadMethod = MUI.getDefaultJsonProvider(options.content.loadMethod);
+			if (options.content.loadMethod != 'jsonp') options.content.loadMethod = 'json';
 			options.content.onLoaded = (function(element, options){
 				this.options.items = MUI.Content.getRecords(options);
 				this.draw();

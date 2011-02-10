@@ -213,8 +213,9 @@ Object.append(Demo, {
 			autoSectionToggle:false,
 
 			content:{
-				url:"/mochaui-grails/person/list?page={page}&max={pageSize}&order={dir}&sort={sort}",
+				url:"http://www.mochaui.org/person/list?page={page}&max={pageSize}&order={dir}&sort={sort}",
 				persist:true,
+				loadMethod: 'jsonp',
 				paging: {
 					pageSize:10,
 					page:1

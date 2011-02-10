@@ -13,7 +13,7 @@
 
  authors:
  Chris Doty		MochaUI Version
- Marko ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â antiÃƒÆ’Ã¢â‚¬Å¾ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¡	original <http://www.omnisdata.com/omnigrid/>
+ Marko Santic	OmniGrid Original <http://www.omnisdata.com/omnigrid/>
 
  note:
  This started out as OmniGrid and got modified so to much to work like a Mocha control.
@@ -1165,7 +1165,7 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 			}
 
 			options.content.instance = this;
-			options.content.loadMethod = 'json';
+			options.content.loadMethod = MUI.getDefaultJsonProvider(options.content.loadMethod);
 			MUI.Content.update(options.content);
 		}
 	},

@@ -51,7 +51,10 @@ MUI.append({
 
 		themes: ['Default','Charcoal'],
 
-		css:	 ['{theme}css/core.css']				// default list of css files to load, added to requirements of every control and plugin loaded
+		css:	 ['{theme}css/core.css'],				// default list of css files to load, added to requirements of every control and plugin loaded
+
+		defaultJsonProvider: 'json'						// the default json provider chosen for controls that require json and not loadMethod was selected
+
 	}
 });
 
@@ -283,7 +286,13 @@ MUI.append({
 			ev.stop();
 			if ($(content.element)) MUI.Content.update(content);
 		};
+	},
+
+	getDefaultJsonProvider: function(value) {
+		if(value=='json' || value=='jsonp' ) return value;
+		return MUI.options.defaultJsonProvider;
 	}
+
 });
 
 var NamedClass = function(name, members){

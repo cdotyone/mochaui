@@ -11,6 +11,8 @@
 
  requires:
  - MochaUI/MUI
+ - Core/Request
+ - More/Request.JSONP
 
  provides: [MUI.Content.update]
 
@@ -22,6 +24,8 @@ MUI.Content = Object.append((MUI.Content || {}), {
 	Providers: {},
 
 	Filters: {},
+
+	callBacks: {},
 
 	update: function(content){
 
@@ -85,8 +89,8 @@ MUI.Content = Object.append((MUI.Content || {}), {
 		if (instance && instance.updateStart) instance.updateStart(content);
 
 		// no content or url and not a subcontrol? nothing else to do beyond this point
-		if (!content.url && !content.content && content.loadMethod != 'control') {
-			if(content.clear) {
+		if (!content.url && !content.content && content.loadMethod != 'control'){
+			if (content.clear){
 				if (instance && instance.updateClear) removeContent = instance.updateClear(content);
 				if (element) element.empty().show();
 			}
@@ -373,7 +377,7 @@ MUI.Content.Providers.xhr = {
 			return;
 		}
 
-		var request=new Request({
+		var request = new Request({
 			url: content.persistKey,
 			method: content.method ? content.method : 'get',
 			data: content.data ? new Hash(content.data).toQueryString() : '',
@@ -461,6 +465,18 @@ MUI.Content.Providers.json = {
 		return false;
 	},
 
+	_onSuccess: function(json){
+		this.persistStore(json);
+		if (json != null){	// when multiple results are persisted, null is returned.  decoding takes place in persistStore instead, and filtering is not allowed
+			if (typeof(json) == 'string') json = JSON.decode(json);
+			this.content = json;
+			MUI.Content.setRecords(this);
+			json = MUI.Content.processFilters(this);
+		}
+		MUI.hideSpinner(content.instance);
+		Browser.ie6 ? this.fireLoaded.delay(50, this) : this.fireLoaded();
+	},
+
 	doRequest: function(content){
 		if (content.content && !content.url){
 			Browser.ie6 ? content.fireLoaded.delay(50, this) : content.fireLoaded();
@@ -474,48 +490,54 @@ MUI.Content.Providers.json = {
 		} else content.persistKey = content.doPrepUrl(content);
 
 		if (!this._checkRecords(content)){
-			// still not found so load
-			new Request({
-				url: content.persistKey,
-				update: content.element,
-				method: content.method ? content.method : 'get',
-				data: content.data ? new Hash(content.data).toQueryString() : '',
-				evalScripts: false,
-				evalResponse: false,
-				headers: {'Content-Type':'application/json'},
-				onRequest: function(){
-					MUI.showSpinner(this.instance);
-				}.bind(content),
-				onFailure: function(){
-					var updateSetContent = true;
-					this.error = [500, 'Error Loading XMLHttpRequest'];
-					this.errorMessage = '<p><strong>Error Loading XMLHttpRequest</strong></p>';
-					if (this.instance && this.instance.updateSetContent) updateSetContent = this.instance.updateSetContent(this);
+			if (content.loadMethod == 'jsonp'){
+				new Request.JSONP({
+					url: content.persistKey,
+					callbackKey: (content.callbackKey ? content.callbackKey : 'callback'),
+					data: content.data ? new Hash(content.data).toQueryString() : '',
+					onRequest: function(){
+						MUI.showSpinner(this.instance);
+					}.bind(content),
+					onComplete: this._onSuccess.bind(content),
+					onCancel: function(){
+						MUI.hideSpinner(this.instance);
+					}.bind(content)
+				}).send();
+			} else {
+				// still not found so load
+				new Request({
+					url: content.persistKey,
+					update: content.element,
+					method: content.method ? content.method : 'get',
+					data: content.data ? new Hash(content.data).toQueryString() : '',
+					evalScripts: false,
+					evalResponse: false,
+					headers: {'Content-Type':'application/json'},
+					onRequest: function(){
+						MUI.showSpinner(this.instance);
+					}.bind(content),
+					onFailure: function(){
+						var updateSetContent = true;
+						this.error = [500, 'Error Loading XMLHttpRequest'];
+						this.errorMessage = '<p><strong>Error Loading XMLHttpRequest</strong></p>';
+						if (this.instance && this.instance.updateSetContent) updateSetContent = this.instance.updateSetContent(this);
 
-					if (this.element){
-						if (updateSetContent) this.element.set('html', this.errorMessage);
-						this.element.hideSpinner(this.instance);
-					}
-				}.bind(content),
-				onException: function(){
-				}.bind(content),
-				onSuccess: function(json){
-					this.persistStore(json);
-					if (json != null){	// when multiple results are persisted, null is returned.  decoding takes place in persistStore instead, and filtering is not allowed
-						json = JSON.decode(json);
-						this.content = json;
-						MUI.Content.setRecords(this);
-						json = MUI.Content.processFilters(this);
-					}
-					MUI.hideSpinner(content.instance);
-					Browser.ie6 ? this.fireLoaded.delay(50, this) : this.fireLoaded();
-				}.bind(content),
-				onComplete: function(){
-				}.bind(content)
-			}).send();
+						if (this.element){
+							if (updateSetContent) this.element.set('html', this.errorMessage);
+							this.element.hideSpinner(this.instance);
+						}
+					}.bind(content),
+					onException: function(){}.bind(content),
+					onSuccess: this._onSuccess.bind(content),
+					onComplete: function(){}.bind(content)
+				}).send();
+			}
 		}
 	}
-};
+}
+		;
+
+MUI.Content.Providers.jsonp = MUI.Content.Providers.json;
 
 MUI.Content.Providers.iframe = {
 
@@ -631,7 +653,7 @@ MUI.append({
 				this.el.contentWrapper.getElements('.column').destroy();
 				this.el.contentWrapper.getElements('.columnHandle').destroy();
 
-				if(this.el.content.getParent()==null) this.el.content.inject(this.el.element);
+				if (this.el.content.getParent() == null) this.el.content.inject(this.el.element);
 
 				return false;
 			}
