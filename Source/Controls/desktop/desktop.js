@@ -21,8 +21,6 @@
 
  provides: [MUI.Dock]
 
- todo: need to use Chain on create of desktop, to insure setDesktopSize is being called at the end 
-
  ...
  */
 
@@ -96,13 +94,12 @@ MUI.Desktop = new NamedClass('MUI.Desktop', {
 						column.control = 'MUI.Column';
 
 						// last column we want it to call the this.setDesktopSize
-						if (i + 1 == section.columns.length) column.onNew = this.setDesktopSize.bind(this);
 						MUI.create(column);
 					}
 				}
 			} else {
 				if (section.name == 'taskbar'){
-					this.el[section.name] = new Element('div', {'id':section.id+'Wrapper'}).inject(this.el.element);
+					this.el[section.name] = new Element('div', {'id':section.id + 'Wrapper'}).inject(this.el.element);
 					this.taskbar = MUI.create({control:'MUI.Taskbar',id:section.id,drawOnInit:false,container:this.el.element,desktop:this,element:this.el[section.name]});
 				} else {
 					// create section element
@@ -122,7 +119,7 @@ MUI.Desktop = new NamedClass('MUI.Desktop', {
 			if (div.getParent() == null) div.inject(container);
 
 			if (this.taskbar) this.taskbar.draw();
-			this.setDesktopSize();					// resize the desktop
+			this.setDesktopSize.delay(100, this);	// resize the desktop
 
 			window.addEvent('resize', function(){	// capture browser resize events
 				this._onBrowserResize();
@@ -151,8 +148,6 @@ MUI.Desktop = new NamedClass('MUI.Desktop', {
 			Object.each(this.el, function(val, key){
 				if (['content', 'element'].indexOf(key) < 0){
 					height -= val.offsetHeight;
-					height += val.getStyle('padding-bottom').toInt();
-					height += val.getStyle('padding-top').toInt();
 				}
 			});
 			if (height < 0) height = 0;

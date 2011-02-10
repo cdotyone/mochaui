@@ -38,18 +38,79 @@ MUI.append({
 	},
 
 	load:function(options){
-		options.loadOnly = true;
+		// convert none hash parameters to hash
+		if (typeOf(options) == 'string') options = {control:options,onload:(arguments.length > 0) ? arguments[1] : null};
+		if (typeOf(options) == 'array'){
+			var controls = [];
+			for (var j = 0; j < options.length; j++)
+				controls.push({control:options[j]});
+			options = {controls:controls, onload:(arguments.length > 0) ? arguments[1] : null, loadOnly:true};
+		}
 		MUI.create(options);
 	},
 
 	create:function(options){
-		if (typeOf(options) == 'string') options = {control:options};
-		if (!MUI.initialized) MUI.initialize();
-		if (this.loadPluginGroups(function(){
+		// convert none hash parameters to hash
+		if (typeOf(options) == 'string') options = {control:options,onload:(arguments.length > 0) ? arguments[1] : null};
+		if (!MUI.initialized) MUI.initialize(); // initialize mocha if needed
+
+		if (this.loadPluginGroups(function(){ // make sure all all plugin/control group configurations are loaded
 			MUI.create(options);
 		})) return;
 
-		var name = options.control.replace(/(^MUI\.)/i, '');
+		// convert array of plugin names to controls request
+		var controls = options.controls;
+		if (!controls) controls = [];
+		if (typeOf(options) == 'array'){
+			for (var j = 0; j < options.length; j++)
+				controls.push({control:options[j]});
+			options = {controls:controls,onload:options.onload};
+		}
+
+		if (controls.length == 0) controls = [options]; // make sure we have an array for list of controls to load
+
+		// gather all of the assests for the requested controls/plugins
+		var r = {js:[],css:[],traversed:(MUI.traversed ? MUI.traversed : [])};
+		var config;
+		for (var i = 0; i < controls.length; i++){
+			if (!controls[i].control) return;
+			config = MUI.getControlAssets(controls[i], r.js, r.css, r.traversed).config;
+		}
+
+		// if only one control was requested and it is loaded then return it
+		if (controls.length == 1 && r.js.length > 0 && MUI.files[r.js[0]] == 'loaded'){
+			if ((config && config.loadOnly) || options.loadOnly) return null;
+			var name = controls[0].control.replace(/(^MUI\.)/i, '');
+			var klass = MUI[name];
+			var obj = new klass(options);
+			if (options.onNew) options.onNew(obj);
+			return obj;
+		}
+
+		// build a callback function for the assests requested
+		r.onload = function(){
+			MUI.traversed = (MUI.traversed ? MUI.traversed : []).combine(r.traversed);
+			if (this.onload) this.onload(this);
+
+			controls.each(function(control){
+				if (control.loadOnly || this.loadOnly) return;
+				if (control.onload) control.onload(control);
+				var name = control.control.replace(/(^MUI\.)/i, '');
+				var klass = MUI[name];
+				var obj = new klass(control);
+				if (control.onNew) control.onNew(obj);
+				if (control.fromHTML && obj.fromHTML) obj.fromHTML();
+			}.bind(this));
+
+		}.bind(options);
+		new MUI.Require(r);
+	},
+
+	getControlAssets : function(control, js, css, traversed, name){
+		if (typeOf(control) == 'string') control = {control:control};
+		if (!traversed) traversed = [control.control];
+		if (!name) name = control.control;
+		name = name.replace(/(^MUI\.)/i, '');
 		var cname = name.toLowerCase();
 
 		// try and locate the requested item
@@ -63,6 +124,27 @@ MUI.append({
 		});
 		if (config == null) return;
 
+		// see if we can gather all of the dependency controls
+		var dependsOn = config.dependsOn ? config.dependsOn : [];	// add configured dependencies if they exist
+		if (config.childNode && control[config.childNode]){			// add child controls of the control has a childnode configured
+			var children=control[config.childNode];
+			if(typeof(children)!='array') children=[children];				// some controls allow child nodes to be an array or a single node
+			Object.each(control[config.childNode], function(child){
+				var controlname=(child.control ? child.control : config.childType);
+				if (typeof(controlname) == 'string'){
+					traversed.include(controlname);
+					MUI.getControlAssets(child, js, css, traversed, controlname);
+				}
+			})
+		}
+		// gather dependencies if we have some 
+		if (dependsOn.length > 0){
+			Object.each(dependsOn, function(controlname){
+				if (traversed.indexOf(controlname) >= 0 || control.control == controlname) return;  // make sure we do get into a runaway recursion
+				MUI.getControlAssets(controlname, js, css, traversed);
+			})
+		}
+
 		var path = {};
 		var sname = MUI.options.pluginGroups[pgName].singularName;
 		if (!config.location) config.location = cname;
@@ -72,39 +154,15 @@ MUI.append({
 			MUI.options.path[name] = MUI.replaceFields(tpath, path);
 		});
 
-		var js;
-		if (!config.js) js = [path[sname] + cname + '.js'];
-		else js = config.js;
-
+		if (!config.js) js.push(path[sname] + cname + '.js');
+		else js.combine(config.js);
 		js = MUI.replaceFields(js, path);
 
-		if (js.length > 0 && MUI.files[js[0]] == 'loaded' && !options.fromHTML){
-			if (config.loadOnly || options.loadOnly) return null;
-			var klass = MUI[name];
-			var obj = new klass(options);
-			if (options.onNew) options.onNew(obj);
-			return obj;
-		}
-
-		if (options.fromHTML) js.push(path[sname] + cname + '_html.js');
-
-		var css = [];
-		if (config.css) css = config.css;
+		if (config.css) css.combine(config.css);
 		css.combine(MUI.options.css);
 		css = MUI.replaceFields(css, path);
 
-		new MUI.Require({
-			'js':js,
-			'css':css,
-			'onload':function(){
-				if (config.loadOnly || options.loadOnly) return;
-				var klass = MUI[name];
-				var obj = new klass(options);
-				if (options.onNew) options.onNew(obj);
-				if (options.fromHTML) ret.fromHTML();
-			}
-		});
-		return null;
+		return {js:js,css:css,config:config};
 	}
 
 });

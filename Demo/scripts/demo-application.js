@@ -292,9 +292,7 @@ Demo.initialize = function(){
 		'onload':function(){
 			// Initialize MochaUI options
 			MUI.initialize({path:{demo:''}});
-			MUI.load('famfamfam');
-			MUI.load('Parametrics');
-			MUI.load('CoolClock');
+			MUI.load(['Parametrics','famfamfam','CoolClock']);
 			MUI.register('Demo', Demo);
 			MUI.register('MUI.Windows', MUI.Windows);
 			Demo.initializeDesktop();
