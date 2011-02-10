@@ -89,9 +89,9 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 
 		// look for a fieldset that contains the selectList
 		var isNew = false;
-		var fs = o.element && o.element.nodeName == 'FIELDSET' ? o.element : $(o.id);
+		var fs = o.element && o.element.nodeName == 'FIELDSET' ? o.element : $(o.id + '_field');
 		if (!fs){  // create it, if it does not already exist
-			fs = new Element('fieldset', {'id':o.id});
+			fs = new Element('fieldset', {'id':o.id + '_field'});
 			isNew = true;
 		}
 		this.el.element = fs.addClass(o.cssClass).empty();
@@ -101,25 +101,22 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 
 		var drop;
 		if (o.isDropList){
-			this.el.panel = new Element('div', {id:id});
+			this.el.panel = new Element('div', {id:o.id + '_panel'}).inject(fs);
 			if (o.width) this.el.panel.setStyle('width', parseInt('' + o.width) + 'px');
 
-			this.el.drop = drop = new Element('div', {id:id + '_droplist','class':o.dropCssClass,styles:{'width':parseInt('' + o.width) + 'px'}}).inject(this.el.panel);
+			this.el.drop = drop = new Element('div', {id:o.id + '_droplist','class':o.dropCssClass,styles:{'width':parseInt('' + o.width) + 'px'}}).inject(this.el.panel);
 			this.dropElement = drop;
 			drop.addEvent('click', function(e){
 				this._open(e);
 			}.bind(this));
 
-			this.el.textElement = new Element('div', {id:id + '_text','class':'text','text':'1 selected',styles:{'width':(parseInt('' + o.width) - 24) + 'px'}}).inject(drop);
-			this.el.buttonElement = new Element('div', {id:id + '_button','class':'button','html':'&nbsp;'}).inject(drop);
+			this.el.textElement = new Element('div', {id:o.id + '_text','class':'text','text':'1 selected',styles:{'width':(parseInt('' + o.width) - 24) + 'px'}}).inject(drop);
+			this.el.buttonElement = new Element('div', {id:o.id + '_button','class':'button','html':'&nbsp;'}).inject(drop);
 		}
 
-		var div = o.element ? o.element : $(o.id);
-		if (!div){
-			div = new Element('div', {'id':o.id});
-			if (o.width) div.setStyle('width', (parseInt('' + o.width) - 2) + 'px');
-			if (o.height) div.setStyle('height', parseInt('' + o.height) + 'px');
-		}
+		var div = new Element('div', {'id':o.id});
+		if (o.width) div.setStyle('width', (parseInt('' + o.width) - 2) + 'px');
+		if (o.height) div.setStyle('height', parseInt('' + o.height) + 'px');
 		this.el.listDiv = div.addClass(o.cssSelectList).empty();
 
 		this.el.list = new Element('ul').inject(div);
@@ -133,19 +130,18 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 			if (typeOf(container) == 'string') container = $(container);
 			if (o.clearContainer) container.empty();
 
-			container.setStyle('padding', '0');
-			if (drop){
+			if (this.el.drop){
 				var selectText = this.options.dropText.replace('{$}', this.getSelectedCount());
 				this.el.textElement.set('text', selectText);
-				div.addEvent('click', function(e){
+				this.el.listDiv.inject(document.body)
+						.addClass('notop')
+						.setStyles({'display':'none','position':'absolute','z-index':999})
+						.addEvent('click', function(e){
 					e.stop();
 				});
-				drop.inject(container);
-				document.body.appendChild(div);
-				div.addClass('notop');
-				div.setStyles({'display':'none','position':'absolute','z-index':999});
 			}
-			if (div.getParent() == null) div.inject(container);
+			if (this.el.element.getParent() == null) this.el.element.inject(container);
+			if (this.el.listDiv.getParent() == null) this.el.listDiv.inject(container);
 		}.bind(this);
 		if (!isNew || typeOf(container) == 'element') addToContainer();
 		else window.addEvent('domready', addToContainer);
@@ -240,7 +236,7 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 	_open: function(){
 		var pos = this.dropElement.getCoordinates();
 		var element = this.el.listDiv;
-		var button = this.el.dropElement;
+		var button = this.el.drop;
 		element.setStyles({'display':'','top':pos.bottom + 2,'left':pos.left});
 		var close = function(){
 			element.setStyles({'display':'none'});
@@ -249,7 +245,7 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 			button.addEvent('click', function(e){
 				this._open(e);
 			}.bind(this));
-		};
+		}.bind(this);
 		element.addEvent('mouseleave', close);
 		button.removeEvent('click');
 		button.addEvent('click', close);

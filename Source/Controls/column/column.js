@@ -60,9 +60,6 @@ MUI.Column = new NamedClass('MUI.Column', {
 	},
 
 	draw: function(){
-		// todo: need to use domready when adding to container
-		// todo: need to accept external container
- 
 		var options = this.options;
 
 		this.fireEvent('drawBegin', [this]);
@@ -198,7 +195,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 			}
 		}
 
-		//this.fireEvent('drawEnd', [this]);
+		this.fireEvent('drawEnd', [this]);
 		return this;
 	},
 

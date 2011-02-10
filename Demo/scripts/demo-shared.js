@@ -243,6 +243,7 @@ Object.append(Demo, {
 			textField: 'name',
 			valueField: 'ID',
 			canSelect: true,
+			formTitle: 'Select List Control:',
 			onItemSelected: function(item, selected, self){
 				Demo.writeConsole(self.options.id + ' received onItemSelected command on item \'' + item.name + '\', selected=' + selected)
 			}
