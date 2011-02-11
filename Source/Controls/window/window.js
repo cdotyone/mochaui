@@ -326,7 +326,7 @@ MUI.Window.implement({
 		// i.e. IE8 Test CSS3 Body
 		if (options.useCSS3 && !this.useCSS3 && !this.options.useCanvas) options.shadowBlur = 0;
 
-		this.draw.delay(50,this); // delay to allow css to finish loading, firefox workaround
+		this.draw.delay(50, this); // delay to allow css to finish loading, firefox workaround
 
 		// Return window object
 		return this;
@@ -499,7 +499,7 @@ MUI.Window.implement({
 		this.morph = new Fx.Morph(this.el.windowEl, {
 			'duration': 200
 		});
-		this.el.windowEl.store('morph', this.morph).store('instance',this);
+		this.el.windowEl.store('morph', this.morph).store('instance', this);
 
 		this.resizeMorph = new Fx.Elements([this.el.contentWrapper, this.el.windowEl], {
 			duration: 400,
@@ -1893,10 +1893,9 @@ MUI.Window.implement({
 
 		if (this.options.type != 'notification' && count > 1) this.focus();
 		if (this.loadingWorkspace) this.windowUnload();
-		if (MUI.Dock && $(MUI.options.dock) && this.options.type == 'window'){
-			var currentButton = $(this.id + '_dockTab');
-			if (currentButton != null) MUI.Dock.dockSortables.removeItems(currentButton).destroy();
-			MUI.Desktop.setDesktopSize();
+		if (this._taskBar){
+			this._taskBar.removeTab(this);
+			this._taskBar = null;
 		}
 
 		delete MUI.erase(this.el.windowEl);

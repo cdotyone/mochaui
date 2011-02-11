@@ -167,6 +167,7 @@ MUI.Taskbar.implement({
 			'title': titleText
 		}).inject($(this.options.id + 'Clear'), 'before');
 
+		instance._taskBar = this; 
 		taskbarTab.addEvent('mousedown', function(e){
 			new Event(e).stop();
 			this.timeDown = Date.now();
