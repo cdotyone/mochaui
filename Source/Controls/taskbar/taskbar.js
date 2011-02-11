@@ -293,7 +293,7 @@ MUI.Taskbar.implement({
 			this._doAutoHide();
 		}.bind(this));
 
-		this.setTaskbarColors();
+		this.setTaskbarColors.delay(100,this);
 
 		if (this.options.position == 'top') this.move();
 

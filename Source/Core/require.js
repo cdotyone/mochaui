@@ -170,9 +170,6 @@ Object.append(Asset, {
 		for (var ii = 0; ii < document.styleSheets.length; ii++){
 			var mySheet = document.styleSheets[ii];
 			var myRules = mySheet.cssRules ? mySheet.cssRules : mySheet.rules;
-			// TODO: track down weird timing bug in above line -
-			// solution at http://code.google.com/p/slideshow/wiki/FAQ#Why_won&#x27t_Slideshow_work_with_Google_Maps?
-			// look at question "Why won't Slideshow work with Google Maps?"
 			for (var i = 0; i < myRules.length; i++){
 				if (myRules[i].selectorText == selector){
 					return myRules[i];

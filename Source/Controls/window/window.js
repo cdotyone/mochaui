@@ -326,7 +326,7 @@ MUI.Window.implement({
 		// i.e. IE8 Test CSS3 Body
 		if (options.useCSS3 && !this.useCSS3 && !this.options.useCanvas) options.shadowBlur = 0;
 
-		this.draw();
+		this.draw.delay(50,this); // delay to allow css to finish loading, firefox workaround
 
 		// Return window object
 		return this;
