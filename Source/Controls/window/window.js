@@ -25,19 +25,19 @@ MUI.Windows = Object.append((MUI.Windows || {}), {
 	focusingWindow: false,
 
 	options: {
-		id:					null,
+		//id:					null,
 		title:				'New Window',
-		icon:				false,
+		//icon:				false,
 		type:				'window',
 
 		// content section update options
-		content:			false,			// used to update the content section of the panel.
+		//content:			false,			// used to update the content section of the panel.
 		// if it is a string it assumes that the content is html and it will be injected into the content div.
 		// if it is an array then assume we need to update multiple sections of the panel
 		// if it is not a string or array it assumes that is a hash and just the content section will have .
 
 		// Container options
-		container:			null,
+		//container:		null,
 		shape:				'box',
 
 		// Window Controls
@@ -47,20 +47,20 @@ MUI.Windows = Object.append((MUI.Windows || {}), {
 		closable:			true,
 
 		// Close options
-		storeOnClose:		false,
-		closeAfter:			false,
+		//storeOnClose:		false,
+		//closeAfter:		false,
 
 		// Modal options
 		modalOverlayClose:	true,
 
 		// Draggable
-		draggable:			null,
-		draggableGrid:		false,
-		draggableLimit:		false,
-		draggableSnap:		false,
+		//draggable:		null,
+		//draggableGrid:	false,
+		//draggableLimit:	false,
+		//draggableSnap:	false,
 
 		// Resizable
-		resizable:			null,
+		//resizable:		null,
 		resizeLimit:		{'x': [250, 2500], 'y': [125, 2000]},
 
 		// Style options:
@@ -70,9 +70,9 @@ MUI.Windows = Object.append((MUI.Windows || {}), {
 		headerHeight:		25,
 		footerHeight:		25,
 		cornerRadius:		8,
-		radiusOnMaximize:	false,
-		x:					null,
-		y:					null,
+		//radiusOnMaximize:	false,
+		//x:				null,
+		//y:				null,
 		scrollbars:			true,
 		padding:			{top: 10, right: 12, bottom: 10, left: 12},
 		shadowBlur:			5,
@@ -436,7 +436,7 @@ MUI.Window.implement({
 		}
 
 		// Inject window into DOM
-		this.el.windowEl.inject($(options.container));
+		this.el.windowEl.inject(options.container ? $(options.container) : document.body);
 
 		// Convert CSS colors to Canvas colors.
 		this._setColors();

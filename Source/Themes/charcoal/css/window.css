@@ -14,7 +14,7 @@
 
 /* Windows
 ---------------------------------------------------------------- */
-.mocha { display: none; overflow: hidden; background-color: #404040; }
+.mocha { display: none; overflow: hidden; background-color: #404040; font-family: Arial,Helvetica,sans-serif;}
 .mocha.css3 { overflow: visible; }
 .mocha.isFocused { }
 .mochaOverlay { position: absolute; /* This is also set in theme.js in order to make theme transitions smoother */ top: 0; left: 0; }

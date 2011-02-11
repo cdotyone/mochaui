@@ -17,7 +17,7 @@
 /* Windows
 ---------------------------------------------------------------- */
 
-.mocha { display: none; overflow: hidden; background-color: #e5e5e5; }
+.mocha { display: none; overflow: hidden; background-color: #e5e5e5;  font-family: Arial,Helvetica,sans-serif; }
 .mocha.css3 { overflow: visible; }
 .mocha.isFocused { }
 .mochaOverlay { position: absolute; /* This is also set in theme.js in order to make theme transitions smoother */ top: 0; left: 0; }
@@ -33,7 +33,7 @@
   
 */
 .mochaTitlebar { width: 100%; overflow: hidden; background: url(../images/spacer.gif?from=fafafa&to=e5e5e5); }
-.mochaTitlebar h3 { font-size: 12px; line-height: 15px; font-weight: bold; margin: 0; padding: 5px 10px 4px 12px; color: #888; }
+.mochaTitlebar h3 { font-size: 12px; font-family: Arial,Helvetica,sans-serif; line-height: 15px; font-weight: bold; margin: 0; padding: 5px 10px 4px 12px; color: #888; }
 .mocha.isFocused .mochaTitlebar h3 { color: #181818; }
 .mochaToolbarWrapper { width: 100%; /* For IE */ position: relative; height: 29px; background: #f1f1f1; overflow: hidden; border-top: 1px solid #d9d9d9; }
 div.mochaToolbarWrapper.bottom { border: 0; border-bottom: 1px solid #d9d9d9; }
