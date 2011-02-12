@@ -25,7 +25,7 @@ MUI.Windows = Object.append((MUI.Windows || {}), {
 	focusingWindow: false,
 
 	options: {
-		//id:					null,
+		//id:				null,
 		title:				'New Window',
 		//icon:				false,
 		type:				'window',
@@ -54,10 +54,10 @@ MUI.Windows = Object.append((MUI.Windows || {}), {
 		modalOverlayClose:	true,
 
 		// Draggable
-		//draggable:		null,
-		//draggableGrid:	false,
-		//draggableLimit:	false,
-		//draggableSnap:	false,
+		draggable:			null,
+		draggableGrid:		false,
+		draggableLimit:		false,
+		draggableSnap:		false,
 
 		// Resizable
 		//resizable:		null,

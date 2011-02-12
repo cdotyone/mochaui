@@ -3,6 +3,9 @@
 	<!--MOCHAUI-->
 	<script type="text/javascript" src="../../../Demo/scripts/mootools-1.3.0-core-nocompat.js"></script>
 	<script type="text/javascript" src="../../../Demo/scripts/mootools-1.3.0-more.js"></script>
+	<!--[if IE]>
+	<script type="text/javascript" src="../../../Demo/scripts/excanvas_r43.js"></script>
+	<![endif]-->	
 	<script type="text/javascript" src="../../Core/core.js"></script>
 	<script type="text/javascript" src="../../Core/content.js"></script>
 	<script type="text/javascript" src="../../Core/create.js"></script>
@@ -23,7 +26,8 @@
 			id: 'ajaxpage',
 			content: {url: '{demo}pages/lipsum.html'},
 			width: 340,
-			height: 150
+			height: 150,
+			draggable: true
 		});
 	</script>
 	<link rel="stylesheet" type="text/css" href="../../Themes/default/css/window.css"/>
