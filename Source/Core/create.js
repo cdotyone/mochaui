@@ -39,7 +39,7 @@ MUI.append({
 
 	load:function(options){
 		// convert none hash parameters to hash
-		if (typeOf(options) == 'string') options = {control:options,onload:(arguments.length > 0) ? arguments[1] : null};
+		if (typeOf(options) == 'string') options = {control:options, loadOnly:true,onload:(arguments.length > 0) ? arguments[1] : null};
 		if (typeOf(options) == 'array'){
 			var controls = [];
 			for (var j = 0; j < options.length; j++)
@@ -47,6 +47,65 @@ MUI.append({
 			options = {controls:controls, onload:(arguments.length > 0) ? arguments[1] : null, loadOnly:true};
 		}
 		MUI.create(options);
+	},
+
+	getControlAssets : function(control, js, css, traversed, name){
+		if (typeOf(control) == 'string') control = {control:control};
+		if (!traversed) traversed = [control.control];
+		if (!name) name = control.control;
+		name = name.replace(/(^MUI\.)/i, '');
+		var cname = name.toLowerCase();
+
+		// try and locate the requested item
+		var config;
+		var pgName;
+		Object.each(MUI.options.pluginGroups, function(group, name){
+			if (MUI[name][cname] != null){
+				pgName = name;
+				config = MUI[name][cname];
+			}
+		});
+		if (config == null) return {js:js,css:css,config:null};
+
+		// see if we can gather all of the dependency controls
+		var dependsOn = config.dependsOn ? config.dependsOn : [];	// add configured dependencies if they exist
+		if (config.childNode && control[config.childNode]){			// add child controls of the control has a childnode configured
+			var children = control[config.childNode];
+			if (typeof(children) != 'array') children = [children];				// some controls allow child nodes to be an array or a single node
+			Object.each(control[config.childNode], function(child){
+				var controlname = (child.control ? child.control : config.childType);
+				if (typeof(controlname) == 'string'){
+					traversed.include(controlname);
+					MUI.getControlAssets(child, js, css, traversed, controlname);
+				}
+			})
+		}
+		// gather dependencies if we have some
+		if (dependsOn.length > 0){
+			Object.each(dependsOn, function(controlname){
+				if (traversed.indexOf(controlname) >= 0 || control.control == controlname) return;  // make sure we do get into a runaway recursion
+				MUI.getControlAssets(controlname, js, css, traversed);
+			})
+		}
+
+		var path = {};
+		var sname = MUI.options.pluginGroups[pgName].singularName;
+		if (!config.location) config.location = cname;
+		path[sname] = '{' + pgName + '}' + config.location + '/';
+
+		if (config.paths) Object.each(config.paths, function(tpath, name){
+			MUI.options.path[name] = MUI.replaceFields(tpath, path);
+		});
+
+		if (!config.js) js.push(path[sname] + cname + '.js');
+		else js.combine(config.js);
+		js = MUI.replaceFields(js, path);
+
+		if (config.css) css.combine(config.css);
+		css.combine(MUI.options.css);
+		css = MUI.replaceFields(css, path);
+
+		return {js:js,css:css,config:config};
 	},
 
 	create:function(options){
@@ -104,65 +163,6 @@ MUI.append({
 
 		}.bind(options);
 		new MUI.Require(r);
-	},
-
-	getControlAssets : function(control, js, css, traversed, name){
-		if (typeOf(control) == 'string') control = {control:control};
-		if (!traversed) traversed = [control.control];
-		if (!name) name = control.control;
-		name = name.replace(/(^MUI\.)/i, '');
-		var cname = name.toLowerCase();
-
-		// try and locate the requested item
-		var config;
-		var pgName;
-		Object.each(MUI.options.pluginGroups, function(group, name){
-			if (MUI[name][cname] != null){
-				pgName = name;
-				config = MUI[name][cname];
-			}
-		});
-		if (config == null) return;
-
-		// see if we can gather all of the dependency controls
-		var dependsOn = config.dependsOn ? config.dependsOn : [];	// add configured dependencies if they exist
-		if (config.childNode && control[config.childNode]){			// add child controls of the control has a childnode configured
-			var children=control[config.childNode];
-			if(typeof(children)!='array') children=[children];				// some controls allow child nodes to be an array or a single node
-			Object.each(control[config.childNode], function(child){
-				var controlname=(child.control ? child.control : config.childType);
-				if (typeof(controlname) == 'string'){
-					traversed.include(controlname);
-					MUI.getControlAssets(child, js, css, traversed, controlname);
-				}
-			})
-		}
-		// gather dependencies if we have some 
-		if (dependsOn.length > 0){
-			Object.each(dependsOn, function(controlname){
-				if (traversed.indexOf(controlname) >= 0 || control.control == controlname) return;  // make sure we do get into a runaway recursion
-				MUI.getControlAssets(controlname, js, css, traversed);
-			})
-		}
-
-		var path = {};
-		var sname = MUI.options.pluginGroups[pgName].singularName;
-		if (!config.location) config.location = cname;
-		path[sname] = '{' + pgName + '}' + config.location + '/';
-
-		if (config.paths) Object.each(config.paths, function(tpath, name){
-			MUI.options.path[name] = MUI.replaceFields(tpath, path);
-		});
-
-		if (!config.js) js.push(path[sname] + cname + '.js');
-		else js.combine(config.js);
-		js = MUI.replaceFields(js, path);
-
-		if (config.css) css.combine(config.css);
-		css.combine(MUI.options.css);
-		css = MUI.replaceFields(css, path);
-
-		return {js:js,css:css,config:config};
 	}
 
 });

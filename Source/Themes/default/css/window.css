@@ -33,8 +33,20 @@
   
 */
 .mochaTitlebar { width: 100%; overflow: hidden; background: url(../images/spacer.gif?from=fafafa&to=e5e5e5); }
-.mochaTitlebar h3 { font-size: 12px; font-family: Arial,Helvetica,sans-serif; line-height: 15px; font-weight: bold; margin: 0; padding: 5px 10px 4px 12px; color: #888; }
-.mocha.isFocused .mochaTitlebar h3 { color: #181818; }
+.mochaTitlebar .toolbar { padding-top:2px; padding-bottom:1px; margin-top:0; margin-bottom:0; height:23px; line-height:23px; float:right; vertical-align:middle; }
+.IE .mochaTitlebar .toolbar { padding-top:4px }
+.mochaTitle { float:left; font-size: 12px; font-family: Arial,Helvetica,sans-serif; line-height: 23px; vertical-align:middle; font-weight: bold; margin: 0; padding: 0 10px 0 12px; color: #888; }
+.mochaTitle { color: #181818; }
+.mochaTitlebar span.icon.windowMinimize { background: url('../images/window-minimize.gif') left top no-repeat; height:16px; padding: 0 14px 0 0; }
+.mochaTitlebar span.icon.windowMinimize:hover { border-color:transparent; }
+.mochaTitlebar span.icon.windowMaximize { background: url('../images/window-maximize.gif') left top no-repeat; height:16px; padding: 0 14px 0 0; }
+.mochaTitlebar span.icon.windowMaximize:hover { border-color:transparent; } 
+.mochaTitlebar span.icon.windowClose { background: url('../images/window-close.gif') left top no-repeat; height:16px; padding: 0 14px 0 0; }
+.mochaTitlebar.gauge .mochaTitle { color:white; margin-top:1px; }
+.mochaTitlebar.gauge span.icon.windowClose { background: url('../images/window-close.gif') left -16px no-repeat; padding-top:1px; }
+.mochaTitlebar.gauge span.icon.windowMinimize { background: url('../images/window-minimize.gif') left -16px no-repeat; padding-top:1px; }
+.mochaTitlebar span.icon.windowClose:hover { border-color:transparent; }
+.mochaTitlebar .toolbar span.icon { line-height:20px; padding-top:0; padding-bottom:0; ; cursor:pointer }
 .mochaToolbarWrapper { width: 100%; /* For IE */ position: relative; height: 29px; background: #f1f1f1; overflow: hidden; border-top: 1px solid #d9d9d9; }
 div.mochaToolbarWrapper.bottom { border: 0; border-bottom: 1px solid #d9d9d9; }
 .mochaToolbar { width: 100%; /* For IE */ border-top: 1px solid #fff; }
@@ -42,19 +54,29 @@ div.mochaToolbarWrapper.bottom { border: 0; border-bottom: 1px solid #d9d9d9; }
 .mochaContentWrapper { /* Has a fixed height and scrollbars if required. */ font-size: 12px; overflow: auto; background: #fff; }
 .mochaContent { padding: 10px 12px; }
 .mochaWindowFooter { height: 26px; padding-left: 20px; padding-top:1px; }
-.mocha .handle { position: absolute; background: #0f0; width: 3px; height: 3px; z-index: 2; -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */ filter: progid:DXImageTransform.Microsoft.Alpha(Opacity = 0); /* IE6 and 7*/ opacity: .0; -moz-opacity: .0; overflow: hidden; font-size: 1px; /* For IE6 */ }
-.mocha .corner { /* Corner resize handles */ width: 10px; height: 10px; background: #f00; }
-.mocha .cornerSE { /* Bottom right resize handle */ width: 20px; height: 20px; background: #fefefe; /* This is the color of the visible resize handle */ }
+.mochaWindowFooter .toolbar { vertical-align:middle; height:20px; line-height:20px; margin:0; padding-top:2px; float:left; padding-left:20px; }
+.IE .mochaWindowFooter .toolbar { padding-top:4px }
+.mochaWindowFooter .toolbar span.icon { line-height:20px; padding-top:2px; padding-bottom:2px; cursor:pointer }
+
+.mocha .handle { position: absolute; z-index: 2; }
+.mocha .handle, .mocha .handleN,.mocha .handleS,.mocha .handleW,.mocha .handleE {  background: #0f0; width: 3px; height: 3px; -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */ filter: progid:DXImageTransform.Microsoft.Alpha(Opacity = 0); /* IE6 and 7*/ opacity:.0; -moz-opacity: .0; overflow: hidden; font-size: 1px; /* For IE6 */ }
+
+.mocha .cornerSE,.mocha .cornerNE,.mocha .cornerNW,.mocha .cornerSW,.mocha .corner { /* Corner resize handles */ width: 10px; height: 10px; background: #f00; }
+.mocha .cornerNE { cursor:ne-resize; top:0; right:0; }
+.mocha .cornerNW { cursor:nw-resize; top:0; left:0; }
+.mocha .cornerSW { cursor:sw-resize; bottom:0; left:0; }
+.mocha .cornerSE { cursor:se-resize; width: 20px; height: 20px;opacity:1.0;filter:none; -ms-filter:none; background: url('../images/window-resize.gif') no-repeat; /* background: #fefefe; This is the color of the visible resize handle */ }
 .mocha.css3 .cornerSE { background: transparent; border-color: transparent white white transparent; border-style: solid; border-width: 5px; height: 0; margin: 2px; opacity: 1; width: 0; }
+
 .mochaCanvasHeader { position: absolute; top: 0; left: 0; background: transparent; z-index: -1; visibility: hidden; overflow: hidden; }
-.mochaControls { position: absolute; width: 52px; top: 6px; right: 8px; height: 14px; z-index: 4; background: transparent; }
+.mochaControls { position: absolute; width: 58px; top: 6px; right: 10px; height: 14px; z-index: 4; background: transparent; }
 .mochaCanvasControls { position: absolute; top: 6px; right: 8px; z-index: 3; background: transparent; }
 /*
 	To use images for these buttons:
 	1. Set the useCanvasControls window option to false.
 	2. If you use a different button size you may need to reposition the controls.
 	   Modify the controlsOffset window option.		
-	2. Replcac the background-color with a background-image for each button.
+	2. Replace the background-color with a background-image for each button.
 
 */
 .mochaMinimizeButton, .mochaMaximizeButton, .mochaCloseButton { float: right; width: 14px; height: 14px; font-size: 1px; cursor: pointer; z-index: 4; color: #666; background-color: #fff; margin-left: 5px; }

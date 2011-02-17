@@ -11,6 +11,8 @@
 	<script type="text/javascript" src="../../Core/create.js"></script>
 	<script type="text/javascript" src="../../Core/require.js"></script>
 	<script type="text/javascript" src="../../Core/canvas.js"></script>
+	<script type="text/javascript" src="../dock/dock.js"></script>
+	<script type="text/javascript" src="../toolbar/toolbar.js"></script>
 	<script type="text/javascript" src="../column/column.js"></script>
 	<script type="text/javascript" src="../panel/panel.js"></script>
 	<script type="text/javascript" src="../taskbar/taskbar.js"></script>
@@ -21,10 +23,14 @@
 		MUI.initialize();
 		MUI.options.path.root = '../../../';
 		MUI.options.path.demo = '{root}Demo/';
-		
+		MUI.load('famfamfam');
 		new MUI.Window({
 			id: 'ajaxpage',
-			content: {url: '{demo}pages/lipsum.html'},
+			content: [
+				{url: '{demo}pages/lipsum.html'},
+				{position:'header',control:'MUI.Toolbar',buttons:[{cssClass: 'icon_application_go', title: 'Go'}]},
+				{position:'footer',control:'MUI.Toolbar',buttons:[{cssClass: 'icon_application_go', title: 'Go'}]}
+			],
 			width: 340,
 			height: 150,
 			draggable: true

@@ -13,9 +13,6 @@
 
  provides: [MUI.Windows]
 
- todo: need to have windows use toolbar control for headers and footers
- todo: need to change minimize, maximize, restore buttons to css images instead of canvas, easier to theme
-
  ...
  */
 
@@ -79,7 +76,6 @@ MUI.Windows = Object.append((MUI.Windows || {}), {
 		shadowOffset:		{'x': 0, 'y': 1},
 		controlsOffset:		{'right': 6, 'top': 6},
 		useCanvas:			true,
-		useCanvasControls:	true,
 		useCSS3:			true,
 		useSpinner:			true
 
@@ -394,6 +390,7 @@ MUI.Window.implement({
 		this.el.windowEl.store('instance', this);
 		this.el.windowEl.addClass(options.cssClass);
 		if (options.type == 'modal2') this.el.windowEl.addClass('modal2');
+		if (Browser.ie) this.el.windowEl.addClass('IE');
 
 		// Fix a mouseover issue with gauges in IE7
 		if (Browser.ie && options.shape == 'gauge') this.el.windowEl.setStyle('backgroundImage', 'url(../images/spacer.gif)');
@@ -411,27 +408,23 @@ MUI.Window.implement({
 		this.el.contentWrapper.setStyle('overflow', 'hidden');
 
 		if (options.shape == 'gauge'){
-			if (options.useCanvasControls) this.el.canvasControls.setStyle('visibility', 'hidden');
-			else this.el.controls.setStyle('visibility', 'hidden');
+			this.el.controls.setStyle('visibility', 'hidden');
+			this.el.titleBar.setStyle('visibility', 'hidden').addClass('gauge');
 			this.el.windowEl.addEvent('mouseover', function(){
 				this.mouseover = true;
 				var showControls = function(){
 					if (this.mouseover){
-						if (options.useCanvasControls) this.el.canvasControls.setStyle('visibility', 'visible');
-						else this.el.controls.setStyle('visibility', 'visible');
+						this.el.controls.setStyle('visibility', 'visible');
 						this.el.canvasHeader.setStyle('visibility', 'visible');
-						this.el.title.setStyle('display', 'block');
+						this.el.titleBar.setStyle('visibility', 'visible');
 					}
 				};
 				showControls.delay(0, this);
-
-			}.bind(this));
-			this.el.windowEl.addEvent('mouseleave', function(){
+			}.bind(this)).addEvent('mouseleave', function(){
 				this.mouseover = false;
-				if (this.options.useCanvasControls) this.el.canvasControls.setStyle('visibility', 'hidden');
-				else this.el.controls.setStyle('visibility', 'hidden');
+				this.el.controls.setStyle('visibility', 'hidden');
 				this.el.canvasHeader.setStyle('visibility', 'hidden');
-				this.el.title.setStyle('display', 'none');
+				this.el.titleBar.setStyle('visibility', 'hidden');
 			}.bind(this));
 		}
 
@@ -440,7 +433,6 @@ MUI.Window.implement({
 
 		// Convert CSS colors to Canvas colors.
 		this._setColors();
-		if (options.type != 'notification') this._setMochaControlsWidth();
 
 		// load/build all of the additional  content sections
 		if (this.sections) this.sections.each(function(section){
@@ -557,11 +549,11 @@ MUI.Window.implement({
 
 		var width = this.el.contentWrapper.getStyle('width').toInt() + shadowBlur2x;
 		var height = this.el.contentWrapper.getStyle('height').toInt() + this.headerFooterShadow + borderHeight;
-		if (this.sections) this.sections.each(function(section){
-			if (section.position == 'content') return;
-			var el = section.wrap ? section.wrapperEl : section.element;
-			height += el.getStyle('height').toInt() + el.getStyle('border-top').toInt();
-		});
+		/*		if (this.sections) this.sections.each(function(section){
+		 if (section.position == 'content') return;
+		 var el = section.wrap ? section.wrapperEl : section.element;
+		 height += el.getStyle('height').toInt() + el.getStyle('border-top').toInt();
+		 });*/
 
 		this.el.windowEl.setStyles({
 			'height': height,
@@ -613,19 +605,8 @@ MUI.Window.implement({
 						MUI.Canvas.drawGauge(ctx, width, height, shadowBlur, shadowOffset, shadows, this.el.canvasHeader, this.options.headerHeight, this.bodyBgColor, this.useCSS3);
 						break;
 				}
-
-				if (options.resizable && !this.isMaximized){
-					if (!this.resizableColor){
-						alert('resizableColor not set!');
-					}
-					MUI.Canvas.triangle(ctx, width - (shadowBlur + shadowOffset.x + 17), height - (shadowBlur + shadowOffset.y + 18), 11, 11, this.resizableColor, 1.0);
-					// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
-					if (Browser.ie) MUI.Canvas.triangle(ctx, 0, 0, 10, 10, this.resizableColor, 0);
-				}
 			}
 		}
-
-		if (options.type != 'notification' && options.useCanvasControls) this._drawControls(width, height, shadows);
 
 		// Resize panels if there are any
 		if (MUI.desktop && this.el.contentWrapper.getChildren('.column').length != 0){
@@ -1036,99 +1017,6 @@ MUI.Window.implement({
 				this.bodyBgColor = new Color('#ff0');
 				this.el.windowEl.addClass('replaced');
 			}
-
-			// Set resizableColor, the color of the SE corner resize handle
-			if (this.options.resizable){
-				if (this.el.se.getStyle('background-color') !== '' && this.el.se.getStyle('background-color') !== 'transparent'){
-					this.resizableColor = new Color(this.el.se.getStyle('background-color'));
-					this.el.se.addClass('replaced');
-				}
-				else {
-					this.resizableColor = new Color('#ff0');
-					this.el.se.addClass('replaced');
-				}
-			}
-		}
-
-		if (this.options.useCanvasControls){
-			if (this.el.minimizeButton){
-				// Set Minimize Button Foreground Color
-				if (this.el.minimizeButton.getStyle('color') !== '' && this.el.minimizeButton.getStyle('color') !== 'transparent'){
-					this.minimizeColor = new Color(this.el.minimizeButton.getStyle('color'));
-				}
-				else {
-					this.minimizeColor = new Color('#ff0');
-				}
-
-				// Set Minimize Button Background Color
-				if (this.el.minimizeButton.getStyle('background-color') !== '' && this.el.minimizeButton.getStyle('background-color') !== 'transparent'){
-					this.minimizeBgColor = new Color(this.el.minimizeButton.getStyle('background-color'));
-					this.el.minimizeButton.addClass('replaced');
-				}
-				else {
-					this.minimizeBgColor = new Color('#ff0');
-					this.el.minimizeButton.addClass('replaced');
-				}
-			}
-
-			if (this.el.maximizeButton){
-				// Set Maximize Button Foreground Color
-				if (this.el.maximizeButton.getStyle('color') !== '' && this.el.maximizeButton.getStyle('color') !== 'transparent'){
-					this.maximizeColor = new Color(this.el.maximizeButton.getStyle('color'));
-				}
-				else {
-					this.maximizeColor = new Color('#ff0');
-					this.el.minimizeButton.addClass('replaced');
-				}
-
-				// Set Maximize Button Background Color
-				if (this.el.maximizeButton.getStyle('background-color') !== '' && this.el.maximizeButton.getStyle('background-color') !== 'transparent'){
-					this.maximizeBgColor = new Color(this.el.maximizeButton.getStyle('background-color'));
-					this.el.maximizeButton.addClass('replaced');
-				}
-				else {
-					this.maximizeBgColor = new Color('#ff0');
-					this.el.maximizeButton.addClass('replaced');
-				}
-			}
-
-			if (this.el.closeButton){
-				// Set Close Button Foreground Color
-				if (this.el.closeButton.getStyle('color') !== '' && this.el.closeButton.getStyle('color') !== 'transparent'){
-					this.closeColor = new Color(this.el.closeButton.getStyle('color'));
-				}
-				else {
-					this.closeColor = new Color('#ff0');
-				}
-
-				// Set Close Button Background Color
-				if (this.el.closeButton.getStyle('background-color') !== '' && this.el.closeButton.getStyle('background-color') !== 'transparent'){
-					this.closeBgColor = new Color(this.el.closeButton.getStyle('background-color'));
-					this.el.closeButton.addClass('replaced');
-				}
-				else {
-					this.closeBgColor = new Color('#ff0');
-					this.el.closeButton.addClass('replaced');
-				}
-			}
-		}
-	},
-
-	_setMochaControlsWidth: function(){
-		this.mochaControlsWidth = 0;
-		var options = this.options;
-		if (options.minimizable){
-			this.mochaControlsWidth += (this.el.minimizeButton.getStyle('margin-left').toInt() + this.el.minimizeButton.getStyle('width').toInt());
-		}
-		if (options.maximizable){
-			this.mochaControlsWidth += (this.el.maximizeButton.getStyle('margin-left').toInt() + this.el.maximizeButton.getStyle('width').toInt());
-		}
-		if (options.closable){
-			this.mochaControlsWidth += (this.el.closeButton.getStyle('margin-left').toInt() + this.el.closeButton.getStyle('width').toInt());
-		}
-		this.el.controls.setStyle('width', this.mochaControlsWidth);
-		if (options.useCanvasControls){
-			this.el.canvasControls.setProperty('width', this.mochaControlsWidth);
 		}
 	},
 
@@ -1171,13 +1059,14 @@ MUI.Window.implement({
 				'cursor': options.draggable ? 'move' : 'default'
 			}
 		}).inject(cache.overlay, 'top');
+		this.headerDock = new MUI.Dock({id:id + '_titleBar',container:cache.overlay,element:cache.titleBar});
 
-		cache.title = new Element('h3', {
+		cache.title = new Element('span', {
 			'id': id + '_title',
 			'class': 'mochaTitle'
 		}).inject(cache.titleBar);
 
-		if (options.icon != false){
+		if (options.icon){
 			cache.title.setStyles({
 				'padding-left': 28,
 				'background': 'url(' + options.icon + ') 5px 4px no-repeat'
@@ -1236,15 +1125,15 @@ MUI.Window.implement({
 		}
 
 		cache.controls = new Element('div', {
-			'id': id + '_controls',
-			'class': 'mochaControls'
-		}).inject(cache.overlay, 'after');
+			'id': id + '_controls'
+		}).inject(cache.titleBar);
 
 		cache.footer = new Element('div', {
 			'id': id + '_footer',
 			'class': 'mochaWindowFooter',
 			'styles': {'width': width - 30}
 		}).inject(cache.overlay, 'bottom');
+		this.footerDock = new MUI.Dock({id:id + '_footer',container:cache.overlay,element:cache.footer});
 
 		// make sure we have a content sections
 		this.sections = [];
@@ -1265,104 +1154,47 @@ MUI.Window.implement({
 		}
 
 		var snum = 0;
-		this.sections.each(function(section, idx){
-			var intoEl = cache.contentBorder;
-
-			section.element = this.el.windowEl;
-			snum++;
-			var id = this.options.id + '_' + (section.section || 'section' + snum);
-
-			section = Object.append({
-				'wrap': true,
-				'position': 'content',
-				'empty': false,
-				'height': 29,
-				'id': id,
-				'css': null,
-				'loadMethod': 'xhr',
-				'method': 'get'
-			}, section);
-
-			if (section.position == 'content'){
-				if (section.loadMethod == 'iframe') this.options.padding = 0;  // Iframes have their own padding.
-				section.element = cache.content;
-				this.sections[idx] = section;
+		this.sections.each(function(section){
+			if (!section.position || section.position == 'content'){
+				if (section.loadMethod == 'iframe') section.padding = 0;  // Iframes have their own padding.
+				section.container = this.el.content;
 				return;
 			}
-
-			var wrap = section.wrap;
-			var where = section.position == 'bottom' ? 'after' : 'before';
-			var empty = section.empty;
-			if (section.position == 'header' || section.position == 'footer'){
-				if (!section.css) section.css = 'mochaToolbar';
-				intoEl = section.position == 'header' ? cache.titleBar : cache.footer;
-				where = 'bottom';
-				wrap = false;
-			} else empty = false; // can't empty in content border area
-
-			if (wrap){
-				section.wrapperEl = new Element('div', {
-					'id': section.id + '_wrapper',
-					'class': section.css + 'Wrapper',
-					'styles': {'height': section.height}
-				}).inject(intoEl, where);
-
-				if (section.position == 'bottom') section.wrapperEl.addClass('bottom');
-				intoEl = section.wrapperEl;
-				cache[section.wrapperEl.id] = intoEl;
+			var id = options.id + '_' + (section.name || 'section' + (snum++));
+			if (!section.control) section.control = 'MUI.DockHtml';
+			if (section.control == 'MUI.Toolbar' && section.divider == null) section.divider = false;
+			if (!section.id) section.id = id;
+			section.partner = this.id;
+			if (section.position == 'header') section.container = cache.titleBar;
+			else if (section.position == 'footer') section.container = cache.footer;
+			else {
+				section.element = new Element('div', {
+					'id': section.id,
+					'class': section.css
+				}).inject(cache.contentBorder);
 			}
-
-			if (empty) intoEl.empty();
-			section.element = new Element('div', {
-				'id': section.id,
-				'class': section.css,
-				'styles': {'height': section.height}
-			}).inject(intoEl);
-
-			section.wrapperEl = intoEl;
-			if (section.wrap && section.position == 'bottom') section.element.addClass('bottom');
-
-			this.sections[idx] = section;
-			cache[section.element.id] = section.element;
 		}, this);
 
-		if (options.useCanvasControls){
-			cache.canvasControls = new Element('canvas', {
-				'id': id + '_canvasControls',
-				'class': 'mochaCanvasControls',
-				'width': 14,
-				'height': 14
-			}).inject(this.el.windowEl);
-
-			if (Browser.ie && MUI.ieSupport == 'excanvas'){
-				G_vmlCanvasManager.initElement(cache.canvasControls);
-				cache.canvasControls = this.el.windowEl.getElement('.mochaCanvasControls');
-			}
-		}
-
-		if (options.closable){
-			cache.closeButton = new Element('div', {
-				'id': id + '_closeButton',
-				'class': 'mochaCloseButton mochaWindowButton',
-				'title': 'Close'
-			}).inject(cache.controls);
+		// add standard window controls
+		var buttons = [];
+		if (options.minimizable){
+			buttons.push({cssClass:'windowMinimize',title:'Minimize',onClick:function(){
+				this.minimize();
+			}.bind(this)});
 		}
 
 		if (options.maximizable){
-			cache.maximizeButton = new Element('div', {
-				'id': id + '_drawMaximizeButton',
-				'class': 'mochaMaximizeButton mochaWindowButton',
-				'title': 'Maximize'
-			}).inject(cache.controls);
+			buttons.push({cssClass:'windowMaximize',title:'Maximize',onClick:function(){
+				this.maximize();
+			}.bind(this)});
 		}
 
-		if (options.minimizable){
-			cache.minimizeButton = new Element('div', {
-				'id': id + '_minimizeButton',
-				'class': 'mochaMinimizeButton mochaWindowButton',
-				'title': 'Minimize'
-			}).inject(cache.controls);
+		if (options.closable){
+			buttons.push({cssClass:'windowClose',title:'Close',onClick:function(){
+				this.el.windowEl.close();
+			}.bind(this)});
 		}
+		new MUI.Toolbar({id:id + '_controls',element:cache.controls,divider:false,container:cache.titleBar,buttons:buttons});
 
 		if (options.useSpinner && options.shape != 'gauge' && options.type != 'notification'){
 			cache.spinner = new Element('div', {
@@ -1397,85 +1229,12 @@ MUI.Window.implement({
 		}
 
 		if (options.resizable){
-			cache.n = new Element('div', {
-				'id': id + '_resizeHandle_n',
-				'class': 'handle',
-				'styles': {
-					'top': 0,
-					'left': 10,
-					'cursor': 'n-resize'
-				}
-			}).inject(cache.overlay, 'after');
-
-			cache.ne = new Element('div', {
-				'id': id + '_resizeHandle_ne',
-				'class': 'handle corner',
-				'styles': {
-					'top': 0,
-					'right': 0,
-					'cursor': 'ne-resize'
-				}
-			}).inject(cache.overlay, 'after');
-
-			cache.e = new Element('div', {
-				'id': id + '_resizeHandle_e',
-				'class': 'handle',
-				'styles': {
-					'top': 10,
-					'right': 0,
-					'cursor': 'e-resize'
-				}
-			}).inject(cache.overlay, 'after');
-
-			cache.se = new Element('div', {
-				'id': id + '_resizeHandle_se',
-				'class': 'handle cornerSE',
-				'styles': {
-					'bottom': 0,
-					'right': 0,
-					'cursor': 'se-resize'
-				}
-			}).inject(cache.overlay, 'after');
-
-			cache.s = new Element('div', {
-				'id': id + '_resizeHandle_s',
-				'class': 'handle',
-				'styles': {
-					'bottom': 0,
-					'left': 10,
-					'cursor': 's-resize'
-				}
-			}).inject(cache.overlay, 'after');
-
-			cache.sw = new Element('div', {
-				'id': id + '_resizeHandle_sw',
-				'class': 'handle corner',
-				'styles': {
-					'bottom': 0,
-					'left': 0,
-					'cursor': 'sw-resize'
-				}
-			}).inject(cache.overlay, 'after');
-
-			cache.w = new Element('div', {
-				'id': id + '_resizeHandle_w',
-				'class': 'handle',
-				'styles': {
-					'top': 10,
-					'left': 0,
-					'cursor': 'w-resize'
-				}
-			}).inject(cache.overlay, 'after');
-
-			cache.nw = new Element('div', {
-				'id': id + '_resizeHandle_nw',
-				'class': 'handle corner',
-				'styles': {
-					'top': 0,
-					'left': 0,
-					'cursor': 'nw-resize'
-				}
-			}).inject(cache.overlay, 'after');
+			['n','ne','e','se','s','sw','w','nw'].each(function(id) {
+				this[id] = new Element('div', {
+					'id': options.id + '_resizeHandle_' + id,
+					'class': 'handle ' + ((id.length==2 ? 'corner' :'handle')+id.toUpperCase())
+				}).inject(this.overlay, 'after');
+			}.bind(cache));
 		}
 		Object.append(this.el, cache);
 
@@ -1798,54 +1557,12 @@ MUI.Window.implement({
 				ctx.clearRect(0, 0, width, height);
 
 				MUI.Canvas.drawBoxCollapsed(ctx, width, height, shadowBlur, shadowOffset, shadows, this.options.cornerRadius, this.headerStartColor, this.headerStopColor);
-				if (options.useCanvasControls) this._drawControls(width, height, shadows);
-
-				// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
-				if (Browser.ie) MUI.Canvas.triangle(ctx, 0, 0, 10, 10, [0, 0, 0], 0);
 			}
 		}
 
 		this.drawingWindow = false;
 		return this;
 
-	},
-
-	_drawControls : function(){
-		var options = this.options;
-		var shadowBlur = this.useCSS3 ? 0 : options.shadowBlur;
-		var shadowOffset = this.useCSS3 ? 0 : options.shadowOffset;
-		var controlsOffset = options.controlsOffset;
-
-		// Make sure controls are placed correctly.
-		this.el.controls.setStyles({
-			'right': shadowBlur + shadowOffset.x + controlsOffset.right,
-			'top': shadowBlur - shadowOffset.y + controlsOffset.top
-		});
-
-		this.el.canvasControls.setStyles({
-			'right': shadowBlur + shadowOffset.x + controlsOffset.right,
-			'top': shadowBlur - shadowOffset.y + controlsOffset.top
-		});
-
-		// Calculate X position for controlbuttons
-		//var mochaControlsWidth = 52;
-		this.closeButtonX = options.closable ? this.mochaControlsWidth - 7 : this.mochaControlsWidth + 12;
-		this.maximizeButtonX = this.closeButtonX - (options.maximizable ? 19 : 0);
-		this.minimizeButtonX = this.maximizeButtonX - (options.minimizable ? 19 : 0);
-
-		var ctx2 = this.el.canvasControls.getContext('2d');
-		ctx2.clearRect(0, 0, 100, 100);
-
-		if (this.options.closable) MUI.Canvas.drawCloseButton(ctx2, this.closeButtonX, 7, this.closeBgColor, 1.0, this.closeColor, 1.0);
-		if (this.options.maximizable) MUI.Canvas.drawMaximizeButton(ctx2, this.maximizeButtonX, 7, this.maximizeBgColor, 1.0, this.maximizeColor, 1.0);
-		if (this.options.minimizable){
-			MUI.Canvas.drawMinimizeButton(ctx2, this.minimizeButtonX, 7, this.minimizeBgColor, 1.0, this.minimizeColor, 1.0);
-
-			// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
-			if (Browser.ie){
-				MUI.Canvas.circle(ctx2, 0, 0, 3, this.minimizeBgColor, 0);
-			}
-		}
 	},
 
 	_doClosingJobs: function(){
@@ -1859,10 +1576,6 @@ MUI.Window.implement({
 			if (instance.el.canvas){
 				instance.el.canvas.height = 0;
 				instance.el.canvas.width = 0;
-			}
-			if (instance.el.canvas){
-				instance.el.canvasControls.height = 0;
-				instance.el.canvasControls.width = 0;
 			}
 
 			if (instance.el.iframe){
@@ -1898,7 +1611,7 @@ MUI.Window.implement({
 			this._taskBar = null;
 		}
 
-		delete MUI.erase(this.el.windowEl);
+		MUI.erase(this.el.windowEl);
 	},
 
 	_storeOnClose: function(){
