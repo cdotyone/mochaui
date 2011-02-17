@@ -26,11 +26,12 @@
  */
 
 CoolClock.createWindow = function(skin){
-	if (typeof(skin) != 'string') skin = 'default_mui';
+	if (typeof(skin) != 'string') skin = 'mui_'+MUI.options.theme;
 	new MUI.Window({
 		id: 'clock',
 		title: 'Canvas Clock',
 		cssClass: 'transparent',
+		defaultSkin: skin,
 		content: {url: '{plugins}coolclock/demo.html'},
 		shape: 'gauge',
 		headerHeight: 30,

@@ -226,7 +226,7 @@ CoolClock.config.skins = {
 		secondHand:       { lineWidth: 1, startAt: -20, endAt: 85, color: "red", alpha: 1 },
 		secondDecoration: { lineWidth: 1, startAt: 70, radius: 4, fillColor: "red", color: "red", alpha: 1 }
 	},
-	default_mui: {
+	mui_default: {
 		outerBorder: { lineWidth: 1, radius:99, fillColor: "#577a9e", color: "#fff", alpha: 1 },
 		smallIndicator: { lineWidth: 6, startAt: 82, endAt: 89, color: "#fff", alpha: 0.15 },
 		largeIndicator: { lineWidth: 6, startAt: 82, endAt: 89, color: "#fff", alpha: 0.50 },
@@ -235,6 +235,15 @@ CoolClock.config.skins = {
 		secondHand: { lineWidth: 2, startAt: -18, endAt: 88, color: "#fff", alpha: 1 },
 		secondDecoration: { lineWidth: 0, startAt: 72, radius: 5, fillColor: "#fff", alpha: 1 }
 		// secondDecoration2: { lineWidth: 2, startAt: 0, radius: 8, fillColor: "#577a9e", color: "#fff", alpha: 1 }
+	},
+	mui_charcoal: {
+		outerBorder: { lineWidth: 185, radius:1, color: "#000", alpha: 1 },
+		smallIndicator: { lineWidth: 3, startAt: 88, endAt: 94, color: "#595959", alpha: 1 },
+		largeIndicator: { lineWidth: 3, startAt: 82, endAt: 94, color: "#ddd", alpha: 1 },
+		hourHand: { lineWidth: 4, startAt: 0, endAt: 58, color: "#fff", alpha: 1 },
+		minuteHand: { lineWidth: 4, startAt: 0, endAt: 78, color: "#fff", alpha: 1 },
+		secondHand: { lineWidth: 4, startAt: 82, endAt: 94, color: "#98B8D9", alpha: 1 },
+		secondDecoration: { lineWidth: 3, startAt: 0, radius: 6, fillColor: "white", color: "white", alpha: 1 }
 	},
 	default_v1: {
 		outerBorder: { lineWidth: 2, radius:99, fillColor: "#90D224", color: "#fff", alpha: 1 },
@@ -257,15 +266,6 @@ CoolClock.config.skins = {
 	},
 	mochaUI1: {
 		outerBorder: { lineWidth: 185, radius:1, color: "#000", alpha: 1 },
-		smallIndicator: { lineWidth: 3, startAt: 88, endAt: 94, color: "#595959", alpha: 1 },
-		largeIndicator: { lineWidth: 3, startAt: 82, endAt: 94, color: "#ddd", alpha: 1 },
-		hourHand: { lineWidth: 4, startAt: 0, endAt: 58, color: "#fff", alpha: 1 },
-		minuteHand: { lineWidth: 4, startAt: 0, endAt: 78, color: "#fff", alpha: 1 },
-		secondHand: { lineWidth: 4, startAt: 82, endAt: 94, color: "#98B8D9", alpha: 1 },
-		secondDecoration: { lineWidth: 3, startAt: 0, radius: 6, fillColor: "white", color: "white", alpha: 1 }
-	},
-	mochaUI2: {
-		outerBorder: { lineWidth: 185, radius:1, color: "#000", alpha: 1 },
 		smallIndicator: { lineWidth: 3, startAt: 88, endAt: 94, color: "#2CC2D1", alpha: 1 },
 		largeIndicator: { lineWidth: 3, startAt: 82, endAt: 94, color: "#1BFFD9", alpha: 1 },
 		hourHand: { lineWidth: 4, startAt: 0, endAt: 58, color: "#fff", alpha: 1 },
@@ -273,7 +273,7 @@ CoolClock.config.skins = {
 		secondHand: { lineWidth: 4, startAt: 82, endAt: 94, color: "#EFCD5F", alpha: 1 },
 		secondDecoration: { lineWidth: 0, startAt: 0, radius: 6, fillColor: "#fff", alpha: 1 }
 	},
-	mochaUI3: {
+	mochaUI2: {
 		outerBorder: { lineWidth: 185, radius:1, color: "#000", alpha: 1 },
 		smallIndicator: { lineWidth: 3, startAt: 88, endAt: 94, color: "#C7C3B7", alpha: 1 },
 		largeIndicator: { lineWidth: 3, startAt: 82, endAt: 94, color: "#C7C3B7", alpha: 1 },
