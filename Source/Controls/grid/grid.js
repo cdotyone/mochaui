@@ -98,17 +98,17 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 		this.dragging = false;
 		this.selected = new Array();
 
-		if (this.options.accordion) this.el = this.ulBody.getElements('li:nth-child(2n+1)'); // all elements except accordion sections
-		else this.el = this.ulBody.getElements('li');
+		if (this.options.accordion) this.rows = this.ulBody.getElements('li:nth-child(2n+1)'); // all elements except accordion sections
+		else this.rows = this.ulBody.getElements('li');
 		this.lastsection = null;
 
 		if (this.options.alternateRows)	this._altRow();
 
-		this.el.each(function(el){
-			el.addEvent('click', this._rowClick.bind(this));
-			el.addEvent('dblclick', this._rowDblClick.bind(this));
-			el.addEvent('mouseover', this._rowMouseOver.bind(this));
-			el.addEvent('mouseout', this._rowMouseOut.bind(this));
+		this.rows.each(function(row){
+			row.addEvent('click', this._rowClick.bind(this));
+			row.addEvent('dblclick', this._rowDblClick.bind(this));
+			row.addEvent('mouseover', this._rowMouseOver.bind(this));
+			row.addEvent('mouseout', this._rowMouseOut.bind(this));
 		}, this);
 
 		// ------------------------- setup header --------------------------------
@@ -205,7 +205,7 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 
 		this._finishEditing(); // if it is open somewhere
 
-		var li = this.el[ sels[0] ];
+		var li = this.rows[ sels[0] ];
 
 		// find the columns index
 		var c = options.columnIndex ? options.columnIndex : 0; // defaults to first column
@@ -324,8 +324,8 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 
 			if ((!evt.control && !evt.shift) || !this.options.multipleSelection){
 				// clear the old selection
-				this.el.each(function(el){
-					el.removeClass('selected')
+				this.rows.each(function(row){
+					row.removeClass('selected')
 				}, this);
 				this.selected = new Array();
 			}
@@ -333,7 +333,7 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 			if (evt.control){
 				for (var i = 0; i < selectedNum; i++){
 					if (currentindex == this.selected[i]){ // select if it is current
-						this.el[ currentindex ].removeClass('selected');
+						this.rows[ currentindex ].removeClass('selected');
 						this.selected.splice(i, 1);
 						dontselect = true;
 					}
@@ -349,7 +349,7 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 				endindex = Math.max(si, endindex);
 
 				for (var j = startindex; j <= endindex; j++){
-					this.el[j].addClass('selected');
+					this.rows[j].addClass('selected');
 					this.selected.push(Number(j));
 				}
 			}
@@ -544,14 +544,14 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 	},
 
 	selectAll: function(){
-		this.el.each(function(el){
+		this.rows.each(function(el){
 			this.selected.push(el.retrieve('row'));
 			el.addClass('selected');
 		}, this);
 	},
 
 	unselectAll: function(){
-		this.el.each(function(el){
+		this.rows.each(function(el){
 			el.removeClass('selected');
 		}, this);
 		this.selected = [];
@@ -564,7 +564,7 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 	setSelectedIndices: function(arr){
 		this.selected = arr;
 		for (var i = 0; i < arr.length; i++){
-			var li = this.el[arr[i]];
+			var li = this.rows[arr[i]];
 			this._rowClick({target:li.getFirst(), control:false});
 		}
 	},
@@ -1141,13 +1141,13 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 			this.refresh();
 		} else {
 			// Sorting...
-			this.el.sort(el.compare);
-			this.el.inject(this.ulBody, 'inside');
+			this.rows.sort(el.compare);
+			this.rows.inject(this.ulBody, 'inside');
 
 			// Update selection array because indices has been changed
 			this.selected = new Array();
-			this.el.each(function(el){
-				if (el.hasClass('selected')) this.selected.push(el.retrieve('row'));
+			this.rows.each(function(row){
+				if (row.hasClass('selected')) this.selected.push(row.retrieve('row'));
 			}, this);
 
 			this._altRow();
@@ -1171,7 +1171,7 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 	},
 
 	_altRow: function(){
-		this.el.each(function(el, i){
+		this.rows.each(function(el, i){
 			if (i % 2) el.removeClass('erow');
 			else el.addClass('erow');
 		});
