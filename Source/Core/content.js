@@ -473,7 +473,7 @@ MUI.Content.Providers.json = {
 			MUI.Content.setRecords(this);
 			json = MUI.Content.processFilters(this);
 		}
-		MUI.hideSpinner(content.instance);
+		MUI.hideSpinner(this.instance);
 		Browser.ie6 ? this.fireLoaded.delay(50, this) : this.fireLoaded();
 	},
 
