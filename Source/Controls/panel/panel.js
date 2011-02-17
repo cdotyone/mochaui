@@ -49,7 +49,8 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 		// Other:
 		collapsible:			true,			// can the panel be collapsed
-		isCollapsed:			 false
+		isCollapsed:			false,			// is the panel collapsed
+		collapseFooter:			true			// collapse footer when panel is collapsed 
 
 		// Events
 		//onLoaded:				null, // called every time content is loaded using MUI.Content
@@ -308,15 +309,18 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		var options = this.options;
 
 		// Collapse Panel
-		var panel = this.el.panel;
-		this.oldHeight = panel.getStyle('height').toInt();
+		this.oldHeight = this.el.panel.getStyle('height').toInt();
+		if(this.el.footer) {
+			this.oldFooterHeight = this.el.footer.getStyle('height').toInt();
+			if(options.collapseFooter) this.el.footer.hide().setStyle('height', 0);
+		}
 		if (this.oldHeight < 10) this.oldHeight = 20;
 		this.el.content.setStyle('position', 'absolute'); // This is so IE6 and IE7 will collapse the panel all the way
-		panel.hide().setStyle('height', 0);
+		this.el.panel.hide().setStyle('height', 0);
 		this.isCollapsed = true;
 		panelWrapper.addClass('collapsed')
 				.removeClass('expanded');
-		MUI.panelHeight(options.container, panel, 'collapsing');
+		MUI.panelHeight(options.container, this.el.panel, 'collapsing');
 		MUI.panelHeight(); // Run this a second time for panels within panels
 		this.el.collapseToggle.removeClass('panel-collapsed')
 				.addClass('panel-expand')
@@ -333,6 +337,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		// Expand Panel
 		this.el.content.setStyle('position', null); // This is so IE6 and IE7 will collapse the panel all the way
 		this.el.panel.setStyle('height', this.oldHeight).show();
+		if(this.el.footer && this.options.collapseFooter) this.el.footer.setStyle('height', this.oldFooterHeight).show();
 		this.isCollapsed = false;
 		this.el.element.addClass('expanded')
 				.removeClass('collapsed');
