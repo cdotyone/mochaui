@@ -72,7 +72,7 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 	initialize: function(options){
 		this.setOptions(options);
 		options = this.options;
-		this.el={};
+		this.el = {};
 
 		// If grid has no ID, give it one.
 		this.id = options.id = options.id || 'grid' + (++MUI.idCount);
@@ -160,7 +160,7 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 				};
 
 				el.compare = function(a, b){
-					var dir=el.retrieve('dir');
+					var dir = el.retrieve('dir');
 					var var1 = a.getChildren()[i].get('html').trim();
 					var var2 = b.getChildren()[i].get('html').trim();
 
@@ -460,7 +460,7 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 		}
 
 		this.reset();
-		this.hideLoader();
+		this.hideSpinner();
 	},
 
 	setDataByRow: function(row, data){
@@ -490,57 +490,16 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 		}
 	},
 
-	_hideWhiteOverflow: function(){
-		if (this.el.element.getElement('.gBlock')) this.el.element.getElement('.gBlock').dispose();
-
-		var pReload = this.el.element.getElement('div.pDiv .pReload');
-		if (pReload) pReload.removeClass('loading');
+	showSpinner: function(){
+		if (this.spinner || !this.el.element) return;
+		this.spinner = new MUI.Spinner({'id':this.id + '_spinner',container:this.el.element.getParent()});
+		this.spinner.show();
 	},
 
-	_showWhiteOverflow: function(i){
-		// white overflow & loader
-		if (this.el.element.getElement('.gBlock')) this.el.element.getElement('.gBlock').dispose();
-
-		var gBlock = new Element('div', {style:'top: 0px; left: 0px; background: white none repeat scroll 0% 0%;  -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial; position: absolute; z-index: 999; opacity: 0.5; filter: alpha(opacity=50'});
-		var bDiv = this.el.element.getElement('.bDiv');
-
-		var top = 1;
-		top += this.el.element.getElement('.tDiv') ? this.el.element.getElement('.tDiv').getSize().y : 0;
-		top += this.el.element.getElement('.hDiv') ? this.el.element.getElement('.hDiv').getSize().y : 0;
-
-		gBlock.setStyles({width:this.options.width, height: this.options.height - 1, top:0});
-		gBlock.addClass('gBlock');
-
-		this.el.element.appendChild(gBlock);
-
-		var pReload = this.el.element.getElement('div.pDiv .pReload');
-		if (pReload) pReload.addClass('loading');
-	},
-
-	/// TODO: replace with mochaui spinner
-	showLoader: function(){
-		if (this.loader) return;
-
-		if(!this.el.element) return;
-		this._showWhiteOverflow();
-
-		this.loader = new Element('div', {
-			'class':'elementloader',
-			'styles':{
-				'top': this.options.height / 2 - 16,
-				'left': this.options.width / 2
-			}
-		}).inject(this.el.element);
-	},
-
-	/// TODO: replace with mochaui spinner
-	hideLoader: function(){
-		if (!this.loader) return;
-
-		this._hideWhiteOverflow();
-		this.loader.dispose();
-		this.loader = null;
-
+	hideSpinner: function(){
+		if (!this.spinner) return;
+		MUI.erase(this.id + '_spinner');
+		this.spinner = null;
 	},
 
 	selectAll: function(){
@@ -716,7 +675,7 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 				var columnObj = columns[colindex];
 				columnObj.setStyle('width', pos - 6);
 			}
-		},this);
+		}, this);
 
 		this._dragColumnReposition();
 	},
@@ -771,7 +730,7 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 	},
 
 	_getBodyHeight: function(){
-		var options=this.options;
+		var options = this.options;
 		// the total height of the entire grid is this.options.height have in the body header
 		// header
 		var headerHeight = options.showHeader ? 24 + 2 : 0;  //+2 for the border
@@ -1013,7 +972,7 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 
 		// --- body
 		var bDiv = new Element('div');
-		this.el.body=bDiv.addClass('bDiv');
+		this.el.body = bDiv.addClass('bDiv');
 
 		if (o.width) bDiv.setStyle('width', width);
 
@@ -1027,7 +986,7 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 		this.el.ulBody.setStyle('width', this.sumWidth + this.visibleColumns); // not to see surplus, address the overflow hidden
 		bDiv.appendChild(this.el.ulBody);
 
-		var paging=o.content.paging;
+		var paging = o.content.paging;
 		if (paging.pageSize && !div.getElement('div.pDiv')){
 			var pageDivWrap = new Element('div', {
 				'class':'pDiv',
@@ -1080,6 +1039,7 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 		// add to container
 		var addToContainer = function(){
 			if (typeOf(container) == 'string') container = $(container);
+			this.hideSpinner();
 			if (o.clearContainer) container.empty();
 			if (div.getParent() == null) div.inject(container);
 			container.setStyle('padding', '0');
@@ -1131,8 +1091,8 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 		var el = header[index];
 
 		if (by != null) el.addClass(by.toLowerCase());
-		if (el.hasClass('desc')) el.store('dir','desc');
-		else el.store('dir','asc');
+		if (el.hasClass('desc')) el.store('dir', 'desc');
+		else el.store('dir', 'asc');
 
 		if (options.serverSort){
 			options.content.paging.sort = options.columns[index].name;
@@ -1176,8 +1136,8 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 		});
 	},
 
-	updateStart: function() {
-		this.showLoader();
+	updateStart: function(){
+		this.showSpinner();
 	},
 
 	updateEnd: function(content){
