@@ -141,14 +141,33 @@ MUI.append({
 
 	erase: function(el){
 		var t=typeof(el);
-		if(t=='string') { return this.instances.erase(el);}
-		if(t=='array' || el.each) { el.each(function(el) { MUI.erase(el) }); return;}
-		if(t=='element') el=$(el);
-		if(el.getChildren) {
-			this.instances.erase(MUI.getID(el));
-			return MUI.erase($(el).getChildren());
+		var instance;
+		if(el.each) t='array';
+		switch(t) {
+			case 'array':
+				el.each(function(el) {
+					MUI.erase(el)
+				});
+				break;
+			case 'element':
+				el=$(el);
+				if(el.getChildren) {
+					if(!instance) instance=MUI.instances[MUI.getID(el)];
+					MUI.instances.erase(MUI.getID(el));
+					MUI.erase($(el).getChildren());
+				}
+				break;
+			default:
+				el=MUI.getID(el);
+				instance = MUI.instances[el];
+				MUI.instances.erase(el);
 		}
-		return this.instances.erase(MUI.getID(el));
+		if(instance && instance.dispose) {
+			instance.dispose();
+			delete instance;
+			return null;
+		}
+		return instance;
 	},
 
 	each: function(func){
@@ -407,6 +426,12 @@ Element.implement({
 			if (options.width != null) this.setStyle('width', options.width);
 			if (options.height != null) this.setStyle('height', options.height);
 		} else instance.resize(options);
+		return this;
+	},
+
+	empty: function() {
+		MUI.erase(this)
+		Array.from(this.childNodes).each(Element.dispose);
 		return this;
 	}
 
