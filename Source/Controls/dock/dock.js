@@ -86,6 +86,7 @@ MUI.Dock = new NamedClass('MUI.Dock', {
 		if (!toolbar.control) toolbar.control = 'MUI.DockHtml';
 		if (!toolbar.id) toolbar.id = this.id + 'Toolbar' + idx;
 		toolbar.container = this.el.element;
+		toolbar.inDock = true; // let the control know it is inside a dock control
 		toolbar.element = new Element('div', {'id':toolbar.id,'class':'toolbar'}).inject(this.el.element);
 		if (!toolbar.partner) toolbar.partner = this.options.partner;
 		this.options.docked[idx] = toolbar;

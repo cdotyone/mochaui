@@ -39,8 +39,10 @@ div.panel-header div.tabs ul { height:28px; overflow:hidden }
 
 /* spinner */
 .spinnerWrapper { width: 16px; height: 16px; background: url(../images/spinner-placeholder.gif) no-repeat; margin: 4px 5px 0 5px; }
-.spinner { display: none; background: url(../images/spinner.gif) no-repeat; width: 16px; height: 16px; margin-left:-3px }
+.spinner { display: none; background: url(../images/spinner.gif) no-repeat; width: 16px; height: 16px; }
 .toolbar .spinnerWrapper { margin: 4px 0 2px 0; height:24px;}
+.toolbar .spinnerWrapper .spinner { margin-left:-3px }
+.spinnerOverlay { top:0; left:0; background: white none repeat scroll 0% 0%;  -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial; position: absolute; z-index: 999; opacity: 0.5; filter: alpha(opacity=50)}
 
 /* search fields toolbar */
 .searchField { width: 150px; overflow: hidden; line-height: 15px; margin: 0; padding: 4px 0 2px 5px; border: 1px solid #808080; border-right: 0; vertical-align: middle; -moz-border-radius-topleft: 3px; -moz-border-radius-bottomleft: 3px; border-radius: 3px 0 0 3px; }

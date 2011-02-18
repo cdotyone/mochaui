@@ -32,9 +32,9 @@ MUI.Spinner = new NamedClass('MUI.Spinner', {
 		container:		null,			// the parent control in the document to add the control to
 		drawOnInit:		true,			// true to add tree to container when control is initialized
 
-		content:		false,			// used to load content
-
 		cssClass:		false,			// css tag to add to control
+
+		inDock:			false,			// is this spinner inside a dock control, set by dock control (do not set)
 		divider:		true,			// true if this toolbar has a divider
 		orientation:	false			// left or right side of dock.  default is right
 	},
@@ -47,7 +47,7 @@ MUI.Spinner = new NamedClass('MUI.Spinner', {
 		this.id = this.options.id = this.options.id || 'spinner' + (++MUI.idCount);
 		MUI.set(this.id, this);
 
-		if(this.options.drawOnInit) this.draw();
+		if (this.options.drawOnInit) this.draw();
 	},
 
 	draw: function(container){
@@ -63,35 +63,50 @@ MUI.Spinner = new NamedClass('MUI.Spinner', {
 		}
 		this.el.element = div.store('instance', this).empty();
 
-		div.addClass('toolbar');
+		// process dock options
+		if (o.inDock){
+			if (o.divider) div.addClass('divider');
+			if (o.orientation) div.addClass(o.orientation);
+			div.addClass('toolbar');
+		}
 		if (o.cssClass) div.addClass(o.cssClass);
-		if (o.divider) div.addClass('divider');
-		if (o.orientation) div.addClass(o.orientation);
 
-		this.el.spinner = new Element('div', {'id':o.id + '_spinner','class':'spinner'}).inject(
-				new Element('div', {'id':o.id + 'spinnerWrapper','class':'spinnerWrapper'}).inject(div)
-				);
+		this.el.spinnerWrapper = new Element('div', {'id':o.id + 'spinnerWrapper','class':'spinnerWrapper'}).inject(div);
+		this.el.spinner = new Element('div', {'id':o.id + '_spinner','class':'spinner'}).inject(this.el.spinnerWrapper);
 
 		// add to container
 		var addToContainer = function(){
 			if (typeOf(container) == 'string') container = $(container);
-			if (div.getParent() == null) div.inject(container);
+			if (div.getParent() == null) div.inject(container, 'top');
+			this.show();
 		}.bind(this);
 		if (!isNew || typeOf(container) == 'element') addToContainer();
 		else window.addEvent('domready', addToContainer);
 
-		return div;
+		return this;
 	},
 
 	hide: function(){
 		if (this.el.spinner) this.el.spinner.hide();
+		if (this.el.element) this.el.removeClass('spinnerOverlay');
 		return this;
 	},
 
 	show: function(){
 		if (this.el.spinner) this.el.spinner.show();
+		var container;
+		if (this.el.element) container = this.el.element.getParent();
+		if (container && !this.options.inDock){
+			var sz = container.getScrollSize();
+			var x = parseInt((sz.x / 2) - 16);
+			var y = parseInt((sz.y / 2) - 16);
+			this.el.element.addClass('spinnerOverlay').setStyles({width:sz.x,height:sz.y});
+			this.el.spinnerWrapper.setStyles({'position':'absolute','left':x,'top':y,'zIndex':1000});
+		}
 		return this;
+	},
+
+	dispose: function(){
+		return this.hide();
 	}
-
 });
-
