@@ -20,14 +20,14 @@
 div.tree { overflow: scroll; overflow-x: auto; font-size: 11px; }
 ul.tree { list-style: none; margin: 0; padding: 0; text-decoration: none; cursor: pointer; }
 ul.tree ul, ul.tree li { list-style: none; margin: 0; padding: 0; text-decoration: none; cursor: pointer; }
-ul.tree ul { background: transparent url(../images/tree_vert.gif) repeat-y left center; }
+ul.tree ul { background: transparent url(../images/tree-vert.gif) repeat-y left center; }
 ul.tree li { line-height: 18px; padding: 0; }
-ul.tree ul li.O { padding-left: 18px; background: url(../images/tree_open.gif) no-repeat left top; }
-ul.tree ul li.C { padding-left: 18px; background: url(../images/tree_closed.gif) no-repeat left top; }
-ul.tree li.nochild { background: url(../images/tree_nochild.gif) no-repeat left top; }
+ul.tree ul li.O { padding-left: 18px; background: url(../images/tree-open.gif) no-repeat left top; }
+ul.tree ul li.C { padding-left: 18px; background: url(../images/tree-closed.gif) no-repeat left top; }
+ul.tree li.nochild { background: url(../images/tree-nochild.gif) no-repeat left top; }
 div.panel ul.tree li.last { background-color: #f8f8f8; }
 div.mochaContent ul.tree li.last { background-color: white; }
-ul.tree ul li.nochild { padding-left: 18px; background: url(../images/tree_nochild.gif) no-repeat left top; }
+ul.tree ul li.nochild { padding-left: 18px; background: url(../images/tree-nochild.gif) no-repeat left top; }
 div.panel ul.tree ul li.last { background-color: #f8f8f8; } 
 div.mochaContent ul.tree ul li.last { background-color: white; }
 ul.tree span.open { padding-left: 17px; background: url(../images/open.gif) no-repeat left top; }
@@ -38,8 +38,8 @@ ul.tree li span.treeIcon { margin-right: 0; background: url(../images/doc.gif) n
 ul.tree li.O li span.treeIcon { margin-right: 0; background: url(../images/doc.gif) no-repeat left top; }
 ul.tree li.O span.treeIcon { margin-right: 2px; background: url(../images/open.gif) no-repeat left top; }
 ul.tree li.C span.treeIcon { margin-right: 2px; background: url(../images/closed.gif) no-repeat left top; }
-ul.tree ul li.O.first { background: url(../images/tree_open_first.gif) no-repeat left top; }
-ul.tree ul li.C.first { background: url(../images/tree_close_first.gif) no-repeat left top; }
+ul.tree ul li.O.first { background: url(../images/tree-open-first.gif) no-repeat left top; }
+ul.tree ul li.C.first { background: url(../images/tree-close-first.gif) no-repeat left top; }
 
 ul.tree li a { color:#333333;  text-decoration: none; }
 ul.tree li a:link { display: inline; text-decoration: none; vertical-align: middle; color: #181818; }
