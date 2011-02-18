@@ -178,7 +178,7 @@ Object.append(Demo, {
 			columns: [
 				{
 					header: "Name",
-					name: 'name',
+					name: '{firstName} {lastName}',
 					dataType:'string'
 				},
 				{

@@ -783,7 +783,7 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 	},
 
 	_renderData: function(){
-		var options=this.options;
+		var options = this.options;
 		this.el.ulBody.empty();
 		this.inlineEditSafe = null;
 
@@ -821,26 +821,27 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 					// title
 					if (columns.title) div.title = rowData[columns.title];
 
+					var template = columns.name;
+					if (template.indexOf('{') < 0) template = '{' + template + '}';
+					var val = ''+MUI.replaceFields(template,rowData); 
+
 					if (columns.itemsType == "checkbox"){
 						var input = new Element('input', {type:"checkbox"});
 						if (columns.onChange) input.onclick = this.onSelect.bind(this, {columns:columns, row:r, input:input});
 						div.appendChild(input);
-
-						var val = rowData[columns.name];
-						if (val == 1 || val == 't') input.set('checked', true);
+						if (val == '1' || val == 't' || val.toLowerCase() == 'true') input.set('checked', true);
 					} else if (columns.type == "image"){
 					} else if (columns.type == 'custom'){
 						//columns.labelFunction(td, options.items[r], r);
 					} else if (columns.labelFunction != null){
 						div.set('html', columns.labelFunction(rowData, r, columns));
 					} else {
-						var str = new String(rowData[columns.name]); // must be a string, and if reaches 0 as the number of error
-						if (str == null || str == 'null' || str == 'undefined' || str == "") str = '&nbsp;';
+						if (val == null || val == 'null' || val == 'undefined' || val == "") val = '&nbsp;';
 
-						var trimmed = str.replace(/^\s+|\s+$/g, ''); // see if string is empty
-						if (trimmed.length == 0) str = '&nbsp;';
+						var trimmed = val.replace(/^\s+|\s+$/g, ''); // see if string is empty
+						if (trimmed.length == 0) val = '&nbsp;';
 
-						div.set('html', toggleIcon + str);
+						div.set('html', toggleIcon + val);
 
 						// *** reg. event to toggleicon ***
 						if (firstVisible == c && options.accordion && options.showToggleIcon)
