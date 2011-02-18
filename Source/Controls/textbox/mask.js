@@ -1,7 +1,7 @@
 /*
  ---
 
- name: MUI.Mask
+ name: Mask
 
  description: The base component for the MUI.Mask plugin.
 

@@ -5,9 +5,9 @@
 
  script: textarea.js
 
- description: MUI - Creates a textarea that can dynamically size itself control.
+ description: MUI.TextArea - Creates a textarea that can dynamically size itself control.
 
- copyright: (c) 2010 Contributors in (/AUTHORS.txt).
+ copyright: (c) 2011 Contributors in (/AUTHORS.txt).
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 

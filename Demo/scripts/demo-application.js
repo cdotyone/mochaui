@@ -278,7 +278,7 @@ Demo.initializeDesktop = function(){
 						}
 					]}
 			]},
-			{name:'footer',content:'<div class="copyright">&copy; 2010 <a target="_blank" href="scripts/AUTHORS.txt" id="authorsLink">Various Contributors</a> - <a target="_blank" href="license.html" id="licenseLink">MIT License</a><div>',cssClass:'desktopFooter'}
+			{name:'footer',content:'<div class="copyright">&copy; 2011 <a target="_blank" href="scripts/AUTHORS.txt" id="authorsLink">Various Contributors</a> - <a target="_blank" href="license.html" id="licenseLink">MIT License</a><div>',cssClass:'desktopFooter'}
 		],
 		'onDrawEnd':function(){
 			Parametrics.createwindow();

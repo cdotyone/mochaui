@@ -5,9 +5,9 @@
 
  script: themechange.js
 
- description: MUI - Creates a toolbar theme changing control.
+ description: MUI.ThemeChange - Creates a toolbar theme changing control.
 
- copyright: (c) 2010 Contributors in (/AUTHORS.txt).
+ copyright: (c) 2011 Contributors in (/AUTHORS.txt).
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 

@@ -5,9 +5,9 @@
 
  script: checkboxgrid.js
 
- description: MUI - Create a control with columns and rows of checkbox/radio buttons.
+ description: MUI.CheckBoxGrid - Create a control with columns and rows of checkbox/radio buttons.
 
- copyright: (c) 2010 Contributors in (/AUTHORS.txt).
+ copyright: (c) 2011 Contributors in (/AUTHORS.txt).
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 

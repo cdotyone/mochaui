@@ -5,7 +5,7 @@
 
  description: core content update routines
 
- copyright: (c) 2010 Contributors in (/AUTHORS.txt).
+ copyright: (c) 2011 Contributors in (/AUTHORS.txt).
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 
@@ -14,7 +14,7 @@
  - Core/Request
  - More/Request.JSONP
 
- provides: [MUI.Content.update]
+ provides: [MUI.Content]
 
  ...
  */

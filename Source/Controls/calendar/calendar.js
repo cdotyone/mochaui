@@ -5,9 +5,9 @@
 
  script: calendar.js
 
- description: MUI - A Javascript class for Mootools that adds accessible and unobtrusive date pickers to your form elements
+ description: MUI.Calendar - A Javascript class for Mootools that adds accessible and unobtrusive date pickers to your form elements
 
- copyright: (c) 2010 Contributors in (/AUTHORS.txt).
+ copyright: (c) 2011 Contributors in (/AUTHORS.txt).
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 

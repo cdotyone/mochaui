@@ -5,9 +5,9 @@
 
  script: textbox.js
 
- description: MUI - Creates a maskable textbox control.
+ description: MUI.TextBox - Creates a maskable textbox control.
 
- copyright: (c) 2010 Contributors in (/AUTHORS.txt).
+ copyright: (c) 2011 Contributors in (/AUTHORS.txt).
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 

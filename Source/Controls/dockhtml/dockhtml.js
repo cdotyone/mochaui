@@ -1,13 +1,13 @@
 /*
  ---
 
- name: ToolbarHtml
+ name: DockHtml
 
- script: toolbarhtml.js
+ script: dockhtml.js
 
- description: MUI - Creates a toolbar control that contains generic html.
+ description: MUI.DockHtml - Creates a toolbar control that contains generic html.
 
- copyright: (c) 2010 Contributors in (/AUTHORS.txt).
+ copyright: (c) 2011 Contributors in (/AUTHORS.txt).
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 

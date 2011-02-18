@@ -1,7 +1,7 @@
 /*
  ---
 
- name: MUI.Mask.Regexp
+ name: Mask.Regexp
 
  description: A mask that is defined by a regular expression.
 

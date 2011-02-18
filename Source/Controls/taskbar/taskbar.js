@@ -1,11 +1,13 @@
 /*
  ---
 
+ name: Taskbar
+
  script: Taskbar.js
 
- description: Implements the taskbar. Enables window minimize.
+ description: MUI.Taskbar - Implements the taskbar. Enables window minimize.
 
- copyright: (c) 2010 Contributors in (/AUTHORS.txt).
+ copyright: (c) 2011 Contributors in (/AUTHORS.txt).
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 

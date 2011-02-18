@@ -1,7 +1,7 @@
 /*
 ---
 
-name: MUI.Mask.Reverse
+name: Mask.Reverse
 
 description: A mask used for currency and decimal numbers.
 

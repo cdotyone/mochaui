@@ -5,9 +5,9 @@
 
  script: imagebutton.js
 
- description: MUI - Creates a button with an image on it.
+ description: MUI.ImageButton - Creates a button with an image on it.
 
- copyright: (c) 2010 Contributors in (/AUTHORS.txt).
+ copyright: (c) 2011 Contributors in (/AUTHORS.txt).
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 

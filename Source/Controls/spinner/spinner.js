@@ -1,13 +1,13 @@
 /*
  ---
 
- name: ToolbarSpinner
+ name: Spinner
 
- script: toolbarspinner.js
+ script: spinner.js
 
- description: MUI - Creates a toolbar spinner animation control.
+ description: MUI.Spinner - Creates a toolbar spinner animation control.
 
- copyright: (c) 2010 Contributors in (/AUTHORS.txt).
+ copyright: (c) 2011 Contributors in (/AUTHORS.txt).
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 

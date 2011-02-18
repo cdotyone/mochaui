@@ -3,9 +3,9 @@
 
  script: Modal.js
 
- description: Create modal dialog windows.
+ description: MUI.Modal - Create modal dialog windows.
 
- copyright: (c) 2010 Contributors in (/AUTHORS.txt).
+ copyright: (c) 2011 Contributors in (/AUTHORS.txt).
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 

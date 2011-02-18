@@ -5,9 +5,9 @@
 
  script: toolbar.js
 
- description: MUI - Creates a toolbar control.
+ description: MUI.Toolbar - Creates a toolbar control.
 
- copyright: (c) 2010 Contributors in (/AUTHORS.txt).
+ copyright: (c) 2011 Contributors in (/AUTHORS.txt).
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 

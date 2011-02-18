@@ -1,13 +1,13 @@
 /*
  ---
 
- name: ToolbarDock
+ name: Dock
 
- script: toolbardock.js
+ script: dock.js
 
- description: MUI - Creates a toolbar dock control.
+ description: MUI.Dock - Creates a toolbar dock control.
 
- copyright: (c) 2010 Contributors in (/AUTHORS.txt).
+ copyright: (c) 2011 Contributors in (/AUTHORS.txt).
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 
