@@ -430,7 +430,7 @@ MUI.append({
 					'cursor': Browser.webkit ? 'row-resize' : 'n-resize'
 				}).removeClass('detached');
 			} else {
-				instance.resize.detach();
+				if(instance.resize) instance.resize.detach();
 				instance.el.handle.setStyles({
 					'display': 'none',
 					'cursor': null

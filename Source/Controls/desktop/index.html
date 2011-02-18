@@ -20,6 +20,8 @@
 	<!--MOCHAUI-->
 	<script type="text/javascript" src="../../../Source/Core/core.js"></script>
 	<script type="text/javascript" src="../../../Source/Core/canvas.js"></script>
+	<script type="text/javascript" src="../../../Source/Core/create.js"></script>
+	<script type="text/javascript" src="../../../Source/Core/require.js"></script>
 	<script type="text/javascript" src="../../../Source/Core/content.js"></script>
 	<script type="text/javascript" src="../../../Source/Core/themes.js"></script>
 	<script type="text/javascript" src="../../../Source/Controls/desktop/desktop.js"></script>
@@ -92,9 +94,28 @@
 						}
 					]},
 					{name:'content',columns:[
-						{id: 'sideColumn1', placement: 'left', width: 205, resizeLimit: [100, 300] },
-						{id: 'mainColumn',	placement: 'main', resizeLimit: [100, 300]},
-						{id: 'sideColumn2',	placement: 'right', width: 220, resizeLimit: [200, 300]}
+						{id: 'mainColumn',	placement: 'main', panels:[
+							{
+								id: 'mainPanel',
+								title: 'Lorem Ipsum',
+								content: [
+									{url: '{demo}pages/lipsum.html'},
+									{
+										name: 'search',
+										position: 'header',
+										url: '{demo}pages/toolbar-search.html'
+									}
+								]
+							},
+							{
+								id: 'mochaConsole',
+								cssClass: 'mochaConsole',
+								title: 'Console',
+								height: 200,
+								content: []
+							}
+						]
+						}
 					]},
 					{name:'footer',content:'<div class="copyright">&copy; 2011 <a target="_blank" href="scripts/AUTHORS.txt" id="authorsLink">Various Contributors</a> - <a target="_blank" href="license.html" id="licenseLink">MIT License</a><div>',cssClass:'desktopFooter'}
 				]

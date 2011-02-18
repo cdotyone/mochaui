@@ -38,7 +38,7 @@ li.divider { margin-top: 2px; padding-top: 3px; border-top: 1px solid #ebebeb; }
 
 /* Panel Layout */
 /* Columns */
-.column { position: relative; float: left; overflow: hidden; /* Required by IE6 */ }
+.column { position: relative; overflow: hidden; /* Required by IE6 */ }
 
 /* Panels */
 .panel { position: relative; overflow: auto; background: #f8f8f8; border-bottom: 1px solid #b9b9b9; clear:both; }

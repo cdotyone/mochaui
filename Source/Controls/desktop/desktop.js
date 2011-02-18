@@ -93,6 +93,8 @@ MUI.Desktop = new NamedClass('MUI.Desktop', {
 						column.element = new Element('div', {'id':column.id}).inject(this.el.content);
 						column.control = 'MUI.Column';
 
+						if (section.columns.length > 1) column.element.setStyle('float', 'left');
+
 						// last column we want it to call the this.setDesktopSize
 						MUI.create(column);
 					}
