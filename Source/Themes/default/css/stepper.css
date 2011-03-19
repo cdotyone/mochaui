@@ -1,0 +1,53 @@
+/*
+ ---
+
+ file: stepper.css
+
+ description: MUI - stepper control css.
+
+ copyright: (c) 2011 André Fiedler <kontakt@visualdrugs.net>
+
+ license: MIT-style license in (/MIT-LICENSE.txt).
+
+ provides: css for default theme
+
+ ...
+ */
+
+/* stepper settings */
+fieldset.stepper { display: inline-block; padding: 0 0 0 10px; border:none; margin-right: 0; clear: left; }
+fieldset.stepper label { float: left; width: 200px; }
+fieldset.stepper { font-family:Helvetica,Arial,sans-serif;  }
+input.stepper { float: left; height: 23px; margin: 0; }
+fieldset div.stepperContainer { float: left; width: 15px; height: 20px; top: 5px; left: -2px; }
+fieldset a.stepperUp,
+fieldset a.stepperDown {
+    display: inline-block;
+    width: 15px;
+    height: 10px;
+    text-align: center;
+    font-size: 11px;
+    line-height: 9px;
+    font-family: Courier, monospace;
+    text-decoration: none;
+    color: white;
+    background: #97989b;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#b8bbbf), to(#8d8f92));
+    background: -moz-linear-gradient(0% 90% 90deg, #8d8f92, #b8bbbf);
+    border: solid 1px #595959;
+    cursor: pointer;
+}
+fieldset a.stepperDown { line-height: 7px; border-top: none; }
+fieldset a.stepperUp:hover,
+fieldset a.stepperDown:hover {
+    background: #718ba6;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#7995b3), to(#576a80));
+    background: -moz-linear-gradient(0% 90% 90deg, #576a80, #7995b3);
+}
+fieldset a.stepperUp.disabled,
+fieldset a.stepperDown.disabled {
+    background: #EFEFEF;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#EFEFEF), to(#666666));
+    background: -moz-linear-gradient(0% 90% 90deg, #666666, #EFEFEF);
+}
+/* stepper settings */
