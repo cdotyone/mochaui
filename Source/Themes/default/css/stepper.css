@@ -20,8 +20,8 @@ fieldset.stepper label { float: left; width: 200px; }
 fieldset.stepper { font-family:Helvetica,Arial,sans-serif;  }
 input.stepper { float: left; height: 23px; margin: 0; }
 fieldset div.stepperContainer { float: left; width: 15px; height: 20px; top: 5px; left: -2px; }
-fieldset a.stepperUp,
-fieldset a.stepperDown {
+fieldset div.stepperUp,
+fieldset div.stepperDown {
     display: inline-block;
     width: 15px;
     height: 10px;
@@ -29,27 +29,29 @@ fieldset a.stepperDown {
     font-size: 11px;
     line-height: 9px;
     font-family: Courier, monospace;
-    text-decoration: none;
     color: white;
     border: solid 1px #595959;
     cursor: pointer;
     background: #97989b;
     background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#b8bbbf), to(#8d8f92));
     background: -moz-linear-gradient(0% 90% 90deg, #8d8f92, #b8bbbf);
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
 }
-fieldset a.stepperDown { line-height: 7px; border-top: none; }
-fieldset a.stepperUp:hover,
-fieldset a.stepperDown:hover {
+fieldset div.stepperDown { line-height: 7px; border-top: none; }
+fieldset div.stepperUp.over,
+fieldset div.stepperDown.over {
     background: #718ba6;
     background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#7995b3), to(#576a80));
     background: -moz-linear-gradient(0% 90% 90deg, #576a80, #7995b3);
 }
-fieldset a.stepperUp.active,
-fieldset a.stepperDown.active {
+fieldset div.stepperUp.active,
+fieldset div.stepperDown.active {
     background: #718ba6;
 }
-fieldset a.stepperUp.disabled,
-fieldset a.stepperDown.disabled {
+fieldset div.stepperUp.disabled,
+fieldset div.stepperDown.disabled {
     border-color: #9C9DA6;
     cursor: default;
     background: #EFEFEF;
