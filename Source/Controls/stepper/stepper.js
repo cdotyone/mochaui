@@ -7,7 +7,7 @@
 
  description: MUI - Creates a stepper control. Defaults to numeric stepper.
 
- copyright: (c) 2011 AndrÃ© Fiedler <kontakt@visualdrugs.net>
+ copyright: (c) 2011 André Fiedler <kontakt@visualdrugs.net>
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 
