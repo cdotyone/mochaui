@@ -193,10 +193,10 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
 			}.bind(this),
 			'mousedown': function(e) {
 				this.aLastValue = this.lastValue;
-				this.aiDelay = this.startAutoIncrement.delay(500, this);
+				this.aDelay = this.startAutoIncrement.delay(500, this);
 			}.bind(this),
 			'mouseup': function(e) {
-				clearTimeout(this.aiDelay);
+				clearTimeout(this.aDelay);
 				this.stopAutoIncrement();
 			}.bind(this)
 		});
@@ -209,10 +209,10 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
 			}.bind(this),
 			'mousedown': function(e) {
 				this.aLastValue = this.lastValue;
-				this.adDelay = this.startAutoDecrement.delay(400, this);
+				this.aDelay = this.startAutoDecrement.delay(400, this);
 			}.bind(this),
 			'mouseup': function(e) {
-				clearTimeout(this.adDelay);
+				clearTimeout(this.aDelay);
 				this.stopAutoDecrement();
 			}.bind(this)
 		});
@@ -285,26 +285,26 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
 	startAutoIncrement: function(value) {
 		var iterator = this.options.iterator;
 
-		this.aiInterval = function() {
+		this.aInterval = function() {
 			if(iterator.hasNext())
 				this.setValue(iterator.next());
 		}.periodical(150, this);
 	},
 	
 	stopAutoIncrement: function(value) {
-		clearInterval(this.aiInterval);
+		clearInterval(this.aInterval);
 	},
 	
 	startAutoDecrement: function(value) {
 		var iterator = this.options.iterator;
 
-		this.adInterval = function() {
+		this.aInterval = function() {
 			if(iterator.hasPrevious())
 				this.setValue(iterator.previous());
 		}.periodical(150, this);
 	},
 	
 	stopAutoDecrement: function(value) {
-		clearInterval(this.adInterval);
+		clearInterval(this.aInterval);
 	}
 });
