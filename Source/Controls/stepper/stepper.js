@@ -70,7 +70,6 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
                 });
             } else {
                 this.options.iterator = new MUI.StepperIterator();
-                this.attachEvents();
             }
         }
 
