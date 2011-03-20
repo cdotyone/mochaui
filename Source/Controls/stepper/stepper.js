@@ -133,14 +133,12 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
             'class': options.cssClass + 'Container'
         }).inject(this.el.input, 'after');
 
-        this.el.up = new Element('a', {
-            'href': '#',
+        this.el.up = new Element('div', {
             'class': options.cssClass + 'Up',
             'text': '+'
         }).inject(this.el.stepperContainer);
 
-        this.el.down = new Element('a', {
-            'href': '#',
+        this.el.down = new Element('div', {
             'class': options.cssClass + 'Down',
             'text': '-'
         }).inject(this.el.stepperContainer);
@@ -208,6 +206,12 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
                 this.stopAutoIncrement();
                 this.el.up.removeClass('active');
             }.bind(this),
+            'mouseenter': function(e){
+                this.addClass('over');
+            },
+            'mouseleave': function(e){
+                this.removeClass('over')
+            },
             'mousewheel': this.onMouseWheel.bind(this)
         });
 
@@ -227,6 +231,12 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
                 this.stopAutoDecrement();
                 this.el.down.removeClass('active');
             }.bind(this),
+            'mouseenter': function(e){
+                this.addClass('over');
+            },
+            'mouseleave': function(e){
+                this.removeClass('over')
+            },
             'mousewheel': this.onMouseWheel.bind(this)
         });
 
