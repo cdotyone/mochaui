@@ -60,11 +60,11 @@ MUI.StepperIterator = new NamedClass('MUI.StepperIterator', {
     
     next: function() {
         this.index++;
-        return this.index;
+        return this.current();
     },
     
     previous: function() {
         this.index--;
-        return this.index;
+        return this.current();
     }
 });
