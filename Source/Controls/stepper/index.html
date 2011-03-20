@@ -44,8 +44,8 @@
                 var minutes = this.index * 15;
                 var h = (minutes / 60).toInt();
                 var m = (minutes % 60).toInt();
-                h = h < 9 ? '0' + h : h;
-                m = m < 9 ? '0' + m : m;
+                h = h < 10 ? '0' + h : h;
+                m = m < 10 ? '0' + m : m;
                 return h + ':' + m;
             },
             
