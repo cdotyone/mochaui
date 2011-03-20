@@ -185,8 +185,11 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
             this.setValue(value);
         }.bind(this));
 
-        this.el.input.addEvent('change', function() {
-            self.setValue(this.get('value'));
+        this.el.input.addEvents({
+            'change': function() {
+                self.setValue(this.get('value'));
+            },
+            'mousewheel': this.onMouseWheel.bind(this)
         });
         
         this.el.up.addEvents({
@@ -204,7 +207,8 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
                 clearTimeout(this.aDelay);
                 this.stopAutoIncrement();
                 this.el.up.removeClass('active');
-            }.bind(this)
+            }.bind(this),
+            'mousewheel': this.onMouseWheel.bind(this)
         });
 
         this.el.down.addEvents({
@@ -222,7 +226,8 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
                 clearTimeout(this.aDelay);
                 this.stopAutoDecrement();
                 this.el.down.removeClass('active');
-            }.bind(this)
+            }.bind(this),
+            'mousewheel': this.onMouseWheel.bind(this)
         });
 
         this.eventsAttached = true;
@@ -314,5 +319,23 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
     
     stopAutoDecrement: function(value) {
         clearInterval(this.aInterval);
+    },
+    
+    onMouseWheel: function(e){
+        if(!this.mWheelNext){
+            this.mWheelNext = true;
+            (function(){
+                var iterator = this.options.iterator;
+                this.mWheelNext = false;
+                if (e.wheel > 0) { // Mousewheel up
+                    if(iterator.hasNext())
+                        iterator.next();
+                }
+                else if (e.wheel < 0) { // Mousewheel down
+                    if(iterator.hasPrevious())
+                        iterator.previous();
+                }
+            }.bind(this)).delay(100); // slow down
+        }
     }
 });
