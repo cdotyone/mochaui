@@ -31,11 +31,11 @@ fieldset a.stepperDown {
     font-family: Courier, monospace;
     text-decoration: none;
     color: white;
+    border: solid 1px #595959;
+    cursor: pointer;
     background: #97989b;
     background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#b8bbbf), to(#8d8f92));
     background: -moz-linear-gradient(0% 90% 90deg, #8d8f92, #b8bbbf);
-    border: solid 1px #595959;
-    cursor: pointer;
 }
 fieldset a.stepperDown { line-height: 7px; border-top: none; }
 fieldset a.stepperUp:hover,
@@ -46,8 +46,10 @@ fieldset a.stepperDown:hover {
 }
 fieldset a.stepperUp.disabled,
 fieldset a.stepperDown.disabled {
+    border-color: #9C9DA6;
+    cursor: default;
     background: #EFEFEF;
-    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#EFEFEF), to(#666666));
-    background: -moz-linear-gradient(0% 90% 90deg, #666666, #EFEFEF);
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#EFEFEF), to(#CCC));
+    background: -moz-linear-gradient(0% 90% 90deg, #CCC, #EFEFEF);
 }
 /* stepper settings */
