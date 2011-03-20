@@ -225,7 +225,7 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
     drawUpdate: function() {
         var iterator = this.options.iterator;
 
-        if(!iterator)
+        if(!iterator || !this.el.up || !this.el.down)
             return this;
 
         if(iterator.hasNext())
@@ -274,7 +274,7 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
             this.lastValue = value;
             iterator.set(value); // set the value of the iterator
             this.el.input.set('value', value); // set the value in the input field
-            
+            this.drawUpdate();
             this.fireEvent('change', [value]);
         } else {
             this.el.input.set('value', this.lastValue); // reset the input field
