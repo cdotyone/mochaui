@@ -27,43 +27,44 @@
  */
 
 MUI.StepperIterator = new NamedClass('MUI.StepperIterator', {
-    
-    index: 0,
-    
-    rewind: function(){
-        this.index = 0;
-    },
-    
-    set: function(value){
-        this.index = value.toInt();
-    },
-    
-    validate: function(value){
-        if(typeOf(value) === 'integer') return true;
-        var intv = parseInt(value, 10);
-        var floatv = parseFloat(value, 10);
-        return !isNaN(intv) && (floatv == intv);
-    },
- 
-    current: function(){
-        return this.index;
-    },
- 
-    hasNext: function(){
-        return true;
-    },
- 
-    hasPrevious: function(){
-        return true;
-    },
- 
-    next: function(){
-        this.index++;
-        return this.index;
-    },
- 
-    previous: function(){
-        this.index--;
-        return this.index;
-    }
+
+	index: 0,
+
+	rewind: function() {
+		this.index = 0;
+	},
+	
+	set: function(value) {
+		this.index = value.toInt();
+	},
+	
+	validate: function(value) {
+		if(typeOf(value) === 'integer')
+			return true;
+		var intv = parseInt(value, 10);
+		var floatv = parseFloat(value, 10);
+		return !isNaN(intv) && (floatv == intv);
+	},
+	
+	current: function() {
+		return this.index;
+	},
+	
+	hasNext: function() {
+		return true;
+	},
+	
+	hasPrevious: function() {
+		return true;
+	},
+	
+	next: function() {
+		this.index++;
+		return this.index;
+	},
+	
+	previous: function() {
+		this.index--;
+		return this.index;
+	}
 });
