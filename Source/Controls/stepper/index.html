@@ -31,7 +31,7 @@
             set: function(value) {
                 var values = value.match(/^(\d{2}):(\d{2})$/);
                 var minutes = values[1].toInt() * 60 + values[2].toInt();
-                this.index = (minutes / 15).toInt();
+                return this.parent((minutes / 15).toInt());
             },
             
             validate: function(value) {
