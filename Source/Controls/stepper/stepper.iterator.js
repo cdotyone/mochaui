@@ -28,14 +28,21 @@
 
 MUI.StepperIterator = new NamedClass('MUI.StepperIterator', {
 
+    Implements: Events,
+
     index: 0,
 
     rewind: function() {
         this.index = 0;
     },
     
-    set: function(value) {
-        this.index = value.toInt();
+    set: function(index) {
+        index = index.toInt();
+        if(index !== this.index) {
+            this.index = index;
+            this.fireEvent('change', [this.current()]);
+        }
+        return this;
     },
     
     validate: function(value) {
@@ -60,11 +67,13 @@ MUI.StepperIterator = new NamedClass('MUI.StepperIterator', {
     
     next: function() {
         this.index++;
-        return this.current();
+        this.fireEvent('change', [this.current()]);
+        return this;
     },
     
     previous: function() {
         this.index--;
-        return this.current();
+        this.fireEvent('change', [this.current()]);
+        return this;
     }
 });

@@ -180,15 +180,20 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
 
         if(!iterator)
             return this;
+            
+        iterator.addEvent('change', function(value){
+            this.setValue(value);
+        }.bind(this));
 
         this.el.input.addEvent('change', function() {
             self.setValue(this.get('value'));
         });
+        
         this.el.up.addEvents({
             'click': function(e) {
                 e.stop();
                 if(this.aLastValue == this.lastValue && iterator.hasNext())
-                    this.setValue(iterator.next());
+                    iterator.next();
             }.bind(this),
             'mousedown': function(e) {
                 this.aLastValue = this.lastValue;
@@ -204,7 +209,7 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
             'click': function(e) {
                 e.stop();
                 if(this.aLastValue == this.lastValue && iterator.hasPrevious())
-                    this.setValue(iterator.previous());
+                    iterator.previous();
             }.bind(this),
             'mousedown': function(e) {
                 this.aLastValue = this.lastValue;
@@ -286,7 +291,7 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
 
         this.aInterval = function() {
             if(iterator.hasNext())
-                this.setValue(iterator.next());
+                iterator.next();
         }.periodical(150, this);
     },
     
@@ -299,7 +304,7 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
 
         this.aInterval = function() {
             if(iterator.hasPrevious())
-                this.setValue(iterator.previous());
+                iterator.previous();
         }.periodical(150, this);
     },
     
