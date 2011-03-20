@@ -7,7 +7,7 @@
 
  description: MUI - Iterator used by MUI.Stepper.
 
- copyright: (c) 2011 AndrÃ© Fiedler <kontakt@visualdrugs.net>
+ copyright: (c) 2011 André Fiedler <kontakt@visualdrugs.net>
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 
