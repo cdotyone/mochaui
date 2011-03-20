@@ -44,6 +44,10 @@ fieldset a.stepperDown:hover {
     background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#7995b3), to(#576a80));
     background: -moz-linear-gradient(0% 90% 90deg, #576a80, #7995b3);
 }
+fieldset a.stepperUp.active,
+fieldset a.stepperDown.active {
+    background: #718ba6;
+}
 fieldset a.stepperUp.disabled,
 fieldset a.stepperDown.disabled {
     border-color: #9C9DA6;

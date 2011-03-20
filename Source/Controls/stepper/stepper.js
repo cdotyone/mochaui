@@ -198,10 +198,12 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
             'mousedown': function(e) {
                 this.aLastValue = this.lastValue;
                 this.aDelay = this.startAutoIncrement.delay(500, this);
+                this.el.up.addClass('active');
             }.bind(this),
             'mouseup': function(e) {
                 clearTimeout(this.aDelay);
                 this.stopAutoIncrement();
+                this.el.up.removeClass('active');
             }.bind(this)
         });
 
@@ -214,10 +216,12 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
             'mousedown': function(e) {
                 this.aLastValue = this.lastValue;
                 this.aDelay = this.startAutoDecrement.delay(400, this);
+                this.el.down.addClass('active');
             }.bind(this),
             'mouseup': function(e) {
                 clearTimeout(this.aDelay);
                 this.stopAutoDecrement();
+                this.el.down.removeClass('active');
             }.bind(this)
         });
 
