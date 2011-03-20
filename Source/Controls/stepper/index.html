@@ -18,10 +18,14 @@
     
        var Demo = Demo || {};
 
-        new MUI.Stepper({
+        var numericStepper = new MUI.Stepper({
             container: 'page1',
             id: 'stepper1',
             value: 0
+        });
+        
+        numericStepper.addEvent('validationFailed', function(value){
+            alert('Ooops! Please input intergers only!');
         });
         
         Demo.TimeIterator = new NamedClass('Demo.TimeIterator', {
@@ -54,12 +58,16 @@
             }
         });
         
-        new MUI.Stepper({
+        var timeStepper = new MUI.Stepper({
             container: 'page2',
             id: 'stepper2',
             formTitle: 'Time',
             value: '00:00',
             iterator: new Demo.TimeIterator()
+        });
+        
+        timeStepper.addEvent('validationFailed', function(value){
+            alert('Ooops! Please format your input like HH:MM !');
         });
 
     </script>
