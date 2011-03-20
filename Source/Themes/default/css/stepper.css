@@ -35,8 +35,8 @@ fieldset div.stepperDown {
     background: #97989b;
     background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#b8bbbf), to(#8d8f92));
     background: -moz-linear-gradient(0% 90% 90deg, #8d8f92, #b8bbbf);
+    -webkit-user-select: none;
     -moz-user-select: none;
-    -khtml-user-select: none;
     user-select: none;
 }
 fieldset div.stepperDown { line-height: 7px; border-top: none; }
