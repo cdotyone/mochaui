@@ -41,7 +41,7 @@
             },
             
             current: function() {
-                var minutes = this.index * 15;
+                var minutes = this.parent() * 15;
                 var h = (minutes / 60).toInt();
                 var m = (minutes % 60).toInt();
                 h = h < 10 ? '0' + h : h;
