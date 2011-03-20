@@ -337,14 +337,25 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
             (function(){
                 var iterator = this.options.iterator;
                 this.mWheelNext = false;
-                if (e.wheel > 0) { // Mousewheel up
-                    if(iterator.hasNext())
+                if(e.wheel > 0) { // Mousewheel up
+                    if(iterator.hasNext()) {
                         iterator.next();
+                        this.el.up.addClass('active'); // show direction indicator
+                        this.el.down.removeClass('active');
+                    }
                 }
-                else if (e.wheel < 0) { // Mousewheel down
-                    if(iterator.hasPrevious())
+                else if(e.wheel < 0) { // Mousewheel down
+                    if(iterator.hasPrevious()) {
                         iterator.previous();
+                        this.el.down.addClass('active'); // show direction indicator
+                        this.el.up.removeClass('active');
+                    }
                 }
+                clearTimeout(this.mWheelIndicator);
+                this.mWheelIndicator = (function(){
+                    this.el.up.removeClass('active');
+                    this.el.down.removeClass('active');
+                }.bind(this)).delay(200); // remove direction indicator
             }.bind(this)).delay(100); // slow down
         }
     }
