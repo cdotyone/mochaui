@@ -274,6 +274,8 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
 			this.lastValue = value;
 			iterator.set(value); // set the value of the iterator
 			this.el.input.set('value', value); // set the value in the input field
+			
+			this.fireEvent('change', [value]);
 		} else {
 			this.el.input.set('value', this.lastValue); // reset the input field
 		}
