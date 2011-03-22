@@ -18,7 +18,15 @@
 fieldset.stepper { display: inline-block; padding: 0 0 0 10px; border:none; margin-right: 0; clear: left; }
 fieldset.stepper label { float: left; width: 200px; }
 fieldset.stepper { font-family:Helvetica,Arial,sans-serif;  }
-input.stepper { float: left; height: 19px; margin: 0; }
+input.stepper { float: left; height: 19px; margin: 0; border: 1px solid #000; border-right: none; padding: 1px;
+	background: #525252;
+	-webkit-border-top-left-radius: 3px;
+	-webkit-border-bottom-left-radius: 3px;
+	-moz-border-radius-topleft: 3px;
+	-moz-border-radius-bottomleft: 3px;
+	border-top-left-radius: 3px;
+	border-bottom-left-radius: 3px;
+}
 fieldset div.stepperContainer { float: left; width: 15px; height: 20px; top: 5px; left: -2px; padding: 0; margin: 0; }
 fieldset div.stepperUp,
 fieldset div.stepperDown {
@@ -30,12 +38,13 @@ fieldset div.stepperDown {
     font-size: 11px;
     line-height: 9px;
     font-family: Courier, monospace;
-    color: white;
-    border: solid 1px #595959;
+    color: #808080;
+    border: solid 1px #000;
     cursor: pointer;
+	text-shadow: 0 0 2px #000;
     background: #97989b;
-    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#b8bbbf), to(#8d8f92));
-    background: -moz-linear-gradient(0% 90% 90deg, #8d8f92, #b8bbbf);
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#404040), to(#292929));
+    background: -moz-linear-gradient(0% 90% 90deg, #292929, #404040);
     -webkit-user-select: none;
     -moz-user-select: none;
     user-select: none;
@@ -43,20 +52,21 @@ fieldset div.stepperDown {
 fieldset div.stepperDown { line-height: 7px; border-top: none; }
 fieldset div.stepperUp.over,
 fieldset div.stepperDown.over {
-    background: #718ba6;
-    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#7995b3), to(#576a80));
-    background: -moz-linear-gradient(0% 90% 90deg, #576a80, #7995b3);
+	color: #999;
+    background: #424242;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#595959), to(#424242));
+    background: -moz-linear-gradient(0% 90% 90deg, #424242, #595959);
 }
 fieldset div.stepperUp.active,
 fieldset div.stepperDown.active {
-    background: #718ba6;
+    background: #424242;
 }
 fieldset div.stepperUp.disabled,
 fieldset div.stepperDown.disabled {
-    border-color: #9C9DA6;
     cursor: default;
-    background: #EFEFEF;
-    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#EFEFEF), to(#CCC));
-    background: -moz-linear-gradient(0% 90% 90deg, #CCC, #EFEFEF);
+    color: #3d3d3d;
+    background: #333;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#333), to(#1e1e1e));
+    background: -moz-linear-gradient(0% 90% 90deg, #1e1e1e, #333);
 }
 /* stepper settings */
