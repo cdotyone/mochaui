@@ -1,0 +1,37 @@
+/*
+ ---
+
+ file: pager.css
+
+ description: css for pager toolbar control
+
+ copyright: (c) 2011 Contributors in (/AUTHORS.txt).
+
+ license: MIT-style license in (/MIT-LICENSE.txt).
+
+ provides: css for default theme
+
+ ...
+ */
+
+.pager { background: url(../images/bg-panel-header.gif) repeat-x 0 -1px; overflow: hidden; white-space: nowrap; }
+.pager .Group { float: left; background: none; height: 24px; margin: 0 0; }
+.pager .Separator { height: 19px; float:left; }
+
+/* Text */
+.pager .Status { position: relative; top: 5px; overflow: visible; font-size: 10px; color: #777777; }
+
+/* Buttons */
+.pager .Button { float: left; width: 16px; height: 16px; border: 0; cursor: pointer; overflow: hidden; margin-top: 3px; padding:0 }
+.pager .Button:hover { background-position: -16px 0; }
+.pager .First { background: url(../images/pager-first.gif) no-repeat; }
+.pager .Prev { background: url(../images/pager-prev.gif) no-repeat; }
+.pager .Next { background: url(../images/pager-next.gif) no-repeat; }
+.pager .Last { background: url(../images/pager-last.gif) no-repeat; }
+.pager .Reload { background: url(../images/pager-refresh.png) no-repeat; }
+.pager .Reload.Loading { background: url(../images/pager-refresh-loading.gif) no-repeat; background-position: 0 0 !important; }
+
+/* Form Elements */
+.pager select { font-size: 10px; margin-top: 2px; }
+.pager input { vertical-align: text-top; position: relative; top: -2px; font-size: 10px; }
+

@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=8"/>
+
+	<title>MochaUI - A Web Applications User Interface Library</title>
+	<meta name="description"
+		  content="A web applications user interface library built on the Mootools JavaScript framework"/>
+
+	<link rel="stylesheet" type="text/css" href="../../../Source/Themes/charcoal/css/core.css"/>
+	<link rel="stylesheet" type="text/css" href="../../../Source/Themes/charcoal/css/desktop.css"/>
+	<link rel="stylesheet" type="text/css" href="../../../Source/Themes/charcoal/css/pager.css"/>
+
+	<!--[if IE]>
+	<script type="text/javascript" src="../../../Demo/scripts/excanvas_r43.js"></script>
+	<![endif]-->
+	<script type="text/javascript" src="../../../Demo/scripts/mootools-1.3.0-core-nocompat-yc.js"></script>
+	<script type="text/javascript" src="../../../Demo/scripts/mootools-1.3.0-more-yc.js"></script>
+
+	<!--MOCHAUI-->
+	<script type="text/javascript" src="../../../Source/Core/core.js"></script>
+	<script type="text/javascript" src="../../../Source/Core/canvas.js"></script>
+	<script type="text/javascript" src="../../../Source/Core/create.js"></script>
+	<script type="text/javascript" src="../../../Source/Core/require.js"></script>
+	<script type="text/javascript" src="../../../Source/Core/content.js"></script>
+	<script type="text/javascript" src="../../../Source/Core/persist.js"></script>
+	<script type="text/javascript" src="../../../Source/Core/themes.js"></script>
+	<script type="text/javascript" src="../../../Source/Controls/desktop/desktop.js"></script>
+	<script type="text/javascript" src="../../../Source/Controls/pager/pager.js"></script>
+	<!--MOCHAUI-->
+
+	<script type="text/javascript">
+		MUI.initialize({'theme':'charcoal'});
+		MUI.options.path.root = '../../../';
+		MUI.options.path.demo = '{root}Demo/';
+
+		var writeConsole = function(message){
+			var d = new Date().format('%H:%M:%S: ');
+			if ($('mochaConsole_pad')) new Element('div', {text: d + message}).inject('mochaConsole_pad', 'top');
+		};
+
+		window.addEvent('load', function(){
+			new MUI.Desktop({
+				'id':'desktop',
+				'content':[
+					{name:'nav',control:'MUI.Dock',cssClass:'desktopNav',docked:[
+						{name: 'menu', position: 'header', control: 'MUI.Menu',
+							items:[
+								{text:'File',items:[
+									{text:'Open',items:[]}
+								]}
+							]
+						}
+					]},
+					{name:'content',columns:[
+						{id: 'mainColumn',	placement: 'main', panels:[
+							{
+								id: 'mainPanel',
+								title: 'Lorem Ipsum',
+								content: [
+									{url: '{demo}pages/lipsum.html'},
+									{control: 'MUI.Pager',position:'header'
+										,onDrawBegin:		 function(){ writeConsole.delay(1000, this, 'onDrawBegin: Control Event: drawing of control started');}
+										,onDrawEnd:			 function(){ writeConsole.delay(1000, this, 'onDrawEnd: Control Event: drawing of control finished, and it is attached to DOM');}
+										,onPagingOptions:	 function(){ writeConsole('onPagingOptions: Control Event: fired when the paging options are being set from another control');}
+										,onStatusChange:	 function(){ writeConsole.delay(1000, this, 'onStatusChange: Control Event: fired when the status text has changed');}
+										,onPageSize:		 function(){ writeConsole('onPageSize: User Event: User changed the page size');}
+										,onFirst:			 function(){ writeConsole('onFirst: User Event: User clicked first record button'); }
+										,onPrev:			 function(){ writeConsole('onPrev: User Event: User clicked previous record button');}
+										,onNext:			 function(){ writeConsole('onNext: User Event: User clicked next record button');}
+										,onLast:			 function(){ writeConsole('onLast: User Event: User clicked last record button');}
+										,onReload:			 function(){ writeConsole('onReload: User Event: User clicked reload records button'); this.stopReload.delay(5000,this); }
+									}
+								]
+							},
+							{
+								id: 'mochaConsole',
+								cssClass: 'mochaConsole',
+								title: 'Console',
+								height: 200,
+								content: []
+							}
+						]
+						}
+					]}
+				]
+			});
+		});
+	</script>
+</head>
+<body>
+
+<div id="desktop">
+</div>
+
+</body>
+</html>
