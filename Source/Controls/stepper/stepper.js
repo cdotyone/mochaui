@@ -47,6 +47,10 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
         hasTitle:            true
         //formTitle:         '',         // defaults to the id of this field
         //value:             '',         // current date in text form
+
+		//onDrawBegin:null				// event: called when stepper is just starting to be drawn
+		//onDrawEnd:null				// event: called when stepper is has just finished drawing
+		//onValidationFailed:null		// event; called when the value keyed in by user is invalid
     },
 
     initialize: function(options) {
@@ -78,10 +82,10 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
     },
     
     draw: function(container) {
+		this.fireEvent('drawBegin', [this]);
+
         var options = this.options; // local var options for better js compression
-        var iterator = options.iterator; // local var options for better js compression
-        if (!container)
-            container = options.container;
+        if (!container) container = options.container;
 
         // look for a fieldset that contains the input field
         var isNew = false;
@@ -156,6 +160,7 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
                     container.empty();
                 this.el.element.inject(container);
             }
+			this.fireEvent('drawEnd', [this]);
             return this;
         }.bind(this);
         if (!isNew || typeOf(container) === 'element')
@@ -202,15 +207,15 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
                 this.aDelay = this.startAutoIncrement.delay(500, this);
                 this.el.up.addClass('active');
             }.bind(this),
-            'mouseup': function(e) {
+            'mouseup': function() {
                 clearTimeout(this.aDelay);
                 this.stopAutoIncrement();
                 this.el.up.removeClass('active');
             }.bind(this),
-            'mouseenter': function(e){
+            'mouseenter': function(){
                 this.addClass('over');
             },
-            'mouseleave': function(e){
+            'mouseleave': function(){
                 this.removeClass('over')
             },
             'mousewheel': this.onMouseWheel.bind(this)
@@ -228,15 +233,15 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
                 this.aDelay = this.startAutoDecrement.delay(400, this);
                 this.el.down.addClass('active');
             }.bind(this),
-            'mouseup': function(e) {
+            'mouseup': function() {
                 clearTimeout(this.aDelay);
                 this.stopAutoDecrement();
                 this.el.down.removeClass('active');
             }.bind(this),
-            'mouseenter': function(e){
+            'mouseenter': function(){
                 this.addClass('over');
             },
-            'mouseleave': function(e){
+            'mouseleave': function(){
                 this.removeClass('over')
             },
             'mousewheel': this.onMouseWheel.bind(this)
@@ -307,7 +312,7 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
         return this;
     },
     
-    startAutoIncrement: function(value) {
+    startAutoIncrement: function() {
         var iterator = this.options.iterator;
 
         this.aInterval = function() {
@@ -316,11 +321,11 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
         }.periodical(150, this);
     },
     
-    stopAutoIncrement: function(value) {
+    stopAutoIncrement: function() {
         clearInterval(this.aInterval);
     },
     
-    startAutoDecrement: function(value) {
+    startAutoDecrement: function() {
         var iterator = this.options.iterator;
 
         this.aInterval = function() {
@@ -329,7 +334,7 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
         }.periodical(150, this);
     },
     
-    stopAutoDecrement: function(value) {
+    stopAutoDecrement: function() {
         clearInterval(this.aInterval);
     },
     

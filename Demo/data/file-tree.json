@@ -12,6 +12,7 @@
 			{'value':'pibLink','text':'Image Button','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.imageButtonBuilder'},
 			{'value':'pogLink','text':'Grid','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.gridBuilder'},
 			{'value':'pslLink','text':'Select List','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.selectListBuilder'},
+			{'value':'pstpLink','text':'Stepper','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.stepperBuilder'},
 			{'value':'ptaLink','text':'Text Area','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.textAreaBuilder'},
 			{'value':'ptbLink','text':'Text Box','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.textBoxBuilder'},
 			{'value':'ptreeLink','text':'Tree','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.treeBuilder'}
@@ -31,6 +32,7 @@
 			{'value':'wibLink','text':'Image Button','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.imageButtonBuilder'},
 			{'value':'wogLink','text':'Grid','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.gridBuilder'},
 			{'value':'wslLink','text':'Select List','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.selectListBuilder'},
+			{'value':'wstpLink','text':'Stepper','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.stepperBuilder'},
 			{'value':'wtaLink','text':'Text Area','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.textAreaBuilder'},
 			{'value':'wtbLink','text':'Text Box','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.textBoxBuilder'},
 			{'value':'wtreeLink','text':'Tree','isChecked': false,'isSelected': false, 'image':'_doc', 'registered':'Demo.treeBuilder'}

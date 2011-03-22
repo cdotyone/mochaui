@@ -296,7 +296,7 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 	},
 
 	updateStart: function(content){
-		options.content.loadMethod = MUI.getDefaultJsonProvider(options.content.loadMethod);
+		this.options.content.loadMethod = MUI.getDefaultJsonProvider(this.options.content.loadMethod);
 	},
 
 	updateEnd: function(content){
