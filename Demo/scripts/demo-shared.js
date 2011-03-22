@@ -306,7 +306,7 @@ Object.append(Demo, {
 			id: node.value + 'stepper2',
 			formTitle: 'Time',
 			value: '00:00',
-			onDrawBegin:function() {
+			onDrawBegin:function(){
 				Demo.TimeIterator = new NamedClass('Demo.TimeIterator', {
 
 					Extends: MUI.StepperIterator,
@@ -336,7 +336,7 @@ Object.append(Demo, {
 						return this.index > 0;
 					}
 				});
-				this.options.iterator = new Demo.TimeIterator(); 
+				this.options.iterator = new Demo.TimeIterator();
 			},
 			onValidationFailed:	function(){
 				alert('Ooops! Please format your input like HH:MM !');
@@ -362,8 +362,7 @@ Object.append(Demo, {
 			if (s.length < 2) s[1] = ttype;
 			MUI.create({control: 'MUI.TextBox', container: div, id: node.value + t, formTitle: s[1].capitalize(), maskType: t, autoTab: true});
 		});
-	}
-	,
+	},
 
 	treeBuilder: function(e, node){
 		var container = Demo.getDemoContainer(node);
@@ -382,8 +381,7 @@ Object.append(Demo, {
 				Demo.writeConsole(self.options.id + ' receieved onNodeSelected command on node ' + node.value)
 			}
 		});
-	}
-	,
+	},
 
 	calendarBuilder: function(e, node){
 		var container = Demo.getDemoContainer(node);
@@ -398,8 +396,7 @@ Object.append(Demo, {
 				MUI.create({control: 'MUI.Calendar', id: 'date1', format: 'm/d/Y', direction: 1, tweak: {x: 6, y: 0}});
 			}
 		});
-	}
-	,
+	},
 
 	splitWindow: function(){
 		new MUI.Window({
@@ -446,8 +443,7 @@ Object.append(Demo, {
 
 			}
 		});
-	}
-	,
+	},
 
 	// Examples > Tests
 	serverResponseWindow: function(response){
@@ -457,8 +453,7 @@ Object.append(Demo, {
 			width: 350,
 			height: 350
 		});
-	}
-	,
+	},
 
 	eventsWindow: function(){
 		new MUI.Window({
@@ -498,8 +493,7 @@ Object.append(Demo, {
 				Demo.writeConsole('Window drag complete.');
 			}
 		});
-	}
-	,
+	},
 
 	iframeTestsWindow: function(){
 		new MUI.Window({
@@ -522,8 +516,7 @@ Object.append(Demo, {
 				document.testForm.focusTest.focus();
 			}
 		});
-	}
-	,
+	},
 
 	accordionBuilder: function(e, node){
 		var container = Demo.getDemoContainer(node, true);
@@ -535,8 +528,7 @@ Object.append(Demo, {
 			content: {url: 'data/accordion-demo.json', loadMethod: 'json'}
 		});
 
-	}
-	,
+	},
 
 	noCanvasWindow: function(){
 		new MUI.Window({
@@ -551,8 +543,7 @@ Object.append(Demo, {
 			useCanvas: false,
 			useCSS3: false
 		});
-	}
-	,
+	},
 
 	css3Window: function(){
 		new MUI.Window({
@@ -566,8 +557,7 @@ Object.append(Demo, {
 			useCanvas: false,
 			useCSS3: true
 		});
-	}
-	,
+	},
 
 	css3fallbackWindow: function(){
 		new MUI.Window({
@@ -580,36 +570,32 @@ Object.append(Demo, {
 			useCanvas: true,
 			useCSS3: true
 		});
-	}
-	,
+	},
 
 	modalCount: 0,
-	createModal
-			:
-			function(){
-				Demo.modalCount++;
-				var content = 'Your modal window content';
-				if (Demo.modalCount < 3) content += '<br/><br/><a id="createModal' + Demo.modalCount + '">Create Another Modal</a>';
-				new MUI.Modal({
-					id: 'modalDemo' + Demo.modalCount,
-					title: 'A Modal Window ' + Demo.modalCount,
-					content: content,
-					width: 400,
-					height: 250,
-					x:70 + (Demo.modalCount * 30),
-					y:70 + (Demo.modalCount * 30),
-					onClose:function(){
-						Demo.modalCount--;
-					},
-					onLoaded:function(){
-						if ($('createModal' + Demo.modalCount)) $('createModal' + Demo.modalCount).addEvent('click', function(e){
-							e.stop();
-							Demo.createModal();
-						});
-					}
+	createModal:function(){
+		Demo.modalCount++;
+		var content = 'Your modal window content';
+		if (Demo.modalCount < 3) content += '<br/><br/><a id="createModal' + Demo.modalCount + '">Create Another Modal</a>';
+		new MUI.Modal({
+			id: 'modalDemo' + Demo.modalCount,
+			title: 'A Modal Window ' + Demo.modalCount,
+			content: content,
+			width: 400,
+			height: 250,
+			x:70 + (Demo.modalCount * 30),
+			y:70 + (Demo.modalCount * 30),
+			onClose:function(){
+				Demo.modalCount--;
+			},
+			onLoaded:function(){
+				if ($('createModal' + Demo.modalCount)) $('createModal' + Demo.modalCount).addEvent('click', function(e){
+					e.stop();
+					Demo.createModal();
 				});
 			}
-	,
+		});
+	},
 
 	forceCanvasWindow: function(){
 		new MUI.Window({
@@ -622,8 +608,7 @@ Object.append(Demo, {
 			useCanvas: true,
 			useCSS3: false
 		});
-	}
-	,
+	},
 
 	closePanelTest: function(){
 		// add ability to test column and panel closing
@@ -634,8 +619,7 @@ Object.append(Demo, {
 				stop = true;
 			}
 		});
-	}
-	,
+	},
 
 	closeColumnTest: function(){
 		var stop = false;
@@ -645,8 +629,7 @@ Object.append(Demo, {
 				stop = true;
 			}
 		});
-	}
-	,
+	},
 
 	// Tools
 	builderWindow: function(){
@@ -672,30 +655,25 @@ Object.append(Demo, {
 			resizable: false,
 			scrollbars: false
 		});
-	}
-	,
+	},
 
 	// Effects
 	toggleStandardEffects: function(check){
 		MUI.toggleStandardEffects(check);
-	}
-	,
+	},
 
 	toggleAdvancedEffects: function(check){
 		MUI.toggleAdvancedEffects(check);
-	}
-	,
+	},
 
 	// Workspaces
 	saveWorkspace: function(){
 		MUI.desktop.saveWorkspace();
-	}
-	,
+	},
 
 	loadWorkspace: function(){
 		MUI.desktop.loadWorkspace();
-	}
-	,
+	},
 
 	// Help
 	featuresWindow: function(){
@@ -730,8 +708,7 @@ Object.append(Demo, {
 				}
 			]
 		});
-	}
-	,
+	},
 
 	aboutWindow: function(){
 		new MUI.Modal({
@@ -750,8 +727,7 @@ Object.append(Demo, {
 				})
 			}
 		});
-	}
-	,
+	},
 
 	// Misc
 	authorsWindow: function(){
@@ -763,8 +739,7 @@ Object.append(Demo, {
 			height: 250,
 			scrollbars: true
 		});
-	}
-	,
+	},
 
 	licenseWindow: function(){
 		new MUI.Modal({
@@ -775,8 +750,7 @@ Object.append(Demo, {
 			height: 350,
 			scrollbars: true
 		});
-	}
-	,
+	},
 
 	splitPanelPanel: function(){
 		if ($('mainPanel')){
@@ -813,16 +787,12 @@ Object.append(Demo, {
 				container: 'sideColumn3'
 			});
 		}
-	}
-	,
+	},
 
 	countResizeEvents: {				// used to for counting resize events for panels
 		mainPanel: 0,
-		panel3
-				:
-				0
-	}
-	,
+		panel3:0
+	},
 
 	addResizeElements: function(){		// add resize events to panels
 		var panel = this.el.contentWrapper;
@@ -842,8 +812,7 @@ Object.append(Demo, {
 		this.countEvents = new Element('span', {
 			'text': Demo.countResizeEvents[this.id]
 		}).inject(resize);
-	}
-	,
+	},
 
 	updateResizeElements: function(){	// update the resize counts for panels
 		Demo.countResizeEvents[this.id]++;
@@ -852,5 +821,4 @@ Object.append(Demo, {
 		if (this.displayWidthEl) this.displayWidthEl.set('text', newSize['width']);
 		if (this.displayHeightEl) this.displayHeightEl.set('text', newSize['height']);
 	}
-})
-		;
+});
