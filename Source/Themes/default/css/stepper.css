@@ -23,40 +23,40 @@ fieldset div.stepperContainer { float: left; width: 15px; height: 20px; top: 5px
 fieldset div.stepperUp,
 fieldset div.stepperDown {
 	margin: 0;
-    display: block;
-    width: 15px;
-    height: 10px;
-    text-align: center;
-    font-size: 11px;
-    line-height: 9px;
-    font-family: Courier, monospace;
-    color: white;
-    border: solid 1px #595959;
-    cursor: pointer;
-    background: #97989b;
-    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#b8bbbf), to(#8d8f92));
-    background: -moz-linear-gradient(0% 90% 90deg, #8d8f92, #b8bbbf);
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    user-select: none;
+	display: block;
+	width: 15px;
+	height: 10px;
+	text-align: center;
+	font-size: 11px;
+	line-height: 9px;
+	font-family: Courier, monospace;
+	color: white;
+	border: solid 1px #595959;
+	cursor: pointer;
+	background: #97989b;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#b8bbbf), to(#8d8f92));
+	background: -moz-linear-gradient(0% 90% 90deg, #8d8f92, #b8bbbf);
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
 }
 fieldset div.stepperDown { line-height: 7px; border-top: none; }
 fieldset div.stepperUp.over,
 fieldset div.stepperDown.over {
-    background: #718ba6;
-    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#7995b3), to(#576a80));
-    background: -moz-linear-gradient(0% 90% 90deg, #576a80, #7995b3);
+	background: #718ba6;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#7995b3), to(#576a80));
+	background: -moz-linear-gradient(0% 90% 90deg, #576a80, #7995b3);
 }
 fieldset div.stepperUp.active,
 fieldset div.stepperDown.active {
-    background: #718ba6;
+	background: #718ba6;
 }
 fieldset div.stepperUp.disabled,
 fieldset div.stepperDown.disabled {
-    border-color: #9C9DA6;
-    cursor: default;
-    background: #EFEFEF;
-    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#EFEFEF), to(#CCC));
-    background: -moz-linear-gradient(0% 90% 90deg, #CCC, #EFEFEF);
+	border-color: #9C9DA6;
+	cursor: default;
+	background: #EFEFEF;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#EFEFEF), to(#CCC));
+	background: -moz-linear-gradient(0% 90% 90deg, #CCC, #EFEFEF);
 }
 /* stepper settings */
