@@ -300,13 +300,12 @@ Object.append(Demo, {
 				alert('Ooops! Please input intergers only!');
 			}
 		});
-
-		MUI.create({control: 'MUI.Stepper',
-			container: container,
-			id: node.value + 'stepper2',
-			formTitle: 'Time',
-			value: '00:00',
-			onDrawBegin:function(){
+		
+		// first load the StepperIterator class
+		new MUI.Require({js: ['{controls}stepper/stepper.iterator.js'],
+			onload: function() {
+				
+				// second, create a custom iterator
 				Demo.TimeIterator = new NamedClass('Demo.TimeIterator', {
 
 					Extends: MUI.StepperIterator,
@@ -336,10 +335,20 @@ Object.append(Demo, {
 						return this.index > 0;
 					}
 				});
-				this.options.iterator = new Demo.TimeIterator();
-			},
-			onValidationFailed:	function(){
-				alert('Ooops! Please format your input like HH:MM !');
+				
+				// finally, instantiate the (custom)stepper
+				MUI.create({control: 'MUI.Stepper',
+					container: container,
+					id: node.value + 'stepper2',
+					formTitle: 'Time',
+					value: '00:00',
+					
+					iterator: new Demo.TimeIterator(),
+					
+					onValidationFailed:	function(){
+						alert('Ooops! Please format your input like HH:MM !');
+					}
+				});
 			}
 		});
 	},
