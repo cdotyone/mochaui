@@ -79,8 +79,9 @@ MUI.TextBox = new NamedClass('MUI.TextBox', {
 
 		// add form label/title
 		var lbl = $(o.id + '_label');
+		var tle = '';
 		if (o.hasTitle){  // are we supposed to have a title
-			var tle = this.getFormTitle();
+			tle = this.getFormTitle();
 			lbl = new Element('label', {'id':o.id + '_label'}).inject(fs);
 		} else {
 			if (lbl){  // title not needed so remove it, if it exists
