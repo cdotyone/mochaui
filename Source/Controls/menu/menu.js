@@ -1,13 +1,13 @@
 /*
  ---
 
- name: Menu
+ name: ToolbarMenu
 
- script: menu.js
+ script: toolbardock.js
 
- description: MUI.Menu - Creates a toolbar dock control.
+ description: MUI - Creates a toolbar dock control.
 
- copyright: (c) 2011 Contributors in (/AUTHORS.txt).
+ copyright: (c) 2010 Contributors in (/AUTHORS.txt).
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 
@@ -31,8 +31,8 @@ MUI.Menu = new NamedClass('MUI.Menu', {
 		id:				'',				// id of the primary element, and id os control that is registered with mocha
 		container:		null,			// the parent control in the document to add the control to
 		drawOnInit:		true,			// true to add tree to container when control is initialized
-		partner:		 false,			// default partner element to send content to
-		partnerMethod:	 'xhr',			// default loadMethod when sending content to partner
+		partner:		false,			// default partner element to send content to
+		partnerMethod:	'xhr',			// default loadMethod when sending content to partner
 
 		content:		false,			// used to load content
 		items:			{},				// menu items for the menu to draw
@@ -124,17 +124,35 @@ MUI.Menu = new NamedClass('MUI.Menu', {
 				if (item.registered && item.registered != '')
 					a.addEvent('click', MUI.getRegistered(this, item.registered, [item]));
 			} else if (item.partner) a.addEvent('click', MUI.sendContentToPartner(this, url, partner, partnerMethod));
-			else a.setAttribute('href', url);
-
-			li.addEvent('mouseenter', function(){
-				this.addClass('hover');
-			}).addEvent('mouseleave', function(){
-				this.removeClass('hover');
+			else a.set('href', url);
+			
+			var self = this;
+			li.addEvents({
+				'mouseenter': function(){
+					this.addClass('hover');
+					if(!!this.retrieve('mui:menu:next'))
+						self.showMenu(this.retrieve('mui:menu:next'));
+				},
+				'mouseleave': function(){
+					this.removeClass('hover');
+					if(!!this.retrieve('mui:menu:next'))
+						self.hideMenu(this.retrieve('mui:menu:next'));
+				}
 			});
 
 			if (item.items && item.items.length > 0){
 				if (addArrow) a.addClass('arrow-right');
 				var ul2 = new Element('ul').inject(li);
+				li.store('mui:menu:next', ul2);
+				ul2.fade('hide').set('tween', {'duration': 'short'});
+				ul2.addEvents({
+					'mouseenter': function(){
+						self.showMenu(this);
+					},
+					'mouseleave': function(){
+						self.hideMenu(this);
+					}
+				});
 				this._buildItems(ul2, item.items, true);
 			}
 
@@ -143,7 +161,7 @@ MUI.Menu = new NamedClass('MUI.Menu', {
 	},
 
 	onItemClick: function(e, item){
-		if (!item.target) e = new Event(e).stop();
+		if (!item.target) e = e.stop();
 		self.fireEvent('itemClicked', [this, item, e]);
 		return true;
 	},
@@ -156,6 +174,18 @@ MUI.Menu = new NamedClass('MUI.Menu', {
 	onItemBlur: function(e, item){
 		self.fireEvent('itemBlurred', [this, item, e]);
 		return true;
+	},
+	
+	showMenu: function(ul){
+		clearTimeout(this.lastMenueDelay);
+		if(!!this.lastMenu && !this.lastMenu.contains(ul)) this.lastMenu.fade('hide');
+		ul.get('tween').cancel();
+		ul.fade('show');
+		this.lastMenu = ul;
+	},
+	
+	hideMenu: function(ul){
+		this.lastMenueDelay = ul.fade.delay(300, ul, ['out']);
 	}
 
 });
