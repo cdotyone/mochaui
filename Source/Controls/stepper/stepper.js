@@ -161,10 +161,9 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
                 this.el.element.inject(container);
             }
 			this.fireEvent('drawEnd', [this]);
-            return this;
         }.bind(this);
         if (!isNew || typeOf(container) === 'element')
-            return addToContainer();
+			addToContainer();
         else
             window.addEvent('domready', addToContainer);
 
