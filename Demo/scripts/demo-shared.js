@@ -107,13 +107,13 @@ Object.append(Demo, {
 				{'text': 'Cancel', 'name': 'Cancel', 'image': '{theme}images/cancel.png'}
 			],
 			onItemCommand: function(item, self, cmd){
-				Demo.writeConsole(self.options.id + ' received ' + cmd.name + ' command on item ' + item.value)
+				Demo.writeConsole(self.options.id + ' received ' + cmd.name + ' command on item ' + item.value);
 			},
 			onItemChecked: function(item, self){
-				Demo.writeConsole(self.options.id + ' received onItemChecked command on item ' + item.value)
+				Demo.writeConsole(self.options.id + ' received onItemChecked command on item ' + item.value);
 			},
 			onItemSelected: function(item, self){
-				Demo.writeConsole(self.options.id + ' received onItemSelected command on item ' + item.value)
+				Demo.writeConsole(self.options.id + ' received onItemSelected command on item ' + item.value);
 			}
 		});
 	},
@@ -246,7 +246,7 @@ Object.append(Demo, {
 			canSelect: true,
 			formTitle: 'Select List Control:',
 			onItemSelected: function(item, selected, self){
-				Demo.writeConsole(self.options.id + ' received onItemSelected command on item \'' + item.name + '\', selected=' + selected)
+				Demo.writeConsole(self.options.id + ' received onItemSelected command on item \'' + item.name + '\', selected=' + selected);
 			}
 		});
 	},
@@ -381,13 +381,13 @@ Object.append(Demo, {
 			id: node.value + 'tree1',
 			content: {url: 'data/tree-testdata.json'},
 			onNodeExpanded: function(node, isExpanded, self){
-				Demo.writeConsole(self.options.id + ' receieved onNodeExpanded command on node ' + node.value + ', isExpanded=' + isExpanded)
+				Demo.writeConsole(self.options.id + ' receieved onNodeExpanded command on node ' + node.value + ', isExpanded=' + isExpanded);
 			},
 			onNodeChecked: function(node, checked, self){
 				Demo.writeConsole(self.options.id + ' receieved onNodeChecked command on node ' + node.value + ', checked=' + checked);
 			},
 			onNodeSelected: function(node, self){
-				Demo.writeConsole(self.options.id + ' receieved onNodeSelected command on node ' + node.value)
+				Demo.writeConsole(self.options.id + ' receieved onNodeSelected command on node ' + node.value);
 			}
 		});
 	},
@@ -733,7 +733,7 @@ Object.append(Demo, {
 				$('authorsAboutLink').addEvent('click', function(e){
 					e.stop();
 					Demo.authorsWindow();
-				})
+				});
 			}
 		});
 	},
