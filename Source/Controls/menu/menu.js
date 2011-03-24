@@ -34,20 +34,36 @@ MUI.MenuController = new NamedClass('MUI.MenuController', {
         return this.$activated;
     },
     
-    checkActivated: function(){
-		if(this.$focused.length === 0)
-			this.$activated = false;
-		else (this.$focused.length === 1){
+    checkActivated: function(item){
+		if(this.$focused.length === 1){
 			this.$focused.pop().setActive(false);
-		} else {
+			this.$activated = false;
+		}
+		else if(!item){
+			this.hideVisibleMenus();
+			while(this.$focused.length > 0)
+	            this.$focused.pop().setActive(false);
+			this.$activated = false;
+		}
+		else {
+			item.setActive(true);
+			this.$focused.push(item);
 			this.$activated = true;
 		}
     },
     
     onItemFocus: function(item){
 		if(this.$activated){
-			if(this.$focused.length > 0)
-				this.$focused.pop().setActive(false);
+			var focused = [];
+	        while(this.$focused.length > 0){
+	            var item2 = this.$focused.pop();
+	            if(!item || item2.isParentOf(item))
+	                focused.push(item2);
+	            else
+	                item2.setActive(false);
+	        }
+	        this.$focused = focused;
+				
 			item.setActive(true);
 			this.$focused.push(item);
 		}	
@@ -112,8 +128,6 @@ MUI.MenuItemContainer = new NamedClass('MUI.MenuItemContainer', {
     $controller: null,
 	items:       [],
 	$items:      [],
-    $left:       0,
-    $right:      0,
 	$visible:    false,
 	
 	initialize: function(controller, items, options){
@@ -177,6 +191,7 @@ MUI.MenuItemContainer = new NamedClass('MUI.MenuItemContainer', {
 		document.body.addEvent('click', function(e){
 			if(!self.el.container.contains(e.target))
 				self.hide();
+			self.$controller.checkActivated();
 		});
 	},
 	
@@ -352,7 +367,7 @@ MUI.MenuItem = new NamedClass('MUI.MenuItem', {
 		target:       '_blank',
 		type:         '',
 		group:        '',
-		subMenuAlign: { top: 0, right: 0 }
+		subMenuAlign: { top: -4, right: 0 }
 	},
 	
 	el:          {},
@@ -431,6 +446,10 @@ MUI.MenuItem = new NamedClass('MUI.MenuItem', {
     getRight: function(value){
         return this.$right;
     },
+    
+    isParentOf: function(item){
+        return this.getLeft() < item.getLeft() && this.getRight() > item.getRight();
+    },
 	
 	attachEvents: function(){
 		var self = this;
@@ -439,7 +458,7 @@ MUI.MenuItem = new NamedClass('MUI.MenuItem', {
 				self.fireEvent('click', [self, e]);
 				if(!self.isLink()) e.stop();
 				
-				self.$controller.checkActivated();
+				self.$controller.checkActivated(self);
                 
                 if(this.hasClass('more')){
                     var coords = { x: 0, y: 0 },
@@ -503,6 +522,13 @@ MUI.MenuItem = new NamedClass('MUI.MenuItem', {
 	
 	isLink: function(){
 		return this.options.url !== '';
+	},
+	
+	setActive: function(state){
+		if(!!state)
+			this.el.item.addClass('active');
+		else
+			this.el.item.removeClass('active');
 	}
 	
 });

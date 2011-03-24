@@ -34,6 +34,6 @@
     background: -moz-linear-gradient(0% 90% 90deg, #688099, #7f9bba);
 }
 
-.toolMenu { margin: 0; padding: 0; padding-top: 4px; overflow: visible; font-size: 12px; }
-.toolMenu .mui-menu-item { float: left; padding: 2px 8px 2px 8px; height: 23px; line-height: 20px; vertical-align:middle; }
+.toolMenu { font-size: 12px; }
+.toolMenu .mui-menu-item { float: left; padding: 0 8px 0 8px; margin: 4px 0 1px 0; height: 23px; line-height: 20px; vertical-align: middle; }
 /* menu */
