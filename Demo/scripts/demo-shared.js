@@ -513,8 +513,7 @@ Object.append(Demo, {
 				loadMethod: 'iframe'
 			}
 		});
-	}
-	,
+	},
 
 	formTestsWindow: function(){
 		new MUI.Window({
