@@ -827,7 +827,7 @@ Object.append(Demo, {
 		Demo.countResizeEvents[this.id]++;
 		if (this.countEvents) this.countEvents.set('text', Demo.countResizeEvents[this.id]);
 		var newSize = this.el.contentWrapper.getStyles(['width', 'height']);
-		if (this.displayWidthEl) this.displayWidthEl.set('text', newSize['width']);
-		if (this.displayHeightEl) this.displayHeightEl.set('text', newSize['height']);
+		if (this.displayWidthEl) this.displayWidthEl.set('text', newSize.width);
+		if (this.displayHeightEl) this.displayHeightEl.set('text', newSize.height);
 	}
 });
