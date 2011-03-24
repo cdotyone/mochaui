@@ -15,42 +15,25 @@
  */
 
 /* menu */
-.toolMenu, .toolbar.toolMenu { margin:0; padding:0; padding-top:4px; overflow:visible }
-.toolMenu  ul { padding: 0; margin: 0; list-style: none; font-size: 12px; text-align:left; }
-.toolMenu  li { float: left; padding: 0 8px 0 8px; height: 23px; line-height: 20px; vertical-align:middle; }
-.toolMenu  a { display: block; color: #333;  }
-.toolMenu  li.hover {
-    background: #718ba6;
-    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#7f9bba), to(#688099));
-    background: -moz-linear-gradient(0% 90% 90deg, #688099, #7f9bba);
-}
-.toolMenu  li.hover a, .toolMenu  li.hover a:hover { color: #FFF; }
-.toolMenu  li.hover  ul li a { font-weight: normal; height: 20px;  color: #333; }
-.toolMenu  li.hover  ul li.hover a, .toolMenu  li.hover ul li.hover a:hover { color: #FFF; }
-.toolMenu  ul li a.arrow-right, .toolMenu  ul li a:hover.arrow-right { background-image: url(../images/arrow-right.gif); background-repeat: no-repeat; background-position: right 8px; }
-.toolMenu  li ul { padding: 4px 0 4px 0; border: 1px solid #CCC; border-top: none; position: absolute; width: 164px; z-index: 8000; margin: 7px 0 0 -8px;
-    background: #FFF;
+.mui-menu { position: absolute; top: 0; left: 0; background: #FFF; z-index: 999999; padding: 4px 0 4px 0;
+	background: #FFF;
     background: rgba(255, 255, 255, 0.95);
     -moz-border-radius: 0 0 5px 5px;
     border-radius: 0 0 5px 5px;
+    -moz-border-radius: 0 5px 5px 5px;
+    border-radius: 0 5px 5px 5px;
     -moz-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
     -webkit-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
 }
-.toolMenu  li ul ul { /* third-and-above-level lists */ margin: -27px 0 0 160px; border-top:solid 1px #CCC;
-    -moz-border-radius: 0 5px 5px 5px;
-    border-radius: 0 5px 5px 5px;
+.mui-menu-item { padding: 0 8px 0 8px; height: 23px; line-height: 23px; vertical-align: middle; color: #333; cursor: default; }
+.mui-menu-item.active {
+	color: #FFF;
+    background: #718ba6;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#7f9bba), to(#688099));
+    background: -moz-linear-gradient(0% 90% 90deg, #688099, #7f9bba);
 }
-.toolMenu  li ul li { padding: 0 4px 0 4px; }
-.toolMenu  li ul li a { position: relative; padding: 1px 2px 1px 25px; width: 130px; color: #3f3f3f; font-weight: normal; }
-.toolMenu  li ul li a .radio { position: absolute; top: 6px; left: 4px; width: 9px; height: 9px; background: transparent url(../images/menu-radio.gif) no-repeat 0 -9px; overflow: hidden; line-height: 1px; font-size: 1px; }
-.toolMenu  li ul li a .noradio { position: absolute; top: 6px; left: 4px; width: 9px; height: 9px; background: transparent url(../images/menu-radio.gif) no-repeat 0 0; overflow: hidden; line-height: 1px; font-size: 1px; }
-.toolMenu  li ul li a:hover .radio { background-position: -9px -9px; }
-.toolMenu  li ul li a:hover .noradio { background-position: -9px 0; }
-.toolMenu  li ul li a .check { position: absolute; top: 6px; left: 4px; width: 9px; height: 9px; background: transparent url(../images/menu-check.gif) no-repeat 0 -9px; overflow: hidden; line-height: 1px; font-size: 1px; }
-.toolMenu  li ul li a .nocheck { position: absolute; top: 6px; left: 4px; width: 9px; height: 9px; background: transparent url(../images/menu-check.gif) no-repeat 0 0; overflow: hidden; line-height: 1px; font-size: 1px; }
-.toolMenu  li ul li a:hover .check { background-position: -9px -9px; }
-.toolMenu  li ul li a:hover .nocheck { background-position: -9px 0; }
-.toolMenu  li.divider { margin-top: 2px; padding-top: 3px; border-top: 1px solid #ebebeb; }
-.toolMenu  li.hover ul li.hover ul li a { color: #3f3f3f; }
-.toolMenu  li.hover ul li.hover ul li.hover a { color: #FFF; }
+
+.toolMenu { margin: 0; padding: 0; padding-top: 4px; overflow: visible; font-size: 12px; }
+.toolMenu .mui-menu-item { float: left; padding: 2px 8px 2px 8px; height: 23px; line-height: 20px; vertical-align:middle; }
+/* menu */
