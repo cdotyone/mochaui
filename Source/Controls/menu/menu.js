@@ -159,4 +159,3 @@ MUI.Menu = new NamedClass('MUI.Menu', {
 	}
 
 });
-

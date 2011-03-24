@@ -301,54 +301,48 @@ Object.append(Demo, {
 			}
 		});
 		
-		// first load the StepperIterator class
-		new MUI.Require({js: ['{controls}stepper/stepper.iterator.js'],
-			onload: function() {
-				
-				// second, create a custom iterator
-				Demo.TimeIterator = new NamedClass('Demo.TimeIterator', {
+		// first, create a custom stepper iterator
+		Demo.TimeIterator = new NamedClass('Demo.TimeIterator', {
 
-					Extends: MUI.StepperIterator,
+			Extends: MUI.StepperIterator,
 
-					set: function(value){
-						var values = value.match(/^(\d{2}):(\d{2})$/);
-						var minutes = values[1].toInt() * 60 + values[2].toInt();
-						return this.parent((minutes / 15).toInt());
-					},
+			set: function(value){
+				var values = value.match(/^(\d{2}):(\d{2})$/);
+				var minutes = values[1].toInt() * 60 + values[2].toInt();
+				return this.parent((minutes / 15).toInt());
+			},
 
-					validate: function(value){
-						if (typeOf(value) !== 'string')
-							return false;
-						return value.test(/^\d{2}:\d{2}$/);
-					},
+			validate: function(value){
+				if (typeOf(value) !== 'string')
+					return false;
+				return value.test(/^\d{2}:\d{2}$/);
+			},
 
-					current: function(){
-						var minutes = this.parent() * 15;
-						var h = (minutes / 60).toInt();
-						var m = (minutes % 60).toInt();
-						h = h < 10 ? '0' + h : h;
-						m = m < 10 ? '0' + m : m;
-						return h + ':' + m;
-					},
+			current: function(){
+				var minutes = this.parent() * 15;
+				var h = (minutes / 60).toInt();
+				var m = (minutes % 60).toInt();
+				h = h < 10 ? '0' + h : h;
+				m = m < 10 ? '0' + m : m;
+				return h + ':' + m;
+			},
 
-					hasPrevious: function(){
-						return this.index > 0;
-					}
-				});
-				
-				// finally, instantiate the (custom)stepper
-				MUI.create({control: 'MUI.Stepper',
-					container: container,
-					id: node.value + 'stepper2',
-					formTitle: 'Time',
-					value: '00:00',
-					
-					iterator: new Demo.TimeIterator(),
-					
-					onValidationFailed:	function(){
-						alert('Ooops! Please format your input like HH:MM !');
-					}
-				});
+			hasPrevious: function(){
+				return this.index > 0;
+			}
+		});
+		
+		// finally, instantiate the (custom)stepper
+		MUI.create({control: 'MUI.Stepper',
+			container: container,
+			id: node.value + 'stepper2',
+			formTitle: 'Time',
+			value: '00:00',
+			
+			iterator: new Demo.TimeIterator(),
+			
+			onValidationFailed:	function(){
+				alert('Ooops! Please format your input like HH:MM !');
 			}
 		});
 	},
