@@ -363,7 +363,7 @@ MUI.MenuItem = new NamedClass('MUI.MenuItem', {
 		target:       '_blank',
 		type:         '',
 		group:        '',
-		subMenuAlign: { top: -4, right: 0 }
+		subMenuAlign: { top: -5, right: 0 }
 	},
 	
 	el:          {},

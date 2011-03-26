@@ -18,8 +18,8 @@
 .mui-menu { position: absolute; top: 0; left: 0; background: #FFF; z-index: 999999; padding: 4px 0 4px 0; border: 1px solid #b9b9b9; font-size: 12px;
 	background: #FFF;
     background: rgba(255, 255, 255, 0.95);
-    -moz-border-radius: 5px 5px 5px 5px;
-    border-radius: 5px 5px 5px 5px;
+    -moz-border-radius: 0 5px 5px 5px;
+    border-radius: 0 5px 5px 5px;
     -moz-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
     -webkit-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
