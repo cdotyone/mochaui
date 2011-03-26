@@ -15,18 +15,16 @@
  */
 
 /* menu */
-.mui-menu { position: absolute; top: 0; left: 0; background: #FFF; z-index: 999999; padding: 4px 0 4px 0;
+.mui-menu { position: absolute; top: 0; left: 0; background: #FFF; z-index: 999999; padding: 4px 0 4px 0; border: 1px solid #b9b9b9; font-size: 12px;
 	background: #FFF;
     background: rgba(255, 255, 255, 0.95);
-    -moz-border-radius: 0 0 5px 5px;
-    border-radius: 0 0 5px 5px;
-    -moz-border-radius: 0 5px 5px 5px;
-    border-radius: 0 5px 5px 5px;
+    -moz-border-radius: 5px 5px 5px 5px;
+    border-radius: 5px 5px 5px 5px;
     -moz-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
     -webkit-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
 }
-.mui-menu-item { padding: 0 8px 0 8px; height: 23px; line-height: 23px; vertical-align: middle; color: #333; cursor: default; }
+.mui-menu-item { padding: 0 20px 0 20px; height: 23px; line-height: 23px; vertical-align: middle; color: #333; cursor: default; }
 .mui-menu-item.active {
 	color: #FFF;
     background: #718ba6;
@@ -34,6 +32,10 @@
     background: -moz-linear-gradient(0% 90% 90deg, #688099, #7f9bba);
 }
 
-.toolMenu { font-size: 12px; }
-.toolMenu .mui-menu-item { float: left; padding: 0 8px 0 8px; margin: 4px 0 1px 0; height: 23px; line-height: 20px; vertical-align: middle; }
+.toolMenu.mui-menu-item.depth-1 { float: left; padding: 0 8px 0 8px; margin: 4px 0 1px 0; height: 23px; line-height: 20px; vertical-align: middle; }
+.toolMenu.mui-menu.depth-2 {
+	border-top: none;
+    -moz-border-radius: 0 0 5px 5px;
+    border-radius: 0 0 5px 5px;
+}
 /* menu */

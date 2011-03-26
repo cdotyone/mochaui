@@ -25,7 +25,6 @@
 
 MUI.MenuController = new NamedClass('MUI.MenuController', {
     
-    lrValue:        0,
     $active:        false,
     $visibles:      [],
     $focused:       [],
@@ -120,19 +119,21 @@ MUI.MenuItemContainer = new NamedClass('MUI.MenuItemContainer', {
 	
 	options: {
 		drawOnInit:  true,
-		cssClass:    'mui-menu',
+		cssClass:    '',      // css tag to add to control
 		container:   document.body
 	},
 	
 	el:          {},
     $controller: null,
+    $dottedId:   '',
 	items:       [],
 	$items:      [],
 	$visible:    false,
 	
-	initialize: function(controller, items, options){
+	initialize: function(controller, items, parentDdottedId, options){
 		this.setOptions(options);
         this.$controller = controller;
+        this.$dottedId = (parentDdottedId || '') + String.uniqueID() + '.';
 		
 		this.items.combine(items);
 
@@ -144,15 +145,16 @@ MUI.MenuItemContainer = new NamedClass('MUI.MenuItemContainer', {
 		var options = this.options;
 		
 		this.el.container = new Element('div', {
-			'class': options.cssClass
+			'class': options.cssClass + ' mui-menu depth-' + this.getDepth()
 		}).fade('hide').set('tween', { duration: 200 }).inject(options.container);
 	    
 		this.items.each(function(item){
-            var left = this.$controller.lrValue++;
-            
-			var i = new MUI.MenuItem(this.$controller, this, item);
 			
-			i.addEvents({
+			var mItem = new MUI.MenuItem(this.$controller, this, this.$dottedId, Object.merge(item, {
+				cssClass: options.cssClass
+			}));
+			
+			mItem.addEvents({
 				'click':    this.onItemClick.bind(this),
 				'clicked':  this.onItemClicked.bind(this),
 				'focus':    this.onItemFocus.bind(this),
@@ -161,26 +163,13 @@ MUI.MenuItemContainer = new NamedClass('MUI.MenuItemContainer', {
 				'blurred':  this.onItemBlurred.bind(this)
 			});
             
-            i.setLeft(left);
-            i.setRight(this.$controller.lrValue++);
-			
-			this.$items.push(i);
+			this.$items.push(mItem);
 		}, this);
 		
 		this.attachEvents();
 		
 		this.fireEvent('drawEnd', [this]);
 	},
-    
-    getLeft: function(value){
-        if(this.$items.length === 0) return 0;
-        return this.$items[0].getLeft();
-    },
-    
-    getRight: function(value){
-        if(this.$items.length === 0) return 0;
-        return this.$items[this.$items.length - 1].getRight();
-    },
     
     toElement: function(){
         return this.el.container;
@@ -226,9 +215,18 @@ MUI.MenuItemContainer = new NamedClass('MUI.MenuItemContainer', {
 	isVisible: function(){
 		return this.$visible;
 	},
+	
+	getDottedId: function(){
+		return this.$dottedId;
+	},
     
-    isParentOf: function(menu){
-        return this.getLeft() < menu.getLeft() && this.getRight() > menu.getRight();
+    isParentOf: function(item){
+        return item.getDottedId().contains(this.getDottedId());
+    },
+    
+    getDepth: function(){
+		var da = this.getDottedId().split('.');
+		return (da.length + 1) / 2;
     },
 	
 	onItemClick: function(item, e){
@@ -310,6 +308,7 @@ MUI.Menu = new NamedClass('MUI.Menu', {
 		div.empty();
 
 		div.addClass('toolbar');
+		div.addClass('depth-' + this.getDepth());
 		if (o.cssClass) div.addClass(o.cssClass);
 		if (o.divider) div.addClass('divider');
 		if (o.orientation) div.addClass(o.orientation);
@@ -317,13 +316,13 @@ MUI.Menu = new NamedClass('MUI.Menu', {
 		this.el.container = div.store('instance', this);
         
 		o.items.each(function(item){
-            var left = this.$controller.lrValue++;
             
-			var i = new MUI.MenuItem(this.$controller, this, Object.merge(item, {
+			var mItem = new MUI.MenuItem(this.$controller, this, this.$dottedId, Object.merge(item, {
+				cssClass: o.cssClass,
 				subMenuAlign: { bottom: 0, left: 0 }
 			}));
 			
-			i.addEvents({
+			mItem.addEvents({
 				'click':    this.onItemClick.bind(this),
 				'clicked':  this.onItemClicked.bind(this),
 				'focus':    this.onItemFocus.bind(this),
@@ -331,9 +330,6 @@ MUI.Menu = new NamedClass('MUI.Menu', {
 				'blur':     this.onItemBlur.bind(this),
 				'blurred':  this.onItemBlurred.bind(this)
 			});
-            
-            i.setLeft(left);
-            i.setRight(this.$controller.lrValue++);
 			
 		}, this);
 
@@ -358,7 +354,7 @@ MUI.MenuItem = new NamedClass('MUI.MenuItem', {
 	
 	options: {
 		drawOnInit:   true,
-		cssClass:     'mui-menu-item',
+		cssClass:     '',      // css tag to add to control
 		items:        [],
 		text:         '',
 		id:           '',
@@ -371,16 +367,16 @@ MUI.MenuItem = new NamedClass('MUI.MenuItem', {
 	},
 	
 	el:          {},
-    $left:       0,
-    $right:      0,
+    $dottedId:   '',
     $controller: null,
     $container:  null,
 	$subMenu:    null,
 	
-	initialize: function(controller, container, options){
+	initialize: function(controller, container, parentDdottedId, options){
 		this.setOptions(options);
         this.$controller = controller;
         this.$container = container;
+        this.$dottedId = (parentDdottedId || '') + String.uniqueID() + '.';
 		
 		this.el.container = container.toElement();
 		
@@ -392,7 +388,7 @@ MUI.MenuItem = new NamedClass('MUI.MenuItem', {
 		var options = this.options;
 		
 		this.el.item = new Element('div', {
-			'class': options.cssClass,
+			'class': options.cssClass + ' mui-menu-item depth-' + this.getDepth(),
 			text: options.text
 		}).inject(this.el.container);
 		
@@ -402,7 +398,9 @@ MUI.MenuItem = new NamedClass('MUI.MenuItem', {
 		if(options.items.length > 0){
 			this.el.item.addClass('more');
             
-			this.$subMenu = new MUI.MenuItemContainer(this.$controller, options.items);
+			this.$subMenu = new MUI.MenuItemContainer(this.$controller, options.items, this.$dottedId, {
+				cssClass: options.cssClass
+			});
 			
 			this.$subMenu.addEvents({
 				'itemClick': function(item, e){
@@ -430,25 +428,18 @@ MUI.MenuItem = new NamedClass('MUI.MenuItem', {
 		
 		this.fireEvent('drawEnd', [this]);
 	},
-    
-    setLeft: function(value){
-        this.$left = value;
-    },
-    
-    getLeft: function(value){
-        return this.$left;
-    },
-    
-    setRight: function(value){
-        this.$right = value;
-    },
-    
-    getRight: function(value){
-        return this.$right;
-    },
+	
+	getDottedId: function(){
+		return this.$dottedId;
+	},
     
     isParentOf: function(item){
-        return this.getLeft() < item.getLeft() && this.getRight() > item.getRight();
+        return item.getDottedId().contains(this.getDottedId());
+    },
+    
+    getDepth: function(){
+		var da = this.getDottedId().split('.');
+		return da.length / 2;
     },
 	
 	attachEvents: function(){
