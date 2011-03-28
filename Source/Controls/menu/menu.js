@@ -417,13 +417,38 @@ MUI.MenuItem = new NamedClass('MUI.MenuItem', {
     },
 	
 	attachEvents: function(){
-		var self = this;
+		var self = this,
+			options = this.options;
 		this.el.item.addEvents({
 			'click': function(e){
 				self.fireEvent('click', [self, e]);
 				if(!self.isLink()) e.stop();
 				
 				self.$controller.checkActivated(self);
+				
+				// determine partner settings
+				var partner = options.partner,
+					partnerMethod = options.partnerMethod,
+					registered = options.registered,
+					url = MUI.replacePaths(options.url),
+					hide = false;
+				if(!url || registered){
+					url = '#';
+					if(registered && registered !== ''){
+						MUI.getRegistered(self, registered, [self.options])(e);
+						hide = true;
+					}
+				}
+				else if(partner){
+					MUI.sendContentToPartner(self.options, url, partner, partnerMethod)(e);
+					hide = true;
+				}
+				else {
+					document.location.href = url;
+				}
+				
+				if(hide)
+					self.$controller.checkActivated();
                 
 				self.fireEvent('clicked', [self, e]);
 			},
