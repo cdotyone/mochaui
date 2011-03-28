@@ -25,9 +25,10 @@
 
 MUI.MenuController = new NamedClass('MUI.MenuController', {
     
-    $active:        false,
-    $visibles:      [],
-    $focused:       [],
+    $active:		false,
+    $visibles:	  [],
+    $focused:	   [],
+    $groupedItems:  {},
     
     menuIsActivated: function(){
         return this.$activated;
@@ -109,8 +110,25 @@ MUI.MenuController = new NamedClass('MUI.MenuController', {
         }
         this.$visibles = visibles;
         return this;
-    }
+    },
     
+    addItemToGroup: function(groupName, item){
+		if(!this.$groupedItems.groupName)
+			this.$groupedItems.groupName = [];
+		this.$groupedItems.groupName.push(item);
+    },
+    
+    removeItemFromGroup: function(groupName, item){
+		if(!this.$groupedItems.groupName) return;
+		var i = this.$groupedItems.indexOf(item);
+		if(i > -1)
+			delete this.$groupedItems[i];
+    },
+    
+    getGroupedItems: function(groupName){
+		if(!this.$groupedItems.groupName) return [];
+		return this.$groupedItems.groupName;
+    }
 });
 
 MUI.MenuItemContainer = new NamedClass('MUI.MenuItemContainer', {
@@ -375,8 +393,7 @@ MUI.MenuItem = new NamedClass('MUI.MenuItem', {
 		registered:    '',
 		url:           '',
 		target:        '_blank',
-		type:          '',
-		group:         '',
+		type:          '',      // 'check', 'radio', 'image' or leave blnak for default
 		partner:       '',
 		partnerMethod: 'xhr'
 	},
@@ -626,19 +643,111 @@ MUI.SubmenuMenuItem = new NamedClass('MUI.SubmenuMenuItem', {
 
 MUI.CheckboxMenuItem = new NamedClass('MUI.CheckboxMenuItem', {
 	
-	Extends: MUI.MenuItem
-
+	Extends: MUI.MenuItem,
+	
+	$selected: false,
+	
+	initialize: function(controller, container, parentDdottedId, options){
+		options = Object.merge({
+			selected: false
+		}, options);
+		this.parent(controller, container, parentDdottedId, options);
+	},
+	
+	draw: function(){
+		this.parent();
+		
+		this.el.item.addClass('checkbox');
+		
+		if(this.options.selected)
+			this.setSelected(true);
+	},
+	
+	attachEvents: function(){
+		var self = this;
+		this.el.item.addEvent('click', function(e){
+			this.toggleClass('checkbox');
+			self.fireEvent('changed', [self]);
+		});
+		this.parent();
+	},
+	
+	isSelected: function(){
+		return this.el.item.hasClass('selected');
+	},
+	
+	setSelected: function(value){
+		if(value === this.$selected) return;
+		this.$selected = !!value;
+		if(this.$selected)
+			this.el.item.addClass('selected');
+		else
+			this.el.item.removeClass('selected');
+		self.fireEvent('changed', [self]);
+	}
 });
 
 MUI.RadiogroupMenuItem = new NamedClass('MUI.SelectboxMenuItem', {
 	
-	Extends: MUI.MenuItem
-
+	Extends: MUI.MenuItem,
+	
+	$selected: false,
+	
+	initialize: function(controller, container, parentDdottedId, options){
+		options = Object.merge({
+			selected: false,
+			group:    ''            // name of the radiogroup this item belongs to
+		}, options);
+		this.parent(controller, container, parentDdottedId, options);
+	},
+	
+	draw: function(){
+		this.parent();
+		
+		this.el.item.addClass('radiogroup');
+		
+		if(this.options.selected)
+			this.setSelected(true);
+			
+		this.$controller.addItemToGroup(this.options.group, this);
+	},
+	
+	attachEvents: function(){
+		var self = this;
+		this.el.item.addEvent('click', function(e){
+			var groupedItems = self.$controller.getGroupedItems(self.options.group);
+			groupedItems.each(function(item){
+				if(item !== self)
+					item.setSelected(false);
+			});
+			self.setSelected(true);
+		});
+		this.parent();
+	},
+	
+	isSelected: function(){
+		return this.el.item.hasClass('selected');
+	},
+	
+	setSelected: function(value){
+		if(value === this.$selected) return;
+		this.$selected = !!value;
+		if(this.$selected)
+			this.el.item.addClass('selected');
+		else
+			this.el.item.removeClass('selected');
+		self.fireEvent('changed', [self]);
+	}
 });
 
 MUI.ImageMenuItem = new NamedClass('MUI.ImageMenuItem',  {
 	
-	Extends: MUI.MenuItem
+	Extends: MUI.MenuItem,
 
+	draw: function(){
+		this.parent();
+		
+		this.el.item.addClass('image');
+	}
 });
 
