@@ -24,15 +24,30 @@
     -webkit-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
 }
-.mui-menu-item { padding: 0 20px 0 20px; height: 23px; line-height: 23px; vertical-align: middle; color: #333; cursor: default; }
+.mui-menu-item { padding: 0 20px 0 20px; height: 23px; line-height: 23px; vertical-align: middle; color: #333; cursor: default; margin: 0 -1px 0 -1px; 
+	border: 1px solid transparent;
+}
+.mui-menu-item-divider {
+	width: 100%;
+}
 .mui-menu-item.active {
 	color: #FFF;
+	border-top: 1px solid #6c839a;
+	border-bottom: 1px solid #4b5e74;
+	border-left: 1px solid #798da2;
+	border-right: 1px solid #798da2;
     background: #718ba6;
     background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#7f9bba), to(#688099));
     background: -moz-linear-gradient(0% 90% 90deg, #688099, #7f9bba);
+	text-shadow: -1px -1px 0px rgba(0, 0, 0, 0.2);
 }
 
-.toolMenu.mui-menu-item.depth-1 { float: left; padding: 0 8px 0 8px; margin: 4px 0 1px 0; height: 23px; line-height: 20px; vertical-align: middle; }
+.toolMenu.mui-menu-item.depth-1 { float: left; padding: 0 8px 0 8px; margin: 2px 0 1px 0; height: 23px; line-height: 20px; vertical-align: middle;
+	text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.8);
+}
+.toolMenu.mui-menu-item.depth-1.active {
+	text-shadow: -1px -1px 0px rgba(0, 0, 0, 0.2);
+}
 .toolMenu.mui-menu.depth-2 {
 	border-top: none;
     -moz-border-radius: 0 0 5px 5px;
