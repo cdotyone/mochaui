@@ -170,6 +170,9 @@ MUI.MenuItemContainer = new NamedClass('MUI.MenuItemContainer', {
 				else if(item.type == 'check'){
 					mItem = new MUI.CheckboxMenuItem(this.$controller, this, this.$dottedId, Object.merge(item, options));
 				}
+				else if(item.type == 'image'){
+					mItem = new MUI.ImageMenuItem(this.$controller, this, this.$dottedId, Object.merge(item, options));
+				}
 			}
 			if(mItem === null){
 				if(item.items){
