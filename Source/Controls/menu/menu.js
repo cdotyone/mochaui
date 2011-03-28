@@ -335,7 +335,7 @@ MUI.Menu = new NamedClass('MUI.Menu', {
 		this.items = o.items;
 		this.drawItems({
 			cssClass: o.cssClass,
-			subMenuAlign: { bottom: 0, left: 0 }
+			subMenuAlign: { bottom: 3, left: 0 }
 		});
 
 		// add to container

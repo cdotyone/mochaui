@@ -44,7 +44,7 @@
 	text-shadow: -1px -1px 0px rgba(0, 0, 0, 0.2);
 }
 
-.toolMenu.mui-menu-item.depth-1 { float: left; padding: 0 8px 0 8px; margin: 2px 0 1px 0; height: 23px; line-height: 20px; vertical-align: middle;
+.toolMenu.mui-menu-item.depth-1 { float: left; padding: 0 8px 0 8px; margin: 2px 0 1px 0; height: 20px; line-height: 20px; vertical-align: middle;
 	text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.8);
 }
 .toolMenu.mui-menu-item.depth-1.active {
