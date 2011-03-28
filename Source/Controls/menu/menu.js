@@ -164,6 +164,12 @@ MUI.MenuItemContainer = new NamedClass('MUI.MenuItemContainer', {
 				if(item.type == 'divider'){
 					mItem = new MUI.MenuItemDivider(this.$controller, this, this.$dottedId, Object.merge(item, options));	
 				}
+				else if(item.type == 'radio'){
+					mItem = new MUI.RadiogroupMenuItem(this.$controller, this, this.$dottedId, Object.merge(item, options));
+				}
+				else if(item.type == 'check'){
+					mItem = new MUI.CheckboxMenuItem(this.$controller, this, this.$dottedId, Object.merge(item, options));
+				}
 			}
 			if(mItem === null){
 				if(item.items){
@@ -358,16 +364,18 @@ MUI.MenuItem = new NamedClass('MUI.MenuItem', {
 	Implements: [Events, Options],
 	
 	options: {
-		drawOnInit:   true,
-		cssClass:     '',      // css tag to add to control
-		items:        [],
-		text:         '',
-		id:           '',
-		registered:   '',
-		url:          '',
-		target:       '_blank',
-		type:         '',
-		group:        ''
+		drawOnInit:    true,
+		cssClass:      '',      // css tag to add to control
+		items:         [],
+		text:          '',
+		id:            '',
+		registered:    '',
+		url:           '',
+		target:        '_blank',
+		type:          '',
+		group:         '',
+		partner:       '',
+		partnerMethod: 'xhr'
 	},
 	
 	el:          {},
@@ -440,7 +448,7 @@ MUI.MenuItem = new NamedClass('MUI.MenuItem', {
 					}
 				}
 				else if(partner){
-					MUI.sendContentToPartner(self.options, url, partner, partnerMethod)(e);
+					MUI.sendContentToPartner(self, url, partner, partnerMethod)(e);
 					hide = true;
 				}
 				else {
@@ -613,7 +621,21 @@ MUI.SubmenuMenuItem = new NamedClass('MUI.SubmenuMenuItem', {
 	}
 });
 
-MUI.CheckboxMenuItem = new NamedClass('MUI.CheckboxMenuItem', {});
-MUI.SelectboxMenuItem = new NamedClass('MUI.SelectboxMenuItem', {});
-MUI.ImageMenuItem = new NamedClass('MUI.ImageMenuItem', {});
+MUI.CheckboxMenuItem = new NamedClass('MUI.CheckboxMenuItem', {
+	
+	Extends: MUI.MenuItem
+
+});
+
+MUI.RadiogroupMenuItem = new NamedClass('MUI.SelectboxMenuItem', {
+	
+	Extends: MUI.MenuItem
+
+});
+
+MUI.ImageMenuItem = new NamedClass('MUI.ImageMenuItem',  {
+	
+	Extends: MUI.MenuItem
+
+});
 
