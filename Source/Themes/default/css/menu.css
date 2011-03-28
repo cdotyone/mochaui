@@ -29,6 +29,8 @@
 }
 .mui-menu-item-divider {
 	width: 100%;
+	border-top: 1px solid #b9b9b9;
+	margin: 4px 0 4px 0;
 }
 .mui-menu-item.active {
 	color: #FFF;
