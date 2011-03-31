@@ -42,7 +42,45 @@
     background: -moz-linear-gradient(0% 90% 90deg, #333, #666);
 	text-shadow: -1px -1px 0px #000;
 }
+.mui-menu-item .arrow-right {
+	 padding-right: 20px;
+	 margin-right: -15px;
+	 background: url(../images/arrow-right.gif) center right no-repeat;
+}
+.toolMenu.mui-menu-item .radioicon {
+	display: inline-block;
+	width: 9px;
+	height: 9px;
+	margin-right: 10px;
+	background: url(../images/menu-radio.gif) 0 0 no-repeat;
+}
+.toolMenu.mui-menu-item.selected .radioicon {
+	background-position: 0 -9px;
+}
+.toolMenu.mui-menu-item.active .radioicon {
+	background-position: -9px 0;
+}
+.toolMenu.mui-menu-item.active.selected .radioicon {
+	background-position: -9px -9px;
+}
+.toolMenu.mui-menu-item .checkicon {
+	display: inline-block;
+	width: 9px;
+	height: 9px;
+	margin-right: 10px;
+	background: url(../images/menu-check.gif) 0 0 no-repeat;
+}
+.toolMenu.mui-menu-item.selected .checkicon {
+	background-position: 0 -9px;
+}
+.toolMenu.mui-menu-item.active .checkicon {
+	background-position: -9px 0;
+}
+.toolMenu.mui-menu-item.active.selected .checkicon {
+	background-position: -9px -9px;
+}
 
+.toolMenu.mui-menu-item.depth-1 .arrow-right { background: none; padding: 0; margin: 0; }
 .toolMenu.mui-menu-item.depth-1 { float: left; padding: 0 8px 0 8px; margin: 2px 0 1px 0; height: 20px; line-height: 20px; vertical-align: middle;
 	color: #EFEFEF;
 	text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);

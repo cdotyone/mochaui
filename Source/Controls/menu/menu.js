@@ -193,7 +193,7 @@ MUI.MenuItemContainer = new NamedClass('MUI.MenuItemContainer', {
 				}
 			}
 			if(mItem === null){
-				if(item.items){
+				if(item.items && item.items.length > 0){
 					mItem = new MUI.SubmenuMenuItem(this.$controller, this, this.$dottedId, Object.merge(item, options));
 				}
 				else {
@@ -545,9 +545,13 @@ MUI.SubmenuMenuItem = new NamedClass('MUI.SubmenuMenuItem', {
 		var options = this.options;
 		
 		this.el.item = new Element('div', {
-			'class': options.cssClass + ' mui-menu-item depth-' + this.getDepth(),
-			text: options.text
+			'class': options.cssClass + ' mui-menu-item depth-' + this.getDepth()
 		}).inject(this.el.container);
+		
+		new Element('div', {
+			'class': 'arrow-right',
+			text: options.text
+		}).inject(this.el.item);
 		
 		if(!!options.id)
 			this.el.item.set('id', options.id);
@@ -657,6 +661,10 @@ MUI.CheckboxMenuItem = new NamedClass('MUI.CheckboxMenuItem', {
 	draw: function(){
 		this.parent();
 		
+		new Element('span', {
+			'class': 'checkicon'
+		}).inject(this.el.item, 'top');
+	
 		this.el.item.addClass('checkbox');
 		
 		if(this.options.selected)
@@ -704,6 +712,10 @@ MUI.RadiogroupMenuItem = new NamedClass('MUI.SelectboxMenuItem', {
 	draw: function(){
 		this.parent();
 		
+		new Element('span', {
+			'class': 'radioicon'
+		}).inject(this.el.item, 'top');
+		
 		this.el.item.addClass('radiogroup');
 		
 		if(this.options.selected)
@@ -740,6 +752,7 @@ MUI.RadiogroupMenuItem = new NamedClass('MUI.SelectboxMenuItem', {
 	}
 });
 
+/*
 MUI.ImageMenuItem = new NamedClass('MUI.ImageMenuItem',  {
 	
 	Extends: MUI.MenuItem,
@@ -750,4 +763,5 @@ MUI.ImageMenuItem = new NamedClass('MUI.ImageMenuItem',  {
 		this.el.item.addClass('image');
 	}
 });
+*/
 
