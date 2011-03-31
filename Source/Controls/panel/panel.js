@@ -170,7 +170,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				});
 				headerItems.push({id:options.id + 'headerContent',content:this.el.title,orientation:'left', divider:false});
 			}
-
+			
 			MUI.create({
 				control: 'MUI.Dock',
 				container: this.el.panel,

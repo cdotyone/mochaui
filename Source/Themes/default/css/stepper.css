@@ -18,7 +18,7 @@
 fieldset.stepper { display: inline-block; padding: 0 0 0 10px; border:none; margin-right: 0; clear: left; }
 fieldset.stepper label { float: left; width: 200px; }
 fieldset.stepper { font-family:Helvetica,Arial,sans-serif;  }
-input.stepper { float: left; height: 19px; margin: 0; }
+input.stepper { display: block; float: left; height: 19px; margin: 0; }
 fieldset div.stepperContainer { float: left; width: 15px; height: 20px; top: 5px; left: -2px; padding: 0; margin: 0; }
 fieldset div.stepperUp,
 fieldset div.stepperDown {
@@ -26,6 +26,7 @@ fieldset div.stepperDown {
 	display: block;
 	width: 15px;
 	height: 10px;
+    overflow: hidden;
 	text-align: center;
 	font-size: 11px;
 	line-height: 9px;
