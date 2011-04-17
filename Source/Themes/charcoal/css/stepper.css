@@ -15,19 +15,19 @@
  */
 
 /* stepper settings */
-fieldset.stepper { display: inline-block; padding: 0 0 0 10px; border:none; margin-right: 0; clear: left; }
+fieldset.stepper { display: block; padding: 0 0 0 10px; border:none; margin-right: 0; clear: both; margin-top:2px; }
 fieldset.stepper label { float: left; width: 200px; }
 fieldset.stepper { font-family:Helvetica,Arial,sans-serif;  }
 input.stepper { float: left; height: 19px; margin: 0; border: 1px solid #000; border-right: none; padding: 1px;
-	background: #525252;
 	-webkit-border-top-left-radius: 3px;
 	-webkit-border-bottom-left-radius: 3px;
 	-moz-border-radius-topleft: 3px;
 	-moz-border-radius-bottomleft: 3px;
 	border-top-left-radius: 3px;
 	border-bottom-left-radius: 3px;
+	background: #525252;
 }
-fieldset div.stepperContainer { float: left; width: 15px; height: 20px; top: 5px; left: -2px; padding: 0; margin: 0; }
+fieldset div.stepperContainer { float: left; width: 15px; height: 19px; top: 5px; left: -2px; padding: 0; margin: 0; }
 fieldset div.stepperUp,
 fieldset div.stepperDown {
 	margin: 0;

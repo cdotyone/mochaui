@@ -294,54 +294,70 @@ Object.append(Demo, {
 		MUI.create({
 			control: 'MUI.Stepper',
 			container: container,
-			value: 0,
+			formTitle: 'numeric',
 			id:node.value + 'stepper1',
 			onValidationFailed:function(){
 				alert('Ooops! Please input intergers only!');
 			}
 		});
 
-		MUI.create({control: 'MUI.Stepper',
+		MUI.create({
+			control: 'MUI.Stepper',
 			container: container,
-			id: node.value + 'stepper2',
-			formTitle: 'Time',
-			value: '00:00',
-			onDrawBegin:function(){
-				Demo.TimeIterator = new NamedClass('Demo.TimeIterator', {
-
-					Extends: MUI.StepperIterator,
-
-					set: function(value){
-						var values = value.match(/^(\d{2}):(\d{2})$/);
-						var minutes = values[1].toInt() * 60 + values[2].toInt();
-						return this.parent((minutes / 15).toInt());
-					},
-
-					validate: function(value){
-						if (typeOf(value) !== 'string')
-							return false;
-						return value.test(/^\d{2}:\d{2}$/);
-					},
-
-					current: function(){
-						var minutes = this.parent() * 15;
-						var h = (minutes / 60).toInt();
-						var m = (minutes % 60).toInt();
-						h = h < 10 ? '0' + h : h;
-						m = m < 10 ? '0' + m : m;
-						return h + ':' + m;
-					},
-
-					hasPrevious: function(){
-						return this.index > 0;
-					}
-				});
-				this.options.iterator = new Demo.TimeIterator();
-			},
-			onValidationFailed:	function(){
-				alert('Ooops! Please format your input like HH:MM !');
+			iterator: 'alpha',
+			formTitle: 'alpha',
+			id:node.value + 'stepper2',
+			onValidationFailed:function(){
+				alert('Ooops! Please input letters only!');
 			}
 		});
+
+		MUI.create({
+			control: 'MUI.Stepper',
+			container: container,
+			iterator: 'hex',
+			formTitle: 'hex',
+			id:node.value + 'stepper3'
+		});
+
+		MUI.create({
+			control: 'MUI.Stepper',
+			container: container,
+			iterator: 'time',
+			formTitle: 'time 24HR',
+			id:node.value + 'stepper4',
+			use24:true
+		});
+
+		MUI.create({
+			control: 'MUI.Stepper',
+			container: container,
+			iterator: 'time',
+			formTitle: 'time',
+			minValue:'6:00AM',
+			maxValue:'6:00PM',
+			id:node.value + 'stepper5'
+		});
+
+		MUI.create({
+			control: 'MUI.Stepper',
+			container: container,
+			iterator: 'list',
+			formTitle: 'list - days',
+			data:['Sun','Mon','Tues','Wed','Thur','Fri','Sat'],
+			id:node.value + 'stepper6'
+		});
+
+		MUI.create({
+			control: 'MUI.Stepper',
+			container: container,
+			iterator: 'list',
+			formTitle: 'list - month',
+			width:70,
+			data:['January','February','March','April','May','June','July','August','September','October','November','December'],
+			id:node.value + 'stepper7'
+		});
+
 	},
 
 	textBoxBuilder: function(e, node){

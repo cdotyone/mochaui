@@ -29,7 +29,7 @@ Object.append(MUI.controls, {
 	'grid':{'samples':['index'],data:['json'],'description':'Grid','isFtextbox.cssormControl':true,'css':['{theme}css/grid.css']},
 	'panel':{'samples':['demo'],data:['json'],'description':'Panel','isFormControl':true,'childNode':'content','childType':'MUI.Panel','css':['{theme}css/desktop.css']},
 	'selectlist':{'samples':['demo','index'],data:['json','html'],'description':'Grid View','isFormControl':true,'css':['{theme}css/selectlist.css']},
-	'stepper':{'samples':['demo','index'],data:['json'],'description':'Stepper','isFormControl':true,'js':['{control}stepper.js','{control}stepper.iterator.js'],'css':['{theme}css/stepper.css']},
+	'stepper':{'samples':['demo','index'],data:['json'],'description':'Stepper','isFormControl':true,'css':['{theme}css/stepper.css']},
 	'tabs':{'samples':['index'],data:['json','html'],'description':'Tabs','isFormControl':false,'css':['{theme}css/tab.css']},
 	'taskbar':{'samples':['demo'],data:['json'],'description':'Taskbar','isFormControl':false,'css':['{theme}css/taskbar.css']},
 	'textarea':{'samples':['index','demo'],data:['json','html'],'description':'Text Area','isFormControl':true,'css':['{theme}css/textbox.css']},
