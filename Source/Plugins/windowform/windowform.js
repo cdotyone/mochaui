@@ -47,7 +47,7 @@ MUI.WindowForm = new NamedClass('MUI.WindowForm', {
 
 	initialize: function(options){
 		this.setOptions(options);
-		this.options.id = 'win' + (++MUI.idCount);
+		this.options.id = 'windowform' + (++MUI.idCount);
 		this.options.title = $('newWindowHeaderTitle').value;
 
 		if ($('htmlLoadMethod').checked){
