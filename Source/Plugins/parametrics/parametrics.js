@@ -63,11 +63,11 @@ var Parametrics = {
 			}
 		});
 	},
-	
+
 	addRadiusSlider: function(){
 		if ($('radiusSliderarea')){
 			var windowOptions = MUI.Windows.options;
-			var sliderFirst = true;
+			var sliderFirst = false;	// [i_a] first invocation of onChange must be processed as that is the only one we'll get on init to set the correct value in the parametrics window!
 			var mochaSlide = new Slider('radiusSliderarea', 'radiusSliderknob', {
 				steps: 14,
 				offset: 0,
