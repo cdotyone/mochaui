@@ -19,7 +19,7 @@
  - MUI
  - MUI.Core
 
- provides: [MUI.Dock]
+ provides: [MUI.Desktop]
 
  ...
  */
