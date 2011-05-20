@@ -166,7 +166,7 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 				onComplete: function(){
 					var instance = MUI.get(o.container);
 					this.accordionTimer = clearInterval(this.accordionTimer);
-					if (instance.dynamicResize) instance.dynamicResize(); // once more for good measure
+					if (instance && instance.dynamicResize) instance.dynamicResize(); // once more for good measure
 				}
 			});
 		}.bind(this);
