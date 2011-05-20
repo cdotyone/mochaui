@@ -1,7 +1,7 @@
 /*
 ---
 
-name: Mask.Repeat
+name: MUI.Mask.Repeat
 
 description: A mask that is defined by a pattern that will match each of the inputted chars.
 

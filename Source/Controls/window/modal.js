@@ -13,7 +13,7 @@
 
  requires:
  - MochaUI/MUI
- - MochaUI/MUI.Windows
+ - MochaUI/MUI.Window
 
  provides: [MUI.Modal]
 

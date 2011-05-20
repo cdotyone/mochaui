@@ -11,7 +11,7 @@
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 
- requires: [MochaUI/MUI]
+ requires: [MUI.Dock, MUI.Toolbar]
 
  provides: [MUI.Windows]
 
