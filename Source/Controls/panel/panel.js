@@ -294,7 +294,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		var parent = MUI.get($(options.container));
 		if (parent.isTypeOf('MUI.Column')){
 			if (expandedSiblings.length == 0 && parent.options.placement != 'main'){
-				parent.toggle();
+				parent.collapse();  // [i_a] more aptly named than .toggle()
 				return;
 			} else if (expandedSiblings.length == 0 && parent.options.placement == 'main'){
 				return;
@@ -354,8 +354,10 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 	},
 
 	toggle: function(){
-		if (this.isCollapsed) this.expand();
-		else this.collapse();
+		if (this.isCollapsed)
+			this.expand();
+		else
+			this.collapse();
 		return this;
 	},
 
