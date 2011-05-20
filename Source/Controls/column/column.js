@@ -105,7 +105,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 					opacity: 0.2,
 					handle: '.panel-header',
 					constrain: false,
-					clone: true,
+					clone: false,
 					revert: { duration: 500, transition: 'quad:in'},
 					onStart: function(element, clone){
 						var pos = element.getPosition(document.body);
@@ -188,7 +188,9 @@ MUI.Column = new NamedClass('MUI.Column', {
 			for(var i=0;i<options.panels.length;i++) {
 				var panel=options.panels[i];
 
-				if (!panel.id) panel.id = options.id + 'Panel' + i;
+				if (!panel.id) {
+					panel.id = options.id + 'Panel' + i;
+				}
 				panel.container = this.el.column;
 				panel.column = options.id;
 				panel.element = new Element('div', {'id':panel.id+'_wrapper'}).inject(this.el.column);
