@@ -189,7 +189,7 @@ MUI.Windows = Object.append((MUI.Windows || {}), {
 		newWindows.each(function(options){
 			var temp = new Object(options);
 
-			temp.each(function(value, key){
+			Object.each(temp, function(value, key){
 				if (typeOf(value) != 'string') return;
 				if (value.substring(0, 8) == 'function'){
 					eval("options." + key + " = " + value);
@@ -1165,7 +1165,7 @@ MUI.Window.implement({
 		this.sections.each(function(section){
 			if (!section.position || section.position == 'content'){
 				if (section.loadMethod == 'iframe') section.padding = 0;  // Iframes have their own padding.
-				section.container = this.el.content;
+				section.container = cache.content;   // [i_a] fix for undefined container further down the lane
 				return;
 			}
 			var id = options.id + '_' + (section.name || 'section' + (snum++));
