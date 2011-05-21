@@ -1302,8 +1302,8 @@ MUI.Window.implement({
 	_css3SetStyles: function(){
 		var options = this.options;
 		var cssobj = Asset.getCSSRule('.mochaCss3Shadow'); // [i_a] fix Safari 5 error (load order?)
-		var color = (typeof cssobj !== 'undefined' ? cssobj.style.backgroundColor : '#333');
-		if (typeof cssobj == 'undefined')
+		var color = (typeof cssobj === 'object' ? cssobj.style.backgroundColor : '#333');
+		if (typeof cssobj !== 'object')
 			console.warn('MUI.css3SetStyles: cannot find style mochaCss3Shadow');
 		['', '-o-', '-webkit-', '-moz-'].each(function(pre){
 			this.el.windowEl.setStyle(pre + 'box-shadow', options.shadowOffset.x + 'px ' + options.shadowOffset.y + 'px ' + options.shadowBlur + 'px ' + color);
