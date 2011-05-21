@@ -143,6 +143,8 @@ MUI.append({
 			var klass = MUI[name];
 			var obj = new klass(options);
 			if (options.onNew) options.onNew(obj);
+			if (options.fromHTML && obj.fromHTML) obj.fromHTML();
+			new MUI.Require(r);
 			return obj;
 		}
 
