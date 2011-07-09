@@ -543,8 +543,9 @@ MUI.append({
 		}.bind(this));
 
 		remainingHeight = column.offsetHeight.toInt() - this.height;
+		if(remainingHeight<0) remainingHeight=10;
 
-		if (remainingHeight != 0 && tallestPanelHeight > 0){
+		if (remainingHeight > 0 && tallestPanelHeight > 0){
 			tallestPanel.setStyle('height', tallestPanel.getStyle('height').toInt() + remainingHeight);
 			if (tallestPanel.getStyle('height') < 1){
 				tallestPanel.setStyle('height', 0);
