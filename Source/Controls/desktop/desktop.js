@@ -462,7 +462,7 @@ MUI.append({
 
 					// NEW PANEL
 					// Resize panels that are "new" or not collapsed
-					if (action == 'new'){
+					if (action == 'new' || action=='all'){
 						if (!instance.isCollapsed && el != changing){
 							panelsToResize.push(el);
 							this.panelsTotalHeight += el.offsetHeight.toInt();
@@ -507,15 +507,12 @@ MUI.append({
 		}.bind(this));
 
 		// Get the remaining height
-		var remainingHeight = column.offsetHeight.toInt() - this.height;
 		this.height = 0;
-
 		// Get height of all the column's children
 		column.getChildren().each(function(el){
 			this.height += el.offsetHeight.toInt();
 		}.bind(this));
-
-		remainingHeight = column.offsetHeight.toInt() - this.height;
+		var remainingHeight = column.offsetHeight.toInt() - this.height;
 
 		panelsToResize.each(function(panel){
 			var ratio = this.panelsTotalHeight / panel.offsetHeight.toInt();
