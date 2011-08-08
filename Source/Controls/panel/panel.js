@@ -368,9 +368,13 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				'height': 16
 			},
 			'title': 'Collapse Panel'
-		}).addEvent('click', function(){
+		}).addEvent('click', function(e){
+			e.stop();
 			this.toggle();
-		}.bind(this));
+		}.bind(this)).addEvent('mousedown', function(e){
+					e = e.stop();
+					e.target.focus();
+		});
 	},
 
 	_addResizeBottom: function(){
