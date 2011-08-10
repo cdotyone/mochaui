@@ -68,7 +68,7 @@ MUI.Require = new Class({
 	requireOnload: function(){
 		this.assetsLoaded++;
 		if (this.assetsLoaded == this.assetsToLoad){
-			this.options.onload();
+			if(this.options.onload) this.options.onload();
 			return true;
 		}
 	},
