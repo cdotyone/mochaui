@@ -1147,6 +1147,7 @@ MUI.Window.implement({
 
 		switch (typeOf(options.content)){
 			case 'string':
+		    case 'element':
 				// was passed html, so make sure it is added
 				this.sections.push({
 					loadMethod:'html',
