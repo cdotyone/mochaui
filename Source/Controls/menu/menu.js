@@ -138,6 +138,8 @@ MUI.Menu = new NamedClass('MUI.Menu', {
 				this._buildItems(ul2, item.items, true);
 			}
 
+			if (item.id) a.setAttribute('id', item.id);
+
 			this.fireEvent('itemDrawEnd', [this, item]);
 		}
 	},
