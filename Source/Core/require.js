@@ -103,7 +103,7 @@ MUI.Require = new Class({
 			var tries = 0;
 			var checker = (function(){
 				tries++;
-				if (MUI.files[source] == 'loading' && tries < '100') return;
+				if (MUI.files[source] == 'loading' && tries < 100) return;
 				clearInterval(checker);
 				if (typeof onload == 'function'){
 					onload();

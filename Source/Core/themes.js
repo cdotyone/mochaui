@@ -113,7 +113,7 @@ MUI.Themes = {
 		});
 
 		this.newSheets.each(function(sheet){
-			MUI.files[sheet.get('href')] = 1;
+			MUI.files[sheet.get('href')] = 'loaded';
 			sheet.inject(document.head);
 		});
 

@@ -29,7 +29,7 @@ MUI.append({
 		Object.each(MUI.options.pluginGroups, function(group, name){
 			if (MUI.files['{' + name + '}mui-' + name + '.js'] != 'loaded'){
 				MUI[name] = [];
-				Object.append(js, ['{' + name + '}mui-' + name + '.js']);
+				js = js.append(['{' + name + '}mui-' + name + '.js']);
 			}
 		});
 		if (js.length > 0) new MUI.Require({'js':js, 'onload':onload });
@@ -44,7 +44,7 @@ MUI.append({
 			var controls = [];
 			for (var j = 0; j < options.length; j++)
 				controls.push({control:options[j]});
-			options = {controls:controls, onload:(arguments.length > 0) ? arguments[1] : null, loadOnly:true};
+			options = {controls:controls, onload:(arguments.length > 1) ? arguments[1] : null, loadOnly:true};
 		}
 		MUI.create(options);
 	},
@@ -110,7 +110,7 @@ MUI.append({
 
 	create:function(options){
 		// convert none hash parameters to hash
-		if (typeOf(options) == 'string') options = {control:options,onload:(arguments.length > 0) ? arguments[1] : null};
+		if (typeOf(options) == 'string') options = {control:options,onload:(arguments.length > 1) ? arguments[1] : null};
 		if (!MUI.initialized) MUI.initialize(); // initialize mocha if needed
 
 		if (this.loadPluginGroups(function(){ // make sure all all plugin/control group configurations are loaded
