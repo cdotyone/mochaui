@@ -15,8 +15,23 @@
  */
 
 /* CheckboxGrid */
-fieldset.cbg { display: block; padding: 0 0 0 10px; border:none; }
-fieldset.cbg span { white-space:nowrap; float:left }
-fieldset.cbg label { padding-right:3px; }
-fieldset.cbg input { padding-right:3px; }
+fieldset.cbg {
+	display: block;
+	padding: 0 0 0 10px;
+	border: none;
+}
+
+fieldset.cbg span {
+	white-space: nowrap;
+	float: left
+}
+
+fieldset.cbg label {
+	padding-right: 3px;
+}
+
+fieldset.cbg input {
+	padding-right: 3px;
+}
+
 /* CheckboxGrid */

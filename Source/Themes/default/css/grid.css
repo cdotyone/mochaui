@@ -14,75 +14,322 @@
  ...
  */
 
-.grid { font-family: Verdana, Geneva, Arial, Helvetica, sans-serif; font-size: 11px; position: relative; border: 0 solid #eee; overflow: hidden; /* to exclude debug */ color: #000; }
-.grid div.hDivBox { position: relative; overflow: hidden; }
-.grid div.hDiv /* header div */ { background: #fafafa url(../images/bg-panel-header.gif) repeat-x bottom; position: relative; border: 1px solid #ccc; border-bottom: 0; overflow: hidden; }
-.grid div.bDiv /* body div */ { border: 1px solid #ccc; border-top: 0; background: #fff; overflow: auto; position: relative; }
-.grid div.hDiv .th, .grid div.bDiv .td /* common cell properties*/ { text-align: left; border-right: 1px solid #ddd; border-left: 1px solid #fff; vertical-align: top !important; display: inline-block; float: left; white-space: nowrap; overflow: hidden; padding-left: 5px; cursor: pointer; }
-.grid ::selection { color: none; background-color: transparent; }
-.grid div.hDiv div.th { line-height: 24px; border-bottom: 1px solid #CCC; }
-.grid div.bDiv .td { line-height: 24px; }
-.grid div.bDiv ul { margin: 0; padding: 0; border-bottom: 1px solid #DDDDDD; overflow: hidden; }
-.grid div.bDiv ul li { margin: 0; padding: 0; list-style: none; overflow: hidden; }
-.grid li.erow /* alt rows */ { background-color: #f7f7f7; }
-.grid li.selected { background-color: #d9e6f4 !important; }
-.grid li.over { background-color: #eaeff4; }
+.grid {
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	position: relative;
+	border: 0 solid #eee;
+	overflow: hidden; /* to exclude debug */
+	color: #000;
+}
+
+.grid div.hDivBox {
+	position: relative;
+	overflow: hidden;
+}
+
+.grid div.hDiv /* header div */
+{
+	background: #fafafa url(../images/bg-panel-header.gif) repeat-x bottom;
+	position: relative;
+	border: 1px solid #ccc;
+	border-bottom: 0;
+	overflow: hidden;
+}
+
+.grid div.bDiv /* body div */
+{
+	border: 1px solid #ccc;
+	border-top: 0;
+	background: #fff;
+	overflow: auto;
+	position: relative;
+}
+
+.grid div.hDiv .th, .grid div.bDiv .td /* common cell properties*/
+{
+	text-align: left;
+	border-right: 1px solid #ddd;
+	border-left: 1px solid #fff;
+	vertical-align: top !important;
+	display: inline-block;
+	float: left;
+	white-space: nowrap;
+	overflow: hidden;
+	padding-left: 5px;
+	cursor: pointer;
+}
+
+.grid ::selection {
+	color: none;
+	background-color: transparent;
+}
+
+.grid div.hDiv div.th {
+	line-height: 24px;
+	border-bottom: 1px solid #CCC;
+}
+
+.grid div.bDiv .td {
+	line-height: 24px;
+}
+
+.grid div.bDiv ul {
+	margin: 0;
+	padding: 0;
+	border-bottom: 1px solid #DDDDDD;
+	overflow: hidden;
+}
+
+.grid div.bDiv ul li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	overflow: hidden;
+}
+
+.grid li.erow /* alt rows */
+{
+	background-color: #f7f7f7;
+}
+
+.grid li.selected {
+	background-color: #d9e6f4 !important;
+}
+
+.grid li.over {
+	background-color: #eaeff4;
+}
 
 /* accordion */
-.grid div.bDiv .toggleicon { background-image: url(../images/o-plusminus.gif); background-repeat: no-repeat; width: 16px; height: 16px; float: left; margin: 4px 3px 0 0; }
-.grid div.bDiv ul li.section { display: none; border-right: 1px solid #ddd; border-bottom: 1px solid #eeeeee; border-top: 1px solid #eeeeee; }
+.grid div.bDiv .toggleicon {
+	background-image: url(../images/o-plusminus.gif);
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+	float: left;
+	margin: 4px 3px 0 0;
+}
+
+.grid div.bDiv ul li.section {
+	display: none;
+	border-right: 1px solid #ddd;
+	border-bottom: 1px solid #eeeeee;
+	border-top: 1px solid #eeeeee;
+}
+
 /* accordion */
 
 /* toolbar */
-.grid div.tDiv { background: #fafafa url(../images/bg-panel-header.gif) repeat-x top; position: relative; border: 1px solid #ccc; border-bottom: 0; overflow: hidden; height: 25px; }
-.grid div.fbutton { margin-top: 1px; float: left; display: block; cursor: pointer; padding: 1px; }
-.grid div.fbutton div { float: left; padding: 1px 3px; }
-.grid div.fbutton span { float: left; display: block; padding: 3px; }
-.grid div.fbutton.fbOver { padding: 0; border: 1px solid #ccc; }
-.grid div.fbutton.fbOver div { padding: 0 2px; border: 1px solid #fff; border-right-color: #eee; border-bottom-color: #eee; }
-.grid div.fbutton .add { background: transparent url(../images/o-add.png) no-repeat scroll left center; }
-.grid div.fbutton .delete { background: transparent url(../images/o-delete.png) no-repeat scroll left center; }
+.grid div.tDiv {
+	background: #fafafa url(../images/bg-panel-header.gif) repeat-x top;
+	position: relative;
+	border: 1px solid #ccc;
+	border-bottom: 0;
+	overflow: hidden;
+	height: 25px;
+}
+
+.grid div.fbutton {
+	margin-top: 1px;
+	float: left;
+	display: block;
+	cursor: pointer;
+	padding: 1px;
+}
+
+.grid div.fbutton div {
+	float: left;
+	padding: 1px 3px;
+}
+
+.grid div.fbutton span {
+	float: left;
+	display: block;
+	padding: 3px;
+}
+
+.grid div.fbutton.fbOver {
+	padding: 0;
+	border: 1px solid #ccc;
+}
+
+.grid div.fbutton.fbOver div {
+	padding: 0 2px;
+	border: 1px solid #fff;
+	border-right-color: #eee;
+	border-bottom-color: #eee;
+}
+
+.grid div.fbutton .add {
+	background: transparent url(../images/o-add.png) no-repeat scroll left center;
+}
+
+.grid div.fbutton .delete {
+	background: transparent url(../images/o-delete.png) no-repeat scroll left center;
+}
+
 /* toolbar */
 
 /* Filter */
-.grid li.hide { display: none; }
-.grid li.filter { }
+.grid li.hide {
+	display: none;
+}
+
+.grid li.filter {
+}
+
 /* Filter */
 
 /* columns size drag */
-.grid div.cDrag { float: left; position: absolute; z-index: 2; overflow: visible; }
-.grid div.cDrag div { float: left; background: none; display: block; position: absolute; height: 24px; width: 5px; cursor: col-resize; }
-.grid div.cDrag div.dragging { background: url(../images/o-line.gif) repeat-y 2px center; }
+.grid div.cDrag {
+	float: left;
+	position: absolute;
+	z-index: 2;
+	overflow: visible;
+}
+
+.grid div.cDrag div {
+	float: left;
+	background: none;
+	display: block;
+	position: absolute;
+	height: 24px;
+	width: 5px;
+	cursor: col-resize;
+}
+
+.grid div.cDrag div.dragging {
+	background: url(../images/o-line.gif) repeat-y 2px center;
+}
+
 /* columns size drag */
 
 /* sort */
-.grid div.hDiv div.desc { background: url(../images/o-dn.png) no-repeat center top; border-bottom: 1px solid orange !important; }
-.grid div.hDiv div.asc { background: url(../images/o-up.png) no-repeat center top; border-bottom: 1px solid orange !important; }
+.grid div.hDiv div.desc {
+	background: url(../images/o-dn.png) no-repeat center top;
+	border-bottom: 1px solid orange !important;
+}
+
+.grid div.hDiv div.asc {
+	background: url(../images/o-up.png) no-repeat center top;
+	border-bottom: 1px solid orange !important;
+}
+
 /* sort */
 
 /* Pagination */
-.grid div.pDiv { background: url(../images/bg-panel-header.gif) repeat-x 0 -1px; border: 1px solid #ccc; border-top: 0; overflow: hidden; white-space: nowrap; }
-.grid div.pDiv div.pDiv2 { margin: 2px; margin-left: -2px; float: left; width: 1024px; }
-div.pGroup { float: left; background: none; height: 24px; margin: 0 5px; }
-.grid div.pDiv .pPageStat, .grid div.pDiv .pcontrol { position: relative; top: 5px; overflow: visible; font-size: 10px; color: #777777; }
-.grid div.pDiv select { font-size: 10px; margin-top: 2px; }
-.grid div.pDiv input { vertical-align: text-top; position: relative; top: -2px; font-size: 10px; }
-.grid div.pDiv .btnseparator { height: 19px; float:left; }
-.grid div.pDiv div.pButton { float: left; width: 16px; height: 16px; border: 0; cursor: pointer; overflow: hidden; margin-top: 3px; }
-.grid div.pDiv div.pButton:hover, .grid div.pDiv div.pButton.pBtnOver { background-position: -16px 0; }
-.grid2 div.pDiv div.pButton:hover, .grid2 div.pDiv div.pButton.pBtnOver { width: 14px; height: 14px; border: 1px solid #ccc; cursor: pointer; }
-.grid .pSearch { background: url(../images/o-magnifier.png) no-repeat center; }
-.grid .pFirst { background: url(../images/o-first.gif) no-repeat; }
-.grid .pPrev { background: url(../images/o-prev.gif) no-repeat; }
-.grid .pNext { background: url(../images/o-next.gif) no-repeat; }
-.grid .pLast { background: url(../images/o-last.gif) no-repeat; }
-.grid .pReload { background: url(../images/o-refresh.gif) no-repeat; }
-.grid .pReload.loading { background: url(../images/o-load.gif) no-repeat; background-position: 0 0 !important; }
-.grid .elementloader { width: 16px; height: 16px; background: url(../images/o-load.gif) no-repeat; position: absolute; }
+.grid div.pDiv {
+	background: url(../images/bg-panel-header.gif) repeat-x 0 -1px;
+	border: 1px solid #ccc;
+	border-top: 0;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+.grid div.pDiv div.pDiv2 {
+	margin: 2px;
+	margin-left: -2px;
+	float: left;
+	width: 1024px;
+}
+
+div.pGroup {
+	float: left;
+	background: none;
+	height: 24px;
+	margin: 0 5px;
+}
+
+.grid div.pDiv .pPageStat, .grid div.pDiv .pcontrol {
+	position: relative;
+	top: 5px;
+	overflow: visible;
+	font-size: 10px;
+	color: #777777;
+}
+
+.grid div.pDiv select {
+	font-size: 10px;
+	margin-top: 2px;
+}
+
+.grid div.pDiv input {
+	vertical-align: text-top;
+	position: relative;
+	top: -2px;
+	font-size: 10px;
+}
+
+.grid div.pDiv .btnseparator {
+	height: 19px;
+	float: left;
+}
+
+.grid div.pDiv div.pButton {
+	float: left;
+	width: 16px;
+	height: 16px;
+	border: 0;
+	cursor: pointer;
+	overflow: hidden;
+	margin-top: 3px;
+}
+
+.grid div.pDiv div.pButton:hover, .grid div.pDiv div.pButton.pBtnOver {
+	background-position: -16px 0;
+}
+
+.grid2 div.pDiv div.pButton:hover, .grid2 div.pDiv div.pButton.pBtnOver {
+	width: 14px;
+	height: 14px;
+	border: 1px solid #ccc;
+	cursor: pointer;
+}
+
+.grid .pSearch {
+	background: url(../images/o-magnifier.png) no-repeat center;
+}
+
+.grid .pFirst {
+	background: url(../images/o-first.gif) no-repeat;
+}
+
+.grid .pPrev {
+	background: url(../images/o-prev.gif) no-repeat;
+}
+
+.grid .pNext {
+	background: url(../images/o-next.gif) no-repeat;
+}
+
+.grid .pLast {
+	background: url(../images/o-last.gif) no-repeat;
+}
+
+.grid .pReload {
+	background: url(../images/o-refresh.gif) no-repeat;
+}
+
+.grid .pReload.loading {
+	background: url(../images/o-load.gif) no-repeat;
+	background-position: 0 0 !important;
+}
+
+.grid .elementloader {
+	width: 16px;
+	height: 16px;
+	background: url(../images/o-load.gif) no-repeat;
+	position: absolute;
+}
+
 /* Pagination */
 
 /* Inline-Edit */
-.grid input.inline { padding: 1px 2px 1px 2px; }
+.grid input.inline {
+	padding: 1px 2px 1px 2px;
+}
+
 /*
 *::-moz-selection {
    background: #FF3C00;

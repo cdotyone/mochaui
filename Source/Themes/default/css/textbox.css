@@ -15,8 +15,23 @@
  */
 
 /* textbox settings */
-fieldset.form { display: block; padding: 0 0 0 10px; border:none; }
-fieldset.form label { float: left; width: 200px; }
-fieldset.form { font-family:Helvetica,Arial,sans-serif;  }
-fieldset.form textarea { padding:5px; }  
+fieldset.form {
+	display: block;
+	padding: 0 0 0 10px;
+	border: none;
+}
+
+fieldset.form label {
+	float: left;
+	width: 200px;
+}
+
+fieldset.form {
+	font-family: Helvetica, Arial, sans-serif;
+}
+
+fieldset.form textarea {
+	padding: 5px;
+}
+
 /* textbox settings */

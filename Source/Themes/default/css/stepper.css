@@ -15,10 +15,31 @@
  */
 
 /* stepper settings */
-fieldset.stepper { display: block; padding: 0 0 0 10px; border:none; margin-right: 0; clear: both; margin-top:2px; }
-fieldset.stepper label { float: left; width: 200px; }
-fieldset.stepper { font-family:Helvetica,Arial,sans-serif;  }
-input.stepper { float: left; height: 19px; margin: 0; border: 1px solid #000; border-right: none; padding: 1px;
+fieldset.stepper {
+	display: block;
+	padding: 0 0 0 10px;
+	border: none;
+	margin-right: 0;
+	clear: both;
+	margin-top: 2px;
+}
+
+fieldset.stepper label {
+	float: left;
+	width: 200px;
+}
+
+fieldset.stepper {
+	font-family: Helvetica, Arial, sans-serif;
+}
+
+input.stepper {
+	float: left;
+	height: 19px;
+	margin: 0;
+	border: 1px solid #000;
+	border-right: none;
+	padding: 1px;
 	-webkit-border-top-left-radius: 3px;
 	-webkit-border-bottom-left-radius: 3px;
 	-moz-border-radius-topleft: 3px;
@@ -27,7 +48,17 @@ input.stepper { float: left; height: 19px; margin: 0; border: 1px solid #000; bo
 	border-bottom-left-radius: 3px;
 	background: #FFF;
 }
-fieldset div.stepperContainer { float: left; width: 15px; height: 19px; top: 5px; left: -2px; padding: 0; margin: 0; }
+
+fieldset div.stepperContainer {
+	float: left;
+	width: 15px;
+	height: 19px;
+	top: 5px;
+	left: -2px;
+	padding: 0;
+	margin: 0;
+}
+
 fieldset div.stepperUp,
 fieldset div.stepperDown {
 	margin: 0;
@@ -48,17 +79,24 @@ fieldset div.stepperDown {
 	-moz-user-select: none;
 	user-select: none;
 }
-fieldset div.stepperDown { line-height: 7px; border-top: none; }
+
+fieldset div.stepperDown {
+	line-height: 7px;
+	border-top: none;
+}
+
 fieldset div.stepperUp.over,
 fieldset div.stepperDown.over {
 	background: #718ba6;
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#7995b3), to(#576a80));
 	background: -moz-linear-gradient(0% 90% 90deg, #576a80, #7995b3);
 }
+
 fieldset div.stepperUp.active,
 fieldset div.stepperDown.active {
 	background: #718ba6;
 }
+
 fieldset div.stepperUp.disabled,
 fieldset div.stepperDown.disabled {
 	border-color: #9C9DA6;
@@ -67,4 +105,5 @@ fieldset div.stepperDown.disabled {
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#EFEFEF), to(#CCC));
 	background: -moz-linear-gradient(0% 90% 90deg, #CCC, #EFEFEF);
 }
+
 /* stepper settings */

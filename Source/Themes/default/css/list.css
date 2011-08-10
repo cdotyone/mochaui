@@ -15,17 +15,84 @@
  */
 
 /* List */
-.list { background-color: White; border: solid 1px black; margin: 20px; }
-div.list { overflow: auto; background-color: White; border: solid 1px #dddddd; margin: 0; }
-div.list div.List { border: none; }
-div.list tr td { height:21px; padding: 0 5px 0 5px; background-color: white; font: normal 9pt Sans-Serif, Arial; color:black; }
-div.list tr.alt td { background-color: #eeeeee; }
-div.list tr.C td { color:black; background-color:#0099cc; cursor: pointer; }
-div.list tr.O td { color:black; background-color: #999999; cursor: pointer; }
-div.list tr td img { border:none; }
-div.list tr td a { color:black; text-decoration:none }
-div.list tr td a:hover { text-decoration:underline }
-div.list tr.head td { white-space: nowrap; color:#444444; height: 20px; background: #718BA6 url(../images/bg-panel-header.gif) repeat-x; border-bottom: solid 1px #999999; border-left: solid 1px #999999; vertical-align: middle; line-height: 20px; font-family: Sans-Serif; font-weight: bold; font-size: 9pt; }
-div.list tr.head td { line-height: 18px; color:#444444; font-family: Sans-Serif; font-size: 13px; font-weight: bold;  }
-div.list tr.head td.first { border-left: none; }
+.list {
+	background-color: White;
+	border: solid 1px black;
+	margin: 20px;
+}
+
+div.list {
+	overflow: auto;
+	background-color: White;
+	border: solid 1px #dddddd;
+	margin: 0;
+}
+
+div.list div.List {
+	border: none;
+}
+
+div.list tr td {
+	height: 21px;
+	padding: 0 5px 0 5px;
+	background-color: white;
+	font: normal 9pt Sans-Serif, Arial;
+	color: black;
+}
+
+div.list tr.alt td {
+	background-color: #eeeeee;
+}
+
+div.list tr.C td {
+	color: black;
+	background-color: #0099cc;
+	cursor: pointer;
+}
+
+div.list tr.O td {
+	color: black;
+	background-color: #999999;
+	cursor: pointer;
+}
+
+div.list tr td img {
+	border: none;
+}
+
+div.list tr td a {
+	color: black;
+	text-decoration: none
+}
+
+div.list tr td a:hover {
+	text-decoration: underline
+}
+
+div.list tr.head td {
+	white-space: nowrap;
+	color: #444444;
+	height: 20px;
+	background: #718BA6 url(../images/bg-panel-header.gif) repeat-x;
+	border-bottom: solid 1px #999999;
+	border-left: solid 1px #999999;
+	vertical-align: middle;
+	line-height: 20px;
+	font-family: Sans-Serif;
+	font-weight: bold;
+	font-size: 9pt;
+}
+
+div.list tr.head td {
+	line-height: 18px;
+	color: #444444;
+	font-family: Sans-Serif;
+	font-size: 13px;
+	font-weight: bold;
+}
+
+div.list tr.head td.first {
+	border-left: none;
+}
+
 /* List */
