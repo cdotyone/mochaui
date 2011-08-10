@@ -1196,6 +1196,7 @@ MUI.Window.implement({
 				this.el.windowEl.close();
 			}.bind(this)});
 		}
+		if(Browser.ie) buttons.reverse();
 		new MUI.Toolbar({id:id + '_controls',element:cache.controls,divider:false,container:cache.titleBar,buttons:buttons});
 
 		if (options.useSpinner && options.shape != 'gauge' && options.type != 'notification'){
