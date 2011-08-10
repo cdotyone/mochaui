@@ -674,11 +674,11 @@ MUI.Window.implement({
 
 		var top, left;
 		if (options.centered){
-			top = typeof(options.top) != 'undefined' ? options.top : oldTop - ((options.height - oldHeight) * .5);
-			left = typeof(options.left) != 'undefined' ? options.left : oldLeft - ((options.width - oldWidth) * .5);
+			top = typeof(options.top) != 'null' ? options.top : oldTop - ((options.height - oldHeight) * .5);
+			left = typeof(options.left) != 'null' ? options.left : oldLeft - ((options.width - oldWidth) * .5);
 		} else {
-			top = typeof(options.top) != 'undefined' ? options.top : oldTop;
-			left = typeof(options.left) != 'undefined' ? options.left : oldLeft;
+			top = typeof(options.top) != 'null' ? options.top : oldTop;
+			left = typeof(options.left) != 'null' ? options.left : oldLeft;
 		}
 
 		if (MUI.options.advancedEffects){
