@@ -3464,7 +3464,14 @@ Element.implement({
 		} else if (value == String(Number(value))){
 			value = Math.round(value);
 		}
-		this.style[property] = value;
+
+    // bug with IE if wrong value for property(ie: height lesser than zero)
+    try {
+      this.style[property] = value;
+    }
+    catch(err) {
+      //alert(property + ' : ' + value + "\n" + err.description);
+    }
 		return this;
 	},
 
