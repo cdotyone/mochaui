@@ -116,13 +116,13 @@ MUI.Require = new Class({
 		} else {  // If the asset is not yet loaded or loading, start loading the asset.
 			MUI.files[source] = 'loading';
 
-			properties = {
+			var properties = {
 				'onload': onload != 'undefined' ? onload : null
 			};
 
 			// Add to the onload function
 			var oldonload = properties.onload;
-			properties.onload = function(/* source */){
+			properties.onload = function(){
 				MUI.files[source] = 'loaded';
 				if (typeof oldonload == 'function') {
 					oldonload(source);
