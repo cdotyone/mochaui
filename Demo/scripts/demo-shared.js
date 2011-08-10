@@ -593,7 +593,8 @@ Object.append(Demo, {
 		Demo.modalCount++;
 		var content = 'Your modal window content';
 		if (Demo.modalCount < 3) content += '<br/><br/><a id="createModal' + Demo.modalCount + '">Create Another Modal</a>';
-		new MUI.Modal({
+		MUI.create({
+			control:'MUI.Modal',
 			id: 'modalDemo' + Demo.modalCount,
 			title: 'A Modal Window ' + Demo.modalCount,
 			content: content,
