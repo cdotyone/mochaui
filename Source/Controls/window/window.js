@@ -776,6 +776,7 @@ MUI.Window.implement({
 		if (this.isClosing) return this;
 
 		this.isClosing = true;
+		if (this.el.windowEl.hasClass('isFocused')) this.fireEvent('blur', [this]);
 		this.fireEvent('close', [this]);
 
 		if (this.options.storeOnClose){
@@ -840,6 +841,8 @@ MUI.Window.implement({
 			if (this.el.iframe) this.el.iframe.setStyle('visibility', 'visible');
 			handles.show();
 		} else {
+			if (this.el.windowEl.hasClass('isFocused')) this.fireEvent('blur', [this]);
+
 			this.isCollapsed = true;
 			handles.hide();
 			if (this.el.iframe) this.el.iframe.setStyle('visibility', 'hidden');
