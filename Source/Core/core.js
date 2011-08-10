@@ -76,6 +76,7 @@ MUI.append({
 		}
 		Object.each(MUI.options.pluginGroups, MUI.addPluginGroup);
 		MUI.initialized = true;
+		if(Browser.ie && Browser.version>8) MUI.ieSupport='Moocanvas';
 	},
 
 	replaceFields: function(str, values){
