@@ -67,8 +67,8 @@ MUI.Canvas = Object.append((MUI.Canvas || {}), {
 		if (shadows && !useCSS3){
 			if (Browser.webkit){
 				var cssobj = Asset.getCSSRule('.mochaCss3Shadow'); // [i_a] fix Safari 5 error (load order?)
-				var color = (typeof cssobj !== 'undefined' ? cssobj.style.backgroundColor : '#333');
-				if (typeof cssobj == 'undefined')
+				var color = (typeof cssobj === 'object' ? cssobj.style.backgroundColor : '#333');
+				if (typeof cssobj !== 'object')
 					console.warn('MUI.drawGauge: cannot find style mochaCss3Shadow');
 				ctx.shadowColor = color.replace(/rgb/g,'rgba');
 				ctx.shadowOffsetX = shadowOffset.x;
