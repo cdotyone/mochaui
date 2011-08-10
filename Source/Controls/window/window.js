@@ -88,6 +88,8 @@ MUI.Windows = Object.append((MUI.Windows || {}), {
 		//onFocus:			null,
 		//onBlur:			null,
 		//onResize:			null,
+		//onResizeDragStart:null,
+		//onResizeDrag:		null,
 		//onMinimize:		null,
 		//onMaximize:		null,
 		//onRestore:		null,
@@ -1456,6 +1458,8 @@ MUI.Window.implement({
 			if (Browser.ie) this.el.iframe.hide();
 			else this.el.iframe.setStyle('visibility', 'hidden');
 		}
+
+		this.fireEvent('resizeDragStart', [this]);
 	},
 
 	_resizeOnDrag: function(){
@@ -1473,6 +1477,8 @@ MUI.Window.implement({
 				panel.setStyle('overflow', panel.retrieve('oldOverflow')); // Fix for a rendering bug in FF
 			});
 		}
+
+		this.fireEvent('resizeDrag', [this]);
 	},
 
 	_resizeOnComplete: function(){
