@@ -157,7 +157,7 @@ Object.append(Asset, {
 					'type': 'text/css',
 					'href': source
 				}).inject(document.head);
-				properties.onload();
+				if (typeOf(properties.onload) == 'function') properties.onload();
 			}.bind(this),
 			onFailure: function(){
 			},
