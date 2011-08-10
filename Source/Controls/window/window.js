@@ -187,7 +187,7 @@ MUI.Windows = Object.append((MUI.Windows || {}), {
 	newFromJSON: function(newWindows){
 
 		newWindows.each(function(options){
-			var temp = new Hash(options);
+			var temp = new Object(options);
 
 			temp.each(function(value, key){
 				if (typeOf(value) != 'string') return;

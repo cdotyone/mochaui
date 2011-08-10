@@ -172,8 +172,9 @@ MUI.Mask = new Class({
 	},
 
 	getNextInput: function(){
-		var fields = $A(this.element.form.elements), field;
-		for (var i = fields.indexOf(this.element) + 1, l = fields.length; i < l; i++){
+	var fields = Array.from(this.element.form.elements).slice();
+	var field;
+	for (var i = fields.indexOf(this.element) + 1, l = fields.length; i < l; i++){
 			field = fields[i];
 			if (this.isFocusableField(field)) return $(field);
 		}

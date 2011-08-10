@@ -120,12 +120,12 @@ var Notimoo = new Class({
 
         // Track scroll in parent element
         this.options.parent.addEvent('scroll', function() {
-            $clear(this.scrollTimeOut);
+            clearTimeout(this.scrollTimeOut);
             this.scrollTimeOut = (function() { manager._relocateActiveNotifications(manager.TYPE_RELOCATE_SCROLL) }).delay(200);
         }, this);
                
         window.addEvent('scroll', function() {
-            $clear(manager.scrollTimeOut);
+            clearTimeout(manager.scrollTimeOut);
             manager.scrollTimeOut = (function() { manager._relocateActiveNotifications(manager.TYPE_RELOCATE_SCROLL) }).delay(200);
         });
 

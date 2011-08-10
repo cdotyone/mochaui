@@ -76,7 +76,6 @@ MUI.append({
 		}
 		Object.each(MUI.options.pluginGroups, MUI.addPluginGroup);
 		MUI.initialized = true;
-		if(Browser.ie && Browser.version>8) MUI.ieSupport='Moocanvas';
 	},
 
 	replaceFields: function(str, values){
@@ -181,8 +180,8 @@ MUI.append({
 		Browser.firefox ? $(iframe).src = src : top.frames[iframe].location.reload(true);
 	},
 
-	notification: function(message){
-		MUI.create({
+	notification: function(message, options){
+		options = Object.append({
 			control: 'MUI.Window',
 			loadMethod: 'html',
 			closeAfter: 1500,
@@ -194,7 +193,8 @@ MUI.append({
 			y: 53,
 			padding: {top: 10, right: 12, bottom: 10, left: 12},
 			shadowBlur: 5
-		});
+		}, options);
+		MUI.create(options);
 	},
 
 	toggleAdvancedEffects: function(link){

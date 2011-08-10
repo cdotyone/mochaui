@@ -380,7 +380,7 @@ MUI.Content.Providers.xhr = {
 		var request = new Request({
 			url: content.persistKey,
 			method: content.method ? content.method : 'get',
-			data: content.data ? new Hash(content.data).toQueryString() : '',
+			data: content.data ? new Object(content.data).toQueryString() : '',
 			evalScripts: function(script){
 				content.javascript = script;
 			},
@@ -509,7 +509,7 @@ MUI.Content.Providers.json = {
 					url: content.persistKey,
 					update: content.element,
 					method: content.method ? content.method : 'get',
-					data: content.data ? new Hash(content.data).toQueryString() : '',
+					data: content.data ? new Object(content.data).toQueryString() : '',
 					evalScripts: false,
 					evalResponse: false,
 					headers: {'Content-Type':'application/json'},
