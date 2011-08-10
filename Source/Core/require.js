@@ -60,7 +60,9 @@ MUI.Require = new Class({
 				}.bind(this));
 			}.bind(this));
 		} else if (!options.js.length && !options.images.length){
-			this.options.onload();
+			if (typeof this.options.onload == 'function'){
+				this.options.onload();
+			}
 			return true;
 		} else this.requireContinue.delay(50, this); // Delay is for Safari
 	},
@@ -68,7 +70,9 @@ MUI.Require = new Class({
 	requireOnload: function(){
 		this.assetsLoaded++;
 		if (this.assetsLoaded == this.assetsToLoad){
-			if(this.options.onload) this.options.onload();
+			if (typeof this.options.onload == 'function'){
+				this.options.onload();
+			}
 			return true;
 		}
 	},
@@ -92,7 +96,7 @@ MUI.Require = new Class({
 		// If the asset is loaded, fire the onload function.
 		if (MUI.files[source] == 'loaded'){
 			if (typeof onload == 'function'){
-				onload();
+				onload(source);
 			}
 			return true;
 		}
@@ -106,7 +110,7 @@ MUI.Require = new Class({
 				if (MUI.files[source] == 'loading' && tries < 100) return;
 				clearInterval(checker);
 				if (typeof onload == 'function'){
-					onload();
+					onload(source);
 				}
 			}).periodical(50);
 		} else {  // If the asset is not yet loaded or loading, start loading the asset.
@@ -118,9 +122,11 @@ MUI.Require = new Class({
 
 			// Add to the onload function
 			var oldonload = properties.onload;
-			properties.onload = function(){
+			properties.onload = function(/* source */){
 				MUI.files[source] = 'loaded';
-				if (oldonload) oldonload();
+				if (typeof oldonload == 'function') {
+					oldonload(source);
+				}
 			}.bind(this);
 
 			var sourcePath = MUI.replacePaths(source);
