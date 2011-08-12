@@ -250,7 +250,7 @@ MUI.Tree = new NamedClass('MUI.Tree', {
 			node._ul = ul;
 
 			for (var i = 0; i < node.nodes.length; i++){
-				this.buildNode(node.nodes[i], node, ul, depth + 1);
+				this.buildNode(node.nodes[i], node, depth + 1);
 			}
 			ul.childNodes[ul.childNodes.length - 1].addClass('last');
 		} else li.addClass('nochild');
