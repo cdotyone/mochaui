@@ -887,12 +887,6 @@ MUI.Window.implement({
 
 	_setupEvents: function(){
 		var windowEl = this.el.windowEl;
-		// Set events
-		// Note: if a button does not exist, its due to properties passed to newWindow() stating otherwise
-		if (this.el.closeButton) this.el.closeButton.addEvent('click', function(e){
-			e.stop();
-			windowEl.close();
-		}.bind(this));
 
 		if (this.options.type == 'window'){
 			windowEl.addEvent('mousedown', function(e){
@@ -903,17 +897,6 @@ MUI.Window.implement({
 				}
 			}.bind(this));
 		}
-
-		if (this.el.minimizeButton) this.el.minimizeButton.addEvent('click', function(e){
-			e.stop();
-			this.minimize();
-		}.bind(this));
-
-		if (this.el.maximizeButton) this.el.maximizeButton.addEvent('click', function(e){
-			e.stop();
-			if (this.isMaximized) this._restoreMaximized();
-			else this.maximize();
-		}.bind(this));
 
 		if (this.options.collapsible){
 			// Keep titlebar text from being selected on double click in Safari.
@@ -1193,7 +1176,8 @@ MUI.Window.implement({
 
 		if (options.maximizable){
 			buttons.push({cssClass:'windowMaximize',title:'Maximize',onClick:function(){
-				this.maximize();
+				if (this.isMaximized) this._restoreMaximized();
+				else this.maximize();
 			}.bind(this)});
 		}
 
