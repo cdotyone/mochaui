@@ -93,7 +93,7 @@ MUI.Desktop = new NamedClass('MUI.Desktop', {
 						column.element = new Element('div', {'id':column.id}).inject(this.el.content);
 						column.control = 'MUI.Column';
 
-						if (section.columns.length > 1) column.element.setStyle('float', 'left');
+						//if (section.columns.length > 1) column.element.setStyle('float', 'left');
 
 						// last column we want it to call the this.setDesktopSize
 						MUI.create(column);
@@ -619,8 +619,30 @@ MUI.append({
 				MUI.resizeChildren(panel);
 			}.bind(this));
 		});
-	}
+		
+		if(container.get('id') !== 'desktop')
+		{
+			var c = 0;
+			var total_col = container.getElements('.column').length;
+			var placement = '';
 
+			container.getElements('.column').each(function(column){
+				placement = column.retrieve('instance').options.placement;
+				if(c+1 < total_col)
+				{
+					column.setStyle('float','left');
+				}else
+				{
+					if(placement === 'main')
+					{
+						column.setStyle('float','none');
+					}
+				}
+				c++;
+			});	
+		}
+	}
+	
 });
 
 MUI.Windows = Object.append((MUI.Windows || {}), {
