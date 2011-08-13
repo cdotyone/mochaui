@@ -459,7 +459,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 						// when only the vertical dimension is changed.
 						var width = instance.el.iframe.getStyle('width').toInt();
 						instance.el.iframe.setStyle('width', width - 1);
-						MUI.rWidth();
+						MUI.rWidth(instance.options.container);
 						instance.el.iframe.setStyle('width', width);
 					} else {
 						instance.el.iframe.setStyle('visibility', 'visible');
