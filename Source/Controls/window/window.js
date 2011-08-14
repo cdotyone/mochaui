@@ -613,9 +613,9 @@ MUI.Window.implement({
 		}
 
 		// Resize panels if there are any
-		if (MUI.desktop && this.el.contentWrapper.getChildren('.column').length != 0){
+		if (MUI.desktop && this.el.contentWrapper.getElements('.column').length != 0){
 			MUI.rWidth(this.el.contentWrapper);
-			this.el.contentWrapper.getChildren('.column').each(function(column){
+			this.el.contentWrapper.getElements('.column').each(function(column){
 				MUI.panelHeight(column);
 			});
 		}
@@ -1276,8 +1276,15 @@ MUI.Window.implement({
 		var height = 0;
 		if (this.sections){
 			this.sections.each(function(section){
-				if (section.position == 'content') return;
-				height += section.wrapperEl.getStyle('height').toInt() + section.wrapperEl.getStyle('border-top').toInt();
+				if (section.position == 'content'){ 
+					return;
+				}
+
+				if(section.wrapperEl){
+					height += section.wrapperEl.getStyle('height').toInt() + section.wrapperEl.getStyle('border-top').toInt();
+				}else if(section.container){
+					height += section.container.getStyle('height').toInt() + section.container.getStyle('border-top').toInt();
+				}
 			});
 		}
 		return height;
@@ -1487,8 +1494,8 @@ MUI.Window.implement({
 		}
 
 		// Resize panels if there are any
-		var columns = this.el.contentWrapper.getChildren('.column');
-		if (columns != null && columns.length > 0){
+		var columns = this.el.contentWrapper.getElements('.column');
+		if (columns != null && columns.length > 0){			
 			MUI.rWidth(this.el.contentWrapper);
 			columns.each(function(column){
 				MUI.panelHeight(column);
