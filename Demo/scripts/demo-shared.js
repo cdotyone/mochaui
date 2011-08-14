@@ -124,6 +124,14 @@ Object.append(Demo, {
 
 			return win.el.content;
 		}
+		
+		MUI.Content.update({
+			element: 'mainPanel', 
+			title: node.text, 
+			clear:true,
+			content:' '
+		});
+
 		return MUI.get('mainPanel').el.content;
 	},
 
