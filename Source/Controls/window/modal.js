@@ -55,7 +55,18 @@ MUI.Modal = new NamedClass('MUI.Modal', {
 
 		modalOverlay.addEvent('click', function(){
 			var instance = MUI.get(MUI.currentModal.id);
-			if (instance.options.modalOverlayClose) MUI.currentModal.close();
+			if (instance.options.modalOverlayClose){
+				
+				MUI.currentModal.close();
+
+				(function(){
+					var highest_win = MUI.Windows._getWithHighestZIndex();					
+					if(highest_win && highest_win.hasClass('modal'))
+					{
+						MUI.currentModal = highest_win;
+					}
+				}).delay(100);
+			}
 		});
 		
 		if (Browser.ie6){
