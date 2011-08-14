@@ -645,15 +645,27 @@ MUI.append({
 		/// intercepts workflow from MUI.Content.update
 		updateClear: function(options){
 			if (options.position == 'content'){
-				this.el.content.show().empty();
-				var iframes = this.el.contentWrapper.getElements('.mochaIframe');
-				if (iframes) iframes.destroy();
 
-				// Panels are not loaded into the padding div, so we remove them separately.
-				this.el.contentWrapper.getElements('.column').destroy();
-				this.el.contentWrapper.getElements('.columnHandle').destroy();
+				this.el.content.show();
+				
+				var iframes = this.el.contentWrapper.getElements('.mochaIframe');		
+				if(iframes.length > 0){
+					iframes.destroy();
+				}
+				
+				this.el.contentWrapper.getElements('.column').each(function(column_el){						
+						column_el.getElements('.panel').each(function(panel_el){
+							panel_el.retrieve('instance').close();							
+							MUI.erase(panel_el);							
+						});
+						column_el.retrieve('instance').close();
+						MUI.erase(column_el);
+				});
 
-				if (this.el.content.getParent() == null) this.el.content.inject(this.el.element);
+				MUI.WindowPanelShared.empty.apply(this);
+				
+				if (this.el.content.getParent() == null) this.el.content.inject(this.el.element);					
+				
 
 				return false;
 			}
@@ -663,10 +675,10 @@ MUI.append({
 		/// intercepts workflow from MUI.Content.update
 		updateSetContent: function(options){
 			if (options.position == 'content'){
-				if (options.loadMethod == 'html') this.el.content.addClass('pad');
-				if (options.loadMethod == 'iframe'){
-					this.el.content.removeClass('pad');
-					this.el.content.setStyle('padding', '0px');
+				if (options.loadMethod == 'html'){					
+					this.el.content.show();				
+				}
+				if (options.loadMethod == 'iframe'){									
 					this.el.content.hide();
 					options.element = this.el.contentWrapper;
 				}
