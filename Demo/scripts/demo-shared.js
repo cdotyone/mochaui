@@ -52,7 +52,7 @@ Object.append(Demo, {
 				element: 'mainPanel', 
 				title: 'Youtube in Iframe', 
 				clear:true,				
-				url: 'pages/youtube5.html', 
+				url: '{demo}pages/youtube5.html', 
 				loadMethod:'iframe'
 			});
 		}
@@ -86,10 +86,10 @@ Object.append(Demo, {
 							loadMethod: 'json',							
 							value:'FleetFoxes',															
 							tabs: [
-								{'text': 'Zero 7/Destiny', 'value':'Zero7', 'url': 'pages/youtube.html', 'loadMethod': 'iframe', 'title': 'Zero 7', 'class': 'first'},
-								{'text': 'Fleet Foxes', 'value': 'FleetFoxes','url': 'pages/youtube2.html', 'loadMethod': 'iframe', 'title': 'Fleet Foxes'},
-								{'text': 'Boards of Canada', 'value': 'BoardsofCanada','url': 'pages/youtube3.html', 'loadMethod': 'iframe', 'title': 'Boards of Canada'},
-								{'text': 'Zero 7/Crosses', 'value': 'Zero7Crosses','url': 'pages/youtube4.html', 'loadMethod': 'iframe', 'title': 'Zero7', 'class': 'last'}
+								{'text': 'Zero 7/Destiny', 'value':'Zero7', 'url': '{demo}pages/youtube.html', 'loadMethod': 'iframe', 'title': 'Zero 7', 'class': 'first'},
+								{'text': 'Fleet Foxes', 'value': 'FleetFoxes','url': '{demo}pages/youtube2.html', 'loadMethod': 'iframe', 'title': 'Fleet Foxes'},
+								{'text': 'Boards of Canada', 'value': 'BoardsofCanada','url': '{demo}pages/youtube3.html', 'loadMethod': 'iframe', 'title': 'Boards of Canada'},
+								{'text': 'Zero 7/Crosses', 'value': 'Zero7Crosses','url': '{demo}pages/youtube4.html', 'loadMethod': 'iframe', 'title': 'Zero7', 'class': 'last'}
 							]
 														
 						}
@@ -190,7 +190,7 @@ Object.append(Demo, {
 			id: node.value + 'cbg2',
 			container: container,
 			clearContainer: false,
-			content: {url: 'data/person.json', paging: {size: 10, totalCount: 200, recordsField: false}},
+			content: {url: '{demo}data/person.json', paging: {size: 10, totalCount: 200, recordsField: false}},
 			width: 260,
 			height: 100,
 			textField: 'FirstName',
@@ -284,7 +284,7 @@ Object.append(Demo, {
 			id: node.value + 'sl1',
 			container: container,
 			clearContainer: true,
-			content: {url: 'data/employees.json', paging: {size: 10, totalCount: 200, recordsField: false}},
+			content: {url: '{demo}data/employees.json', paging: {size: 10, totalCount: 200, recordsField: false}},
 			width: 250,
 			height: 100,
 			textField: 'name',
@@ -432,7 +432,7 @@ Object.append(Demo, {
 			control: 'MUI.Tree',
 			container: container,
 			id: node.value + 'tree1',
-			content: {url: 'data/tree-testdata.json'},
+			content: {url: '{demo}data/tree-testdata.json'},
 			onNodeExpanded: function(node, isExpanded, self){
 				Demo.writeConsole(self.options.id + ' receieved onNodeExpanded command on node ' + node.value + ', isExpanded=' + isExpanded)
 			},
@@ -529,7 +529,7 @@ Object.append(Demo, {
 			control:'MUI.Window',
 			id: 'windowevents',
 			title: 'Window Events',
-			content: {url: 'pages/events.html'},
+			content: {url: '{demo}pages/events.html'},
 			width: 340,
 			height: 255,
 			onLoaded: function(){
@@ -571,7 +571,7 @@ Object.append(Demo, {
 			id: 'iframetests',
 			title: 'Iframe Tests',
 			content: {
-				url: 'pages/iframetests.html',
+				url: '{demo}pages/iframetests.html',
 				loadMethod: 'iframe'
 			}
 		});
@@ -583,7 +583,7 @@ Object.append(Demo, {
 			control:'MUI.Window',
 			id: 'formtests',
 			title: 'Form Tests',
-			content: {url: 'pages/formtests.html'},
+			content: {url: '{demo}pages/formtests.html'},
 			onLoaded: function(){
 				document.testForm.focusTest.focus();
 			}
@@ -598,7 +598,7 @@ Object.append(Demo, {
 			control: 'MUI.Accordion',
 			container: container,
 			id: 'accordionMainPanel1',
-			content: {url: 'data/accordion-demo.json', loadMethod: 'json'}
+			content: {url: '{demo}data/accordion-demo.json', loadMethod: 'json'}
 		});
 	},
 
@@ -607,7 +607,7 @@ Object.append(Demo, {
 			control:'MUI.Window',
 			id: 'nocanvas',
 			title: 'No Canvas',
-			content: {url: 'pages/lipsum.html'},
+			content: {url: '{demo}pages/lipsum.html'},
 			cssClass: 'no-canvas',
 			width: 305,
 			height: 175,
@@ -625,7 +625,7 @@ Object.append(Demo, {
 			control:'MUI.Window',
 			id: 'css3',
 			title: 'CSS3',
-			content: {url: 'pages/lipsum.html'},
+			content: {url: '{demo}pages/lipsum.html'},
 			cssClass: 'no-canvas',
 			width: 305,
 			height: 175,
@@ -640,7 +640,7 @@ Object.append(Demo, {
 			control:'MUI.Window',
 			id: 'css3fallback',
 			title: 'CSS3 with Fallback to Canvas',
-			content: {url: 'pages/lipsum.html'},
+			content: {url: '{demo}pages/lipsum.html'},
 			width: 305,
 			height: 175,
 			resizable: true,
@@ -680,7 +680,7 @@ Object.append(Demo, {
 			control:'MUI.Window',
 			id: 'forceCanvas',
 			title: 'Force Canvas',
-			content: {url: 'pages/lipsum.html'},
+			content: {url: '{demo}pages/lipsum.html'},
 			width: 305,
 			height: 175,
 			resizable: true,
@@ -781,9 +781,9 @@ Object.append(Demo, {
 							loadMethod: 'json',							
 							value:'Layout',															
 							tabs: [
-								{'text': 'Layout', 'value': 'Layout', 'url': 'pages/features-layout.html', 'loadMethod': 'iframe', 'title': 'Features - Layout', 'class': 'first'},
-								{'text': 'Windows', 'value': 'Windows', 'url': 'pages/features-windows.html', 'loadMethod': 'iframe', 'title': 'Features - Windows'},
-								{'text': 'General', 'value': 'General', 'url': 'pages/features-general.html', 'loadMethod': 'iframe', 'title': 'Features - General', 'class': 'last'}
+								{'text': 'Layout', 'value': 'Layout', 'url': '{demo}pages/features-layout.html', 'loadMethod': 'iframe', 'title': 'Features - Layout', 'class': 'first'},
+								{'text': 'Windows', 'value': 'Windows', 'url': '{demo}pages/features-windows.html', 'loadMethod': 'iframe', 'title': 'Features - Windows'},
+								{'text': 'General', 'value': 'General', 'url': '{demo}pages/features-general.html', 'loadMethod': 'iframe', 'title': 'Features - General', 'class': 'last'}
 							]															
 						}]
 				}]
