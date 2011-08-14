@@ -8,13 +8,32 @@ var Demo = (Demo || {});
 // Examples
 Object.append(Demo, {
 
+	devNotesPanel: function(){		
+		MUI.Content.update({ 
+			element: 'mainPanel', 
+			title: 'Development Notes', 
+			clear:true,
+			url:'{demo}pages/notes.html'
+		});
+	},
+
+	xhrPanel: function(){
+		MUI.Content.update({ 
+			element: 'mainPanel', 
+			title: 'Lorem Ipsum', 
+			clear:true,
+			url:'{demo}pages/lipsum.html'
+		});
+	},
+
 	ajaxpageWindow: function(){
-		new MUI.Window({
+		MUI.create({
+			control:'MUI.Window',
 			id: 'ajaxpage',
-			content: {url: 'pages/lipsum.html'},
+			content: {url:'{demo}pages/lipsum.html'},
 			width: 340,
 			height: 150
-		});
+		});		
 	},
 
 	jsonWindows: function(){
@@ -26,39 +45,56 @@ Object.append(Demo, {
 		}).send();
 	},
 
+	youtubePanel: function(){
+		if ($('mainPanel')){
+
+			MUI.Content.update({ 
+				element: 'mainPanel', 
+				title: 'Youtube in Iframe', 
+				clear:true,				
+				url: 'pages/youtube5.html', 
+				loadMethod:'iframe'
+			});
+		}
+	},
+
+	
 	youtubeWindow: function(){
-		new MUI.Window({
-			id: 'youtube',
+		MUI.create({
+			control:'MUI.Window',	
+			id: 'youtubeWindow',
 			title: 'YouTube in Iframe',
-			width: 340,
-			height: 280,
+			width: 500,
+			height: 375,			
 			resizeLimit: {'x': [330, 2500], 'y': [250, 2000]},
-			content: [
-				{
-					url: 'pages/youtube.html',
-					loadMethod: 'iframe'
-				},
-				{
-					position: 'top',
-					loadMethod: 'json',
-					id: 'youtube_toolbar',
-					css: 'mochaToolbar',
-					content: [
-						{'text': 'Zero 7', 'url': 'pages/youtube.html', 'loadMethod': 'iframe', 'title': 'Zero 7', 'class': 'first'},
-						{'text': 'Fleet Foxes', 'url': 'pages/youtube2.html', 'loadMethod': 'iframe', 'title': 'Fleet Foxes'},
-						{'text': 'Boards of Canada', 'url': 'pages/youtube3.html', 'loadMethod': 'iframe', 'title': 'Boards of Canada', 'class': 'last'}
-					],
-					onLoaded: function(element, content){
-						MUI.create({
-							control: 'MUI.Tabs',
-							id: 'youtube_toolbar',
-							container: 'youtube',
-							position: 'top',
-							tabs: content.content,
-							partner: 'youtube'
-						});
-					}
-				}
+			headerHeight:50,
+			padding: {top:0, bottom: 0, left: 0, right: 0},
+			content: [				
+				{						
+					id:'youtubeTabs',
+					position:'header',						
+					container:'youtubeWindow',				
+					control: 'MUI.Dock', 
+					partner:'youtubeWindow',
+					onDrawEnd: function(){
+						this.el.element.setStyle('clear','left');
+					},							
+					docked: [
+						{								
+							control: 'MUI.Tabs',								
+							position: 'header',
+							loadMethod: 'json',							
+							value:'FleetFoxes',															
+							tabs: [
+								{'text': 'Zero 7/Destiny', 'value':'Zero7', 'url': 'pages/youtube.html', 'loadMethod': 'iframe', 'title': 'Zero 7', 'class': 'first'},
+								{'text': 'Fleet Foxes', 'value': 'FleetFoxes','url': 'pages/youtube2.html', 'loadMethod': 'iframe', 'title': 'Fleet Foxes'},
+								{'text': 'Boards of Canada', 'value': 'BoardsofCanada','url': 'pages/youtube3.html', 'loadMethod': 'iframe', 'title': 'Boards of Canada'},
+								{'text': 'Zero 7/Crosses', 'value': 'Zero7Crosses','url': 'pages/youtube4.html', 'loadMethod': 'iframe', 'title': 'Zero7', 'class': 'last'}
+							]
+														
+						}
+					]
+				}				
 			]
 		});
 	},
@@ -74,7 +110,8 @@ Object.append(Demo, {
 		if (!height) height = 200;
 
 		if (isWindow){
-			var win = new MUI.Window({
+			var win = MUI.create({
+				control:'MUI.Window',
 				id: node.value + 'Window',
 				content: 'loading...',
 				title: node.text + ' in Window',
@@ -84,6 +121,7 @@ Object.append(Demo, {
 				resizable: canResize,
 				maximizable: false
 			});
+
 			return win.el.content;
 		}
 		return MUI.get('mainPanel').el.content;
@@ -415,55 +453,62 @@ Object.append(Demo, {
 	},
 
 	splitWindow: function(){
-		new MUI.Window({
+				
+		MUI.create({
+			control:'MUI.Window',
 			id: 'splitWindow',
 			title: 'Split Window',
 			width: 600,
 			height: 350,
+			cssClass:'splitWindowContent',
 			resizeLimit: {'x': [450, 2500], 'y': [300, 2000]},
-			scrollbars: false, // Could make this automatic if a 'panel' method were created
-			content: '',
-			onLoaded: function(){
-
-				new MUI.Column({
-					container: 'splitWindow_contentWrapper',
+			padding:0,						
+			content: [{										
+				loadMethod:'control',
+				controls:[
+				{
+					control:'MUI.Column',
+					container: 'splitWindow_content',							
 					id: 'splitWindow_sideColumn',
 					placement: 'left',
 					width: 170,
-					resizeLimit: [100, 300]
-				});
-
-				new MUI.Column({
-					container: 'splitWindow_contentWrapper',
+					resizeLimit: [100, 300],
+					cssClass:'splitWindowColumn',
+					panels:[
+						{
+							header: false,
+							id: 'splitWindow_sidePanel_1',
+							cssClass: 'panelAlt',
+							content: {url: '{demo}pages/lipsum.html'},
+							container: 'splitWindow_sideColumn'
+						}
+					]
+				},
+				{
+					control:'MUI.Column',
+					container: 'splitWindow_content',
 					id: 'splitWindow_mainColumn',
-					placement: 'main',
-					width: null,
-					resizeLimit: [100, 300]
-				});
-
-				new MUI.Panel({
-					header: false,
-					id: 'splitWindow_panel1',
-					content: {url: 'license.html'},
-					column: 'splitWindow_mainColumn',
-					panelBackground: '#fff'
-				});
-
-				new MUI.Panel({
-					header: false,
-					id: 'splitWindow_panel2',
-					cssClass: 'panelAlt',
-					content: {url: 'pages/lipsum.html'},
-					column: 'splitWindow_sideColumn'
-				});
-
-			}
-		});
+					placement: 'main',							
+					resizeLimit: [100, 300],
+					cssClass:'splitWindowColumn',
+					panels:[
+						{
+							header: false,
+							id: 'splitWindow_mainPanel_1',
+							content: {url: '{demo}license.html'},
+							container: 'splitWindow_mainColumn',
+							panelBackground: '#fff'
+						}
+					]
+				}]
+			}]
+		});			
 	},
 
 	// Examples > Tests
 	serverResponseWindow: function(response){
-		new MUI.Window({
+		MUI.create({
+		control:'MUI.Window',
 			id: 'serverResponse',
 			content: response,
 			width: 350,
@@ -472,7 +517,8 @@ Object.append(Demo, {
 	},
 
 	eventsWindow: function(){
-		new MUI.Window({
+		MUI.create({
+			control:'MUI.Window',
 			id: 'windowevents',
 			title: 'Window Events',
 			content: {url: 'pages/events.html'},
@@ -512,7 +558,8 @@ Object.append(Demo, {
 	},
 
 	iframeTestsWindow: function(){
-		new MUI.Window({
+		MUI.create({
+			control:'MUI.Window',
 			id: 'iframetests',
 			title: 'Iframe Tests',
 			content: {
@@ -520,18 +567,20 @@ Object.append(Demo, {
 				loadMethod: 'iframe'
 			}
 		});
-	}
-	,
+		
+	},
 
 	formTestsWindow: function(){
-		new MUI.Window({
+		MUI.create({
+			control:'MUI.Window',
 			id: 'formtests',
 			title: 'Form Tests',
 			content: {url: 'pages/formtests.html'},
 			onLoaded: function(){
 				document.testForm.focusTest.focus();
 			}
-		});
+			
+		});		
 	},
 
 	accordionBuilder: function(e, node){
@@ -543,11 +592,11 @@ Object.append(Demo, {
 			id: 'accordionMainPanel1',
 			content: {url: 'data/accordion-demo.json', loadMethod: 'json'}
 		});
-
 	},
 
 	noCanvasWindow: function(){
-		new MUI.Window({
+		MUI.create({
+			control:'MUI.Window',
 			id: 'nocanvas',
 			title: 'No Canvas',
 			content: {url: 'pages/lipsum.html'},
@@ -558,11 +607,14 @@ Object.append(Demo, {
 			resizeLimit: {'x': [275, 2500], 'y': [125, 2000]},
 			useCanvas: false,
 			useCSS3: false
-		});
+
+		});		
 	},
 
 	css3Window: function(){
-		new MUI.Window({
+
+		MUI.create({
+			control:'MUI.Window',
 			id: 'css3',
 			title: 'CSS3',
 			content: {url: 'pages/lipsum.html'},
@@ -576,7 +628,8 @@ Object.append(Demo, {
 	},
 
 	css3fallbackWindow: function(){
-		new MUI.Window({
+		MUI.create({
+			control:'MUI.Window',
 			id: 'css3fallback',
 			title: 'CSS3 with Fallback to Canvas',
 			content: {url: 'pages/lipsum.html'},
@@ -615,7 +668,8 @@ Object.append(Demo, {
 	},
 
 	forceCanvasWindow: function(){
-		new MUI.Window({
+		MUI.create({
+			control:'MUI.Window',
 			id: 'forceCanvas',
 			title: 'Force Canvas',
 			content: {url: 'pages/lipsum.html'},
@@ -650,7 +704,8 @@ Object.append(Demo, {
 
 	// Tools
 	builderWindow: function(){
-		new MUI.Window({
+		MUI.create({
+			control:'MUI.Window',
 			id: 'builder',
 			title: 'Window Builder',
 			icon: 'images/icons/16x16/page.gif',
@@ -692,46 +747,47 @@ Object.append(Demo, {
 		MUI.desktop.loadWorkspace();
 	},
 
-	// Help
 	featuresWindow: function(){
-		new MUI.Window({
-			id: 'features',
+		MUI.create({
+			control:'MUI.Window',	
+			id: 'featuresWindow',
 			title: 'Features',
-			width: 275,
-			height: 250,
+			width: 355,
+			height: 320,
 			resizeLimit: {'x': [275, 2500], 'y': [125, 2000]},
-			content: [
-				{url: 'pages/features-layout.html'},
-				{
-					position: 'top',
-					loadMethod: 'json',
-					id: 'features_toolbar',
-					css: 'mochaToolbar',
-					content: [
-						{'text': 'Layout', 'url': 'pages/features-layout.html', 'loadMethod': 'iframe', 'title': 'Features - Layout', 'class': 'first'},
-						{'text': 'Windows', 'url': 'pages/features-windows.html', 'loadMethod': 'iframe', 'title': 'Features - Windows'},
-						{'text': 'General', 'url': 'pages/features-general.html', 'loadMethod': 'iframe', 'title': 'Features - General', 'class': 'last'}
-					],
-					onLoaded: function(element, content){
-						MUI.create({
-							control: 'MUI.Tabs',
-							id: 'features_toolbar',
-							container: 'features',
-							position: 'top',
-							tabs: content.content,
-							partner: 'features'
-						});
-					}
-				}
-			]
-		});
+			scrollbars:false,
+			resizable:false,
+			headerHeight:50,
+			content: [{						
+					id:'featureTabs',
+					position:'header',						
+					container:'featuresWindow',				
+					control: 'MUI.Dock', 
+					partner:'featuresWindow',
+					onDrawEnd: function(){
+						this.el.element.setStyle('clear','left');
+					},							
+					docked:[{								
+							control: 'MUI.Tabs',								
+							position: 'header',
+							loadMethod: 'json',							
+							value:'Layout',															
+							tabs: [
+								{'text': 'Layout', 'value': 'Layout', 'url': 'pages/features-layout.html', 'loadMethod': 'iframe', 'title': 'Features - Layout', 'class': 'first'},
+								{'text': 'Windows', 'value': 'Windows', 'url': 'pages/features-windows.html', 'loadMethod': 'iframe', 'title': 'Features - Windows'},
+								{'text': 'General', 'value': 'General', 'url': 'pages/features-general.html', 'loadMethod': 'iframe', 'title': 'Features - General', 'class': 'last'}
+							]															
+						}]
+				}]
+			});
 	},
 
 	aboutWindow: function(){
-		new MUI.Modal({
+		MUI.create({
+			control:'MUI.Modal',
 			id: 'about',
 			title: 'MUI',
-			content: {url: 'pages/about.html'},
+			content: {url: '{demo}pages/about.html'},
 			type: 'modal2',
 			width: 350,
 			height: 195,
@@ -739,69 +795,95 @@ Object.append(Demo, {
 			scrollbars: false,
 			onLoaded: function(){
 				$('authorsAboutLink').addEvent('click', function(e){
-					e.stop();
+					e.stop();					
 					Demo.authorsWindow();
-				})
+				});
 			}
-		});
+		});	
+			
 	},
 
 	// Misc
 	authorsWindow: function(){
-		new MUI.Modal({
+
+		MUI.create({
+			control:'MUI.Modal',
 			id: 'authorsWindow',
 			title: 'AUTHORS.txt',
-			content: {url: 'scripts/AUTHORS.txt'},
+			content: {url: '{demo}scripts/AUTHORS.txt'},
 			width: 400,
 			height: 250,
-			scrollbars: true
+			scrollbars: true,
+			type: 'modal2'
 		});
 	},
 
 	licenseWindow: function(){
-		new MUI.Modal({
+		
+		MUI.create({
+			control:'MUI.Modal',
 			id: 'License',
 			title: 'MIT-LICENSE.txt',
-			content: {url: 'scripts/MIT-LICENSE.txt'},
+			content: {url: '{demo}scripts/MIT-LICENSE.txt'},
 			width: 580,
 			height: 350,
-			scrollbars: true
+			scrollbars: true,
+			type: 'modal2'			
 		});
-	},
+	},	
 
 	splitPanelPanel: function(){
 		if ($('mainPanel')){
-			MUI.Content.update({ element: 'mainPanel', title: 'Split Panel', clear:true });
 
-			new MUI.Column({
-				container: 'mainPanel',
-				id: 'sideColumn3',
-				placement: 'left',
-				width: 200,
-				resizeLimit: [100, 300]
-			});
+			MUI.Content.update({ 
+				element: 'mainPanel', 
+				title: 'Split Panel', 
+				clear:true,
+				loadMethod:'control',				
+				controls:[
+				{											 
+					control:'MUI.Column',
+					container: 'mainPanel',							
+					id: 'splitPanel_sideColumn',
+					placement: 'left',
+					width: 200,				
+					resizeLimit: [100, 300],
+					panels:[
+						{
+						control:'MUI.Panel',					
+						header: false,
+						id: 'splitPanel_sidePanel_1',
+						cssClass: 'panelAlt',
+						content: {url: '{demo}pages/lipsum.html'},
+						container: 'splitPanel_sideColumn'
+						}
+					]							
+				},
+				{
+					control:'MUI.Column',
+					container: 'mainPanel',
+					id: 'splitPanel_mainColumn',
+					placement: 'main',							
+					resizeLimit: [100, 300],
+					width:null,								
+					panels:[
+						{
+							control:'MUI.Panel',
+							id: 'splitPanel_mainPanel_1',
+							container: 'splitPanel_mainColumn',
+							cssClass: 'panelAlt',					
+							header: false,
+							content: {
+								url: '{demo}license.html', 
+								onLoaded: function(){
+									$('splitPanel_mainColumn').setStyle('width','inherit');
+								}
+							}
+												
+						}
+					]
 
-			new MUI.Column({
-				container: 'mainPanel',
-				id: 'mainColumn2',
-				placement: 'main',
-				width: null,
-				resizeLimit: [100, 300]
-			});
-
-			new MUI.Panel({
-				header: false,
-				id: 'splitPanel_mainPanel',
-				content: {url: 'license.html'},
-				container: 'mainColumn2'
-			});
-
-			new MUI.Panel({
-				header: false,
-				id: 'splitPanel_sidePanel',
-				cssClass: 'panelAlt',
-				content: {url: 'pages/lipsum.html'},
-				container: 'sideColumn3'
+				}]							
 			});
 		}
 	},
