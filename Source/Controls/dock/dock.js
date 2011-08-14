@@ -54,6 +54,8 @@ MUI.Dock = new NamedClass('MUI.Dock', {
 		var o = this.options;
 		if (!container) container = o.container;
 
+		this.fireEvent('drawBegin', [this]);
+
 		// determine element for this control
 		var isNew = false;
 		var div = o.element ? o.element : $(o.id);
@@ -74,7 +76,10 @@ MUI.Dock = new NamedClass('MUI.Dock', {
 			if (div.getParent() == null) div.inject(container);
 
 			// add docked controls
-			Object.each(this.options.docked, this._createToolbar, this);
+		Object.each(this.options.docked, this._createToolbar, this);
+
+		this.fireEvent('drawEnd', [this]);
+
 		}.bind(this);
 		if (!isNew || typeOf(container) == 'element') addToContainer();
 		else window.addEvent('domready', addToContainer);
@@ -91,10 +96,10 @@ MUI.Dock = new NamedClass('MUI.Dock', {
 		if (!toolbar.partner) toolbar.partner = this.options.partner;
 		this.options.docked[idx] = toolbar;
 		var content = {};
-		Object.each(toolbar, function(val, key){
-			if (['loadmethod', 'method', 'url', 'content', 'onloaded'].indexOf(key) > -1)
+		Object.each(toolbar, function(val, key){	
+			if (['loadmethod', 'method', 'url', 'content', 'onloaded', 'ondrawbegin', 'ondrawend'].indexOf(key.toLowerCase()) > -1)
 				content[key] = val;
-		});
+		});		
 		toolbar.content = content;
 		MUI.create(toolbar);
 	}
