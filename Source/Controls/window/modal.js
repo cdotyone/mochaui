@@ -55,7 +55,7 @@ MUI.Modal = new NamedClass('MUI.Modal', {
 
 		modalOverlay.addEvent('click', function(){
 			var instance = MUI.get(MUI.currentModal.id);
-			if (instance.options.modalOverlayClose){
+			if (instance && instance.options.modalOverlayClose){
 				
 				MUI.currentModal.close();
 
@@ -65,7 +65,7 @@ MUI.Modal = new NamedClass('MUI.Modal', {
 					{
 						MUI.currentModal = highest_win;
 					}
-				}).delay(100);
+				}).delay(200);
 			}
 		});
 		
