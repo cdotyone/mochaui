@@ -233,9 +233,10 @@ Demo.initializeDesktop = function(){
 									position: 'header',
 									loadMethod: 'json',
 									control: 'MUI.Tabs',
+									value:'Overview',
 									tabs: [
-										{'text': 'Overview', 'url': 'pages/overview.html', 'title': 'Overview'},
-										{'text': 'Download', 'url': 'pages/download.html', 'title': 'Download'}
+										{'text': 'Overview', 'value': 'Overview', 'url': 'pages/overview.html', 'title': 'Overview'},
+										{'text': 'Download', 'value': 'Download', 'url': 'pages/download.html', 'title': 'Download'}
 									]
 								}
 							]
@@ -278,10 +279,21 @@ Demo.initializeDesktop = function(){
 						}
 					]}
 			]},
-			{name:'footer',content:'<div class="copyright">&copy; 2011 <a target="_blank" href="scripts/AUTHORS.txt" id="authorsLink">Various Contributors</a> - <a target="_blank" href="license.html" id="licenseLink">MIT License</a></div>',cssClass:'desktopFooter'}
+			{name:'footer',content:'<div class="copyright">&copy; 2011 <a href="#" id="authorsLink">Various Contributors</a> - <a href="#" id="licenseLink">MIT License</a></div>',cssClass:'desktopFooter'}
 		],
 		'onDrawEnd':function(){
-			Parametrics.createwindow();
+		
+			if(Parametrics){ Parametrics.createwindow(); }
+			
+			$('authorsLink').addEvent('click', function(e){
+				e.stop();
+				Demo.authorsWindow();
+			});
+
+			$('licenseLink').addEvent('click', function(e){
+				e.stop();
+				Demo.licenseWindow();
+			});
 		}
 	});
 };
@@ -292,9 +304,9 @@ Demo.initialize = function(){
 		'onload':function(){
 			// Initialize MochaUI options
 			MUI.initialize({path:{demo:''}});
-			MUI.load(['Parametrics','famfamfam','CoolClock']);
+			MUI.load(['Parametrics','famfamfam','CoolClock']);						
 			MUI.register('Demo', Demo);
-			MUI.register('MUI.Windows', MUI.Windows);
+			MUI.register('MUI.Windows', MUI.Windows);						
 			Demo.initializeDesktop();
 		}
 	});
