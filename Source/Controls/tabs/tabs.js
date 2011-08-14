@@ -69,6 +69,8 @@ MUI.Tabs = new NamedClass('MUI.Tabs', {
 		var o = this.options;
 		if (!container) container = o.container;
 
+		this.fireEvent('drawBegin', [this]);
+
 		var isNew = false;
 		var div = o.element ? o.element : $(o.id);
 		if (!div){
@@ -112,7 +114,8 @@ MUI.Tabs = new NamedClass('MUI.Tabs', {
 			if (div.getParent() == null) div.inject(container);
 
 			// select current tab
-			if (o.selectedTab) o.selectedTab.fireEvent('click');
+			if (o.selectedTab && $(o.selectedTab)) $(o.selectedTab).fireEvent('click');
+			this.fireEvent('drawEnd', [this]);
 		}.bind(this);
 		if (!isNew || typeOf(container) == 'element') addToContainer();
 		else window.addEvent('domready', addToContainer);
