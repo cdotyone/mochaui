@@ -83,6 +83,8 @@ MUI.Toolbar = new NamedClass('MUI.Toolbar', {
 		var o = this.options;
 		if (!container) container = o.container;
 
+		this.fireEvent('drawBegin', [this]);
+		
 		// determine element for this control
 		var isNew = false;
 		var div = o.element ? o.element : $(o.id);
@@ -104,6 +106,7 @@ MUI.Toolbar = new NamedClass('MUI.Toolbar', {
 		var addToContainer = function(){
 			if (typeOf(container) == 'string') container = $(container);
 			if (div.getParent() == null) div.inject(container);
+			this.fireEvent('drawEnd', [this]);
 		}.bind(this);
 		if (!isNew || typeOf(container) == 'element') addToContainer();
 		else window.addEvent('domready', addToContainer);
