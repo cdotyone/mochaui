@@ -69,32 +69,27 @@ Object.append(Demo, {
 			resizeLimit: {'x': [330, 2500], 'y': [250, 2000]},
 			headerHeight:50,
 			padding: {top:0, bottom: 0, left: 0, right: 0},
-			content: [				
-				{						
-					id:'youtubeTabs',
-					position:'header',						
-					container:'youtubeWindow',				
-					control: 'MUI.Dock', 
-					partner:'youtubeWindow',
-					onDrawEnd: function(){
-						this.el.element.setStyle('clear','left');
-					},							
-					docked: [
-						{								
+			content: [
+						{url:'{demo}pages/youtube.html', loadMethod:'iframe'},				
+						{	
+							id:'youtubeTabs',							
 							control: 'MUI.Tabs',								
 							position: 'header',
 							loadMethod: 'json',							
-							value:'FleetFoxes',															
+							value:'Zero7',
+							container:'youtubeWindow',
+							partner:'youtubeWindow',															
 							tabs: [
 								{'text': 'Zero 7/Destiny', 'value':'Zero7', 'url': '{demo}pages/youtube.html', 'loadMethod': 'iframe', 'title': 'Zero 7', 'class': 'first'},
 								{'text': 'Fleet Foxes', 'value': 'FleetFoxes','url': '{demo}pages/youtube2.html', 'loadMethod': 'iframe', 'title': 'Fleet Foxes'},
 								{'text': 'Boards of Canada', 'value': 'BoardsofCanada','url': '{demo}pages/youtube3.html', 'loadMethod': 'iframe', 'title': 'Boards of Canada'},
 								{'text': 'Zero 7/Crosses', 'value': 'Zero7Crosses','url': '{demo}pages/youtube4.html', 'loadMethod': 'iframe', 'title': 'Zero7', 'class': 'last'}
-							]
-														
+							],
+							onDrawEnd: function(){
+								this.el.element.setStyle('clear','left');
+							}														
 						}
-					]
-				}				
+							
 			]
 		});
 	},
@@ -766,27 +761,26 @@ Object.append(Demo, {
 			scrollbars:false,
 			resizable:false,
 			headerHeight:50,
-			content: [{						
-					id:'featureTabs',
-					position:'header',						
-					container:'featuresWindow',				
-					control: 'MUI.Dock', 
-					partner:'featuresWindow',
-					onDrawEnd: function(){
-						this.el.element.setStyle('clear','left');
-					},							
-					docked:[{								
+			content: [
+					{url: '{demo}pages/features-layout.html', loadMethod: 'iframe'},
+					{
+							id:'featureTabs',								
 							control: 'MUI.Tabs',								
 							position: 'header',
-							loadMethod: 'json',							
+							loadMethod: 'json',
+							container:'featuresWindow',
+							partner:'featuresWindow',								
 							value:'Layout',															
 							tabs: [
 								{'text': 'Layout', 'value': 'Layout', 'url': '{demo}pages/features-layout.html', 'loadMethod': 'iframe', 'title': 'Features - Layout', 'class': 'first'},
 								{'text': 'Windows', 'value': 'Windows', 'url': '{demo}pages/features-windows.html', 'loadMethod': 'iframe', 'title': 'Features - Windows'},
 								{'text': 'General', 'value': 'General', 'url': '{demo}pages/features-general.html', 'loadMethod': 'iframe', 'title': 'Features - General', 'class': 'last'}
-							]															
-						}]
-				}]
+							],
+							onDrawEnd: function(){
+								this.el.element.setStyle('clear','left');
+							}															
+					}]
+			
 			});
 	},
 
