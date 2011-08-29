@@ -35,6 +35,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 		resizeLimit:	[],
 		sortable:		true,
 		isCollapsed:	false,
+		keep1PanelOpen:	false,
 
 		panels:			[],
 

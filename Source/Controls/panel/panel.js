@@ -294,7 +294,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		var parent = MUI.get($(options.container));
 		if (parent.isTypeOf('MUI.Column')){
 			if (expandedSiblings.length == 0 && parent.options.placement != 'main'){
-				parent.collapse();  // [i_a] more aptly named than .toggle()
+				if(!parent.options.keep1PanelOpen) parent.collapse();
 				return;
 			} else if (expandedSiblings.length == 0 && parent.options.placement == 'main'){
 				return;
