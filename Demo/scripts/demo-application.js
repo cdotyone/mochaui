@@ -106,7 +106,8 @@ Demo.initializeDesktop = function(){
 								container: 'files-panel',
 								partner: 'mainPanel',
 								content: {url: 'data/file-tree.json', recordsField: false},
-								idField: 'value'
+								idField: 'value',
+								depth: 3
 							}
 						},
 						{
