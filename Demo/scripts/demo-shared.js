@@ -716,6 +716,7 @@ Object.append(Demo, {
 				url: '{plugins}windowform/demo.html',
 				require: {
 					js: ['{plugins}windowform/windowform.js'],
+					css: ['{plugins}windowform/style.css'],
 					onload: function(){
 						$('newWindowSubmit').addEvent('click', function(e){
 							e.stop();
