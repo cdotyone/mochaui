@@ -33,10 +33,9 @@ MUI.WindowForm = new NamedClass('MUI.WindowForm', {
 
 	options: {
 		id: null,
-		title: 'New Window',
-		loadMethod: 'html',
+		control: 'MUI.Window',
+		title: 'New Window',		
 		content: '',
-		contentURL: 'pages/lipsum.html',
 		type: 'window',
 		width: 300,
 		height: 125,
@@ -47,27 +46,30 @@ MUI.WindowForm = new NamedClass('MUI.WindowForm', {
 
 	initialize: function(options){
 		this.setOptions(options);
+
 		this.options.id = 'windowform' + (++MUI.idCount);
 		this.options.title = $('newWindowHeaderTitle').value;
 
 		if ($('htmlLoadMethod').checked){
-			this.options.loadMethod = 'html';
+					
+			this.options.content = $('newWindowContent').value;
+
+			// Remove eval(), javascript:, and script from User Provided Markup
+			this.options.content = this.options.content.replace(/\<(.*)script(.*)\<\/(.*)script(.*)\>/g, "");
+			this.options.content = this.options.content.replace(/[\"\'][\s]*javascript:(.*)[\"\']/g, "\"\"");
+			this.options.content = this.options.content.replace(/eval\((.*)\)/g, "");
+
 		}
+		
 		if ($('iframeLoadMethod').checked){
-			this.options.loadMethod = 'iframe';
-		}
-		this.options.content = $('newWindowContent').value;
-
-		// Remove eval(), javascript:, and script from User Provided Markup
-		this.options.content = this.options.content.replace(/\<(.*)script(.*)\<\/(.*)script(.*)\>/g, "");
-		this.options.content = this.options.content.replace(/[\"\'][\s]*javascript:(.*)[\"\']/g, "\"\"");
-		this.options.content = this.options.content.replace(/eval\((.*)\)/g, "");
-
-		if ($('newWindowContentURL').value){
-			this.options.contentURL = $('newWindowContentURL').value;
-		}
+			this.options.content = {
+				url: $('newWindowContentURL').value,
+				loadMethod: 'iframe'
+			};
+		}		
 
 		if ($('newWindowModal').checked){
+			this.options.control = 'MUI.Modal';
 			this.options.type = 'modal';
 		}
 
@@ -75,7 +77,9 @@ MUI.WindowForm = new NamedClass('MUI.WindowForm', {
 		this.options.height = $('newWindowHeight').value.toInt();
 		this.options.x = $('newWindowX').value.toInt();
 		this.options.y = $('newWindowY').value.toInt();
-		new MUI.Window(this.options);
+
+		MUI.create(this.options);
+		//new MUI.Window(this.options);
 	}
 
 });

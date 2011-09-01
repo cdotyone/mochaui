@@ -722,6 +722,14 @@ Object.append(Demo, {
 							e.stop();
 							new MUI.WindowForm();
 						});
+
+						$('iframeLoadMethod').addEvent('click', function(e){							
+							if($('newWindowContentURL').get('value') === "http://www.google.com/")
+							{
+								$('newWindowWidth').set('value', 845);
+								$('newWindowHeight').set('value', 400);
+							}
+						});
 					}
 				}
 			},
