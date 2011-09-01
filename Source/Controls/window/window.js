@@ -1586,12 +1586,16 @@ MUI.Window.implement({
 			}
 
 			if (instance.el.iframe){
-				var idoc = instance.el.iframe.contentDocument;
-				delay = idoc.getElementsByTagName("*").length * 10;
 
-				if (idoc.defaultView.MooTools){
-					if (idoc.defaultView.MooTools.version.contains("1.3")) idoc.defaultView.Browser.ie = true;
-					else idoc.defaultView.Browser.Engine.trident = true;
+				if(instance.el.iframe.src.contains(window.location.host) && instance.el.iframe.contentDocument.defaultView.location.protocol === window.location.protocol){
+					
+					var idoc = instance.el.iframe.contentDocument;
+					delay = idoc.getElementsByTagName("*").length * 10;
+
+					if (idoc.defaultView.MooTools){
+						if (idoc.defaultView.MooTools.version.contains("1.3")) idoc.defaultView.Browser.ie = true;
+						else idoc.defaultView.Browser.Engine.trident = true;
+					}
 				}
 
 				instance.el.iframe.src = "javascript:false";
