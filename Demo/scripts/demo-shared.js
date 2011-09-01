@@ -713,9 +713,9 @@ Object.append(Demo, {
 			title: 'Window Builder',
 			icon: 'images/icons/16x16/page.gif',
 			content: {
-				url: '{plugins}windowform/',
+				url: '{plugins}windowform/demo.html',
 				require: {
-					js: ['{plugins}windowform/scripts/window-from-form.js'],
+					js: ['{plugins}windowform/windowform.js'],
 					onload: function(){
 						$('newWindowSubmit').addEvent('click', function(e){
 							e.stop();
