@@ -66,7 +66,9 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 		accordionRenderer:	null,
 		autoSectionToggle:	true,		 // if true just one section can be open/visible
 		showToggleIcon:		true,
-		openOnDblClick:		false
+		openOnDblClick:		false,
+		consoleOutput:		null
+	
 	},
 
 	initialize: function(options){
@@ -77,6 +79,8 @@ MUI.Grid = new NamedClass('MUI.Grid', {
 		// If grid has no ID, give it one.
 		this.id = options.id = options.id || 'grid' + (++MUI.idCount);
 		MUI.set(this.id, this);
+
+		MUI.console.bind(this).sLog("Initializing new Grid with options: ", options);
 
 		if (options.content){
 			if (!options.content.paging) options.content.paging = {};

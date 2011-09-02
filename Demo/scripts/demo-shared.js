@@ -26,10 +26,11 @@ Object.append(Demo, {
 		});
 	},
 
-	ajaxpageWindow: function(){
-		MUI.create({
+	ajaxpageWindow: function(e, node){
+		MUI.create({			
 			control:'MUI.Window',
 			id: 'ajaxpage',
+			title:node.text,
 			content: {url:'{demo}pages/lipsum.html'},
 			width: 340,
 			height: 150
@@ -87,6 +88,7 @@ Object.append(Demo, {
 							],
 							onDrawEnd: function(){
 								this.el.element.setStyle('clear','left');
+
 							}														
 						}
 							
@@ -216,6 +218,7 @@ Object.append(Demo, {
 			control: 'MUI.Grid',
 			'id': node.value + 'Grid',
 			container: container,
+			consoleOutput: false,
 			columns: [
 				{
 					header: "Name",
@@ -460,6 +463,7 @@ Object.append(Demo, {
 		MUI.create({
 			control:'MUI.Window',
 			id: 'splitWindow',
+			consoleOutput:true,
 			title: 'Split Window',
 			width: 600,
 			height: 350,
