@@ -38,6 +38,14 @@ MUI.append({
 		advancedEffects: false, // Effects that require fast browsers and are cpu intensive.
 		standardEffects: true,  // Basic effects that tend to run smoothly.
 
+		/*
+		Global parameters for console/debug logging (see root/Source/Core/console.js)
+		*/
+		consoleOutput: ['MUI.Accordion', 'MUI.Grid'],
+		consoleTarget: null, 	//value of null: output to firebug/dev tools console.
+								//Can also be a string or element (populate an element with log messages),
+								//Or a function, which is passed an object parameter (see switch structure in MUI.internal.debugOutput function)
+
 		path: {
 			root:		'../',						// Path to root of other source folders
 			source:		'{root}Source/',			// Path to MochaUI source JavaScript
@@ -119,6 +127,8 @@ MUI.append({
 
 	getID: function(el){
 		var type = typeOf(el);
+		if(type == 'null') return null;
+		if(type == 'function'){ return el; } 
 		if (type == 'string') return el;
 		if (type == 'element') return el.id;
 		else if (type == 'object' && el.id) return el.id;
