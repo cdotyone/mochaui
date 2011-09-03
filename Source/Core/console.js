@@ -200,7 +200,7 @@
 						doConsoleOutput = Array.from(MUI.options.consoleOutput).contains(this.options.control);
 					}
 
-					if(!doConsoleOutput) { //Next, we check if the MUI.options.consoleOutput array has Class names		 				
+					if(!doConsoleOutput) { //Next, we check if the MUI.options.consoleOutput array has instance ID strings
 						doConsoleOutput = Array.from(MUI.options.consoleOutput).contains(MUI.getID(this));							
 					}
 												
