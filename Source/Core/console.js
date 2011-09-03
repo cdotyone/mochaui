@@ -178,44 +178,11 @@
 			
 		_getOutputParams: function(consoleMessage, messageType)
 		{	
-			
+			var consoleParamType = typeOf(MUI.options.consoleOutput);
+
 			var doConsoleOutput = false;
-
-			/*
-			The next three boolean variables (hasConsoleParam, hasIdentifier, isBoundMocha)
-			are used to allow control of console output on a per control, per instance basis.
-
-			What values they take depends on the scope of the function - whether it is bound to a
-			specific control instance object or not, whether that instance object has a 'consoleOutput' option
-			or not, etc.			
-			*/
-			
-			//if hasConsoleParam = true,
-			//the _getOutputParams function is bound to an object, like a control instance object,
-			//and the object has a class option named 'consoleOutput' that is not equal to null
-
-			if(this.options && this.options.consoleOutput !== null){
-				var hasConsoleParam = true;
-			}
-			
-			
-			
-			//if hasIdentifier = true,
-			//function is bound to an object, 
-			//and the object has a value defined for 'id'
-			var hasIdentifier = true;			
-			if(typeof this._outputToTarget !== 'undefined'){ 
-				hasIdentifier = false;
-			}else {
-				hasIdentifier = !!(Object.keys(MUI.instances).contains(this.options.id) === true); 
-			}
-			
-			//if isBoundMocha = true,
-			//function is bound to an object, 
-			//and the object is a MochaUI NamedClass			
-			var isBoundMocha = !!(typeof this.options !== 'undefined' && typeof(this.options.control) === 'string'); 	
-			
-			var consoleParamType = typeOf(MUI.options.consoleOutput);			
+			var isBoundMocha = !!(typeof this.options !== 'undefined' && typeof(this.options.control) === 'string'); 			
+			var hasConsoleParam = !!(isBoundMocha && this.options.consoleOutput !== null)
 			
 			if(hasConsoleParam)
 			{
@@ -229,21 +196,15 @@
 					
 				}else if(consoleParamType === 'array')
 				{
-					if(isBoundMocha)
-					{
+					if(isBoundMocha) { //First we check if the MUI.options.consoleOutput array has Class names
 						doConsoleOutput = Array.from(MUI.options.consoleOutput).contains(this.options.control);
 					}
 
-					if(!doConsoleOutput)
-					{
-						if(hasIdentifier)
-						{
-							doConsoleOutput = Array.from(MUI.options.consoleOutput).contains(MUI.getID(this));	
-						}
+					if(!doConsoleOutput) { //Next, we check if the MUI.options.consoleOutput array has Class names		 				
+						doConsoleOutput = Array.from(MUI.options.consoleOutput).contains(MUI.getID(this));							
 					}
 												
-					if(!hasIdentifier && !isBoundMocha)
-					{		
+					if(!doConsoleOutput) { //Finally, we see if the if the MUI.options.consoleOutput array just contains key words
 						if(Array.from(MUI.options.consoleOutput).contains("all"))
 						{
 							doConsoleOutput = true;
@@ -284,8 +245,6 @@
 			
 			if(doConsoleOutput)
 			{
-
-
 				var outputTarget = MUI.options.consoleTarget;				
 				var outputTargetType = typeOf(outputTarget);	
 				
@@ -293,6 +252,8 @@
 
 				if(outputTargetType !== 'null' && outputTargetType !== 'function' && outputTargetType !== 'string' && outputTargetType !== 'element')
 				{
+					//The output target is set to something other than the expected values.
+					//Instead of an error, we just set it to the default (null) values
 					outputTargetType = null;
 					outputTarget = null;
 				}
@@ -326,14 +287,7 @@
 				{
 					case 'string': case 'element':										
 
-					outputParameters.content.messageText = '['+messageType+'] '+ new Date().format('%H:%M:%S: ') + outputParameters.content.messageText;
-
-					if(!$(outputTarget) && (MUI.instances && !MUI.instances[outputTarget])){
-												
-						outputParameters.ready = false;
-						outputParameters.unreadyReason = "Output Target is set to a DOM element or a MUI instance that does not exist";						
-					
-					}
+						outputParameters.content.messageText = '['+messageType+'] '+ new Date().format('%H:%M:%S: ') + outputParameters.content.messageText;
 
 						if(MUI.instances && MUI.instances[outputTarget] && MUI.instances[outputTarget].el)
 						{
@@ -351,6 +305,12 @@
 							}
 
 							outputParameters.target = outputTarget;							
+						}
+
+						if(!$(outputTarget) && (MUI.instances && !MUI.instances[outputTarget])){
+													
+							outputParameters.ready = false;
+							outputParameters.unreadyReason = "Output Target is set to a DOM element or a MUI instance that does not exist";	
 						}
 
 					break;
@@ -397,13 +357,13 @@
 							}else
 							{
 								outputParameters.ready = false;
-								outputParameters.unreadyReason = "Output Target is set to browser console, but console does not allow the smessage type specified"
+								outputParameters.unreadyReason = "Output Target is set to browser console, but console does not allow the message type specified"
 							}
 						}					
 				}
 			
 				//If the recently prepared console output item is ready to go, and the buffer is relatively small, go ahead and write 
-				//the console output the its target. Otherwise, add the output object to the buffer
+				//the console output to its target. Otherwise, add the output object to the buffer
 				if((outputParameters.ready && MUI.console.processBuffer && MUI.console.buffer.length <= 5) || MUI.console.resetGlobalParam)
 				{
 					MUI.console._outputToTarget(outputParameters);
