@@ -55,9 +55,7 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 		widthFx:			false,		// If set to true, it will add a width transition to the accordion when switching between displayed elements. Warning: CSS mastery is required to make this work!
 		opacity:			false,		// If set to true, an opacity transition effect will take place when switching between displayed elements.
 		alwaysHide:			false,		// If set to true, it will be possible to close all displayable elements. Otherwise, one will remain open at all time.
-		initialDisplayFx:	true,		// If set to false, the initial item displayed will not display with an effect but will just be shown immediately.
-		consoleOutput:		null
-
+		initialDisplayFx:	true		// If set to false, the initial item displayed will not display with an effect but will just be shown immediately.
 
 		//onPanelSelected:    null        // event: when a panel is opened
 	},
@@ -68,9 +66,7 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 
 		// If accordion has no ID, give it one.
 		this.id = this.options.id = this.options.id || 'accordion' + (++MUI.idCount);
-		MUI.set(this.id, this);
-
-		MUI.console.bind(this).log("Initializing new Accordion with options: ", options);
+		MUI.set(this.id, this);		
 
 		if (options.content){
 			options.content.loadMethod = MUI.getDefaultJsonProvider(options.content.loadMethod);

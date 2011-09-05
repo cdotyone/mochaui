@@ -36,15 +36,7 @@ MUI.append({
 	'options': {
 		theme: 'default',
 		advancedEffects: false, // Effects that require fast browsers and are cpu intensive.
-		standardEffects: true,  // Basic effects that tend to run smoothly.
-
-		/*
-		Global parameters for console/debug logging (see root/Source/Core/console.js)
-		*/
-		consoleOutput: ['MUI.Accordion', 'MUI.Grid'],
-		consoleTarget: null, 	//value of null: output to firebug/dev tools console.
-								//Can also be a string or element (populate an element with log messages),
-								//Or a function, which is passed an object parameter (see switch structure in MUI.internal.debugOutput function)
+		standardEffects: true,  // Basic effects that tend to run smoothly.		
 
 		path: {
 			root:		'../',						// Path to root of other source folders

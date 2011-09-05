@@ -79,10 +79,7 @@ MUI.Windows = Object.append((MUI.Windows || {}), {
 		controlsOffset:		{'right': 6, 'top': 6},
 		useCanvas:			true,
 		useCSS3:			true,
-		useSpinner:			true,//,
-
-		consoleOutput:		null
-					
+		useSpinner:			true
 
 		// Events
 		//onLoaded:			null, // called every time content is loaded using MUI.Content
@@ -254,9 +251,7 @@ MUI.Window.implement({
 		this.setOptions(options);
 
 		// Shorten object chain
-		options = this.options;
-
-		MUI.console.bind(this).log("Initializing new Window with options: ", options);
+		options = this.options;		
 
 		Object.append(this, {
 			mochaControlsWidth: 0,
