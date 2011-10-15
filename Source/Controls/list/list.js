@@ -35,7 +35,7 @@ MUI.List = new NamedClass('MUI.List', {
 		container:			null,		// the parent control in the document to add the control to
 		clearContainer:		false,		// should the control clear its parent container before it appends itself
 		drawOnInit:			true,		// true to add tree to container when control is initialized
-		cssClass:			'list',		// the primary css tag
+		cssClass:			'mui-list',		// the primary css tag
 
 		showCommand:		true,		// turns row commands on or off
 		commands:			[],			// commands to be used
@@ -183,6 +183,7 @@ MUI.List = new NamedClass('MUI.List', {
 
 		var cl = o.columns;
 		var value = '' + MUI.getData(item, cl[0].value);
+		if(!item.value) item.value = value;
 		if (!value) value = '' + parent.childNodes.length;
 		var rid = id + '_' + value.replace(/[\s\.]/g, '_');
 

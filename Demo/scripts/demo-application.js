@@ -37,7 +37,7 @@ Demo.initializeDesktop = function(){
 		'taskbar':true,
 		'content':[
 			{name:'header',url:'pages/titlebar.html'},
-			{name:'nav',control:'MUI.Dock',cssClass:'desktopNav',docked:[
+			{name:'nav',control:'MUI.Dock',cssClass:'mui-desktopNav',docked:[
 				{name: 'menu', position: 'header', control: 'MUI.Menu',
 					items:[
 						{text:'File',items:[

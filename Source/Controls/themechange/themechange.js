@@ -62,9 +62,9 @@ MUI.ThemeChange = new NamedClass('MUI.ThemeChange', {
 			isNew = true;
 		}
 
-		div.empty().addClass('toolbar');
+		div.empty().addClass('mui-toolbar');
 		if(o.cssClass) div.addClass(o.cssClass);
-		if(o.divider) div.addClass('divider');
+		if(o.divider) div.addClass('mui-divider');
 
 		this.el.element = div.store('instance', this);
 

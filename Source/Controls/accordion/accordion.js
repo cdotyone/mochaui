@@ -36,7 +36,7 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 		container:			null,		// the parent control in the document to add the control to
 		clearContainer:		true,		// should the control clear its parent container before it appends itself
 		drawOnInit:			true,		// true to add accordion to container when control is initialized
-		cssClass:			'accordion',// the primary css tag
+		cssClass:			'mui-accordion',// the primary css tag
 
 		panels:				[],			// the list of accordion panels
 

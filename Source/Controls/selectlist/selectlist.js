@@ -35,8 +35,8 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		//container:		null,			// the parent control in the document to add the control to
 		//clearContainer:	false,			// should the control clear its parent container before it appends itself
 		drawOnInit:			true,			// true to add tree to container when control is initialized
-		cssClass:			'form',			// the form element/title css tag
-		cssSelectList:		'slb',			// the select list css tag
+		cssClass:			'mui-form',			// the form element/title css tag
+		cssSelectList:		'mui-slb',		// the select list css tag
 
 		//content:			false,			// used to load content
 		items:				[],				// the array list of nodes
@@ -47,7 +47,7 @@ MUI.SelectList = new NamedClass('MUI.SelectList', {
 		isSelectedField:	'selected',		// the name of the field that has the item's isSelected state
 
 		isDropList:			true,			// show this control as a drop list
-		dropCssClass:		'dslb',			// the class to use when displaying the drop list parent control
+		dropCssClass:		'mui-dslb',			// the class to use when displaying the drop list parent control
 		dropText:			'{$} Selected',	// the text to show on the drop list when items are selected
 
 		//alternateRows:	false,			// show the items with alternating background color

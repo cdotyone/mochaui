@@ -15,12 +15,12 @@
  */
 
 /* SelectListBox */
-div.dslb {
+div.mui-dslb {
 	margin: 0;
 	height: 20px;
 }
 
-div.dslb div.text {
+div.mui-dslb div.text {
 	height: 20px;
 	background-color: #eeeeee;
 	border: solid 1px #bbbbbb;
@@ -34,7 +34,7 @@ div.dslb div.text {
 	padding-left: 3px;
 }
 
-div.dslb div.button {
+div.mui-dslb div.button {
 	width: 17px;
 	float: right;
 	background: #bbbbbb url(../images/down-arrow.gif) no-repeat top left;
@@ -50,7 +50,7 @@ div.dslb div.button {
 	padding: 0
 }
 
-div.slb {
+div.mui-slb {
 	clear: both;
 	overflow: auto;
 	background-color: white;
@@ -64,45 +64,45 @@ div.notop {
 	border-top-style: none;
 }
 
-div.slb ul {
+div.mui-slb ul {
 	list-style: none;
 	padding: 0;
 	margin: 0
 }
 
-div.slb ul li {
+div.mui-slb ul li {
 	margin: 0;
 	padding: 0
 }
 
-div.slb ul li input {
+div.mui-slb ul li input {
 	margin-top: 4px;
 }
 
-div.slb ul li span {
+div.mui-slb ul li span {
 	line-height: 20px;
 	padding: 0 0 0 2px;
 	margin-top: 4px;
 	vertical-align: top;
 }
 
-div.slb ul li {
+div.mui-slb ul li {
 	padding: 0 5px 0 5px;
 	background-color: white;
 	font: normal 9pt Sans-Serif, Arial;
 }
 
-div.slb ul li.alt {
+div.mui-slb ul li.alt {
 	background-color: #eeeeee;
 }
 
-div.slb ul li.C {
+div.mui-slb ul li.C {
 	color: #FFFFFF;
 	background-color: #0099cc;
 	cursor: pointer;
 }
 
-div.slb ul li.O {
+div.mui-slb ul li.O {
 	color: #FFFFFF;
 	background-color: #2f227e;
 	cursor: pointer;

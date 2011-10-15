@@ -49,9 +49,9 @@ MUI.Tree = new NamedClass('MUI.Tree', {
 		imageOpenField:		'imageOpen',	// the name of the field that has the node's open image
 		imageClosedField:	'imageClosed',	// the name of the field that has the node's closed image
 
-		partner:			 false,			// default partner element to send content to
-		partnerMethod:		 'xhr',			// default loadMethod when sending content to partner
-		cssClass:			'tree',			// the primary css tag
+		partner:			false,			// default partner element to send content to
+		partnerMethod:		'xhr',			// default loadMethod when sending content to partner
+		cssClass:			'mui-tree',			// the primary css tag
 		showIcon:			true,
 		showCheckBox:		false,			// true to show checkBoxes
 		canSelect:			true,			// can the user select a node by clicking it
@@ -209,7 +209,7 @@ MUI.Tree = new NamedClass('MUI.Tree', {
 		a = node._a = new Element('a', {'id': id}).inject(li);
 		if (node.target) a.setAttribute('target', node.target); 									// add anchor target
 		span = node._span = new Element('span', {'text': text, 'id': id + '_tle'}).inject(a);		// add node text
-		if (o.showIcon) node._icon = new Element('span', {'class': 'treeIcon'}).inject(a, 'top');	// add node image
+		if (o.showIcon) node._icon = new Element('span', {'class': 'mui-treeIcon'}).inject(a, 'top');	// add node image
 
 		node._element = li;
 		var title = MUI.getData(node, o.titleField);

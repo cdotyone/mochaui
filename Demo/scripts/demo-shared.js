@@ -147,7 +147,7 @@ Object.append(Demo, {
 			],
 			commands: [
 				{'text': 'Ok', 'name': 'Ok', 'image': '{theme}images/accept.png'},
-				{'text': 'Cancel', 'name': 'Cancel', 'image': '{theme}images/cancel.png'}
+				{'text': 'Delete', 'name': 'Delete', 'image': '{theme}images/cancel.png'}
 			],
 			onItemCommand: function(item, self, cmd){
 				Demo.writeConsole(self.options.id + ' received ' + cmd.name + ' command on item ' + item.value)
@@ -299,7 +299,6 @@ Object.append(Demo, {
 		$(container).empty();
 		MUI.create({
 			control: 'MUI.ImageButton',
-			cssClass: 'imgButton',
 			text: 'Accept',
 			title: 'Accept Order',
 			image: '{theme}images/accept.png',
@@ -311,7 +310,6 @@ Object.append(Demo, {
 		});
 		MUI.create({
 			control: 'MUI.ImageButton',
-			cssClass: 'imgButton',
 			text: 'Cancel',
 			title: 'Cancel Order',
 			image: '{theme}images/cancel.png',

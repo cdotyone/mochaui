@@ -3,7 +3,7 @@
 
  file: list.css
 
- description: MUI - List control css.
+ description: MUI.List control css.
 
  copyright: (c) 2011 Contributors in (/AUTHORS.txt).
 
@@ -15,24 +15,24 @@
  */
 
 /* List */
-.list {
+.mui-list {
 	background-color: White;
 	border: solid 1px black;
 	margin: 20px;
 }
 
-div.list {
+div.mui-list {
 	overflow: auto;
 	background-color: White;
 	border: solid 1px #dddddd;
 	margin: 0;
 }
 
-div.list div.List {
+div.mui-list div.mui-list {
 	border: none;
 }
 
-div.list tr td {
+div.mui-list tr td {
 	height: 21px;
 	padding: 0 5px 0 5px;
 	background-color: white;
@@ -40,36 +40,36 @@ div.list tr td {
 	color: black;
 }
 
-div.list tr.alt td {
+div.mui-list tr.alt td {
 	background-color: #eeeeee;
 }
 
-div.list tr.C td {
+div.mui-list tr.C td {
 	color: black;
 	background-color: #0099cc;
 	cursor: pointer;
 }
 
-div.list tr.O td {
+div.mui-list tr.O td {
 	color: black;
 	background-color: #999999;
 	cursor: pointer;
 }
 
-div.list tr td img {
+div.mui-list tr td img {
 	border: none;
 }
 
-div.list tr td a {
+div.mui-list tr td a {
 	color: black;
 	text-decoration: none
 }
 
-div.list tr td a:hover {
+div.mui-list tr td a:hover {
 	text-decoration: underline
 }
 
-div.list tr.head td {
+div.mui-list tr.head td {
 	white-space: nowrap;
 	color: #444444;
 	height: 20px;
@@ -83,7 +83,7 @@ div.list tr.head td {
 	font-size: 9pt;
 }
 
-div.list tr.head td {
+div.mui-list tr.head td {
 	line-height: 18px;
 	color: #444444;
 	font-family: Sans-Serif;
@@ -91,7 +91,7 @@ div.list tr.head td {
 	font-weight: bold;
 }
 
-div.list tr.head td.first {
+div.mui-list tr.head td.first {
 	border-left: none;
 }
 

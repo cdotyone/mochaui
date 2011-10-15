@@ -25,11 +25,11 @@
 }
 
 /* header */
-.desktopHeader {
+.mui-desktopHeader {
 	background: #404040;
 }
 
-.desktopNav {
+.mui-desktopNav {
 	background-color: #404040;
 	clear: both;
 	height: 30px;
@@ -38,20 +38,20 @@
 	padding-top: 4px;
 }
 
-.desktopTitlebarWrapper {
+.mui-desktopTitlebarWrapper {
 	position: relative;
 	height: 45px;
 	overflow: hidden;
 	background: #303030 url(../images/bg-header.gif) repeat-x;
 }
 
-.desktopTitlebar {
+.mui-desktopTitlebar {
 	padding: 7px 8px 6px 8px;
 	height: 32px;
 	background: url(../images/logo.gif) no-repeat left 0;
 }
 
-.desktopTitlebar h1.applicationTitle {
+.mui-desktopTitlebar h1.applicationTitle {
 	display: none;
 	margin: 0;
 	padding: 0 5px 0 0;
@@ -61,7 +61,7 @@
 	color: #fff;
 }
 
-.desktopTitlebar h2.tagline {
+.mui-desktopTitlebar h2.tagline {
 	padding: 7px 0 0 0;
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 10px;
@@ -71,12 +71,12 @@
 	text-transform: uppercase;
 }
 
-.desktopTitlebar h2.tagline .taglineEm {
+.mui-desktopTitlebar h2.tagline .taglineEm {
 	color: #fff;
 	font-weight: bold;
 }
 
-.desktopTitlebar div.topNav {
+.mui-desktopTitlebar div.topNav {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 10px;
 	position: absolute;
@@ -87,23 +87,23 @@
 	padding: 13px 10px 0 0;
 }
 
-.desktopTitlebar div.topNav a {
+.mui-desktopTitlebar div.topNav a {
 	color: #fff;
 	font-weight: normal;
 }
 
-.desktopTitlebar div.topNav a:hover {
+.mui-desktopTitlebar div.topNav a:hover {
 	text-decoration: none;
 }
 
 /* content*/
-li.divider {
+li.mui-divider {
 	margin-top: 2px;
 	padding-top: 3px;
 	border-top: 1px solid #ebebeb;
 }
 
-.desktopContent {
+.mui-desktopContent {
 	position: relative;
 	overflow: hidden; /* This can be set to hidden or auto */
 	border-top: 1px solid #181818;
@@ -111,7 +111,7 @@ li.divider {
 }
 
 /* Footer */
-.desktopFooter {
+.mui-desktopFooter {
 	position: absolute;
 	left: 0;
 	bottom: 0;
@@ -120,7 +120,7 @@ li.divider {
 	overflow: hidden;
 }
 
-.desktopFooter .copyright {
+.mui-desktopFooter .copyright {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 10px;
 	height: 24px;

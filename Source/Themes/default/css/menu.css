@@ -15,14 +15,14 @@
  */
 
 /* menu */
-.toolMenu, .toolbar.toolMenu {
+.mui-menu, .toolbar.mui-menu {
 	margin: 0;
 	padding: 0;
 	padding-top: 4px;
 	overflow: visible
 }
 
-.toolMenu  ul {
+.mui-menu  ul {
 	padding: 0;
 	margin: 0;
 	list-style: none;
@@ -30,7 +30,7 @@
 	text-align: left;
 }
 
-.toolMenu  li {
+.mui-menu  li {
 	float: left;
 	padding-left: 4px;
 	padding-right: 4px;
@@ -39,27 +39,27 @@
 	vertical-align: middle;
 }
 
-.toolMenu  a {
+.mui-menu  a {
 	display: block;
 }
 
-.toolMenu  ul li a {
+.mui-menu  ul li a {
 	color: #333;
 	font-weight: normal;
 	height: 25px;
 }
 
-.toolMenu  ul li a:hover {
+.mui-menu  ul li a:hover {
 	color: #333;
 }
 
-.toolMenu  ul li a.arrow-right, .toolMenu  ul li a:hover.arrow-right {
+.mui-menu  ul li a.arrow-right, .mui-menu  ul li a:hover.arrow-right {
 	background-image: url(../images/arrow-right.gif);
 	background-repeat: no-repeat;
 	background-position: right 9px;
 }
 
-.toolMenu  li ul {
+.mui-menu  li ul {
 	padding-bottom: 4px;
 	border: 1px solid #3f3f3f;
 	border-top: solid 1px transparent;
@@ -70,17 +70,17 @@
 	z-index: 8000;
 }
 
-.toolMenu  li.hover ul ul, .toolMenu  li.hover ul ul ul {
+.mui-menu  li.hover ul ul, .mui-menu  li.hover ul ul ul {
 	left: -999em;
 }
 
-.toolMenu  li ul ul {
+.mui-menu  li ul ul {
 /* third-and-above-level lists */
 	margin: -27px 0 0 160px;
 	border-top: solid 1px #3f3f3f
 }
 
-.toolMenu  li ul li a {
+.mui-menu  li ul li a {
 	position: relative;
 	padding: 1px 2px 1px 25px;
 	width: 130px;
@@ -88,13 +88,13 @@
 	font-weight: normal;
 }
 
-.toolMenu  li ul li a:hover {
+.mui-menu  li ul li a:hover {
 	background: #6C98D9;
 	color: #fff;
 	-moz-border-radius: 2px;
 }
 
-.toolMenu  li ul li .radio {
+.mui-menu  li ul li .radio {
 	position: absolute;
 	top: 6px;
 	left: 4px;
@@ -106,7 +106,7 @@
 	font-size: 1px;
 }
 
-.toolMenu  li ul li .noradio {
+.mui-menu  li ul li .noradio {
 	position: absolute;
 	top: 6px;
 	left: 4px;
@@ -118,15 +118,15 @@
 	font-size: 1px;
 }
 
-.toolMenu  li ul li a:hover .radio {
+.mui-menu  li ul li a:hover .radio {
 	background-position: right bottom;
 }
 
-.toolMenu  li ul li a:hover .noradio {
+.mui-menu  li ul li a:hover .noradio {
 	background-position: right 0;
 }
 
-.toolMenu  li ul li .check {
+.mui-menu  li ul li .check {
 	position: absolute;
 	top: 6px;
 	left: 4px;
@@ -138,7 +138,7 @@
 	font-size: 1px;
 }
 
-.toolMenu  li ul li .nocheck {
+.mui-menu  li ul li .nocheck {
 	position: absolute;
 	top: 6px;
 	left: 4px;
@@ -150,20 +150,20 @@
 	font-size: 1px;
 }
 
-.toolMenu  li ul li a:hover .check {
+.mui-menu  li ul li a:hover .check {
 	background-position: right bottom;
 }
 
-.toolMenu  li ul li a:hover .nocheck {
+.mui-menu  li ul li a:hover .nocheck {
 	background-position: right 0;
 }
 
-.toolMenu  li.hover ul, .toolMenu li li.hover ul, .toolMenu  li li li.hover ul {
+.mui-menu  li.hover ul, .mui-menu li li.hover ul, .mui-menu  li li li.hover ul {
 /* lists nested under hovered list items */
 	left: auto;
 }
 
-.toolMenu li.divider {
+.mui-menu li.mui-divider {
 	margin-top: 2px;
 	padding-top: 3px;
 	border-top: 1px solid #ebebeb;

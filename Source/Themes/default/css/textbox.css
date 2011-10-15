@@ -15,23 +15,27 @@
  */
 
 /* textbox settings */
-fieldset.form {
+fieldset.mui-form {
 	display: block;
 	padding: 0 0 0 10px;
 	border: none;
 }
 
-fieldset.form label {
+fieldset.mui-form label {
 	float: left;
 	width: 200px;
 }
 
-fieldset.form {
+fieldset.mui-form {
 	font-family: Helvetica, Arial, sans-serif;
 }
 
-fieldset.form textarea {
+fieldset.mui-form textarea {
 	padding: 5px;
+}
+
+input.mui-form {
+	height: 23px;
 }
 
 /* textbox settings */

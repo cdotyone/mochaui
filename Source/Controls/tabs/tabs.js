@@ -34,9 +34,9 @@ MUI.Tabs = new NamedClass('MUI.Tabs', {
 		id:				'',				// id of the primary element, and id os control that is registered with mocha
 		container:		null,			// the parent control in the document to add the control to
 		drawOnInit:		true,			// true to add tree to container when control is initialized
-		cssClass:		'tabs',			// the primary css tag
+		cssClass:		'mui-tabs',		// the primary css tag
 
-		tabs:			[],			 // the list of tabs
+		tabs:			[],			 	// the list of tabs
 
 		textField:		'text',			// the name of the field that has the tab's text
 		valueField:		'value',		// the name of the field that has the tab's value
@@ -62,7 +62,7 @@ MUI.Tabs = new NamedClass('MUI.Tabs', {
 		this.id = this.options.id = this.options.id || 'tabs' + (++MUI.idCount);
 		MUI.set(this.id, this);
 
-		if(this.options.drawOnInit && this.options.tabs.length > 0) this.draw();
+		if (this.options.drawOnInit && this.options.tabs.length > 0) this.draw();
 	},
 
 	draw: function(container){
@@ -97,13 +97,13 @@ MUI.Tabs = new NamedClass('MUI.Tabs', {
 		o.tabs.each(function(tab){
 			this._buildTab(tab, ul);
 			if (MUI.getData(tab, o.valueField) == o.value) o.selectedTab = tab;
-		},this);
+		}, this);
 
 		// add a formatting div
 		new Element('div', {'class': 'clear'}).inject(ul);
 
 		if (!isNew){
-			div.removeClass('toolbar');
+			div.removeClass('mui-toolbar');
 			if (o.selectedTab) o.selectedTab.element.fireEvent('click');
 			return this;
 		}

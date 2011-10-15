@@ -36,7 +36,7 @@ MUI.ImageButton = new NamedClass('MUI.ImageButton', {
 		container:		null,		// the parent control in the document to add the control to
 		section:		false,		// name of section in panel/window to add this control
 		drawOnInit:		true,		// true to add tree to container when control is initialized
-		cssClass:		'imgButton',// the primary css tag
+		cssClass:		'mui-imgButton',// the primary css tag
 
 		text:			null,		// the text displayed on the button
 		title:			null,		// tool tip text

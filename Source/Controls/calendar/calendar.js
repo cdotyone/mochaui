@@ -36,8 +36,8 @@ MUI.Calendar = new NamedClass('MUI.Calendar', {
 		//container:		null,	// the parent control in the document to add the control to
 		//clearContainer:	false,	// should the control clear its parent container before it appends itself
 		drawOnInit:		true,		// true to add tree to container when control is initialized
-		cssClass:		'form',		// the form element/title css tag
-		cssCalendar:	'calendar',	// the calendar css tag, added to the beginning of each css name
+		cssClass:		'mui-form',		// the form element/title css tag
+		cssCalendar:	'mui-calendar',	// the calendar css tag, added to the beginning of each css name
 		cssClasses:		{},			// ['calendar', 'prev', 'next', 'month', 'year', 'today', 'invalid', 'valid', 'inactive', 'active', 'hover', 'hilite']
 
 		format:			'd/m/Y',	// date format
@@ -161,7 +161,7 @@ MUI.Calendar = new NamedClass('MUI.Calendar', {
 
 		this.el.button = $(o.id + '_button');
 		if (!this.el.button){
-			this.el.button = new Element('button', {'id':o.id + '_button', 'type': 'button', 'class':this._classes.calendar }).addEvent('click', function(){
+			this.el.button = new Element('button', {'id':o.id + '_button', 'type': 'button', 'class':o.cssCalendar }).addEvent('click', function(){
 				this.toggle();
 			}.bind(this)).inject(inp, 'after');
 		}
@@ -172,7 +172,7 @@ MUI.Calendar = new NamedClass('MUI.Calendar', {
 			this.el.calendar = new Element('div', {'id':o.id + '_calendar'}).inject(document.body);
 		}
 		this.el.calendar.setStyles({ left: '-1000px', opacity: 0, position: 'absolute', top: '-1000px', zIndex: 1000 })
-				.addClass(this._classes.calendar)
+				.addClass(o.cssCalendar)
 				.empty();
 
 		// iex 6 needs a transparent iframe underneath the calendar in order to not allow select elements to render through
@@ -483,7 +483,7 @@ MUI.Calendar = new NamedClass('MUI.Calendar', {
 
 		// 1. header and navigation
 		calendar.empty(); // init div
-		calendar.className = this._classes.calendar + ' ' + this.options.months[this._month].toLowerCase();
+		calendar.className = o.cssCalendar + ' ' + this.options.months[this._month].toLowerCase();
 		var div = new Element('div').inject(calendar); // a wrapper div to help correct browser css problems with the caption element
 		var table = new Element('table').inject(div).adopt(this._caption());
 

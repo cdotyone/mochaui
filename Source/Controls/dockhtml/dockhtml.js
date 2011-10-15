@@ -34,7 +34,7 @@ MUI.DockHtml = new NamedClass('MUI.DockHtml', {
 
 		content:		false,			// used to load content
 
-		cssClass:		'toolbar',		// css tag to add to control
+		cssClass:		'mui-toolbar',		// css tag to add to control
 		divider:		true,			// true if this toolbar has a divider
 		orientation:	false			// left or right side of dock.  default is right
 	},
@@ -65,7 +65,7 @@ MUI.DockHtml = new NamedClass('MUI.DockHtml', {
 
 		// add styling to element
 		if (o.cssClass) div.addClass(o.cssClass);
-		if (o.divider) div.addClass('divider');
+		if (o.divider) div.addClass('mui-divider');
 		if (o.orientation) div.addClass(o.orientation);
 
 		o.content.element = this.el.element = div.store('instance', this);		// assign instance to element

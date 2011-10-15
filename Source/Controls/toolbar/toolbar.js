@@ -31,7 +31,7 @@ MUI.Toolbar = new NamedClass('MUI.Toolbar', {
 		id:				'',				// id of the primary element, and id os control that is registered with mocha
 		container:		null,			// the parent toolbar doc
 		drawOnInit:		true,			// true to add tree to container when control is initialized
-		cssClass:		false,			// css tag to add to control
+	cssClass:		'mui-toolbar',  // css tag to add to control
 
 		content:		false,			// used to load content
 		divider:		true,			// true if this toolbar has a divider
@@ -93,9 +93,9 @@ MUI.Toolbar = new NamedClass('MUI.Toolbar', {
 			isNew = true;
 		}
 
-		div.addClass('toolbar');
+		div.addClass('mui-toolbar');
 		if (o.cssClass) div.addClass(o.cssClass);
-		if (o.divider) div.addClass('divider');
+		if (o.divider) div.addClass('mui-divider');
 
 		this.el.element = div.store('instance', this);
 

@@ -34,8 +34,8 @@ MUI.Stepper = new NamedClass('MUI.Stepper', {
 		//id:				'',		 	// id of the primary element, and id os control that is registered with mocha
 		//container:		null,	   	// the parent control in the document to add the control to
 		//clearContainer:	false,	  	// should the control clear its parent container before it appends itself
-		drawOnInit:			  true,		   // true to add textbox to container when control is initialized
-		cssClass:			'stepper',  // the primary css tag
+		drawOnInit:			true,		   // true to add textbox to container when control is initialized
+		cssClass:			'mui-stepper',  // the primary css tag
 		//width:			40,			// stepper width in px
 
 		//iterator:		  	null,

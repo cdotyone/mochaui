@@ -35,7 +35,7 @@ MUI.TextBox = new NamedClass('MUI.TextBox', {
 		//container:		null,		// the parent control in the document to add the control to
 		//clearContainer:	false,		// should the control clear its parent container before it appends itself
 		drawOnInit:			true,		// true to add textbox to container when control is initialized
-		cssClass:			'form',		// the primary css tag
+		cssClass:			'mui-form',		// the primary css tag
 		type:				'text',		// this is a text field
 
 		maskType:			'none',		// type of mask to apply  ['Fixed','Regexp','Reverse']

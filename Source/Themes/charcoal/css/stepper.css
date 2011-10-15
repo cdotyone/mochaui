@@ -15,7 +15,7 @@
  */
 
 /* stepper settings */
-fieldset.stepper {
+fieldset.mui-stepper {
 	display: block;
 	padding: 0 0 0 10px;
 	border: none;
@@ -24,18 +24,18 @@ fieldset.stepper {
 	margin-top: 2px;
 }
 
-fieldset.stepper label {
+fieldset.mui-stepper label {
 	float: left;
 	width: 200px;
 }
 
-fieldset.stepper {
+fieldset.mui-stepper {
 	font-family: Helvetica, Arial, sans-serif;
 }
 
-input.stepper {
+input.mui-stepper {
 	float: left;
-	height: 19px;
+	height: 23px;
 	margin: 0;
 	border: 1px solid #000;
 	border-right: none;
@@ -49,18 +49,18 @@ input.stepper {
 	background: #525252;
 }
 
-fieldset div.stepperContainer {
+fieldset div.mui-stepperContainer {
 	float: left;
 	width: 15px;
-	height: 19px;
+	height: 23px;
 	top: 5px;
 	left: -2px;
 	padding: 0;
 	margin: 0;
 }
 
-fieldset div.stepperUp,
-fieldset div.stepperDown {
+fieldset div.mui-stepperUp,
+fieldset div.mui-stepperDown {
 	margin: 0;
 	display: block;
 	width: 15px;
@@ -81,26 +81,26 @@ fieldset div.stepperDown {
 	user-select: none;
 }
 
-fieldset div.stepperDown {
+fieldset div.mui-stepperDown {
 	line-height: 7px;
 	border-top: none;
 }
 
-fieldset div.stepperUp.over,
-fieldset div.stepperDown.over {
+fieldset div.mui-stepperUp.over,
+fieldset div.mui-stepperDown.over {
 	color: #999;
 	background: #424242;
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#595959), to(#424242));
 	background: -moz-linear-gradient(0% 90% 90deg, #424242, #595959);
 }
 
-fieldset div.stepperUp.active,
-fieldset div.stepperDown.active {
+fieldset div.mui-stepperUp.active,
+fieldset div.mui-stepperDown.active {
 	background: #424242;
 }
 
-fieldset div.stepperUp.disabled,
-fieldset div.stepperDown.disabled {
+fieldset div.mui-stepperUp.disabled,
+fieldset div.mui-stepperDown.disabled {
 	cursor: default;
 	color: #3d3d3d;
 	background: #333;

@@ -12,13 +12,12 @@
  provides: css for charcoal theme
  ...
  */
-div.tree {
-	overflow: scroll;
-	overflow-x: auto;
+div.mui-tree {
+	overflow: auto;
 	font-size: 11px;
 }
 
-ul.tree {
+ul.mui-tree {
 	list-style: none;
 	margin: 0;
 	padding: 0;
@@ -26,7 +25,7 @@ ul.tree {
 	cursor: pointer;
 }
 
-ul.tree ul, ul.tree li {
+ul.mui-tree ul, ul.mui-tree li {
 	list-style: none;
 	margin: 0;
 	padding: 0;
@@ -34,159 +33,159 @@ ul.tree ul, ul.tree li {
 	cursor: pointer;
 }
 
-ul.tree ul {
+ul.mui-tree ul {
 	background: transparent url(../images/tree-vert.gif) repeat-y left center;
 }
 
-ul.tree li {
+ul.mui-tree li {
 	line-height: 18px;
 	padding: 0;
 }
 
-ul.tree li a:link {
+ul.mui-tree li a:link {
 	display: inline;
 	text-decoration: none;
 	vertical-align: middle;
 }
 
-ul.tree li a:visited {
+ul.mui-tree li a:visited {
 	text-decoration: none;
 	vertical-align: middle;
 }
 
-ul.tree li a:active {
+ul.mui-tree li a:active {
 	text-decoration: none;
 	vertical-align: middle;
 }
 
-ul.tree li a:hover span {
+ul.mui-tree li a:hover span {
 	text-decoration: underline;
 }
 
-ul.tree li a.lbl {
+ul.mui-tree li a.lbl {
 	color: WindowText;
 }
 
-ul.tree li a.sel span {
+ul.mui-tree li a.sel span {
 	text-decoration: underline;
 }
 
-ul.tree ul li.O {
+ul.mui-tree ul li.O {
 	padding-left: 18px;
 	background: url(../images/tree-open.gif) no-repeat left top;
 }
 
-ul.tree ul li.C {
+ul.mui-tree ul li.C {
 	padding-left: 18px;
 	background: url(../images/tree-closed.gif) no-repeat left top;
 }
 
-ul.tree li.nochild {
+ul.mui-tree li.nochild {
 	background: url(../images/tree-nochild.gif) no-repeat left top;
 }
 
-div.panel ul.tree li.last {
+div.panel ul.mui-tree li.last {
 	background-color: #303030;
 }
 
-div.mochaContent ul.tree li.last {
+div.mochaContent ul.mui-tree li.last {
 	background-color: #303030;
 }
 
-ul.tree ul li.nochild {
+ul.mui-tree ul li.nochild {
 	padding-left: 18px;
 	background: url(../images/tree-nochild.gif) no-repeat left top;
 }
 
-div.panel ul.tree ul li.last {
+div.panel ul.mui-tree ul li.last {
 	background-color: #303030;
 }
 
-div.mochaContent ul.tree ul li.last {
+div.mochaContent ul.mui-tree ul li.last {
 	background-color: #303030;
 }
 
-ul.tree span.open {
+ul.mui-tree span.open {
 	padding-left: 17px;
 	background: url(../images/open.gif) no-repeat left top;
 }
 
-ul.tree span.closed {
+ul.mui-tree span.closed {
 	padding-left: 17px;
 	background: url(../images/closed.gif) no-repeat left top;
 }
 
-ul.tree span.doc {
+ul.mui-tree span.doc {
 	padding-left: 16px;
 	padding-bottom: 2px;
 	background: transparent url(../images/doc.gif) no-repeat left top;
 }
 
-ul.tree span.treeIcon {
+ul.mui-tree span.mui-treeIcon {
 	float: left;
 	width: 16px;
 	height: 16px;
 	vertical-align: middle;
 }
 
-ul.tree li span.treeIcon {
+ul.mui-tree li span.mui-treeIcon {
 	margin-right: 0;
 	background: url(../images/doc.gif) no-repeat left top;
 }
 
-ul.tree li.O span.treeIcon {
+ul.mui-tree li.O span.mui-treeIcon {
 	margin-right: 2px;
 	background: url(../images/open.gif) no-repeat left top;
 }
 
-ul.tree li.C span.treeIcon {
+ul.mui-tree li.C span.mui-treeIcon {
 	margin-right: 2px;
 	background: url(../images/closed.gif) no-repeat left top;
 }
 
-ul.tree li.O li span.treeIcon {
+ul.mui-tree li.O li span.mui-treeIcon {
 	margin-right: 0;
 	background: url(../images/doc.gif) no-repeat left top;
 }
 
-ul.tree li a:link {
+ul.mui-tree li a:link {
 	color: #f8f8f8;
 }
 
-ul.tree ul li.O.first {
+ul.mui-tree ul li.O.first {
 	background: url(../images/tree-open-first.gif) no-repeat left top;
 }
 
-ul.tree ul li.C.first {
+ul.mui-tree ul li.C.first {
 	background: url(../images/tree-close-first.gif) no-repeat left top;
 }
 
-ul.tree li a {
+ul.mui-tree li a {
 	color: #f8f8f8;
 	text-decoration: none;
 }
 
-ul.tree li a:link {
+ul.mui-tree li a:link {
 	display: inline;
 	text-decoration: none;
 	vertical-align: middle;
 	color: #f8f8f8;
 }
 
-ul.tree li a:visited {
+ul.mui-tree li a:visited {
 	text-decoration: none;
 	vertical-align: middle;
 }
 
-ul.tree li a:active {
+ul.mui-tree li a:active {
 	text-decoration: none;
 	vertical-align: middle;
 }
 
-ul.tree li a:hover span {
+ul.mui-tree li a:hover span {
 	text-decoration: underline;
 }
 
-ul.tree li a.sel span {
+ul.mui-tree li a.sel span {
 	text-decoration: underline;
 }

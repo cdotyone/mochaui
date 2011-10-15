@@ -15,13 +15,13 @@
  */
 
 /* Tabs */
-div.tabs {
+div.mui-tabs {
 	padding: 0 5px 2px 2px;
 	background: url(../images/tabs.gif) repeat-x left -70px;
 	overflow: visible;
 }
 
-div.tabs ul {
+div.mui-tabs ul {
 	padding: 2px 0 0;
 	list-style: none;
 	margin: 0;
@@ -29,7 +29,7 @@ div.tabs ul {
 	font-size: 11px;
 }
 
-div.tabs ul li {
+div.mui-tabs ul li {
 	display: block;
 	float: left;
 	margin: 0 0 5px 0;
@@ -37,11 +37,11 @@ div.tabs ul li {
 	background: url(../images/tabs.gif) repeat-x left -35px;
 }
 
-div.tabs ul li.sel {
+div.mui-tabs ul li.sel {
 	background: url(../images/tabs.gif) repeat-x left 0;
 }
 
-div.tabs ul li a {
+div.mui-tabs ul li a {
 	display: block;
 	margin-left: 8px;
 	padding: 6px 15px 5px 9px;
@@ -51,17 +51,17 @@ div.tabs ul li a {
 	background: url(../images/tabs.gif) repeat-x right -35px;
 }
 
-div.tabs ul li.sel a {
+div.mui-tabs ul li.sel a {
 	color: #181818;
 	font-weight: bold;
 	background: url(../images/tabs.gif) repeat-x right 0;
 }
 
-div.mochaToolbar.tabs ul {
+div.mochaToolbar.mui-tabs ul {
 	padding: 0;
 }
 
-div.panel-header div.panel-header-toolbar div.tabs {
+div.panel-header div.panel-header-toolbar div.mui-tabs {
 	background: url(../images/tabs.gif) repeat-x left -68px;
 	padding-top: 0;
 }

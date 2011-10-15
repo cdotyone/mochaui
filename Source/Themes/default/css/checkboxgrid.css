@@ -15,22 +15,24 @@
  */
 
 /* CheckboxGrid */
-fieldset.cbg {
+fieldset.mui-cbg {
 	display: block;
 	padding: 0 0 0 10px;
 	border: none;
 }
 
-fieldset.cbg span {
+fieldset.mui-cbg span {
 	white-space: nowrap;
 	float: left
 }
 
-fieldset.cbg label {
+fieldset.mui-cbg label {
+	padding-left: 2px;
 	padding-right: 3px;
+	font-size: 12px;
 }
 
-fieldset.cbg input {
+fieldset.mui-cbg input {
 	padding-right: 3px;
 }
 

@@ -9,11 +9,11 @@
 	opacity: 1;
 }
 
-input.calendar, select.calendar {
+input.mui-calendar, select.mui-calendar {
 	vertical-align: middle;
 }
 
-button.calendar {
+button.mui-calendar {
 	background: url(../images/calendar-icon.gif);
 	border: 0;
 	cursor: pointer;
@@ -23,11 +23,11 @@ button.calendar {
 	vertical-align: middle;
 }
 
-button.calendar:hover, button.calendar.active {
+button.mui-calendar:hover, button.mui-calendar.active {
 	background-position: 0 20px;
 }
 
-div.calendar {
+div.mui-calendar {
 	background: url(../images/calendar.png);
 	height: 195px;
 	padding: 0 6px;
@@ -35,12 +35,12 @@ div.calendar {
 	width: 147px;
 }
 
-div.calendar * {
+div.mui-calendar * {
 	margin: 0;
 	padding: 0;
 }
 
-div.calendar div {
+div.mui-calendar div {
 	background: none !important;
 	cursor: move;
 	height: 185px;
@@ -50,7 +50,7 @@ div.calendar div {
 	width: 147px;
 }
 
-div.calendar caption {
+div.mui-calendar caption {
 	color: #333;
 	font: normal 12px / 16px Arial, Helvetica, sans-serif;
 	padding-top: 6px;
@@ -58,7 +58,7 @@ div.calendar caption {
 	width: 100%;
 }
 
-div.calendar caption a {
+div.mui-calendar caption a {
 	cursor: pointer;
 	display: block;
 	height: 12px;
@@ -69,35 +69,35 @@ div.calendar caption a {
 	width: 11px;
 }
 
-div.calendar caption a.prev {
+div.mui-calendar caption a.prev {
 	background-image: url(../images/calendar-prev.gif);
 	left: 0;
 }
 
-div.calendar caption a.next {
+div.mui-calendar caption a.next {
 	background-image: url(../images/calendar-next.gif);
 	right: 0;
 }
 
-div.calendar caption a:hover {
+div.mui-calendar caption a:hover {
 	background-position: 0 12px;
 }
 
-div.calendar caption span {
+div.mui-calendar caption span {
 	height: 25px;
 	position: relative;
 	text-align: center;
 }
 
-div.calendar caption span.month {
+div.mui-calendar caption span.month {
 	padding-right: 8px;
 }
 
-div.calendar caption span.month:after {
+div.mui-calendar caption span.month:after {
 	content: ',';
 }
 
-div.calendar table {
+div.mui-calendar table {
 	background: #FFF;
 	border: 0;
 	border-collapse: collapse;
@@ -108,7 +108,7 @@ div.calendar table {
 	width: 147px;
 }
 
-div.calendar td, div.calendar th {
+div.mui-calendar td, div.mui-calendar th {
 	border: 0;
 	color: #0597DB;
 	font: normal 12px Arial, Helvetica, sans-serif;
@@ -117,32 +117,32 @@ div.calendar td, div.calendar th {
 	width: 21px;
 }
 
-div.calendar td {
+div.mui-calendar td {
 	background: url(../images/calendar-td.gif);
 	color: #FFF;
 	font-size: 11px;
 }
 
-div.calendar td.invalid {
+div.mui-calendar td.invalid {
 	color: #999;
 }
 
-div.calendar td.valid {
+div.mui-calendar td.valid {
 	background: url(../images/calendar-valid.gif);
 	color: #0597DB;
 	cursor: pointer;
 }
 
-div.calendar td.hilite {
+div.mui-calendar td.hilite {
 	background: url(../images/calendar-hilite.gif);
 }
 
-div.calendar td.inactive {
+div.mui-calendar td.inactive {
 	background: url(../images/calendar-td.gif) 0 100%;
 	color: #FFF;
 }
 
-div.calendar td.active, div.calendar td.hover {
+div.mui-calendar td.active, div.mui-calendar td.hover {
 	background: url(../images/calendar-valid.gif) 0 100%;
 	color: #FFF;
 	cursor: pointer;

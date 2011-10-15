@@ -65,9 +65,9 @@ MUI.Spinner = new NamedClass('MUI.Spinner', {
 
 		// process dock options
 		if (o.inDock){
-			if (o.divider) div.addClass('divider');
+			if (o.divider) div.addClass('mui-divider');
 			if (o.orientation) div.addClass(o.orientation);
-			div.addClass('toolbar');
+			div.addClass('mui-toolbar');
 		}
 		if (o.cssClass) div.addClass(o.cssClass);
 

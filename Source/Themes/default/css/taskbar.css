@@ -15,15 +15,15 @@
  */
 
 /* Taskbar */
-.taskbarWrapper {
+.mui-taskbarWrapper {
 	display: none;
 	width: 100%;
 }
 
-.taskbarWrapper.top {
+.mui-taskbarWrapper.top {
 }
 
-.taskbar {
+.mui-taskbar {
 	position: relative;
 	padding: 3px 16px 0 6px;
 	bottom: 0;
@@ -33,11 +33,11 @@
 	height: auto;
 }
 
-* html .taskbar {
+* html .mui-taskbar {
 	height: 30px; /* Used for IE 6.0 since it does not support min-height */
 }
 
-.taskbarTab {
+.mui-taskbarTab {
 	float: left;
 	position: relative;
 	font-size: 11px;
@@ -49,11 +49,11 @@
 	background: url(../images/taskbar-tabs.gif) left top no-repeat;
 }
 
-.taskbarTab.activeTab {
+.mui-taskbarTab.activeTab {
 	background-position: left -24px;
 }
 
-.taskbarText {
+.mui-taskbarText {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -67,22 +67,22 @@
 	overflow: hidden;
 }
 
-.taskbarText:hover {
+.mui-taskbarText:hover {
 	color: #333;
 }
 
-.taskbarTab.activeTab .taskbarText {
+.mui-taskbarTab.activeTab .mui-taskbarText {
 	color: #333;
 }
 
-.taskbarCanvas {
+.mui-taskbarCanvas {
 	position: absolute;
 	top: 5px;
 	right: 3px;
 	z-index: 2;
 }
 
-.taskbarPlacement {
+.mui-taskbarPlacement {
 	position: absolute;
 	top: 4px;
 	right: 8px;
@@ -94,7 +94,7 @@
 	text-align: right;
 }
 
-.taskbarAutoHide {
+.mui-taskbarAutoHide {
 	position: absolute;
 	top: 14px;
 	right: 8px;
@@ -106,14 +106,14 @@
 	text-align: right;
 }
 
-.taskbarButtonEnabled {
+.mui-taskbarButtonEnabled {
 	background-color: #7399bf;
 }
 
-.taskbarButtonDisabled {
+.mui-taskbarButtonDisabled {
 	background-color: #aaa;
 }
 
-.taskbarButtonTrue {
+.mui-taskbarButtonTrue {
 	background-color: #33cc33;
 }

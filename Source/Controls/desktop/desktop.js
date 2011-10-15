@@ -32,7 +32,7 @@ MUI.Desktop = new NamedClass('MUI.Desktop', {
 		id:				'',				// id of the primary element, and id os control that is registered with mocha
 		container:		null,			// the parent control in the document to add the control to
 		drawOnInit:		true,			// true to add tree to container when control is initialized
-		cssClass:		'desktop',		// additional css tag
+		cssClass:		'mui-desktop',	// additional css tag
 		orientation:	'left',			// toolbars are listed from left to right or right to left
 
 		partner:		false,			// default partner panel to pass docked controls

@@ -14,26 +14,26 @@
  ...
  */
 
-.pager {
+.mui-pager {
 	background: url(../images/bg-panel-header.gif) repeat-x 0 -1px;
 	overflow: hidden;
 	white-space: nowrap;
 }
 
-.pager .Group {
+.mui-pager .Group {
 	float: left;
 	background: none;
 	height: 24px;
 	margin: 0 0;
 }
 
-.pager .Separator {
+.mui-pager .Separator {
 	height: 19px;
 	float: left;
 }
 
 /* Text */
-.pager .Status {
+.mui-pager .Status {
 	position: relative;
 	top: 5px;
 	overflow: visible;
@@ -42,7 +42,7 @@
 }
 
 /* Buttons */
-.pager .Button {
+.mui-pager .Button {
 	float: left;
 	width: 16px;
 	height: 16px;
@@ -53,42 +53,42 @@
 	padding: 0
 }
 
-.pager .Button:hover {
+.mui-pager .Button:hover {
 	background-position: -16px 0;
 }
 
-.pager .First {
+.mui-pager .First {
 	background: url(../images/pager-first.gif) no-repeat;
 }
 
-.pager .Prev {
+.mui-pager .Prev {
 	background: url(../images/pager-prev.gif) no-repeat;
 }
 
-.pager .Next {
+.mui-pager .Next {
 	background: url(../images/pager-next.gif) no-repeat;
 }
 
-.pager .Last {
+.mui-pager .Last {
 	background: url(../images/pager-last.gif) no-repeat;
 }
 
-.pager .Reload {
+.mui-pager .Reload {
 	background: url(../images/pager-refresh.png) no-repeat;
 }
 
-.pager .Reload.Loading {
+.mui-pager .Reload.Loading {
 	background: url(../images/pager-refresh-loading.gif) no-repeat;
 	background-position: 0 0 !important;
 }
 
 /* Form Elements */
-.pager select {
+.mui-pager select {
 	font-size: 10px;
 	margin-top: 2px;
 }
 
-.pager input {
+.mui-pager input {
 	vertical-align: text-top;
 	position: relative;
 	top: -2px;

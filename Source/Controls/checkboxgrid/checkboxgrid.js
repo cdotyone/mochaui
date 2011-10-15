@@ -36,7 +36,7 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 		container:			null,		// the parent control in the document to add the control to
 		clearContainer:		false,		// should the control clear its parent container before it appends itself
 		drawOnInit:			true,		// true to add tree to container when control is initialized
-		cssClass:			'cbg',		// the primary css tag
+		cssClass:			'mui-cbg',		// the primary css tag
 		title:				false,		// the title to place above the controls
 
 		content:			false,		// used to load content

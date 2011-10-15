@@ -13,35 +13,35 @@
  */
 
 /* Toolbar Dock */
-.toolbardock {
+.mui-toolbardock {
 	padding: 0;
 }
 
-.toolbardock div {
+.mui-toolbardock div {
 	padding-left: 3px;
 	padding-right: 3px;
 }
 
-.toolbardock div.divider {
+.mui-toolbardock div.mui-divider {
 /* Have to specify div here for IE6's sake */
 	background: url(../images/toolbar-divider.gif) repeat-y;
 	padding-left: 6px;
 	float: right;
 }
 
-.toolbardock div.left {
+.mui-toolbardock div.left {
 	float: left
 }
 
-.toolbardock div.right {
+.mui-toolbardock div.right {
 	float: right
 }
 
-.toolbardock div.tabs ul {
+.mui-toolbardock div.tabs ul {
 	padding-top: 0;
 }
 
-.toolbardock div.tabs {
+.mui-toolbardock div.tabs {
 	margin-top: 2px;
 }
 
@@ -56,7 +56,7 @@ div.panel-header div.tabs ul {
 }
 
 /* Toolbar */
-.toolbar {
+.mui-toolbar {
 	margin-top: 4px;
 	float: right;
 	overflow: hidden;
@@ -66,23 +66,23 @@ div.panel-header div.tabs ul {
 	vertical-align: middle;
 }
 
-.toolbar img.disabled {
+.mui-toolbar img.disabled {
 	cursor: default;
 }
 
-.toolbar .button {
+.mui-toolbar .button {
 	vertical-align: top;
 	margin-top: 0;
 	height: 23px;
 }
 
-.toolbar span.imgButton .imgButton span img {
+.mui-toolbar span.imgButton .imgButton span img {
 	padding: 0 0 2px;
 	position: relative;
 	top: 6px;
 }
 
-.toolbar span.icon {
+.mui-toolbar span.icon {
 	line-height: 24px;
 	font-size: 14px;
 	padding: 3px 9px;
@@ -91,30 +91,30 @@ div.panel-header div.tabs ul {
 	border: 1px solid transparent;
 }
 
-.toolbar span.icon:hover {
+.mui-toolbar span.icon:hover {
 	border: 1px solid #a0a0a0;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 }
 
-.toolbar select.theme {
+.mui-toolbar select.theme {
 	line-height: 24px;
 	margin: 3px 0 4px 0;
 }
 
-* html .toolbar .searchField, * html .toolbar .searchButton {
+* html .mui-toolbar .searchField, * html .mui-toolbar .searchButton {
 /* IE6 Hack */
 	margin-top: -1px;
 }
 
-* html .toolbar .button {
+* html .mui-toolbar .button {
 /* IE6 Hack */
 	vertical-align: top;
 	margin-top: 0;
 	height: 25px;
 }
 
-.panel-footer div div.toolbar {
+.panel-footer div div.mui-toolbar {
 }
 
 /* spinner */
@@ -132,12 +132,12 @@ div.panel-header div.tabs ul {
 	height: 16px;
 }
 
-.toolbar .spinnerWrapper {
+.mui-toolbar .spinnerWrapper {
 	margin: 4px 0 2px 0;
 	height: 24px;
 }
 
-.toolbar .spinnerWrapper .spinner {
+.mui-toolbar .spinnerWrapper .spinner {
 	margin-left: -3px
 }
 
@@ -175,7 +175,7 @@ div.panel-header div.tabs ul {
 	border-radius: 0 3px 3px 0;
 }
 
-*:first-child + html .toolbar .searchField, *:first-child + html .toolbar .searchButton {
+*:first-child + html .mui-toolbar .searchField, *:first-child + html .mui-toolbar .searchButton {
 /* IE7 Hack */
 	margin-top: -1px;
 }
