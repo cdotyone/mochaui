@@ -217,8 +217,7 @@ Object.append(Demo, {
 		MUI.create({
 			control: 'MUI.Grid',
 			'id': node.value + 'Grid',
-			container: container,
-			consoleOutput: false,
+			container: container,			
 			columns: [
 				{
 					header: "Name",
@@ -462,8 +461,7 @@ Object.append(Demo, {
 				
 		MUI.create({
 			control:'MUI.Window',
-			id: 'splitWindow',
-			consoleOutput:true,
+			id: 'splitWindow',			
 			title: 'Split Window',
 			width: 600,
 			height: 350,
