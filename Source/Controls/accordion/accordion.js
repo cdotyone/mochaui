@@ -112,9 +112,9 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 		// build all panels
 		this._togglers = [];
 		this._panels = [];
-		o.panels.each(function(panel){
-			this._buildPanel(panel, this._panelsElement);
-		}, this);
+		for(var i=0;i<o.panels.length;i++) {
+			this._buildPanel(o.panels[i], this._panelsElement, i);
+		}
 		if (this._panels.length > 1){
 			this._togglers[0].addClass('first');
 			this._togglers[this._panels.length - 1].addClass('last');
@@ -124,36 +124,32 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 		var addToContainer = function(){
 			if (typeOf(container) == 'string') container = $(container);
 			if (o.clearContainer) container.empty();
-			if (!container) container.div.getParent();
-			var parentHeight = this._getParentHeight(container);
-			if (container.hasClass('pad')) parentHeight = this._getParentHeight(container.getParent());
+			if (!container) container = div.getParent();
 			if (div.getParent() == null) div.inject(container);
 
-			var instance = MUI.get(o.container);
-			if (!instance || !instance.dynamicResize){
-				if (!o.height){
-					o.height = parentHeight;
-					this._togglers.each(function(toggler){
-						o.height -= toggler.getSize().y
-					});
-				}
-				this._panelsElement.setStyle('height', parentHeight + 'px');
-				container.setStyle('overflow', 'hidden');
-				container.setStyle('padding', 0);
-			}
+			container.setStyle('overflow', 'hidden');
+			container.setStyle('padding', 0);
+			var parentHeight = this._getParentHeight(container);
+
+			MUI.get(o.container).addEvent('resize', this._onParentResize.bind(this));
 
 			this._accordion = new Fx.Accordion(this._togglers, this._panels, {
 				'height':o.heightFx
 				,'width':o.widthFx
+				,'display':this._index
 				,'opacity':o.opacity
-				,'fixedHeight':o.height
+				,'fixedHeight':o._height
 				,'fixedWidth':o.width
 				,'alwaysHide':o.alwaysHide
 				,'initialDisplayFx':o.initialDisplayFx
-				,onActive: function(toggler, element){
+				,onActive: (function(toggler, element){
+					this.options.value = toggler.get('id');
+					this._index = parseInt(toggler.get('index'));
+					this._getParentHeight(container); // forces recalc of _height
+					element.fullHeight = this.options._height;
 					toggler.addClass('open');
 					element.setStyle('overflow', 'auto');
-				},
+				}).bind(this),
 				onBackground: function(toggler, element){
 					toggler.removeClass('open');
 					element.setStyle('overflow', 'hidden');
@@ -178,7 +174,32 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 		return this;
 	},
 
-	_getParentHeight:function(e){
+	_onParentResize:function(){
+		var o = this.options;
+		var div = o.element ? o.element : $(o.id);
+		var h = this._getParentHeight(div.getParent());
+		this._panelsElement.setStyle('height', h + 'px');
+		this._accordion.previous = -1;
+		this._accordion.display(this._index);
+	},
+
+	_getParentHeight: function(e){
+		var o = this.options;
+		var h = this._getElementHeight(e);
+		if (e.hasClass('pad')) h = this._getElementHeight(e.getParent());
+
+		if (!o.height){
+			o._height = h;
+			this._togglers.each(function(toggler){
+				o._height -= toggler.getSize().y
+			});
+		} else o._height = o.height;
+		this._panelsElement.setStyle('height', h + 'px');
+
+		return h;
+	},
+
+	_getElementHeight:function(e){
 		var h = e.getSize().y;
 		h -= parseInt(e.getStyle('border-bottom-width'));
 		h -= parseInt(e.getStyle('border-top-width'));
@@ -187,7 +208,7 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 		return h;
 	},
 
-	_buildPanel: function(panel, div){
+	_buildPanel: function(panel, div, idx){
 		var self = this;
 		var o = self.options;
 
@@ -197,8 +218,10 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 		var title = MUI.getData(panel, o.titleField);
 		var html = MUI.getData(panel, o.contentField);
 
-		panel._togglerEl = new Element('h3', {'id':value,'class':'toggler','text':text,'title':title}).inject(div);
-		panel._element = new Element('div', {'id':value + '_panel','class':'element'}).inject(div);
+		if(o.value == value || (!o.value && idx==0)) this._index = idx;
+
+		panel._togglerEl = new Element('h3', {'id':value,'class':'toggler','text':text,'title':title, 'index':idx}).inject(div);
+		panel._element = new Element('div', {'id':value + '_panel','class':'element', 'index':idx}).inject(div);
 		panel._contentEl = new Element('div', {'class':'content'}).inject(panel._element);
 
 		if (o.insertTitle){

@@ -593,6 +593,7 @@ Object.append(Demo, {
 			control: 'MUI.Accordion',
 			container: container,
 			id: 'accordionMainPanel1',
+			value: 'panel2',
 			content: {url: '{demo}data/accordion-demo.json', loadMethod: 'json'}
 		});
 	},
