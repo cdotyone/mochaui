@@ -20,21 +20,21 @@
 	<p>All of the color options in Window.js are depreciated. They should now be defined in the CSS.</p>
 	
 	<ul>
-		<li><strong>headerStartColor: </strong>.mochaTitlebar background-color (See notes below.)</li>
-		<li><strong>headerStopColor: </strong>.mochaTitlebar background-color (See notes below.)</li>
-		<li><strong>bodyBgColor: </strong>.mocha background-color</li>
-		<li><strong>minimizeColor: </strong>.mochaMinimizeButton color</li>
-		<li><strong>minimizeBgColor: </strong>.mochaMinimizeButton background-color</li>
-		<li><strong>maximizeColor: </strong>.mochaMaximizeButton color</li>				
-		<li><strong>maximizeBgColor: </strong>.mochaMaximizeButton background-color</li>
-		<li><strong>closeColor: </strong>.mochaCloseButton color</li>		
-		<li><strong>closeBgColor: </strong>.mochaCloseButton background-color</li>
-		<li><strong>resizableColor: </strong>.mocha .cornerSE background-color</li>
+		<li><strong>headerStartColor: </strong>.mui-windowTitlebar background-color (See notes below.)</li>
+		<li><strong>headerStopColor: </strong>.mui-windowTitlebar background-color (See notes below.)</li>
+		<li><strong>bodyBgColor: </strong>.mui-window background-color</li>
+		<li><strong>minimizeColor: </strong>.mui-windowMinimizeButton color</li>
+		<li><strong>minimizeBgColor: </strong>.mui-windowMinimizeButton background-color</li>
+		<li><strong>maximizeColor: </strong>.mui-windowMaximizeButton color</li>
+		<li><strong>maximizeBgColor: </strong>.mui-windowMaximizeButton background-color</li>
+		<li><strong>closeColor: </strong>.mui-windowCloseButton color</li>
+		<li><strong>closeBgColor: </strong>.mui-windowCloseButton background-color</li>
+		<li><strong>resizableColor: </strong>.mui-window .mui-cornerSE background-color</li>
 	</ul>
 	
-	<p>If you set the background color of .mochaTitlebar, a gradient will be created from that value. The gradient will start with the value you gave plus 20% white, and end with the value you assigned plus 20% black. So the color in the middle of the gradient should be the color you defined.</p>	
+	<p>If you set the background color of .mui-windowTitlebar, a gradient will be created from that value. The gradient will start with the value you gave plus 20% white, and end with the value you assigned plus 20% black. So the color in the middle of the gradient should be the color you defined.</p>
 	
-	<p>If you want more control over the start and end colors of the gradient then set the background-image of .mochaTitlebar in the following way. Here we got a bit creative using a query string appended to a background image.</p>
+	<p>If you want more control over the start and end colors of the gradient then set the background-image of .mui-windowTitlebar in the following way. Here we got a bit creative using a query string appended to a background image.</p>
 		
 	<pre>background: url(../images/spacer.gif?from=fafafa&amp;to=e5e5e5);</pre>
 	
@@ -42,7 +42,7 @@
 	
 	<p>To style some windows or panels differently than others use the cssClass option. The example windows created from with JSON for instance have been given the class, "jsonExample". We can change their title bar color like so:</p>
 	
-<pre>.jsonExample .mochaTitlebar {
+<pre>.jsonExample .mui-windowTitlebar {
 	background-color: #6db6db;
 }		
 </pre>	

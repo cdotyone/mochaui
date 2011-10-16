@@ -57,7 +57,7 @@ div.mui-tabs ul li.sel a {
 	background: url(../images/tabs.gif) repeat-x right 0;
 }
 
-div.mochaToolbar.mui-tabs ul {
+div.mui-windowToolbar.mui-tabs ul {
 	padding: 0;
 }
 

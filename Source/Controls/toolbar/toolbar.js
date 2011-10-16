@@ -189,8 +189,8 @@ MUI.Toolbar = new NamedClass('MUI.Toolbar', {
 				MUI.create(options);
 				break;
 			default:
-				if (!css) css = 'icon';
-				else css = 'icon ' + css;
+				if (!css) css = 'mui-icon';
+				else css = 'mui-icon ' + css;
 				this.el[button.id] = new Element('span', {id:button.id,'class':css,html:'&nbsp;',title:button.title}).inject(div, where).addEvent('click', onclick).store('instance', this);
 				if (button.image) this.el[button.id].setStyle('backgroundImage', "url('" + MUI.replacePaths(button.image) + "')");
 		}

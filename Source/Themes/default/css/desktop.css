@@ -130,13 +130,13 @@ li.mui-divider {
 
 /* Panel Layout */
 /* Columns */
-.column {
+.mui-column {
 	position: relative;
 	overflow: hidden; /* Required by IE6 */
 }
 
 /* Panels */
-.panel {
+.mui-panel {
 	position: relative;
 	overflow: auto;
 	background: #f8f8f8;
@@ -144,15 +144,15 @@ li.mui-divider {
 	clear: both;
 }
 
-.panelWrapper.collapsed .panel-header {
+.mui-panelWrapper.mui-collapsed .mui-panel-header {
 	border-bottom: 0;
 }
 
-.panelAlt {
+.mui-panelAlt {
 	background: #f2f2f2;
 }
 
-.bottomPanel .panel {
+.mui-bottomPanel .mui-panel {
 	border-bottom: 0;
 }
 
@@ -164,7 +164,7 @@ li.mui-divider {
 	background: #fff;
 }
 
-.panel-header {
+.mui-panel-header {
 	position: relative;
 	background: #f1f1f1 url(../images/bg-panel-header.gif) repeat-x;
 	height: 30px;
@@ -174,12 +174,12 @@ li.mui-divider {
 	overflow-y: hidden;
 }
 
-.panel-headerContent {
+.mui-panel-headerContent {
 	padding-top: 2px;
 	display: table-cell
 }
 
-.panel-header h2 {
+.mui-panel-header h2 {
 	display: inline-block;
 	font-size: 12px;
 	margin: 0;
@@ -189,21 +189,21 @@ li.mui-divider {
 	color: #333;
 }
 
-.panel-collapse {
+.mui-panel-collapse {
 	background: url(../images/collapse-expand.gif) left top no-repeat;
 	padding-right: 5px
 }
 
-.panel-expand {
+.mui-panel-expand {
 	background: url(../images/collapse-expand.gif) left -16px no-repeat;
 }
 
-.icon16 {
+.mui-icon16 {
 	margin: 4px 0 0 2px;
 	cursor: pointer;
 }
 
-.panel-footer {
+.mui-panel-footer {
 	position: relative;
 	width: 100%;
 	background: #f9f9f9;
@@ -213,21 +213,21 @@ li.mui-divider {
 	padding: 0 0 0 8px;
 }
 
-.bottomPanel .panel-footer {
+.mui-bottomPanel .mui-panel-footer {
 	border-top: 1px solid #b9b9b9;
 	border-bottom: 0;
 }
 
-.collapsed .panel-footer {
+.mui-collapsed .mui-panel-footer {
 	display: none;
 }
 
-.panel-footerContent {
+.mui-mui-panel-footerContent {
 	margin-top: 6px;
 }
 
 /* Column and Panel Handles */
-.horizontalHandle {
+.mui-horizontalHandle {
 	height: 4px;
 	line-height: 1px;
 	font-size: 1px;
@@ -235,11 +235,11 @@ li.mui-divider {
 	background: #eee url(../images/bg-handle-horizontal.gif) repeat-x;
 }
 
-.horizontalHandle.detached .handleIcon {
+.mui-horizontalHandle.detached .mui-handleIcon {
 	background: transparent;
 }
 
-.horizontalHandle .handleIcon {
+.mui-horizontalHandle .mui-handleIcon {
 	margin: 0 auto;
 	height: 4px;
 	line-height: 1px;
@@ -248,7 +248,7 @@ li.mui-divider {
 	background: url(../images/handle-icon-horizontal.gif) center center no-repeat;
 }
 
-.columnHandle {
+.mui-columnHandle {
 	min-height: 10px;
 	float: left;
 	width: 4px;

@@ -104,7 +104,7 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 		this.el.element = div.store('instance', this);		// assign instance to element
 
 		// create main panel container
-		this._panelsElement = new Element('div', {'class':'panels'}).inject(div);
+		this._panelsElement = new Element('div', {'class':'mui-panels'}).inject(div);
 
 		// if no tab selected, then select first tab for them
 		if (o.panels.length > 0 && (o.value == null || o.value == '')) o.value = MUI.getData(o.panels[0], o.valueField);

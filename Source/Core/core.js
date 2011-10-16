@@ -231,13 +231,13 @@ MUI.append({
 
 	hideSpinner: function(instance){
 		if (instance == null) instance = MUI.get(this.id);
-		var spinner = $$('.spinner');
-		if (instance && instance.el && instance.el.spinner) spinner = instance.el.spinner;
+		var spinner = $$('.mui-spinner');
+		if (instance && instance.el && instance.el.mui-spinner) spinner = instance.el.mui-spinner;
 		if ((instance == null || (instance && instance.showSpinner == null)) && spinner){
 			var t = (typeof spinner);
 			if (t == 'array' || t == 'object') spinner = spinner[0];
 			if (spinner) MUI.each(function(instance){
-				if (instance.isTypeOf && instance.isTypeOf('MUI.Spinner')) spinner = instance.el.spinner;
+				if (instance.isTypeOf && instance.isTypeOf('MUI.Spinner')) spinner = instance.el.mui-spinner;
 			});
 			if (!spinner) return;
 			(function(){
@@ -252,13 +252,13 @@ MUI.append({
 
 	showSpinner: function(instance){
 		if (instance == null) instance = MUI.get(this.id);
-		var spinner = $$('.spinner');
-		if (instance && instance.el && instance.el.spinner) spinner = instance.el.spinner;
+		var spinner = $$('.mui-spinner');
+		if (instance && instance.el && instance.el.mui-spinner) spinner = instance.el.mui-spinner;
 		if ((instance == null || (instance && instance.showSpinner == null)) && spinner){
 			var t = (typeof spinner);
 			if (t == 'array' || t == 'object') spinner = spinner[0];
 			if (spinner) MUI.each(function(instance){
-				if (instance.isTypeOf && instance.isTypeOf('MUI.Spinner')) spinner = instance.el.spinner;
+				if (instance.isTypeOf && instance.isTypeOf('MUI.Spinner')) spinner = instance.el.mui-spinner;
 			});
 			if (!spinner) return;
 			var count = spinner.retrieve("count");

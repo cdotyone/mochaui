@@ -15,7 +15,7 @@
  */
 
 /* menu */
-.mui-menu, .toolbar.mui-menu {
+.mui-menu, .mui-toolbar.mui-menu {
 	margin: 0;
 	padding: 0;
 	padding-top: 4px;

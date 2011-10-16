@@ -17,21 +17,21 @@
 /* Windows
 ---------------------------------------------------------------- */
 
-.mocha {
+.mui-window {
 	display: none;
 	overflow: hidden;
 	background-color: #404040;
 	font-family: Arial, Helvetica, sans-serif;
 }
 
-.mocha.css3 {
+.mui-window.css3 {
 	overflow: visible;
 }
 
-.mocha.isFocused {
+.mui-window.isFocused {
 }
 
-.mochaOverlay {
+.mui-windowOverlay {
 	position: absolute; /* This is also set in theme.js in order to make theme transitions smoother */
 	top: 0;
 	left: 0;
@@ -47,13 +47,13 @@
 	Both must be hex values without the leading # sign.
 
 */
-.mochaTitlebar {
+.mui-windowTitlebar {
 	width: 100%;
 	overflow: hidden;
 	background: url(../images/spacer.gif?from=494949&to=393939);
 }
 
-.mochaTitlebar .toolbar {
+.mui-windowTitlebar .mui-toolbar {
 	padding-top: 2px;
 	padding-bottom: 1px;
 	margin-top: 0;
@@ -64,7 +64,7 @@
 	vertical-align: middle;
 }
 
-.mochaTitle {
+.mui-windowTitle {
 	float: left;
 	font-size: 12px;
 	font-family: Arial, Helvetica, sans-serif;
@@ -76,63 +76,63 @@
 	color: #888;
 }
 
-.mochaTitle {
+.mui-windowTitle {
 	color: #B3D9FF;
 }
 
-.mochaTitlebar span.icon.windowMinimize {
+.mui-windowTitlebar span.mui-icon.windowMinimize {
 	background: url('../images/window-minimize.gif') left top no-repeat;
 	height: 16px;
 	padding: 0 14px 0 0;
 }
 
-.mochaTitlebar span.icon.windowMinimize:hover {
+.mui-windowTitlebar span.mui-icon.windowMinimize:hover {
 	border-color: transparent;
 }
 
-.mochaTitlebar span.icon.windowMaximize {
+.mui-windowTitlebar span.mui-icon.windowMaximize {
 	background: url('../images/window-maximize.gif') left top no-repeat;
 	height: 16px;
 	padding: 0 14px 0 0;
 }
 
-.mochaTitlebar span.icon.windowMaximize:hover {
+.mui-windowTitlebar span.mui-icon.windowMaximize:hover {
 	border-color: transparent;
 }
 
-.mochaTitlebar span.icon.windowClose {
+.mui-windowTitlebar span.mui-icon.windowClose {
 	background: url('../images/window-close.gif') left top no-repeat;
 	height: 16px;
 	padding: 0 14px 0 0;
 }
 
-.mochaTitlebar.gauge .mochaTitle {
+.mui-windowTitlebar.gauge .mui-windowTitle {
 	color: white;
 	margin-top: 1px;
 }
 
-.mochaTitlebar.gauge span.icon.windowClose {
+.mui-windowTitlebar.gauge span.mui-icon.windowClose {
 	background: url('../images/window-close.gif') left -16px no-repeat;
 	padding-top: 1px;
 }
 
-.mochaTitlebar.gauge span.icon.windowMinimize {
+.mui-windowTitlebar.gauge span.mui-icon.windowMinimize {
 	background: url('../images/window-minimize.gif') left -16px no-repeat;
 	padding-top: 1px;
 }
 
-.mochaTitlebar span.icon.windowClose:hover {
+.mui-windowTitlebar span.mui-icon.windowClose:hover {
 	border-color: transparent;
 }
 
-.mochaTitlebar .toolbar span.icon {
+.mui-windowTitlebar .mui-toolbar span.mui-icon {
 	line-height: 20px;
 	padding-top: 0;
 	padding-bottom: 0;;
 	cursor: pointer
 }
 
-.mochaToolbarWrapper {
+.mui-windowToolbarWrapper {
 	width: 100%; /* For IE */
 	position: relative;
 	height: 29px;
@@ -141,39 +141,39 @@
 	border-top: 1px solid #4c4c4c;
 }
 
-div.mochaToolbarWrapper.bottom {
+div.mui-windowToolbarWrapper.bottom {
 	border: 0;
 	border-bottom: 1px solid #222;
 }
 
-.mochaToolbar {
+.mui-windowToolbar {
 	width: 100%; /* For IE */
 	border-top: 1px solid #222;
 }
 
-.mochaContentBorder {
+.mui-windowContentBorder {
 	border-top: 1px solid #282828;
 	border-bottom: 1px solid #282828;
 }
 
-.mochaContentWrapper {
+.mui-windowContentWrapper {
 /* Has a fixed height and scrollbars if required. */
 	font-size: 12px;
 	overflow: auto;
 	background: #303030;
 }
 
-.mochaContent {
+.mui-windowContent {
 	padding: 10px 12px;
 }
 
-.mochaWindowFooter {
+.mui-windowFooter {
 	height: 26px;
 	padding-left: 20px;
 	padding-top: 1px;
 }
 
-.mochaWindowFooter .toolbar {
+.mui-windowFooter .mui-toolbar {
 	vertical-align: middle;
 	height: 20px;
 	line-height: 20px;
@@ -183,23 +183,23 @@ div.mochaToolbarWrapper.bottom {
 	padding-left: 20px;
 }
 
-.IE .mochaWindowFooter .toolbar {
+.IE .mui-windowFooter .mui-toolbar {
 	padding-top: 4px
 }
 
-.mochaWindowFooter .toolbar span.icon {
+.mui-windowFooter .mui-toolbar span.mui-icon {
 	line-height: 20px;
 	padding-top: 2px;
 	padding-bottom: 2px;
 	cursor: pointer
 }
 
-.mocha .handle {
+.mui-window .mui-handle {
 	position: absolute;
 	z-index: 2;
 }
 
-.mocha .handle, .mocha .handleN, .mocha .handleS, .mocha .handleW, .mocha .handleE {
+.mui-window .mui-handle, .mui-window .mui-handleN, .mui-window .mui-handleS, .mui-window .mui-handleW, .mui-window .mui-handleE {
 	background: #0f0;
 	width: 3px;
 	height: 3px;
@@ -211,32 +211,32 @@ div.mochaToolbarWrapper.bottom {
 	font-size: 1px; /* For IE6 */
 }
 
-.mocha .cornerSE, .mocha .cornerNE, .mocha .cornerNW, .mocha .cornerSW, .mocha .corner {
+.mui-window .mui-cornerSE, .mui-window .mui-cornerNE, .mui-window .mui-cornerNW, .mui-window .mui-cornerSW, .mui-window .mui-corner {
 /* Corner resize handles */
 	width: 10px;
 	height: 10px;
 	background: #f00;
 }
 
-.mocha .cornerNE {
+.mui-window .mui-cornerNE {
 	cursor: ne-resize;
 	top: 0;
 	right: 0;
 }
 
-.mocha .cornerNW {
+.mui-window .mui-cornerNW {
 	cursor: nw-resize;
 	top: 0;
 	left: 0;
 }
 
-.mocha .cornerSW {
+.mui-window .mui-cornerSW {
 	cursor: sw-resize;
 	bottom: 0;
 	left: 0;
 }
 
-.mocha .cornerSE {
+.mui-window .mui-cornerSE {
 	cursor: se-resize;
 	width: 20px;
 	height: 20px;
@@ -246,7 +246,7 @@ div.mochaToolbarWrapper.bottom {
 	background: url('../images/window-resize.gif') no-repeat; /* background: #fefefe; This is the color of the visible resize handle */
 }
 
-.mocha.css3 .cornerSE {
+.mui-window.css3 .mui-cornerSE {
 	background: transparent;
 	border-color: transparent white white transparent;
 	border-style: solid;
@@ -257,7 +257,7 @@ div.mochaToolbarWrapper.bottom {
 	width: 0;
 }
 
-.mochaCanvasHeader {
+.mui-windowCanvasHeader {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -267,7 +267,7 @@ div.mochaToolbarWrapper.bottom {
 	overflow: hidden;
 }
 
-.mochaControls {
+.mui-windowControls {
 	position: absolute;
 	width: 58px;
 	top: 6px;
@@ -277,7 +277,7 @@ div.mochaToolbarWrapper.bottom {
 	background: transparent;
 }
 
-.mochaCanvasControls {
+.mui-windowCanvasControls {
 	position: absolute;
 	top: 6px;
 	right: 8px;
@@ -293,7 +293,7 @@ div.mochaToolbarWrapper.bottom {
 	2. Replace the background-color with a background-image for each button.
 
 */
-.mochaMinimizeButton, .mochaMaximizeButton, .mochaCloseButton {
+.mui-windowMinimizeButton, .mui-windowMaximizeButton, .mui-windowCloseButton {
 	float: right;
 	width: 14px;
 	height: 14px;
@@ -305,17 +305,17 @@ div.mochaToolbarWrapper.bottom {
 	margin-left: 5px;
 }
 
-.mochaMinimizeButton {
+.mui-windowMinimizeButton {
 	margin-left: 0;
 }
 
-.mochaMaximizeButton {
+.mui-windowMaximizeButton {
 }
 
-.mochaCloseButton {
+.mui-windowCloseButton {
 }
 
-.mochaWindowFooter .spinner {
+.mui-windowFooter .mui-spinner {
 	display: none;
 	position: absolute;
 	bottom: 5px;
@@ -324,7 +324,7 @@ div.mochaToolbarWrapper.bottom {
 	height: 16px
 }
 
-.mochaIframe {
+.mui-IFrame {
 	width: 100%;
 }
 
@@ -343,7 +343,7 @@ div.mochaToolbarWrapper.bottom {
 
 /* Viewport overlays
 ---------------------------------------------------------------- */
-#modalOverlay {
+#mui-modalOverlay {
 	display: none;
 	position: fixed;
 	top: 0;
@@ -358,7 +358,7 @@ div.mochaToolbarWrapper.bottom {
 }
 
 /* Fix for IE6 select z-index issue */
-#modalFix {
+#mui-modalFix {
 	display: none;
 	position: absolute;
 	top: 0;
@@ -372,7 +372,7 @@ div.mochaToolbarWrapper.bottom {
 }
 
 /* Underlay */
-#windowUnderlay {
+#mui-windowUnderlay {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -380,16 +380,16 @@ div.mochaToolbarWrapper.bottom {
 	background: #000;
 }
 
-* html #windowUnderlay {
+* html #mui-windowUnderlay {
 	position: absolute;
 }
 
 /* The replaced class is used internally when converting CSS values to Canvas. These classes should not be removed. */
-.mocha.replaced, .mochaTitlebar.replaced, .mochaMinimizeButton.replaced, .mochaMaximizeButton.replaced, .mochaCloseButton.replaced {
+.mui-window.replaced, .mui-windowTitlebar.replaced, .mui-windowMinimizeButton.replaced, .mui-windowMaximizeButton.replaced, .mui-windowCloseButton.replaced {
 	background-color: transparent !important;
 }
 
-.windowClosed {
+.mui-windowClosed {
 	visibility: hidden;
 	display: none;
 	position: absolute;
@@ -399,7 +399,7 @@ div.mochaToolbarWrapper.bottom {
 	overflow: hidden;
 }
 
-.windowClosed .mochaContentBorder, .windowClosed .mochaToolbarWrapper, .windowClosed .mochaTitlebar, .windowClosed .mochaControls, .windowClosed .mochaCanvasControls {
+.mui-windowClosed .mui-windowContentBorder, .mui-windowClosed .mui-windowToolbarWrapper, .mui-windowClosed .mui-windowTitlebar, .mui-windowClosed .mui-windowControls, .mui-windowClosed .mui-windowCanvasControls {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -409,72 +409,72 @@ div.mochaToolbarWrapper.bottom {
 }
 
 /* Modals */
-.modal2 {
+.mui-modal2 {
 	border: 8px solid #fff;
 }
 
-.modal2 .mochaContentBorder {
+.mui-modal2 .mui-windowContentBorder {
 	border-width: 0;
 }
 
 /* Window Themes */
-.mocha.no-canvas {
+.mui-window.no-canvas {
 	background: #4c4c4c;
 	border: 1px solid #666;
 }
 
-.mocha.css3.no-canvas {
+.mui-window.css3.no-canvas {
 	border: none;
 }
 
-.mochaCss3Shadow {
+.mui-windowCss3Shadow {
 	background-color: #000;
 }
 
-.mocha.no-canvas .mochaTitlebar {
+.mui-window.no-canvas .mui-windowTitlebar {
 	background: #4c4c4c;
 }
 
-.mocha.css3 .mochaTitlebar {
+.mui-window.css3 .mui-windowTitlebar {
 	background-image: -moz-linear-gradient(top, #494949, #393939); /* FF3.6+ */
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #494949), color-stop(1, #393939)); /* Saf4+ */
 	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#494949', EndColorStr='#393939')"; /* IE8, IE9? */
 	background: #4c4c4c;
 }
 
-.mocha.transparent .mochaTitlebar h3 {
+.mui-window.transparent .mui-windowTitlebar h3 {
 	color: #fff;
 	display: none;
 }
 
-.mocha.transparent .mochaContentWrapper {
+.mui-window.transparent .mui-windowContentWrapper {
 	background: transparent;
 }
 
-.mocha.notification {
+.mui-window.notification {
 	background: #fff;
 	color: #222;
 }
 
-.mocha.notification .mochaTitlebar {
+.mui-window.notification .mui-windowTitlebar {
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE8 */
 	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity = 0); /* IE6 and 7*/
 	opacity: .0;
 	-moz-opacity: 0;
 }
 
-.mocha.notification .mochaContentBorder {
+.mui-window.notification .mui-windowContentBorder {
 	border-width: 0;
 }
 
-.mocha.notification .mochaContentWrapper {
+.mui-window.notification .mui-windowContentWrapper {
 	text-align: center;
 	font-size: 12px;
 	font-weight: bold;
 	background: transparent;
 }
 
-.IE .mochaTitlebar .toolbar {
+.IE .mui-windowTitlebar .mui-toolbar {
 	margin-top: 0
 }
 
@@ -492,37 +492,37 @@ div.mochaToolbarWrapper.bottom {
 	background: #f5f5f7;
 }
 
-#json01 .mochaTitlebar {
+#json01 .mui-windowTitlebar {
 	background: #6dd2db;
 }
 
-#json02 .mochaTitlebar {
+#json02 .mui-windowTitlebar {
 	background: #6db6db;
 }
 
-#json03 .mochaTitlebar {
+#json03 .mui-windowTitlebar {
 	background: #6d92db;
 }
 
-.jsonExample .mochaTitlebar h3 {
+.jsonExample .mui-windowTitlebar h3 {
 	color: #ddd;
 }
 
-.jsonExample .mochaTitlebar {
+.jsonExample .mui-windowTitlebar {
 	background: #6db6db;
 }
 
-.jsonExample .mochaWindowButton {
+.jsonExample .mui-windowButton {
 	color: #666;
 	background-color: #fff;
 }
 
 /* This does not work in IE6. */
-.isFocused.jsonExample .mochaTitlebar h3 {
+.isFocused.jsonExample .mui-windowTitlebar h3 {
 	color: #fff;
 }
 
-#fxmorpherExample .mochaContentWrapper {
+#fxmorpherExample .mui-windowContentWrapper {
 	background: #577a9e;
 }
 

@@ -256,7 +256,7 @@ Object.append(Demo, {
 			autoSectionToggle:false,
 
 			content:{
-				url:"http://www.mochaui.org/person/list?page={page}&max={pageSize}&order={dir}&sort={sort}",
+				url:"http://www.mui-windowui.org/person/list?page={page}&max={pageSize}&order={dir}&sort={sort}",
 				persist:true,
 				loadMethod: 'jsonp',
 				paging: {
@@ -481,7 +481,7 @@ Object.append(Demo, {
 						{
 							header: false,
 							id: 'splitWindow_sidePanel_1',
-							cssClass: 'panelAlt',
+							cssClass: 'mui-panelAlt',
 							content: {url: '{demo}pages/lipsum.html'},
 							container: 'splitWindow_sideColumn'
 						}
@@ -864,7 +864,7 @@ Object.append(Demo, {
 						control:'MUI.Panel',					
 						header: false,
 						id: 'splitPanel_sidePanel_1',
-						cssClass: 'panelAlt',
+						cssClass: 'mui-panelAlt',
 						content: {url: '{demo}pages/lipsum.html'},
 						container: 'splitPanel_sideColumn'
 						}
@@ -882,7 +882,7 @@ Object.append(Demo, {
 							control:'MUI.Panel',
 							id: 'splitPanel_mainPanel_1',
 							container: 'splitPanel_mainColumn',
-							cssClass: 'panelAlt',					
+							cssClass: 'mui-panelAlt',					
 							header: false,
 							content: {
 								url: '{demo}license.html', 

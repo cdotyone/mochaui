@@ -29,9 +29,9 @@ MUI.Modal = new NamedClass('MUI.Modal', {
 	},
 
 	initialize: function(options){
-		if(!options.type) options.type='modal';
+		if (!options.type) options.type = 'modal';
 
-		if (!$('modalOverlay')){
+		if (!$('mui-modalOverlay')){
 			this._modalInitialize();
 			window.addEvent('resize', function(){
 				this._setModalSize();
@@ -42,7 +42,7 @@ MUI.Modal = new NamedClass('MUI.Modal', {
 
 	_modalInitialize: function(){
 		var modalOverlay = new Element('div', {
-			'id': 'modalOverlay',
+			'id': 'mui-modalOverlay',
 			'styles': {
 				'height': document.getCoordinates().height,
 				'opacity': .6
@@ -56,22 +56,21 @@ MUI.Modal = new NamedClass('MUI.Modal', {
 		modalOverlay.addEvent('click', function(){
 			var instance = MUI.get(MUI.currentModal.id);
 			if (instance && instance.options.modalOverlayClose){
-				
+
 				MUI.currentModal.close();
 
 				(function(){
-					var highest_win = MUI.Windows._getWithHighestZIndex();					
-					if(highest_win && highest_win.hasClass('modal'))
-					{
+					var highest_win = MUI.Windows._getWithHighestZIndex();
+					if (highest_win && highest_win.hasClass('mui-modal')){
 						MUI.currentModal = highest_win;
 					}
 				}).delay(200);
 			}
 		});
-		
+
 		if (Browser.ie6){
-			var modalFix = new Element('iframe', {
-				'id': 'modalFix',
+			new Element('iframe', {
+				'id': 'mui-modalFix',
 				'scrolling': 'no',
 				'marginWidth': 0,
 				'marginHeight': 0,
@@ -82,23 +81,23 @@ MUI.Modal = new NamedClass('MUI.Modal', {
 			}).inject(document.body);
 		}
 
-		MUI.Modal.modalOverlayOpenMorph = new Fx.Morph($('modalOverlay'), {
+		MUI.Modal.modalOverlayOpenMorph = new Fx.Morph($('mui-modalOverlay'), {
 			'duration': 150
 		});
-		MUI.Modal.modalOverlayCloseMorph = new Fx.Morph($('modalOverlay'), {
+		MUI.Modal.modalOverlayCloseMorph = new Fx.Morph($('mui-modalOverlay'), {
 			'duration': 150,
 			onComplete: function(){
-				$('modalOverlay').hide();
+				$('mui-modalOverlay').hide();
 				if (Browser.ie6){
-					$('modalFix').hide();
+					$('mui-modalFix').hide();
 				}
 			}.bind(this)
 		});
 	},
 
 	_setModalSize: function(){
-		$('modalOverlay').setStyle('height', document.getCoordinates().height);
-		if (Browser.ie6) $('modalFix').setStyle('height', document.getCoordinates().height);
+		$('mui-modalOverlay').setStyle('height', document.getCoordinates().height);
+		if (Browser.ie6) $('mui-modalFix').setStyle('height', document.getCoordinates().height);
 	}
 
 });

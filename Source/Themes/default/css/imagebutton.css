@@ -94,37 +94,37 @@ span.mui-imgButton .mui-imgButton.imgOnly:hover {
 	border: none;
 }
 
-div.toolbar div span.mui-imgButton {
+div.mui-toolbar div span.mui-imgButton {
 	line-height: 12px;
 }
 
-div.toolbar div span.mui-imgButton .mui-imgButton {
+div.mui-toolbar div span.mui-imgButton .mui-imgButton {
 	background-color: transparent;
 	margin-right: 2px;
 }
 
-div.toolbar div span.mui-imgButton .mui-imgButton span img {
+div.mui-toolbar div span.mui-imgButton .mui-imgButton span img {
 	padding: 0 0 3px 0;
 	position: relative;
 	top: 6px
 }
 
-div.mochaWindowFooter span.mui-imgButton {
+div.mui-windowFooter span.mui-imgButton {
 	line-height: 14px;
 }
 
-div.mochaWindowFooter span.mui-imgButton .mui-imgButton {
+div.mui-windowFooter span.mui-imgButton .mui-imgButton {
 	background-color: transparent;
 	border: solid 1px #BBBBBB;
 }
 
-div.mochaWindowFooter span.mui-imgButton .mui-imgButton span img {
+div.mui-windowFooter span.mui-imgButton .mui-imgButton span img {
 	padding: 0 0 3px 0;
 	position: relative;
 	top: 6px
 }
 
-div.mochaWindowFooter span.mui-imgButton .mui-imgButton span span {
+div.mui-windowFooter span.mui-imgButton .mui-imgButton span span {
 	color: #BBBBBB;
 }
 

@@ -15,7 +15,7 @@
  */
 
 /* menu */
-.mui-menu, .toolbar.mui-menu {
+.mui-menu, .mui-toolbar.mui-menu {
 	margin: 0;
 	padding: 4px 0 0;
 	overflow: visible;

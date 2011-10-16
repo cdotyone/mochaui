@@ -555,7 +555,7 @@ MUI.Content.Providers.iframe = {
 			var iframeEl = new Element('iframe', {
 				id: element.id + '_iframe',
 				name: element.id + '_iframe',
-				'class': 'mochaIframe',
+				'class': '.mui-IFrame',
 				src: content.doPrepUrl(content),
 				marginwidth: 0,
 				marginheight: 0,
@@ -647,25 +647,25 @@ MUI.append({
 			if (options.position == 'content'){
 
 				this.el.content.show();
-				
-				var iframes = this.el.contentWrapper.getElements('.mochaIframe');		
-				if(iframes.length > 0){
+
+				var iframes = this.el.contentWrapper.getElements('.mui-IFrame');
+				if (iframes.length > 0){
 					iframes.destroy();
 				}
-				
-				this.el.contentWrapper.getElements('.column').each(function(column_el){						
-						column_el.getElements('.panel').each(function(panel_el){
-							panel_el.retrieve('instance').close();							
-							MUI.erase(panel_el);							
-						});
-						column_el.retrieve('instance').close();
-						MUI.erase(column_el);
+
+				this.el.contentWrapper.getElements('.mui-column').each(function(column_el){
+					column_el.getElements('.mui-panel').each(function(panel_el){
+						panel_el.retrieve('instance').close();
+						MUI.erase(panel_el);
+					});
+					column_el.retrieve('instance').close();
+					MUI.erase(column_el);
 				});
 
 				MUI.WindowPanelShared.empty.apply(this);
-				
-				if (this.el.content.getParent() == null) this.el.content.inject(this.el.element);					
-				
+
+				if (this.el.content.getParent() == null) this.el.content.inject(this.el.element);
+
 
 				return false;
 			}
@@ -675,10 +675,10 @@ MUI.append({
 		/// intercepts workflow from MUI.Content.update
 		updateSetContent: function(options){
 			if (options.position == 'content'){
-				if (options.loadMethod == 'html'){					
-					this.el.content.show();				
+				if (options.loadMethod == 'html'){
+					this.el.content.show();
 				}
-				if (options.loadMethod == 'iframe'){									
+				if (options.loadMethod == 'iframe'){
 					this.el.content.hide();
 					options.element = this.el.contentWrapper;
 				}

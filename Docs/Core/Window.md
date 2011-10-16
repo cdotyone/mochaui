@@ -6,7 +6,7 @@ Creates a single MochaUI window.
 ### Notes:
 
  - For content to load via xhr all the files must be online and in the same domain. If you need to load content from another domain or wish to have it work offline, load the content in an iframe instead of using the xhr option.
- - If you use the iframe loadMethod your iframe will automatically be resized when the window it is in is resized. If you want this same functionality when using one of the other load options simply add class="mochaIframe" to those iframes and they will be resized for you as well.
+ - If you use the iframe loadMethod your iframe will automatically be resized when the window it is in is resized. If you want this same functionality when using one of the other load options simply add class=".mui-IFrame" to those iframes and they will be resized for you as well.
 
 ### Syntax:
 

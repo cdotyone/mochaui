@@ -340,7 +340,7 @@ MUI.append({
 		if (column != null){
 			MUI.panelHeight2($(column), changing, action);
 		} else {
-			$$('.column').each(function(column){
+			$$('.mui-column').each(function(column){
 				MUI.panelHeight2(column, null, action);
 			}.bind(this));
 		}
@@ -356,14 +356,14 @@ MUI.append({
 
 		// Get column panels
 		var panels = [];
-		column.getChildren('.panelWrapper').each(function(panelWrapper){
-			panels.push(panelWrapper.getElement('.panel'));
+		column.getChildren('.mui-panelWrapper').each(function(panelWrapper){
+			panels.push(panelWrapper.getElement('.mui-panel'));
 		}.bind(this));
 
 		// Get expanded column panels
 		var panelsExpanded = [];
-		column.getChildren('.expanded').each(function(panelWrapper){
-			panelsExpanded.push(panelWrapper.getElement('.panel'));
+		column.getChildren('.mui-expanded').each(function(panelWrapper){
+			panelsExpanded.push(panelWrapper.getElement('.mui-panel'));
 		}.bind(this));
 
 		// makes sure at least one panel is expanded for the
@@ -390,8 +390,8 @@ MUI.append({
 		// Set panel resize partners
 		panels.each(function(panel){
 			var instance = MUI.get(panel.id);
-			if (panel.getParent().hasClass('expanded') && panel.getParent().getNext('.expanded')){
-				instance.partner = panel.getParent().getNext('.expanded').getElement('.panel');
+			if (panel.getParent().hasClass('mui-expanded') && panel.getParent().getNext('.mui-expanded')){
+				instance.partner = panel.getParent().getNext('.mui-expanded').getElement('.mui-panel');
 				instance.resize.attach();
 				instance.el.handle.setStyles({
 					'display': 'block',
@@ -404,7 +404,7 @@ MUI.append({
 					'cursor': null
 				}).addClass('detached');
 			}
-			if (panel.getParent().getNext('.panelWrapper') == null){
+			if (panel.getParent().getNext('.mui-panelWrapper') == null){
 				instance.el.handle.hide();
 			}
 		}.bind(this));
@@ -416,14 +416,14 @@ MUI.append({
 
 			panelWrapper.getChildren().each(function(el){
 
-				if (el.hasClass('panel')){
+				if (el.hasClass('mui-panel')){
 					var instance = MUI.get(el.id);
 
 					// Are any next siblings Expanded?
 					var anyNextSiblingsExpanded = function(el){
 						var test;
-						el.getParent().getAllNext('.panelWrapper').each(function(sibling){
-							var siblingInstance = MUI.get(sibling.getElement('.panel').id);
+						el.getParent().getAllNext('.mui-panelWrapper').each(function(sibling){
+							var siblingInstance = MUI.get(sibling.getElement('.mui-panel').id);
 							if (!siblingInstance.isCollapsed){
 								test = true;
 							}
@@ -434,8 +434,8 @@ MUI.append({
 					// If a next sibling is expanding, are any of the nexts siblings of the expanding sibling Expanded?
 					var anyExpandingNextSiblingsExpanded = function(){
 						var test;
-						changing.getParent().getAllNext('.panelWrapper').each(function(sibling){
-							var siblingInstance = MUI.get(sibling.getElement('.panel').id);
+						changing.getParent().getAllNext('.mui-panelWrapper').each(function(sibling){
+							var siblingInstance = MUI.get(sibling.getElement('.mui-panel').id);
 							if (!siblingInstance.isCollapsed){
 								test = true;
 							}
@@ -446,16 +446,16 @@ MUI.append({
 					// Is the panel that is collapsing, expanding, or new located after this panel?
 					var anyNextContainsChanging = function(el){
 						var allNext = [];
-						el.getParent().getAllNext('.panelWrapper').each(function(panelWrapper){
-							allNext.push(panelWrapper.getElement('.panel'));
+						el.getParent().getAllNext('.mui-panelWrapper').each(function(panelWrapper){
+							allNext.push(panelWrapper.getElement('.mui-panel'));
 						}.bind(this));
 						return allNext.contains(changing);
 					}.bind(this);
 
 					var nextExpandedChanging = function(el){
 						var test;
-						if (el.getParent().getNext('.expanded')){
-							if (el.getParent().getNext('.expanded').getElement('.panel') == changing) test = true;
+						if (el.getParent().getNext('.mui-expanded')){
+							if (el.getParent().getNext('.mui-expanded').getElement('.mui-panel') == changing) test = true;
 						}
 						return test;
 					};
@@ -532,7 +532,7 @@ MUI.append({
 		column.getChildren().each(function(panelWrapper){
 			panelWrapper.getChildren().each(function(el){
 				this.height += el.offsetHeight.toInt();
-				if (el.hasClass('panel') && el.getStyle('height').toInt() > tallestPanelHeight){
+				if (el.hasClass('mui-panel') && el.getStyle('height').toInt() > tallestPanelHeight){
 					tallestPanel = el;
 					tallestPanelHeight = el.getStyle('height').toInt();
 				}
@@ -549,7 +549,7 @@ MUI.append({
 			}
 		}
 
-		parent.getChildren('.columnHandle').each(function(handle){
+		parent.getChildren('.mui-columnHandle').each(function(handle){
 			var parent = handle.getParent();
 			if (parent.getStyle('height').toInt() < 1) return; // Keeps IE7 and 8 from throwing an error when collapsing a panel within a panel
 			var handleHeight = parent.getStyle('height').toInt() - handle.getStyle('border-top').toInt() - handle.getStyle('border-bottom').toInt();
@@ -598,7 +598,7 @@ MUI.append({
 
 			// Get the total width of all the parent element's children
 			parent.getChildren().each(function(el){
-				if (el.hasClass('mocha') != true){
+				if (el.hasClass('mui-window') != true){
 					this.width += el.offsetWidth.toInt();
 				}
 			}.bind(this));
@@ -615,7 +615,7 @@ MUI.append({
 				panel.fireEvent('resize', [panel]);
 			}, this);
 
-			column.getElements('.panel').each(function(panel){
+			column.getElements('.mui-panel').each(function(panel){
 				MUI.resizeChildren(panel);
 			}.bind(this));
 		});
@@ -623,10 +623,10 @@ MUI.append({
 		if(container.get('id') !== 'desktop')
 		{
 			var c = 0;
-			var total_col = container.getElements('.column').length;
+			var total_col = container.getElements('.mui-column').length;
 			var placement = '';
 
-			container.getElements('.column').each(function(column){
+			container.getElements('.mui-column').each(function(column){
 				placement = column.retrieve('instance').options.placement;
 				if(c+1 < total_col)
 				{
@@ -670,7 +670,7 @@ MUI.Windows = Object.append((MUI.Windows || {}), {
 
 		var x = viewportLeftOffset;
 		var y = viewportTopOffset;
-		$$('.mocha').each(function(windowEl){
+		$$('.mui-window').each(function(windowEl){
 			var instance = windowEl.retrieve('instance');
 			if (!instance.isMinimized && !instance.isMaximized && instance.options.draggable){
 				instance.focus();

@@ -378,7 +378,7 @@ MUI.Taskbar.implement({
 MUI.Windows = Object.append((MUI.Windows || {}), {
 
 	minimizeAll: function(){
-		$$('.mocha').each(function(windowEl){
+		$$('.mui-window').each(function(windowEl){
 			var instance = windowEl.retrieve('instance');
 			if (!instance.isMinimized && instance.options.minimizable){
 				instance.minimize();

@@ -43,7 +43,7 @@ MUI.Themes = {
 		this.newTheme = newTheme.toLowerCase();
 		if (!this.newTheme || this.newTheme == null || this.newTheme == MUI.options.theme.toLowerCase()) return false;
 
-		if ($('spinner')) $('spinner').show();
+		if ($('mui-spinner')) $('mui-spinner').show();
 
 		this.oldURIs = [];
 		this.oldSheets = [];
@@ -88,7 +88,7 @@ MUI.Themes = {
 				}.bind(this),
 				onFailure: function(){
 					this.themeLoadSuccess = false;
-					if ($('spinner')) $('spinner').hide();
+					if ($('mui-spinner')) $('mui-spinner').hide();
 					MUI.notification('Stylesheets did not load.');
 				},
 				onSuccess: function(){
@@ -131,7 +131,7 @@ MUI.Themes = {
 		$$('.replaced').removeClass('replaced');
 
 		// Redraw open windows
-		$$('.mocha').each(function(element){
+		$$('.mui-window').each(function(element){
 			var instance = element.retrieve('instance');
 
 			// Convert CSS colors to Canvas colors.
@@ -153,7 +153,7 @@ MUI.Themes = {
 			}).periodical(50);
 		}
 
-		if ($('spinner')) $('spinner').hide();
+		if ($('mui-spinner')) $('mui-spinner').hide();
 		MUI.options.theme = this.newTheme;
 	}
 };

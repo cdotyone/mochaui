@@ -82,7 +82,7 @@ div.panel-header div.tabs ul {
 	top: 6px;
 }
 
-.mui-toolbar span.icon {
+.mui-toolbar span.mui-icon {
 	line-height: 24px;
 	font-size: 14px;
 	padding: 3px 9px;
@@ -91,7 +91,7 @@ div.panel-header div.tabs ul {
 	border: 1px solid transparent;
 }
 
-.mui-toolbar span.icon:hover {
+.mui-toolbar span.mui-icon:hover {
 	border: 1px solid #a0a0a0;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
@@ -118,30 +118,30 @@ div.panel-header div.tabs ul {
 }
 
 /* spinner */
-.spinnerWrapper {
+.mui-spinnerWrapper {
 	width: 16px;
 	height: 16px;
 	background: url(../images/spinner-placeholder.gif) no-repeat;
 	margin: 4px 5px 0 5px;
 }
 
-.spinner {
+.mui-spinner {
 	display: none;
 	background: url(../images/spinner.gif) no-repeat;
 	width: 16px;
 	height: 16px;
 }
 
-.mui-toolbar .spinnerWrapper {
+.mui-toolbar .mui-spinnerWrapper {
 	margin: 4px 0 2px 0;
 	height: 24px;
 }
 
-.mui-toolbar .spinnerWrapper .spinner {
+.mui-toolbar .mui-spinnerWrapper .mui-spinner {
 	margin-left: -3px
 }
 
-.spinnerOverlay {
+.mui-spinnerOverlay {
 	top: 0;
 	left: 0;
 	background: white none repeat scroll 0% 0%;

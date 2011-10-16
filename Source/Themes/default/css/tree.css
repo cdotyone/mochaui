@@ -65,7 +65,7 @@ div.panel ul.mui-tree li.last {
 	background-color: #f8f8f8;
 }
 
-div.mochaContent ul.mui-tree li.last {
+div.mui-windowContent ul.mui-tree li.last {
 	background-color: white;
 }
 
@@ -78,7 +78,7 @@ div.panel ul.mui-tree ul li.last {
 	background-color: #f8f8f8;
 }
 
-div.mochaContent ul.mui-tree ul li.last {
+div.mui-windowContent ul.mui-tree ul li.last {
 	background-color: white;
 }
 
