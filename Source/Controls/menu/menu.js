@@ -101,9 +101,9 @@ MUI.Menu = new NamedClass('MUI.Menu', {
 		for (var i = 0; i < items.length; i++){
 			this.fireEvent('itemDrawBegin', [this, item]);
 			var item = items[i];
-			if (item.type == 'mui-divider') continue;
+			if (item.type == 'divider') continue;
 			var li = new Element('li').inject(ul);
-			if (i > 0 && items[i - 1].type == 'mui-divider') li.addClass('mui-divider');
+			if (i > 0 && items[i - 1].type == 'divider') li.addClass('mui-divider');
 			var a = new Element('a', {text:item.text}).inject(li);
 			if (item.type == 'radio') new Element('div', {'class':(item.selected ? 'radio' : 'noradio')}).inject(a);
 			if (item.type == 'check') new Element('div', {'class':(item.selected ? 'check' : 'nocheck')}).inject(a);
