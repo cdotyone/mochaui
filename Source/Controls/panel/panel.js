@@ -211,7 +211,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 
 		this.el.handle = new Element('div', {
 			'id': options.id + '_handle',
-			'class': 'mui-mui-horizontalHandle',
+			'class': 'mui-horizontalHandle',
 			'styles': {
 				'display': this.showHandle ? 'block' : 'none'
 			}
