@@ -66,7 +66,7 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 
 		// If accordion has no ID, give it one.
 		this.id = this.options.id = this.options.id || 'accordion' + (++MUI.idCount);
-		MUI.set(this.id, this);		
+		MUI.set(this.id, this);
 
 		if (options.content){
 			options.content.loadMethod = MUI.getDefaultJsonProvider(options.content.loadMethod);
@@ -124,11 +124,13 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 		var addToContainer = function(){
 			if (typeOf(container) == 'string') container = $(container);
 			if (o.clearContainer) container.empty();
+			if (!container) container.div.getParent();
+			var parentHeight = this._getParentHeight(container);
+			if (container.hasClass('pad')) parentHeight = this._getParentHeight(container.getParent());
 			if (div.getParent() == null) div.inject(container);
 
 			var instance = MUI.get(o.container);
 			if (!instance || !instance.dynamicResize){
-				var parentHeight = container.getSize().y;
 				if (!o.height){
 					o.height = parentHeight;
 					this._togglers.each(function(toggler){
@@ -137,7 +139,7 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 				}
 				this._panelsElement.setStyle('height', parentHeight + 'px');
 				container.setStyle('overflow', 'hidden');
-				container.setStyle('padding',0);
+				container.setStyle('padding', 0);
 			}
 
 			this._accordion = new Fx.Accordion(this._togglers, this._panels, {
@@ -148,11 +150,11 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 				,'fixedWidth':o.width
 				,'alwaysHide':o.alwaysHide
 				,'initialDisplayFx':o.initialDisplayFx
-				,onActive: function(toggler,element){
+				,onActive: function(toggler, element){
 					toggler.addClass('open');
 					element.setStyle('overflow', 'auto');
 				},
-				onBackground: function(toggler,element){
+				onBackground: function(toggler, element){
 					toggler.removeClass('open');
 					element.setStyle('overflow', 'hidden');
 				},
@@ -174,6 +176,15 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 		else window.addEvent('domready', addToContainer);
 
 		return this;
+	},
+
+	_getParentHeight:function(e){
+		var h = e.getSize().y;
+		h -= parseInt(e.getStyle('border-bottom-width'));
+		h -= parseInt(e.getStyle('border-top-width'));
+		h -= parseInt(e.getStyle('padding-bottom'));
+		h -= parseInt(e.getStyle('padding-top'));
+		return h;
 	},
 
 	_buildPanel: function(panel, div){
