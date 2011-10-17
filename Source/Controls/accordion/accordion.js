@@ -112,7 +112,7 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 		// build all panels
 		this._togglers = [];
 		this._panels = [];
-		for(var i=0;i<o.panels.length;i++) {
+		for (var i = 0; i < o.panels.length; i++){
 			this._buildPanel(o.panels[i], this._panelsElement, i);
 		}
 		if (this._panels.length > 1){
@@ -131,7 +131,8 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 			container.setStyle('padding', 0);
 			var parentHeight = this._getParentHeight(container);
 
-			MUI.get(o.container).addEvent('resize', this._onParentResize.bind(this));
+			var instance = MUI.get(o.container);
+			if (instance != null) instance.addEvent('resize', this._onParentResize.bind(this));
 
 			this._accordion = new Fx.Accordion(this._togglers, this._panels, {
 				'height':o.heightFx
@@ -218,7 +219,7 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 		var title = MUI.getData(panel, o.titleField);
 		var html = MUI.getData(panel, o.contentField);
 
-		if(o.value == value || (!o.value && idx==0)) this._index = idx;
+		if (o.value == value || (!o.value && idx == 0)) this._index = idx;
 
 		panel._togglerEl = new Element('h3', {'id':value,'class':'toggler','text':text,'title':title, 'index':idx}).inject(div);
 		panel._element = new Element('div', {'id':value + '_panel','class':'element', 'index':idx}).inject(div);

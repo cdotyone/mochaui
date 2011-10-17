@@ -163,7 +163,7 @@ div.mui-windowToolbarWrapper.bottom {
 	background: #303030;
 }
 
-.mui-windowContent {
+.mui-window .pad {
 	padding: 10px 12px;
 }
 

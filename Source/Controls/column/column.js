@@ -79,11 +79,8 @@ MUI.Column = new NamedClass('MUI.Column', {
 
 		var parentInstance = MUI.get(options.container);
 		if(parentInstance && (parentInstance.isTypeOf('MUI.Panel') || parentInstance.isTypeOf('MUI.Window'))) {
-			// If loading columns into a panel, hide the regular content container.
+			// If loading columns into a panel or window, hide the regular content container.
 			if (parentInstance.el.element.getElement('.pad') != null) parentInstance.el.element.getElement('.pad').hide();
-
-			// If loading columns into a window, hide the regular content container.
-			if (parentInstance.el.element.getElement('.mui-windowContent') != null)  parentInstance.el.element.getElement('.mui-windowContent').hide();
 		}
 
 		// make or use existing element

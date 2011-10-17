@@ -1083,8 +1083,9 @@ MUI.Window.implement({
 
 		cache.content = new Element('div', {
 			'id': id + '_content',
-			'class': 'mui-windowContent'
+			'class': 'mui-windowContent pad'
 		}).inject(cache.contentWrapper);
+		cache.content.store('instance', this);
 
 		if (this.options.useCanvas && !this.useCSS3){
 			if (!Browser.ie){
