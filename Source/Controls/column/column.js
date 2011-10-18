@@ -77,17 +77,18 @@ MUI.Column = new NamedClass('MUI.Column', {
 		if (this.el.column) return this;
 		else MUI.set(options.id, this);
 
-		var parentInstance = MUI.get(options.container);
-		if(parentInstance && (parentInstance.isTypeOf('MUI.Panel') || parentInstance.isTypeOf('MUI.Window'))) {
-			// If loading columns into a panel or window, hide the regular content container.
-			if (parentInstance.el.element.getElement('.pad') != null) parentInstance.el.element.getElement('.pad').hide();
-		}
-
 		// make or use existing element
 		if (options.element) this.el.column = options.element;
 		else if ($(options.id)) this.el.column = $(options.id);
 		else this.el.column = new Element('div', {'id': options.id}).inject($(options.container));
 		this.el.element = this.el.column;
+
+		var parentInstance = MUI.get(options.container);
+		if (parentInstance && (parentInstance.isTypeOf('MUI.Panel') || parentInstance.isTypeOf('MUI.Window'))){
+			// If loading columns into a panel or window, hide the regular content container.
+			if (parentInstance.el.element.getElement('.pad') != null) parentInstance.el.element.getElement('.pad').hide();
+			MUI.panelHeight.delay(200, this, [this.el.element]);
+		}
 
 		// parent container's height
 		var parent = this.el.column.getParent();
@@ -188,15 +189,15 @@ MUI.Column = new NamedClass('MUI.Column', {
 		MUI.rWidth(options.container);
 
 		if (options.panels){
-			for(var i=0;i<options.panels.length;i++) {
-				var panel=options.panels[i];
+			for (var i = 0; i < options.panels.length; i++){
+				var panel = options.panels[i];
 
-				if (!panel.id) {
+				if (!panel.id){
 					panel.id = options.id + 'Panel' + i;
 				}
 				panel.container = this.el.column;
 				panel.column = options.id;
-				panel.element = new Element('div', {'id':panel.id+'_wrapper'}).inject(this.el.column);
+				panel.element = new Element('div', {'id':panel.id + '_wrapper'}).inject(this.el.column);
 				panel.control = 'MUI.Panel';
 				MUI.create(panel);
 			}
