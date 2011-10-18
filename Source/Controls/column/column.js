@@ -39,7 +39,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 
 		panels:			[],
 
-		cssClass: 		'' 
+		cssClass:		 ''
 
 		//onDrawBegin:	null,
 		//onDrawEnd:	null,

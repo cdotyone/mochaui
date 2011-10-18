@@ -606,9 +606,6 @@ MUI.Content.Providers.control = {
 	canPage:		false,
 
 	doRequest: function(content){
-		//var options2 = content.options;
-		// remove unneeded items that cause recursion
-		// delete content.options;
 		delete content.instance;
 		MUI.create(content);
 	}
