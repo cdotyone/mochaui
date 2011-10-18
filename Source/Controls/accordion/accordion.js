@@ -178,6 +178,7 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 	_onParentResize:function(){
 		var o = this.options;
 		var div = o.element ? o.element : $(o.id);
+		if (!div) return;
 		var h = this._getParentHeight(div.getParent());
 		this._panelsElement.setStyle('height', h + 'px');
 		this._accordion.previous = -1;
