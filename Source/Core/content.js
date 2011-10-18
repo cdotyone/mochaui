@@ -645,7 +645,7 @@ MUI.append({
 
 				this.el.content.show();
 
-				var iframes = this.el.contentWrapper.getElements('.mui-IFrame');
+				var iframes = this.el.contentWrapper.getElements('iframe');
 				if (iframes.length > 0){
 					iframes.destroy();
 				}
