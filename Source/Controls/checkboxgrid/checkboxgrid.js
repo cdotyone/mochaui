@@ -88,29 +88,36 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 		}
 
 		// create main wrapper control
-		var fs = o.element ? o.element : $(o.id);
+		var div = o.element ? o.element : $(o.id);
 		var isNew = false;
-		if (!fs){
-			fs = new Element('fieldset', {'id':o.id + '_field'});
+		if (!div){
+			div = new Element('fieldset', {'id':o.id});
 			isNew = true;
 		}
-		if (o.cssClass) fs.set('class', o.cssClass);
-		if (o.width) fs.setStyle('width', (parseInt('' + o.width) - 2));
-		if (o.height) fs.setStyle('height', parseInt('' + o.height));
-		this.el.element = fs;
+		this.el.element = div;
+		if (o.cssClass) div.set('class', o.cssClass);
 
 		// add title if given
-		if (o.title)  new Element('div', {'id':o.id + '_tle','text':o.title}).inject(fs);
+		if (o.title) new Element('label', {'id':o.id + '_tle','text':o.title}).inject(div);
+
+		var wrapper = $(o.id + '_wrapper');
+		if (!wrapper) wrapper = new Element('div', {'id':o.id + '_wrapper','class':'mui-cbg-wrapper'}).inject(div);
+		if (o.width) wrapper.setStyle('width', (parseInt('' + o.width) - 2));
+		if (o.height) wrapper.setStyle('height', parseInt('' + o.height));
+
+		var fs = $(o.id + '_field');
+		if (!fs) fs = new Element('div', {'id':o.id + '_field'}).inject(wrapper);
+		this.el.fieldset = fs;
 
 		for (var i = 0; i < o.items.length; i++){
-			this._buildItem(o.items[i], fs, i);
+			this._buildItem(o.items[i], div, i);
 		}
 
 		// add to container
 		var addToContainer = function(){
 			if (typeOf(container) == 'string') container = $(container);
 			if (o.clearContainer) container.empty();
-			if (fs.getParent() == null) fs.inject(container);
+			if (div.getParent() == null) div.inject(container);
 
 			container.setStyle('padding', '0');
 			this._convertToGrid.delay(1, this, [fs]);
@@ -163,103 +170,38 @@ MUI.CheckBoxGrid = new NamedClass('MUI.CheckBoxGrid', {
 		var self = this,o = this.options;
 		if (!fs) fs = $(o.id);
 
-		var reinject = function(pair, tr, colspan){
-			pair[1] = colspan;
-			pair[0]._td = new Element('td', {'colspan':colspan}).inject(tr);
-			pair[0]._span.getChildren().each(function(el){
-				el.dispose().inject(pair[0]._td);
+		var reinject = function(item, tr){
+			item._td = new Element('td').inject(tr);
+			item._span.getChildren().each(function(el){
+				el.dispose().inject(item._td);
 			});
-			pair[0]._span.dispose();
-			pair[0]._span = null;
-			if (o.labelPlacement == 'left') pair[0]._td.setStyle('text-align', 'right');
+			item._span.dispose();
+			item._span = null;
+			if (o.labelPlacement == 'left') item._td.setStyle('text-align', 'right');
 		};
 
-		var rows = {};
+		var rows = {},maxCW = 0;
 		o.items.each(function(item){
 			var c = item._span.getCoordinates();
-			if (!rows['row' + c.top]) rows['row' + c.top] = [];
-			rows['row' + c.top].push([item,c.width]);
+			if (c.width > maxCW) maxCW = c.width;
 		});
 
-		// find the row width the most columns
-		var lv = 0,lk;
-		Object.each(rows, function(row, k){
-			if (lv < row.length){
-				lk = k;
-				lv = row.length;
-			}
-		});
-
-		// now get widths of the columns
-		var cols = [],twidth = 0;
-		Object.each(rows[lk], function(pair){
-			cols.push(pair[1]);
-			twidth += pair[1] + 3;
-		});
-
-		// check to make sure total width is used
-		if (twidth < o.width){
-			for (var i = 0; i < cols.length; i++){
-				cols[i] = Math.round((cols[i] / twidth) * o.width);
-			}
-		}
+		var twidth = 0,clen = 0;
+		do {
+			twidth += maxCW;
+			clen++;
+		} while (twidth + maxCW <= o.width);
 
 		// build table to hold newly arranged controls
 		self._table = new Element('table', {'cellspacing':'0','cellpadding':'0','border':'0'}).inject(fs);
 		self._tbody = new Element('tbody').inject(self._table);
 
-		// determine colspan for other columns in other rows
-		var clen = cols.length;
-		Object.each(rows, function(row){
-			// create table row for this row
-			var tr = new Element('tr').inject(self._tbody);
-
-			// rows with the same length as the largest rows do not need colspan determination
-			if (row.length == clen){
-				for (var j = 0; j < clen; j++){
-					row[j][1] = reinject(row[j], tr, 1);
-				}
-				return;
-			}
-
-			// determine colspan for this row
-			var i = 0,tspan = 0;
-			Object.each(row, function(col){
-				var cwidth = col[1]
-						,twidth = 0
-						,colspan = 1;
-
-				// keep increasing colspan until we have enough support this column
-				for (var j = i; j < clen && i < clen; j++,i++,colspan++){
-					twidth += cols[j];
-					if (twidth >= cwidth) break;
-				}
-
-				// convert span to table cell
-				reinject(col, tr, colspan);
-				tspan += colspan;
-			});
-
-			// make sure the total colspans in this row is at least the same as our largest row
-			while (tspan < clen){
-				row[row.length - 1][1]++;
-				row[row.length - 1][0]._td.set('colspan', row[row.length - 1][1]);
-				tspan++;
-			}
-
-			if (tspan > clen){
-				// went past the end of the longest row, so move all items to same cell
-				row[0][0]._td.set('colspan', clen);
-				for (i = 1; i < row.length; i++){
-					row[i][0]._td.getChildren().each(function(el){
-						el.dispose().inject(row[0][0]._td);
-					});
-					row[i][0]._td.dispose();
-					row[i][0]._td = null;
-				}
-			}
+		var cell = 0,tr;
+		o.items.each(function(item){
+			if (cell == 0) tr = new Element('tr').inject(self._tbody);
+			reinject(item, tr);
+			cell++;
+			if (cell >= clen) cell = 0;
 		});
-
-		self.el.element.setStyles({'width':null,'height':null});
 	}
 });

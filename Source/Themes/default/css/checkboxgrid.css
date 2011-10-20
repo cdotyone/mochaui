@@ -36,4 +36,12 @@ fieldset.mui-cbg input {
 	padding-right: 3px;
 }
 
+.mui-cbg-wrapper {
+	overflow:auto;
+}
+
+.mui-cbg td {
+	white-space:nowrap;
+}
+
 /* CheckboxGrid */
