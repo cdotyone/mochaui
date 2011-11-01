@@ -100,15 +100,15 @@ MUI.Taskbar.implement({
 	},
 
 	setTaskbarColors: function(){
-		var enabled = Asset.getCSSRule('.taskbarButtonEnabled');
+		var enabled = Asset.getCSSRule('.mui-taskbarButtonEnabled');
 		if (enabled && enabled.style.backgroundColor)
 			this.enabledButtonColor = new Color(enabled.style.backgroundColor);
 
-		var disabled = Asset.getCSSRule('.taskbarButtonDisabled');
+		var disabled = Asset.getCSSRule('.mui-taskbarButtonDisabled');
 		if (disabled && disabled.style.backgroundColor)
 			this.disabledButtonColor = new Color(disabled.style.backgroundColor);
 
-		var color = Asset.getCSSRule('.taskbarButtonTrue');
+		var color = Asset.getCSSRule('.mui-taskbarButtonTrue');
 		if (color && color.style.backgroundColor)
 			this.trueButtonColor = new Color(color.style.backgroundColor);
 
