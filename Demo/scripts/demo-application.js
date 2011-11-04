@@ -280,7 +280,7 @@ Demo.initializeDesktop = function(){
 						}
 					]}
 			]},
-			{name:'footer',content:'<div class="copyright">&copy; 2011 <a href="#" id="authorsLink">Various Contributors</a> - <a href="#" id="licenseLink">MIT License</a></div>',cssClass:'desktopFooter'}
+			{name:'footer',content:'<div class="mui-copyright">&copy; 2011 <a href="#" id="authorsLink">Various Contributors</a> - <a href="#" id="licenseLink">MIT License</a></div>',cssClass:'mui-desktopFooter'}
 		],
 		'onDrawEnd':function(){
 		
