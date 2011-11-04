@@ -77,18 +77,19 @@ MUI.Column = new NamedClass('MUI.Column', {
 		if (this.el.column) return this;
 		else MUI.set(options.id, this);
 
-		// make or use existing element
-		if (options.element) this.el.column = options.element;
-		else if ($(options.id)) this.el.column = $(options.id);
-		else this.el.column = new Element('div', {'id': options.id}).inject($(options.container));
-		this.el.element = this.el.column;
-
-		var parentInstance = MUI.get(options.container);
+		this.container = options.container;
+		var parentInstance = MUI.get(this.container);
 		if (parentInstance && (parentInstance.isTypeOf('MUI.Panel') || parentInstance.isTypeOf('MUI.Window'))){
+			this.container = parentInstance.el.element.getElement('.pad').getParent();
 			// If loading columns into a panel or window, hide the regular content container.
-			if (parentInstance.el.element.getElement('.pad') != null) parentInstance.el.element.getElement('.pad').hide();
+			parentInstance.el.element.getElement('.pad').hide(true);
 			MUI.panelHeight.delay(200, this, [this.el.element]);
 		}
+
+		// make or use existing element
+		if ($(options.id)) this.el.column = $(options.id);
+		else this.el.column = new Element('div', {'id': options.id}).inject(this.container);
+		this.el.element = this.el.column;
 
 		// parent container's height
 		var parent = this.el.column.getParent();
@@ -103,7 +104,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 		this.el.column.addClass(options.cssClass);
 
 		if (options.sortable){
-			if (!options.container.retrieve('sortables')){
+			if (!this.container.retrieve('sortables')){
 				var sortables = new Sortables(this.el.column, {
 					opacity: 0.2,
 					handle: '.mui-panel-header',
@@ -142,9 +143,9 @@ MUI.Column = new NamedClass('MUI.Column', {
 						}.bind(this));
 					}.bind(this)
 				});
-				options.container.store('sortables', sortables);
+				this.container.store('sortables', sortables);
 			} else {
-				options.container.retrieve('sortables').addLists(this.el.column);
+				this.container.retrieve('sortables').addLists(this.el.column);
 			}
 		}
 
@@ -186,7 +187,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 			}.bind(this));
 		}
 
-		MUI.rWidth(options.container);
+		MUI.rWidth(this.container);
 
 		if (options.panels){
 			for (var i = 0; i < options.panels.length; i++){
@@ -232,7 +233,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 		this.isCollapsed = true;
 		column.addClass('mui-collapsed');
 		column.removeClass('mui-expanded');
-		MUI.rWidth(this.options.container);
+		MUI.rWidth(this.container);
 		this.fireEvent('collapse', [this]);
 
 		return this;
@@ -253,7 +254,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 		this.resize.attach();
 		this.el.handle.setStyle('cursor', Browser.webkit ? 'col-resize' : 'e-resize').addClass('attached');
 
-		MUI.rWidth(this.options.container);
+		MUI.rWidth(this.container);
 		this.fireEvent('expand', [this]);
 
 		return this;
@@ -287,7 +288,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 
 		if (MUI.desktop) MUI.desktop.resizePanels();
 
-		var sortables = self.options.container.retrieve('sortables');
+		var sortables = self.container.retrieve('sortables');
 		if (sortables) sortables.removeLists(this.el.column);
 
 		Array.each(this.el, function(el){

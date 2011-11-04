@@ -376,7 +376,7 @@ MUI.Window.implement({
 
 		// Create window div
 		MUI.Windows.indexLevel++;
-		this.el.windowEl = new Element('div', {
+		this.el.element = this.el.windowEl = new Element('div', {
 			'class': this.useCSS3 ? 'mui-window css3' : 'mui-window',
 			'id': options.id,
 			'styles': {
@@ -440,6 +440,7 @@ MUI.Window.implement({
 
 		// load/build all of the additional  content sections
 		if (this.sections) this.sections.each(function(section){
+			if (!section) return;
 			if (section.onLoaded) section.onLoaded = section.onLoaded.bind(this);
 			section.instance = this;
 			MUI.Content.update(section);
@@ -1147,6 +1148,7 @@ MUI.Window.implement({
 
 		var snum = 0;
 		this.sections.each(function(section){
+			if (!section) return;
 			if (!section.position || section.position == 'content'){
 				if (section.loadMethod == 'iframe') section.padding = 0;  // Iframes have their own padding.
 				section.container = cache.content;   // [i_a] fix for undefined container further down the lane

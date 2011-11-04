@@ -197,8 +197,8 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 			});
 		}
 
-		if (parent && parent.options.sortable){
-			parent.options.container.retrieve('sortables').addItems(this.el.element);
+		if (parent && parent.options.sortable && parent.container){
+			parent.container.retrieve('sortables').addItems(this.el.element);
 			if (this.el.header){
 				this.el.header.setStyle('cursor', 'move');
 				this.el.header.addEvent('mousedown', function(e){
@@ -254,8 +254,8 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		this.isClosing = true;
 
 		var parent = MUI.get(container);
-		if (parent.options.sortable)
-			parent.options.container.retrieve('sortables').removeItems(this.el.element);
+		if (parent.options.sortable && parent.container)
+			parent.container.retrieve('sortables').removeItems(this.el.element);
 
 		MUI.erase(this.el.element);
 		this.el.element.destroy();
