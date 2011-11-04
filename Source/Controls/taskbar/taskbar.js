@@ -100,15 +100,15 @@ MUI.Taskbar.implement({
 	},
 
 	setTaskbarColors: function(){
-		var enabled = Asset.getCSSRule('.taskbarButtonEnabled');
+		var enabled = Asset.getCSSRule('.mui-taskbarButtonEnabled');
 		if (enabled && enabled.style.backgroundColor)
 			this.enabledButtonColor = new Color(enabled.style.backgroundColor);
 
-		var disabled = Asset.getCSSRule('.taskbarButtonDisabled');
+		var disabled = Asset.getCSSRule('.mui-taskbarButtonDisabled');
 		if (disabled && disabled.style.backgroundColor)
 			this.disabledButtonColor = new Color(disabled.style.backgroundColor);
 
-		var color = Asset.getCSSRule('.taskbarButtonTrue');
+		var color = Asset.getCSSRule('.mui-taskbarButtonTrue');
 		if (color && color.style.backgroundColor)
 			this.trueButtonColor = new Color(color.style.backgroundColor);
 
@@ -165,7 +165,7 @@ MUI.Taskbar.implement({
 
 		var taskbarTab = new Element('div', {
 			'id': instance.options.id + '_taskbarTab',
-			'class': 'taskbarTab',
+			'class': this.options.cssClass + 'Tab',
 			'title': titleText
 		}).inject($(this.options.id + 'Clear'), 'before');
 
@@ -223,11 +223,11 @@ MUI.Taskbar.implement({
 			instance = windowEl.retrieve('instance');
 		}
 
-		$$('.' + css + 'Tab').removeClass('activeTab');
+		$$('.' + css + 'Tab').removeClass('mui-activeTab');
 		if (instance.isMinimized != true){
 			instance.el.windowEl.addClass('isFocused');
 			var currentButton = $(instance.options.id + '_taskbarTab');
-			if (currentButton != null) currentButton.addClass('activeTab');
+			if (currentButton != null) currentButton.addClass('mui-activeTab');
 		} else instance.el.windowEl.removeClass('isFocused');
 		this.fireEvent('tabSet', [this,instance]);
 	},
