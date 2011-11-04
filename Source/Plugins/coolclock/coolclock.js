@@ -12,9 +12,10 @@
 window.CoolClock = function(options) {
 	return this.init(options);
 };
+CoolClock.config = CoolClock.config || {};
 
 // Config contains some defaults, and clock skins
-CoolClock.config = {
+Object.each({
 	defaultRadius: 75,    // The ACTUAL radius at which the clock will be SHOWN ON SCREEN; the ratio of this one and 'renderRadius' determines the scaling applied to the skin.
 	renderRadius: 100,    // the radius at which all elements are rendered, i.e. the radius assumed by all the skins. Keep at 100.
 	defaultSkin: "chunkySwiss",
@@ -76,7 +77,11 @@ CoolClock.config = {
 
 	// the clock interval timer: common for all clocks
 	tickInterval: null
-};
+}, function(item,key) {
+	if(CoolClock.config == undefined) {
+		CoolClock.config[key]=item;
+	}
+});
 
 // Define the CoolClock object's methods
 CoolClock.prototype = {

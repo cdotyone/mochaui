@@ -25,6 +25,13 @@
  ...
  */
 
+if(!window.CoolClock) {
+	window.CoolClock = function(options) {
+		return this.init(options);
+	};
+	CoolClock.config = {};
+}
+
 CoolClock.createWindow = function(skin){
 	if (typeof(skin) != 'string') skin = 'mui_'+MUI.options.theme;
 	new MUI.Window({
