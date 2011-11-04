@@ -395,28 +395,6 @@ Element.implement({
 		return this;
 	},
 
-	hide: function(){
-		var instance = MUI.get(this.id);
-		if (instance != null && instance.hide != null){
-			instance.hide();
-			return this;
-		}
-
-		this.setStyle('display', 'none');
-		return this;
-	},
-
-	show: function(){
-		var instance = MUI.get(this.id);
-		if (instance != null && instance.show != null){
-			instance.show();
-			return this;
-		}
-
-		this.setStyle('display', 'block');
-		return this;
-	},
-
 	close: function(){
 		var instance = MUI.get(this.id);
 		if (instance == null || instance.isClosing || instance.close == null) return;
