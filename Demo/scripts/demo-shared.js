@@ -39,7 +39,7 @@ Object.append(Demo, {
 
 	jsonWindows: function(){
 		new Request.JSON({
-			url: 'data/json-windows-data.js',
+			url: 'data/json-windows-data.json',
 			onComplete: function(properties){
 				MUI.Windows.newFromJSON(properties.windows);
 			}

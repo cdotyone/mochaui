@@ -1,0 +1,76 @@
+/*
+ ---
+
+ file: demo.css
+
+ description: MUI - Demo Specific CSS.
+
+ copyright: (c) 2011 Contributors in (/AUTHORS.txt).
+
+ license: MIT-style license in (/MIT-LICENSE.txt).
+
+ provides: css for charcoal theme
+
+ ...
+ */
+
+.mui-desktopTitlebar {
+	padding: 7px 8px 6px 8px;
+	height: 32px;
+	background: url(../images/logo.gif) no-repeat left 0;
+}
+
+/* Windows
+---------------------------------------------------------------- */
+
+/* Example Window Themes */
+
+#about {
+	border: 6px solid #333;
+}
+
+#about_contentWrapper {
+	background: #191919 url(../images/logo2.gif) 3px 3px no-repeat;
+}
+
+#builder_contentWrapper {
+	background: #f5f5f7;
+}
+
+#json01 .mui-windowTitlebar {
+	background: #6dd2db;
+}
+
+#json02 .mui-windowTitlebar {
+	background: #6db6db;
+}
+
+#json03 .mui-windowTitlebar {
+	background: #6d92db;
+}
+
+.jsonExample .mui-windowTitlebar h3 {
+	color: #ddd;
+}
+
+.jsonExample .mui-windowTitlebar {
+	background: #6db6db;
+}
+
+.jsonExample .mui-windowButton {
+	color: #666;
+	background-color: #fff;
+}
+
+/* This does not work in IE6. */
+.isFocused.jsonExample .mui-windowTitlebar h3 {
+	color: #fff;
+}
+
+#fxmorpherExample .mui-windowContentWrapper {
+	background: #577a9e;
+}
+
+#clock {
+	background: #393939;
+}
