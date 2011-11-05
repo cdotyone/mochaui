@@ -82,7 +82,7 @@ MUI.Column = new NamedClass('MUI.Column', {
 		if (parentInstance && (parentInstance.isTypeOf('MUI.Panel') || parentInstance.isTypeOf('MUI.Window'))){
 			this.container = parentInstance.el.element.getElement('.pad').getParent();
 			// If loading columns into a panel or window, hide the regular content container.
-			parentInstance.el.element.getElement('.pad').hide(true);
+			parentInstance.el.element.getElement('.pad').hide();
 			MUI.panelHeight.delay(200, this, [this.el.element]);
 		}
 

@@ -619,30 +619,15 @@ MUI.append({
 				MUI.resizeChildren(panel);
 			}.bind(this));
 		});
-		
-		if(container.get('id') !== 'desktop')
-		{
-			var c = 0;
-			var total_col = container.getElements('.mui-column').length;
-			var placement = '';
 
+		if(container.hasClass('mui-panel'))
+		{
 			container.getElements('.mui-column').each(function(column){
-				placement = column.retrieve('instance').options.placement;
-				if(c+1 < total_col)
-				{
-					column.setStyle('float','left');
-				}else
-				{
-					if(placement === 'main')
-					{
+				if(MUI.get(column).options.placement==="main")
 						column.setStyle('float','none');
-					}
-				}
-				c++;
-			});	
+			});
 		}
 	}
-	
 });
 
 MUI.Windows = Object.append((MUI.Windows || {}), {

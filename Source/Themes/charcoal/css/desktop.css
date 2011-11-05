@@ -134,6 +134,7 @@ li.mui-divider {
 .mui-column {
 	position: relative;
 	overflow: hidden; /* Required by IE6 */
+	float: left
 }
 
 /* Panels */

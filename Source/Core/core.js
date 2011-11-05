@@ -411,7 +411,7 @@ Element.implement({
 	},
 
 	empty: function() {
-		MUI.erase(this)
+		MUI.erase(this);
 		Array.from(this.childNodes).each(Element.dispose);
 		return this;
 	}
