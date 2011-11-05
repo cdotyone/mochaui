@@ -78,7 +78,7 @@ Object.each({
 	// the clock interval timer: common for all clocks
 	tickInterval: null
 }, function(item,key) {
-	if(CoolClock.config == undefined) {
+	if(key != 'skins') {
 		CoolClock.config[key]=item;
 	}
 });
