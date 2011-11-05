@@ -320,7 +320,7 @@ MUI.Window.implement({
 		if (!options.useCSS3) this.useCSS3 = false;
 		else if (Browser.firefox && Browser.version >= 3.6) this.useCSS3 = true; // FF3.6
 		else if (Browser.webkit && Browser.version >= 4) this.useCSS3 = true; // S4
-		else this.useCSS3 = Browser.ie && Browser.version > 9; // ie9
+		else this.useCSS3 = Browser.ie && Browser.version > 8; // ie9
 
 		// if somebody wants CSS3 but not canvas and condition are false for css3
 		// i.e. IE8 Test CSS3 Body
@@ -1302,7 +1302,7 @@ MUI.Window.implement({
 		['', '-o-', '-webkit-', '-moz-'].each(function(pre){
 			this.el.windowEl.setStyle(pre + 'box-shadow', options.shadowOffset.x + 'px ' + options.shadowOffset.y + 'px ' + options.shadowBlur + 'px ' + color);
 			this.el.windowEl.setStyle(pre + 'border-radius', options.cornerRadius + 'px');
-			this.el.titleBar.setStyle(pre + 'border-radius', options.cornerRadius + 'px');
+			this.el.titleBar.setStyle(pre + 'border-radius', options.cornerRadius + 'px ' + options.cornerRadius + 'px 0 0');
 		}, this);
 	},
 
