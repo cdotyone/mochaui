@@ -144,7 +144,7 @@ MUI.append({
 			var klass = MUI[name];
 			var obj = new klass(options);
 			if (options.onNew) options.onNew(obj);
-			if (options.fromHTML && obj.fromHTML) obj.fromHTML();
+			if (options.fromHTML && obj.fromHTML) obj.fromHTML(options.content);
 			new MUI.Require(r);
 			return obj;
 		}
@@ -161,7 +161,7 @@ MUI.append({
 				var klass = MUI[name];
 				var obj = new klass(control);
 				if (control.onNew) control.onNew(obj);
-				if (control.fromHTML && obj.fromHTML) obj.fromHTML();
+				if (control.fromHTML && obj.fromHTML) obj.fromHTML(options.content);
 			}.bind(this));
 
 		}.bind(options);

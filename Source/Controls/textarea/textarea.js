@@ -222,10 +222,10 @@ MUI.TextArea = new NamedClass('MUI.TextArea', {
 		if (scrollHeight != el.offsetHeight) el.setStyle('height', scrollHeight);
 	},
 
-	fromHTML: function(){
+	fromHTML: function(inp){
 		var self = this,o = this.options;
 
-		var inp = $(o.id);
+		if (!inp) inp = $(o.id);
 		if (!inp) return self;
 		self.element = inp;
 
