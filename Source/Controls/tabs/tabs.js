@@ -186,6 +186,34 @@ MUI.Tabs = new NamedClass('MUI.Tabs', {
 		} else {
 			this.fireEvent('tabSelected', [tab, value, this, e]);
 		}
+	},
+
+	fromHTML: function(el){
+		var self = this;
+		var o = self.options;
+		if (!el) el = $(o.id);
+		else el = $(el);
+		if (!el) return;
+
+		var tabs = [];
+		el.getElements('li').each(function(li){
+			var tab = {};
+
+			var value = li.get('id');
+			if (!value) value = 'tab' + (++MUI.idCount);
+
+			var a = li.getElement('a');
+			var title = a.get('title');
+
+			tab[o.valueField] = value;
+			tab[o.textField] = a.get('text');
+			tab[o.urlField] = a.get('href');
+			if (title) tab[o.titleField] = title;
+
+			tabs.push(tab);
+		});
+		o.tabs = tabs;
+		self.draw();
 	}
 
 });

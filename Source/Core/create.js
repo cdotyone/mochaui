@@ -133,6 +133,7 @@ MUI.append({
 		var config;
 		for (var i = 0; i < controls.length; i++){
 			if (!controls[i].control) return;
+			if (controls[i].fromHTML && controls[i].drawOnInit === undefined) controls[i].drawOnInit = false;
 			config = MUI.getControlAssets(controls[i], r.js, r.css, r.traversed).config;
 		}
 

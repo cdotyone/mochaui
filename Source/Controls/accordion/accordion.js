@@ -233,6 +233,43 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 
 		self._togglers.push(panel._togglerEl);
 		self._panels.push(panel._element);
+	},
+
+	fromHTML: function(el){
+		var self = this;
+		var o = self.options;
+		if (!el) el = $(o.id);
+		else el = $(el);
+		if (!el) return;
+
+		o.cssClass = el.get('class');
+
+		var panels = [];
+		var togglerEls = el.getElements('h3.toggler');
+		var panelEls = el.getElements('div.element');
+
+		for (var i = 0; i < togglerEls.length; i++){
+			var togglerEl = togglerEls[i];
+			if (i >= panelEls.length) break;
+
+			var toggler = {};
+
+			var value = togglerEl.get('id');
+			var text = togglerEl.get('text');
+			if (!value) value = text;
+			if (togglerEl.hasClass('open')) o.value = value;
+
+			var title = togglerEl.get('title');
+			if (title) toggler[o.titleField] = title;
+
+			toggler[o.valueField] = value;
+			toggler[o.textField] = text;
+			toggler[o.contentField] = panelEls[i].get('html');
+			panels.push(toggler);
+		}
+
+		o.panels = panels;
+		self.draw();
 	}
 
 });

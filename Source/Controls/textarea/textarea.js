@@ -220,6 +220,21 @@ MUI.TextArea = new NamedClass('MUI.TextArea', {
 		var cssHeight = tempHeight - this._padding;
 		var scrollHeight = tempHeight + this._offset;
 		if (scrollHeight != el.offsetHeight) el.setStyle('height', scrollHeight);
+	},
+
+	fromHTML: function(){
+		var self = this,o = this.options;
+
+		var inp = $(o.id);
+		if (!inp) return self;
+		self.element = inp;
+
+		if (inp.get('type')) o.type = inp.get('type');
+		o.value = inp.get('defaultValue');
+		if (inp.get('class')) o.cssClass = inp.get('class');
+
+		self.draw();
+		return self;
 	}
 
 });
