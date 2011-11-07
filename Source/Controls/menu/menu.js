@@ -31,8 +31,9 @@ MUI.Menu = new NamedClass('MUI.Menu', {
 		id:				'',				// id of the primary element, and id os control that is registered with mocha
 		container:		null,			// the parent control in the document to add the control to
 		drawOnInit:		true,			// true to add tree to container when control is initialized
-		partner:		 false,			// default partner element to send content to
-		partnerMethod:	 'xhr',			// default loadMethod when sending content to partner
+		partner:		false,			// default partner element to send content to
+		partnerMethod:	'xhr',			// default loadMethod when sending content to partner
+		fromHTML:		false,			// default false, true to load menu from html
 
 		content:		false,			// used to load content
 		items:			{},				// menu items for the menu to draw
@@ -55,10 +56,16 @@ MUI.Menu = new NamedClass('MUI.Menu', {
 		this.el = {};
 
 		// If menu has no ID, give it one.
-		this.id = this.options.id = this.options.id || 'menu' + (++MUI.idCount);
-		MUI.set(this.id, this);
+		var id = this.id = this.options.id = this.options.id || 'menu' + (++MUI.idCount);
+		MUI.set(id, this);
 
-		if (this.options.drawOnInit) this.draw();
+		if (this.options.drawOnInit && !self.fromHTML) this.draw();
+		else if (self.fromHTML){
+			window.addEvent('domready', function(){
+				var el = $(id);
+				if (el != null) self.fromHTML(el);
+			});
+		}
 	},
 
 	draw: function(container){
