@@ -34,7 +34,6 @@ Demo.initializeDesktop = function(){
 	MUI.create({
 		'control':'MUI.Desktop',
 		'id':'desktop',
-		'taskbar':true,
 		'content':[
 			{name:'header',url:'pages/titlebar.html'},
 			{name:'nav',control:'MUI.Dock',cssClass:'mui-desktopNav',docked:[
@@ -53,13 +52,14 @@ Demo.initializeDesktop = function(){
 								{text:'Close Panel',id:'closePanelCheck',registered:'Demo.closePanelTest' },
 								{text:'Close Column',id:'closeColumnCheck',registered:'Demo.closeColumnTest' }
 							]},
+							{type:'divider'},
 							{text:'Starters',items:[
-								{text:'Virtual Desktop',url:'{demo}demo-virtual-desktop.html'},
-								{text:'Fixed Width',url:'{demo}demo-fixed-width.html'},
-								{text:'Fixed Width 2',url:'{demo}demo-taskbar-only.html'},
-								{text:'No Toolbars',url:'{demo}demo-no-toolbars.html'},
-								{text:'No Desktop',url:'{demo}demo-no-desktop.html'},
-								{text:'Modal Only',url:'{demo}demo-modal-only.html'}
+								{text:'Virtual Desktop',url:'{demo}demo-virtual-desktop.html',target:"_blank"},
+								{text:'Fixed Width',url:'{demo}demo-fixed-width.html',target:"_blank"},
+								{text:'Fixed Width 2',url:'{demo}demo-taskbar-only.html',target:"_blank"},
+								{text:'No Toolbars',url:'{demo}demo-no-toolbars.html',target:"_blank"},
+								{text:'No Desktop',url:'{demo}demo-no-desktop.html',target:"_blank"},
+								{text:'Modal Only',url:'{demo}demo-modal-only.html',target:"_blank"}
 							]}
 						]},
 						{text:'View',items:[
