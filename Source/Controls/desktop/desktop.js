@@ -93,12 +93,11 @@ MUI.Desktop = new NamedClass('MUI.Desktop', {
 						column.element = new Element('div', {'id':column.id}).inject(this.el.content);
 						column.control = 'MUI.Column';
 
-						//if (section.columns.length > 1) column.element.setStyle('float', 'left');
-
 						// last column we want it to call the this.setDesktopSize
 						MUI.create(column);
 					}
 				}
+				if (section.content && typeof(section.content) == 'string') this.el.content.set('html', section.content);
 			} else {
 				if (section.name == 'taskbar'){
 					this.el[section.name] = new Element('div', {'id':section.id + 'Wrapper'}).inject(this.el.element);
@@ -206,6 +205,43 @@ MUI.Desktop = new NamedClass('MUI.Desktop', {
 		MUI.panelHeight(null, null, 'all');
 		MUI.rWidth(this.el.content);
 		return this;
+	},
+
+	fromHTML: function(div){
+		var self = this,o = this.options;
+
+		if (!div) div = $(o.id);
+		if (!div) return self;
+		self.element = div;
+		if (div.get('class')) o.cssClass = div.get('class');
+
+		var content = [];
+		div.getChildren().each(function(child){
+			if (child.get('id') == 'desktopNav' || child.hasClass('mui-desktopNav')){
+				var nav = {name:'nav',control:'MUI.Dock',cssClass:'mui-desktopNav',docked:[]};
+				if (child.hasClass('mui-menu') || child.getChildren('ul').length > 0){
+					nav.docked.push({name: 'menu', position: 'header', control: 'MUI.Menu', fromHTML:true, content:child});
+				}
+				content.push(nav);
+			} else
+			if (child.get('id') == 'desktopContent' || child.hasClass('mui-desktopContent')){
+				content.push({name:'content',content:child.get('html')});
+			} else if (child.get('id') == 'desktopTaskbarWrapper' || child.hasClass('mui-taskbarWrapper')){
+				content.push({name:'taskbar'});
+			} else
+			if (child.get('id') == 'desktopHeader' || child.hasClass('mui-desktopHeader')){
+				content.push({name:'header',content:child.get('html')});
+			} else
+			if (child.get('id') == 'desktopFooter' || child.hasClass('mui-desktopFooter')){
+				content.push({name:'footer',content:child.get('html')});
+			} else {
+				content.push({name:child.get('id'),content:child.get('html')});
+			}
+		});
+
+		self.options.content = content;
+		self.draw();
+		return self;
 	}
 
 });
@@ -462,7 +498,7 @@ MUI.append({
 
 					// NEW PANEL
 					// Resize panels that are "new" or not collapsed
-					if (action == 'new' || action=='all'){
+					if (action == 'new' || action == 'all'){
 						if (!instance.isCollapsed && el != changing){
 							panelsToResize.push(el);
 							this.panelsTotalHeight += el.offsetHeight.toInt();
@@ -540,7 +576,7 @@ MUI.append({
 		}.bind(this));
 
 		remainingHeight = column.offsetHeight.toInt() - this.height;
-		if(remainingHeight<0) remainingHeight=10;
+		if (remainingHeight < 0) remainingHeight = 10;
 
 		if (remainingHeight > 0 && tallestPanelHeight > 0){
 			tallestPanel.setStyle('height', tallestPanel.getStyle('height').toInt() + remainingHeight);
@@ -620,11 +656,10 @@ MUI.append({
 			}.bind(this));
 		});
 
-		if(container.hasClass('mui-panel'))
-		{
+		if (container.hasClass('mui-panel')){
 			container.getElements('.mui-column').each(function(column){
-				if(MUI.get(column).options.placement==="main")
-						column.setStyle('float','none');
+				if (MUI.get(column).options.placement === "main")
+					column.setStyle('float', 'none');
 			});
 		}
 	}

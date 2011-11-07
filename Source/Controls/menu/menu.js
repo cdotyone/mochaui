@@ -158,7 +158,42 @@ MUI.Menu = new NamedClass('MUI.Menu', {
 	onItemBlur: function(e, item){
 		self.fireEvent('itemBlurred', [this, item, e]);
 		return true;
-	}
+	},
 
+	fromHTML: function(div){
+		var self = this,o = this.options;
+
+		if (!div) div = $(o.id);
+		if (!div) return self;
+		if (div.get('class')) o.cssClass = div.get('class');
+
+		var ul = div.getChildren("ul");
+		if (ul.length > 0) o.items = this._fromHtmlChildren(ul[0]);
+
+		self.draw();
+		return self;
+	},
+
+	_fromHtmlChildren: function(ul){
+		var list = [];
+		Object.each(ul.getChildren('li'), function(li){
+			if (typeof(li) != 'object' && typeof(li) != 'element') return;
+			if (li.hasClass('divider') || li.hasClass('mui-divider')) list.push({'type':'divider'});
+			var item = {};
+			var a = li.getChildren('a');
+			item.text = a.get('text');
+			if (!item.text) return;
+			var tgt = a.get("target");
+			if (tgt) item.target = tgt;
+			var href = a.get("href");
+			if (href) item.url = href;
+
+			var subul = li.getChildren('ul');
+			if (subul && subul.length > 0) item.items = this._fromHtmlChildren(subul[0]);
+
+			list.push(item);
+		}, this);
+		return list;
+	}
 });
 

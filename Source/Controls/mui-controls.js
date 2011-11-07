@@ -36,11 +36,11 @@ Object.append(MUI.controls, {
 	'toolbar':{'samples':['index'],data:['json'],'description':'Toolbar','isFormControl':false,'css':['{theme}css/toolbar.css']},
 	'dock':{'samples':['index'],data:['json'],'description':'Toolbar Dock','isFormControl':false,'childNode':'docked','dependsOn':['MUI.DockHtml'],'css':['{theme}css/toolbar.css']},
 	'dockhtml':{'samples':['index'],data:['json'],'description':'Toolbar HTML Block','isFormControl':false,'css':['{theme}css/toolbar.css']},
-	'menu':{'samples':['index'],data:['json'],'description':'Toolbar Menu','isFormControl':false,'css':['{theme}css/menu.css']},
+	'menu':{'samples':['index'],data:['json','html'],'description':'Toolbar Menu','isFormControl':false,'css':['{theme}css/menu.css']},
 	'spinner':{'samples':['index'],data:['json'],'description':'Toolbar Spinner','isFormControl':false,'css':['{theme}css/toolbar.css']},
 	'themechange':{'samples':['index'],data:['json'],'description':'Toolbar Menu','isFormControl':false,'css':['{theme}css/toolbar.css']},
-	'window':{'samples':['demo'],data:['json'],'description':'Window','isFormControl':false,'childNode':'content','css':['{theme}css/window.css']},
-	'desktop':{'samples':['demo'],data:['json'],'description':'Desktop','isFormControl':false,'childNode':'content','childType':'MUI.DesktopColumns','dependsOn':['MUI.Dock','MUI.Taskbar'],'css':['{theme}css/desktop.css']},
+	'window':{'samples':['demo'],data:['json'],'description':'Window','isFormControl':false,'dependsOn':['MUI.Toolbar'],'childNode':'content','css':['{theme}css/window.css']},
+	'desktop':{'samples':['demo'],data:['json','html'],'description':'Desktop','isFormControl':false,'childNode':'content','childType':'MUI.DesktopColumns','dependsOn':['MUI.Dock','MUI.Taskbar'],'css':['{theme}css/desktop.css']},
 	'desktopcolumns':{'hide':true,'loadOnly':true,'description':'used to map columns in MUI.Desktop content section','childNode':'columns','childType':'MUI.Column','js':[],'css':[]}
 
 });
