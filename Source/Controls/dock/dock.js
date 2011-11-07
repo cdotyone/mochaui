@@ -96,10 +96,11 @@ MUI.Dock = new NamedClass('MUI.Dock', {
 		if (!toolbar.partner) toolbar.partner = this.options.partner;
 		this.options.docked[idx] = toolbar;
 		var content = {};
-		Object.each(toolbar, function(val, key){	
-			if (['loadmethod', 'method', 'url', 'content', 'onloaded', 'ondrawbegin', 'ondrawend'].indexOf(key.toLowerCase()) > -1)
+		if (toolbar.content) content = toolbar.content;
+		Object.each(toolbar, function(val, key){
+			if (['loadmethod', 'method', 'url', 'content', 'onloaded', 'ondrawbegin', 'ondrawend', 'content'].indexOf(key.toLowerCase()) > -1)
 				content[key] = val;
-		});		
+		});
 		toolbar.content = content;
 		MUI.create(toolbar);
 	}
