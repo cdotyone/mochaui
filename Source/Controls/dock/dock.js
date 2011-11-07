@@ -47,7 +47,7 @@ MUI.Dock = new NamedClass('MUI.Dock', {
 		this.id = this.options.id = this.options.id || 'dock' + (++MUI.idCount);
 		MUI.set(this.id, this);
 
-		if(this.options.drawOnInit) this.draw();
+		if (this.options.drawOnInit) this.draw();
 	},
 
 	draw: function(container){
@@ -76,9 +76,9 @@ MUI.Dock = new NamedClass('MUI.Dock', {
 			if (div.getParent() == null) div.inject(container);
 
 			// add docked controls
-		Object.each(this.options.docked, this._createToolbar, this);
+			Object.each(this.options.docked, this._createToolbar, this);
 
-		this.fireEvent('drawEnd', [this]);
+			this.fireEvent('drawEnd', [this]);
 
 		}.bind(this);
 		if (!isNew || typeOf(container) == 'element') addToContainer();
