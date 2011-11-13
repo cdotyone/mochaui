@@ -120,7 +120,7 @@ MUI.Desktop = new NamedClass('MUI.Desktop', {
 			if (div.getParent() == null) div.inject(container);
 
 			if (this.taskbar) this.taskbar.draw();
-			this.setDesktopSize.delay(100, this);	// resize the desktop
+			this._onBrowserResize.delay(400, this);	// resize the desktop
 
 			window.addEvent('resize', function(){	// capture browser resize events
 				this._onBrowserResize();
