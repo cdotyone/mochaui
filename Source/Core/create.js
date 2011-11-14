@@ -111,6 +111,13 @@ MUI.append({
 		return {js:js,css:css,config:config};
 	},
 
+	areLoaded: function(listToCheck){
+		for (var i = 0; i < listToCheck.length; i++){
+			if (MUI.files[listToCheck[i]] != 'loaded') return false;
+		}
+		return true;
+	},
+
 	create:function(options){
 		// convert none hash parameters to hash
 		if (typeOf(options) == 'string') options = {control:options,onload:(arguments.length > 1) ? arguments[1] : null};
@@ -141,8 +148,11 @@ MUI.append({
 		}
 
 		// if only one control was requested and it is loaded then return it
-		if (controls.length == 1 && r.js.length > 0 && MUI.files[r.js[0]] == 'loaded'){
-			if ((config && config.loadOnly) || options.loadOnly) return null;
+		if (controls.length == 1 && r.js.length > 0 && this.areLoaded[r.js]){
+			if ((config && config.loadOnly) || options.loadOnly){
+				if (config.onload) config.onload(config);
+				return null;
+			}
 			var name = controls[0].control.replace(/(^MUI\.)/i, '');
 			var klass = MUI[name];
 			var obj = new klass(options);
