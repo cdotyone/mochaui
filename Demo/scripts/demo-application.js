@@ -57,7 +57,7 @@ Demo.initializeDesktop = function(){
 								{text:'Virtual Desktop',url:'{demo}demo-virtual-desktop.html',target:"_blank"},
 								{text:'Fixed Width',url:'{demo}demo-fixed-width.html',target:"_blank"},
 								{text:'Fixed Width 2',url:'{demo}demo-taskbar-only.html',target:"_blank"},
-								{text:'No Toolbars',url:'{demo}demo-no-toolbars.html',target:"_blank"},
+								{text:'Fixed No Desktop',url:'{demo}demo-fixed-no-desktop.html',target:"_blank"},
 								{text:'No Desktop',url:'{demo}demo-no-desktop.html',target:"_blank"},
 								{text:'Modal Only',url:'{demo}demo-modal-only.html',target:"_blank"}
 							]}
