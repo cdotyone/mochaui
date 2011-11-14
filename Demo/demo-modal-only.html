@@ -21,22 +21,19 @@
 	<script type="text/javascript" src="../Source/Core/require.js"></script>
 	<script type="text/javascript" src="../Source/Core/canvas.js"></script>
 	<script type="text/javascript" src="../Source/Core/content.js"></script>
-	<script type="text/javascript" src="../Source/Controls/taskbar/taskbar.js"></script>
-	<script type="text/javascript" src="../Source/Controls/window/window.js"></script>
-	<script type="text/javascript" src="../Source/Controls/window/modal.js"></script>
 	<!--MOCHAUI-->
 
 	<script type="text/javascript">
 
 		function makeModal() {
-			new MUI.Modal({
+			MUI.create({control:'MUI.Modal',
 				id: 'modalDemo',
 				title: 'A Modal Window 2',
 				content: 'Your modal window content',
 				width: 400,
 				height: 250
 			});
-			new MUI.Modal({
+			MUI.create({control:'MUI.Modal',
 				id: 'modalDemo2',
 				title: 'A Modal Window 1',
 				content: 'Your modal window content',
@@ -67,21 +64,6 @@
 	ante erat, tristique ac, posuere id, mollis et, leo. Fusce sollicitudin vulputate elit. Mauris fringilla pulvinar
 	eros. Nunc ante libero, pellentesque id, laoreet a, aliquet gravida, quam. Cum sociis natoque penatibus et magnis
 	dis parturient montes, nascetur ridiculus mus.</p>
-
-<select>
-	<option value="test1">Test1</option>
-	<option value="test2">Test2</option>
-	<option value="test3">Test3</option>
-	<option value="test4">Test4</option>
-</select>
-
-<p>Fusce urna augue, ullamcorper eget, adipiscing a, commodo at, erat. Quisque arcu risus, ullamcorper sit amet,
-	porttitor vitae, mollis eu, dolor. Donec eget orci. Aenean in risus. In vel lectus in massa dignissim scelerisque.
-	Mauris in massa. Curabitur sapien. Nullam venenatis consequat eros. Aenean auctor quam. Suspendisse iaculis
-	consectetuer mi. Praesent eu libero porttitor risus ornare vestibulum. Pellentesque luctus sapien tristique augue.
-	Nam turpis metus, lobortis a, bibendum sit amet, tempor ut, neque. Nulla suscipit elit ac arcu. In hac habitasse
-	platea dictumst. Vivamus velit mi, dignissim non, pellentesque sit amet, adipiscing in, purus. Praesent scelerisque
-	vulputate metus. Vestibulum pede. Quisque enim. Mauris nec libero sagittis erat tempor imperdiet.</p>
 
 <p><a class="modalDemoLink" href="">Demo Modal</a></p>
 

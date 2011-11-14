@@ -17,17 +17,17 @@
 			visibility: visible;
 		}
 
-		#desktopTitlebarWrapper {
+		.mui-desktopTitlebarWrapper {
 			border: 0;
 		}
 
-		#desktopTitlebar {
+		.mui-desktopTitlebar {
 			padding: 7px 8px 6px 8px;
 			height: 23px;
-			background: transparent;
+			background-image: none;
 		}
 
-		#desktopTitlebar h1.applicationTitle {
+		.mui-desktopTitlebar h1.applicationTitle {
 			display: inline;
 			margin: 0;
 			padding: 0 5px 0 0;
@@ -37,20 +37,7 @@
 			color: #fff;
 		}
 
-		#desktopTitlebar h2.tagline {
-			display: inline;
-			font-size: 12px;
-			color: #fff;
-			font-weight: normal;
-			padding: 5px 0 0 0;
-		}
-
-		#desktopTitlebar h2.tagline .taglineEm {
-			color: #fff;
-			font-weight: bold;
-		}
-
-		#pageWrapper {
+		#desktopContent {
 			overflow: auto;
 			background: #7c9dbf;
 			border: 0;
@@ -71,16 +58,20 @@
 			padding: 10px 20px;
 		}
 
-		#taskbarWrapper {
+		#desktopTaskbarWrapper {
 			border-top: 1px solid #222;
 			border-bottom: 0;
 		}
 
-		#taskbarWrapper.top {
+		#desktopTaskbarWrapper.top {
 			border-top: 0;
 			border-bottom: 1px solid #222;
 		}
 
+		#about_contentWrapper {
+			background-color: #E5E5E5;
+		}
+}
 	</style>
 
 	<!--[if IE]>
@@ -95,23 +86,15 @@
 	<script type="text/javascript" src="../Source/Core/require.js"></script>
 	<script type="text/javascript" src="../Source/Core/canvas.js"></script>
 	<script type="text/javascript" src="../Source/Core/content.js"></script>
-	<script type="text/javascript" src="../Source/Controls/column/column.js"></script>
-	<script type="text/javascript" src="../Source/Controls/panel/panel.js"></script>
-	<script type="text/javascript" src="../Source/Controls/taskbar/taskbar.js"></script>
-	<script type="text/javascript" src="../Source/Controls/window/window.js"></script>
-	<script type="text/javascript" src="../Source/Controls/window/modal.js"></script>
-<!--
-	<script type="text/javascript" src="../Source/Utility/window-from-html.js"></script>
--->
 	<!--MOCHAUI-->
 
 	<script type="text/javascript">
 
-		// Initialize MochaUI options
-		MUI.initialize();
+		var Demo = {};
 
-		MUI.aboutWindow = function() {
-			new MUI.Modal({
+		Demo.aboutWindow = function(){
+			MUI.create({
+				control:"MUI.Modal",
 				id: 'about',
 				title: 'MochaUI',
 				type: 'modal2',
@@ -127,81 +110,56 @@
 			});
 		};
 
-		window.addEvent('load', function() {
-			MUI.Windows.options.container = 'pageWrapper';
-			MUI.Desktop.initialize();
-			MUI.Windows.newFromHTML();
-
-			$('aboutLink').addEvent('click', function(e) {
-				e.stop();
-				MUI.aboutWindow();
+		window.addEvent('domready', function(){
+			MUI.files.extend({
+				'{theme}css/window.css':'loaded',
+				'{theme}css/desktop.css':'loaded'
 			});
 
+			MUI.load(["MUI.Desktop","MUI.Window"], function(){
+				MUI.create({
+					'control':'MUI.Desktop',
+					'id':'desktop',
+					'fromHTML':true,
+					'onDrawEnd':function(){
+						$('aboutLink').addEvent('click', function(e){
+							e.stop();
+							Demo.aboutWindow();
+						});
+					}
+				});
+			});
 		});
 	</script>
-
 </head>
 <body>
 
 <div id="desktop">
 
-	<div id="mui-desktopHeader">
-		<div id="mui-desktopTitlebarWrapper">
-			<div id="mui-desktopTitlebar">
-				<div id="topNav">
+	<div id="desktopHeader" class="mui-desktopHeader">
+		<div class="mui-desktopTitlebarWrapper">
+			<div class="mui-desktopTitlebar">
+				<h1 class="applicationTitle">My Site</h1>
+
+				<div class="topNav">
 					<ul class="menu-right">
 						<li>Welcome <a href="#" onclick="MUI.notification('Do Something');return false;">Demo User</a>.
 						</li>
 						<li><a href="#" onclick="MUI.notification('Do Something');return false;">Sign Out</a></li>
 					</ul>
 				</div>
-				<h1 class="applicationTitle">My Site</h1>
-
-				<h2 class="tagline">My Tagline</h2>
-			</div>
-		</div>
-	</div>
-	<div id="taskbarWrapper">
-		<div id="taskbar">
-			<div id="taskbarPlacement"></div>
-			<div id="taskbarAutoHide"></div>
-			<div id="taskbarSort">
-				<div id="taskbarClear" class="clear"></div>
 			</div>
 		</div>
 	</div>
 
-	<div id="pageWrapper">
+	<div id="desktopTaskbarWrapper">
+	</div>
+
+	<div id="desktopContent">
 		<div id="page">
-
 			<!-- PAGE CONTENT BEGINS HERE -->
-
 			<div id="content">
 				<h3>My Page Content</h3>
-
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-					et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-					aliquip ex ea commodo consequat.</p>
-
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-					et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-					aliquip ex ea commodo consequat.</p>
-
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-					et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-					aliquip ex ea commodo consequat.</p>
-
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-					et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-					aliquip ex ea commodo consequat.</p>
-
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-					et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-					aliquip ex ea commodo consequat.</p>
-
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-					et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-					aliquip ex ea commodo consequat.</p>
 
 				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
 					et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
@@ -275,37 +233,14 @@
 
 			</div>
 			<!-- content end -->
-
 			<div id="footer">
 				Footer text
 			</div>
-
 			<!-- PAGE CONTENT ENDS HERE -->
 		</div>
 		<!-- page end -->
 	</div>
-	<!-- pageWrapper end -->
-
-	<div class="mocha" id="myWindow01" style="width:300px;height:255px;top:90px;left:350px">
-		<h3 class="mochaTitle">My Window 01</h3>
-
-		<p>My Window Content</p>
-	</div>
-
-	<div class="mocha" id="myWindow02" style="width:300px;height:275px;top:160px;left:420px">
-		<h3 class="mochaTitle">My Window 02</h3>
-
-		<p>My Window Content</p>
-	</div>
-
-	<div class="mocha" id="myWindow03" style="width:300px;height:105px;top:230px;left:490px">
-		<h3 class="mochaTitle">My Window 03</h3>
-
-		<p>My Window Content</p>
-	</div>
-
 </div>
-<!-- desktop end -->
 
 </body>
 </html>

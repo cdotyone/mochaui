@@ -3,63 +3,14 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-	
-	<title>Mootools MochaUI - Fixed Width with Taskbar</title>
-	
+
+	<title>MochaUI - A Web Applications User Interface Library</title>
+	<meta name="description"
+		  content="A web applications user interface library built on the Mootools javascript framework"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
 	<link rel="stylesheet" type="text/css" href="../Source/Themes/default/css/core.css"/>
-	<link rel="stylesheet" type="text/css" href="../Source/Themes/default/css/desktop.css"/>
-	<link rel="stylesheet" type="text/css" href="../Source/Themes/default/css/taskbar.css"/>
-	<link rel="stylesheet" type="text/css" href="../Source/Themes/default/css/window.css"/>
-	
-	<style type="text/css">
-	
-		#desktop {
-			visibility: visible;
-		}
-		
-		#pageWrapper {
-			overflow: auto;
-			background: #7c9dbf;
-			border: 0;
-		}
-		
-		#page {
-			margin: 0 auto 0;
-			width: 800px;
-			background: #fff;
-		}
-		
-		#header {
-			background: #f0f0f0;
-			padding: 20px;
-		}
-		
-		#navigation {
-			background: #f5f5f5;
-			padding: 5px 20px;
-		}
-		
-		#content {
-			padding: 20px;
-		}
-		
-		#footer {
-			background: #f0f0f0;
-			padding: 10px 20px;
-		}
-		
-		#taskbarWrapper {
-			border-top: 1px solid #999;
-			border-bottom: 0;
-		}
-		
-		#taskbarWrapper.top {
-			border-top: 0;
-			border-bottom: 1px solid #999;
-		}
-	
-	</style>
-	
+
 	<!--[if IE]>
 	<script type="text/javascript" src="scripts/excanvas.js"></script>
 	<![endif]-->
@@ -72,206 +23,62 @@
 	<script type="text/javascript" src="../Source/Core/require.js"></script>
 	<script type="text/javascript" src="../Source/Core/canvas.js"></script>
 	<script type="text/javascript" src="../Source/Core/content.js"></script>
-	<script type="text/javascript" src="../Source/Controls/column/column.js"></script>
-	<script type="text/javascript" src="../Source/Controls/panel/panel.js"></script>
-	<script type="text/javascript" src="../Source/Controls/taskbar/taskbar.js"></script>
-	<script type="text/javascript" src="../Source/Controls/window/window.js"></script>
-	<script type="text/javascript" src="../Source/Controls/window/modal.js"></script>
-	<script type="text/javascript" src="../Source/Plugins/windowform/windowform.js"></script>
+	<script type="text/javascript" src="../Source/Core/persist.js"></script>
+	<script type="text/javascript" src="../Source/Core/themes.js"></script>
 	<!--MOCHAUI-->
-	
-	<script type="text/javascript">
-		// Initialize MochaUI options
-		MUI.initialize();
 
-		MUI.aboutWindow = function(){
-			new MUI.Modal({
+	<script type="text/javascript">
+
+		var Demo = {};
+
+		Demo.aboutWindow = function(){
+			MUI.create({
+				control:"MUI.Modal",
 				id: 'about',
 				title: 'MochaUI',
 				type: 'modal2',
 				width: 350,
 				height: 195,
-				// contentBgColor: '#e5e5e5 url(images/logo2.gif) left 3px no-repeat',
+				contentBgColor: '#e5e5e5 url(images/logo2.gif) left 3px no-repeat',
 				padding: { top: 43, right: 12, bottom: 10, left: 12 },
-				scrollbars: false,
+				scrollbars:  false,
 				content: {
 					loadMethod: 'xhr',
 					url: 'pages/about.html'
 				}
 			});
 		};
-		
-		window.addEvent('load', function(){
-			MUI.Windows.options.container = 'pageWrapper';
-			MUI.Desktop.initialize();
-			MUI.Windows.newFromHTML();
-			
-			$('aboutLink').addEvent('click', function(e){
-				e.stop();
-				MUI.aboutWindow();
+
+		window.addEvent('domready', function(){
+			MUI.load(["MUI.Desktop","MUI.Window"], function(){
+				MUI.create([
+					{
+						'control':'MUI.Desktop',
+						'id':'desktop',
+						'content':[
+							{name:'taskbar'},
+							{name:'content'}
+						]
+					},
+					{
+						control:'MUI.Window',
+						id:'test',
+						title:'Test',
+						content:{
+							loadMethod: 'xhr',
+							url:'pages/lipsum.html'
+						}
+					}
+				]);
 			});
-			
 		});
 	</script>
 
 </head>
 <body>
 
-<div id="desktop">
-
-	<div id="taskbarWrapper">
-		<div id="taskbar">
-			<div id="taskbarPlacement"></div>
-			<div id="taskbarAutoHide"></div>
-			<div id="taskbarSort">
-				<div id="taskbarClear" class="clear"></div>
-			</div>
-		</div>
-	</div>
-	
-	<div id="pageWrapper">
-		<div id="page">
-		
-			<!-- PAGE CONTENT BEGINS HERE -->
-			
-			<div id="header">
-				<h1>My Website</h1>
-			</div>
-			
-			<div id="navigation">
-				Site menu
-			</div>
-			
-			<div id="content">
-				<h3>My Page Content</h3>
-				
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-				et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-				aliquip ex ea commodo consequat.</p>
-				
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-				et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-				aliquip ex ea commodo consequat.</p>
-				
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-				et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-				aliquip ex ea commodo consequat.</p>
-				
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-				et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-				aliquip ex ea commodo consequat.</p>
-				
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-				et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-				aliquip ex ea commodo consequat.</p>
-				
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-				et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-				aliquip ex ea commodo consequat.</p>
-				
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-				et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-				aliquip ex ea commodo consequat.</p>
-				
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-				et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-				aliquip ex ea commodo consequat.</p>
-				
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-				et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-				aliquip ex ea commodo consequat.</p>
-				
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-				et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-				aliquip ex ea commodo consequat.</p>
-				
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-				et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-				aliquip ex ea commodo consequat.</p>
-				
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-				et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-				aliquip ex ea commodo consequat.</p>
-				
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-				et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-				aliquip ex ea commodo consequat.</p>
-				
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-				et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-				aliquip ex ea commodo consequat.</p>
-				
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-				et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-				aliquip ex ea commodo consequat.</p>
-				
-				<p><a id="aboutLink" href="pages/about.html">Modal Test</a></p>
-				
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-				et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-				aliquip ex ea commodo consequat.</p>
-				
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-				et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-				aliquip ex ea commodo consequat.</p>
-				
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-				et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-				aliquip ex ea commodo consequat.</p>
-				
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-				et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-				aliquip ex ea commodo consequat.</p>
-				
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-				et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-				aliquip ex ea commodo consequat.</p>
-				
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-				et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-				aliquip ex ea commodo consequat.</p>
-				
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-				et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-				aliquip ex ea commodo consequat.</p>
-				
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-				et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-				aliquip ex ea commodo consequat.</p>
-			
-			</div>
-			<!-- content end -->
-			
-			<div id="footer">
-				Footer text
-			</div>
-		
-		<!-- PAGE CONTENT ENDS HERE -->
-		</div>
-		<!-- page end -->
-	</div>
-	<!-- pageWrapper end -->
-	
-	<div class="mocha" id="myWindow01" style="width:300px;height:255px;top:90px;left:350px">
-		<h3 class="mochaTitle">My Window 01</h3>
-		
-		<p>My Window Content</p>
-	</div>
-	
-	<div class="mocha" id="myWindow02" style="width:300px;height:275px;top:160px;left:420px">
-		<h3 class="mochaTitle">My Window 02</h3>
-		
-		<p>My Window Content</p>
-	</div>
-	
-	<div class="mocha" id="myWindow03" style="width:300px;height:105px;top:230px;left:490px">
-		<h3 class="mochaTitle">My Window 03</h3>
-		
-		<p>My Window Content</p>
-	</div>
-
+<div id="desktop" class="mui-desktop">
 </div>
-<!-- desktop end -->
 
 </body>
 </html>

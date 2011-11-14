@@ -4,10 +4,9 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 
-	<title>Mootools MochaUI - Fixed Width and No Toolbars</title>
+	<title>Mootools MochaUI - Fixed Width and No Desktop</title>
 
 	<link rel="stylesheet" type="text/css" href="../Source/Themes/default/css/core.css"/>
-	<link rel="stylesheet" type="text/css" href="../Source/Themes/default/css/window.css"/>
 
 	<!--[if IE]>
 	<script type="text/javascript" src="scripts/excanvas.js"></script>
@@ -21,24 +20,19 @@
 	<script type="text/javascript" src="../Source/Core/require.js"></script>
 	<script type="text/javascript" src="../Source/Core/canvas.js"></script>
 	<script type="text/javascript" src="../Source/Core/content.js"></script>
-	<script type="text/javascript" src="../Source/Controls/column/column.js"></script>
-	<script type="text/javascript" src="../Source/Controls/panel/panel.js"></script>
-	<script type="text/javascript" src="../Source/Controls/taskbar/taskbar.js"></script>
-	<script type="text/javascript" src="../Source/Controls/window/window.js"></script>
-	<script type="text/javascript" src="../Source/Controls/window/modal.js"></script>
-	<script type="text/javascript" src="../Source/Plugins/windowform/windowform.js"></script>
 	<!--MOCHAUI-->
 
 	<script type="text/javascript">
 
-		MUI.aboutWindow = function() {
-			new MUI.Modal({
+		var Demo = {};
+
+		Demo.aboutWindow = function() {
+			MUI.create({"control":"MUI.Modal",
 				id: 'about',
 				title: 'MochaUI',
 				type: 'modal2',
 				width: 350,
 				height: 195,
-				//contentBgColor: '#e5e5e5 url(images/logo2.gif) left 3px no-repeat',
 				padding: { top: 43, right: 12, bottom: 10, left: 12 },
 				scrollbars:  false,
 				content: {
@@ -48,18 +42,19 @@
 			});
 		};
 
-		window.addEvent('load', function() {
+		window.addEvent('domready', function(){
 
 			// Initialize MochaUI options
 			MUI.initialize();
 
-			MUI.Windows.newFromHTML();
-
 			$('aboutLink').addEvent('click', function(e) {
 				e.stop();
-				MUI.aboutWindow();
+				Demo.aboutWindow();
 			});
 
+			MUI.load(["MUI.Window"],function(){
+				MUI.Windows.newFromHTML();
+			});
 		});
 	</script>
 
@@ -135,42 +130,6 @@
 					et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
 					aliquip ex ea commodo consequat.</p>
 
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-					et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-					aliquip ex ea commodo consequat.</p>
-
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-					et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-					aliquip ex ea commodo consequat.</p>
-
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-					et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-					aliquip ex ea commodo consequat.</p>
-
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-					et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-					aliquip ex ea commodo consequat.</p>
-
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-					et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-					aliquip ex ea commodo consequat.</p>
-
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-					et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-					aliquip ex ea commodo consequat.</p>
-
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-					et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-					aliquip ex ea commodo consequat.</p>
-
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-					et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-					aliquip ex ea commodo consequat.</p>
-
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-					et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-					aliquip ex ea commodo consequat.</p>
-
 				<p><a id="aboutLink" href="pages/about.html">Modal Test</a></p>
 
 				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
@@ -206,19 +165,19 @@
 	</div>
 	<!-- pageWrapper end -->
 
-	<div class="mocha" id="myWindow01" style="width:300px;height:255px;top:50px;left:350px">
+	<div class="mui-window" id="myWindow01" style="width:300px;height:255px;top:50px;left:350px;display:none">
 		<h3 class="mochaTitle">My Window 01</h3>
 
 		<p>My Window Content</p>
 	</div>
 
-	<div class="mocha" id="myWindow02" style="width:300px;height:275px;top:120px;left:420px">
+	<div class="mui-window" id="myWindow02" style="width:300px;height:275px;top:120px;left:420px;display:none">
 		<h3 class="mochaTitle">My Window 02</h3>
 
 		<p>My Window Content</p>
 	</div>
 
-	<div class="mocha" id="myWindow03" style="width:300px;height:105px;top:190px;left:490px">
+	<div class="mui-window" id="myWindow03" style="width:300px;height:105px;top:190px;left:490px;display:none">
 		<h3 class="mochaTitle">My Window 03</h3>
 
 		<p>My Window Content</p>
