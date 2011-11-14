@@ -132,13 +132,13 @@ MUI.append({
 		if (!controls) controls = [];
 		if (typeOf(options) == 'array'){
 			for (var j = 0; j < options.length; j++)
-				controls.push({control:options[j]});
+				controls.push(options[j]);
 			options = {controls:controls,onload:options.onload};
 		}
 
 		if (controls.length == 0) controls = [options]; // make sure we have an array for list of controls to load
 
-		// gather all of the assests for the requested controls/plugins
+		// gather all of the assets for the requested controls/plugins
 		var r = {js:[],css:[],traversed:(MUI.traversed ? MUI.traversed : [])};
 		var config;
 		for (var i = 0; i < controls.length; i++){
@@ -162,7 +162,7 @@ MUI.append({
 			return obj;
 		}
 
-		// build a callback function for the assests requested
+		// build a callback function for the assets requested
 		r.onload = function(){
 			MUI.traversed = (MUI.traversed ? MUI.traversed : []).combine(r.traversed);
 			if (this.onload) this.onload(this);
