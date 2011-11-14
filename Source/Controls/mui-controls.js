@@ -28,7 +28,7 @@ Object.append(MUI.controls, {
 	'accordion':{'samples':[,'demo','index'],data:['json','html'],'description':'Accordion','isFormControl':false,'css':['{theme}css/accordion.css']},
 	'column':{'samples':['demo'],data:['json'],'description':'Column','isFormControl':false,'childNode':'panels','childType':'MUI.Panel','css':['{theme}css/desktop.css']},	
 	'list':{'samples':['demo','index'],data:['json'],'description':'Basic List','isFormControl':false,'css':['{theme}css/list.css']},
-	'modal':{'samples':['demo'],data:['json'],'description':'Modal','isFormControl':false,'css':['{theme}css/desktop.css'],location:'window'},	
+	'modal':{'samples':['demo'],data:['json'],'description':'Modal','isFormControl':false,'dependsOn':['MUI.Window'],'css':['{theme}css/desktop.css'],location:'window'},	
 	'panel':{'samples':['demo'],data:['json'],'description':'Panel','isFormControl':false,'childNode':'content','childType':'MUI.Panel','css':['{theme}css/desktop.css']},	
 	'tabs':{'samples':['index'],data:['json','html'],'description':'Tabs','isFormControl':false,'css':['{theme}css/tab.css']},
 	'taskbar':{'samples':['demo'],data:['json'],'description':'Taskbar','isFormControl':false,'css':['{theme}css/taskbar.css']},	
@@ -39,7 +39,7 @@ Object.append(MUI.controls, {
 	'menu':{'samples':['index'],data:['json','html'],'description':'Toolbar Menu','isFormControl':false,'css':['{theme}css/menu.css']},
 	'spinner':{'samples':['index'],data:['json'],'description':'Toolbar Spinner','isFormControl':false,'css':['{theme}css/toolbar.css']},
 	'themechange':{'samples':['index'],data:['json'],'description':'Toolbar Menu','isFormControl':false,'css':['{theme}css/toolbar.css']},
-	'window':{'samples':['demo'],data:['json'],'description':'Window','isFormControl':false,'dependsOn':['MUI.Toolbar'],'childNode':'content','css':['{theme}css/window.css']},
+	'window':{'samples':['demo'],data:['json'],'description':'Window','isFormControl':false,'dependsOn':['MUI.Toolbar','MUI.Dock'],'childNode':'content','css':['{theme}css/window.css']},
 	'desktop':{'samples':['demo'],data:['json','html'],'description':'Desktop','isFormControl':false,'childNode':'content','childType':'MUI.DesktopColumns','dependsOn':['MUI.Dock','MUI.Taskbar'],'css':['{theme}css/desktop.css']},
 	'desktopcolumns':{'hide':true,'loadOnly':true,'description':'used to map columns in MUI.Desktop content section','childNode':'columns','childType':'MUI.Column','js':[],'css':[]}
 
