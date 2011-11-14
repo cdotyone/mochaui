@@ -141,7 +141,7 @@ MUI.Windows = Object.append((MUI.Windows || {}), {
 		if (!MUI.Windows.focusingWindow){
 			$$('.mui-window').each(function(windowEl){
 				var instance = windowEl.retrieve('instance');
-				if (instance.options.type != 'modal' && instance.options.type != 'modal2'){
+				if (instance && instance.options.type != 'modal' && instance.options.type != 'modal2'){
 					windowEl.removeClass('isFocused');
 				}
 			});
