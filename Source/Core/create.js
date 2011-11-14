@@ -46,6 +46,9 @@ MUI.append({
 				controls.push({control:options[j]});
 			options = {controls:controls, onload:(arguments.length > 1) ? arguments[1] : null, loadOnly:true};
 		}
+		if (typeOf(options) == 'object'){
+			options.loadOnly = true;
+		}
 		MUI.create(options);
 	},
 
