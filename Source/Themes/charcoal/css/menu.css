@@ -22,7 +22,7 @@
 	color: #F8F8F8
 }
 
-.mui-menu  ul {
+.mui-menu ul {
 	padding: 0;
 	margin: 0;
 	list-style: none;
@@ -30,7 +30,7 @@
 	text-align: left;
 }
 
-.mui-menu  li {
+.mui-menu li {
 	float: left;
 	padding-left: 4px;
 	padding-right: 4px;
@@ -59,7 +59,7 @@
 	background-position: right 9px;
 }
 
-.mui-menu  li ul {
+.mui-menu li ul {
 	padding-bottom: 4px;
 	border: 1px solid #3f3f3f;
 	border-top: solid 1px transparent;
@@ -67,16 +67,20 @@
 	position: absolute;
 	width: 164px;
 	left: -999em;
+	display: none;
 	z-index: 8000;
+	margin-top:1px;
+
 }
 
 .mui-menu  li.hover ul ul, .mui-menu  li.hover ul ul ul {
-	left: -999em;
+	padding-top: 2px;
+	display: none;
 }
 
 .mui-menu  li ul ul {
 /* third-and-above-level lists */
-	margin: -27px 0 0 160px;
+	margin: -31px 0 0 160px;
 	border-top: solid 1px #3f3f3f
 }
 
@@ -88,34 +92,43 @@
 	font-weight: normal;
 }
 
-.mui-menu  li ul li a:hover {
+.mui-menu  li ul li.hover a:hover {
 	background: #3f3f3f;
 	color: #fff;
 	-moz-border-radius: 2px;
 }
 
+.mui-menu  li ul li {
+	float:none;
+	display:block;
+}
+
 .mui-menu  li ul li .radio {
 	position: absolute;
-	top: 6px;
-	left: 4px;
+	top: 9px;
+	left: 2px;
 	width: 9px;
 	height: 9px;
 	background: transparent url(../images/menu-radio.gif) no-repeat 0 bottom;
 	overflow: hidden;
 	line-height: 1px;
 	font-size: 1px;
+	padding-left:0;
+	padding-right:0;
 }
 
 .mui-menu  li ul li .noradio {
 	position: absolute;
-	top: 6px;
-	left: 4px;
+	top: 9px;
+	left: 2px;
 	width: 9px;
 	height: 9px;
 	background: transparent url(../images/menu-radio.gif) no-repeat 0 0;
 	overflow: hidden;
 	line-height: 1px;
 	font-size: 1px;
+	padding-left:0;
+	padding-right:0;
 }
 
 .mui-menu  li ul li a:hover .radio {
@@ -128,26 +141,30 @@
 
 .mui-menu  li ul li .check {
 	position: absolute;
-	top: 6px;
-	left: 4px;
+	top: 9px;
+	left: 2px;
 	width: 9px;
 	height: 9px;
 	background: transparent url(../images/menu-check.gif) no-repeat 0 bottom;
 	overflow: hidden;
 	line-height: 1px;
 	font-size: 1px;
+	padding-left:0;
+	padding-right:0;
 }
 
 .mui-menu  li ul li .nocheck {
 	position: absolute;
-	top: 6px;
-	left: 4px;
+	top: 9px;
+	left: 2px;
 	width: 9px;
 	height: 9px;
 	background: transparent url(../images/menu-check.gif) no-repeat 0 0;
 	overflow: hidden;
 	line-height: 1px;
 	font-size: 1px;
+	padding-left:0;
+	padding-right:0;
 }
 
 .mui-menu  li ul li a:hover .check {
@@ -160,7 +177,7 @@
 
 .mui-menu  li.hover ul, .mui-menu li li.hover ul, .mui-menu  li li li.hover ul {
 /* lists nested under hovered list items */
-	left: auto;
+	display: inline-block;
 }
 
 .mui-menu li.mui-divider {

@@ -133,9 +133,14 @@ MUI.Menu = new NamedClass('MUI.Menu', {
 			} else if (item.partner) a.addEvent('click', MUI.sendContentToPartner(this, url, partner, partnerMethod));
 			else a.setAttribute('href', url);
 
-			li.addEvent('mouseenter', function(){
+			a.addEvent('mouseleave', function(e){ e.stop();});
+			li.addEvent('mouseenter', function(e){
+				var ul = e.target.getParent('ul');
+				ul.getChildren('li').removeClass('hover');
+				ul=this.getChildren('UL');
 				this.addClass('hover');
-			}).addEvent('mouseleave', function(){
+			}).addEvent('mouseleave', function(e){
+				console.log(e.target.tagName);
 				this.removeClass('hover');
 			});
 
