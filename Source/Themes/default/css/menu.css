@@ -96,7 +96,7 @@
 	-moz-border-radius: 2px;
 }
 
-.mui-menu  li ul li {
+.mui-menu li ul li {
 	float:none;
 	display:block;
 }

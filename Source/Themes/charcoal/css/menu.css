@@ -66,11 +66,9 @@
 	background: #999999 url(../images/bg-dropdown.gif) repeat-y;
 	position: absolute;
 	width: 164px;
-	left: -999em;
 	display: none;
 	z-index: 8000;
 	margin-top:1px;
-
 }
 
 .mui-menu  li.hover ul ul, .mui-menu  li.hover ul ul ul {

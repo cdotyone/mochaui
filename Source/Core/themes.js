@@ -51,14 +51,14 @@ MUI.Themes = {
 
 		$$('link').each(function(link){
 			var href = link.get('href');
-			if (href.contains(themesPath + MUI.options.theme)){
+			if (href.contains(MUI.options.theme)){
 				this.oldURIs.push(href);
 				this.oldSheets.push(link);
 			}
 		}.bind(this));
 
 		Object.each(MUI.files, function(value, key){
-			if (key.contains(themesPath + MUI.options.theme)){
+			if (key.contains(themesPath + MUI.options.theme) && this.oldURIs.indexOf(key)<0){
 				this.oldURIs.push(key);
 			}
 		}.bind(this));

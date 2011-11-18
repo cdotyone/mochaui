@@ -175,6 +175,10 @@ div.panel-header div.tabs ul {
 	border-radius: 0 3px 3px 0;
 }
 
+.mui-panel-header .mui-tabs li a {
+  padding-bottom: 1px;
+}
+
 *:first-child + html .mui-toolbar .searchField, *:first-child + html .mui-toolbar .searchButton {
 /* IE7 Hack */
 	margin-top: -1px;
