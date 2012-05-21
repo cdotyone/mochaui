@@ -35,7 +35,7 @@ MUI.Taskbar.implement({
 		visible:		true,			// is the taskbar visible
 		autoHide:		 false,			// True when taskbar autohide is set to on, false if set to off
 		menuCheck:		'taskbarCheck',	// the name of the element in the menu that needs to be checked if taskbar is shown
-		cssClass:		'taskbar'
+		cssClass:		'mui-taskbar'
 
 		//onDrawBegin:	null,
 		//onDrawEnd:	null,
@@ -100,15 +100,15 @@ MUI.Taskbar.implement({
 	},
 
 	setTaskbarColors: function(){
-		var enabled = Asset.getCSSRule('.taskbarButtonEnabled');
+		var enabled = Asset.getCSSRule('.mui-taskbarButtonEnabled');
 		if (enabled && enabled.style.backgroundColor)
 			this.enabledButtonColor = new Color(enabled.style.backgroundColor);
 
-		var disabled = Asset.getCSSRule('.taskbarButtonDisabled');
+		var disabled = Asset.getCSSRule('.mui-taskbarButtonDisabled');
 		if (disabled && disabled.style.backgroundColor)
 			this.disabledButtonColor = new Color(disabled.style.backgroundColor);
 
-		var color = Asset.getCSSRule('.taskbarButtonTrue');
+		var color = Asset.getCSSRule('.mui-taskbarButtonTrue');
 		if (color && color.style.backgroundColor)
 			this.trueButtonColor = new Color(color.style.backgroundColor);
 
@@ -165,11 +165,11 @@ MUI.Taskbar.implement({
 
 		var taskbarTab = new Element('div', {
 			'id': instance.options.id + '_taskbarTab',
-			'class': 'taskbarTab',
+			'class': this.options.cssClass + 'Tab',
 			'title': titleText
 		}).inject($(this.options.id + 'Clear'), 'before');
 
-		instance._taskBar = this; 
+		instance._taskBar = this;
 		taskbarTab.addEvent('mousedown', function(e){
 			new Event(e).stop();
 			this.timeDown = Date.now();
@@ -223,11 +223,11 @@ MUI.Taskbar.implement({
 			instance = windowEl.retrieve('instance');
 		}
 
-		$$('.' + css + 'Tab').removeClass('activeTab');
+		$$('.' + css + 'Tab').removeClass('mui-activeTab');
 		if (instance.isMinimized != true){
 			instance.el.windowEl.addClass('isFocused');
 			var currentButton = $(instance.options.id + '_taskbarTab');
-			if (currentButton != null) currentButton.addClass('activeTab');
+			if (currentButton != null) currentButton.addClass('mui-activeTab');
 		} else instance.el.windowEl.removeClass('isFocused');
 		this.fireEvent('tabSet', [this,instance]);
 	},
@@ -281,20 +281,26 @@ MUI.Taskbar.implement({
 		}
 
 		// Position top or bottom selector
-		this.el.placement.setProperty('title', 'Position Taskbar Top');
+		if (this.el.placement)
+		{
+			this.el.placement.setProperty('title', 'Position Taskbar Top');
 
-		// Attach event
-		this.el.placement.addEvent('click', function(){
-			this.move();
-		}.bind(this));
+			// Attach event
+			this.el.placement.addEvent('click', function(){
+				this.move();
+			}.bind(this));
+		};
 
 		// Auto Hide toggle switch
-		this.el.autohide.setProperty('title', 'Turn Auto Hide On');
+		if (this.el.autohide)
+		{
+			this.el.autohide.setProperty('title', 'Turn Auto Hide On');
 
-		// Attach event Auto Hide
-		this.el.autohide.addEvent('click', function(){
-			this._doAutoHide();
-		}.bind(this));
+			// Attach event Auto Hide
+			this.el.autohide.addEvent('click', function(){
+				this._doAutoHide();
+			}.bind(this));
+		};
 
 		this.setTaskbarColors.delay(100,this);
 
@@ -363,6 +369,9 @@ MUI.Taskbar.implement({
 	},
 
 	_renderTaskControls: function(){
+		if (!this.el.canvas){
+			return;
+		}
 		// Draw taskbar controls
 		var ctx = this.el.canvas.getContext('2d');
 		ctx.clearRect(0, 0, 100, 100);
@@ -378,7 +387,7 @@ MUI.Taskbar.implement({
 MUI.Windows = Object.append((MUI.Windows || {}), {
 
 	minimizeAll: function(){
-		$$('.mocha').each(function(windowEl){
+		$$('.mui-window').each(function(windowEl){
 			var instance = windowEl.retrieve('instance');
 			if (!instance.isMinimized && instance.options.minimizable){
 				instance.minimize();
