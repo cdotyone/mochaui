@@ -97,6 +97,13 @@ MUI.Menu = new NamedClass('MUI.Menu', {
 		return this;
 	},
 
+	addItems:function(items, Parent, addArrow){
+		if (typeof Parent === 'undefined'){
+			Parent = this.el.element.getChildren('ul')[0];
+		};
+		this._buildItems(Parent, items, (addArrow || false));
+	},
+
 	_buildItems:function(ul, items, addArrow){
 		for (var i = 0; i < items.length; i++){
 			this.fireEvent('itemDrawBegin', [this, item]);
