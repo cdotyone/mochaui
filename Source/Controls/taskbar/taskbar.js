@@ -35,7 +35,7 @@ MUI.Taskbar.implement({
 		visible:		true,			// is the taskbar visible
 		autoHide:		 false,			// True when taskbar autohide is set to on, false if set to off
 		menuCheck:		'taskbarCheck',	// the name of the element in the menu that needs to be checked if taskbar is shown
-		cssClass:		'mui-taskbar'
+		cssClass:		'taskbar'
 
 		//onDrawBegin:	null,
 		//onDrawEnd:	null,
