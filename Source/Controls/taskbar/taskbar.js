@@ -169,7 +169,7 @@ MUI.Taskbar.implement({
 			'title': titleText
 		}).inject($(this.options.id + 'Clear'), 'before');
 
-		instance._taskBar = this; 
+		instance._taskBar = this;
 		taskbarTab.addEvent('mousedown', function(e){
 			new Event(e).stop();
 			this.timeDown = Date.now();
@@ -281,20 +281,26 @@ MUI.Taskbar.implement({
 		}
 
 		// Position top or bottom selector
-		this.el.placement.setProperty('title', 'Position Taskbar Top');
+		if (this.el.placement)
+		{
+			this.el.placement.setProperty('title', 'Position Taskbar Top');
 
-		// Attach event
-		this.el.placement.addEvent('click', function(){
-			this.move();
-		}.bind(this));
+			// Attach event
+			this.el.placement.addEvent('click', function(){
+				this.move();
+			}.bind(this));
+		};
 
 		// Auto Hide toggle switch
-		this.el.autohide.setProperty('title', 'Turn Auto Hide On');
+		if (this.el.autohide)
+		{
+			this.el.autohide.setProperty('title', 'Turn Auto Hide On');
 
-		// Attach event Auto Hide
-		this.el.autohide.addEvent('click', function(){
-			this._doAutoHide();
-		}.bind(this));
+			// Attach event Auto Hide
+			this.el.autohide.addEvent('click', function(){
+				this._doAutoHide();
+			}.bind(this));
+		};
 
 		this.setTaskbarColors.delay(100,this);
 
@@ -363,6 +369,9 @@ MUI.Taskbar.implement({
 	},
 
 	_renderTaskControls: function(){
+		if (!this.el.canvas){
+			return;
+		}
 		// Draw taskbar controls
 		var ctx = this.el.canvas.getContext('2d');
 		ctx.clearRect(0, 0, 100, 100);
