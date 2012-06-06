@@ -20,7 +20,8 @@
  ...
  */
 
-MUI.Modal = new NamedClass('MUI.Modal', {
+MUI.Modal = (MUI.Modal || new NamedClass('MUI.Modal', {}));
+MUI.Modal.implement({
 
 	Extends: MUI.Window,
 
@@ -56,11 +57,11 @@ MUI.Modal = new NamedClass('MUI.Modal', {
 		modalOverlay.addEvent('click', function(){
 			var instance = MUI.get(MUI.currentModal.id);
 			if (instance && instance.options.modalOverlayClose){
-				
+
 				MUI.currentModal.close();
 
 				(function(){
-					var highest_win = MUI.Windows._getWithHighestZIndex();					
+					var highest_win = MUI.Windows._getWithHighestZIndex();
 					if(highest_win && highest_win.hasClass('modal'))
 					{
 						MUI.currentModal = highest_win;
@@ -68,7 +69,7 @@ MUI.Modal = new NamedClass('MUI.Modal', {
 				}).delay(200);
 			}
 		});
-		
+
 		if (Browser.ie6){
 			var modalFix = new Element('iframe', {
 				'id': 'modalFix',

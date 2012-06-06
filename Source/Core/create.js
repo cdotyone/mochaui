@@ -137,16 +137,20 @@ MUI.append({
 		}
 
 		// if only one control was requested and it is loaded then return it
-		if (controls.length == 1 && r.js.length > 0 && MUI.files[r.js[0]] == 'loaded'){
+		if (controls.length == 1 && r.js.length > 0 && MUI.files[r.js[0]] == 'loaded')
+		{
 			if ((config && config.loadOnly) || options.loadOnly) return null;
 			var name = controls[0].control.replace(/(^MUI\.)/i, '');
 			var klass = MUI[name];
-			var obj = new klass(options);
-			if (options.onNew) options.onNew(obj);
-			if (options.fromHTML && obj.fromHTML) obj.fromHTML();
-			new MUI.Require(r);
-			return obj;
-		}
+			if (klass)
+			{
+				var obj = new klass(options);
+				if (options.onNew) options.onNew(obj);
+				if (options.fromHTML && obj.fromHTML) obj.fromHTML();
+				new MUI.Require(r);
+				return obj;
+			};
+		};
 
 		// build a callback function for the assests requested
 		r.onload = function(){
