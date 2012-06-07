@@ -789,10 +789,20 @@ MUI.Window.implement({
 			$('modalFix').hide();
 		}
 
-		if (!MUI.options.advancedEffects){
-			if ((this.options.type == 'modal' || this.options.type == 'modal2') && $$('.modal').length < 2) $('modalOverlay').setStyle('opacity', 0);
+		if (!MUI.options.advancedEffects)
+		{
+			if ((this.options.type == 'modal' || this.options.type == 'modal2') &&
+				$$('.modal').length < 2)
+			{
+				$('modalOverlay').setStyles({
+					'opacity' : 0,
+					'display' : 'none'
+				});
+			};
+
 			this._doClosingJobs();
-		} else {
+		} else
+		{
 			// Redraws IE windows without shadows since IE messes up canvas alpha when you change element opacity
 			if (Browser.ie) this.redraw(false);
 			if ((this.options.type == 'modal' || this.options.type == 'modal2') && $$('.modal').length < 2){
@@ -1276,7 +1286,7 @@ MUI.Window.implement({
 		var height = 0;
 		if (this.sections){
 			this.sections.each(function(section){
-				if (section.position == 'content'){ 
+				if (section.position == 'content'){
 					return;
 				}
 
@@ -1495,7 +1505,7 @@ MUI.Window.implement({
 
 		// Resize panels if there are any
 		var columns = this.el.contentWrapper.getElements('.column');
-		if (columns != null && columns.length > 0){			
+		if (columns != null && columns.length > 0){
 			MUI.rWidth(this.el.contentWrapper);
 			columns.each(function(column){
 				MUI.panelHeight(column);

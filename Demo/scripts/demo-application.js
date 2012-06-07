@@ -1,4 +1,4 @@
-/* 
+/*
 
  In this file we setup our Windows, Columns and Panels,
  and then initialize MochaUI.
@@ -282,9 +282,9 @@ Demo.initializeDesktop = function(){
 			{name:'footer',content:'<div class="copyright">&copy; 2011 <a href="#" id="authorsLink">Various Contributors</a> - <a href="#" id="licenseLink">MIT License</a></div>',cssClass:'desktopFooter'}
 		],
 		'onDrawEnd':function(){
-		
+
 			if(Parametrics){ Parametrics.createwindow(); }
-			
+
 			$('authorsLink').addEvent('click', function(e){
 				e.stop();
 				Demo.authorsWindow();
@@ -304,9 +304,9 @@ Demo.initialize = function(){
 		'onload':function(){
 			// Initialize MochaUI options
 			MUI.initialize({path:{demo:''}});
-			MUI.load(['Parametrics','famfamfam','CoolClock']);						
+			MUI.load(['Parametrics','famfamfam','CoolClock']);
 			MUI.register('Demo', Demo);
-			MUI.register('MUI.Windows', MUI.Windows);						
+			MUI.register('MUI.Windows', MUI.Windows);
 			Demo.initializeDesktop();
 		}
 	});
