@@ -52,7 +52,7 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		// Other:
 		collapsible:			true,			// can the panel be collapsed
 		isCollapsed:			false,			// is the panel collapsed
-		collapseFooter:			true			// collapse footer when panel is collapsed 
+		collapseFooter:			true			// collapse footer when panel is collapsed
 
 		// Events
 		//onLoaded:				null, // called every time content is loaded using MUI.Content
@@ -349,6 +349,10 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 				.addClass('panel-collapsed')
 				.setProperty('title', 'Collapse Panel');
 		this.fireEvent('expand', [this]);
+
+		if (this.options.column && (Col = MUI.get(this.options.column)) && Col.isCollapsed) {
+			Col.expand();
+		};
 
 		return this;
 	},
