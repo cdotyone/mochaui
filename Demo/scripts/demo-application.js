@@ -301,7 +301,9 @@ Demo.initializeDesktop = function(){
 
 Demo.initialize = function(){
 
-	new MUI.Require({js:['scripts/demo-shared.js'],
+	new MUI.Require({
+        js:['scripts/demo-shared.js'],
+        noCache: true,
 		'onload':function(){
 			// Initialize MochaUI options
 			MUI.initialize({path:{demo:''}});

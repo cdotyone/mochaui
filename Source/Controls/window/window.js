@@ -7,7 +7,7 @@
 
  description: MUI.Window - Build windows.
 
- copyright: (c) 2011 Contributors in (/AUTHORS.txt).
+ copyright: (c) 2014 Contributors in (/AUTHORS.txt).
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 
@@ -152,13 +152,8 @@ MUI.Windows = Object.append((MUI.Windows || {}), {
 	newFromHTML: function(){
 
 		$$('.mui-window').each(function(el){
-			// Get the window title and destroy that element, so it does not end up in window content
-			if (Browser.opera || Browser.ie7){
-				el.hide(); // Required by Opera, and probably IE7
-			}
-			var title = el.getElement('h3.mui-windowTitle');
-
-			if (Browser.opera) el.show();
+			
+			var title = el.getElement('h3.mui-windowTitle');		
 
 			var elDimensions = el.getStyles('height', 'width');
 			var properties = {
@@ -315,17 +310,9 @@ MUI.Window.implement({
 		this.id = options.id = options.id || 'win' + (++MUI.idCount);
 
 		this.el.windowEl = $(options.id);
-
-		// Condition under which to use CSS3, needs shadow, border-radius and gradient support
-		if (!options.useCSS3) this.useCSS3 = false;
-		else if (Browser.firefox && Browser.version >= 3.6) this.useCSS3 = true; // FF3.6
-		else if (Browser.webkit && Browser.version >= 4) this.useCSS3 = true; // S4
-		else this.useCSS3 = Browser.ie && Browser.version > 8; // ie9
-
-		// if somebody wants CSS3 but not canvas and condition are false for css3
-		// i.e. IE8 Test CSS3 Body
-		if (options.useCSS3 && !this.useCSS3 && !this.options.useCanvas) options.shadowBlur = 0;
-
+		
+		this.useCSS3 = options.useCSS3;
+        			
 		this.draw(); // .delay(50, this); // delay to allow css to finish loading, firefox workaround  (has side effects)
 
 		// Return window object
@@ -393,15 +380,7 @@ MUI.Window.implement({
 
 		this.el.windowEl.store('instance', this);
 		this.el.windowEl.addClass(options.cssClass);
-		if (options.type == 'modal2') this.el.windowEl.addClass('mui-modal2');
-		if (Browser.ie) this.el.windowEl.addClass('IE');
-
-		// Fix a mouseover issue with gauges in IE7
-		if (Browser.ie && options.shape == 'gauge') this.el.windowEl.setStyle('backgroundImage', 'url(../images/spacer.gif)');
-
-		if ((this.options.type == 'modal' || options.type == 'modal2') && Browser.Platform.mac && Browser.firefox){
-			if (Browser.version < 3) this.el.windowEl.setStyle('position', 'fixed');
-		}
+		if (options.type == 'modal2') this.el.windowEl.addClass('mui-modal2');		
 
 		// Insert sub elements inside el.windowEl
 		this._insertWindowElements();
@@ -483,10 +462,7 @@ MUI.Window.implement({
 		// Create opacityMorph
 		this.opacityMorph = new Fx.Morph(this.el.windowEl, {
 			'duration': 350,
-			transition: Fx.Transitions.Sine.easeInOut,
-			onComplete: function(){
-				if (Browser.ie) this.redraw();
-			}.bind(this)
+			transition: Fx.Transitions.Sine.easeInOut			
 		});
 
 		this._showNewWindow();
@@ -577,18 +553,11 @@ MUI.Window.implement({
 				'left': shadowBlur - shadowOffset.x
 			});
 
-			if (this.options.useCanvas){
-				if (Browser.ie){
-					this.el.canvas.height = 20000;
-					this.el.canvas.width = 50000;
-				}
+			if (this.options.useCanvas){				
 				this.el.canvas.height = height;
 				this.el.canvas.width = width;
 			}
-
-			// Part of the fix for IE6 select z-index bug
-			if (Browser.ie6) this.el.zIndexFix.setStyles({'width': width, 'height': height});
-
+			
 			// Make sure loading icon is placed correctly.
 			if (options.useSpinner && options.shape != 'gauge' && options.type != 'notification'){
 				this.el.spinner.setStyles({
@@ -705,8 +674,7 @@ MUI.Window.implement({
 			this.redraw();
 			// Show iframe
 			if (this.el.iframe){
-				if (Browser.ie) this.el.iframe.show();
-				else this.el.iframe.setStyle('visibility', 'visible');
+				this.el.iframe.setStyle('visibility', 'visible');
 			}
 		}
 
@@ -785,17 +753,12 @@ MUI.Window.implement({
 			return this;
 		}
 		if (this.check) this.check.destroy();
-
-		if ((this.options.type == 'modal' || this.options.type == 'modal2') && Browser.ie6){
-			$('mui-modalFix').hide();
-		}
-
-		if (!MUI.options.advancedEffects){
-			if ((this.options.type == 'modal' || this.options.type == 'modal2') && $$('.mui-modal').length < 2) $('mui-modalOverlay').setStyle('opacity', 0);
-			this._doClosingJobs();
-		} else {
-			// Redraws IE windows without shadows since IE messes up canvas alpha when you change element opacity
-			if (Browser.ie) this.redraw(false);
+		
+		
+        if (!MUI.options.advancedEffects){
+			if ((this.options.type == 'modal' || this.options.type == 'modal2') && $$('.mui-modal').length < 2) $('mui-modalOverlay').hide();
+			this._doClosingJobs();            
+		} else {			
 			if ((this.options.type == 'modal' || this.options.type == 'modal2') && $$('.mui-modal').length < 2){
 				MUI.Modal.modalOverlayCloseMorph.start({
 					'opacity': 0
@@ -890,8 +853,7 @@ MUI.Window.implement({
 		var windowEl = this.el.windowEl;
 
 		if (this.options.type == 'window'){
-			windowEl.addEvent('mousedown', function(e){
-				if (Browser.ie) e.stop();
+			windowEl.addEvent('mousedown', function(e){				
 				this.focus();
 				if (windowEl.getStyle('top').toInt() < -this.options.shadowBlur){
 					windowEl.setStyle('top', -this.options.shadowBlur);
@@ -903,16 +865,7 @@ MUI.Window.implement({
 			// Keep titlebar text from being selected on double click in Safari.
 			this.el.title.addEvent('selectstart', function(e){
 				e.stop();
-			}.bind(this));
-
-			if (Browser.ie){
-				this.el.titleBar.addEvent('mousedown', function(){
-					this.el.title.setCapture();
-				}.bind(this));
-				this.el.titleBar.addEvent('mouseup', function(){
-					this.el.title.releaseCapture();
-				}.bind(this));
-			}
+			}.bind(this));			
 
 			this.el.titleBar.addEvent('dblclick', function(e){
 				e.stop();
@@ -1017,21 +970,7 @@ MUI.Window.implement({
 		var width = options.width;
 		var id = options.id;
 
-		var cache = {};
-
-		if (Browser.ie6){
-			cache.zIndexFix = new Element('iframe', {
-				'id': id + '_zIndexFix',
-				'class': 'zIndexFix',
-				'scrolling': 'no',
-				'marginWidth': 0,
-				'marginHeight': 0,
-				'src': '',
-				'styles': {
-					'position': 'absolute' // This is set here to make theme transitions smoother
-				}
-			}).inject(this.el.windowEl);
-		}
+		var cache = {};		
 
 		cache.overlay = new Element('div', {
 			'id': id + '_overlay',
@@ -1088,32 +1027,13 @@ MUI.Window.implement({
 		}).inject(cache.contentWrapper);
 		cache.content.store('instance', this);
 
-		if (this.options.useCanvas && !this.useCSS3){
-			if (!Browser.ie){
-				cache.canvas = new Element('canvas', {
-					'id': id + '_canvas',
-					'class': 'mui-windowCanvas',
-					'width': 10,
-					'height': 10
-				}).inject(this.el.windowEl);
-			} else if (Browser.ie){
-				cache.canvas = new Element('canvas', {
-					'id': id + '_canvas',
-					'class': 'mui-windowCanvas',
-					'width': 50000, // IE8 excanvas requires these large numbers
-					'height': 20000,
-					'styles': {
-						'position': 'absolute',
-						'top': 0,
-						'left': 0
-					}
-				}).inject(this.el.windowEl);
-
-				if (MUI.ieSupport == 'excanvas'){
-					G_vmlCanvasManager.initElement(cache.canvas);
-					cache.canvas = this.el.windowEl.getElement('.mui-windowCanvas');
-				}
-			}
+		if (this.options.useCanvas && !this.useCSS3){		
+            cache.canvas = new Element('canvas', {
+            	'id': id + '_canvas',
+            	'class': 'mui-windowCanvas',
+            	'width': 10,
+            	'height': 10
+            }).inject(this.el.windowEl);			
 		}
 
 		cache.controls = new Element('div', {
@@ -1189,7 +1109,7 @@ MUI.Window.implement({
 				this.el.windowEl.close();
 			}.bind(this)});
 		}
-		if (Browser.ie) buttons.reverse();
+        		
 		new MUI.Toolbar({id:id + '_controls',element:cache.controls,divider:false,container:cache.titleBar,buttons:buttons});
 
 		if (options.useSpinner && options.shape != 'gauge' && options.type != 'notification'){
@@ -1210,20 +1130,9 @@ MUI.Window.implement({
 				'width': this.options.width,
 				'height': 26
 			}).inject(this.el.windowEl, 'bottom');
-
-			if (Browser.ie && MUI.ieSupport == 'excanvas'){
-				G_vmlCanvasManager.initElement(cache.canvasHeader);
-				cache.canvasHeader = this.el.windowEl.getElement('.mui-windowCanvasHeader');
-			}
+			
 		}
-
-		if (Browser.ie) cache.overlay.setStyle('zIndex', 2);
-
-		// For Mac Firefox 2 to help reduce scrollbar bugs in that browser
-		if (Browser.Platform.mac && Browser.firefox && Browser.version < 3){
-			cache.overlay.setStyle('overflow', 'auto');
-		}
-
+	
 		if (options.resizable){
 			['n','ne','e','se','s','sw','w','nw'].each(function(id){
 				this[id] = new Element('div', {
@@ -1240,7 +1149,7 @@ MUI.Window.implement({
 		var options = this.options;
 		if (options.type == 'modal' || options.type == 'modal2'){
 			MUI.currentModal = this.el.windowEl;
-			if (Browser.ie6) $('mui-modalFix').show();
+			
 			$('mui-modalOverlay').show();
 			if (MUI.options.advancedEffects){
 				MUI.Modal.modalOverlayCloseMorph.cancel();
@@ -1263,9 +1172,7 @@ MUI.Window.implement({
 			$$('.mui-window').removeClass('isFocused');
 			this.el.windowEl.addClass('isFocused');
 
-		} else if (MUI.options.advancedEffects){
-			// IE cannot handle both element opacity and VML alpha at the same time.
-			if (Browser.ie) this.redraw(false);
+		} else if (MUI.options.advancedEffects){						
 			this.opacityMorph.start({'opacity': 1});
 			this.focus.delay(10, this);
 		} else {
@@ -1321,8 +1228,7 @@ MUI.Window.implement({
 					$('mui-windowUnderlay').show();
 				}
 				if (this.el.iframe){
-					if (!Browser.ie) this.el.iframe.setStyle('visibility', 'hidden');
-					else this.el.iframe.hide();
+					this.el.iframe.setStyle('visibility', 'hidden');					
 				}
 				this.fireEvent('dragStart', [this]);
 			}.bind(this),
@@ -1331,8 +1237,7 @@ MUI.Window.implement({
 					$('mui-windowUnderlay').hide();
 
 				if (this.el.iframe){
-					if (!Browser.ie) this.el.iframe.setStyle('visibility', 'visible');
-					else this.el.iframe.show();
+					this.el.iframe.setStyle('visibility', 'visible');					
 				}
 				// Store new position in options.
 				this._saveValues();
@@ -1455,9 +1360,9 @@ MUI.Window.implement({
 
 	_resizeOnStart: function(){
 		$('mui-windowUnderlay').show();
-		if (this.el.iframe){
-			if (Browser.ie) this.el.iframe.hide();
-			else this.el.iframe.setStyle('visibility', 'hidden');
+        
+		if (this.el.iframe){			
+			this.el.iframe.setStyle('visibility', 'hidden');
 		}
 
 		this.fireEvent('resizeDragStart', [this]);
@@ -1465,15 +1370,16 @@ MUI.Window.implement({
 
 	_resizeOnDrag: function(){
 		// Fix for a rendering glitch in FF when resizing a window with panels in it
-		if (Browser.firefox){
+		if (Browser.name == 'firefox'){
 			this.el.windowEl.getElements('.mui-panel').each(function(panel){
 				panel.store('oldOverflow', panel.getStyle('overflow'));
 				panel.setStyle('overflow', 'visible');
 			});
 		}
+        
 		this.redraw();
 		this._adjustHandles();
-		if (Browser.firefox){
+		if (Browser.name == 'firefox'){
 			this.el.windowEl.getElements('.mui-panel').each(function(panel){
 				panel.setStyle('overflow', panel.retrieve('oldOverflow')); // Fix for a rendering bug in FF
 			});
@@ -1484,17 +1390,9 @@ MUI.Window.implement({
 
 	_resizeOnComplete: function(){
 		$('mui-windowUnderlay').hide();
-		if (this.el.iframe){
-			if (Browser.ie){
-				this.el.iframe.show();
-				// The following hack is to get IE8 RC1 IE8 Standards Mode to properly resize an iframe
-				// when only the vertical dimension is changed.
-				this.el.iframe.setStyle('width', '99%');
-				this.el.iframe.setStyle('height', this.el.contentWrapper.offsetHeight);
-				this.el.iframe.setStyle('width', '100%');
-				this.el.iframe.setStyle('height', this.el.contentWrapper.offsetHeight);
-			} else this.el.iframe.setStyle('visibility', 'visible');
-		}
+		
+        if (this.el.iframe)
+		  this.el.iframe.setStyle('visibility', 'visible');		
 
 		// Resize panels if there are any
 		var columns = this.el.contentWrapper.getElements('.mui-column');
@@ -1551,13 +1449,7 @@ MUI.Window.implement({
 				'top': shadowBlur - shadowOffset.y,
 				'left': shadowBlur - shadowOffset.x
 			});
-
-			// Part of the fix for IE6 select z-index bug
-			if (Browser.ie6) this.el.zIndexFix.setStyles({
-				'width': width,
-				'height': height
-			});
-
+			
 			// Draw Window
 			if (this.options.useCanvas){
 				this.el.canvas.height = height;
@@ -1591,14 +1483,8 @@ MUI.Window.implement({
 			if (instance.el.iframe){
 
 				if (instance.el.iframe.src.contains(window.location.host) && instance.el.iframe.contentDocument.defaultView.location.protocol === window.location.protocol){
-
 					var idoc = instance.el.iframe.contentDocument;
-					delay = idoc.getElementsByTagName("*").length * 10;
-
-					if (idoc.defaultView.MooTools){
-						if (idoc.defaultView.MooTools.version.contains("1.3")) idoc.defaultView.Browser.ie = true;
-						else idoc.defaultView.Browser.Engine.trident = true;
-					}
+					delay = idoc.getElementsByTagName("*").length * 10;				
 				}
 
 				instance.el.iframe.src = "javascript:false";
@@ -1609,8 +1495,8 @@ MUI.Window.implement({
 	},
 
 	_killWindow: function(){
-		if (Browser.ie) this.el.windowEl.dispose();
-		else this.el.windowEl.destroy();
+		
+		this.el.windowEl.destroy();
 		this.fireEvent('closeComplete');
 
 		var count = 0;

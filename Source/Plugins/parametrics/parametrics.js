@@ -7,7 +7,7 @@
 
  description: Creates a window and initializes sliders.
 
- copyright: (c) 2011 Contributors in (/AUTHORS.txt).
+ copyright: (c) 2014 Contributors in (/AUTHORS.txt).
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 
@@ -16,6 +16,7 @@
  - Core/Class
  - Core/Options
  - Core/Events
+ - More/Slider
  - MUI
  - MUI.Core
  - MUI.Window

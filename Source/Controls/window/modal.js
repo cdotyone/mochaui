@@ -5,7 +5,7 @@
 
  description: MUI.Modal - Create modal dialog windows.
 
- copyright: (c) 2011 Contributors in (/AUTHORS.txt).
+ copyright: (c) 2014 Contributors in (/AUTHORS.txt).
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 
@@ -50,7 +50,7 @@ MUI.Modal = new NamedClass('MUI.Modal', {
 		}).inject(document.body);
 
 		modalOverlay.setStyles({
-			'position': Browser.ie6 ? 'absolute' : 'fixed'
+			'position': 'fixed'
 		});
 
 		modalOverlay.addEvent('click', function(){
@@ -67,37 +67,20 @@ MUI.Modal = new NamedClass('MUI.Modal', {
 				}).delay(200);
 			}
 		});
-
-		if (Browser.ie6){
-			new Element('iframe', {
-				'id': 'mui-modalFix',
-				'scrolling': 'no',
-				'marginWidth': 0,
-				'marginHeight': 0,
-				'src': '',
-				'styles': {
-					'height': document.getCoordinates().height
-				}
-			}).inject(document.body);
-		}
-
+	
 		MUI.Modal.modalOverlayOpenMorph = new Fx.Morph($('mui-modalOverlay'), {
 			'duration': 150
 		});
 		MUI.Modal.modalOverlayCloseMorph = new Fx.Morph($('mui-modalOverlay'), {
 			'duration': 150,
 			onComplete: function(){
-				$('mui-modalOverlay').hide();
-				if (Browser.ie6){
-					$('mui-modalFix').hide();
-				}
+				$('mui-modalOverlay').hide();				
 			}.bind(this)
 		});
 	},
 
 	_setModalSize: function(){
-		$('mui-modalOverlay').setStyle('height', document.getCoordinates().height);
-		if (Browser.ie6) $('mui-modalFix').setStyle('height', document.getCoordinates().height);
+		$('mui-modalOverlay').setStyle('height', document.getCoordinates().height);	
 	}
 
 });

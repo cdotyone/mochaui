@@ -122,7 +122,7 @@ MUI.append({
 		// convert none hash parameters to hash
 		if (typeOf(options) == 'string') options = {control:options,onload:(arguments.length > 1) ? arguments[1] : null};
 		if (!MUI.initialized) MUI.initialize(); // initialize mocha if needed
-
+        
 		if (this.loadPluginGroups(function(){ // make sure all all plugin/control group configurations are loaded
 			MUI.create(options);
 		})) return;
@@ -146,9 +146,10 @@ MUI.append({
 			if (controls[i].fromHTML && controls[i].drawOnInit === undefined) controls[i].drawOnInit = false;
 			config = MUI.getControlAssets(controls[i], r.js, r.css, r.traversed).config;
 		}
-
+                
+               
 		// if only one control was requested and it is loaded then return it
-		if (controls.length == 1 && r.js.length > 0 && this.areLoaded[r.js]){
+		if (controls.length == 1 && r.js.length > 0 && this.areLoaded(r.js)){
 			if ((config && config.loadOnly) || options.loadOnly){
 				if (config.onload) config.onload(config);
 				return null;
@@ -159,6 +160,7 @@ MUI.append({
 			if (options.onNew) options.onNew(obj);
 			if (options.fromHTML && obj.fromHTML) obj.fromHTML(options.content);
 			new MUI.Require(r);
+            
 			return obj;
 		}
 
@@ -178,6 +180,7 @@ MUI.append({
 			}.bind(this));
 
 		}.bind(options);
+        
 		new MUI.Require(r);
 	}
 

@@ -7,11 +7,12 @@
 
  description: MUI.Column - Column control for horizontal layouts.
 
- copyright: (c) 2011 Contributors in (/AUTHORS.txt).
+ copyright: (c) 2014 Contributors in (/AUTHORS.txt).
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 
  requires:
+ - More/Sortables
  - MochaUI/MUI
  - MUI.Desktop
  - MUI.Panel

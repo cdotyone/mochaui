@@ -157,7 +157,7 @@ MUI.Menu = new NamedClass('MUI.Menu', {
 	},
 
 	onItemClick: function(e, item){
-		if (!item.target) e = new Event(e).stop();
+		if (!item.target) e.stop();
 		self.fireEvent('itemClicked', [this, item, e]);
 		return true;
 	},

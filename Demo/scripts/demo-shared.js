@@ -105,7 +105,7 @@ Object.append(Demo, {
 		var isWindow = node.value.substr(0, 1) == 'w';
 		if (!width) width = 340;
 		if (!height) height = 200;
-
+        
 		if (isWindow){
 			var win = MUI.create({
 				control:'MUI.Window',
@@ -118,9 +118,9 @@ Object.append(Demo, {
 				resizable: canResize,
 				maximizable: false
 			});
-
+            
 			return win.el.content;
-		}
+		} 
 
 		MUI.Content.update({
 			element: 'mainPanel',
