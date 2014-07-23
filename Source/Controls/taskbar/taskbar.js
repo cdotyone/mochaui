@@ -7,7 +7,7 @@
 
  description: MUI.Taskbar - Implements the taskbar. Enables window minimize.
 
- copyright: (c) 2011 Contributors in (/AUTHORS.txt).
+ copyright: (c) 2014 Contributors in (/AUTHORS.txt).
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 
@@ -171,7 +171,7 @@ MUI.Taskbar.implement({
 
 		instance._taskBar = this; 
 		taskbarTab.addEvent('mousedown', function(e){
-			new Event(e).stop();
+			e.stop();
 			this.timeDown = Date.now();
 		}.bind(instance));
 
@@ -273,11 +273,7 @@ MUI.Taskbar.implement({
 				'height': '18',
 				'class' : css + 'Canvas'
 			}).inject(this.el.taskbar);
-
-			// Dynamically initialize canvas using excanvas. This is only required by IE
-			if (Browser.ie && MUI.ieSupport == 'excanvas'){
-				G_vmlCanvasManager.initElement(this.el.canvas);
-			}
+			
 		}
 
 		// Position top or bottom selector
@@ -397,19 +393,13 @@ MUI.Window.implement({
 
 		// Hide iframe
 		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
-		if (this.el.iframe){
-			// Some elements are still visible in IE8 in the iframe when the iframe's visibility is set to hidden.
-			if (!Browser.ie) this.el.iframe.setStyle('visibility', 'hidden');
-			else this.el.iframe.hide();
+		if (this.el.iframe){			
+			// this.el.iframe.setStyle('visibility', 'hidden');
+			this.el.iframe.hide();
 		}
 
 		this.hide(); // Hide window and add to taskbar
-
-		// Fixes a scrollbar issue in Mac FF2
-		if (Browser.Platform.mac && Browser.firefox && Browser.version < 3){
-			this.el.contentWrapper.setStyle('overflow', 'hidden');
-		}
-
+		
 		if (this.desktop) this.desktop.setDesktopSize();
 
 		// Have to use timeout because window gets focused when you click on the minimize button
@@ -433,8 +423,8 @@ MUI.Window.implement({
 		if (this.isCollapsed) this.collapseToggle();
 
 		if (this.el.iframe){  // Show iframe
-			if (!Browser.ie) this.el.iframe.setStyle('visibility', 'visible');
-			else this.el.iframe.show();
+			// if (!Browser.ie) this.el.iframe.setStyle('visibility', 'visible');
+			this.el.iframe.show();
 		}
 
 		this.isMinimized = false;
