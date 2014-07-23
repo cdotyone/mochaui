@@ -290,8 +290,8 @@ MUI.append({
 		}
 	},
 
-	getRegistered: function(bind, name, args){
-		return function(ev){
+	getRegistered: function(bind, name, args){                
+		return function(ev){            
 			MUI.registered[name].apply(bind, [ev].append(args));
 		};
 	},

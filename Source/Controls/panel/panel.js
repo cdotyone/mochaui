@@ -343,13 +343,19 @@ MUI.Panel = new NamedClass('MUI.Panel', {
 		this.isCollapsed = false;
 		this.el.element.addClass('mui-expanded')
 				.removeClass('mui-collapsed');
-		MUI.panelHeight(this.options.container, this.el.panel, 'expanding');
-		MUI.panelHeight(); // Run this a second time for panels within panels
-		this.el.collapseToggle.removeClass('mui-panel-expand')
+		
+        MUI.panelHeight(this.options.container, this.el.panel, 'expanding');		
+        MUI.panelHeight(); // Run this a second time for panels within panels
+		
+        this.el.collapseToggle.removeClass('mui-panel-expand')
 				.addClass('mui-panel-collapsed')
 				.setProperty('title', 'Collapse Panel');
-		this.fireEvent('expand', [this]);
-
+		
+        if (this.options.column && (Col = MUI.get(this.options.column)) && Col.isCollapsed)
+            Col.expand();
+        
+        this.fireEvent('expand', [this]);
+                    
 		return this;
 	},
 

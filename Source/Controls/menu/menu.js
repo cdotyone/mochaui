@@ -7,7 +7,7 @@
 
  description: MUI.Menu - Creates a toolbar dock control.
 
- copyright: (c) 2011 Contributors in (/AUTHORS.txt).
+ copyright: (c) 2014 Contributors in (/AUTHORS.txt).
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 
@@ -103,6 +103,13 @@ MUI.Menu = new NamedClass('MUI.Menu', {
 
 		return this;
 	},
+    
+    addItems:function(items, Parent, addArrow){
+        if (typeof Parent === 'undefined')
+            Parent = this.el.element.getChildren('ul')[0];
+        
+        this._buildItems(Parent, items, (addArrow || false));
+    },
 
 	_buildItems:function(ul, items, addArrow){
 		for (var i = 0; i < items.length; i++){

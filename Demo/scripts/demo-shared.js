@@ -81,8 +81,8 @@ Object.append(Demo, {
 					container:'youtubeWindow',
 					partner:'youtubeWindow',
 					tabs: [
-						{'text': 'Zero 7/Destiny', 'value':'Zero7', 'url': '{demo}pages/youtube.html', 'loadMethod': 'iframe', 'title': 'Zero 7', 'class': 'first'},
-						{'text': 'Fleet Foxes', 'value': 'FleetFoxes','url': '{demo}pages/youtube2.html', 'loadMethod': 'iframe', 'title': 'Fleet Foxes'},
+						{'text': 'RAC/Tourist', 'value':'Zero7', 'url': '{demo}pages/youtube.html', 'loadMethod': 'iframe', 'title': 'Zero 7', 'class': 'first'},
+						{'text': 'Madeon/The City', 'value': 'FleetFoxes','url': '{demo}pages/youtube2.html', 'loadMethod': 'iframe', 'title': 'Fleet Foxes'},
 						{'text': 'Boards of Canada', 'value': 'BoardsofCanada','url': '{demo}pages/youtube3.html', 'loadMethod': 'iframe', 'title': 'Boards of Canada'},
 						{'text': 'Zero 7/Crosses', 'value': 'Zero7Crosses','url': '{demo}pages/youtube4.html', 'loadMethod': 'iframe', 'title': 'Zero7', 'class': 'last'}
 					],

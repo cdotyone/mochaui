@@ -104,6 +104,12 @@ MUI.Windows = Object.append((MUI.Windows || {}), {
 			windowEl.close();
 		}.bind(this));
 	},
+    
+    minimizeAll: function(){
+        $$('.mui-window').each(function(windowEl){
+			windowEl.minimize();
+		}.bind(this));
+    },
 
 	toggleAll: function(){
 		MUI.each(function(instance){
