@@ -5,7 +5,7 @@
 
  description: core content update routines
 
- copyright: (c) 2011 Contributors in (/AUTHORS.txt).
+ copyright: (c) 2014 Contributors in (/AUTHORS.txt).
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 
@@ -13,6 +13,7 @@
  - MochaUI/MUI
  - Core/Request
  - More/Request.JSONP
+ - More/Elements.Shortcuts
 
  provides: [MUI.Content]
 

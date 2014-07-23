@@ -7,7 +7,7 @@
 
  description: MUI.Accordion - Creates a generic accordion control.
 
- copyright: (c) 2011 Contributors in (/AUTHORS.txt).
+ copyright: (c) 2014 Contributors in (/AUTHORS.txt).
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 
@@ -19,6 +19,7 @@
  - Core/Class
  - Core/Options
  - Core/Events
+ - More/Fx.Accordion
  - MUI
  - MUI.Core
 

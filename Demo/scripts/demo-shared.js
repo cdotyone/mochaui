@@ -81,8 +81,8 @@ Object.append(Demo, {
 					container:'youtubeWindow',
 					partner:'youtubeWindow',
 					tabs: [
-						{'text': 'Zero 7/Destiny', 'value':'Zero7', 'url': '{demo}pages/youtube.html', 'loadMethod': 'iframe', 'title': 'Zero 7', 'class': 'first'},
-						{'text': 'Fleet Foxes', 'value': 'FleetFoxes','url': '{demo}pages/youtube2.html', 'loadMethod': 'iframe', 'title': 'Fleet Foxes'},
+						{'text': 'RAC/Tourist', 'value':'Zero7', 'url': '{demo}pages/youtube.html', 'loadMethod': 'iframe', 'title': 'Zero 7', 'class': 'first'},
+						{'text': 'Madeon/The City', 'value': 'FleetFoxes','url': '{demo}pages/youtube2.html', 'loadMethod': 'iframe', 'title': 'Fleet Foxes'},
 						{'text': 'Boards of Canada', 'value': 'BoardsofCanada','url': '{demo}pages/youtube3.html', 'loadMethod': 'iframe', 'title': 'Boards of Canada'},
 						{'text': 'Zero 7/Crosses', 'value': 'Zero7Crosses','url': '{demo}pages/youtube4.html', 'loadMethod': 'iframe', 'title': 'Zero7', 'class': 'last'}
 					],
@@ -105,7 +105,7 @@ Object.append(Demo, {
 		var isWindow = node.value.substr(0, 1) == 'w';
 		if (!width) width = 340;
 		if (!height) height = 200;
-
+        
 		if (isWindow){
 			var win = MUI.create({
 				control:'MUI.Window',
@@ -118,9 +118,9 @@ Object.append(Demo, {
 				resizable: canResize,
 				maximizable: false
 			});
-
+            
 			return win.el.content;
-		}
+		} 
 
 		MUI.Content.update({
 			element: 'mainPanel',

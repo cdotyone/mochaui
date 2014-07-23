@@ -280,7 +280,7 @@ Demo.initializeDesktop = function(){
 						}
 					]}
 			]},
-			{name:'footer',content:'<div class="mui-copyright">&copy; 2011 <a href="#" id="authorsLink">Various Contributors</a> - <a href="#" id="licenseLink">MIT License</a></div>',cssClass:'mui-desktopFooter'}
+			{name:'footer',content:'<div class="mui-copyright">&copy; 2014 <a href="#" id="authorsLink">Various Contributors</a> - <a href="#" id="licenseLink">MIT License</a></div>',cssClass:'mui-desktopFooter'}
 		],
 		'onDrawEnd':function(){
 		
@@ -301,7 +301,9 @@ Demo.initializeDesktop = function(){
 
 Demo.initialize = function(){
 
-	new MUI.Require({js:['scripts/demo-shared.js'],
+	new MUI.Require({
+        js:['scripts/demo-shared.js'],
+        noCache: true,
 		'onload':function(){
 			// Initialize MochaUI options
 			MUI.initialize({path:{demo:''}});

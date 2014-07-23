@@ -5,7 +5,7 @@
 
  description: core css and js asset loading functionality, builds on mootools ASSET
 
- copyright: (c) 2011 Contributors in (/AUTHORS.txt).
+ copyright: (c) 2014 Contributors in (/AUTHORS.txt).
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 
@@ -13,7 +13,8 @@
  - MochaUI/MUI
  - Core/Request
  - More/Hash
- - More/Assets
+ - More/Assets 
+ - More/URI
 
  provides: [MUI.Require, Asset.css ]
 
@@ -27,7 +28,8 @@ MUI.Require = new Class({
 	options: {
 		css: [],
 		images: [],
-		js: []
+		js: [],
+        noCache: false
 		//onload: null
 	},
 
@@ -128,9 +130,18 @@ MUI.Require = new Class({
 					oldonload(source);
 				}
 			}.bind(this);
-
-			var sourcePath = MUI.replacePaths(source);
-			switch (sourcePath.match(/\.\w+$/)[0]){
+			                                                
+            var sourcePath = MUI.replacePaths(source);
+            
+            var sourceURI = new URI(sourcePath);
+            
+            // Add an unique ID to the URL in order to avoid the cache                    
+            if (this.options.noCache)              
+                sourceURI.setData('_id', String.uniqueID());
+                
+            sourcePath = sourceURI.toString();                                                                                                                                                                                            
+                        
+			switch (sourceURI.get('file').match(/(?:\.([^.]+))?$/)[0]){
 				case '.js': return Asset.javascript(sourcePath, properties);
 				case '.css': return Asset.css(sourcePath, properties);
 				case '.jpg':

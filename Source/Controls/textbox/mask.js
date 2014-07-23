@@ -26,7 +26,7 @@ Object.append(Element.NativeEvents, {
 	'paste': 2, 'input': 2
 });
 Element.Events.paste = {
-	base : (Browser.opera || (Browser.firefox && Browser.version < 4)) ? 'input' : 'paste',
+	base : (Browser.name == 'opera' || (Browser.name == 'firefox' && Browser.version < 4)) ? 'input' : 'paste',
 	condition: function(e){
 		this.fireEvent('paste', e, 1);
 		return false;
@@ -114,8 +114,8 @@ MUI.Mask = new Class({
 		o.range = this.element.getSelectedRange();
 		o.isSelection = (o.range.start !== o.range.end);
 		// 8 == backspace && 46 == delete && 127 == iphone's delete
-		o.isDelKey = (keyCode == 46 && (event.type != 'keypress' || ((Browser.firefox || Browser.opera) && !event.which)));
-		o.isBksKey = (keyCode == 8 || (Browser.Platform.ios && e.code == 127));
+		o.isDelKey = (keyCode == 46 && (event.type != 'keypress' || ((Browser.name == 'firefox' || Browser.name == 'opera') && !event.which)));
+		o.isBksKey = (keyCode == 8 || (Browser.platform == 'ios' && e.code == 127));
 		o.isRemoveKey = (o.isBksKey || o.isDelKey);
 		func && func.call(this, e, o);
 		return true;
@@ -127,7 +127,7 @@ MUI.Mask = new Class({
 			var keyRepresentation = MUI.Mask.ignoreKeys[e.code] || '';
 			this.fireEvent('valid', [this.element, e.code, keyRepresentation]);
 		}
-		return (Browser.Platform.ios || (MUI.Mask.onlyKeyDownRepeat && o.isRemoveKey)) ? this.keypress(e, o) : true;
+		return (Browser.platform == 'ios' || (MUI.Mask.onlyKeyDownRepeat && o.isRemoveKey)) ? this.keypress(e, o) : true;
 	},
 
 	keypress: function(){
@@ -260,7 +260,8 @@ Object.append(MUI.Mask,
 			// http://unixpapa.com/js/key.html
 			// if only the keydown auto-repeats
 			// if you have a better implementation of this detection tell me
-			onlyKeyDownRepeat: (Browser.ie || (Browser.webkit && Browser.version >= 4))
+			// onlyKeyDownRepeat: (Browser.name == 'ie' || (Browser.webkit && Browser.version >= 4))
+            onlyKeyDownRepeat: (Browser.name == 'ie')
 
 		})
 		, function(){
@@ -290,7 +291,7 @@ Object.append(MUI.Mask,
 				127		: 'delete'
 			};
 
-	if (Browser.Platform.ios){
+	if (Browser.platform == 'ios'){
 		ignoreKeys = iphoneIgnoreKeys;
 	} else {
 		// f1, f2, f3 ... f12

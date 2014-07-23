@@ -105,6 +105,7 @@ var buildTestTree = function(testType){
 		if(!testSource.requested) {
 			if(testSource.js!=null && !testSource.sourceLoaded) {
 				new MUI.Require({
+                    'noCache': true,
 					'js':testSource.js,
 					'onload':function() {
 						testSource.sourceLoaded = true;

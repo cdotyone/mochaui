@@ -7,7 +7,7 @@
 
  description: MUI.List - Creates a generic list.
 
- copyright: (c) 2011 Contributors in (/AUTHORS.txt).
+ copyright: (c) 2014 Contributors in (/AUTHORS.txt).
 
  license: MIT-style license in (/MIT-LICENSE.txt).
 
@@ -355,8 +355,9 @@ MUI.List = new NamedClass('MUI.List', {
 
 	_itemCommand: function(e, item, parent, cmd){
 		var self = this;
-		e = new Event(e);
+        
 		e.stop();
+        
 		var t = $(e.target);
 		if (t.nodeName != 'A') t = t.getParent('a');
 		var img = t.getElement('img');

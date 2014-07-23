@@ -36,7 +36,8 @@ MUI.append({
 	'options': {
 		theme: 'default',
 		advancedEffects: false, // Effects that require fast browsers and are cpu intensive.
-		standardEffects: true,  // Basic effects that tend to run smoothly.		
+		standardEffects: true,  // Basic effects that tend to run smoothly.	
+        debug: false,           // Debug mode	
 
 		path: {
 			root:		'../',						// Path to root of other source folders
@@ -63,8 +64,7 @@ MUI.append({
 	initialized: false,
 	instances: new Hash(),
 	registered: new Hash(),
-	idCount: 0,
-	ieSupport: 'excanvas',					// Makes it easier to switch between Excanvas and Moocanvas for testing
+	idCount: 0,	
 	path: MUI.options.path,					// depreciated, will be removed
 
 	initialize: function(options){
@@ -290,8 +290,8 @@ MUI.append({
 		}
 	},
 
-	getRegistered: function(bind, name, args){
-		return function(ev){
+	getRegistered: function(bind, name, args){                
+		return function(ev){            
 			MUI.registered[name].apply(bind, [ev].append(args));
 		};
 	},
