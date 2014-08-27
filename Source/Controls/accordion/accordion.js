@@ -83,7 +83,7 @@ MUI.Accordion = new NamedClass('MUI.Accordian', {
 		if (this.options.drawOnInit && this.options.panels.length > 0) self.draw();
 		else if (self.fromHTML){
 			window.addEvent('domready', function(){
-				var el = $(id);
+				var el = $(this.id);
 				if (el != null) self.fromHTML(self.content);
 			});
 		}
