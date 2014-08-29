@@ -1,30 +1,24 @@
 <html>
 <head>
 	<!--MOCHAUI-->
-	<script type="text/javascript" src="../../../Demo/scripts/mootools-1.3.2-core-nocompat-yc.js"></script>
-	<script type="text/javascript" src="../../../Demo/scripts/mootools-1.3.2-more-yc.js"></script>
+        <script type="text/javascript" src="../../../Demo/scripts/mootools-core-1.5.0-full-nocompat.js"></script>
+        <script type="text/javascript" src="../../../Demo/scripts/mootools-more-1.5.0.js"></script>
 	<script type="text/javascript" src="../../Core/core.js"></script>
-	<script type="text/javascript" src="../../Core/desktop.js"></script>
-	<script type="text/javascript" src="../column/column.js"></script>
-	<script type="text/javascript" src="../panel/panel.js"></script>
-	<script type="text/javascript" src="../taskbar/taskbar.js"></script>
-	<script type="text/javascript" src="../window/window.js"></script>
-	<script type="text/javascript" src="../window/modal.js"></script>
 	<!--MOCHAUI-->
 	<script type="text/javascript" src="list.js"></script>
 	<script type="text/javascript">
 
 		var items = [
-			{value:'item1',text:"Item 1",isChecked: false,isSelected: false},
-			{value:'item2',text:"Item 2",isChecked: true,isSelected: false},
-			{value:'item3',text:"Item 3",isChecked: false,isSelected: false},
-			{value:'item4',text:"Item 4",isChecked: true,isSelected: true},
-			{value:'item5',text:"Item 5",isChecked: false,isSelected: false},
-			{value:'item6',text:"Item 6",isChecked: false,isSelected: false},
-			{value:'item7',text:"Item 7",isChecked: false,isSelected: false},
-			{value:'item8',text:"Item 8",isChecked: false,isSelected: false},
-			{value:'item9',text:"Item 9",isChecked: false,isSelected: false},
-			{value:'item10',text:"Item 10",isChecked: false,isSelected: false}
+                        {"value":"item1","text":"Item 1","isChecked": false,"isSelected": false},
+                        {"value":"item2","text":"Item 2","isChecked": true,"isSelected": false},
+                        {"value":"item3","text":"Item 3","isChecked": false,"isSelected": false},
+                        {"value":"item4","text":"Item 4","isChecked": true,"isSelected": true},
+                        {"value":"item5","text":"Item 5","isChecked": false,"isSelected": false},
+                        {"value":"item6","text":"Item 6","isChecked": false,"isSelected": false},
+                        {"value":"item7","text":"Item 7","isChecked": false,"isSelected": false},
+                        {"value":"item8","text":"Item 8","isChecked": false,"isSelected": false},
+                        {"value":"item9","text":"Item 9","isChecked": false,"isSelected": false},
+                        {"value":"item10","text":"Item 10","isChecked": false,"isSelected": false}
 		];
 
 		new MUI.List({
@@ -35,13 +29,13 @@
 			id:'list1',
 			items:items,
 			columns:[
-				{text:'value',name:'value','value':'value'},
-				{text:'text',name:'value'},
-				{text:'isChecked',name:'isChecked','type':'checkbox'},
-				{text:'isSelected',name:'isSelected','type':'checkbox'}
+                                {"text":"value","name":"value","value":"value"},
+                                {"text":"text","name":"value"},
+                                {"text":"isChecked","name":"isChecked","type":"checkbox"},
+                                {"text":"isSelected","name":"isSelected","type":"checkbox"}
 			],
 			commands:[
-				{'text':'Cancel','name':'Cancel','image':'../../Themes/default/images/cancel.png'}
+                                {"text":"Cancel","name":"Cancel","image":"../../Themes/default/images/cancel.png"}
 			],
 			onItemCommand: function(item, self, cmd, img) {
 				alert('receieved ' + cmd.name + ' command on item ' + item.value)
