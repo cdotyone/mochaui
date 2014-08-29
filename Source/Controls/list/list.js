@@ -308,7 +308,7 @@ MUI.List = new NamedClass('MUI.List', {
 				tr.appendChild(td);
 			}
 
-			Object.each(cm,function(cmd) {
+			Object.each(cm,function(item,cmd) {
 				// show event is used to determine if commands should be displayed
 				var showEvt = self.canShowEvent(self, item, cmd.name);
 				if (showEvt){
