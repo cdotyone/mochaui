@@ -233,7 +233,8 @@ MUI.Tree = new NamedClass('MUI.Tree', {
 			if (node.registered && node.registered != '')
 				a.addEvent('click', MUI.getRegistered(this, node.registered, [node]));
 		}
-		a.setAttribute('href', MUI.replacePaths(url));
+// Something wrong with MUI.replacePaths
+//		a.setAttribute('href', MUI.replacePaths(url));
 
 		if (o.value == value){
 			this.el.element.getElements('.sel').removeClass('sel');
@@ -266,7 +267,7 @@ MUI.Tree = new NamedClass('MUI.Tree', {
 		if (node._checkbox){
 			var isChecked = MUI.getData(node, o.isCheckedField);
 			if (isChecked != null) node._checkbox.checked = isChecked;
-			node._checkbox.removeEvents('click')._checkbox.addEvent('click', MUI.getWrappedEvent(this, this.onNodeCheck, [node]));
+			node._checkbox.removeEvents('click').addEvent('click', MUI.getWrappedEvent(this, this.onNodeCheck, [node]));
 		}
 		li.addEvent('click', MUI.getWrappedEvent(this, this.onNodeExpand, [node]));
 		a.addEvent('click', MUI.getWrappedEvent(this, this.onNodeClick, [node]));
