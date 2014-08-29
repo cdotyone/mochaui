@@ -61,7 +61,7 @@ ul.mui-tree li.nochild {
 	background: url(../images/tree-nochild.gif) no-repeat left top;
 }
 
-div.panel ul.mui-tree li.last {
+div.mui-panel ul.mui-tree li.last {
 	background-color: #f8f8f8;
 }
 
@@ -74,7 +74,7 @@ ul.mui-tree ul li.nochild {
 	background: url(../images/tree-nochild.gif) no-repeat left top;
 }
 
-div.panel ul.mui-tree ul li.last {
+div.mui-panel ul.mui-tree ul li.last {
 	background-color: #f8f8f8;
 }
 
