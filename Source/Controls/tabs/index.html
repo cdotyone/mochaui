@@ -1,33 +1,26 @@
 <html>
 <head>
 	<!--MOCHAUI-->
-	<script type="text/javascript" src="../../../Demo/scripts/mootools-1.3.2-core-nocompat-yc.js"></script>
-	<script type="text/javascript" src="../../../Demo/scripts/mootools-1.3.2-more-yc.js"></script>
-	<script type="text/javascript" src="../../Core/core.js"></script>
-	<script type="text/javascript" src="../../Core/desktop.js"></script>
-	<script type="text/javascript" src="../column/column.js"></script>
-	<script type="text/javascript" src="../panel/panel.js"></script>
-	<script type="text/javascript" src="../taskbar/taskbar.js"></script>
-	<script type="text/javascript" src="../window/window.js"></script>
-	<script type="text/javascript" src="../window/modal.js"></script>
+        <script type="text/javascript" src="../../../Demo/scripts/mootools-core-1.5.0-full-nocompat.js"></script>
+        <script type="text/javascript" src="../../../Demo/scripts/mootools-more-1.5.0.js"></script>
+        <script type="text/javascript" src="../../Core/core.js"></script>
 	<!--MOCHAUI-->
 	<script type="text/javascript" src="tabs.js"></script>
 	<script type="text/javascript">
 		new MUI.Tabs({
-			container:'page',
-			id:'tabs1',
-			element:'page2',
-			tabs:[
-				{text:'Overview',value:'Overview','element':'page2',url:'../../pages/overview.html'},
-				{text:'Download',value:'Download','element':'page2',url:'../../pages/download.html'}
+                        id: 'tabs1',
+                        container:'page',
+                        tabs:[
+                                {"text":'Overview',"value":"Overview","element":"page2","url":"../../pages/overview.html"},
+                                {"text":'Download',"value":"Download","element":"page2","url":"../../pages/download.html"}
 			],
 			onTabSelected: function(tab, value, self, e) {
 				alert('receieved onTabSelected command on tab ' + value);
 			}
 		});
 		new MUI.Tabs({
-			container:'page2',
-			id:'tabs2',
+                        id: 'tabs2',
+                        container:'page2',
 			onTabSelected: function(tab, value, self, e) {
 				alert('receieved onTabSelected command on tab ' + value);
 			}
