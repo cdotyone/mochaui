@@ -57,6 +57,7 @@ MUI.Windows = Object.append((MUI.Windows || {}), {
 		draggableGrid:		false,
 		draggableLimit:		false,
 		draggableSnap:		false,
+		dragOpacity:		0.5,
 
 		// Resizable
 		//resizable:		null,
@@ -1232,6 +1233,7 @@ MUI.Window.implement({
 				if (this.options.type != 'modal' && this.options.type != 'modal2'){
 					this.focus();
 					$('mui-windowUnderlay').show();
+					windowEl.setStyle('opacity', this.options.dragOpacity);
 				}
 				if (this.el.iframe){
 					this.el.iframe.setStyle('visibility', 'hidden');					
@@ -1241,6 +1243,7 @@ MUI.Window.implement({
 			onComplete: function(){
 				if (this.options.type != 'modal' && this.options.type != 'modal2')
 					$('mui-windowUnderlay').hide();
+					windowEl.setStyle('opacity', 1);
 
 				if (this.el.iframe){
 					this.el.iframe.setStyle('visibility', 'visible');					
