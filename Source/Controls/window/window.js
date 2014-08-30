@@ -1192,14 +1192,13 @@ MUI.Window.implement({
 		var height = 0;
 		if (this.sections){
 			this.sections.each(function(section){
-				if (section.position == 'content'){
-					return;
-				}
-
-				if (section.wrapperEl){
-					height += section.wrapperEl.getStyle('height').toInt() + section.wrapperEl.getStyle('border-top').toInt();
-				} else if (section.container){
-					height += section.container.getStyle('height').toInt() + section.container.getStyle('border-top').toInt();
+				if (section.position == 'content') return;
+				if (section) {
+					if (section.wrapperEl){
+						height += section.wrapperEl.getStyle('height').toInt() + section.wrapperEl.getStyle('border-top').toInt();
+					} else if (section.container){
+						height += section.container.getStyle('height').toInt() + section.container.getStyle('border-top').toInt();
+					}
 				}
 			});
 		}
