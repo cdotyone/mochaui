@@ -297,9 +297,8 @@ MUI.Window.implement({
 
 		// Minimizable, taskbar is required and window cannot be modal
 		if (MUI.desktop && MUI.desktop.taskbar) this.taskbar = MUI.desktop.taskbar;
-		if (this.taskbar){
-			if (options.type != 'modal' && options.type != 'modal2') this.options.minimizable = options.minimizable;
-		} else options.minimizable = false;
+		if (this.taskbar)
+			if (options.type != 'modal' && options.type != 'modal2') this.options.minimizable = options.minimizable; else options.minimizable = false;
 
 		// Maximizable, desktop is required
 		options.maximizable = MUI.desktop && options.maximizable && options.type != 'modal' && options.type != 'modal2';
