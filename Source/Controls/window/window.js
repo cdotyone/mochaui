@@ -1239,9 +1239,10 @@ MUI.Window.implement({
 				this.fireEvent('dragStart', [this]);
 			}.bind(this),
 			onComplete: function(){
-				if (this.options.type != 'modal' && this.options.type != 'modal2')
+				if (this.options.type != 'modal' && this.options.type != 'modal2') {
 					$('mui-windowUnderlay').hide();
 					windowEl.setStyle('opacity', 1);
+				}
 
 				if (this.el.iframe){
 					this.el.iframe.setStyle('visibility', 'visible');					
