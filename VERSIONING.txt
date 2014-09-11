@@ -65,8 +65,8 @@ VERSIONING JS & CSS SCRIPTS
       require_once("autoversion.php");
   
       // Add as many extra scripts as needed, like this:
-      echo "<script type='text/javascript' src='".autoVer("ui/scripts/mochaui.js")."'></script>";
-      echo "<link rel='stylesheet' type='text/css' href='".autoVer("ui/css/main.css")."' />";
+      echo "<script type='text/javascript' src='".autoVersion("ui/scripts/mochaui.js")."'></script>";
+      echo "<link rel='stylesheet' type='text/css' href='".autoVersion("ui/css/main.css")."' />";
 
   
   Those lines are only PHP sample code and are here for information purpose only.
