@@ -56,7 +56,6 @@ Versioning JS & CSS files
   
   The numbers inside are generated but the PHP script in autoversion.php:
   
-  <?php
   //
   // Script: autoversion.php
   //
@@ -79,7 +78,6 @@ Versioning JS & CSS files
   }
 
   if (isset($_REQUEST["file"])) echo autoVersion($_REQUEST["file"]);
-  ?>
 
   
   
