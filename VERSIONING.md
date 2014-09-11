@@ -59,14 +59,15 @@ VERSIONING JS & CSS SCRIPTS
   In the directory Source/Core there's a modified version of require.js, names require_with_versioning.js
   in order to test your server modifications first.
   
-  To add versioning inside your current code, you need to do the following:
+  To add versioning inside your current PHP code, you need to do the following:
   
-  <php
+  // Include the versioning function
   require_once("autoversion.php");
   
+  // Add as many extra scripts as needed, like this:
   echo "<script type='text/javascript' src='".autoVer("ui/scripts/mochaui.js")."'></script>";
   echo "<link rel='stylesheet' type='text/css' href='".autoVer("ui/css/main.css")."' />";
-  ?>
+
   
   This is only PHP sample code and it's here for information only. You need to code you're own
   instructions in order to make autoversion.php work.
