@@ -27,22 +27,22 @@ VERSIONING JS & CSS SCRIPTS
   Foreknowledge of Apache's httpd.conf configuration
   is required. The module mod_rewrite needs to be active:
   
-  LoadModule rewrite_module     modules/mod_rewrite.so
+        LoadModule rewrite_module     modules/mod_rewrite.so
   
   and the directive AllowOverride needs to be set to All in the
   proper directory:
   
-    AllowOverride All
-    Require all granted
-  </Directory>
+        AllowOverride All
+        Require all granted
+      </Directory>
   
   
   Let's start by adding or creating the following instructions to .htaccess:
   
-  #Rules for Versioned Static Files
-  Options +FollowSymLinks -Multiviews -Indexes
-  RewriteEngine on
-  RewriteRule ^(.*)\.[\d]+\.(css|js)$ $1.$2 [L]
+        #Rules for Versioned Static Files
+        Options +FollowSymLinks -Multiviews -Indexes
+        RewriteEngine on
+        RewriteRule ^(.*)\.[\d]+\.(css|js)$ $1.$2 [L]
 
   Those instructions inform the Apache server that every JS & CSS filename
   will have one format and needs to be change to another format:
