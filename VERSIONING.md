@@ -56,8 +56,8 @@ VERSIONING JS & CSS SCRIPTS
   
   The numbers inside are generated but the PHP script in autoversion.php.
   
-  In the directory Source/Core there's a modified version of require.js, names require_with_versioning.js
-  in order to test your server modifications first.
+  In the directory Source/Core there's a modified version of require.js, named require_with_versioning.js
+  in order to test your server modifications first without breaking your current site.
   
   To add versioning inside your current PHP code, you need to do the following:
   
