@@ -1,9 +1,11 @@
 /*
  ---
 
- script: require.js
+ script: require_with_versioning.js
 
  description: core css and js asset loading functionality, builds on mootools ASSET
+
+ extra feature:	added versioning functionality for JS & CSS scripts
 
  copyright: (c) 2014 Contributors in (/AUTHORS.txt).
 
@@ -17,7 +19,7 @@
  - More/URI
 
  provides: [MUI.Require, Asset.css ]
-
+ 
  ...
  */
 
