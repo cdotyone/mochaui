@@ -55,4 +55,24 @@ VERSIONING JS & CSS SCRIPTS
   that calls JS & CSS scripts.
   
   The numbers inside are generated but the PHP script in autoversion.php.
-
+  
+  In the directory Source/Core there's a modified version of require.js, names require_with_versioning.js
+  in order to test your server modifications first.
+  
+  To add versioning inside your current code, you need to do the following:
+  
+  <php
+  require_once("autoversion.php");
+  
+  echo "<script type='text/javascript' src='".autoVer("ui/scripts/mochaui.js")."'></script>";
+  echo "<link rel='stylesheet' type='text/css' href='".autoVer("ui/css/main.css")."' />";
+  ?>
+  
+  This is only PHP sample code and it's here for information only. You need to code you're own
+  instructions in order to make autoversion.php work.
+  
+  
+  I hope this is helpful to you as it is to me.
+  
+  RoberNET
+  
