@@ -69,8 +69,8 @@ VERSIONING JS & CSS SCRIPTS
       echo "<link rel='stylesheet' type='text/css' href='".autoVer("ui/css/main.css")."' />";
 
   
-  This is only PHP sample code and it's here for information only. You need to code you're own
-  instructions in order to make autoversion.php work.
+  Those lines are only PHP sample code and are here for information purpose only.
+  You need to code you're own instructions in order to make autoversion.php work.
   
   
   I hope this is helpful to you as it is to me.
