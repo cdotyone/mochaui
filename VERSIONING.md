@@ -54,7 +54,7 @@ VERSIONING JS & CSS SCRIPTS
   You need to place the .htaccess file in the root directory of your website, and/or in any other directory
   that calls JS & CSS scripts.
   
-  The numbers inside are generated but the PHP script in autoversion.php.
+  Numbers inside the name are generated but a PHP script called autoversion.php, located at the Source directory.
   
   In the directory Source/Core there's a modified version of require.js, named require_with_versioning.js
   in order to test your server modifications first without breaking your current site.
