@@ -70,7 +70,7 @@ VERSIONING JS & CSS SCRIPTS
 
   
   Those lines are only PHP sample code and are here for information purpose only.
-  You need to code you're own instructions in order to make autoversion.php work.
+  You need to code you're own <script> and <link> tags in order to make autoversion.php work for you.
   
   
   I hope this is helpful to you as it is to me.
