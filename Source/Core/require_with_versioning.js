@@ -20,6 +20,9 @@
 
  provides: [MUI.Require, Asset.css ]
  
+ NOTE: Before using this script, please read VERSIONING.txt for adicional instructions,
+ 	otherwise use require.js instead.
+ 
  ...
  */
 
