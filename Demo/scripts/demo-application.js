@@ -317,3 +317,22 @@ Demo.initialize = function(){
 
 // Initialize MochaUI when the DOM is ready
 window.addEvent('load', Demo.initialize); //using load instead of domready for IE8
+
+window.addEventListener("touchmove", function(e) {
+        e.preventDefault();
+}, false);
+
+window.addEventListener('orientationchange', function(){
+        ['.mui-modal','.mui-modal2'].each(function(winClass, index) {
+                $$(winClass).each(function(windowEl){
+                        windowEl.close();
+                });
+        });
+        switch(window.orientation) {
+        case 0:
+        case 180:
+                console.log("Do something with iPad or Tablet at vertical");
+                break;
+        default:
+        }
+});
