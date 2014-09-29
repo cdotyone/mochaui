@@ -506,6 +506,9 @@ MUI.Window.implement({
 
 		if (this.options.closeAfter) this.close.delay(this.options.closeAfter, this);
 		if (this.taskbar && this.options.type == 'window') this.taskbar.createTab(this);
+		
+		$(this.el.windowEl.id+"_contentWrapper").addEventListener("touchmove", function(e){e.stopPropagation();}, false);
+
 		this.fireEvent('drawEnd', [this]);
 		return this;
 	},
