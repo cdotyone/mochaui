@@ -1,0 +1,64 @@
+MOOTOOLS MORE and MochaUI's ability to Drag & Drop on Mobile Devices
+
+MochaUI is amazing on desktops but weak on mobile devices, which needs to be solved
+in order to stay current and relevant.
+
+Adapting a project of mine to mobile devices has been challenging due to this issues,
+because it's important to make MochaUI work with updated versions of MooTools and
+mobile devices.
+
+In order to accomplish this, a few tweeks needs to be done in MooTools's More Drag.js
+to add the touchable events needed in MochaUI.
+
+Here's a list of the changes in MooTools More 1.5.1, Drag.js:
+
+        attach: function(){
+                this.handles.addEvent("mousedown", this.bound.start);
++               this.handles.addEvent("touchstart", this.bound.start);
+
+        detach: function(){
+                this.handles.removeEvent("mousedown", this.bound.start);
++               this.handles.removeEvent("touchstart", this.bound.start);
+
+        start: function(event){
+                var options = this.options;
+        (about 36 lines below)
+                var events = {
+                        mousemove: this.bound.check,
++                       touchmove: this.bound.check,
+                        mouseup: this.bound.cancel,
++                       touchend: this.bound.cancel
+                };
+
+        check: function(event){
+        (about 6 lines below)
+                        this.document.addEvents({
+                                mousemove: this.bound.drag,
++                               touchmove: this.bound.drag,
+                                mouseup: this.bound.stop,
++                               touchend: this.bound.stop
+                        });
+
+        cancel: function(event){
+                this.document.removeEvents({
+                        mousemove: this.bound.check,
++                       touchmove: this.bound.check,
+                        mouseup: this.bound.cancel,
++                       touchend: this.bound.cancel
+                });
+
+        stop: function(event){
+                var events = {
+                        mousemove: this.bound.drag,
++                       touchmove: this.bound.drag,
+                        mouseup: this.bound.stop,
++                       touchend: this.bound.stop
+                };
+
+After this changes, MochaUI's Drag & Drop abilities were fully functional again.
+
+This is only a partial solution since newer versions of MooTools More Drag.js need
+to be changed until a definite solution for touchable events are implemented inside
+MooTools.
+
+Regards.
