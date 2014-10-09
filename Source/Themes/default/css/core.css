@@ -198,7 +198,7 @@ textarea.dynamic {
 	position: relative;
 	display: block;
 	overflow: hidden;
-	height: auto
+	height: auto;
 }
 
 textarea, input, select {
