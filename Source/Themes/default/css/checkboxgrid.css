@@ -37,7 +37,8 @@ fieldset.mui-cbg input {
 }
 
 .mui-cbg-wrapper {
-	overflow:auto;
+	overflow:scroll;
+	-webkit-overflow-scrolling: touch;
 }
 
 .mui-cbg td {
