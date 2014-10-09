@@ -159,7 +159,8 @@ div.mui-windowToolbarWrapper.bottom {
 .mui-windowContentWrapper {
 /* Has a fixed height and scrollbars if required. */
 	font-size: 12px;
-	overflow: auto;
+	overflow: scroll;
+	-webkit-overflow-scrolling: touch;
 	background: #303030;
 }
 
