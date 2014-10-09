@@ -22,7 +22,8 @@
 }
 
 div.mui-list {
-	overflow: auto;
+	overflow: scroll;
+	-webkit-overflow-scrolling: touch;
 	background-color: #999999;
 	border: solid 1px #222222;
 	margin: 0;
