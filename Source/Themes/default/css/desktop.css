@@ -139,7 +139,8 @@ li.mui-divider {
 /* Panels */
 .mui-panel {
 	position: relative;
-	overflow: auto;
+	overflow: scroll;
+	-webkit-overflow-scrolling: touch; /* Required for iOS */
 	background: #f8f8f8;
 	border-bottom: 1px solid #b9b9b9;
 	clear: both;
