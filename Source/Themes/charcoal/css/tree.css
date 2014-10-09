@@ -13,7 +13,8 @@
  ...
  */
 div.mui-tree {
-	overflow: auto;
+	overflow: scroll;
+	-webkit-overflow-scrolling: touch;
 	font-size: 11px;
 }
 
