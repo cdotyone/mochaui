@@ -60,7 +60,7 @@ Demo.initialize = function(){
 // Initialize MochaUI when the DOM is ready
 window.addEvent('load', Demo.initialize); //using load instead of domready for IE8
 
-window.addEventListener("touchmove", function(e) {
+document.addEventListener("touchmove", function(e) {
         e.preventDefault();
 }, false);
 
