@@ -52,7 +52,8 @@ div.mui-dslb div.button {
 
 div.mui-slb {
 	clear: both;
-	overflow: auto;
+	overflow: scroll;
+	-webkit-overflow-scrolling: touch;
 	background-color: white;
 	border: solid 1px black;
 	border-left-style: outset;
