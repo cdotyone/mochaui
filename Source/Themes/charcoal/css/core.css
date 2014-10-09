@@ -209,7 +209,7 @@ textarea.dynamic {
 	position: relative;
 	display: block;
 	overflow: hidden;
-	height: auto
+	height: auto;
 }
 
 textarea, input, select {
@@ -266,7 +266,8 @@ pre {
 	display: block;
 	font-family: 'Courier New', Courier, monospace;
 	font-size: 11px;
-	overflow: auto;
+	overflow: scroll;
+	-webkit-overflow-scrolling: touch;
 	margin: 0 0 10px 0;
 	padding: 10px;
 	border: 1px solid #222;
