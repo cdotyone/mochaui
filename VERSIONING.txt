@@ -77,3 +77,9 @@ VERSIONING JS & CSS SCRIPTS
   
   RoberNET
   
+  UPDATE: I made a project work, out of the box, in a GoDaddy's shared hosting simply downloading
+        all the files in the proper directory. The file .htaccess did it's job, with one exception:
+        files inside directory /windows/js, I don't know the reason yet. So I place them inside /ui/js,
+        changed some code and worked.
+        I have no reason to think this solution will behave differently in other hosting providers.
+  
