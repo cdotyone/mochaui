@@ -257,3 +257,7 @@ li.mui-divider {
 	border-top: 0;
 	border-bottom: 0;
 }
+.rWidth {
+        position: absolute;
+        right: 0;
+}
