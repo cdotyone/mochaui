@@ -11,9 +11,10 @@
 		new MUI.Tabs({
                         id: 'tabs1',
                         container:'page',
+                        partner: 'page2',
                         tabs:[
-                                {"text":'Overview',"value":"Overview","element":"page2","url":"../../pages/overview.html"},
-                                {"text":'Download',"value":"Download","element":"page2","url":"../../pages/download.html"}
+                                {"text":'Overview',"value":"Overview","url":"../../pages/overview.html"},
+                                {"text":'Download',"value":"Download","url":"../../pages/download.html"}
 			],
 			onTabSelected: function(tab, value, self, e) {
 				alert('receieved onTabSelected command on tab ' + value);
