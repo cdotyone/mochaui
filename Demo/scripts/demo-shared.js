@@ -256,7 +256,8 @@ Object.append(Demo, {
 			autoSectionToggle:false,
 
 			content:{
-				url:"http://www.mui-windowui.org/person/list?page={page}&max={pageSize}&order={dir}&sort={sort}",
+				//url:"http://www.mui-windowui.org/person/list?page={page}&max={pageSize}&order={dir}&sort={sort}",
+				url:undefined,
 				persist:true,
 				loadMethod: 'jsonp',
 				paging: {

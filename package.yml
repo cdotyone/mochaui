@@ -4,13 +4,13 @@ version: "1.1-dev"
 
 exports: "mochaui.js"
 
-web: "[mochaui.org](http://mochaui.org/)"
+web: "[mui.github.io/mochaui](https://mui.github.io/mochaui/)"
 
 description: "MochaUI, A web applications user interface library"
 
-license: "[MIT License](http://mochaui.org/MIT-LICENSE.txt)"
+license: "[MIT License](https://mui.github.io/mochaui/MIT-LICENSE.txt)"
 
-copyright: "&copy; [AUTHORS.txt](http://mochaui.org/AUTHORS.txt)"
+copyright: "&copy; [AUTHORS.txt](https://mui.github.io/mochaui/AUTHORS.txt)"
 
 authors:
   - "[Chris Doty](http://polaropposite.com/)"
