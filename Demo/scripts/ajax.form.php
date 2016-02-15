@@ -1,7 +1,5 @@
 <div id="postContent">
-<!--	<?php
-		print "<pre>".print_r($_POST, true)."</pre>";
-	?> -->
+<!-- some scripted content here -->
 
     some search result response - edit demo/scripts/ajax.form.php to make this really work
 </div>

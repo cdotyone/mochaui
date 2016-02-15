@@ -106,10 +106,6 @@ options - (*object*) - Options listed below.
 		resizeLimit: [100, 300]
 	})
 
-### Demos:
-
-- *MUI.Column* - <http://mochaui.org/demo>
-
 
 
 MUI.Column Method: draw {#MUI-Column:draw}

@@ -84,7 +84,7 @@ Demo.initializeDesktop = function(){
 						{text:'Help',items:[
 							{text:'Features',id:'featuresLinkCheck',url:'{demo}pages/features.html',registered:'Demo.featuresWindow'},
 							{type:'divider'},
-							{text:'Documentation',id:'loadWorkspaceLink',target:'_blank',url:'http://mochaui.org/doc/'},
+							/* DEAD LINK {text:'Documentation',id:'loadWorkspaceLink',target:'_blank',url:'http://mochaui.org/doc/'}, */
 							{type:'divider'},
 							{text:'About',id:'aboutLink',url:'{demo}pages/about.html',registered:'Demo.aboutWindow'}
 						]}
